@@ -1,0 +1,38 @@
+// Vitest Snapshot v1
+
+exports[`should build a multi-export package 1`] = `
+"'use strict';
+
+function defineConfig(options) {
+  return options;
+}
+
+exports.defineConfig = defineConfig;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build a multi-export package 2`] = `
+"function defineConfig(options) {
+  return options;
+}
+
+export { defineConfig };
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build a multi-export package 3`] = `
+"export declare interface Config {
+    plugins?: Plugin_2[];
+}
+
+export declare function defineConfig(options: Config): Config;
+
+declare interface Plugin_2 {
+}
+export { Plugin_2 as Plugin }
+
+export { }
+"
+`;

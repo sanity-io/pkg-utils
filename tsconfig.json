@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.settings",
+  "include": ["**/*.ts"],
+  "exclude": ["./test/__fixtures__"],
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "outDir": "./dist/tmp",
+    "jsx": "react"
+  }
+}

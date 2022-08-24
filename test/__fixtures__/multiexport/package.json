@@ -1,0 +1,35 @@
+{
+  "name": "multiexport",
+  "version": "0.0.0-development",
+  "source": "./src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./plugin": {
+      "source": "./src/plugin.ts",
+      "require": "./dist/plugin.cjs",
+      "default": "./dist/plugin.js",
+      "types": "./dist/plugin.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "plugin": [
+        "./dist/plugin.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "pkg-utils build --extract --tsconfig tsconfig.dist.json"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
