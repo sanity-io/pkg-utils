@@ -1,0 +1,19 @@
+{
+  "name": "a",
+  "version": "1.0.0",
+  "source": "./src/index.ts",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./lib/index.cjs",
+      "default": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "node -r esbuild-register ../../node_modules/@sanity/pkg-utils/src/cli build --extract --tsconfig tsconfig.lib.json"
+  }
+}
