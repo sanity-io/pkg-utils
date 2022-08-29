@@ -22,7 +22,7 @@ describe('_parseExports', () => {
     expect(exports).toEqual([
       {
         path: '.',
-        runtime: 'web',
+        runtime: undefined,
 
         default: undefined,
         source: './src/index.ts',

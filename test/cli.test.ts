@@ -49,3 +49,23 @@ test('should build `monorepo` package', async () => {
 
   project.remove()
 })
+
+test('should build `node-package` package', async () => {
+  const project = await _spawnProject('node-package')
+
+  await project.install()
+  await project.add(__ROOT__)
+  await project.run('build')
+
+  project.remove()
+})
+
+test('should build `web-package` package', async () => {
+  const project = await _spawnProject('web-package')
+
+  await project.install()
+  await project.add(__ROOT__)
+  await project.run('build')
+
+  project.remove()
+})
