@@ -32,7 +32,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -r esbuild-register src/cli.ts build --extract --tsconfig tsconfig.dist.json",
+    "build": "node -r esbuild-register src/cli build --extract --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
     "lint": "eslint . --ext .cjs,.js,.ts",
     "prebuild": "rimraf dist",
