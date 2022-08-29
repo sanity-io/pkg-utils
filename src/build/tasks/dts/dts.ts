@@ -27,16 +27,15 @@ export interface _DtsTask {
 export async function _dtsTask(ctx: _BuildContext, task: _DtsTask): Promise<void> {
   const {cwd, dist, files, tsconfig} = ctx
   const exportPath = task.exportPath === '.' ? './index' : task.exportPath
+  const distPath = path.resolve(cwd, dist)
+  const tmpPath = path.resolve(cwd, dist, 'tmp')
+  const tsconfigPath = path.resolve(cwd, tsconfig || 'tsconfig.json')
 
   console.log('=================================================================================')
   console.log(chalk.gray('task      '), 'd.ts')
   console.log(chalk.gray('source    '), path.join('', task.source))
   console.log(chalk.gray('export    '), path.join(dist, `${exportPath}.d.ts`))
-
-  const distPath = path.resolve(cwd, dist)
-  const tmpPath = path.resolve(cwd, dist, 'tmp')
-
-  const tsconfigPath = path.resolve(cwd, tsconfig || 'tsconfig.json')
+  console.log(chalk.gray('tsconfig  '), path.relative(cwd, tsconfigPath))
 
   const types = await _buildTypes({
     cwd,
