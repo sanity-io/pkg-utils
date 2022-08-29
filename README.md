@@ -1,4 +1,4 @@
-# pkg-utils
+# @sanity/pkg-utils
 
 Simple utilities for modern [npm](https://www.npmjs.com/) packages.
 
@@ -14,6 +14,6 @@ npm install @sanity/pkg-utils -D
 pkg-utils build --tsconfig tsconfig.dist.json
 ```
 
-## Licence
+## License
 
 MIT
