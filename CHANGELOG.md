@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/sanity-io/pkg-utils/compare/v1.0.0...v1.0.1) (2022-08-29)
+
+### Bug Fixes
+
+- enable declarations when extracting ([49394b8](https://github.com/sanity-io/pkg-utils/commit/49394b81bda174f78b0c481f62d51029433dd52f))
+
 ## 1.0.0 (2022-08-29)
 
 ### Features
