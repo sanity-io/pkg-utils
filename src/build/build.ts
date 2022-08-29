@@ -19,11 +19,6 @@ export async function build(options: {
   const pkg = await _loadPkg({cwd})
   const config = await _loadConfig({cwd})
 
-  // if (!config) {
-  //   console.log('no configuration found')
-  //   return
-  // }
-
   const parsedExports = _parseExports(pkg).reduce<PackageExports>((acc, x) => {
     const {path: exportPath, ...exportEntry} = x
 
