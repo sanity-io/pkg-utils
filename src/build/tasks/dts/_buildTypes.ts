@@ -25,6 +25,7 @@ export async function _buildTypes(options: {
 
   const compilerOptions: ts.CompilerOptions = {
     ...config.options,
+    declaration: true,
     emitDeclarationOnly: true,
     outDir,
   }
