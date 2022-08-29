@@ -13,7 +13,6 @@ import {_createTSDocConfig} from './_createTSDocConfig'
 export async function _extractTypes(options: {
   cwd: string
   distPath: string
-  // exportId: string
   exportPath: string
   files: _BuildFile[]
   projectPath: string
