@@ -1,13 +1,13 @@
 import path from 'path'
-import {PackageSubPathExportEntry} from '../core'
+import {PackageSubPathExportEntry, _DEFAULTS} from '../core'
 import {_BuildContext} from './_types'
-import {_RollupTask, _BuildTask, _DtsTask} from './tasks'
+import {_BuildTask, _DtsTask, _RollupTask} from './tasks'
 
 /**
  * @internal
  */
 export function _parseTasks(ctx: _BuildContext): _BuildTask[] {
-  const {pkg} = ctx
+  const {config, pkg} = ctx
 
   const entries = Object.entries(ctx.exports || {}).map(
     ([path, entry]) => ({path, ...entry} as PackageSubPathExportEntry & {path: string})
@@ -35,6 +35,8 @@ export function _parseTasks(ctx: _BuildContext): _BuildTask[] {
 
   // Parse `rollup` tasks
   for (const entry of entries) {
+    const runtime = entry.runtime || config?.runtime || 'web'
+
     const format: ('commonjs' | 'esm')[] = []
     const target: string[] = []
 
@@ -46,23 +48,23 @@ export function _parseTasks(ctx: _BuildContext): _BuildTask[] {
       format.push('esm')
     }
 
-    if (entry.runtime === 'node') {
-      target.push('node12')
+    if (runtime === 'node') {
+      target.push(...(config?.target?.node || _DEFAULTS.target.node))
     }
 
-    if (entry.runtime === 'web') {
-      target.push('chrome104')
+    if (runtime === 'web') {
+      target.push(...(config?.target?.web || _DEFAULTS.target.web))
     }
 
     for (const f of format) {
-      const buildId = `${entry.runtime}:${f}:${target.join(',')}`
+      const buildId = `${runtime}:${f}:${target.join(',')}`
 
       if (!rollupTasks[buildId]) {
         rollupTasks[buildId] = {
           type: 'rollup',
           buildId,
           entries: [entry],
-          runtime: entry.runtime,
+          runtime,
           format: f,
           target,
         }

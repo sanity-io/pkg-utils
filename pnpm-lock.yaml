@@ -11,6 +11,7 @@ specifiers:
   '@sanity/semantic-release-preset': ^2.0.0
   '@sanity/tsdoc-to-portable-text': ^0.4.1
   '@types/cpx': ^1.5.2
+  '@types/find-config': ^1.0.1
   '@types/mkdirp': ^1.0.2
   '@types/node': ^18.7.13
   '@types/rimraf': ^3.0.2
@@ -27,6 +28,7 @@ specifiers:
   eslint-config-prettier: ^8.5.0
   eslint-plugin-import: ^2.26.0
   eslint-plugin-prettier: ^4.2.1
+  find-config: ^1.0.0
   husky: ^8.0.1
   jsonc-parser: ^3.1.0
   lint-staged: ^12.5.0
@@ -53,6 +55,7 @@ dependencies:
   chalk: 4.1.2
   esbuild: 0.15.5
   esbuild-register: 3.3.3_esbuild@0.15.5
+  find-config: 1.0.0
   jsonc-parser: 3.1.0
   mkdirp: 1.0.4
   pkg-up: 3.1.0
@@ -65,6 +68,7 @@ devDependencies:
   '@commitlint/config-conventional': 17.1.0
   '@sanity/semantic-release-preset': 2.0.1
   '@types/cpx': 1.5.2
+  '@types/find-config': 1.0.1
   '@types/mkdirp': 1.0.2
   '@types/node': 18.7.13
   '@types/rimraf': 3.0.2
@@ -842,6 +846,10 @@ packages:
   /@types/estree/0.0.39:
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
     dev: false
+
+  /@types/find-config/1.0.1:
+    resolution: {integrity: sha512-H4DFIQMwxCKRgVWMSqALg6aowTOgZi5D4pSPBBuOQFJLRwfNZaByhC9+s870CZgTRJoyVg5J+iesdF5uvnJ0mA==}
+    dev: true
 
   /@types/glob/7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
@@ -2938,6 +2946,13 @@ packages:
       to-regex-range: 5.0.1
     dev: true
 
+  /find-config/1.0.0:
+    resolution: {integrity: sha512-Z+suHH+7LSE40WfUeZPIxSxypCWvrzdVc60xAjUShZeT5eMWM0/FQUduq3HjluyfAHWvC/aOBkT1pTZktyF/jg==}
+    engines: {node: '>= 0.12'}
+    dependencies:
+      user-home: 2.0.0
+    dev: false
+
   /find-index/0.1.1:
     resolution: {integrity: sha512-uJ5vWrfBKMcE6y2Z8834dwEZj9mNGxYa3t3I53OwFeuZ8D9oc2E5zcsrkuhX6h4iYrjhiv0T3szQmxlAV9uxDg==}
     dev: true
@@ -4613,6 +4628,11 @@ packages:
       wcwidth: 1.0.1
     dev: true
 
+  /os-homedir/1.0.2:
+    resolution: {integrity: sha512-B5JU3cabzk8c67mRRd3ECmROafjYMXbuzlwtqdM8IbS8ktlTix8aFGb2bAGKrSRIlnfKwovGUUr72JUPyOb6kQ==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /os-tmpdir/1.0.2:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
@@ -5892,6 +5912,13 @@ packages:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /user-home/2.0.0:
+    resolution: {integrity: sha512-KMWqdlOcjCYdtIJpicDSFBQ8nFwS2i9sslAd6f4+CBGcU4gist2REnr2fxj2YocvJFxSF3ZOHLYLVZnUxv4BZQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      os-homedir: 1.0.2
+    dev: false
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}

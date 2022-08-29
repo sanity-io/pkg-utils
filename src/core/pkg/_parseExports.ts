@@ -8,7 +8,7 @@ import {_PackageJSON} from './_types'
 export function _parseExports(pkg: _PackageJSON): (PackageSubPathExportEntry & {path: string})[] {
   const rootExport: PackageSubPathExportEntry & {path: string} = {
     path: '.',
-    runtime: 'web',
+    runtime: undefined,
 
     source: pkg.source || 'index.js',
     require: pkg.main,
@@ -26,7 +26,6 @@ export function _parseExports(pkg: _PackageJSON): (PackageSubPathExportEntry & {
         } else {
           extraExports.push({
             path: exportPath,
-            runtime: 'web',
             source: exportEntry.source,
             ...exportEntry,
           })

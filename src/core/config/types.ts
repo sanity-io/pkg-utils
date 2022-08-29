@@ -2,7 +2,7 @@
  * @public
  */
 export interface PackageSubPathExportEntry {
-  runtime: 'node' | 'web'
+  runtime?: 'node' | 'web'
 
   // paths
   source: string
@@ -42,7 +42,15 @@ export interface PkgConfigOptions {
    */
   external?: ConfigProperty<string[]>
   /**
+   * Default runtime of package exports
+   */
+  runtime?: 'node' | 'web'
+  /**
    * Directory of source files.
    */
   src?: string
+  target?: {
+    node?: string[]
+    web?: string[]
+  }
 }
