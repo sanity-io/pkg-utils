@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0](https://github.com/sanity-io/pkg-utils/compare/v1.2.0...v1.3.0) (2022-08-30)
+
+### Features
+
+- use `browserslist` with sane defaults ([7ab40ab](https://github.com/sanity-io/pkg-utils/commit/7ab40ab67c7e80296cfc4c6d1c8569e244dd0975))
+
 ## [1.2.0](https://github.com/sanity-io/pkg-utils/compare/v1.1.0...v1.2.0) (2022-08-29)
 
 ### Features
