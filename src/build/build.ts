@@ -49,6 +49,17 @@ export async function build(options: {
   const srcPath = path.resolve(cwd, config?.src || 'src')
   const distPath = path.resolve(cwd, config?.dist || 'dist')
 
+  const nodeTarget = _parseNodeTarget(targetVersions)
+  const webTarget = _parseWebTarget(targetVersions)
+
+  if (!nodeTarget) {
+    throw new Error('no matching `node` target')
+  }
+
+  if (!webTarget) {
+    throw new Error('no matching `web` target')
+  }
+
   const context: _BuildContext = {
     config,
     cwd,
@@ -59,10 +70,7 @@ export async function build(options: {
     dist: path.relative(cwd, distPath),
     pkg,
     src: path.relative(cwd, srcPath),
-    target: {
-      node: _parseNodeTarget(targetVersions) || _DEFAULTS.target.node,
-      web: _parseWebTarget(targetVersions) || _DEFAULTS.target.web,
-    },
+    target: {node: nodeTarget, web: webTarget},
     tsconfig,
   }
 
