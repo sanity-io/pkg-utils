@@ -21,5 +21,6 @@ export interface _BuildContext {
   dist: string
   pkg: _PackageJSON
   src: string
+  target: {node: string[]; web: string[]}
   tsconfig?: string
 }

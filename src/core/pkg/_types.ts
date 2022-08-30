@@ -15,4 +15,5 @@ export interface _PackageJSON {
   source?: string
   module?: string
   types?: string
+  browserslist?: string[]
 }

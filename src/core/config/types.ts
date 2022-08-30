@@ -49,8 +49,4 @@ export interface PkgConfigOptions {
    * Directory of source files.
    */
   src?: string
-  target?: {
-    node?: string[]
-    web?: string[]
-  }
 }

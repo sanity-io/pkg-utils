@@ -2,8 +2,18 @@
 
 import path from 'path'
 import chalk from 'chalk'
-import {PackageExports, _loadConfig, _loadPkg, _parseExports, _resolveConfigProperty} from '../core'
+import {
+  PackageExports,
+  _DEFAULTS,
+  _loadConfig,
+  _loadPkg,
+  _parseExports,
+  _resolveConfigProperty,
+} from '../core'
+import {_parseBrowserslistVersions} from './_parseBrowserslistVersions'
+import {_parseNodeTarget} from './_parseNodeTarget'
 import {_parseTasks} from './_parseTasks'
+import {_parseWebTarget} from './_parseWebTarget'
 import {_BuildContext} from './_types'
 import {_dtsTask, _extractTask, _rollupTask} from './tasks'
 
@@ -25,18 +35,16 @@ export async function build(options: {
     return {...acc, [exportPath]: exportEntry}
   }, {})
 
-  const exports = config?.exports
-    ? _resolveConfigProperty(config.exports, parsedExports)
-    : parsedExports
+  const exports = _resolveConfigProperty(config?.exports, parsedExports)
 
-  const initialExternal = [
+  const parsedExternal = [
     ...(pkg.dependencies ? Object.keys(pkg.dependencies) : []),
     ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []),
   ]
 
-  const external = config?.external
-    ? _resolveConfigProperty(config.external, initialExternal)
-    : initialExternal
+  const external = _resolveConfigProperty(config?.external, parsedExternal)
+
+  const targetVersions = _parseBrowserslistVersions(pkg.browserslist || _DEFAULTS.browserslist)
 
   const srcPath = path.resolve(cwd, config?.src || 'src')
   const distPath = path.resolve(cwd, config?.dist || 'dist')
@@ -51,11 +59,14 @@ export async function build(options: {
     dist: path.relative(cwd, distPath),
     pkg,
     src: path.relative(cwd, srcPath),
+    target: {
+      node: _parseNodeTarget(targetVersions) || _DEFAULTS.target.node,
+      web: _parseWebTarget(targetVersions) || _DEFAULTS.target.web,
+    },
     tsconfig,
   }
 
   console.log(chalk.gray('cwd       '), context.cwd)
-  // console.log('external ', context.external)
   console.log(chalk.gray('src       '), context.src)
   console.log(chalk.gray('dist      '), context.dist)
   console.log(chalk.gray('tsconfig  '), context.tsconfig)

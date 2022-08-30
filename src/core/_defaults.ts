@@ -2,8 +2,10 @@
  * @internal
  */
 export const _DEFAULTS = {
-  target: {
-    node: ['node12'],
-    web: ['chrome58', 'edge16', 'firefox54', 'opera44', 'safari11'],
-  },
+  browserslist: [
+    '> 0.2% and supports es6-module and supports es6-module-dynamic-import',
+    'not dead',
+    'not IE 11',
+    'maintained node versions',
+  ],
 }

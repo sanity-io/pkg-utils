@@ -1,5 +1,5 @@
 import path from 'path'
-import {PackageSubPathExportEntry, _DEFAULTS} from '../core'
+import {PackageSubPathExportEntry} from '../core'
 import {_BuildContext} from './_types'
 import {_BuildTask, _DtsTask, _RollupTask} from './tasks'
 
@@ -49,11 +49,11 @@ export function _parseTasks(ctx: _BuildContext): _BuildTask[] {
     }
 
     if (runtime === 'node') {
-      target.push(...(config?.target?.node || _DEFAULTS.target.node))
+      target.push(...ctx.target.node)
     }
 
     if (runtime === 'web') {
-      target.push(...(config?.target?.web || _DEFAULTS.target.web))
+      target.push(...ctx.target.web)
     }
 
     for (const f of format) {
