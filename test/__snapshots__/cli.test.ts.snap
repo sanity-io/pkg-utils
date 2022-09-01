@@ -3,6 +3,8 @@
 exports[`should build \`custom-dist\` package 1`] = `
 "'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
 const VERSION = \\"1.0.0\\";
 
 exports.VERSION = VERSION;
@@ -27,6 +29,8 @@ export { }
 
 exports[`should build \`multi-export\` package 1`] = `
 "'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 function defineConfig(options) {
   return options;

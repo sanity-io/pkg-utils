@@ -11,6 +11,7 @@ export function _spawnProject(name: string): Promise<{
   cwd: string
   add: (pkg: string) => Promise<{stdout: string; stderr: string}>
   install: () => Promise<{stdout: string; stderr: string}>
+  pack: () => Promise<{path: string}>
   readFile: (filePath: string) => Promise<string>
   remove: () => void
   run: (cmd: string) => Promise<{stdout: string; stderr: string}>
@@ -32,6 +33,9 @@ export function _spawnProject(name: string): Promise<{
           return
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const pkg = require(path.resolve(tmpPath, 'package.json'))
+
         async function runExec(cmd: string) {
           try {
             return _exec(cmd, {cwd: tmpPath})
@@ -51,6 +55,13 @@ export function _spawnProject(name: string): Promise<{
           cwd: tmpPath,
           add: (pkg: string) => runExec(`pnpm add ${pkg}`),
           install: () => runExec('pnpm install'),
+          pack: async () => {
+            const log = await runExec('pnpm pack')
+
+            console.log('log', log)
+
+            return {path: path.resolve(tmpPath, `${pkg.name}-${pkg.version}.tgz`)}
+          },
           readFile: (filePath: string) =>
             fs.readFile(path.resolve(tmpPath, filePath)).then((r) => r.toString()),
           remove: () => setTimeout(() => tmpRemove(), 0),

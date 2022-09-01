@@ -6,9 +6,9 @@ describe('_parseExports', () => {
     const pkg: _PackageJSON = {
       name: 'test',
       version: '0.0.0-test',
-      bin: {
-        test: './dist/cli.cjs',
-      },
+      bin: {test: './dist/cli.cjs'},
+      source: './src/index.ts',
+      main: './src/index.cjs',
       exports: {
         '.': {
           source: './src/index.ts',
@@ -17,16 +17,16 @@ describe('_parseExports', () => {
       },
     }
 
-    const exports = _parseExports(pkg)
+    const exports = _parseExports({pkg})
 
     expect(exports).toEqual([
       {
-        path: '.',
-        runtime: undefined,
-
-        default: undefined,
-        source: './src/index.ts',
+        _exported: true,
+        _path: '.',
+        browser: undefined,
+        import: undefined,
         require: './dist/index.cjs',
+        source: './src/index.ts',
         types: undefined,
       },
     ])

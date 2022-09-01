@@ -1,5 +1,5 @@
 import path from 'path'
-import {expect, test} from 'vitest'
+import {describe, expect, test} from 'vitest'
 import {_spawnProject} from './env'
 
 const __ROOT__ = path.resolve(__dirname, '..')
@@ -11,9 +11,9 @@ test('should build `multi-export` package', async () => {
   await project.add(__ROOT__)
   const buildLog = await project.run('build')
 
-  expect(buildLog.stdout).toContain(' dist/index.cjs')
-  expect(buildLog.stdout).toContain(' dist/index.js')
-  expect(buildLog.stdout).toContain(' dist/index.d.ts')
+  expect(buildLog.stdout).toContain(' ./dist/index.cjs')
+  expect(buildLog.stdout).toContain(' ./dist/index.js')
+  expect(buildLog.stdout).toContain(' ./dist/index.d.ts')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
@@ -29,9 +29,9 @@ test('should build `custom-dist` package', async () => {
   await project.add(__ROOT__)
   const buildLog = await project.run('build')
 
-  expect(buildLog.stdout).toContain(' lib/index.cjs')
-  expect(buildLog.stdout).toContain(' lib/index.js')
-  expect(buildLog.stdout).toContain(' lib/index.d.ts')
+  expect(buildLog.stdout).toContain(' ./lib/index.cjs')
+  expect(buildLog.stdout).toContain(' ./lib/index.js')
+  expect(buildLog.stdout).toContain(' ./lib/index.d.ts')
 
   expect(await project.readFile('lib/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('lib/index.js')).toMatchSnapshot()
@@ -50,22 +50,40 @@ test('should build `monorepo` package', async () => {
   project.remove()
 })
 
-test('should build `node-package` package', async () => {
-  const project = await _spawnProject('node-package')
+describe('runtime: webpack v3', () => {
+  test('import from `exports-dummy` package', async () => {
+    const exportsDummy = await _spawnProject('exports-dummy')
+    const runtime = await _spawnProject('runtime-webpack-v3')
 
-  await project.install()
-  await project.add(__ROOT__)
-  await project.run('build')
+    // install and build dummy package
+    await exportsDummy.install()
+    await exportsDummy.add(__ROOT__)
+    await exportsDummy.run('build')
 
-  project.remove()
+    // pack dummy package as tgz archive
+    const exportsDummyArchive = await exportsDummy.pack()
+
+    // install dummy archive
+    await runtime.install()
+    await runtime.add(exportsDummyArchive.path)
+
+    // build (uses webpack v3)
+    await runtime.run('build')
+
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const {index, extra} = require(path.resolve(runtime.cwd, 'dist/main.js'))
+
+    expect(index.runtime).toBe('browser')
+    expect(index.format).toBe('esm')
+    expect(index.path).toBe('dist/index.browser.js')
+
+    expect(extra.runtime).toBe('browser')
+    expect(extra.format).toBe('esm')
+    expect(extra.path).toBe('dist/extra.browser.js')
+  })
 })
 
-test('should build `web-package` package', async () => {
-  const project = await _spawnProject('web-package')
-
-  await project.install()
-  await project.add(__ROOT__)
-  await project.run('build')
-
-  project.remove()
-})
+// describe('runtime: next.js', () => {
+//   test('import `dist/index.browser.js` from packge', async () => {
+//   })
+// })
