@@ -39,7 +39,7 @@
     "prebuild": "rimraf dist",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
-    "test": "vitest run",
+    "test": "node -r esbuild-register src/cli check && vitest run",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

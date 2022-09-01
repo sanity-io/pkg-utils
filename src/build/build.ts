@@ -6,14 +6,13 @@ import chalk from 'chalk'
 import ora from 'ora'
 import prettyBytes from 'pretty-bytes'
 import treeify from 'treeify'
-import {ZodError} from 'zod'
 import {
   PackageExport,
   PackageExports,
   PackageRuntime,
   _DEFAULTS,
   _loadConfig,
-  _loadPkg,
+  _loadPkgWithReporting,
   _parseExports,
   _resolveConfigProperty,
 } from '../core'
@@ -23,28 +22,6 @@ import {_parseNodeTarget} from './_parseNodeTarget'
 import {_parseTasks} from './_parseTasks'
 import {_BuildContext} from './_types'
 import {_dtsTask, _extractTask, _rollupTask} from './tasks'
-
-async function _withZodReporting<T>(fn: () => Promise<T>) {
-  try {
-    return await fn()
-  } catch (err) {
-    if (err instanceof ZodError) {
-      for (const issue of err.issues) {
-        if (issue.code === 'invalid_type') {
-          console.log(
-            `${chalk.red('invalid type')} at ${chalk.magenta(
-              `\`${issue.path.join('')}\``
-            )} (expected ${issue.expected}, received ${issue.received})`
-          )
-        }
-      }
-    } else {
-      console.error(err)
-    }
-
-    process.exit(1)
-  }
-}
 
 /**
  * @public
@@ -56,7 +33,8 @@ export async function build(options: {
 }): Promise<void> {
   const {cwd, extract = false, tsconfig = 'tsconfig.json'} = options
 
-  const pkg = await _withZodReporting(() => _loadPkg({cwd}))
+  // const pkg = await _withZodReporting(() => _loadPkg({cwd}))
+  const pkg = await _loadPkgWithReporting({cwd})
   const config = await _loadConfig({cwd})
 
   const targetVersions = _parseBrowserslistVersions(pkg.browserslist || _DEFAULTS.browserslist)

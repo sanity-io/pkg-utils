@@ -1,5 +1,6 @@
 import cac from 'cac'
 import {build} from './build'
+import {check} from './check'
 
 const cli = cac()
 
@@ -12,6 +13,17 @@ cli
       cwd: process.cwd(),
       extract: options.extract ? Boolean(options.extract) : undefined,
       tsconfig: options.tsconfig,
+    })
+  })
+
+cli
+  .command('check', 'Check package')
+  // .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
+  .action(async (options) => {
+    await check({
+      cwd: process.cwd(),
+      // extract: options.extract ? Boolean(options.extract) : undefined,
+      // tsconfig: options.tsconfig,
     })
   })
 
