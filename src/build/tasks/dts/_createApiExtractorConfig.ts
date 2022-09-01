@@ -49,13 +49,14 @@ export const DEFAULT_MESSAGES_CONFIG: IExtractorMessagesConfig = {
 }
 
 export function _createApiExtractorConfig(options: {
+  distPath: string
   exportPath: string
+  filePath: string
   projectPath: string
   sourcePath: string
   tsconfigPath: string
-  distPath: string
 }): IConfigFile {
-  const {exportPath, projectPath, sourcePath, tsconfigPath, distPath} = options
+  const {distPath, exportPath, filePath, projectPath, sourcePath, tsconfigPath} = options
 
   return {
     apiReport: {
@@ -74,7 +75,8 @@ export function _createApiExtractorConfig(options: {
     },
     dtsRollup: {
       enabled: true,
-      untrimmedFilePath: path.resolve(distPath, `${exportPath}.d.ts`),
+      untrimmedFilePath: path.resolve(distPath, filePath),
+      // untrimmedFilePath: path.resolve(distPath, `${exportPath}.d.ts`),
       // betaTrimmedFilePath: path.resolve(distPath, `${exportPath}-beta.d.ts`),
       // publicTrimmedFilePath: path.resolve(distPath, `${exportPath}-public.d.ts`)
     },

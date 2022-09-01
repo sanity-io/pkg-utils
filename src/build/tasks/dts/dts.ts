@@ -2,7 +2,7 @@
 
 import path from 'path'
 import {promisify} from 'util'
-import chalk from 'chalk'
+// import chalk from 'chalk'
 import rimrafCallback from 'rimraf'
 import {_BuildContext} from '../../_types'
 import {_buildTypes} from './_buildTypes'
@@ -31,11 +31,11 @@ export async function _dtsTask(ctx: _BuildContext, task: _DtsTask): Promise<void
   const tmpPath = path.resolve(cwd, dist, 'tmp')
   const tsconfigPath = path.resolve(cwd, tsconfig || 'tsconfig.json')
 
-  console.log('=================================================================================')
-  console.log(chalk.gray('task      '), 'd.ts')
-  console.log(chalk.gray('source    '), path.join('', task.source))
-  console.log(chalk.gray('export    '), path.join(dist, `${exportPath}.d.ts`))
-  console.log(chalk.gray('tsconfig  '), path.relative(cwd, tsconfigPath))
+  // console.log('=================================================================================')
+  // console.log(chalk.gray('task      '), 'd.ts')
+  // console.log(chalk.gray('source    '), path.join('', task.source))
+  // console.log(chalk.gray('export    '), path.join(dist, `${exportPath}.d.ts`))
+  // console.log(chalk.gray('tsconfig  '), path.relative(cwd, tsconfigPath))
 
   const types = await _buildTypes({
     cwd,
@@ -48,6 +48,7 @@ export async function _dtsTask(ctx: _BuildContext, task: _DtsTask): Promise<void
     cwd,
     exportPath,
     files,
+    filePath: path.relative(distPath, path.resolve(cwd, task.output)),
     projectPath: cwd,
     sourcePath: types.path,
     tsconfigPath,

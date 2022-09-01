@@ -1,6 +1,6 @@
 import {_PackageTargetVersions} from './_parseBrowserslistVersions'
 
-export function _parseWebTarget(versions: _PackageTargetVersions): string[] | undefined {
+export function _parseBrowserTarget(versions: _PackageTargetVersions): string[] | undefined {
   const target: string[] = []
 
   if (versions.chrome.length) {

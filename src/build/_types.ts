@@ -1,4 +1,4 @@
-import {PackageExports, PkgConfigOptions, _PackageJSON} from '../core'
+import {PackageExports, PackageRuntime, PkgConfigOptions, _PackageJSON} from '../core'
 
 /**
  * @internal
@@ -20,7 +20,8 @@ export interface _BuildContext {
   files: _BuildFile[]
   dist: string
   pkg: _PackageJSON
+  runtime: PackageRuntime
   src: string
-  target: {node: string[]; web: string[]}
+  target: Record<PackageRuntime, string[]>
   tsconfig?: string
 }

@@ -1,13 +1,30 @@
 /**
  * @public
  */
-export interface PackageSubPathExportEntry {
-  runtime?: 'node' | 'web'
+export type PackageFormat = 'commonjs' | 'esm'
 
-  // paths
-  source: string
+/**
+ * @public
+ */
+export type PackageRuntime = '*' | 'browser' | 'node'
+
+/**
+ * @public
+ */
+export interface PackageExport {
+  _exported: boolean
+  browser?: {
+    source?: string
+    import?: string
+    require?: string
+  }
+  // electron?: {
+  //   node?: string
+  //   default?: string
+  // }
+  import?: string
   require?: string
-  default?: string
+  source: string
   types?: string
 }
 
@@ -25,7 +42,7 @@ export type ConfigProperty<T> = ConfigPropertyResolver<T> | T
  * @public
  */
 export interface PackageExports {
-  [path: string]: PackageSubPathExportEntry
+  [path: string]: PackageExport
 }
 
 /**
@@ -44,7 +61,7 @@ export interface PkgConfigOptions {
   /**
    * Default runtime of package exports
    */
-  runtime?: 'node' | 'web'
+  runtime?: PackageRuntime
   /**
    * Directory of source files.
    */

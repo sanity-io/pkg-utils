@@ -15,12 +15,14 @@ export async function _extractTypes(options: {
   distPath: string
   exportPath: string
   files: _BuildFile[]
+  filePath: string
   projectPath: string
   quiet?: boolean
   sourcePath: string
   tsconfigPath: string
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
-  const {cwd, distPath, exportPath, files, projectPath, quiet, sourcePath, tsconfigPath} = options
+  const {cwd, distPath, exportPath, files, filePath, projectPath, quiet, sourcePath, tsconfigPath} =
+    options
 
   const tsdocConfigFile = await _createTSDocConfig({
     customTags: [],
@@ -29,6 +31,7 @@ export async function _extractTypes(options: {
   const extractorConfig: ExtractorConfig = ExtractorConfig.prepare({
     configObject: _createApiExtractorConfig({
       exportPath,
+      filePath,
       projectPath,
       sourcePath,
       distPath,

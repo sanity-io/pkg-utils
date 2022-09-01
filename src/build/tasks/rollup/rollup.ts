@@ -1,11 +1,17 @@
 /* eslint-disable no-console */
 
 import path from 'path'
-import chalk from 'chalk'
+// import chalk from 'chalk'
 import {rollup} from 'rollup'
-import {PackageSubPathExportEntry} from '../../../core'
+import {PackageRuntime} from '../../../core'
 import {_BuildContext} from '../../_types'
 import {_resolveRollupConfig} from './_resolveRollupConfig'
+
+export interface _RollupTaskEntry {
+  path: string
+  source: string
+  output: string
+}
 
 /**
  * @internal
@@ -13,20 +19,14 @@ import {_resolveRollupConfig} from './_resolveRollupConfig'
 export interface _RollupTask {
   type: 'rollup'
   buildId: string
-  entries: (PackageSubPathExportEntry & {path: string})[]
-  runtime: 'node' | 'web'
+  entries: _RollupTaskEntry[]
+  runtime: PackageRuntime
   format: 'commonjs' | 'esm'
   target: string[]
 }
 
 export async function _rollupTask(ctx: _BuildContext, buildTask: _RollupTask): Promise<void> {
-  console.log('=================================================================================')
-
-  console.log(chalk.gray('task      '), 'rollup')
-  console.log(chalk.gray('target    '), buildTask.target.join(', '))
-  console.log(chalk.gray('format    '), buildTask.format)
-
-  const {cwd, files, dist: outDir, pkg} = ctx
+  const {files, dist: outDir} = ctx
 
   const {inputOptions, outputOptions} = _resolveRollupConfig(ctx, buildTask)
 
@@ -59,38 +59,4 @@ export async function _rollupTask(ctx: _BuildContext, buildTask: _RollupTask): P
 
   // closes the bundle
   await bundle.close()
-
-  for (const entry of buildTask.entries) {
-    console.log(`- ${path.join(pkg.name, entry.path)}`)
-
-    console.log(chalk.gray('  source  '), path.relative(cwd, path.resolve(cwd, entry.source)))
-
-    const defaultFile = files.find(
-      (f) => entry.default && f.path === path.resolve(cwd, entry.default)
-    )
-
-    const requireFile = files.find(
-      (f) => entry.require && f.path === path.resolve(cwd, entry.require)
-    )
-
-    const typesFile = files.find((f) => entry.types && f.path === path.resolve(cwd, entry.types))
-
-    if (buildTask.format.includes('esm'))
-      console.log(
-        chalk.gray('  default '),
-        defaultFile ? path.relative(cwd, defaultFile.path) : undefined
-      )
-
-    if (buildTask.format.includes('commonjs'))
-      console.log(
-        chalk.gray('  require '),
-        requireFile ? path.relative(cwd, requireFile.path) : undefined
-      )
-
-    if (entry.types)
-      console.log(
-        chalk.gray('  types   '),
-        typesFile ? path.relative(cwd, typesFile.path) : undefined
-      )
-  }
 }
