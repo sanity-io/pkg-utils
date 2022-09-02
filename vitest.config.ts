@@ -3,10 +3,10 @@ import {defineConfig} from 'vitest/config'
 export default defineConfig({
   test: {
     deps: {
-      inline: ['@sanity/tsdoc-to-portable-text'],
+      inline: ['@sanity/tsdoc'],
     },
     exclude: ['**/node_modules/**', '**/dist/**', '**/__fixtures__/**'],
-    testTimeout: 20000,
+    testTimeout: 60 * 1000, // 60 s
   },
   esbuild: {
     target: 'node14',

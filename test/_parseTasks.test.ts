@@ -1,6 +1,5 @@
-import {expect, test} from 'vitest'
-import {_BuildContext, _PackageJSON, _parseExports} from '../src'
-import {_parseTasks} from '../src/build/_parseTasks'
+import {expect, test, vi} from 'vitest'
+import {_BuildContext, _PackageJSON, _parseExports, _resolveBuildTasks} from '../src/node'
 
 test('should parse tasks', () => {
   const pkg: _PackageJSON = {
@@ -22,8 +21,14 @@ test('should parse tasks', () => {
     dist: 'dist',
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
-    extract: false,
     files: [],
+    logger: {
+      log: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      success: vi.fn(),
+    },
     pkg,
     runtime: '*',
     src: 'src',
@@ -32,15 +37,14 @@ test('should parse tasks', () => {
       browser: ['chrome102'],
       node: ['node14'],
     },
+    ts: {},
   }
 
-  const tasks = _parseTasks(ctx)
-
-  // console.log(JSON.stringify(tasks, null, 2))
+  const tasks = _resolveBuildTasks(ctx)
 
   expect(tasks).toEqual([
     {
-      type: 'rollup',
+      type: 'build:js',
       buildId: 'commonjs:*',
       entries: [
         {
@@ -54,7 +58,7 @@ test('should parse tasks', () => {
       target: ['chrome102', 'node14'],
     },
     {
-      type: 'rollup',
+      type: 'build:js',
       buildId: 'commonjs:browser',
       entries: [
         {
@@ -68,7 +72,7 @@ test('should parse tasks', () => {
       target: ['chrome102'],
     },
     {
-      type: 'rollup',
+      type: 'build:js',
       buildId: 'esm:*',
       entries: [
         {
@@ -82,7 +86,7 @@ test('should parse tasks', () => {
       target: ['chrome102', 'node14'],
     },
     {
-      type: 'rollup',
+      type: 'build:js',
       buildId: 'esm:browser',
       entries: [
         {

@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'vitest'
-import {_PackageJSON, _parseExports} from '../src'
+import {_PackageJSON, _parseExports} from '../src/node'
 
 describe('_parseExports', () => {
   test('parse basic package.json', () => {

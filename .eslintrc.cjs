@@ -32,6 +32,7 @@ module.exports = {
       },
     ],
     'no-console': 'error',
+    'no-shadow': 'error',
     'no-warning-comments': ['warn', {location: 'start', terms: ['todo', '@todo', 'fixme']}],
     'padding-line-between-statements': [
       'warn',

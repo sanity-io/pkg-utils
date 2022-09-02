@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "node -r esbuild-register ./node_modules/@sanity/pkg-utils/src/cli build --extract --tsconfig tsconfig.lib.json"
+    "build": "pkg-utils build  --tsconfig tsconfig.lib.json"
   },
   "devDependencies": {
     "esbuild": "^0.15.5",

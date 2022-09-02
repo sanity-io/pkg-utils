@@ -1,11 +1,17 @@
 {
   "extends": "./tsconfig.settings",
-  "include": ["**/*.ts"],
+  "include": ["./package.config.ts", "./package.json", "**/*.ts"],
   "exclude": ["./test/__fixtures__"],
   "compilerOptions": {
-    "noEmit": true,
     "rootDir": ".",
-    "outDir": "./dist/tmp",
-    "jsx": "react"
+    "outDir": "./dist/ide",
+
+    "noEmit": true,
+    "resolveJsonModule": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@sanity/pkg-utils": ["./node"]
+    }
   }
 }

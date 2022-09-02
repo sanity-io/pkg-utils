@@ -1,8 +1,9 @@
 {
   "extends": "./tsconfig.settings",
-  "include": ["./src"],
+  "include": ["./package.json", "./src"],
   "compilerOptions": {
-    "outDir": "./dist/tmp",
-    "rootDir": "."
+    "rootDir": ".",
+    "outDir": "./dist/dts",
+    "resolveJsonModule": true
   }
 }

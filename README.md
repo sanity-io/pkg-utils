@@ -13,10 +13,13 @@ npm install @sanity/pkg-utils -D
 
 # Check the package
 # This will validate the package.json file
-pkg-utils check
+pkg-utils
 
 # Build the package
 pkg-utils build --tsconfig tsconfig.dist.json
+
+# Watch the package
+pkg-utils watch --tsconfig tsconfig.dist.json
 ```
 
 ## License

@@ -1,67 +1,50 @@
 // Vitest Snapshot v1
 
 exports[`should build \`custom-dist\` package 1`] = `
-"'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-const VERSION = \\"1.0.0\\";
-
-exports.VERSION = VERSION;
+"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});const e=\\"1.0.0\\";exports.VERSION=e;
 //# sourceMappingURL=index.cjs.map
 "
 `;
 
 exports[`should build \`custom-dist\` package 2`] = `
-"const VERSION = \\"1.0.0\\";
-
-export { VERSION };
+"const o=\\"1.0.0\\";export{o as VERSION};
 //# sourceMappingURL=index.js.map
 "
 `;
 
 exports[`should build \`custom-dist\` package 3`] = `
-"export declare const VERSION = \\"1.0.0\\";
+"/** @public */
+export declare const VERSION = \\"1.0.0\\";
 
-export { }
+export {};
 "
 `;
 
 exports[`should build \`multi-export\` package 1`] = `
-"'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function defineConfig(options) {
-  return options;
-}
-
-exports.defineConfig = defineConfig;
+"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});function n(e){return e}exports.defineConfig=n;
 //# sourceMappingURL=index.cjs.map
 "
 `;
 
 exports[`should build \`multi-export\` package 2`] = `
-"function defineConfig(options) {
-  return options;
-}
-
-export { defineConfig };
+"function e(n){return n}export{e as defineConfig};
 //# sourceMappingURL=index.js.map
 "
 `;
 
 exports[`should build \`multi-export\` package 3`] = `
-"export declare interface Config {
-    plugins?: Plugin_2[];
+"/** @public */
+export declare interface Config {
+  plugins?: Plugin_2[];
 }
 
+/** @public */
 export declare function defineConfig(options: Config): Config;
 
-declare interface Plugin_2 {
-}
-export { Plugin_2 as Plugin }
+/** @public */
+declare interface Plugin_2 {}
+export { Plugin_2 as Plugin };
 
-export { }
+export {};
 "
 `;
