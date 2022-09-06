@@ -36,6 +36,7 @@
   ],
   "scripts": {
     "build": "node -r esbuild-register scripts/build",
+    "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
     "lint": "eslint . --ext .cjs,.js,.ts",
@@ -92,6 +93,7 @@
     "@typescript-eslint/parser": "^5.35.1",
     "commitizen": "^4.2.5",
     "cpx": "^1.5.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
@@ -106,6 +108,11 @@
   },
   "peerDependencies": {
     "typescript": "^4.7"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   },
   "engines": {
     "node": ">=12.0.0"
@@ -122,5 +129,8 @@
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
-  "homepage": "https://github.com/sanity-io/pkg-utils#readme"
+  "homepage": "https://github.com/sanity-io/pkg-utils#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
