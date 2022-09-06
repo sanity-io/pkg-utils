@@ -4,6 +4,7 @@ import {check} from '../src/node'
 function _run() {
   return check({
     cwd: path.resolve(__dirname, '..'),
+    strict: true,
   })
 }
 

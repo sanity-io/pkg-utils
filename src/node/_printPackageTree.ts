@@ -5,7 +5,7 @@ import treeify from 'treeify'
 import {PkgExport, _BuildContext} from './_core'
 import {_getFilesize} from './_getFilesize'
 
-function _getFileExists(file: string) {
+export function _fileExists(file: string): boolean {
   try {
     fs.accessSync(file)
 
@@ -17,7 +17,7 @@ function _getFileExists(file: string) {
 
 function _getFileInfo(cwd: string, filePath: string) {
   const p = path.resolve(cwd, filePath)
-  const exists = _getFileExists(p)
+  const exists = _fileExists(p)
   const size = exists ? _getFilesize(p) : undefined
 
   return {exists, size}
@@ -41,7 +41,7 @@ export function _printPackageTree(ctx: _BuildContext): void {
     const info = _getFileInfo(cwd, file)
 
     if (!info.size) {
-      return chalk.gray(file)
+      return `${chalk.gray(file)} ${chalk.red('does not exist')}`
     }
 
     return `${file} ${chalk.gray(info.size)}`

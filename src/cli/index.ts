@@ -5,10 +5,11 @@ const cli = cac()
 
 // default commands checks package status
 cli
-  .command('', 'Status')
+  .command('', 'Check')
+  .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
-    const {statusAction} = await import('./statusAction')
+    const {checkAction: statusAction} = await import('./checkAction')
 
     return statusAction(options)
   })

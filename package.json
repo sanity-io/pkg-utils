@@ -36,6 +36,7 @@
   ],
   "scripts": {
     "build": "node -r esbuild-register scripts/build",
+    "check:package": "node -r esbuild-register scripts/check",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
@@ -43,7 +44,7 @@
     "prebuild": "rimraf dist",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
-    "test": "node -r esbuild-register scripts/status && vitest run",
+    "test": "node -r esbuild-register scripts/check && vitest run",
     "type-check": "tsc --build",
     "watch": "node -r esbuild-register scripts/watch"
   },
