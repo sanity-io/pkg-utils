@@ -13,6 +13,7 @@ specifiers:
   '@sanity/semantic-release-preset': ^2.0.0
   '@types/cpx': ^1.5.2
   '@types/find-config': ^1.0.1
+  '@types/globby': ^9.1.0
   '@types/mkdirp': ^1.0.2
   '@types/node': ^18.7.13
   '@types/prettier': ^2.7.0
@@ -34,7 +35,7 @@ specifiers:
   eslint-plugin-import: ^2.26.0
   eslint-plugin-prettier: ^4.2.1
   find-config: ^1.0.0
-  globby: ^12.2.0
+  globby: ^11.1.0
   husky: ^8.0.1
   jsonc-parser: ^3.1.0
   lint-staged: ^12.5.0
@@ -70,7 +71,7 @@ dependencies:
   esbuild: 0.15.5
   esbuild-register: 3.3.3_esbuild@0.15.5
   find-config: 1.0.0
-  globby: 12.2.0
+  globby: 11.1.0
   jsonc-parser: 3.1.0
   mkdirp: 1.0.4
   ora: 5.4.1
@@ -90,6 +91,7 @@ devDependencies:
   '@sanity/semantic-release-preset': 2.0.1
   '@types/cpx': 1.5.2
   '@types/find-config': 1.0.1
+  '@types/globby': 9.1.0
   '@types/mkdirp': 1.0.2
   '@types/node': 18.7.13
   '@types/prettier': 2.7.0
@@ -880,6 +882,13 @@ packages:
       '@types/node': 18.7.13
     dev: true
 
+  /@types/globby/9.1.0:
+    resolution: {integrity: sha512-9du/HCA71EBz7syHRnM4Q/u4Fbx3SyN/Uu+4Of9lyPX4A6Xi+A8VMxvx8j5/CMTfrae2Zwdwg0fAaKvKXfRbAw==}
+    deprecated: This is a stub types definition. globby provides its own type definitions, so you do not need this installed.
+    dependencies:
+      globby: 11.1.0
+    dev: true
+
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
@@ -1255,12 +1264,6 @@ packages:
   /array-union/2.1.0:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
-    dev: true
-
-  /array-union/3.0.1:
-    resolution: {integrity: sha512-1OvF9IbWwaeiM9VhzYXVQacMibxpXOMYVNIvMtKRyX9SImBXpKcFr8XvFDeEslCyuH/t6KRt7HEO94AlP8Iatw==}
-    engines: {node: '>=12'}
-    dev: false
 
   /array-unique/0.2.1:
     resolution: {integrity: sha512-G2n5bG5fSUCpnsXz4+8FUkYsGPkNfLn9YvS66U5qbTIXI2Ynnlo4Bi42bWv+omKUCqz+ejzfClwne0alJWJPhg==}
@@ -3346,19 +3349,6 @@ packages:
       ignore: 5.2.0
       merge2: 1.4.1
       slash: 3.0.0
-    dev: true
-
-  /globby/12.2.0:
-    resolution: {integrity: sha512-wiSuFQLZ+urS9x2gGPl1H5drc5twabmm4m2gTR27XDFyjUHJUNsS8o/2aKyIF6IoBaR630atdher0XJ5g6OMmA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      array-union: 3.0.1
-      dir-glob: 3.0.1
-      fast-glob: 3.2.11
-      ignore: 5.2.0
-      merge2: 1.4.1
-      slash: 4.0.0
-    dev: false
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
@@ -5410,11 +5400,6 @@ packages:
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
-
-  /slash/4.0.0:
-    resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
-    engines: {node: '>=12'}
-    dev: false
 
   /slice-ansi/3.0.0:
     resolution: {integrity: sha512-pSyv7bSTC7ig9Dcgbw9AuRNUb5k5V6oDudjZoMBSr13qpLBG7tB+zgCkARjq7xIUgdz5P1Qe8u+rSGdouOOIyQ==}
