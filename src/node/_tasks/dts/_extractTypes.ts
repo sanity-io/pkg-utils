@@ -8,6 +8,7 @@ import {
   ExtractorResult,
   IExtractorMessagesConfig,
 } from '@microsoft/api-extractor'
+import mkdirp from 'mkdirp'
 import prettier from 'prettier'
 import {PkgRuleLevel, PkgConfigOptions, _BuildFile} from '../../_core'
 import {_createApiExtractorConfig} from './_createApiExtractorConfig'
@@ -24,8 +25,8 @@ export async function _extractTypes(options: {
   cwd: string
   distPath: string
   exportPath: string
-  files: _BuildFile[]
   filePath: string
+  files: _BuildFile[]
   projectPath: string
   rules?: NonNullable<PkgConfigOptions['extract']>['rules']
   sourcePath: string
@@ -139,9 +140,11 @@ export async function _extractTypes(options: {
     },
   })
 
-  const typesPath = path.resolve(distPath, `${exportPath}.d.ts`)
+  const typesPath = path.resolve(distPath, filePath)
   const typesBuf = await fs.readFile(typesPath)
   const prettierConfig = await prettier.resolveConfig(typesPath)
+
+  await mkdirp(path.dirname(typesPath))
 
   await fs.writeFile(
     typesPath,

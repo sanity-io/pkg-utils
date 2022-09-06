@@ -43,8 +43,8 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
           type: 'build:dts',
           importId,
           exportPath: exp._path,
-          source: exp.source,
-          output: exp.types,
+          sourcePath: exp.source,
+          targetPath: exp.types,
         }
       }
     }

@@ -18,10 +18,12 @@ export const _rollupTask: _TaskHandler<_RollupTask> = {
       .join('\n       ')}`,
   exec: (ctx, task) => {
     return new Observable((observer) => {
-      _execPromise(ctx, task).then((result) => {
-        observer.next(result)
-        observer.complete()
-      }, observer.error)
+      _execPromise(ctx, task)
+        .then((result) => {
+          observer.next(result)
+          observer.complete()
+        })
+        .catch((err) => observer.error(err))
     })
   },
   complete: () => {

@@ -27,6 +27,14 @@ export async function _buildTypes(options: {
     outDir,
   }
 
+  const rootDir =
+    path.relative(
+      cwd,
+      compilerOptions.rootDir
+        ? path.resolve(cwd, compilerOptions.rootDir)
+        : path.dirname(path.resolve(cwd, sourcePath))
+    ) || '.'
+
   const program = ts.createProgram(tsconfig.fileNames, compilerOptions)
 
   const sourceFiles = program.getSourceFiles()
@@ -61,7 +69,9 @@ export async function _buildTypes(options: {
     }
   }
 
-  const typesPath = path.resolve(outDir, sourcePath.replace(/\.ts$/, '.d.ts'))
+  const typesPath = path
+    .resolve(outDir, path.relative(rootDir, path.resolve(cwd, sourcePath)))
+    .replace(/\.[jt]sx?$/, '.d.ts')
 
   return {path: typesPath}
 }

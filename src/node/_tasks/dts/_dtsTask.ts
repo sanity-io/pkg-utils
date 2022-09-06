@@ -11,7 +11,7 @@ export const _dtsTask: _TaskHandler<_DtsTask, _DtsResult> = {
   name: (_ctx, task) =>
     [
       `build type definitions`,
-      `       ${chalk.blue(task.importId)}: ${task.source} -> ${task.output}`,
+      `       ${chalk.blue(task.importId)}: ${task.sourcePath} -> ${task.targetPath}`,
     ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {
@@ -20,7 +20,9 @@ export const _dtsTask: _TaskHandler<_DtsTask, _DtsResult> = {
           observer.next(result)
           observer.complete()
         })
-        .catch(observer.error)
+        .catch((err) => {
+          observer.error(err)
+        })
     })
   },
   complete: (ctx, _task, result) => {

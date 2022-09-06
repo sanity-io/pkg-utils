@@ -17,18 +17,29 @@ export async function _doExtract(
 
   if (!ts.config || !ts.configPath) return {type: 'dts', messages: []}
 
-  const sourcePath = task.source
+  const sourcePath = task.sourcePath
   const exportPath = task.exportPath === '.' ? './index' : task.exportPath
   const distPath = path.resolve(cwd, dist)
-  const outDir = ts.config?.options.outDir || path.resolve(cwd, dist)
+  const filePath = path.relative(distPath, path.resolve(cwd, task.targetPath))
 
-  const types = await _buildTypes({cwd, outDir, sourcePath, tsconfig: ts.config})
+  const tmpDirPath = path.resolve(distPath, '__dts__')
+  const tmpDir = {
+    path: tmpDirPath,
+    removeCallback: () => rimraf(tmpDirPath),
+  }
+
+  const types = await _buildTypes({
+    cwd,
+    outDir: tmpDir.path,
+    sourcePath,
+    tsconfig: ts.config,
+  })
 
   const {messages} = await _extractTypes({
     cwd,
     exportPath,
     files,
-    filePath: path.relative(distPath, path.resolve(cwd, task.output)),
+    filePath,
     projectPath: cwd,
     rules: config?.extract?.rules,
     sourcePath: types.path,
@@ -36,7 +47,7 @@ export async function _doExtract(
     distPath,
   })
 
-  await rimraf(outDir)
+  await tmpDir.removeCallback()
 
   if (messages.some((msg) => msg.logLevel === 'error')) {
     throw new _DtsError('encountered errors when extracting types', messages)

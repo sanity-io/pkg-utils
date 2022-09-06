@@ -43,8 +43,8 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
           type: 'watch:dts',
           importId,
           exportPath: exp._path,
-          source: exp.source,
-          output: exp.types,
+          sourcePath: exp.source,
+          targetPath: exp.types,
         }
       }
     }

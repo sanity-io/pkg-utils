@@ -5,8 +5,8 @@ export interface _DtsWatchTask {
   type: 'watch:dts'
   exportPath: string
   importId: string
-  source: string
-  output: string
+  sourcePath: string
+  targetPath: string
 }
 
 /** @internal */
@@ -14,8 +14,8 @@ export interface _DtsTask {
   type: 'build:dts'
   exportPath: string
   importId: string
-  source: string
-  output: string
+  sourcePath: string
+  targetPath: string
 }
 
 /** @internal */
