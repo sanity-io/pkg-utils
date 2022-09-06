@@ -15,6 +15,7 @@ const pkgSchema = z.object({
   main: z.optional(z.string()),
   browser: z.optional(z.record(z.string())),
   module: z.optional(z.string()),
+  types: z.optional(z.string()),
   exports: z.optional(
     z.record(
       z.object({
