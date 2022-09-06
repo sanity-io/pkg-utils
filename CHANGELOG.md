@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/sanity-io/pkg-utils/compare/v1.4.1...v1.4.2) (2022-09-06)
+
+### Bug Fixes
+
+- add `.types` property to schema ([6b32dcd](https://github.com/sanity-io/pkg-utils/commit/6b32dcdac44c05216e7a4b4feefed3629f8badca))
+- respect `.types` path ([f12f3ac](https://github.com/sanity-io/pkg-utils/commit/f12f3ac17f66cd3e8406cc5a8a964a5abef6c798))
+
 ## [1.4.1](https://github.com/sanity-io/pkg-utils/compare/v1.4.0...v1.4.1) (2022-09-06)
 
 ### Bug Fixes
