@@ -1,11 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import {PkgExport, PkgFormat, PkgRuntime, _BuildContext} from './_core'
+import {_resolveEsTarget} from './_resolveEsTarget'
 import {_BuildTask, _DtsTask, _RollupTask, _RollupTaskEntry} from './_tasks'
 
 /** @internal */
 export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
   const {cwd, pkg, target} = ctx
+  const esTarget = _resolveEsTarget(ctx)
 
   const tasks: _BuildTask[] = []
 
@@ -26,7 +28,7 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
         entries: [entry],
         runtime,
         format,
-        target: target[runtime],
+        target: [esTarget].concat(target[runtime]),
       }
     } else {
       rollupTasks[buildId].entries.push(entry)

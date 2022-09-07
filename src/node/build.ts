@@ -33,7 +33,9 @@ export async function build(options: {cwd: string; tsconfig?: string}): Promise<
       spinner.error()
 
       if (err instanceof Error) {
-        ctx.logger.error(err.message.replaceAll(cwd, '.'))
+        const RE_CWD = new RegExp(`${cwd}`, 'g')
+
+        ctx.logger.error(err.message.replace(RE_CWD, '.'))
         ctx.logger.log()
       }
 
