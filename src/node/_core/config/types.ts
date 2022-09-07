@@ -56,6 +56,22 @@ export interface PkgConfigOptions {
    * Packages to exclude from the bundles.
    */
   external?: PkgConfigProperty<string[]>
+  /**
+   * Defaults to `"automatic"`
+   */
+  jsx?: 'transform' | 'preserve' | 'automatic'
+  /**
+   * Defaults to `"createElement"`
+   */
+  jsxFactory?: string
+  /**
+   * Defaults to `"Fragment"`
+   */
+  jsxFragment?: string
+  /**
+   * Defaults to `"react"`
+   */
+  jsxImportSource?: string
   minify?: boolean
   /**
    * Default runtime of package exports

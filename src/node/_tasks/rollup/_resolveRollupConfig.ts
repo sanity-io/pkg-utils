@@ -106,11 +106,12 @@ export function _resolveRollupConfig(
         json(),
         esbuild({
           minify: config?.minify ?? true,
-          jsx: 'transform', // default, or 'preserve'
-          jsxFactory: 'React.createElement',
-          jsxFragment: 'React.Fragment',
+          jsx: config?.jsx ?? 'automatic',
+          jsxFactory: config?.jsxFactory ?? 'createElement',
+          jsxFragment: config?.jsxFragment ?? 'Fragment',
+          jsxImportSource: config?.jsxImportSource ?? 'react',
           target,
-          tsconfig: ctx.ts.configPath || 'tsconfig.json', // 'tsconfig.json', // default
+          tsconfig: ctx.ts.configPath || 'tsconfig.json',
         }),
       ],
 
