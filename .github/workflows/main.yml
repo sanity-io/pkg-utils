@@ -2,13 +2,9 @@ name: CI & Release
 
 on:
   push:
-  workflow_dispatch:
-    inputs:
-      release:
-        description: "Release new version"
-        required: true
-        default: false
-        type: boolean
+  pull_request:
+    branches:
+      - next
 
 jobs:
   test:
@@ -30,33 +26,10 @@ jobs:
       - run: pnpm run build
       - run: pnpm test
 
-  prelease:
-    name: "Semantic release (prerelease)"
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # Need to fetch entire commit history to
-          # analyze every commit since last release
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-      - run: npm i pnpm@latest -g
-      - run: pnpm install
-      # Branches that will release new versions are defined in .releaserc.json
-      - run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-
   release:
-    name: "Semantic release (latest)"
+    name: "Semantic release"
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && inputs.release == true
     steps:
       - uses: actions/checkout@v3
         with:
