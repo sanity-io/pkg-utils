@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.0](https://github.com/sanity-io/pkg-utils/compare/v1.5.1...v1.6.0) (2022-09-07)
+
+### Features
+
+- support custom jsx config options ([af34c50](https://github.com/sanity-io/pkg-utils/commit/af34c50f70309ce177ff54a13ff97562d74eb818))
+
 ## [1.5.1](https://github.com/sanity-io/pkg-utils/compare/v1.5.0...v1.5.1) (2022-09-07)
 
 ### Bug Fixes
