@@ -116,7 +116,7 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
           [
             `// AUTO-GENERATED – DO NOT EDIT`,
             ``,
-            `export {default} from '${relativeTargetPath}'`,
+            // `export {default} from '${relativeTargetPath}'`,
             `export * from '${relativeTargetPath}'`,
             ``,
           ].join('\n')
