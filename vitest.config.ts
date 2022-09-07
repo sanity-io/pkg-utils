@@ -6,7 +6,9 @@ export default defineConfig({
       inline: ['@sanity/tsdoc'],
     },
     exclude: ['**/node_modules/**', '**/dist/**', '**/__fixtures__/**'],
-    testTimeout: 60 * 1000, // 60 s
+
+    // Set to 2 minutes to support long-running Next.js test
+    testTimeout: 2 * 60 * 1000,
   },
   esbuild: {
     target: 'node14',
