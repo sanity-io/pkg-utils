@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0](https://github.com/sanity-io/pkg-utils/compare/v1.4.2...v1.5.0) (2022-09-07)
+
+### Features
+
+- add `strict` mode ([67e0b20](https://github.com/sanity-io/pkg-utils/commit/67e0b20b8fd126b35e226f266b88243da62f37ef))
+
+### Bug Fixes
+
+- remove default export from legacy exports ([65fb2d8](https://github.com/sanity-io/pkg-utils/commit/65fb2d8714d4e464ab00d338eef019793a0fe54f))
+
 ## [1.4.2](https://github.com/sanity-io/pkg-utils/compare/v1.4.1...v1.4.2) (2022-09-06)
 
 ### Bug Fixes
