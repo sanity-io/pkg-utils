@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/sanity-io/pkg-utils/compare/v1.5.0...v1.5.1) (2022-09-07)
+
+### Bug Fixes
+
+- respect `target` in tsconfig.json ([f8584da](https://github.com/sanity-io/pkg-utils/commit/f8584da57ed67bb1e16310422eb559ef97f216a4))
+
 ## [1.5.0](https://github.com/sanity-io/pkg-utils/compare/v1.4.2...v1.5.0) (2022-09-07)
 
 ### Features
