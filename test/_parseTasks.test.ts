@@ -55,7 +55,7 @@ test('should parse tasks', () => {
       ],
       runtime: '*',
       format: 'commonjs',
-      target: ['chrome102', 'node14'],
+      target: ['esnext', 'chrome102', 'node14'],
     },
     {
       type: 'build:js',
@@ -69,7 +69,7 @@ test('should parse tasks', () => {
       ],
       runtime: 'browser',
       format: 'commonjs',
-      target: ['chrome102'],
+      target: ['esnext', 'chrome102'],
     },
     {
       type: 'build:js',
@@ -83,7 +83,7 @@ test('should parse tasks', () => {
       ],
       runtime: '*',
       format: 'esm',
-      target: ['chrome102', 'node14'],
+      target: ['esnext', 'chrome102', 'node14'],
     },
     {
       type: 'build:js',
@@ -97,7 +97,7 @@ test('should parse tasks', () => {
       ],
       runtime: 'browser',
       format: 'esm',
-      target: ['chrome102'],
+      target: ['esnext', 'chrome102'],
     },
   ])
 })
