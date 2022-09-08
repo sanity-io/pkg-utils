@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.1](https://github.com/sanity-io/pkg-utils/compare/v1.7.0...v1.7.1) (2022-09-08)
+
+### Bug Fixes
+
+- print less ([03858b3](https://github.com/sanity-io/pkg-utils/commit/03858b36b0f86ed1c72d4a9ba8a8af8e27c55977))
+- simplify spinner ([8bb80a1](https://github.com/sanity-io/pkg-utils/commit/8bb80a1ad24a0579e57baac96338d5024f047cb8))
+
 ## [1.7.0](https://github.com/sanity-io/pkg-utils/compare/v1.6.0...v1.7.0) (2022-09-08)
 
 ### Features
