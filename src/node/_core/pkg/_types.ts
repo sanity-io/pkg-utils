@@ -12,13 +12,14 @@ export interface _PackageJSON {
     string,
     {
       source: string
+      types?: string
       browser?: {
         require?: string
         import?: string
       }
-      require?: string
       import?: string
-      types?: string
+      require?: string
+      default: string
     }
   >
   main?: string

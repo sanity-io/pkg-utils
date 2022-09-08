@@ -51,7 +51,7 @@ export function _printPackageTree(ctx: _BuildContext): void {
     Object.entries(exports)
       .filter(([, entry]) => entry._exported)
       .map(([exportPath, entry]) => {
-        const exp: Omit<PkgExport, '_exported'> = {source: entry.source}
+        const exp: Omit<PkgExport, '_exported'> = {source: entry.source, default: entry.default}
 
         if (entry.browser) {
           exp.browser = {}
@@ -63,6 +63,8 @@ export function _printPackageTree(ctx: _BuildContext): void {
         if (entry.import) exp.import = _fileInfo(entry.import)
         if (entry.require) exp.require = _fileInfo(entry.require)
         if (entry.types) exp.types = _fileInfo(entry.types)
+
+        exp.default = _fileInfo(entry.default)
 
         return [chalk.green(path.join(pkg.name, exportPath)), exp]
       })

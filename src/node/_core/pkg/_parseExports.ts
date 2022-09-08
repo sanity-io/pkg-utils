@@ -9,14 +9,15 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
   const rootExport: PkgExport & {_path: string} = {
     _exported: true,
     _path: '.',
+    types: pkg.types,
+    source: pkg.source || 'index.js',
     browser: pkg.browser && {
       require: pkg.main && pkg.browser[pkg.main],
       import: pkg.module && pkg.browser[pkg.module],
     },
-    source: pkg.source || 'index.js',
-    require: pkg.main,
     import: pkg.module,
-    types: pkg.types,
+    require: pkg.main,
+    default: pkg.module || pkg.main || './index.js',
   }
 
   const extraExports: (PkgExport & {_path: string})[] = []

@@ -17,10 +17,11 @@ export interface PkgExport {
   //   node?: string
   //   default?: string
   // }
+  types?: string
+  source: string
   import?: string
   require?: string
-  source: string
-  types?: string
+  default: string
 }
 
 /** @public */

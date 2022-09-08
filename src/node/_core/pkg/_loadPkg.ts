@@ -19,6 +19,7 @@ const pkgSchema = z.object({
   exports: z.optional(
     z.record(
       z.object({
+        types: z.optional(z.string()),
         source: z.string(),
         browser: z.optional(
           z.object({
@@ -34,7 +35,7 @@ const pkgSchema = z.object({
         ),
         require: z.optional(z.string()),
         import: z.optional(z.string()),
-        types: z.optional(z.string()),
+        default: z.string(),
       })
     )
   ),
