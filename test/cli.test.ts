@@ -9,11 +9,11 @@ test('should build `custom-dist` package', async () => {
 
   await project.install()
   await project.add(__ROOT__)
-  const buildLog = await project.run('build')
+  const {stdout} = await project.run('build')
 
-  expect(buildLog.stdout).toContain(' ./lib/index.cjs')
-  expect(buildLog.stdout).toContain(' ./lib/index.js')
-  expect(buildLog.stdout).toContain(' ./lib/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./lib/index.cjs')
+  expect(stdout).toContain('./src/index.ts -> ./lib/index.js')
+  expect(stdout).toContain('./src/index.ts -> ./lib/index.d.ts')
 
   expect(await project.readFile('lib/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('lib/index.js')).toMatchSnapshot()
@@ -27,11 +27,11 @@ test('should build `multi-export` package', async () => {
 
   await project.install()
   await project.add(__ROOT__)
-  const buildLog = await project.run('build')
+  const {stdout} = await project.run('build')
 
-  expect(buildLog.stdout).toContain(' ./dist/index.cjs')
-  expect(buildLog.stdout).toContain(' ./dist/index.js')
-  expect(buildLog.stdout).toContain(' ./dist/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./dist/index.cjs')
+  expect(stdout).toContain('./src/index.ts -> ./dist/index.js')
+  expect(stdout).toContain('./src/index.ts -> ./dist/index.d.ts')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
