@@ -6,6 +6,7 @@ export default defineConfig({
     './cli': {
       source: './src/cli/index.ts',
       require: './dist/cli.cjs',
+      default: './dist/cli.cjs',
     },
   }),
   external: (external) => external.concat(['@sanity/tsdoc']),
