@@ -7,16 +7,18 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
-      "require": "./dist/index.cjs",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./plugin": {
+      "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
-      "require": "./dist/plugin.cjs",
       "import": "./dist/plugin.js",
-      "types": "./dist/plugin.d.ts"
+      "require": "./dist/plugin.cjs",
+      "default": "./dist/plugin.js"
     }
   },
   "typesVersions": {

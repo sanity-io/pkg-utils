@@ -7,10 +7,11 @@
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "source": "./src/index.ts",
-      "require": "./lib/index.cjs",
       "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "require": "./lib/index.cjs",
+      "default": "./lib/index.js"
     }
   },
   "scripts": {

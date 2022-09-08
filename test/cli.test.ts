@@ -50,7 +50,7 @@ test('should build `monorepo` package', async () => {
   project.remove()
 })
 
-describe('runtime: webpack v3', () => {
+describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from packge', async () => {
     const exportsDummy = await _spawnProject('exports-dummy')
     const runtime = await _spawnProject('runtime-webpack-v3')
@@ -83,7 +83,7 @@ describe('runtime: webpack v3', () => {
   })
 })
 
-describe('runtime: next.js', () => {
+describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from packge', async () => {
     const exportsDummy = await _spawnProject('exports-dummy')
     const runtime = await _spawnProject('runtime-next-js')

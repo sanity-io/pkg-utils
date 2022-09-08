@@ -13,6 +13,7 @@ describe('_parseExports', () => {
         '.': {
           source: './src/index.ts',
           require: './dist/index.cjs',
+          default: './dist/index.cjs',
         },
       },
     }
@@ -23,11 +24,12 @@ describe('_parseExports', () => {
       {
         _exported: true,
         _path: '.',
+        types: undefined,
+        source: './src/index.ts',
         browser: undefined,
         import: undefined,
         require: './dist/index.cjs',
-        source: './src/index.ts',
-        types: undefined,
+        default: './dist/index.cjs',
       },
     ])
   })

@@ -11,26 +11,28 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "browser": {
         "source": "./src/index.ts",
         "require": "./dist/index.browser.cjs",
         "import": "./dist/index.browser.js"
       },
       "source": "./src/index.ts",
-      "require": "./dist/index.cjs",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./extra": {
+      "types": "./dist/extra.d.ts",
       "browser": {
         "source": "./src/extra.ts",
         "require": "./dist/extra.browser.cjs",
         "import": "./dist/extra.browser.js"
       },
       "source": "./src/extra.ts",
-      "require": "./dist/extra.cjs",
       "import": "./dist/extra.js",
-      "types": "./dist/extra.d.ts"
+      "require": "./dist/extra.cjs",
+      "default": "./dist/extra.js"
     }
   },
   "typesVersions": {

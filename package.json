@@ -36,7 +36,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -r esbuild-register scripts/build",
+    "build": "node -r esbuild-register scripts/build && node -r esbuild-register scripts/check",
     "check:package": "node -r esbuild-register scripts/check",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
@@ -45,7 +45,7 @@
     "prebuild": "rimraf dist",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
-    "test": "node -r esbuild-register scripts/check && vitest run",
+    "test": "vitest run",
     "type-check": "tsc --build",
     "watch": "node -r esbuild-register scripts/watch"
   },
