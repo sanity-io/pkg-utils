@@ -44,6 +44,4 @@ export async function build(options: {cwd: string; tsconfig?: string}): Promise<
       process.exit(1)
     }
   }
-
-  _printPackageTree(ctx)
 }
