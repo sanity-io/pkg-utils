@@ -1,5 +1,4 @@
 import {_loadConfig, _loadPkgWithReporting} from './_core'
-import {_printPackageTree} from './_printPackageTree'
 import {_resolveBuildContext} from './_resolveBuildContext'
 import {_resolveBuildTasks} from './_resolveBuildTasks'
 import {_spinner} from './_spinner'

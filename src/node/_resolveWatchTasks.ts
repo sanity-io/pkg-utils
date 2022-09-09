@@ -1,13 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import {PkgExport, PkgFormat, PkgRuntime, _BuildContext} from './_core'
-import {_resolveEsTarget} from './_resolveEsTarget'
 import {_WatchTask, _DtsWatchTask, _RollupWatchTask, _RollupTaskEntry} from './_tasks'
 
 /** @internal */
 export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
   const {cwd, pkg, target} = ctx
-  const esTarget = _resolveEsTarget(ctx)
   const tasks: _WatchTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(
@@ -27,7 +25,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
         entries: [entry],
         runtime,
         format,
-        target: [esTarget].concat(target[runtime]),
+        target: target[runtime],
       }
     } else {
       rollupTasks[buildId].entries.push(entry)

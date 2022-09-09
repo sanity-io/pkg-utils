@@ -1,12 +1,14 @@
 import path from 'path'
 import alias from '@rollup/plugin-alias'
+import {getBabelOutputPlugin} from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import {InputOptions, OutputOptions} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
-import {_BuildContext} from '../../_core'
+import {terser} from 'rollup-plugin-terser'
+import {_BuildContext, _DEFAULTS} from '../../_core'
 import {_RollupTask, _RollupWatchTask} from '../_types'
 
 export interface _RollupConfig {
@@ -22,6 +24,7 @@ export function _resolveRollupConfig(
   const {format, runtime, target} = buildTask
   const {config, cwd, external, dist: outDir, pkg, ts} = ctx
   const outputExt = format === 'commonjs' ? '.cjs' : pkg.type === 'module' ? '.mjs' : '.js'
+  const minify = config?.minify ?? true
 
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
@@ -105,7 +108,6 @@ export function _resolveRollupConfig(
         }),
         json(),
         esbuild({
-          minify: config?.minify ?? true,
           jsx: config?.jsx ?? 'automatic',
           jsxFactory: config?.jsxFactory ?? 'createElement',
           jsxFragment: config?.jsxFragment ?? 'Fragment',
@@ -113,7 +115,23 @@ export function _resolveRollupConfig(
           target,
           tsconfig: ctx.ts.configPath || 'tsconfig.json',
         }),
-      ],
+        getBabelOutputPlugin({
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                targets: pkg.browserslist || _DEFAULTS.browserslist,
+              },
+            ],
+          ],
+        }),
+        minify &&
+          terser({
+            output: {
+              comments: 'all',
+            },
+          }),
+      ].filter(Boolean),
 
       treeshake: {
         propertyReadSideEffects: false,
