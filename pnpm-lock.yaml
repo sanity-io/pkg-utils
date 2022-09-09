@@ -22,8 +22,8 @@ specifiers:
   '@types/node': ^18.7.13
   '@types/prettier': ^2.7.0
   '@types/rimraf': ^3.0.2
-  '@types/tmp': ^0.2.3
   '@types/treeify': ^1.0.0
+  '@types/uuid': ^8.3.4
   '@typescript-eslint/eslint-plugin': ^5.35.1
   '@typescript-eslint/parser': ^5.35.1
   browserslist: ^4.21.3
@@ -54,10 +54,10 @@ specifiers:
   rollup-plugin-terser: ^7.0.2
   rxjs: ^7.5.6
   semantic-release: ^19.0.5
-  tmp: ^0.2.1
   treeify: ^1.1.0
   ts-node: ^10.9.1
   typescript: ^4.7.4
+  uuid: ^9.0.0
   vitest: ^0.22.1
   zod: ^3.18.0
 
@@ -92,6 +92,7 @@ dependencies:
   rollup-plugin-terser: 7.0.2_rollup@2.78.1
   rxjs: 7.5.6
   treeify: 1.1.0
+  uuid: 9.0.0
   zod: 3.18.0
 
 devDependencies:
@@ -105,8 +106,8 @@ devDependencies:
   '@types/node': 18.7.13
   '@types/prettier': 2.7.0
   '@types/rimraf': 3.0.2
-  '@types/tmp': 0.2.3
   '@types/treeify': 1.0.0
+  '@types/uuid': 8.3.4
   '@typescript-eslint/eslint-plugin': 5.35.1_t3qvqq7ugt4jqnoquow4ze3psy
   '@typescript-eslint/parser': 5.35.1_sorwav4hsh5vncerguqybud76i
   commitizen: 4.2.5_ts-node@10.9.1
@@ -119,7 +120,6 @@ devDependencies:
   husky: 8.0.1
   lint-staged: 12.5.0
   semantic-release: 19.0.5
-  tmp: 0.2.1
   ts-node: 10.9.1_57uwcby55h6tzvkj3v5sfcgxoe
   typescript: 4.7.4
   vitest: 0.22.1
@@ -2128,12 +2128,12 @@ packages:
       '@types/node': 18.7.13
     dev: true
 
-  /@types/tmp/0.2.3:
-    resolution: {integrity: sha512-dDZH/tXzwjutnuk4UacGgFRwV+JSLaXL1ikvidfJprkb7L9Nx1njcRHHmi3Dsvt7pgqqTEeucQuOrWHPFgzVHA==}
-    dev: true
-
   /@types/treeify/1.0.0:
     resolution: {integrity: sha512-ONpcZAEYlbPx4EtJwfTyCDQJGUpKf4sEcuySdCVjK5Fj/3vHp5HII1fqa1/+qrsLnpYELCQTfVW/awsGJePoIg==}
+    dev: true
+
+  /@types/uuid/8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.35.1_t3qvqq7ugt4jqnoquow4ze3psy:
@@ -7126,13 +7126,6 @@ packages:
       os-tmpdir: 1.0.2
     dev: true
 
-  /tmp/0.2.1:
-    resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
-    engines: {node: '>=8.17.0'}
-    dependencies:
-      rimraf: 3.0.2
-    dev: true
-
   /to-fast-properties/2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
@@ -7415,6 +7408,11 @@ packages:
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /v8-compile-cache-lib/3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}

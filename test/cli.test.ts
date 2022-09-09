@@ -19,7 +19,7 @@ test('should build `custom-dist` package', async () => {
   expect(await project.readFile('lib/index.js')).toMatchSnapshot()
   expect(await project.readFile('lib/index.d.ts')).toMatchSnapshot()
 
-  project.remove()
+  await project.remove()
 })
 
 test('should build `multi-export` package', async () => {
@@ -37,7 +37,7 @@ test('should build `multi-export` package', async () => {
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
   expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
 
-  project.remove()
+  await project.remove()
 })
 
 test('should build `monorepo` package', async () => {
@@ -47,7 +47,7 @@ test('should build `monorepo` package', async () => {
   await project.add(`-w ${__ROOT__}`)
   await project.run('build')
 
-  project.remove()
+  await project.remove()
 })
 
 describe.skip('runtime: webpack v3', () => {
