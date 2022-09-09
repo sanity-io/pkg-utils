@@ -20,6 +20,11 @@ export async function _loadConfig(options: {cwd: string}): Promise<PkgConfigOpti
     return undefined
   }
 
+  // Do not accept config files outside of the root
+  if (!configFile.path.startsWith(cwd)) {
+    return undefined
+  }
+
   try {
     const {unregister} = configFile.transform
       ? register({extensions: ['.js', '.ts']})
