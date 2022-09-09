@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.2](https://github.com/sanity-io/pkg-utils/compare/v1.7.1...v1.7.2) (2022-09-09)
+
+### Bug Fixes
+
+- do not accept config files outside of root ([b796713](https://github.com/sanity-io/pkg-utils/commit/b7967139da698a6f5604a1b7cae9744d89491734))
+- improve terser config ([25ce3df](https://github.com/sanity-io/pkg-utils/commit/25ce3df12d64cc309e70d4024867bbc84115abc5))
+- transform rest/spread specifically ([172c01b](https://github.com/sanity-io/pkg-utils/commit/172c01b437eb6328af9d8ba4f6ff53f7e11446f9))
+- use babel to dedupe inline helpers ([796e0a1](https://github.com/sanity-io/pkg-utils/commit/796e0a1fa42d6664d505fcb29aa644ede139f48c))
+
 ## [1.7.1](https://github.com/sanity-io/pkg-utils/compare/v1.7.0...v1.7.1) (2022-09-08)
 
 ### Bug Fixes
