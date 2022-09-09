@@ -116,14 +116,8 @@ export function _resolveRollupConfig(
           tsconfig: ctx.ts.configPath || 'tsconfig.json',
         }),
         getBabelOutputPlugin({
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                targets: pkg.browserslist || _DEFAULTS.browserslist,
-              },
-            ],
-          ],
+          plugins: ['@babel/plugin-proposal-object-rest-spread'],
+          presets: [['@babel/preset-env', {targets: pkg.browserslist || _DEFAULTS.browserslist}]],
         }),
         minify &&
           terser({
