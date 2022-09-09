@@ -128,7 +128,18 @@ export function _resolveRollupConfig(
         minify &&
           terser({
             output: {
-              comments: 'all',
+              comments: (_node, comment) => {
+                const text = comment.value
+                const type = comment.type
+
+                // Check if this is a multiline comment
+                if (type == 'comment2') {
+                  // Keep licensing comments
+                  return /@preserve|@license|@cc_on/i.test(text)
+                }
+
+                return false
+              },
             },
           }),
       ].filter(Boolean),
