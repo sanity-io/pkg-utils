@@ -46,4 +46,13 @@ module.exports = {
       {blankLine: 'always', prev: '*', next: 'return'},
     ],
   },
+
+  overrides: [
+    {
+      files: ['**/*.cjs', '**/*.mjs', '**/*.js'],
+      rules: {
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+      },
+    },
+  ],
 }
