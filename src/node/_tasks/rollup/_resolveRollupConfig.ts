@@ -22,8 +22,8 @@ export function _resolveRollupConfig(
   buildTask: _RollupTask | _RollupWatchTask
 ): _RollupConfig {
   const {format, runtime, target} = buildTask
-  const {config, cwd, external, dist: outDir, pkg, ts} = ctx
-  const outputExt = format === 'commonjs' ? '.cjs' : pkg.type === 'module' ? '.mjs' : '.js'
+  const {config, cwd, exports: _exports, external, dist: outDir, logger, pkg, ts} = ctx
+  const outputExt = format === 'commonjs' ? '.cjs' : '.js'
   const minify = config?.minify ?? true
 
   const pathAliases = Object.fromEntries(
@@ -39,11 +39,37 @@ export function _resolveRollupConfig(
     }
   }, {})
 
+  const exportIds =
+    _exports && Object.keys(_exports).map((exportPath) => path.join(pkg.name, exportPath))
+
+  const sourcePaths = _exports && Object.values(_exports).map((e) => path.resolve(cwd, e.source))
+
   return {
     inputOptions: {
       context: cwd,
 
-      external: (id) => {
+      external: (id, importer) => {
+        // Check if the id is a self-referencing import
+        if (exportIds?.includes(id)) {
+          return true
+        }
+
+        // Check if the id is a file path that points to an exported source file
+        if (importer && (id.startsWith('.') || id.startsWith('/'))) {
+          const idPath = path.resolve(path.dirname(importer), id)
+
+          if (sourcePaths?.includes(idPath)) {
+            logger.warn(
+              `detected self-referencing import – treating as external: ${path.relative(
+                cwd,
+                idPath
+              )}`
+            )
+
+            return true
+          }
+        }
+
         const idParts = id.split('/')
 
         const name = idParts[0].startsWith('@') ? `${idParts[0]}/${idParts[1]}` : idParts[0]
@@ -116,6 +142,7 @@ export function _resolveRollupConfig(
           tsconfig: ctx.ts.configPath || 'tsconfig.json',
         }),
         getBabelOutputPlugin({
+          babelrc: false,
           plugins: ['@babel/plugin-proposal-object-rest-spread'],
           presets: [['@babel/preset-env', {targets: pkg.browserslist || _DEFAULTS.browserslist}]],
         }),
