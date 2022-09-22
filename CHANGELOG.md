@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.1](https://github.com/sanity-io/pkg-utils/compare/v1.8.0...v1.8.1) (2022-09-22)
+
+### Bug Fixes
+
+- print browser export tree ([9cc9923](https://github.com/sanity-io/pkg-utils/commit/9cc99231daf75a636527eaa9de2ddffc5e5bf2e2))
+
 ## [1.8.0](https://github.com/sanity-io/pkg-utils/compare/v1.7.3...v1.8.0) (2022-09-22)
 
 ### Features
