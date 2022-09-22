@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.0](https://github.com/sanity-io/pkg-utils/compare/v1.7.3...v1.8.0) (2022-09-22)
+
+### Features
+
+- clean types directory ([e9607ba](https://github.com/sanity-io/pkg-utils/commit/e9607ba9a4e04cbdef1b99cdbef46913e93c063f))
+- improve package validation ([bcc3798](https://github.com/sanity-io/pkg-utils/commit/bcc37981af0ccfb0473968a3ab8f50659ad538b6))
+
+### Bug Fixes
+
+- parse browser exports ([491bbf6](https://github.com/sanity-io/pkg-utils/commit/491bbf639f475412c73e88091874e926b7ac82f8))
+
 ## [1.7.3](https://github.com/sanity-io/pkg-utils/compare/v1.7.2...v1.7.3) (2022-09-22)
 
 ### Bug Fixes
