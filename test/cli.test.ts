@@ -16,6 +16,25 @@ test('should build `js` package', async () => {
   await project.remove()
 })
 
+test('should build `isomorphic` package', async () => {
+  const project = await _spawnProject('isomorphic')
+
+  await project.install()
+  await project.add(__ROOT__)
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('isomorphic: ./src/index.ts -> ./dist/types/src/index.d.ts')
+  expect(stdout).toContain('isomorphic: ./src/index.ts -> ./dist/index.cjs')
+  expect(stdout).toContain('isomorphic: ./src/index.ts -> ./dist/index.js')
+  expect(stdout).toContain('isomorphic: ./src/browser/index.ts -> ./dist/index.browser.cjs')
+  expect(stdout).toContain('isomorphic: ./src/browser/index.ts -> ./dist/index.browser.js')
+
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.browser.js')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 test('should build `custom-dist` package', async () => {
   const project = await _spawnProject('custom-dist')
 

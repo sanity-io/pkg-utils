@@ -20,6 +20,18 @@ export {}
 "
 `;
 
+exports[`should build \`isomorphic\` package 1`] = `
+"const o=\\"1.0.0\\";export{o as version};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`isomorphic\` package 2`] = `
+"const o=\\"1.0.0/browser\\";export{o as version};
+//# sourceMappingURL=index.browser.js.map
+"
+`;
+
 exports[`should build \`multi-export\` package 1`] = `
 "'use strict';
 

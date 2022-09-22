@@ -34,4 +34,45 @@ describe('_parseExports', () => {
       },
     ])
   })
+
+  test('parse package.json with browser files', () => {
+    const pkg: _PackageJSON = {
+      type: 'module',
+      name: 'test',
+      version: '0.0.0-test',
+      exports: {
+        '.': {
+          types: './dist/types/src/index.d.ts',
+          browser: {
+            source: './src/index.ts',
+            require: './dist/index.cjs',
+            import: './dist/index.js',
+          },
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+      },
+    }
+
+    const exports = _parseExports({pkg})
+
+    expect(exports).toEqual([
+      {
+        _exported: true,
+        _path: '.',
+        types: './dist/types/src/index.d.ts',
+        source: './src/index.ts',
+        browser: {
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          import: './dist/index.js',
+        },
+        import: './dist/index.js',
+        require: './dist/index.cjs',
+        default: './dist/index.js',
+      },
+    ])
+  })
 })
