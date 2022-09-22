@@ -3,6 +3,7 @@ import {_BuildContext, _PackageJSON, _parseExports, _resolveBuildTasks} from '..
 
 test('should parse tasks', () => {
   const pkg: _PackageJSON = {
+    type: 'module',
     name: 'test',
     version: '1.0.0',
     source: './src/index.ts',

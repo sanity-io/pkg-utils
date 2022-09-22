@@ -4,16 +4,17 @@ import {_PackageJSON, _parseExports} from '../src/node'
 describe('_parseExports', () => {
   test('parse basic package.json', () => {
     const pkg: _PackageJSON = {
+      type: 'commonjs',
       name: 'test',
       version: '0.0.0-test',
-      bin: {test: './dist/cli.cjs'},
+      bin: {test: './dist/cli.js'},
       source: './src/index.ts',
-      main: './src/index.cjs',
+      main: './dist/index.js',
       exports: {
         '.': {
           source: './src/index.ts',
-          require: './dist/index.cjs',
-          default: './dist/index.cjs',
+          require: './dist/index.js',
+          default: './dist/index.js',
         },
       },
     }
@@ -28,8 +29,8 @@ describe('_parseExports', () => {
         source: './src/index.ts',
         browser: undefined,
         import: undefined,
-        require: './dist/index.cjs',
-        default: './dist/index.cjs',
+        require: './dist/index.js',
+        default: './dist/index.js',
       },
     ])
   })

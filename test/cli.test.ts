@@ -11,7 +11,7 @@ test('should build `js` package', async () => {
   await project.add(__ROOT__)
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('./src/index.js -> ./dist/index.cjs')
+  expect(stdout).toContain('./src/index.js -> ./dist/index.js')
 
   await project.remove()
 })
