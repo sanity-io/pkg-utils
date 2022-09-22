@@ -2,6 +2,10 @@
   "extends": "./tsconfig.settings",
   "include": ["./src"],
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+
+    "paths": {
+      "multi-export": ["./src/index.ts"]
+    }
   }
 }

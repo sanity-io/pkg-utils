@@ -1,7 +1,9 @@
 /** @public */
-export interface Plugin {}
+export interface Plugin {
+  name: string
+}
 
 /** @public */
-export interface Config {
+export interface Config extends Plugin {
   plugins?: Plugin[]
 }

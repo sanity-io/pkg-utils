@@ -1,20 +1,22 @@
 {
+  "type": "module",
   "name": "multi-export",
+  "license": "MIT",
   "version": "0.0.0-development",
+  "types": "./dist/types/src/index.d.ts",
   "source": "./src/index.ts",
-  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/src/index.d.ts",
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./plugin": {
-      "types": "./dist/plugin.d.ts",
+      "types": "./dist/types/src/plugin.d.ts",
       "source": "./src/plugin.ts",
       "import": "./dist/plugin.js",
       "require": "./dist/plugin.cjs",
@@ -24,16 +26,14 @@
   "typesVersions": {
     "*": {
       "plugin": [
-        "./dist/plugin.d.ts"
+        "./dist/types/src/plugin.d.ts"
       ]
     }
   },
   "scripts": {
-    "build": "pkg-utils build  --tsconfig tsconfig.dist.json"
+    "build": "pkg-utils build --tsconfig tsconfig.dist.json"
   },
   "devDependencies": {
-    "esbuild": "^0.15.5",
-    "esbuild-register": "^3.3.3",
     "typescript": "^4.7.4"
   }
 }

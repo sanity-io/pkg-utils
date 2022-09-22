@@ -31,11 +31,19 @@ test('should build `multi-export` package', async () => {
 
   expect(stdout).toContain('./src/index.ts -> ./dist/index.cjs')
   expect(stdout).toContain('./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('./src/index.ts -> ./dist/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./dist/types/src/index.d.ts')
+
+  expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.cjs')
+  expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.js')
+  expect(stdout).toContain('./src/plugin.ts -> ./dist/types/src/plugin.d.ts')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/types/src/index.d.ts')).toMatchSnapshot()
+
+  expect(await project.readFile('dist/plugin.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/plugin.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/types/src/plugin.d.ts')).toMatchSnapshot()
 
   await project.remove()
 })

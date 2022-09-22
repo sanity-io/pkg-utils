@@ -21,20 +21,43 @@ export {}
 `;
 
 exports[`should build \`multi-export\` package 1`] = `
-"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0}),exports.defineConfig=function(e){return e};
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function defineConfig(options) {
+  return options;
+}
+
+function definePlugin(plugin) {
+  return plugin;
+}
+
+exports.defineConfig = defineConfig;
+exports.definePlugin = definePlugin;
 //# sourceMappingURL=index.cjs.map
 "
 `;
 
 exports[`should build \`multi-export\` package 2`] = `
-"function n(n){return n}export{n as defineConfig};
+"function defineConfig(options) {
+  return options;
+}
+
+function definePlugin(plugin) {
+  return plugin;
+}
+
+export { defineConfig, definePlugin };
 //# sourceMappingURL=index.js.map
 "
 `;
 
 exports[`should build \`multi-export\` package 3`] = `
 "/** @public */
-export declare interface Config {
+export declare interface Config extends Plugin_2 {
   plugins?: Plugin_2[]
 }
 
@@ -42,8 +65,60 @@ export declare interface Config {
 export declare function defineConfig(options: Config): Config
 
 /** @public */
-declare interface Plugin_2 {}
+export declare function definePlugin(plugin: Plugin_2): Plugin_2
+
+/** @public */
+declare interface Plugin_2 {
+  name: string
+}
 export {Plugin_2 as Plugin}
+
+export {}
+"
+`;
+
+exports[`should build \`multi-export\` package 4`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var multiExport = require('multi-export');
+
+function plugin() {
+  return multiExport.definePlugin({
+    name: \\"plugin\\"
+  });
+}
+
+exports.plugin = plugin;
+//# sourceMappingURL=plugin.cjs.map
+"
+`;
+
+exports[`should build \`multi-export\` package 5`] = `
+"import { definePlugin } from 'multi-export';
+
+function plugin() {
+  return definePlugin({
+    name: \\"plugin\\"
+  });
+}
+
+export { plugin };
+//# sourceMappingURL=plugin.js.map
+"
+`;
+
+exports[`should build \`multi-export\` package 6`] = `
+"/** @public */
+export declare function plugin(): Plugin_2
+
+/** @public */
+declare interface Plugin_2 {
+  name: string
+}
 
 export {}
 "

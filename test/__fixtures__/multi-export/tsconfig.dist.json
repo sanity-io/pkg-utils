@@ -2,7 +2,11 @@
   "extends": "./tsconfig.settings",
   "include": ["./src"],
   "compilerOptions": {
-    "outDir": "./dist/tmp",
-    "rootDir": "."
+    "outDir": "./dist/types",
+    "rootDir": ".",
+
+    "paths": {
+      "multi-export": ["./src/index.ts"]
+    }
   }
 }
