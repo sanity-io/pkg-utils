@@ -26,4 +26,5 @@ export interface _DtsTask {
 export interface _DtsResult {
   type: 'dts'
   messages: ExtractorMessage[]
+  results: {sourcePath: string; filePath: string}[]
 }
