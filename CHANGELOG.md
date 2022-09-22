@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.3](https://github.com/sanity-io/pkg-utils/compare/v1.7.2...v1.7.3) (2022-09-22)
+
+### Bug Fixes
+
+- handle self-referencing imports ([5ebee3c](https://github.com/sanity-io/pkg-utils/commit/5ebee3ccae62809afb8c21ce6a78fbd55a5db075))
+- parity between watch and build ([0658026](https://github.com/sanity-io/pkg-utils/commit/0658026459bd338ebdbd3bfe71987a79c4abd3d4))
+- use dot when rendering package.json paths ([549c3d3](https://github.com/sanity-io/pkg-utils/commit/549c3d32647b8d63891ebe6670c618796dc727b1))
+
 ## [1.7.2](https://github.com/sanity-io/pkg-utils/compare/v1.7.1...v1.7.2) (2022-09-09)
 
 ### Bug Fixes
