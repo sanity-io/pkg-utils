@@ -13,6 +13,7 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
     types: pkg.types,
     source: pkg.source || '',
     browser: pkg.browser && {
+      source: pkg.source || '',
       require: pkg.main && pkg.browser[pkg.main],
       import: pkg.module && pkg.browser[pkg.module],
     },

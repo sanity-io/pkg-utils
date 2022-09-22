@@ -9,7 +9,7 @@ export interface PkgExport {
   /** @internal */
   _exported?: boolean
   browser?: {
-    source?: string
+    source: string
     import?: string
     require?: string
   }
@@ -17,6 +17,11 @@ export interface PkgExport {
   //   node?: string
   //   default?: string
   // }
+  node?: {
+    source: string
+    import?: string
+    require?: string
+  }
   types?: string
   source: string
   import?: string
