@@ -1,6 +1,6 @@
 /** @internal */
 export interface _PackageJSON {
-  type?: 'module'
+  type: 'commonjs' | 'module'
   version: string
   private?: boolean
   name: string
