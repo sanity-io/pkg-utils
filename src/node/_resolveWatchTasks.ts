@@ -119,7 +119,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
           [
             `// AUTO-GENERATED – DO NOT EDIT`,
             ``,
-            `export {default} from '${relativeTargetPath}'`,
+            // `export {default} from '${relativeTargetPath}'`,
             `export * from '${relativeTargetPath}'`,
             ``,
           ].join('\n')
