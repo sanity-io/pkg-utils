@@ -36,13 +36,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -r esbuild-register scripts/build && node -r esbuild-register scripts/check",
+    "build": "node -r esbuild-register scripts/build",
     "check:package": "node -r esbuild-register scripts/check",
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
     "lint": "eslint . --ext .cjs,.js,.ts",
+    "postbuild": "pnpm run check:package",
     "prebuild": "pnpm run clean",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
