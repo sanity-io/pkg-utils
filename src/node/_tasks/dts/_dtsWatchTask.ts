@@ -11,7 +11,10 @@ export const _dtsWatchTask: _TaskHandler<_DtsWatchTask, _DtsResult> = {
   name: (_ctx, task) =>
     [
       `build type definitions`,
-      `       ${chalk.blue(task.importId)}: ${task.sourcePath} -> ${task.targetPath}`,
+      ...task.entries.map(
+        (entry) =>
+          `       ${chalk.blue(entry.importId)}: ${entry.sourcePath} -> ${entry.targetPath}`
+      ),
     ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {

@@ -13,13 +13,19 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
     ([_path, exp]) => ({_path, ...exp} as PkgExport & {_path: string})
   )
 
-  const dtsTasks: Record<string, _DtsTask> = {}
+  const dtsTask: _DtsTask = {
+    type: 'build:dts',
+    entries: [],
+  }
+
   const rollupTasks: Record<string, _RollupTask> = {}
 
   function _addRollupTaskEntry(format: PkgFormat, runtime: PkgRuntime, entry: _RollupTaskEntry) {
     const buildId = `${format}:${runtime}`
 
-    if (!rollupTasks[buildId]) {
+    if (rollupTasks[buildId]) {
+      rollupTasks[buildId].entries.push(entry)
+    } else {
       rollupTasks[buildId] = {
         type: 'build:js',
         buildId,
@@ -28,8 +34,6 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
         format,
         target: target[runtime],
       }
-    } else {
-      rollupTasks[buildId].entries.push(entry)
     }
   }
 
@@ -38,15 +42,12 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
     const importId = path.join(pkg.name, exp._path)
 
     if (exp.types) {
-      if (!dtsTasks[importId]) {
-        dtsTasks[importId] = {
-          type: 'build:dts',
-          importId,
-          exportPath: exp._path,
-          sourcePath: exp.source,
-          targetPath: exp.types,
-        }
-      }
+      dtsTask.entries.push({
+        importId,
+        exportPath: exp._path,
+        sourcePath: exp.source,
+        targetPath: exp.types,
+      })
     }
   }
 
@@ -102,7 +103,10 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
     })
   }
 
-  tasks.push(...Object.values(dtsTasks))
+  if (dtsTask.entries.length) {
+    tasks.push(dtsTask)
+  }
+
   tasks.push(...Object.values(rollupTasks))
 
   // Parse rollup:esm:browser tasks

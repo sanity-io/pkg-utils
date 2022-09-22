@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 
-import path from 'path'
 import ts from 'typescript'
 
 export const formatHost: ts.FormatDiagnosticsHost = {
@@ -13,10 +12,9 @@ export const formatHost: ts.FormatDiagnosticsHost = {
 export async function _buildTypes(options: {
   cwd: string
   outDir: string
-  sourcePath: string
   tsconfig: ts.ParsedCommandLine
-}): Promise<{path: string}> {
-  const {cwd, outDir, sourcePath, tsconfig} = options
+}): Promise<void> {
+  const {outDir, tsconfig} = options
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,
@@ -27,22 +25,7 @@ export async function _buildTypes(options: {
     outDir,
   }
 
-  const rootDir =
-    path.relative(
-      cwd,
-      compilerOptions.rootDir
-        ? path.resolve(cwd, compilerOptions.rootDir)
-        : path.dirname(path.resolve(cwd, sourcePath))
-    ) || '.'
-
   const program = ts.createProgram(tsconfig.fileNames, compilerOptions)
-
-  const sourceFiles = program.getSourceFiles()
-  const sourceFile = sourceFiles.find((f) => f.fileName === path.resolve(cwd, sourcePath))
-
-  if (!sourceFile) {
-    throw new Error(`source file not found: ${sourcePath}`)
-  }
 
   const emitResult = program.emit()
 
@@ -68,10 +51,4 @@ export async function _buildTypes(options: {
       throw new Error('failed to compile')
     }
   }
-
-  const typesPath = path
-    .resolve(outDir, path.relative(rootDir, path.resolve(cwd, sourcePath)))
-    .replace(/\.[jt]sx?$/, '.d.ts')
-
-  return {path: typesPath}
 }

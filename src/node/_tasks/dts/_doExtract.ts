@@ -1,13 +1,10 @@
 import path from 'path'
-import {promisify} from 'util'
-import rimrafCallback from 'rimraf'
+import {ExtractorMessage} from '@microsoft/api-extractor'
 import {_BuildContext} from '../../_core'
 import {_buildTypes} from './_buildTypes'
 import {_DtsError} from './_DtsError'
 import {_extractTypes} from './_extractTypes'
 import {_DtsResult, _DtsTask, _DtsWatchTask} from './_types'
-
-const rimraf = promisify(rimrafCallback)
 
 export async function _doExtract(
   ctx: _BuildContext,
@@ -17,40 +14,44 @@ export async function _doExtract(
 
   if (!ts.config || !ts.configPath) return {type: 'dts', messages: []}
 
-  const sourcePath = task.sourcePath
-  const exportPath = task.exportPath === '.' ? './index' : task.exportPath
   const distPath = path.resolve(cwd, dist)
-  const filePath = path.relative(distPath, path.resolve(cwd, task.targetPath))
 
-  const tmpDirPath = path.resolve(distPath, '__dts__')
-  const tmpDir = {
-    path: tmpDirPath,
-    removeCallback: () => rimraf(tmpDirPath),
-  }
+  const {outDir = distPath, rootDir = cwd} = ts.config.options
 
-  const types = await _buildTypes({
+  await _buildTypes({
     cwd,
-    outDir: tmpDir.path,
-    sourcePath,
+    outDir: outDir,
     tsconfig: ts.config,
   })
 
-  const {messages} = await _extractTypes({
-    cwd,
-    exportPath,
-    files,
-    filePath,
-    projectPath: cwd,
-    rules: config?.extract?.rules,
-    sourcePath: types.path,
-    tsconfigPath: path.resolve(cwd, ts.configPath),
-    distPath,
-  })
+  const messages: ExtractorMessage[] = []
 
-  await tmpDir.removeCallback()
+  for (const entry of task.entries) {
+    const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
 
-  if (messages.some((msg) => msg.logLevel === 'error')) {
-    throw new _DtsError('encountered errors when extracting types', messages)
+    const filePath = path.relative(distPath, path.resolve(cwd, entry.targetPath))
+
+    const result = await _extractTypes({
+      cwd,
+      exportPath,
+      files,
+      filePath,
+      projectPath: cwd,
+      rules: config?.extract?.rules,
+      sourcePath: path.resolve(
+        outDir,
+        path.relative(cwd, rootDir),
+        entry.sourcePath.replace(/\.ts$/, '.d.ts')
+      ),
+      tsconfigPath: path.resolve(cwd, ts.configPath),
+      distPath,
+    })
+
+    messages.push(...result.messages)
+
+    if (result.messages.some((msg) => msg.logLevel === 'error')) {
+      throw new _DtsError('encountered errors when extracting types', result.messages)
+    }
   }
 
   return {type: 'dts', messages}
