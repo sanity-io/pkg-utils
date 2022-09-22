@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "@sanity/pkg-utils",
   "version": "1.7.3",
   "author": "Sanity.io <hello@sanity.io>",
@@ -27,8 +28,8 @@
     }
   },
   "bin": {
-    "pkg": "./bin/pkg-utils",
-    "pkg-utils": "./bin/pkg-utils"
+    "pkg": "./bin/pkg-utils.cjs",
+    "pkg-utils": "./bin/pkg-utils.cjs"
   },
   "files": [
     "bin",
@@ -36,8 +37,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -r esbuild-register scripts/build",
-    "check:package": "node -r esbuild-register scripts/check",
+    "build": "node --experimental-loader ./scripts/_experimental-loader.js --no-warnings -r esbuild-register scripts/build",
+    "check:package": "node --experimental-loader ./scripts/_experimental-loader.js --no-warnings -r esbuild-register scripts/check",
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
@@ -49,7 +50,7 @@
     "release": "semantic-release",
     "test": "vitest run",
     "type-check": "tsc --build",
-    "watch": "node -r esbuild-register scripts/watch"
+    "watch": "node --experimental-loader ./scripts/_experimental-loader.js --no-warnings -r esbuild-register scripts/watch"
   },
   "dependencies": {
     "@babel/core": "^7.19.0",
