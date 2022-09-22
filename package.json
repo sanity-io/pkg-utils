@@ -16,10 +16,10 @@
   "source": "./src/node/index.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/src/node/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/src/node/index.d.ts",
       "source": "./src/node/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
