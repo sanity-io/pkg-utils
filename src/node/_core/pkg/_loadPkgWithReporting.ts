@@ -15,7 +15,7 @@ export async function _loadPkgWithReporting(options: {cwd: string}): Promise<_Pa
         if (issue.code === 'invalid_type') {
           console.log(
             `${chalk.red('invalid type')} in ./package.json at ${chalk.magenta(
-              `\`${issue.path.join('')}\``
+              `\`${issue.path.join('.')}\``
             )} (expected ${issue.expected}, received ${issue.received})`
           )
         }
