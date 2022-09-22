@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import {PkgExport, PkgFormat, PkgRuntime, _BuildContext} from './_core'
+import {PkgExport, PkgFormat, PkgRuntime, _BuildContext, _MODULE_EXT} from './_core'
 import {_WatchTask, _DtsWatchTask, _RollupWatchTask, _RollupTaskEntry} from './_tasks'
 
 /** @internal */
@@ -112,6 +112,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
   for (const exp of exports) {
     if (exp._exported && exp._path !== '.') {
       const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(/\.[^/.]+$/, '')
+      const ext = _MODULE_EXT[pkg.type].esm
 
       if (relativeTargetPath) {
         fs.writeFileSync(
@@ -120,7 +121,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
             `// AUTO-GENERATED – DO NOT EDIT`,
             ``,
             // `export {default} from '${relativeTargetPath}'`,
-            `export * from '${relativeTargetPath}'`,
+            `export * from '${relativeTargetPath}${pkg.type === 'commonjs' ? ext : ''}'`,
             ``,
           ].join('\n')
         )

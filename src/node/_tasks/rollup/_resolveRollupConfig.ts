@@ -8,7 +8,7 @@ import replace from '@rollup/plugin-replace'
 import {InputOptions, OutputOptions} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {terser} from 'rollup-plugin-terser'
-import {_BuildContext, _DEFAULTS} from '../../_core'
+import {_BuildContext, _DEFAULTS, _MODULE_EXT} from '../../_core'
 import {_RollupTask, _RollupWatchTask} from '../_types'
 
 export interface _RollupConfig {
@@ -23,7 +23,8 @@ export function _resolveRollupConfig(
 ): _RollupConfig {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, dist: outDir, logger, pkg, ts} = ctx
-  const outputExt = format === 'commonjs' ? '.cjs' : '.js'
+  const outputExt = _MODULE_EXT[pkg.type][format]
+
   const minify = config?.minify ?? true
 
   const pathAliases = Object.fromEntries(
