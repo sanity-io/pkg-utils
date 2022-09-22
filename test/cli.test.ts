@@ -4,6 +4,18 @@ import {_spawnProject} from './env'
 
 const __ROOT__ = path.resolve(__dirname, '..')
 
+test('should build `js` package', async () => {
+  const project = await _spawnProject('js')
+
+  await project.install()
+  await project.add(__ROOT__)
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.js -> ./dist/index.cjs')
+
+  await project.remove()
+})
+
 test('should build `custom-dist` package', async () => {
   const project = await _spawnProject('custom-dist')
 
