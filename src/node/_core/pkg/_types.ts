@@ -14,6 +14,12 @@ export interface _PackageJSON {
       source: string
       types?: string
       browser?: {
+        source: string
+        require?: string
+        import?: string
+      }
+      node?: {
+        source: string
         require?: string
         import?: string
       }
@@ -24,7 +30,7 @@ export interface _PackageJSON {
   >
   main?: string
   browser?: Record<string, string>
-  source: string
+  source?: string
   module?: string
   types?: string
   browserslist?: string[]

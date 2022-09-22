@@ -10,7 +10,7 @@ const pkgSchema = z.object({
   dependencies: z.optional(z.record(z.string())),
   devDependencies: z.optional(z.record(z.string())),
   peerDependencies: z.optional(z.record(z.string())),
-  source: z.string(),
+  source: z.optional(z.string()),
   main: z.optional(z.string()),
   browser: z.optional(z.record(z.string())),
   module: z.optional(z.string()),
@@ -22,12 +22,14 @@ const pkgSchema = z.object({
         source: z.string(),
         browser: z.optional(
           z.object({
+            source: z.string(),
             require: z.optional(z.string()),
             import: z.optional(z.string()),
           })
         ),
         node: z.optional(
           z.object({
+            source: z.string(),
             require: z.optional(z.string()),
             import: z.optional(z.string()),
           })

@@ -11,14 +11,14 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
     _exported: true,
     _path: '.',
     types: pkg.types,
-    source: pkg.source || 'index.js',
+    source: pkg.source || '',
     browser: pkg.browser && {
       require: pkg.main && pkg.browser[pkg.main],
       import: pkg.module && pkg.browser[pkg.module],
     },
     import: pkg.module,
     require: pkg.main,
-    default: pkg.module || pkg.main || './index.js',
+    default: pkg.module || pkg.main || '',
   }
 
   const extraExports: (PkgExport & {_path: string})[] = []
@@ -47,7 +47,7 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
             throw new Error('mismatch between "source" and "source"')
           }
 
-          // Object.assign(rootExport, exportEntry)
+          Object.assign(rootExport, exportEntry)
         } else {
           const extraExport: PkgExport & {_path: string} = {
             _exported: true,
