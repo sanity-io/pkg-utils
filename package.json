@@ -43,7 +43,7 @@
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
-    "lint": "eslint . --ext .cjs,.js,.ts",
+    "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
     "postbuild": "pnpm run check:package",
     "prebuild": "pnpm run clean",
     "prepublishOnly": "pnpm run build",
@@ -89,6 +89,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
+    "@sanity/pkg-utils": "workspace:*",
     "@sanity/semantic-release-preset": "^2.0.0",
     "@types/babel__core": "^7.1.19",
     "@types/cpx": "^1.5.2",
@@ -141,5 +142,11 @@
   "homepage": "https://github.com/sanity-io/pkg-utils#readme",
   "publishConfig": {
     "access": "public"
+  },
+  "packageManager": "pnpm@7.12.2",
+  "pnpm": {
+    "overrides": {
+      "@sanity/pkg-utils": "workspace:*"
+    }
   }
 }

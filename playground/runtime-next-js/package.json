@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "runtime-next-js",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "exports-dummy": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^12.2.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.18"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "type": "commonjs",
+  "name": "js",
+  "version": "1.0.0",
+  "license": "MIT",
+  "source": "./src/index.js",
+  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "pkg-utils build && pkg-utils"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "exports-dummy",
+  "version": "1.0.0",
+  "license": "MIT",
+  "source": "./src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "browser": {
+    "./dist/index.cjs": "./dist/index.browser.cjs",
+    "./dist/index.js": "./dist/index.browser.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": {
+        "source": "./src/index.ts",
+        "require": "./dist/index.browser.cjs",
+        "import": "./dist/index.browser.js"
+      },
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./extra": {
+      "types": "./dist/extra.d.ts",
+      "browser": {
+        "source": "./src/extra.ts",
+        "require": "./dist/extra.browser.cjs",
+        "import": "./dist/extra.browser.js"
+      },
+      "source": "./src/extra.ts",
+      "import": "./dist/extra.js",
+      "require": "./dist/extra.cjs",
+      "default": "./dist/extra.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "extra": [
+        "./dist/extra.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "extra.js"
+  ],
+  "scripts": {
+    "build": "pkg-utils build  --tsconfig tsconfig.dist.json"
+  }
+}

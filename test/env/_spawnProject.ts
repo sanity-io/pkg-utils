@@ -38,7 +38,7 @@ export function _spawnProject(name: string): Promise<{
   return new Promise((resolve, reject) => {
     _tmpWorkspace()
       .then(({path: tmpPath, remove: tmpRemove}) => {
-        const packagePath = path.resolve(__dirname, '../__fixtures__', name)
+        const packagePath = path.resolve(__dirname, '../../playground', name)
 
         cpx.copy(path.resolve(packagePath, '**/*'), tmpPath, (cpxErr) => {
           if (cpxErr) {
@@ -73,7 +73,7 @@ export function _spawnProject(name: string): Promise<{
           resolve({
             cwd: tmpPath,
             add: (id: string) => runExec(`pnpm add ${id}`),
-            install: () => runExec('pnpm install'),
+            install: () => runExec('pnpm install --no-frozen-lockfile'),
             pack: async () => {
               await runExec('pnpm pack')
 

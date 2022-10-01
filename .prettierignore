@@ -1,6 +1,9 @@
-/dist/*.cjs
-/dist/*.cjs.map
-/dist/*.js
-/dist/*.js.map
-/test/__fixtures__
+/dist
+
+/playground/*/.next
+/playground/*/dist
+/playground/*/lib
+
 /pnpm-lock.yaml
+
+/test/env/__tmp__

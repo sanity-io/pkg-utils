@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.settings",
   "include": ["./package.config.ts", "./package.json", "**/*.ts"],
-  "exclude": ["./test/__fixtures__", "./test/env/__tmp__"],
+  "exclude": ["./playground", "./test/env/__tmp__"],
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist/types",

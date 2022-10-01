@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "custom-dist",
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "source": "./src/index.ts",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "source": "./src/index.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs",
+      "default": "./lib/index.js"
+    }
+  },
+  "scripts": {
+    "build": "pkg-utils build  --tsconfig tsconfig.lib.json"
+  }
+}
