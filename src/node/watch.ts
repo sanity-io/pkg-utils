@@ -33,7 +33,7 @@ export async function watch(options: {cwd: string; tsconfig?: string}): Promise<
     const watchTasks = _resolveWatchTasks(ctx)
 
     for (const task of watchTasks) {
-      const handler = _watchTaskHandlers[task.type] as _TaskHandler<_WatchTask, any>
+      const handler = _watchTaskHandlers[task.type] as _TaskHandler<_WatchTask, unknown>
       const result$ = handler.exec(ctx, task)
 
       result$.subscribe({
