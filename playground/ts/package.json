@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "ts",
+  "version": "0.0.0-development",
+  "license": "MIT",
+  "types": "./dist/src/index.d.ts",
+  "source": "./src/index.ts",
+  "module": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rimraf dist && pkg build --tsconfig tsconfig.dist.json && pkg --tsconfig tsconfig.dist.json --strict"
+  }
+}
