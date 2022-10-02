@@ -1,7 +1,4 @@
-/* eslint-disable no-console */
-
 import path from 'path'
-import chalk from 'chalk'
 import esbuild, {BuildFailure} from 'esbuild'
 import {_loadConfig, _loadPkgWithReporting} from './_core'
 import {_fileExists, _printPackageTree} from './_printPackageTree'
@@ -18,6 +15,7 @@ export async function check(options: {
   const pkg = await _loadPkgWithReporting({cwd})
   const config = await _loadConfig({cwd})
   const ctx = await _resolveBuildContext({config, cwd, pkg, tsconfig})
+  const {logger} = ctx
 
   _printPackageTree(ctx)
 
@@ -44,7 +42,8 @@ export async function check(options: {
     }
 
     if (missingFiles.length) {
-      throw new Error('missing files')
+      logger.error('missing files')
+      process.exit(1)
     }
 
     // Check if the files are resolved
@@ -53,10 +52,10 @@ export async function check(options: {
       import: [],
     }
 
-    for (const [exportPath, exp] of Object.entries(ctx.exports || {})) {
+    for (const exp of Object.values(ctx.exports || {})) {
       if (!exp._exported) continue
-      if (exp.require) _paths.require.push(exportPath)
-      if (exp.import) _paths.import.push(exportPath)
+      if (exp.require) _paths.require.push(exp.require)
+      if (exp.import) _paths.import.push(exp.import)
     }
 
     const external = Object.keys(pkg.dependencies || {}).concat(
@@ -83,24 +82,24 @@ export async function check(options: {
         })
 
         if (esbuildResult.warnings.length > 0) {
-          console.warn(...esbuildResult.warnings)
+          logger.warn(...esbuildResult.warnings)
         }
       } catch (err) {
         const {errors} = err as BuildFailure
 
         for (const _err of errors) {
           if (_err.location) {
-            console.log(chalk.red('error'), _err.detail || _err.text)
-            console.log(`${_err.location.line} | ${_err.location.lineText}`)
-            console.log(
+            logger.error(_err.detail || _err.text)
+            logger.error(`${_err.location.line} | ${_err.location.lineText}`)
+            logger.error(
               'in',
               `./${_err.location.file}:${_err.location.line}:${_err.location.column}`
             )
           } else {
-            console.log(_err.detail || _err.text)
+            logger.error(_err.detail || _err.text)
           }
 
-          console.log()
+          logger.log()
         }
 
         process.exit(1)
@@ -125,11 +124,13 @@ export async function check(options: {
       })
 
       if (esbuildResult.errors.length > 0) {
-        throw new Error(esbuildResult.errors.join(', '))
+        // throw new Error(esbuildResult.errors.join(', '))
+        logger.error(esbuildResult.errors.join(', '))
+        process.exit(1)
       }
 
       if (esbuildResult.warnings.length > 0) {
-        console.warn(...esbuildResult.warnings)
+        logger.warn(...esbuildResult.warnings)
       }
     }
   }
