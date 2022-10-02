@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.3](https://github.com/sanity-io/pkg-utils/compare/v1.8.2...v1.8.3) (2022-10-02)
+
+### Bug Fixes
+
+- prevent file operation issues ([f68d1ae](https://github.com/sanity-io/pkg-utils/commit/f68d1ae1b13690a52e9f50d370f7feac783c8746))
+- print correct package tree ([e92c5c5](https://github.com/sanity-io/pkg-utils/commit/e92c5c50a6501e5e58968c41a7fdc7a906503267))
+- use `unknown` type instead of `any` ([6c0207c](https://github.com/sanity-io/pkg-utils/commit/6c0207cb64f6db95119d47cd175c3a1e95ca8fa6))
+
 ## [1.8.2](https://github.com/sanity-io/pkg-utils/compare/v1.8.1...v1.8.2) (2022-09-22)
 
 ### Bug Fixes
