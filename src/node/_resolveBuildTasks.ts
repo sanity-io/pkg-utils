@@ -7,6 +7,8 @@ import {_BuildTask, _DtsTask, _RollupTask, _RollupTaskEntry} from './_tasks'
 export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
   const {config, cwd, pkg, target} = ctx
 
+  const bundles = config?.bundles || []
+
   const tasks: _BuildTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(
@@ -64,19 +66,6 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
     })
   }
 
-  // Parse rollup:commonjs:browser tasks
-  for (const exp of exports) {
-    const output = exp.browser?.require
-
-    if (!output) continue
-
-    _addRollupTaskEntry('commonjs', 'browser', {
-      path: exp._path,
-      source: exp.browser?.source || exp.source,
-      output,
-    })
-  }
-
   // Parse rollup:esm:* tasks
   for (const exp of exports) {
     const output = exp.import
@@ -86,6 +75,19 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
     _addRollupTaskEntry('esm', ctx.runtime, {
       path: exp._path,
       source: exp.source,
+      output,
+    })
+  }
+
+  // Parse rollup:commonjs:browser tasks
+  for (const exp of exports) {
+    const output = exp.browser?.require
+
+    if (!output) continue
+
+    _addRollupTaskEntry('commonjs', 'browser', {
+      path: exp._path,
+      source: exp.browser?.source || exp.source,
       output,
     })
   }
@@ -101,6 +103,24 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
       source: exp.browser?.source || exp.source,
       output,
     })
+  }
+
+  for (const bundle of bundles) {
+    if (bundle.require) {
+      _addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
+        path: '__bundle__',
+        source: bundle.source,
+        output: bundle.require,
+      })
+    }
+
+    if (bundle.import) {
+      _addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
+        path: '__bundle__',
+        source: bundle.source,
+        output: bundle.import,
+      })
+    }
   }
 
   if (dtsTask.entries.length) {

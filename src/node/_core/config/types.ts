@@ -36,6 +36,14 @@ export type PkgConfigPropertyResolver<T> = (prev: T) => T
 export type PkgConfigProperty<T> = PkgConfigPropertyResolver<T> | T
 
 /** @public */
+export interface PkgBundle {
+  source: string
+  import?: string
+  require?: string
+  runtime?: PkgRuntime
+}
+
+/** @public */
 export interface PkgExports {
   [path: string]: PkgExport
 }
@@ -45,6 +53,7 @@ export type PkgRuleLevel = 'error' | 'warn' | 'info' | 'off'
 
 /** @public */
 export interface PkgConfigOptions {
+  bundles?: PkgBundle[]
   /**
    * Directory of distributed & bundled files.
    */
