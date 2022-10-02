@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.0](https://github.com/sanity-io/pkg-utils/compare/v1.9.0...v1.10.0) (2022-10-02)
+
+### Features
+
+- add `bundles` config property ([066f663](https://github.com/sanity-io/pkg-utils/commit/066f663f2780bb3b4f41d344c0fafc775d918b0b))
+
 ## [1.9.0](https://github.com/sanity-io/pkg-utils/compare/v1.8.3...v1.9.0) (2022-10-02)
 
 ### Features
