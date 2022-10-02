@@ -51,26 +51,51 @@ export function _printPackageTree(ctx: _BuildContext): void {
     Object.entries(exports)
       .filter(([, entry]) => entry._exported)
       .map(([exportPath, entry]) => {
-        const exp: Omit<PkgExport, '_exported'> = {source: entry.source, default: entry.default}
+        const exp: Omit<PkgExport, '_exported'> = {
+          source: entry.source,
+          types: undefined,
+          browser: undefined,
+          node: undefined,
+          import: undefined,
+          require: undefined,
+          default: entry.default,
+        }
 
-        if (entry.types) exp.types = _fileInfo(entry.types)
+        if (entry.types) {
+          exp.types = _fileInfo(entry.types)
+        } else {
+          delete exp.types
+        }
 
         if (entry.browser) {
           exp.browser = {source: entry.browser.source}
 
           if (entry.browser.import) exp.browser.import = _fileInfo(entry.browser.import)
-          if (entry.browser.require) exp.browser.import = _fileInfo(entry.browser.require)
+          if (entry.browser.require) exp.browser.require = _fileInfo(entry.browser.require)
+        } else {
+          delete exp.browser
         }
 
         if (entry.node) {
           exp.node = {source: entry.node.source}
 
           if (entry.node.import) exp.node.import = _fileInfo(entry.node.import)
-          if (entry.node.require) exp.node.import = _fileInfo(entry.node.require)
+          if (entry.node.require) exp.node.require = _fileInfo(entry.node.require)
+        } else {
+          delete exp.node
         }
 
-        if (entry.import) exp.import = _fileInfo(entry.import)
-        if (entry.require) exp.require = _fileInfo(entry.require)
+        if (entry.import) {
+          exp.import = _fileInfo(entry.import)
+        } else {
+          delete exp.import
+        }
+
+        if (entry.require) {
+          exp.require = _fileInfo(entry.require)
+        } else {
+          delete exp.require
+        }
 
         exp.default = _fileInfo(entry.default)
 
