@@ -68,7 +68,7 @@ export interface PkgConfigOptions {
     }
   }
   /**
-   * Packages to exclude from the bundles.
+   * Packages to exclude from bundles.
    */
   external?: PkgConfigProperty<string[]>
   /**
@@ -88,7 +88,7 @@ export interface PkgConfigOptions {
    */
   jsxImportSource?: string
   /**
-   * Build package with support for legacy exports (writes root <export>.js files)
+   * Build package with support for legacy exports (writes root `<export>.js` files)
    */
   legacyExports?: boolean
   minify?: boolean
