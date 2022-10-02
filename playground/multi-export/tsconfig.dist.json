@@ -2,8 +2,8 @@
   "extends": "./tsconfig.settings",
   "include": ["./src"],
   "compilerOptions": {
-    "outDir": "./dist/types",
     "rootDir": ".",
+    "outDir": "./dist",
 
     "paths": {
       "multi-export": ["./src/index.ts"]

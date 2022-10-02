@@ -4,17 +4,17 @@
   "name": "exports-dummy",
   "version": "1.0.0",
   "license": "MIT",
+  "types": "./dist/src/index.d.ts",
   "source": "./src/index.ts",
-  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
   "browser": {
     "./dist/index.cjs": "./dist/index.browser.cjs",
     "./dist/index.js": "./dist/index.browser.js"
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/src/index.d.ts",
       "browser": {
         "source": "./src/index.ts",
         "require": "./dist/index.browser.cjs",
@@ -26,7 +26,7 @@
       "default": "./dist/index.js"
     },
     "./extra": {
-      "types": "./dist/extra.d.ts",
+      "types": "./dist/src/extra.d.ts",
       "browser": {
         "source": "./src/extra.ts",
         "require": "./dist/extra.browser.cjs",
@@ -41,7 +41,7 @@
   "typesVersions": {
     "*": {
       "extra": [
-        "./dist/extra.d.ts"
+        "./dist/src/extra.d.ts"
       ]
     }
   },
@@ -50,6 +50,6 @@
     "extra.js"
   ],
   "scripts": {
-    "build": "pkg-utils build  --tsconfig tsconfig.dist.json"
+    "build": "rimraf dist extra.js && pkg build --tsconfig tsconfig.dist.json && pkg --tsconfig tsconfig.dist.json --strict"
   }
 }

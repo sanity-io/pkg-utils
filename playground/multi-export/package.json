@@ -4,20 +4,20 @@
   "name": "multi-export",
   "version": "0.0.0-development",
   "license": "MIT",
-  "types": "./dist/types/src/index.d.ts",
+  "types": "./dist/src/index.d.ts",
   "source": "./src/index.ts",
   "module": "./dist/index.js",
   "main": "./dist/index.cjs",
   "exports": {
     ".": {
-      "types": "./dist/types/src/index.d.ts",
+      "types": "./dist/src/index.d.ts",
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./plugin": {
-      "types": "./dist/types/src/plugin.d.ts",
+      "types": "./dist/src/plugin.d.ts",
       "source": "./src/plugin.ts",
       "import": "./dist/plugin.js",
       "require": "./dist/plugin.cjs",
@@ -27,11 +27,11 @@
   "typesVersions": {
     "*": {
       "plugin": [
-        "./dist/types/src/plugin.d.ts"
+        "./dist/src/plugin.d.ts"
       ]
     }
   },
   "scripts": {
-    "build": "pkg-utils build --tsconfig tsconfig.dist.json"
+    "build": "rimraf dist plugin.js && pkg build --tsconfig tsconfig.dist.json && pkg --strict --tsconfig tsconfig.dist.json"
   }
 }

@@ -8,6 +8,6 @@
   "module": "./dist/index.mjs",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "pkg-utils build && pkg-utils"
+    "build": "rimraf dist && pkg build && pkg --strict"
   }
 }

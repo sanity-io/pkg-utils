@@ -4,13 +4,13 @@
   "name": "custom-dist",
   "version": "0.0.0-development",
   "license": "MIT",
+  "types": "./lib/src/index.d.ts",
   "source": "./src/index.ts",
-  "main": "./lib/index.cjs",
   "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./lib/index.cjs",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
+      "types": "./lib/src/index.d.ts",
       "source": "./src/index.ts",
       "import": "./lib/index.js",
       "require": "./lib/index.cjs",
@@ -18,6 +18,6 @@
     }
   },
   "scripts": {
-    "build": "pkg-utils build  --tsconfig tsconfig.lib.json"
+    "build": "rimraf lib && pkg build --tsconfig tsconfig.lib.json && pkg --tsconfig tsconfig.lib.json --strict"
   }
 }
