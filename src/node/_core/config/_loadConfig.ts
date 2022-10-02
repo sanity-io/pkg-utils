@@ -1,7 +1,7 @@
 import path from 'path'
 import {register} from 'esbuild-register/dist/node'
-import findConfig from 'find-config'
 import pkgUp from 'pkg-up'
+import {_findConfigFile} from './_findConfigFile'
 import {PkgConfigOptions} from './types'
 
 /** @internal */
@@ -14,24 +14,22 @@ export async function _loadConfig(options: {cwd: string}): Promise<PkgConfigOpti
 
   const root = path.dirname(pkgPath)
 
-  const configFile = _findConfigFile(root)
+  const configFile = await _findConfigFile(root)
 
   if (!configFile) {
     return undefined
   }
 
   // Do not accept config files outside of the root
-  if (!configFile.path.startsWith(cwd)) {
+  if (!configFile.startsWith(cwd)) {
     return undefined
   }
 
   try {
-    const {unregister} = configFile.transform
-      ? register({extensions: ['.js', '.ts']})
-      : {unregister: () => undefined}
+    const {unregister} = register({extensions: ['.js', '.mjs', '.ts']})
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const mod = require(configFile.path)
+    const mod = require(configFile)
 
     unregister()
 
@@ -39,20 +37,4 @@ export async function _loadConfig(options: {cwd: string}): Promise<PkgConfigOpti
   } catch (_) {
     return undefined
   }
-}
-
-// Looks for:
-// 1. package.config.ts
-// 2. package.config.cjs
-//
-function _findConfigFile(cwd: string): {path: string; transform: boolean} | null {
-  const ts = findConfig('package.config.ts', {cwd})
-
-  if (ts) return {path: ts, transform: true}
-
-  const cjs = findConfig('package.config.cjs', {cwd})
-
-  if (cjs) return {path: cjs, transform: false}
-
-  return null
 }
