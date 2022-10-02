@@ -31,6 +31,7 @@ export async function _buildTypes(options: {
 
   const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
 
+  // TODO: improve logging
   allDiagnostics.forEach((diagnostic) => {
     if (diagnostic.file && diagnostic.start) {
       const {line, character} = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)

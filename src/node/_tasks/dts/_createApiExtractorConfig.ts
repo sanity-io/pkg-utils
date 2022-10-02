@@ -6,11 +6,19 @@ export function _createApiExtractorConfig(options: {
   exportPath: string
   filePath: string
   messages: IExtractorMessagesConfig
-  projectPath: string
-  sourcePath: string
+  projectFolder: string
+  mainEntryPointFilePath: string
   tsconfigPath: string
 }): IConfigFile {
-  const {distPath, exportPath, filePath, messages, projectPath, sourcePath, tsconfigPath} = options
+  const {
+    distPath,
+    exportPath,
+    filePath,
+    messages,
+    projectFolder,
+    mainEntryPointFilePath,
+    tsconfigPath,
+  } = options
 
   return {
     apiReport: {
@@ -35,7 +43,7 @@ export function _createApiExtractorConfig(options: {
       enabled: false,
     },
     messages,
-    mainEntryPointFilePath: sourcePath,
-    projectFolder: projectPath,
+    mainEntryPointFilePath,
+    projectFolder,
   }
 }

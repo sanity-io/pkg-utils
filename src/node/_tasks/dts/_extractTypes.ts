@@ -29,10 +29,10 @@ export async function _extractTypes(options: {
   files: _BuildFile[]
   projectPath: string
   rules?: NonNullable<PkgConfigOptions['extract']>['rules']
-  sourcePath: string
+  sourceTypesPath: string
   tsconfigPath: string
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
-  const {distPath, exportPath, files, filePath, projectPath, rules, sourcePath, tsconfigPath} =
+  const {distPath, exportPath, files, filePath, projectPath, rules, sourceTypesPath, tsconfigPath} =
     options
 
   const tsdocConfigFile = await _createTSDocConfig({
@@ -116,8 +116,8 @@ export async function _extractTypes(options: {
       exportPath,
       filePath,
       messages: messagesConfig,
-      projectPath,
-      sourcePath,
+      projectFolder: projectPath,
+      mainEntryPointFilePath: sourceTypesPath,
       tsconfigPath,
     }),
     configObjectFullPath: undefined,
