@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.0](https://github.com/sanity-io/pkg-utils/compare/v1.8.3...v1.9.0) (2022-10-02)
+
+### Features
+
+- add `legacyExports` config property ([7be1b76](https://github.com/sanity-io/pkg-utils/commit/7be1b76a65bb6317eed77e00efae95d7b9865cd4))
+
 ## [1.8.3](https://github.com/sanity-io/pkg-utils/compare/v1.8.2...v1.8.3) (2022-10-02)
 
 ### Bug Fixes
