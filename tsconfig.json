@@ -1,12 +1,12 @@
 {
   "extends": "./tsconfig.settings",
-  "include": ["./package.config.ts", "./package.json", "**/*.ts"],
-  "exclude": ["./playground", "./test/env/__tmp__"],
+  "include": ["./*.cjs", "./*.ts", "./bin", "./package.json", "./scripts", "./src", "./test"],
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./dist/types",
+    "outDir": "./dist",
 
     "noEmit": true,
+    "allowJs": true,
     "resolveJsonModule": true,
 
     "baseUrl": "./src",

@@ -1,15 +1,12 @@
 import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
-  exports: (exports) => ({
-    ...exports,
-    './cli': {
+  bundles: [
+    {
       source: './src/cli/index.ts',
       require: './dist/cli.cjs',
-      default: './dist/cli.cjs',
     },
-  }),
-  external: (external) => external.concat(['@sanity/tsdoc']),
+  ],
   extract: {
     rules: {
       'ae-forgotten-export': 'error',

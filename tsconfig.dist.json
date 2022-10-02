@@ -3,7 +3,9 @@
   "include": ["./package.json", "./src"],
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./dist/types",
+    "outDir": "./dist",
+
+    "emitDeclarationOnly": true,
     "resolveJsonModule": true
   }
 }
