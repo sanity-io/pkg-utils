@@ -78,6 +78,10 @@ export interface PkgConfigOptions {
    * Defaults to `"react"`
    */
   jsxImportSource?: string
+  /**
+   * Build package with support for legacy exports (writes root <export>.js files)
+   */
+  legacyExports?: boolean
   minify?: boolean
   /**
    * Default runtime of package exports

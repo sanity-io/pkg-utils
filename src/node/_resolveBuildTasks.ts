@@ -5,7 +5,7 @@ import {_BuildTask, _DtsTask, _RollupTask, _RollupTaskEntry} from './_tasks'
 
 /** @internal */
 export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
-  const {cwd, pkg, target} = ctx
+  const {config, cwd, pkg, target} = ctx
 
   const tasks: _BuildTask[] = []
 
@@ -109,23 +109,28 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
 
   tasks.push(...Object.values(rollupTasks))
 
-  // Parse rollup:esm:browser tasks
-  for (const exp of exports) {
-    if (exp._exported && exp._path !== '.') {
-      const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(/\.[^/.]+$/, '')
-      const ext = _MODULE_EXT[pkg.type].esm
-
-      if (relativeTargetPath) {
-        fs.writeFileSync(
-          path.resolve(cwd, `${exp._path}.js`),
-          [
-            `// AUTO-GENERATED – DO NOT EDIT`,
-            ``,
-            // `export {default} from '${relativeTargetPath}'`,
-            `export * from '${relativeTargetPath}${pkg.type === 'commonjs' ? ext : ''}'`,
-            ``,
-          ].join('\n')
+  // Write legacy exports files
+  if (config?.legacyExports) {
+    for (const exp of exports) {
+      if (exp._exported && exp._path !== '.') {
+        const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
+          /\.[^/.]+$/,
+          ''
         )
+        const ext = _MODULE_EXT[pkg.type].esm
+
+        if (relativeTargetPath) {
+          fs.writeFileSync(
+            path.resolve(cwd, `${exp._path}.js`),
+            [
+              `// AUTO-GENERATED – DO NOT EDIT`,
+              ``,
+              // `export {default} from '${relativeTargetPath}'`,
+              `export * from '${relativeTargetPath}${pkg.type === 'commonjs' ? ext : ''}'`,
+              ``,
+            ].join('\n')
+          )
+        }
       }
     }
   }
