@@ -15,21 +15,38 @@ test('should build `js` package', async () => {
   await project.remove()
 })
 
-test('should build `isomorphic` package', async () => {
-  const project = await _spawnProject('isomorphic')
+test('should build `exports-dummy` package', async () => {
+  const project = await _spawnProject('exports-dummy')
 
   await project.install()
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('isomorphic: ./src/index.ts -> ./dist/types/src/index.d.ts')
-  expect(stdout).toContain('isomorphic: ./src/index.ts -> ./dist/index.cjs')
-  expect(stdout).toContain('isomorphic: ./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('isomorphic: ./src/browser/index.ts -> ./dist/index.browser.cjs')
-  expect(stdout).toContain('isomorphic: ./src/browser/index.ts -> ./dist/index.browser.js')
+  // types
+  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/src/index.d.ts')
+  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/src/extra.d.ts')
 
+  // commonjs
+  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.cjs')
+  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.browser.cjs')
+  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.cjs')
+  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.browser.cjs')
+
+  // esm
+  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.js')
+  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.browser.js')
+  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.js')
+  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.browser.js')
+
+  expect(await project.readFile('dist/src/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
   expect(await project.readFile('dist/index.browser.js')).toMatchSnapshot()
+
+  expect(await project.readFile('dist/src/extra.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/extra.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/extra.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/extra.browser.js')).toMatchSnapshot()
 
   await project.remove()
 })
@@ -43,11 +60,11 @@ test('should build `custom-dist` package', async () => {
 
   expect(stdout).toContain('./src/index.ts -> ./lib/index.cjs')
   expect(stdout).toContain('./src/index.ts -> ./lib/index.js')
-  expect(stdout).toContain('./src/index.ts -> ./lib/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./lib/src/index.d.ts')
 
   expect(await project.readFile('lib/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('lib/index.js')).toMatchSnapshot()
-  expect(await project.readFile('lib/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('lib/src/index.d.ts')).toMatchSnapshot()
 
   await project.remove()
 })
@@ -61,19 +78,19 @@ test('should build `multi-export` package', async () => {
 
   expect(stdout).toContain('./src/index.ts -> ./dist/index.cjs')
   expect(stdout).toContain('./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('./src/index.ts -> ./dist/types/src/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./dist/src/index.d.ts')
 
   expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.cjs')
   expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.js')
-  expect(stdout).toContain('./src/plugin.ts -> ./dist/types/src/plugin.d.ts')
+  expect(stdout).toContain('./src/plugin.ts -> ./dist/src/plugin.d.ts')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/types/src/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/src/index.d.ts')).toMatchSnapshot()
 
   expect(await project.readFile('dist/plugin.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/plugin.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/types/src/plugin.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/src/plugin.d.ts')).toMatchSnapshot()
 
   await project.remove()
 })

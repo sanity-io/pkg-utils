@@ -20,15 +20,67 @@ export {}
 "
 `;
 
-exports[`should build \`isomorphic\` package 1`] = `
-"const o=\\"1.0.0\\";export{o as version};
+exports[`should build \`exports-dummy\` package 1`] = `
+"/** @public */
+export declare const format: string
+
+/** @public */
+export declare const path: string
+
+/** @public */
+export declare const runtime: string
+
+export {}
+"
+`;
+
+exports[`should build \`exports-dummy\` package 2`] = `
+"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});exports.format=\\"commonjs\\",exports.path=\\"dist/index.cjs\\",exports.runtime=\\"*\\";
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`exports-dummy\` package 3`] = `
+"const s=\\"esm\\",e=\\"*\\",t=\\"dist/index.js\\";export{s as format,t as path,e as runtime};
 //# sourceMappingURL=index.js.map
 "
 `;
 
-exports[`should build \`isomorphic\` package 2`] = `
-"const o=\\"1.0.0/browser\\";export{o as version};
+exports[`should build \`exports-dummy\` package 4`] = `
+"const s=\\"esm\\",e=\\"browser\\",r=\\"dist/index.browser.js\\";export{s as format,r as path,e as runtime};
 //# sourceMappingURL=index.browser.js.map
+"
+`;
+
+exports[`should build \`exports-dummy\` package 5`] = `
+"/** @public */
+export declare const format: string
+
+/** @public */
+export declare const path: string
+
+/** @public */
+export declare const runtime: string
+
+export {}
+"
+`;
+
+exports[`should build \`exports-dummy\` package 6`] = `
+"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});exports.format=\\"commonjs\\",exports.path=\\"dist/extra.cjs\\",exports.runtime=\\"*\\";
+//# sourceMappingURL=extra.cjs.map
+"
+`;
+
+exports[`should build \`exports-dummy\` package 7`] = `
+"const s=\\"esm\\",t=\\"*\\",e=\\"dist/extra.js\\";export{s as format,e as path,t as runtime};
+//# sourceMappingURL=extra.js.map
+"
+`;
+
+exports[`should build \`exports-dummy\` package 8`] = `
+"const r=\\"esm\\",s=\\"browser\\",e=\\"dist/extra.browser.js\\";export{r as format,e as path,s as runtime};
+//# sourceMappingURL=extra.browser.js.map
 "
 `;
 
