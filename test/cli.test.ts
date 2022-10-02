@@ -95,7 +95,7 @@ test('should build `multi-export` package', async () => {
   await project.remove()
 })
 
-describe('runtime: webpack v3', () => {
+describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await _spawnProject('exports-dummy')
     const runtime = await _spawnProject('runtime-webpack-v3')
@@ -119,10 +119,13 @@ describe('runtime: webpack v3', () => {
     expect(extra.runtime).toBe('browser')
     expect(extra.format).toBe('esm')
     expect(extra.path).toBe('dist/extra.browser.js')
+
+    await runtime.remove()
+    await exportsDummy.remove()
   })
 })
 
-describe('runtime: next.js', () => {
+describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await _spawnProject('exports-dummy')
     const runtime = await _spawnProject('runtime-next-js')
@@ -144,5 +147,8 @@ describe('runtime: next.js', () => {
 
     expect(pageFile).toContain(`"dist/index.browser.js"`)
     expect(pageFile).toContain(`"dist/extra.browser.js"`)
+
+    await runtime.remove()
+    await exportsDummy.remove()
   })
 })

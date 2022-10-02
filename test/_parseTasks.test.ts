@@ -60,20 +60,6 @@ test('should parse tasks', () => {
     },
     {
       type: 'build:js',
-      buildId: 'commonjs:browser',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.ts',
-          output: './dist/index.browser.cjs',
-        },
-      ],
-      runtime: 'browser',
-      format: 'commonjs',
-      target: ['chrome102'],
-    },
-    {
-      type: 'build:js',
       buildId: 'esm:*',
       entries: [
         {
@@ -85,6 +71,20 @@ test('should parse tasks', () => {
       runtime: '*',
       format: 'esm',
       target: ['chrome102', 'node14'],
+    },
+    {
+      type: 'build:js',
+      buildId: 'commonjs:browser',
+      entries: [
+        {
+          path: '.',
+          source: './src/index.ts',
+          output: './dist/index.browser.cjs',
+        },
+      ],
+      runtime: 'browser',
+      format: 'commonjs',
+      target: ['chrome102'],
     },
     {
       type: 'build:js',
