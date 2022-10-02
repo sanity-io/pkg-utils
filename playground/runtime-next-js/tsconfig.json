@@ -1,15 +1,10 @@
 {
   "extends": "./tsconfig.settings",
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["./next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["./node_modules"],
   "compilerOptions": {
     "noEmit": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
@@ -17,10 +12,5 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve"
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  }
 }
