@@ -14,9 +14,11 @@ export async function _loadPkgWithReporting(options: {cwd: string}): Promise<_Pa
       for (const issue of err.issues) {
         if (issue.code === 'invalid_type') {
           console.log(
-            `${chalk.red('invalid type')} in ./package.json at ${chalk.magenta(
-              `\`${issue.path.join('.')}\``
-            )} (expected ${issue.expected}, received ${issue.received})`
+            [
+              `${chalk.red('fail')}   \`${_formatPath(issue.path)}\` `,
+              `in ./package.json must be of type ${chalk.magenta(issue.expected)} `,
+              `(received ${chalk.magenta(issue.received)})`,
+            ].join('')
           )
         }
       }
@@ -26,4 +28,22 @@ export async function _loadPkgWithReporting(options: {cwd: string}): Promise<_Pa
 
     process.exit(1)
   }
+}
+
+function _formatPath(segments: Array<string | number>) {
+  return segments
+    .map((s, idx) => {
+      if (idx === 0) return s
+
+      if (typeof s === 'number') {
+        return `[${s}]`
+      }
+
+      if (s.startsWith('.')) {
+        return `["${s}"]`
+      }
+
+      return `.${s}`
+    })
+    .join('')
 }
