@@ -1,9 +1,14 @@
 import {check} from '../node/check'
+import {_handleError} from './_handleError'
 
 export async function checkAction(options: {strict?: boolean; tsconfig?: string}): Promise<void> {
-  return await check({
-    cwd: process.cwd(),
-    strict: options.strict,
-    tsconfig: options.tsconfig,
-  })
+  try {
+    await check({
+      cwd: process.cwd(),
+      strict: options.strict,
+      tsconfig: options.tsconfig,
+    })
+  } catch (err) {
+    _handleError(err)
+  }
 }
