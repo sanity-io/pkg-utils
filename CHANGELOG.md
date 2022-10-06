@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.0](https://github.com/sanity-io/pkg-utils/compare/v1.10.0...v1.11.0) (2022-10-06)
+
+### Features
+
+- handle errors gracefully ([2210dd5](https://github.com/sanity-io/pkg-utils/commit/2210dd530623a7f72387716916f2b49cc7cdd8c5))
+
+### Bug Fixes
+
+- make joined paths readable ([6b38bf9](https://github.com/sanity-io/pkg-utils/commit/6b38bf978b031e15d033256ea3f08bc39e0774ab))
+- use `.esm.js` extension for esm exports in commonjs packages ([124cce0](https://github.com/sanity-io/pkg-utils/commit/124cce0f0f738e41e85543dec4ee44eebb96ef22))
+
 ## [1.10.0](https://github.com/sanity-io/pkg-utils/compare/v1.9.0...v1.10.0) (2022-10-02)
 
 ### Features
