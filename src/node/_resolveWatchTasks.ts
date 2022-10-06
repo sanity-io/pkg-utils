@@ -116,18 +116,13 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
           /\.[^/.]+$/,
           ''
         )
-        const ext = _MODULE_EXT[pkg.type].esm
 
         if (relativeTargetPath) {
           fs.writeFileSync(
             path.resolve(cwd, `${exp._path}.js`),
-            [
-              `// AUTO-GENERATED – DO NOT EDIT`,
-              ``,
-              // `export {default} from '${relativeTargetPath}'`,
-              `export * from '${relativeTargetPath}${pkg.type === 'commonjs' ? ext : ''}'`,
-              ``,
-            ].join('\n')
+            [`// AUTO-GENERATED – DO NOT EDIT`, `export * from '${relativeTargetPath}'`, ``].join(
+              '\n'
+            )
           )
         }
       }

@@ -1,3 +1,4 @@
+import {_MODULE_EXT} from '../_constants'
 import {PkgExport} from '../config'
 import {_PackageJSON} from './_types'
 
@@ -6,22 +7,19 @@ export function _validateExports(
   options: {pkg: _PackageJSON}
 ): (PkgExport & {_path: string})[] {
   const {pkg} = options
+  const ext = _MODULE_EXT[pkg.type]
 
   for (const exp of _exports) {
-    if (pkg.type === 'commonjs') {
-      if (exp.require && !exp.require.endsWith('.js')) {
-        throw new Error(
-          `package.json with \`"type": "commonjs"\` - \`exports["${exp._path}"].require\` must end with ".js"`
-        )
-      }
+    if (exp.require && !exp.require.endsWith(ext.commonjs)) {
+      throw new Error(
+        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`
+      )
     }
 
-    if (pkg.type === 'module') {
-      if (exp.require && !exp.require.endsWith('.cjs')) {
-        throw new Error(
-          `package.json with \`"type": "module"\` - \`exports["${exp._path}"].require\` must end with ".cjs"`
-        )
-      }
+    if (exp.import && !exp.import.endsWith(ext.esm)) {
+      throw new Error(
+        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.esm}"`
+      )
     }
   }
 

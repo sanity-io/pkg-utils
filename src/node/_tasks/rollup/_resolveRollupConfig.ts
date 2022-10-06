@@ -173,11 +173,9 @@ export function _resolveRollupConfig(
     outputOptions: {
       chunkFileNames: () => `_[name]-[hash]${outputExt}`,
       dir: outDir,
-      entryFileNames: () => `[name]${outputExt}`,
+      entryFileNames: () => (outputExt === '.esm.js' ? `[name].js` : `[name]${outputExt}`),
       format,
-      // esModule: true,
       exports: 'auto',
-      // freeze: true,
       sourcemap: config?.sourcemap ?? true,
     },
   }

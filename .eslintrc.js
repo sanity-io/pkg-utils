@@ -49,7 +49,7 @@ module.exports = {
 
   overrides: [
     {
-      files: ['**/*.cjs', '**/*.mjs', '**/*.js'],
+      files: ['**/*.js'],
       rules: {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
       },

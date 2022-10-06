@@ -4,7 +4,7 @@ export default defineConfig({
   bundles: [
     {
       source: './src/cli/index.ts',
-      require: './dist/cli.cjs',
+      require: './dist/cli.js',
     },
   ],
   extract: {
