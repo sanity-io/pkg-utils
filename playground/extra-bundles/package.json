@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "source": "./src/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.esm.js",
   "main": "./dist/index.js",
   "scripts": {
     "build": "rimraf dist && pkg build && pkg --strict"
