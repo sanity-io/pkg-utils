@@ -171,7 +171,7 @@ export function _resolveRollupConfig(
       },
     },
     outputOptions: {
-      chunkFileNames: () => `_[name]-[hash]${outputExt}`,
+      chunkFileNames: () => `_chunks/[name]-[hash]${outputExt}`,
       dir: outDir,
       entryFileNames: () => (outputExt === '.esm.js' ? `[name].js` : `[name]${outputExt}`),
       format,
