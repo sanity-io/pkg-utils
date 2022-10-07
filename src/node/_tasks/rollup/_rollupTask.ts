@@ -37,7 +37,8 @@ export const _rollupTask: _TaskHandler<_RollupTask> = {
 }
 
 async function _execPromise(ctx: _BuildContext, task: _RollupTask) {
-  const {files, dist: outDir} = ctx
+  const {files, distPath} = ctx
+  const outDir = path.relative(ctx.cwd, distPath)
 
   const {inputOptions, outputOptions} = _resolveRollupConfig(ctx, task)
 

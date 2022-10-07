@@ -22,10 +22,10 @@ export function _resolveRollupConfig(
   buildTask: _RollupTask | _RollupWatchTask
 ): _RollupConfig {
   const {format, runtime, target} = buildTask
-  const {config, cwd, exports: _exports, external, dist: outDir, logger, pkg, ts} = ctx
+  const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
   const outputExt = _MODULE_EXT[pkg.type][format]
-
   const minify = config?.minify ?? true
+  const outDir = path.relative(cwd, distPath)
 
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {

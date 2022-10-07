@@ -12,7 +12,7 @@ export interface _BuildFile {
 export interface _BuildContext {
   config?: PkgConfigOptions
   cwd: string
-  dist: string
+  distPath: string
   exports: PkgExports | undefined
   external: string[]
   files: _BuildFile[]
@@ -25,7 +25,6 @@ export interface _BuildContext {
   }
   pkg: _PackageJSON
   runtime: PkgRuntime
-  src: string
   target: Record<PkgRuntime, string[]>
   ts: {
     config?: ts.ParsedCommandLine
