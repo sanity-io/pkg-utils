@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.12.0](https://github.com/sanity-io/pkg-utils/compare/v1.11.0...v1.12.0) (2022-10-07)
+
+### Features
+
+- detect dist path from package.json ([22acd14](https://github.com/sanity-io/pkg-utils/commit/22acd142d5a2c3df0adf930d394ef383172584c9))
+
 ## [1.11.0](https://github.com/sanity-io/pkg-utils/compare/v1.10.0...v1.11.0) (2022-10-06)
 
 ### Features
