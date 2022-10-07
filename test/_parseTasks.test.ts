@@ -19,7 +19,7 @@ test('should parse tasks', () => {
 
   const ctx: _BuildContext = {
     cwd: '/test',
-    dist: 'dist',
+    distPath: '/test/dist',
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
     files: [],
@@ -32,7 +32,6 @@ test('should parse tasks', () => {
     },
     pkg,
     runtime: '*',
-    src: 'src',
     target: {
       '*': ['chrome102', 'node14'],
       browser: ['chrome102'],
