@@ -1,4 +1,5 @@
 import {defineConfig} from '@sanity/pkg-utils'
+import {visualizer} from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   bundles: [
@@ -16,5 +17,13 @@ export default defineConfig({
     },
   },
   minify: false,
+  rollup: {
+    plugins: [
+      visualizer({
+        emitFile: true,
+        filename: 'stats.html',
+      }),
+    ],
+  },
   runtime: 'node',
 })
