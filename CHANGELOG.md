@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.0](https://github.com/sanity-io/pkg-utils/compare/v1.12.0...v1.13.0) (2022-10-08)
+
+### Features
+
+- configure rollup plugins ([7685c1a](https://github.com/sanity-io/pkg-utils/commit/7685c1a64de9e2d573957c2daa95eb470d5047fd))
+
+### Bug Fixes
+
+- support tsdoc rules ([5718f10](https://github.com/sanity-io/pkg-utils/commit/5718f10c37b049bd926dac8c5c1a4f032ba60606))
+
 ## [1.12.0](https://github.com/sanity-io/pkg-utils/compare/v1.11.0...v1.12.0) (2022-10-07)
 
 ### Features
