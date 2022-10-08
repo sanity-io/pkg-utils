@@ -93,20 +93,20 @@ export async function _extractTypes(options: {
         addToApiReportFile: false,
       },
 
-      // 'tsdoc-link-tag-unescaped-text': {
-      //   logLevel: 'warning' as ExtractorLogLevel,
-      //   addToApiReportFile: false
-      // },
+      'tsdoc-link-tag-unescaped-text': {
+        logLevel: _ruleToLogLevel('tsdoc-link-tag-unescaped-text', 'warning' as ExtractorLogLevel),
+        addToApiReportFile: false,
+      },
 
-      // 'tsdoc-unsupported-tag': {
-      //   logLevel: 'none' as ExtractorLogLevel,
-      //   addToApiReportFile: false
-      // },
+      'tsdoc-undefined-tag': {
+        logLevel: _ruleToLogLevel('tsdoc-undefined-tag', 'error' as ExtractorLogLevel),
+        addToApiReportFile: false,
+      },
 
-      // 'tsdoc-undefined-tag': {
-      //   logLevel: 'none' as ExtractorLogLevel,
-      //   addToApiReportFile: false
-      // }
+      'tsdoc-unsupported-tag': {
+        logLevel: _ruleToLogLevel('tsdoc-unsupported-tag', 'none' as ExtractorLogLevel),
+        addToApiReportFile: false,
+      },
     },
   }
 

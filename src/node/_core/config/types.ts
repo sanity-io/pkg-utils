@@ -70,6 +70,9 @@ export interface PkgConfigOptions {
       'ae-incompatible-release-tags'?: PkgRuleLevel
       'ae-internal-missing-underscore'?: PkgRuleLevel
       'ae-missing-release-tag'?: PkgRuleLevel
+      'tsdoc-link-tag-unescaped-text'?: PkgRuleLevel
+      'tsdoc-undefined-tag'?: PkgRuleLevel
+      'tsdoc-unsupported-tag'?: PkgRuleLevel
     }
   }
   /**
