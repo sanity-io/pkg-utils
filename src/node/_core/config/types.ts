@@ -1,3 +1,8 @@
+import {type Plugin as RollupPlugin} from 'rollup'
+
+// re-export
+export type {RollupPlugin}
+
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'
 
@@ -92,6 +97,10 @@ export interface PkgConfigOptions {
    */
   legacyExports?: boolean
   minify?: boolean
+  /** @alpha */
+  rollup?: {
+    plugins?: RollupPlugin[]
+  }
   /**
    * Default runtime of package exports
    */

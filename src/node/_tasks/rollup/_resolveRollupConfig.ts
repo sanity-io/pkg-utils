@@ -164,6 +164,8 @@ export function _resolveRollupConfig(
               },
             },
           }),
+
+        ...(config?.rollup?.plugins || []),
       ].filter(Boolean),
 
       treeshake: {
