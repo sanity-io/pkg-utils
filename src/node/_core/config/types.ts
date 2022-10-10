@@ -112,7 +112,7 @@ export interface PkgConfigOptions {
   minify?: boolean
   /** @alpha */
   rollup?: {
-    plugins?: RollupPlugin[]
+    plugins?: PkgConfigProperty<RollupPlugin[]>
   }
   /**
    * Default runtime of package exports

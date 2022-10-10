@@ -5,10 +5,10 @@ import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
-import {InputOptions, OutputOptions} from 'rollup'
+import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {terser} from 'rollup-plugin-terser'
-import {_BuildContext, _DEFAULTS, _MODULE_EXT} from '../../_core'
+import {_BuildContext, _DEFAULTS, _MODULE_EXT, _resolveConfigProperty} from '../../_core'
 import {_RollupTask, _RollupWatchTask} from '../_types'
 
 export interface _RollupConfig {
@@ -48,6 +48,87 @@ export function _resolveRollupConfig(
   const replacements = Object.fromEntries(
     Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)])
   )
+
+  const defaultPlugins = [
+    replace({
+      preventAssignment: true,
+      values: {
+        ...(pkg.name === '@sanity/pkg-utils'
+          ? {...replacements}
+          : {
+              'process.env.PKG_FILE_PATH': (arg) => {
+                const sourcePath = './' + path.relative(cwd, arg)
+                const entry = entries.find((e) => e.source === sourcePath)
+
+                if (!entry) {
+                  throw new Error(`could not find source entry: ${sourcePath}`)
+                }
+
+                return JSON.stringify(
+                  path.relative(cwd, path.resolve(outDir, entry.name + outputExt))
+                )
+              },
+              'process.env.PKG_FORMAT': JSON.stringify(format),
+              'process.env.PKG_RUNTIME': JSON.stringify(runtime),
+              'process.env.PKG_VERSION': JSON.stringify(process.env.PKG_VERSION || pkg.version),
+              ...replacements,
+            }),
+      },
+    }),
+    alias({
+      entries: {...pathAliases},
+    }),
+    nodeResolve({
+      // mainFields: ['module', 'jsnext', 'main'],
+      browser: runtime === 'browser',
+      // exportConditions: [runtime === 'node' ? 'node' : 'browser'],
+      extensions: ['.cjs', '.mjs', '.js', '.jsx', '.json', '.node'],
+      preferBuiltins: true, // runtime === 'node',
+    }),
+    commonjs({
+      esmExternals: false,
+      extensions: ['.js'],
+      // include: /\/node_modules\//,
+      // requireReturnsDefault: 'namespace',
+    }),
+    json(),
+    esbuild({
+      jsx: config?.jsx ?? 'automatic',
+      jsxFactory: config?.jsxFactory ?? 'createElement',
+      jsxFragment: config?.jsxFragment ?? 'Fragment',
+      jsxImportSource: config?.jsxImportSource ?? 'react',
+      target,
+      tsconfig: ctx.ts.configPath || 'tsconfig.json',
+    }),
+    getBabelOutputPlugin({
+      babelrc: false,
+      plugins: ['@babel/plugin-proposal-object-rest-spread'],
+      presets: [['@babel/preset-env', {targets: pkg.browserslist || _DEFAULTS.browserslist}]],
+    }),
+    minify &&
+      terser({
+        output: {
+          comments: (_node, comment) => {
+            const text = comment.value
+            const type = comment.type
+
+            // Check if this is a multiline comment
+            if (type == 'comment2') {
+              // Keep licensing comments
+              return /@preserve|@license|@cc_on/i.test(text)
+            }
+
+            return false
+          },
+        },
+      }),
+  ].filter(Boolean) as Plugin[]
+
+  const userPlugins = config?.rollup?.plugins
+
+  const plugins = Array.isArray(userPlugins)
+    ? defaultPlugins.concat(userPlugins)
+    : _resolveConfigProperty(config?.rollup?.plugins, defaultPlugins)
 
   return {
     inputOptions: {
@@ -96,82 +177,7 @@ export function _resolveRollupConfig(
         }
       },
 
-      plugins: [
-        replace({
-          preventAssignment: true,
-          values: {
-            ...(pkg.name === '@sanity/pkg-utils'
-              ? {...replacements}
-              : {
-                  'process.env.PKG_FILE_PATH': (arg) => {
-                    const sourcePath = './' + path.relative(cwd, arg)
-                    const entry = entries.find((e) => e.source === sourcePath)
-
-                    if (!entry) {
-                      throw new Error(`could not find source entry: ${sourcePath}`)
-                    }
-
-                    return JSON.stringify(
-                      path.relative(cwd, path.resolve(outDir, entry.name + outputExt))
-                    )
-                  },
-                  'process.env.PKG_FORMAT': JSON.stringify(format),
-                  'process.env.PKG_RUNTIME': JSON.stringify(runtime),
-                  'process.env.PKG_VERSION': JSON.stringify(process.env.PKG_VERSION || pkg.version),
-                  ...replacements,
-                }),
-          },
-        }),
-        alias({
-          entries: {...pathAliases},
-        }),
-        nodeResolve({
-          // mainFields: ['module', 'jsnext', 'main'],
-          browser: runtime === 'browser',
-          // exportConditions: [runtime === 'node' ? 'node' : 'browser'],
-          extensions: ['.cjs', '.mjs', '.js', '.jsx', '.json', '.node'],
-          preferBuiltins: true, // runtime === 'node',
-        }),
-        commonjs({
-          esmExternals: false,
-          extensions: ['.js'],
-          // include: /\/node_modules\//,
-          // requireReturnsDefault: 'namespace',
-        }),
-        json(),
-        esbuild({
-          jsx: config?.jsx ?? 'automatic',
-          jsxFactory: config?.jsxFactory ?? 'createElement',
-          jsxFragment: config?.jsxFragment ?? 'Fragment',
-          jsxImportSource: config?.jsxImportSource ?? 'react',
-          target,
-          tsconfig: ctx.ts.configPath || 'tsconfig.json',
-        }),
-        getBabelOutputPlugin({
-          babelrc: false,
-          plugins: ['@babel/plugin-proposal-object-rest-spread'],
-          presets: [['@babel/preset-env', {targets: pkg.browserslist || _DEFAULTS.browserslist}]],
-        }),
-        minify &&
-          terser({
-            output: {
-              comments: (_node, comment) => {
-                const text = comment.value
-                const type = comment.type
-
-                // Check if this is a multiline comment
-                if (type == 'comment2') {
-                  // Keep licensing comments
-                  return /@preserve|@license|@cc_on/i.test(text)
-                }
-
-                return false
-              },
-            },
-          }),
-
-        ...(config?.rollup?.plugins || []),
-      ].filter(Boolean),
+      plugins,
 
       treeshake: {
         propertyReadSideEffects: false,
