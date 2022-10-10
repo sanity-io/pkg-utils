@@ -50,6 +50,7 @@ export async function _doExtract(
     const targetPath = path.resolve(cwd, entry.targetPath)
 
     const result = await _extractTypes({
+      customTags: config?.extract?.customTags,
       cwd,
       exportPath,
       files,

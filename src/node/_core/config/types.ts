@@ -57,6 +57,13 @@ export interface PkgExports {
 export type PkgRuleLevel = 'error' | 'warn' | 'info' | 'off'
 
 /** @public */
+export interface TSDocCustomTag {
+  name: string
+  syntaxKind: 'block' | 'modifier'
+  allowMultiple?: boolean
+}
+
+/** @public */
 export interface PkgConfigOptions {
   bundles?: PkgBundle[]
   /**
@@ -65,6 +72,7 @@ export interface PkgConfigOptions {
   dist?: string
   exports?: PkgConfigProperty<PkgExports>
   extract?: {
+    customTags?: TSDocCustomTag[]
     rules?: {
       'ae-forgotten-export'?: PkgRuleLevel
       'ae-incompatible-release-tags'?: PkgRuleLevel

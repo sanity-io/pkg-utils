@@ -22,6 +22,7 @@ const _LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
 }
 
 export async function _extractTypes(options: {
+  customTags: NonNullable<PkgConfigOptions['extract']>['customTags']
   cwd: string
   distPath: string
   exportPath: string
@@ -32,11 +33,20 @@ export async function _extractTypes(options: {
   sourceTypesPath: string
   tsconfigPath: string
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
-  const {distPath, exportPath, files, filePath, projectPath, rules, sourceTypesPath, tsconfigPath} =
-    options
+  const {
+    customTags,
+    distPath,
+    exportPath,
+    files,
+    filePath,
+    projectPath,
+    rules,
+    sourceTypesPath,
+    tsconfigPath,
+  } = options
 
   const tsdocConfigFile = await _createTSDocConfig({
-    customTags: [],
+    customTags: customTags || [],
   })
 
   function _ruleToLogLevel(
