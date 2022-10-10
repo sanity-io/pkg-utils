@@ -45,6 +45,10 @@ export function _resolveRollupConfig(
 
   const sourcePaths = _exports && Object.values(_exports).map((e) => path.resolve(cwd, e.source))
 
+  const replacements = Object.fromEntries(
+    Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)])
+  )
+
   return {
     inputOptions: {
       context: cwd,
@@ -97,7 +101,7 @@ export function _resolveRollupConfig(
           preventAssignment: true,
           values: {
             ...(pkg.name === '@sanity/pkg-utils'
-              ? {}
+              ? {...replacements}
               : {
                   'process.env.PKG_FILE_PATH': (arg) => {
                     const sourcePath = './' + path.relative(cwd, arg)
@@ -114,6 +118,7 @@ export function _resolveRollupConfig(
                   'process.env.PKG_FORMAT': JSON.stringify(format),
                   'process.env.PKG_RUNTIME': JSON.stringify(runtime),
                   'process.env.PKG_VERSION': JSON.stringify(process.env.PKG_VERSION || pkg.version),
+                  ...replacements,
                 }),
           },
         }),

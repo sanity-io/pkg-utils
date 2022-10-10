@@ -66,6 +66,8 @@ export interface TSDocCustomTag {
 /** @public */
 export interface PkgConfigOptions {
   bundles?: PkgBundle[]
+  /** @alpha */
+  define?: Record<string, string | number | boolean | undefined | null>
   /**
    * Directory of distributed & bundled files.
    */
