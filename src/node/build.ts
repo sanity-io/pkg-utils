@@ -4,7 +4,25 @@ import {_resolveBuildTasks} from './_resolveBuildTasks'
 import {_spinner} from './_spinner'
 import {_BuildTask, _TaskHandler, _buildTaskHandlers} from './_tasks'
 
-/** @public */
+/**
+ * Build the distribution files of a npm package.
+ *
+ * @example
+ * ```ts
+ * import {build} from '@sanity/pkg-utils'
+ *
+ * build({
+ *   cwd: process.cwd(),
+ *   tsconfig: 'tsconfig.dist.json,
+ * }).then(() => {
+ *   console.log('successfully built')
+ * }).catch((err) => {
+ *   console.log(`build error: ${err.message}`)
+ * })
+ * ```
+ *
+ * @public
+ */
 export async function build(options: {cwd: string; tsconfig?: string}): Promise<void> {
   const {cwd, tsconfig = 'tsconfig.json'} = options
 
