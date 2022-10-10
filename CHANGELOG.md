@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.0](https://github.com/sanity-io/pkg-utils/compare/v1.13.0...v1.14.0) (2022-10-10)
+
+### Features
+
+- configure `define` property ([9d4d9a0](https://github.com/sanity-io/pkg-utils/commit/9d4d9a0e8138423e3f1f5eaf96991a2e326e9845))
+- configure `extract.customTags` ([ca36e7e](https://github.com/sanity-io/pkg-utils/commit/ca36e7ece28ba029509112c9600a52d263997c57))
+
 ## [1.13.0](https://github.com/sanity-io/pkg-utils/compare/v1.12.0...v1.13.0) (2022-10-08)
 
 ### Features
