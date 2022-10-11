@@ -53,6 +53,13 @@ export default defineConfig({
 An array of entry points to bundle. This is useful if you want to bundle something that should not
 be exported by the package, e.g. CLI scripts or Node.js workers.
 
+#### `define`
+
+- Type: `Record<string, string | number | boolean | null | undefined>`
+- Default: `{}`
+
+An object defining globals within the package.
+
 #### `dist`
 
 - Type: `string`
@@ -135,6 +142,13 @@ need to support older Node.js versions or older bundlers.
 
 Whether to minify the bundled JavaScript.
 
+#### `rollup.plugins`
+
+- Type: `PkgConfigProperty<RollupPlugin[]>`
+- Default: `[]`
+
+Rollup plugins to load when bundling.
+
 #### `runtime`
 
 - Type: `'*' | 'browser' | 'node'`
@@ -155,6 +169,13 @@ Whether to include source map files.
 - Default: `'./src'`
 
 The path to the directory in which source code is located.
+
+#### `tsconfig`
+
+- Type: `string`
+- Default: `'tsconfig.json'`
+
+The path to the TypeScript configuration file.
 
 ## License
 
