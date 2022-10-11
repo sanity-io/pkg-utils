@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.0](https://github.com/sanity-io/pkg-utils/compare/v1.14.0...v1.15.0) (2022-10-11)
+
+### Features
+
+- `tsconfig` config property ([1a7cc30](https://github.com/sanity-io/pkg-utils/commit/1a7cc300c3062b6e569c6e3c7daac5e865ae4fa4))
+- strict mode ([62c9a67](https://github.com/sanity-io/pkg-utils/commit/62c9a67c2977275fa18f7348678d17d7b9c59c95))
+- use property reducer for rollup plugins ([8ec1788](https://github.com/sanity-io/pkg-utils/commit/8ec17888f61e0e26b1b8901162d357405399ba4f))
+
+### Bug Fixes
+
+- allow unresolved env variable ([f23e10f](https://github.com/sanity-io/pkg-utils/commit/f23e10f65cff3660a0c8d392c018da005d87f9ce))
+
 ## [1.14.0](https://github.com/sanity-io/pkg-utils/compare/v1.13.0...v1.14.0) (2022-10-10)
 
 ### Features
