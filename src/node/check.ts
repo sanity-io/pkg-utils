@@ -10,11 +10,11 @@ export async function check(options: {
   strict?: boolean
   tsconfig?: string
 }): Promise<void> {
-  const {cwd, strict, tsconfig = 'tsconfig.json'} = options
+  const {cwd, strict = false, tsconfig = 'tsconfig.json'} = options
 
   const pkg = await _loadPkgWithReporting({cwd})
   const config = await _loadConfig({cwd})
-  const ctx = await _resolveBuildContext({config, cwd, pkg, tsconfig})
+  const ctx = await _resolveBuildContext({config, cwd, pkg, strict, tsconfig})
   const {logger} = ctx
 
   _printPackageTree(ctx)

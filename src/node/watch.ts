@@ -7,8 +7,12 @@ import {_WatchTask, _TaskHandler, _watchTaskHandlers} from './_tasks'
 import {_watchConfigFiles} from './_watchConfigFiles'
 
 /** @public */
-export async function watch(options: {cwd: string; tsconfig?: string}): Promise<void> {
-  const {cwd, tsconfig = 'tsconfig.json'} = options
+export async function watch(options: {
+  cwd: string
+  strict?: boolean
+  tsconfig?: string
+}): Promise<void> {
+  const {cwd, strict = false, tsconfig = 'tsconfig.json'} = options
 
   const configFiles$ = await _watchConfigFiles({cwd})
 
@@ -25,7 +29,7 @@ export async function watch(options: {cwd: string; tsconfig?: string}): Promise<
       const pkg = await _loadPkgWithReporting({cwd})
       const config = await _loadConfig({cwd})
 
-      return _resolveBuildContext({config, cwd, pkg, tsconfig})
+      return _resolveBuildContext({config, cwd, pkg, strict, tsconfig})
     })
   )
 

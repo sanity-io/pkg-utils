@@ -13,8 +13,9 @@ export async function _buildTypes(options: {
   cwd: string
   outDir: string
   tsconfig: ts.ParsedCommandLine
+  strict: boolean
 }): Promise<void> {
-  const {outDir, tsconfig} = options
+  const {outDir, tsconfig, strict = false} = options
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,
@@ -49,7 +50,9 @@ export async function _buildTypes(options: {
     if (errors.length) {
       console.error(ts.formatDiagnostics(errors, formatHost))
 
-      throw new Error('failed to compile')
+      if (strict) {
+        throw new Error('failed to compile TypeScript definitions')
+      }
     }
   }
 }

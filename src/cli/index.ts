@@ -16,6 +16,7 @@ cli
 
 cli
   .command('build', 'Build package')
+  .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
     const {buildAction} = await import('./buildAction')
@@ -25,6 +26,7 @@ cli
 
 cli
   .command('watch', 'Watch package')
+  .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
     const {watchAction} = await import('./watchAction')

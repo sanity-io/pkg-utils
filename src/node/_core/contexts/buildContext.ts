@@ -25,6 +25,7 @@ export interface _BuildContext {
   }
   pkg: _PackageJSON
   runtime: PkgRuntime
+  strict: boolean
   target: Record<PkgRuntime, string[]>
   ts: {
     config?: ts.ParsedCommandLine

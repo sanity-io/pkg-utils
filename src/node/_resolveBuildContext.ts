@@ -42,9 +42,10 @@ export async function _resolveBuildContext(options: {
   config?: PkgConfigOptions
   cwd: string
   pkg: _PackageJSON
+  strict: boolean
   tsconfig: string
 }): Promise<_BuildContext> {
-  const {config, cwd, pkg, tsconfig: tsconfigPath} = options
+  const {config, cwd, pkg, strict, tsconfig: tsconfigPath} = options
   const logger = _createLogger()
   const tsconfig = await _loadTSConfig({cwd, tsconfigPath})
   const targetVersions = _resolveBrowserslistVersions(pkg.browserslist || _DEFAULTS.browserslist)
@@ -134,6 +135,7 @@ export async function _resolveBuildContext(options: {
     logger,
     pkg,
     runtime: config?.runtime ?? '*',
+    strict,
     target,
     ts: {
       config: tsconfig,
