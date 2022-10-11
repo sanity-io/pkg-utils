@@ -123,4 +123,5 @@ export interface PkgConfigOptions {
    * Directory of source files.
    */
   src?: string
+  tsconfig?: string
 }

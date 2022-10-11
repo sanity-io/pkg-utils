@@ -12,7 +12,7 @@ export async function watch(options: {
   strict?: boolean
   tsconfig?: string
 }): Promise<void> {
-  const {cwd, strict = false, tsconfig = 'tsconfig.json'} = options
+  const {cwd, strict = false, tsconfig: tsconfigOption} = options
 
   const configFiles$ = await _watchConfigFiles({cwd})
 
@@ -28,6 +28,7 @@ export async function watch(options: {
 
       const pkg = await _loadPkgWithReporting({cwd})
       const config = await _loadConfig({cwd})
+      const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
       return _resolveBuildContext({config, cwd, pkg, strict, tsconfig})
     })
