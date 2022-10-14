@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.1](https://github.com/sanity-io/pkg-utils/compare/v1.15.0...v1.15.1) (2022-10-14)
+
+### Bug Fixes
+
+- merge `config.external` with defaults if it's an array ([#1](https://github.com/sanity-io/pkg-utils/issues/1)) ([98c82fc](https://github.com/sanity-io/pkg-utils/commit/98c82fc3133cf3bd7a532ae76ae76f7342af4b77))
+
 ## [1.15.0](https://github.com/sanity-io/pkg-utils/compare/v1.14.0...v1.15.0) (2022-10-11)
 
 ### Features
