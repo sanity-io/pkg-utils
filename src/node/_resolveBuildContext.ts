@@ -79,7 +79,11 @@ export async function _resolveBuildContext(options: {
     ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []),
   ]
 
-  const external = _resolveConfigProperty(config?.external, parsedExternal)
+  // Merge externals if an array is provided, replace if it's a function
+  const external =
+    config && Array.isArray(config.external)
+      ? [...parsedExternal, ...config.external]
+      : _resolveConfigProperty(config?.external, parsedExternal)
 
   const outputPaths = Object.values(exports)
     .flatMap((exportEntry) => {
