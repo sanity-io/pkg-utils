@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.0](https://github.com/sanity-io/pkg-utils/compare/v1.15.1...v1.16.0) (2022-10-21)
+
+### Features
+
+- `emitDeclarationOnly` option ([37e0b53](https://github.com/sanity-io/pkg-utils/commit/37e0b53fb64f815e4cfcd045c781373bcccc29a3))
+
 ## [1.15.1](https://github.com/sanity-io/pkg-utils/compare/v1.15.0...v1.15.1) (2022-10-14)
 
 ### Bug Fixes
