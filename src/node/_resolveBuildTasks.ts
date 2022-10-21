@@ -53,98 +53,101 @@ export function _resolveBuildTasks(ctx: _BuildContext): _BuildTask[] {
     }
   }
 
-  // Parse rollup:commonjs:* tasks
-  for (const exp of exports) {
-    const output = exp.require
-
-    if (!output) continue
-
-    _addRollupTaskEntry('commonjs', ctx.runtime, {
-      path: exp._path,
-      source: exp.source,
-      output,
-    })
-  }
-
-  // Parse rollup:esm:* tasks
-  for (const exp of exports) {
-    const output = exp.import
-
-    if (!output) continue
-
-    _addRollupTaskEntry('esm', ctx.runtime, {
-      path: exp._path,
-      source: exp.source,
-      output,
-    })
-  }
-
-  // Parse rollup:commonjs:browser tasks
-  for (const exp of exports) {
-    const output = exp.browser?.require
-
-    if (!output) continue
-
-    _addRollupTaskEntry('commonjs', 'browser', {
-      path: exp._path,
-      source: exp.browser?.source || exp.source,
-      output,
-    })
-  }
-
-  // Parse rollup:esm:browser tasks
-  for (const exp of exports) {
-    const output = exp.browser?.import
-
-    if (!output) continue
-
-    _addRollupTaskEntry('esm', 'browser', {
-      path: exp._path,
-      source: exp.browser?.source || exp.source,
-      output,
-    })
-  }
-
-  for (const bundle of bundles) {
-    if (bundle.require) {
-      _addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
-        path: '__bundle__',
-        source: bundle.source,
-        output: bundle.require,
-      })
-    }
-
-    if (bundle.import) {
-      _addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
-        path: '__bundle__',
-        source: bundle.source,
-        output: bundle.import,
-      })
-    }
-  }
-
+  // Add dts task
   if (dtsTask.entries.length) {
     tasks.push(dtsTask)
   }
 
-  tasks.push(...Object.values(rollupTasks))
-
-  // Write legacy exports files
-  if (config?.legacyExports) {
+  if (!ctx.emitDeclarationOnly) {
+    // Parse rollup:commonjs:* tasks
     for (const exp of exports) {
-      if (exp._exported && exp._path !== '.') {
-        const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
-          /\.[^/.]+$/,
-          ''
-        )
+      const output = exp.require
 
-        if (relativeTargetPath) {
-          fs.writeFileSync(
-            path.resolve(cwd, `${exp._path}.js`),
-            [`// AUTO-GENERATED – DO NOT EDIT`, `export * from '${relativeTargetPath}'`, ``].join(
-              '\n'
-            )
+      if (!output) continue
+
+      _addRollupTaskEntry('commonjs', ctx.runtime, {
+        path: exp._path,
+        source: exp.source,
+        output,
+      })
+    }
+
+    // Parse rollup:esm:* tasks
+    for (const exp of exports) {
+      const output = exp.import
+
+      if (!output) continue
+
+      _addRollupTaskEntry('esm', ctx.runtime, {
+        path: exp._path,
+        source: exp.source,
+        output,
+      })
+    }
+
+    // Parse rollup:commonjs:browser tasks
+    for (const exp of exports) {
+      const output = exp.browser?.require
+
+      if (!output) continue
+
+      _addRollupTaskEntry('commonjs', 'browser', {
+        path: exp._path,
+        source: exp.browser?.source || exp.source,
+        output,
+      })
+    }
+
+    // Parse rollup:esm:browser tasks
+    for (const exp of exports) {
+      const output = exp.browser?.import
+
+      if (!output) continue
+
+      _addRollupTaskEntry('esm', 'browser', {
+        path: exp._path,
+        source: exp.browser?.source || exp.source,
+        output,
+      })
+    }
+
+    for (const bundle of bundles) {
+      if (bundle.require) {
+        _addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
+          path: '__bundle__',
+          source: bundle.source,
+          output: bundle.require,
+        })
+      }
+
+      if (bundle.import) {
+        _addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
+          path: '__bundle__',
+          source: bundle.source,
+          output: bundle.import,
+        })
+      }
+    }
+
+    tasks.push(...Object.values(rollupTasks))
+
+    // Write legacy exports files
+    if (config?.legacyExports) {
+      for (const exp of exports) {
+        if (exp._exported && exp._path !== '.') {
+          const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
+            /\.[^/.]+$/,
+            ''
           )
+
+          if (relativeTargetPath) {
+            fs.writeFileSync(
+              path.resolve(cwd, `${exp._path}.js`),
+              [`// AUTO-GENERATED – DO NOT EDIT`, `export * from '${relativeTargetPath}'`, ``].join(
+                '\n'
+              )
+            )
+          }
         }
       }
     }

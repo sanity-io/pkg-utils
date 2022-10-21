@@ -25,15 +25,16 @@ import {_BuildTask, _TaskHandler, _buildTaskHandlers} from './_tasks'
  */
 export async function build(options: {
   cwd: string
+  emitDeclarationOnly?: boolean
   strict?: boolean
   tsconfig?: string
 }): Promise<void> {
-  const {cwd, strict = false, tsconfig: tsconfigOption} = options
+  const {cwd, emitDeclarationOnly, strict = false, tsconfig: tsconfigOption} = options
 
   const pkg = await _loadPkgWithReporting({cwd})
   const config = await _loadConfig({cwd})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
-  const ctx = await _resolveBuildContext({config, cwd, pkg, strict, tsconfig})
+  const ctx = await _resolveBuildContext({config, cwd, emitDeclarationOnly, pkg, strict, tsconfig})
 
   const buildTasks = _resolveBuildTasks(ctx)
 

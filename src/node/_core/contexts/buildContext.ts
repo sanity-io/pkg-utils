@@ -13,6 +13,7 @@ export interface _BuildContext {
   config?: PkgConfigOptions
   cwd: string
   distPath: string
+  emitDeclarationOnly: boolean
   exports: PkgExports | undefined
   external: string[]
   files: _BuildFile[]

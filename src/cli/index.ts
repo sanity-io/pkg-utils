@@ -16,6 +16,7 @@ cli
 
 cli
   .command('build', 'Build package')
+  .option('--emitDeclarationOnly', 'Emit d.ts only')
   .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
