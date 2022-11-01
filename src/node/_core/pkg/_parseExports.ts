@@ -24,6 +24,8 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
 
   const extraExports: (PkgExport & {_path: string})[] = []
 
+  const errors: string[] = []
+
   if (pkg.exports) {
     for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
       if (_isRecord(exportEntry)) {
@@ -33,19 +35,27 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
             rootExport.require &&
             exportEntry.require !== rootExport.require
           ) {
-            throw new Error('mismatch between "main" and "require"')
+            errors.push(
+              'package.json: mismatch between "main" and "exports.require". These must be equal.'
+            )
           }
 
           if (exportEntry.import && rootExport.import && exportEntry.import !== rootExport.import) {
-            throw new Error('mismatch between "module" and "import"')
+            errors.push(
+              'package.json: mismatch between "module" and "exports.import" These must be equal.'
+            )
           }
 
           if (exportEntry.types && rootExport.types && exportEntry.types !== rootExport.types) {
-            throw new Error('mismatch between "types" and "types"')
+            errors.push(
+              'package.json: mismatch between "types" and "exports.types". These must be equal.'
+            )
           }
 
           if (exportEntry.source && rootExport.source && exportEntry.source !== rootExport.source) {
-            throw new Error('mismatch between "source" and "source"')
+            errors.push(
+              'package.json: mismatch between "source" and "exports.source". These must be equal.'
+            )
           }
 
           Object.assign(rootExport, exportEntry)
@@ -59,12 +69,18 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
           extraExports.push(extraExport)
         }
       } else {
-        throw new Error('string entries are not supported')
+        errors.push('package.json: exports must be an object')
       }
     }
   }
 
   const _exports = [rootExport, ...extraExports]
 
-  return _validateExports(_exports, {pkg})
+  errors.push(..._validateExports(_exports, {pkg}))
+
+  if (errors.length) {
+    throw new Error('\n- ' + errors.join('\n- '))
+  }
+
+  return _exports
 }
