@@ -75,4 +75,32 @@ describe('_parseExports', () => {
       },
     ])
   })
+
+  test('package.json with multiple exports errors', () => {
+    const pkg: _PackageJSON = {
+      type: 'commonjs',
+      name: 'test',
+      version: '0.0.0-test',
+      source: './src/index.ts',
+      exports: {
+        '.': {
+          types: './lib/src/index.d.ts',
+          source: './src/index.ts',
+          import: './lib/index.wrong.suffix',
+          require: './lib/index.wrong.suffix',
+          default: './lib/index.js',
+        },
+      },
+      main: './lib/index.js',
+      module: './lib/index.esm.js',
+      types: './lib/src/index.d.ts',
+    }
+
+    expect(() => _parseExports({pkg})).toThrow(
+      '\n- package.json: mismatch between "main" and "exports.require". These must be equal.' +
+        '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
+        '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
+        '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".esm.js"'
+    )
+  })
 })
