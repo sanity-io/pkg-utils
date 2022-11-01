@@ -18,7 +18,7 @@ export function _validateExports(
 
     if (exp.import && !exp.import.endsWith(ext.esm)) {
       throw new Error(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.esm}"`
+        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`
       )
     }
   }
