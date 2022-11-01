@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.1](https://github.com/sanity-io/pkg-utils/compare/v1.16.0...v1.16.1) (2022-11-01)
+
+### Bug Fixes
+
+- corrected error message for import export ([66c8eda](https://github.com/sanity-io/pkg-utils/commit/66c8eda02be70229523919ccdb98437adf07c279))
+- group package entry errors into a single error message ([aa27f45](https://github.com/sanity-io/pkg-utils/commit/aa27f4549d7bfe9628852c0aac99dba68353790c))
+
 ## [1.16.0](https://github.com/sanity-io/pkg-utils/compare/v1.15.1...v1.16.0) (2022-10-21)
 
 ### Features
