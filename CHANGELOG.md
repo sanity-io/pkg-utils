@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.2](https://github.com/sanity-io/pkg-utils/compare/v1.16.1...v1.16.2) (2022-11-02)
+
+### Bug Fixes
+
+- extract and append declare module blocks to types file ([c362e00](https://github.com/sanity-io/pkg-utils/commit/c362e005d6972705c7f30e864c4d68af6d449382))
+
 ## [1.16.1](https://github.com/sanity-io/pkg-utils/compare/v1.16.0...v1.16.1) (2022-11-01)
 
 ### Bug Fixes
