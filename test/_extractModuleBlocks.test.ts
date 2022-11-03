@@ -18,8 +18,18 @@ test('extract module block', () => {
             x: string
         }
       }
+
+       /**
+       * declare module 'sanity' {
+       *  export interface StringOptions {
+       *    myCustomOption?: boolean
+       *  }
+       * }
+       * /
   `
   )
+
+  expect(blocks.length).toEqual(2)
 
   expect(blocks[0]).toEqual(outdent`
     declare module X {

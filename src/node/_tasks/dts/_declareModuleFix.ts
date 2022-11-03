@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
+import globby from 'globby'
 
 /**
  * '@microsoft/api-extractor' omits declare module blocks
@@ -22,9 +23,12 @@ export async function _appendModuleBlocks({
 async function _extractModuleBlocksFromTypes(dirname: string): Promise<string[]> {
   const moduleBlocks: string[] = []
 
-  const files = await _getFileList(dirname)
+  const files = await globby(path.resolve(dirname, '**/*.d.ts'))
 
   for (const fileName of files) {
+    if (fileName.includes('.test.')) {
+      continue
+    }
     const content = await fs.readFile(path.resolve(dirname, fileName), {
       encoding: 'utf-8',
     })
@@ -37,21 +41,6 @@ async function _extractModuleBlocksFromTypes(dirname: string): Promise<string[]>
   return moduleBlocks
 }
 
-async function _getFileList(dirName: string): Promise<string[]> {
-  let files: string[] = []
-  const filesInCurrentDir = await fs.readdir(dirName, {withFileTypes: true})
-
-  for (const fileInDir of filesInCurrentDir) {
-    if (fileInDir.isDirectory()) {
-      files = [...files, ...(await _getFileList(path.resolve(dirName, fileInDir.name)))]
-    } else {
-      files.push(path.resolve(dirName, fileInDir.name))
-    }
-  }
-
-  return files
-}
-
 export function _extractModuleBlocks(fileContent: string): string[] {
   const moduleBlocks: string[] = []
 
@@ -62,8 +51,9 @@ export function _extractModuleBlocks(fileContent: string): string[] {
 
   for (const line of lines) {
     if (!moduleLines.length) {
+      const isModuleDeclaration = line.match(/^\s*declare module.+$/)?.length
       const moduleIndex = line.indexOf('declare module')
-      const isModuleStart = moduleIndex > -1
+      const isModuleStart = isModuleDeclaration && moduleIndex > -1
 
       if (isModuleStart) {
         moduleIndentLevel = moduleIndex
