@@ -16,6 +16,7 @@ describe('_parseExports', () => {
           require: './dist/index.js',
           default: './dist/index.js',
         },
+        './package.json': './package.json',
       },
     }
 
@@ -33,6 +34,28 @@ describe('_parseExports', () => {
         default: './dist/index.js',
       },
     ])
+  })
+
+  test('should throw if `package.json` is missing from the exports', () => {
+    const pkg: _PackageJSON = {
+      type: 'commonjs',
+      name: 'test',
+      version: '0.0.0-test',
+      bin: {test: './dist/cli.js'},
+      source: './src/index.ts',
+      main: './dist/index.js',
+      exports: {
+        '.': {
+          source: './src/index.ts',
+          require: './dist/index.js',
+          default: './dist/index.js',
+        },
+      },
+    }
+
+    expect(() => _parseExports({pkg})).toThrow(
+      '\n- package.json: `exports["./package.json"] must be declared.'
+    )
   })
 
   test('parse package.json with browser files', () => {
@@ -53,6 +76,7 @@ describe('_parseExports', () => {
           import: './dist/index.js',
           default: './dist/index.js',
         },
+        './package.json': './package.json',
       },
     }
 
@@ -90,6 +114,7 @@ describe('_parseExports', () => {
           require: './lib/index.wrong.suffix',
           default: './lib/index.js',
         },
+        './package.json': './not/package.json',
       },
       main: './lib/index.js',
       module: './lib/index.esm.js',
@@ -99,6 +124,7 @@ describe('_parseExports', () => {
     expect(() => _parseExports({pkg})).toThrow(
       '\n- package.json: mismatch between "main" and "exports.require". These must be equal.' +
         '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
+        '\n- package.json: `exports["./package.json"] must be "./package.json".' +
         '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
         '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".esm.js"'
     )

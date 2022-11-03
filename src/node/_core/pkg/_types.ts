@@ -10,23 +10,24 @@ export interface _PackageJSON {
   peerDependencies?: Record<string, string>
   exports?: Record<
     string,
-    {
-      source: string
-      types?: string
-      browser?: {
+    | `./${string}.json`
+    | {
         source: string
-        require?: string
+        types?: string
+        browser?: {
+          source: string
+          require?: string
+          import?: string
+        }
+        node?: {
+          source: string
+          require?: string
+          import?: string
+        }
         import?: string
-      }
-      node?: {
-        source: string
         require?: string
-        import?: string
+        default: string
       }
-      import?: string
-      require?: string
-      default: string
-    }
   >
   main?: string
   browser?: Record<string, string>

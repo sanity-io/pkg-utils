@@ -17,27 +17,30 @@ const pkgSchema = z.object({
   types: z.optional(z.string()),
   exports: z.optional(
     z.record(
-      z.object({
-        types: z.optional(z.string()),
-        source: z.string(),
-        browser: z.optional(
-          z.object({
-            source: z.string(),
-            require: z.optional(z.string()),
-            import: z.optional(z.string()),
-          })
-        ),
-        node: z.optional(
-          z.object({
-            source: z.string(),
-            require: z.optional(z.string()),
-            import: z.optional(z.string()),
-          })
-        ),
-        require: z.optional(z.string()),
-        import: z.optional(z.string()),
-        default: z.string(),
-      })
+      z.union([
+        z.custom<`./${string}.json`>((val) => /^\.\/.*\.json$/.test(val as string)),
+        z.object({
+          types: z.optional(z.string()),
+          source: z.string(),
+          browser: z.optional(
+            z.object({
+              source: z.string(),
+              require: z.optional(z.string()),
+              import: z.optional(z.string()),
+            })
+          ),
+          node: z.optional(
+            z.object({
+              source: z.string(),
+              require: z.optional(z.string()),
+              import: z.optional(z.string()),
+            })
+          ),
+          require: z.optional(z.string()),
+          import: z.optional(z.string()),
+          default: z.string(),
+        }),
+      ])
     )
   ),
   browserslist: z.optional(z.array(z.string())),
