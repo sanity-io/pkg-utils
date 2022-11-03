@@ -29,6 +29,7 @@ async function _extractModuleBlocksFromTypes(dirname: string): Promise<string[]>
     if (fileName.includes('.test.')) {
       continue
     }
+
     const content = await fs.readFile(path.resolve(dirname, fileName), {
       encoding: 'utf-8',
     })
