@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.0](https://github.com/sanity-io/pkg-utils/compare/v1.16.2...v1.17.0) (2022-11-04)
+
+### Features
+
+- add support for `./package.json` in `pkg.exports` ([#5](https://github.com/sanity-io/pkg-utils/issues/5)) ([0239d6c](https://github.com/sanity-io/pkg-utils/commit/0239d6c8d03b01995d5d547292aaf1c8cb14fe29))
+
 ## [1.16.2](https://github.com/sanity-io/pkg-utils/compare/v1.16.1...v1.16.2) (2022-11-02)
 
 ### Bug Fixes
