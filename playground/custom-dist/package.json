@@ -15,7 +15,8 @@
       "import": "./lib/index.js",
       "require": "./lib/index.cjs",
       "default": "./lib/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "rimraf lib && pkg build --tsconfig tsconfig.lib.json && pkg --tsconfig tsconfig.lib.json --strict"

@@ -27,8 +27,18 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
   const errors: string[] = []
 
   if (pkg.exports) {
+    if (!pkg.exports['./package.json']) {
+      errors.push('package.json: `exports["./package.json"] must be declared.')
+    }
+
     for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
-      if (_isRecord(exportEntry)) {
+      if (exportPath.endsWith('.json')) {
+        if (exportPath === './package.json') {
+          if (exportEntry !== './package.json') {
+            errors.push('package.json: `exports["./package.json"] must be "./package.json".')
+          }
+        }
+      } else if (_isRecord(exportEntry)) {
         if (exportPath === '.') {
           if (
             exportEntry.require &&
