@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
-import path from 'path'
-import globby from 'globby'
+import {ExtractorResult} from '@microsoft/api-extractor'
+import {Program} from 'typescript'
 
 /**
  * '@microsoft/api-extractor' omits declare module blocks
@@ -8,34 +8,40 @@ import globby from 'globby'
  */
 export async function _appendModuleBlocks({
   tsOutDir,
+  extractResult,
   extractTypesOutFile,
 }: {
   tsOutDir: string
+  extractResult: ExtractorResult
   extractTypesOutFile: string
 }): Promise<void> {
-  const moduleBlocks = await _extractModuleBlocksFromTypes(tsOutDir)
+  const moduleBlocks = await _extractModuleBlocksFromTypes({tsOutDir, extractResult})
 
   if (moduleBlocks.length) {
     await fs.appendFile(extractTypesOutFile, '\n' + moduleBlocks.join('\n\n'))
   }
 }
 
-async function _extractModuleBlocksFromTypes(dirname: string): Promise<string[]> {
+async function _extractModuleBlocksFromTypes({
+  tsOutDir,
+  extractResult,
+}: {
+  tsOutDir: string
+  extractResult: ExtractorResult
+}): Promise<string[]> {
   const moduleBlocks: string[] = []
 
-  const files = await globby(path.resolve(dirname, '**/*.d.ts'))
+  const program = extractResult.compilerState.program as Program
 
-  for (const fileName of files) {
-    if (fileName.includes('.test.')) {
-      continue
-    }
+  // all program files, including node_modules
+  const allProgramFiles = [...program.getSourceFiles()]
 
-    const content = await fs.readFile(path.resolve(dirname, fileName), {
-      encoding: 'utf-8',
-    })
+  // just our compiled files used in the program
+  const sourceFiles = allProgramFiles.filter((sourceFile) => sourceFile.fileName.includes(tsOutDir))
 
-    if (content.includes('declare module')) {
-      moduleBlocks.push(..._extractModuleBlocks(content))
+  for (const sourceFile of sourceFiles) {
+    if (sourceFile.text.includes('declare module')) {
+      moduleBlocks.push(..._extractModuleBlocks(sourceFile.text))
     }
   }
 
@@ -46,11 +52,24 @@ export function _extractModuleBlocks(fileContent: string): string[] {
   const moduleBlocks: string[] = []
 
   let moduleIndentLevel = 0
+  let insideComment = false
   let moduleLines: string[] = []
 
   const lines = fileContent.split('\n')
 
   for (const line of lines) {
+    // Note: Extractor already removes comment blocks, so fileContent is typically already comment free
+    // This is just defensive code, just in case
+    if (insideComment && line.indexOf('*/') > 0) {
+      insideComment = false
+    } else if (!insideComment && line.indexOf('/*') > 0) {
+      insideComment = true
+    }
+
+    if (insideComment) {
+      continue
+    }
+
     if (!moduleLines.length) {
       const isModuleDeclaration = line.match(/^\s*declare module.+$/)?.length
       const moduleIndex = line.indexOf('declare module')

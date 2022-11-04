@@ -48,13 +48,13 @@ export async function _doExtract(
     )
 
     const targetPath = path.resolve(cwd, entry.targetPath)
-
+    const filePath = path.relative(outDir, targetPath)
     const result = await _extractTypes({
       customTags: config?.extract?.customTags,
       cwd,
       exportPath,
       files,
-      filePath: path.relative(outDir, targetPath),
+      filePath: filePath,
       projectPath: cwd,
       rules: config?.extract?.rules,
       sourceTypesPath: sourceTypesPath,
@@ -64,6 +64,7 @@ export async function _doExtract(
 
     await _appendModuleBlocks({
       tsOutDir: tmpPath,
+      extractResult: result.extractorResult,
       extractTypesOutFile: path.resolve(outDir, targetPath),
     })
 

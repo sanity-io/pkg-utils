@@ -26,6 +26,14 @@ test('extract module block', () => {
        *  }
        * }
        * /
+
+ /*
+     declare module 'BB' {
+      export interface BB {
+        a: string
+      }
+     }
+        * /
   `
   )
 

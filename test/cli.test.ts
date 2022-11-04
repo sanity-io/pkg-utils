@@ -95,6 +95,20 @@ test('should build `multi-export` package', async () => {
   await project.remove()
 })
 
+test('should build ts package', async () => {
+  const project = await _spawnProject('ts')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.ts -> ./dist/src/index.d.ts')
+
+  expect(await project.readFile('dist/src/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await _spawnProject('exports-dummy')
