@@ -20,7 +20,7 @@ describe('_parseExports', () => {
       },
     }
 
-    const exports = _parseExports({pkg})
+    const exports = _parseExports({pkg, strict: true})
 
     expect(exports).toEqual([
       {
@@ -53,7 +53,7 @@ describe('_parseExports', () => {
       },
     }
 
-    expect(() => _parseExports({pkg})).toThrow(
+    expect(() => _parseExports({pkg, strict: true})).toThrow(
       '\n- package.json: `exports["./package.json"] must be declared.'
     )
   })
@@ -80,7 +80,7 @@ describe('_parseExports', () => {
       },
     }
 
-    const exports = _parseExports({pkg})
+    const exports = _parseExports({pkg, strict: true})
 
     expect(exports).toEqual([
       {
@@ -121,7 +121,7 @@ describe('_parseExports', () => {
       types: './lib/src/index.d.ts',
     }
 
-    expect(() => _parseExports({pkg})).toThrow(
+    expect(() => _parseExports({pkg, strict: true})).toThrow(
       '\n- package.json: mismatch between "main" and "exports.require". These must be equal.' +
         '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
         '\n- package.json: `exports["./package.json"] must be "./package.json".' +

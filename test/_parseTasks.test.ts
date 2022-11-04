@@ -15,11 +15,12 @@ test('should parse tasks', () => {
     },
   }
 
-  const exports = _parseExports({pkg})
+  const exports = _parseExports({pkg, strict: true})
 
   const ctx: _BuildContext = {
     cwd: '/test',
     distPath: '/test/dist',
+    emitDeclarationOnly: false,
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
     files: [],
@@ -37,6 +38,7 @@ test('should parse tasks', () => {
       browser: ['chrome102'],
       node: ['node14'],
     },
+    strict: true,
     ts: {},
   }
 
