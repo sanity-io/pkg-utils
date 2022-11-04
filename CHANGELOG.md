@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.1](https://github.com/sanity-io/pkg-utils/compare/v1.17.0...v1.17.1) (2022-11-04)
+
+### Bug Fixes
+
+- filter out test modules and comments ([d66379a](https://github.com/sanity-io/pkg-utils/commit/d66379adbe6d890037dd5eadc436c2364733b14d))
+- skip one line comments ([b4eee52](https://github.com/sanity-io/pkg-utils/commit/b4eee52aa0c280aa699b547a2528e235b4cfb066))
+- use extractor source files to inform where to extract modules ([9fb7405](https://github.com/sanity-io/pkg-utils/commit/9fb740571682dd7ec408a6adb9c1e4016673b11d))
+
 ## [1.17.0](https://github.com/sanity-io/pkg-utils/compare/v1.16.2...v1.17.0) (2022-11-04)
 
 ### Features
