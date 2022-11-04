@@ -51,6 +51,6 @@
     "extra.js"
   ],
   "scripts": {
-    "build": "rimraf dist extra.js && pkg build --tsconfig tsconfig.dist.json && pkg --tsconfig tsconfig.dist.json --strict"
+    "build": "rimraf dist extra.js && pkg build --strict --tsconfig tsconfig.dist.json && pkg --strict --tsconfig tsconfig.dist.json"
   }
 }

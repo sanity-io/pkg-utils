@@ -33,6 +33,6 @@
     }
   },
   "scripts": {
-    "build": "rimraf dist plugin.js && pkg build --tsconfig tsconfig.dist.json && pkg --strict --tsconfig tsconfig.dist.json"
+    "build": "rimraf dist plugin.js && pkg build --strict --tsconfig tsconfig.dist.json && pkg --strict --tsconfig tsconfig.dist.json"
   }
 }
