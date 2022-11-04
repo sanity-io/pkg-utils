@@ -19,6 +19,6 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "rimraf dist && pkg build --tsconfig tsconfig.dist.json && pkg --tsconfig tsconfig.dist.json --strict"
+    "build": "rimraf dist && pkg build --strict --tsconfig tsconfig.dist.json && pkg --strict --tsconfig tsconfig.dist.json"
   }
 }

@@ -8,6 +8,6 @@
   "module": "./dist/index.esm.js",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "rimraf dist && pkg build && pkg --strict"
+    "build": "rimraf dist && pkg build --strict && pkg --strict"
   }
 }
