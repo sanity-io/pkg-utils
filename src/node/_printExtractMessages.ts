@@ -16,6 +16,9 @@ export function _printExtractMessages(ctx: _BuildContext, messages: ExtractorMes
     const sourceFilePath = msg.sourceFilePath && path.relative(cwd, msg.sourceFilePath)
 
     if (msg.messageId === 'TS6307') {
+      // Ignore this warning:
+      // > TS6307: <filename> is not in project file list.
+      // > Projects must list all files or use an 'include' pattern.
       continue
     }
 
