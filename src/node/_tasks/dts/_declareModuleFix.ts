@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
-import path from 'path'
+import {ExtractorResult} from '@microsoft/api-extractor'
+import {Program} from 'typescript'
 
 /**
  * '@microsoft/api-extractor' omits declare module blocks
@@ -7,63 +8,74 @@ import path from 'path'
  */
 export async function _appendModuleBlocks({
   tsOutDir,
+  extractResult,
   extractTypesOutFile,
 }: {
   tsOutDir: string
+  extractResult: ExtractorResult
   extractTypesOutFile: string
 }): Promise<void> {
-  const moduleBlocks = await _extractModuleBlocksFromTypes(tsOutDir)
+  const moduleBlocks = await _extractModuleBlocksFromTypes({tsOutDir, extractResult})
 
   if (moduleBlocks.length) {
     await fs.appendFile(extractTypesOutFile, '\n' + moduleBlocks.join('\n\n'))
   }
 }
 
-async function _extractModuleBlocksFromTypes(dirname: string): Promise<string[]> {
+async function _extractModuleBlocksFromTypes({
+  tsOutDir,
+  extractResult,
+}: {
+  tsOutDir: string
+  extractResult: ExtractorResult
+}): Promise<string[]> {
   const moduleBlocks: string[] = []
 
-  const files = await _getFileList(dirname)
+  const program = extractResult.compilerState.program as Program
 
-  for (const fileName of files) {
-    const content = await fs.readFile(path.resolve(dirname, fileName), {
-      encoding: 'utf-8',
-    })
+  // all program files, including node_modules
+  const allProgramFiles = [...program.getSourceFiles()]
 
-    if (content.includes('declare module')) {
-      moduleBlocks.push(..._extractModuleBlocks(content))
+  // just our compiled files used in the program
+  const sourceFiles = allProgramFiles.filter((sourceFile) => sourceFile.fileName.includes(tsOutDir))
+
+  for (const sourceFile of sourceFiles) {
+    if (sourceFile.text.includes('declare module')) {
+      moduleBlocks.push(..._extractModuleBlocks(sourceFile.text))
     }
   }
 
   return moduleBlocks
 }
 
-async function _getFileList(dirName: string): Promise<string[]> {
-  let files: string[] = []
-  const filesInCurrentDir = await fs.readdir(dirName, {withFileTypes: true})
-
-  for (const fileInDir of filesInCurrentDir) {
-    if (fileInDir.isDirectory()) {
-      files = [...files, ...(await _getFileList(path.resolve(dirName, fileInDir.name)))]
-    } else {
-      files.push(path.resolve(dirName, fileInDir.name))
-    }
-  }
-
-  return files
-}
-
 export function _extractModuleBlocks(fileContent: string): string[] {
   const moduleBlocks: string[] = []
 
   let moduleIndentLevel = 0
+  let insideComment = false
   let moduleLines: string[] = []
 
   const lines = fileContent.split('\n')
 
   for (const line of lines) {
+    // Note: Extractor already removes comment blocks, so fileContent is typically already comment free
+    // This is just defensive code, just in case
+    if (insideComment && line.includes('*/')) {
+      insideComment = false
+    } else if (!insideComment && line.includes('/*') && line.includes('*/')) {
+      continue // it's a one-line comment
+    } else if (!insideComment && line.includes('/*')) {
+      insideComment = true
+    }
+
+    if (insideComment) {
+      continue
+    }
+
     if (!moduleLines.length) {
+      const isModuleDeclaration = line.match(/^\s*declare module.+$/)?.length
       const moduleIndex = line.indexOf('declare module')
-      const isModuleStart = moduleIndex > -1
+      const isModuleStart = isModuleDeclaration && moduleIndex > -1
 
       if (isModuleStart) {
         moduleIndentLevel = moduleIndex

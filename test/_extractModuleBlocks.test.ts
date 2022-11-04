@@ -18,8 +18,30 @@ test('extract module block', () => {
             x: string
         }
       }
+
+      const a = 0; /*declare module 'sanity' {}*/ const b = 0;
+/*declare module 'sanity' {}*/
+      /* declare module 'sanity' {} */
+
+       /**
+       * declare module 'sanity' {
+       *  export interface StringOptions {
+       *    myCustomOption?: boolean
+       *  }
+       * }
+       * /
+
+ /*
+     declare module 'BB' {
+      export interface BB {
+        a: string
+      }
+     }
+        * /
   `
   )
+
+  expect(blocks.length).toEqual(2)
 
   expect(blocks[0]).toEqual(outdent`
     declare module X {
