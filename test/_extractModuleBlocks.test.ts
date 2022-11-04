@@ -19,6 +19,7 @@ test('extract module block', () => {
         }
       }
 
+      const a = 0; /*declare module 'sanity' {}*/ const b = 0;
 /*declare module 'sanity' {}*/
       /* declare module 'sanity' {} */
 
