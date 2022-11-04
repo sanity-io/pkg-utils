@@ -67,7 +67,7 @@ export async function _resolveBuildContext(options: {
     node: nodeTarget,
   }
 
-  const parsedExports = _parseExports({pkg}).reduce<PkgExports>((acc, x) => {
+  const parsedExports = _parseExports({pkg, strict}).reduce<PkgExports>((acc, x) => {
     const {_path: exportPath, ...exportEntry} = x
 
     return {...acc, [exportPath]: exportEntry}
