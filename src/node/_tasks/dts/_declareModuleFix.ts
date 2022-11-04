@@ -60,9 +60,9 @@ export function _extractModuleBlocks(fileContent: string): string[] {
   for (const line of lines) {
     // Note: Extractor already removes comment blocks, so fileContent is typically already comment free
     // This is just defensive code, just in case
-    if (insideComment && line.indexOf('*/') > 0) {
+    if (insideComment && line.includes('*/')) {
       insideComment = false
-    } else if (!insideComment && line.indexOf('/*') > 0) {
+    } else if (!insideComment && line.includes('/*')) {
       insideComment = true
     }
 
