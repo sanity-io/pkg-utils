@@ -19,6 +19,9 @@ test('extract module block', () => {
         }
       }
 
+/*declare module 'sanity' {}*/
+      /* declare module 'sanity' {} */
+
        /**
        * declare module 'sanity' {
        *  export interface StringOptions {
