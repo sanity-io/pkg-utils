@@ -4,8 +4,11 @@ import {_PackageJSON} from './_types'
 import {_validateExports} from './_validateExports'
 
 /** @internal */
-export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path: string})[] {
-  const {pkg} = options
+export function _parseExports(options: {
+  pkg: _PackageJSON
+  strict: boolean
+}): (PkgExport & {_path: string})[] {
+  const {pkg, strict} = options
 
   const rootExport: PkgExport & {_path: string} = {
     _exported: true,
@@ -27,7 +30,7 @@ export function _parseExports(options: {pkg: _PackageJSON}): (PkgExport & {_path
   const errors: string[] = []
 
   if (pkg.exports) {
-    if (!pkg.exports['./package.json']) {
+    if (strict && !pkg.exports['./package.json']) {
       errors.push('package.json: `exports["./package.json"] must be declared.')
     }
 
