@@ -95,7 +95,7 @@ test('should build `multi-export` package', async () => {
   await project.remove()
 })
 
-test('should build ts package', async () => {
+test.only('should build ts package', async () => {
   const project = await _spawnProject('ts')
 
   await project.install()

@@ -15,7 +15,7 @@ declare module './module2' {
 }
 
 /**
- * declare namespace ExcludedModule {
+ * declare module './module2' {
  *  interface TSDocsDummy {
  *    field: string
  *  }
@@ -23,14 +23,14 @@ declare module './module2' {
  */
 
 /*
-  declare namespace ExcludedModule {
+  declare module './module2' {
    interface BlockCommentDummy {
      field: string
    }
   }
     */
 
-// declare namespace ExcludedModule {
+// declare module './module2' {
 //  interface CommentDummy {
 //    field: string
 //  }
