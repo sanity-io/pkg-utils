@@ -1,5 +1,8 @@
 import fs from 'fs/promises'
+import type {File} from '@babel/types'
 import {ExtractorResult} from '@microsoft/api-extractor'
+import {parse, print} from 'recast'
+import typeScriptParser from 'recast/parsers/typescript'
 import {Program} from 'typescript'
 
 /**
@@ -49,51 +52,11 @@ async function _extractModuleBlocksFromTypes({
 }
 
 export function _extractModuleBlocks(fileContent: string): string[] {
-  const moduleBlocks: string[] = []
+  const ast = parse(fileContent, {
+    parser: typeScriptParser,
+  }) as File
 
-  let moduleIndentLevel = 0
-  let insideComment = false
-  let moduleLines: string[] = []
-
-  const lines = fileContent.split('\n')
-
-  for (const line of lines) {
-    // Note: Extractor already removes comment blocks, so fileContent is typically already comment free
-    // This is just defensive code, just in case
-    if (insideComment && line.includes('*/')) {
-      insideComment = false
-      continue
-    } else if (!insideComment && line.includes('/*') && line.includes('*/')) {
-      continue // it's a one-line comment
-    } else if (!insideComment && line.includes('/*')) {
-      insideComment = true
-    }
-
-    if (insideComment) {
-      continue
-    }
-
-    if (!moduleLines.length) {
-      const isModuleDeclaration = line.match(/^\s*declare module.+$/)?.length
-      const moduleIndex = line.indexOf('declare module')
-      const isModuleStart = isModuleDeclaration && moduleIndex > -1
-
-      if (isModuleStart) {
-        moduleIndentLevel = moduleIndex
-        moduleLines = [line]
-      }
-    } else {
-      moduleLines.push(line)
-      const blockEndIndex = line.indexOf('}')
-
-      if (blockEndIndex === moduleIndentLevel) {
-        moduleBlocks.push(
-          moduleLines.map((l) => l.substring(moduleIndentLevel, l.length)).join('\n')
-        )
-        moduleLines = []
-      }
-    }
-  }
-
-  return moduleBlocks
+  return ast.program.body
+    .filter((node) => node.type === 'TSModuleDeclaration')
+    .map((node) => print(node).code)
 }

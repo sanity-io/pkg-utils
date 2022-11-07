@@ -90,15 +90,12 @@ exports[`should build \`multi-export\` package 1`] = `
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-
 function defineConfig(options) {
   return options;
 }
-
 function definePlugin(plugin) {
   return plugin;
 }
-
 exports.defineConfig = defineConfig;
 exports.definePlugin = definePlugin;
 //# sourceMappingURL=index.cjs.map
@@ -109,11 +106,9 @@ exports[`should build \`multi-export\` package 2`] = `
 "function defineConfig(options) {
   return options;
 }
-
 function definePlugin(plugin) {
   return plugin;
 }
-
 export { defineConfig, definePlugin };
 //# sourceMappingURL=index.js.map
 "
@@ -147,15 +142,12 @@ exports[`should build \`multi-export\` package 4`] = `
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-
 var multiExport = require('multi-export');
-
 function plugin() {
   return multiExport.definePlugin({
     name: \\"plugin\\"
   });
 }
-
 exports.plugin = plugin;
 //# sourceMappingURL=plugin.cjs.map
 "
@@ -163,13 +155,11 @@ exports.plugin = plugin;
 
 exports[`should build \`multi-export\` package 5`] = `
 "import { definePlugin } from 'multi-export';
-
 function plugin() {
   return definePlugin({
     name: \\"plugin\\"
   });
 }
-
 export { plugin };
 //# sourceMappingURL=plugin.js.map
 "
@@ -212,5 +202,6 @@ declare module './module2' {
     interface IncludedModuleDummy {
         addedField: string;
     }
-}"
+}
+//# sourceMappingURL=module1.d.ts.map"
 `;

@@ -4,7 +4,7 @@ import {_extractModuleBlocks} from '../src/node/_tasks/dts/_declareModuleFix'
 
 test('extract module block', () => {
   const blocks = _extractModuleBlocks(
-    outdent`
+    `
     interface A {}
 
     declare module X {
@@ -18,12 +18,14 @@ test('extract module block', () => {
 
       /** @public */
       declare module TT {
+        /** @public */
         interface X {
             x: string
         }
       }
 
       declare module YY {
+        /** @internal */
         interface Y {
             y: string
         }
@@ -47,7 +49,7 @@ test('extract module block', () => {
         a: string
       }
      }
-        * /
+        */
   `
   )
 
@@ -55,13 +57,18 @@ test('extract module block', () => {
 
   expect(blocks[0]).toEqual(outdent`
     declare module X {
+      /**
+       * @beta
+       **/
       interface A {
           a: string
       }
     }`)
 
   expect(blocks[1]).toEqual(outdent`
+    /** @public */
     declare module TT {
+      /** @public */
       interface X {
           x: string
       }
@@ -69,6 +76,7 @@ test('extract module block', () => {
 
   expect(blocks[2]).toEqual(outdent`
     declare module YY {
+      /** @internal */
       interface Y {
           y: string
       }
