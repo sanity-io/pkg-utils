@@ -16,14 +16,6 @@ declare module './module2' {
 
 // Note: dont remove these blocks, they test that we dont include them in the final bundle
 
-/**
- * declare module './module2' {
- *  interface TSDocsDummy {
- *    field: string
- *  }
- * }
- */
-
 /*
   declare module './module2' {
    interface BlockCommentDummy {
