@@ -11,6 +11,7 @@ import prettier from 'prettier'
 import {PkgConfigOptions, _BuildFile} from '../../_core'
 import {_createApiExtractorConfig} from './_createApiExtractorConfig'
 import {_createTSDocConfig} from './_createTSDocConfig'
+import {_extractModuleBlocksFromTypes} from './_extractModuleBlocks'
 import {_getExtractMessagesConfig} from './_getExtractMessagesConfig'
 
 export async function _extractTypes(options: {
@@ -23,6 +24,7 @@ export async function _extractTypes(options: {
   projectPath: string
   rules?: NonNullable<PkgConfigOptions['extract']>['rules']
   sourceTypesPath: string
+  tmpPath: string
   tsconfigPath: string
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
   const {
@@ -34,6 +36,7 @@ export async function _extractTypes(options: {
     projectPath,
     rules,
     sourceTypesPath,
+    tmpPath,
     tsconfigPath,
   } = options
 
@@ -77,9 +80,16 @@ export async function _extractTypes(options: {
 
   await mkdirp(path.dirname(typesPath))
 
+  const moduleBlocks = await _extractModuleBlocksFromTypes({
+    extractResult: extractorResult,
+    tsOutDir: tmpPath,
+  })
+
+  const code = [typesBuf.toString(), ...moduleBlocks].join('\n\n')
+
   await fs.writeFile(
     typesPath,
-    prettier.format(typesBuf.toString(), {
+    prettier.format(code, {
       ...prettierConfig,
       filepath: typesPath,
     })

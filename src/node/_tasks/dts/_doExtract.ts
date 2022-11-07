@@ -4,7 +4,6 @@ import {ExtractorMessage} from '@microsoft/api-extractor'
 import rimrafCallback from 'rimraf'
 import {_BuildContext} from '../../_core'
 import {_buildTypes} from './_buildTypes'
-import {_appendModuleBlocks} from './_declareModuleFix'
 import {_DtsError} from './_DtsError'
 import {_extractTypes} from './_extractTypes'
 import {_DtsResult, _DtsTask, _DtsWatchTask} from './_types'
@@ -52,20 +51,15 @@ export async function _doExtract(
     const result = await _extractTypes({
       customTags: config?.extract?.customTags,
       cwd,
+      distPath: outDir,
       exportPath,
       files,
       filePath: filePath,
       projectPath: cwd,
       rules: config?.extract?.rules,
       sourceTypesPath: sourceTypesPath,
+      tmpPath,
       tsconfigPath: path.resolve(cwd, ts.configPath || 'tsconfig.json'),
-      distPath: outDir,
-    })
-
-    await _appendModuleBlocks({
-      tsOutDir: tmpPath,
-      extractResult: result.extractorResult,
-      extractTypesOutFile: path.resolve(outDir, targetPath),
     })
 
     messages.push(...result.messages)
