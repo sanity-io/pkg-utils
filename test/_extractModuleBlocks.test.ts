@@ -8,14 +8,24 @@ test('extract module block', () => {
     interface A {}
 
     declare module X {
+      /**
+       * @beta
+       **/
       interface A {
           a: string
       }
     }
 
+      /** @public */
       declare module TT {
         interface X {
             x: string
+        }
+      }
+
+      declare module YY {
+        interface Y {
+            y: string
         }
       }
 
@@ -41,7 +51,7 @@ test('extract module block', () => {
   `
   )
 
-  expect(blocks.length).toEqual(2)
+  expect(blocks.length).toEqual(3)
 
   expect(blocks[0]).toEqual(outdent`
     declare module X {
@@ -54,6 +64,13 @@ test('extract module block', () => {
     declare module TT {
       interface X {
           x: string
+      }
+    }`)
+
+  expect(blocks[2]).toEqual(outdent`
+    declare module YY {
+      interface Y {
+          y: string
       }
     }`)
 })

@@ -62,6 +62,7 @@ export function _extractModuleBlocks(fileContent: string): string[] {
     // This is just defensive code, just in case
     if (insideComment && line.includes('*/')) {
       insideComment = false
+      continue
     } else if (!insideComment && line.includes('/*') && line.includes('*/')) {
       continue // it's a one-line comment
     } else if (!insideComment && line.includes('/*')) {
