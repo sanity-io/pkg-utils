@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.3](https://github.com/sanity-io/pkg-utils/compare/v1.17.2...v1.17.3) (2022-11-07)
+
+### Bug Fixes
+
+- syntax error on multi-line declared modules ([2b4670d](https://github.com/sanity-io/pkg-utils/commit/2b4670d27b5f0cfcfe08ae3f9d35c46912bf2a79))
+
 ## [1.17.2](https://github.com/sanity-io/pkg-utils/compare/v1.17.1...v1.17.2) (2022-11-04)
 
 ### Bug Fixes
