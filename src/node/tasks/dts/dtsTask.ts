@@ -1,13 +1,13 @@
 import chalk from 'chalk'
 import {Observable} from 'rxjs'
-import {_printExtractMessages} from '../../_printExtractMessages'
-import {_TaskHandler} from '../_types'
-import {_doExtract} from './_doExtract'
-import {_DtsError} from './_DtsError'
-import {_DtsResult, _DtsTask} from './_types'
+import {printExtractMessages} from '../../printExtractMessages'
+import {TaskHandler} from '../types'
+import {doExtract} from './doExtract'
+import {DtsError} from './DtsError'
+import {DtsResult, DtsTask} from './types'
 
 /** @internal */
-export const _dtsTask: _TaskHandler<_DtsTask, _DtsResult> = {
+export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
   name: (_ctx, task) =>
     [
       `build type definitions`,
@@ -18,7 +18,7 @@ export const _dtsTask: _TaskHandler<_DtsTask, _DtsResult> = {
     ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {
-      _doExtract(ctx, task)
+      doExtract(ctx, task)
         .then((result) => {
           observer.next(result)
           observer.complete()
@@ -29,13 +29,13 @@ export const _dtsTask: _TaskHandler<_DtsTask, _DtsResult> = {
     })
   },
   complete: (ctx, _task, result) => {
-    _printExtractMessages(ctx, result.messages)
+    printExtractMessages(ctx, result.messages)
   },
   error: (ctx, _task, err) => {
     const {logger} = ctx
 
-    if (err instanceof _DtsError) {
-      _printExtractMessages(ctx, err.messages)
+    if (err instanceof DtsError) {
+      printExtractMessages(ctx, err.messages)
     } else if (err instanceof Error) {
       logger.error(err)
     }

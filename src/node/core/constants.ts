@@ -1,5 +1,5 @@
 /** @internal */
-export const _MODULE_EXT: Record<'commonjs' | 'module', {commonjs: string; esm: string}> = {
+export const MODULE_EXT: Record<'commonjs' | 'module', {commonjs: string; esm: string}> = {
   // pkg.type: "commonjs"
   commonjs: {
     commonjs: '.js',

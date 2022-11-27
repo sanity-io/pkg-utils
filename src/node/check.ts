@@ -1,8 +1,8 @@
 import path from 'path'
 import esbuild, {BuildFailure} from 'esbuild'
-import {_loadConfig, _loadPkgWithReporting} from './_core'
-import {_fileExists, _printPackageTree} from './_printPackageTree'
-import {_resolveBuildContext} from './_resolveBuildContext'
+import {loadConfig, loadPkgWithReporting} from './core'
+import {fileExists, printPackageTree} from './printPackageTree'
+import {resolveBuildContext} from './resolveBuildContext'
 
 /** @public */
 export async function check(options: {
@@ -12,32 +12,32 @@ export async function check(options: {
 }): Promise<void> {
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
 
-  const pkg = await _loadPkgWithReporting({cwd})
-  const config = await _loadConfig({cwd})
+  const pkg = await loadPkgWithReporting({cwd})
+  const config = await loadConfig({cwd})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
-  const ctx = await _resolveBuildContext({config, cwd, pkg, strict, tsconfig})
+  const ctx = await resolveBuildContext({config, cwd, pkg, strict, tsconfig})
   const {logger} = ctx
 
-  _printPackageTree(ctx)
+  printPackageTree(ctx)
 
   if (strict) {
     const missingFiles: string[] = []
 
     // Check if there are missing files
     for (const [, exp] of Object.entries(ctx.exports || {})) {
-      if (exp.source && !_fileExists(path.resolve(cwd, exp.source))) {
+      if (exp.source && !fileExists(path.resolve(cwd, exp.source))) {
         missingFiles.push(exp.source)
       }
 
-      if (exp.require && !_fileExists(path.resolve(cwd, exp.require))) {
+      if (exp.require && !fileExists(path.resolve(cwd, exp.require))) {
         missingFiles.push(exp.require)
       }
 
-      if (exp.import && !_fileExists(path.resolve(cwd, exp.import))) {
+      if (exp.import && !fileExists(path.resolve(cwd, exp.import))) {
         missingFiles.push(exp.import)
       }
 
-      if (exp.types && !_fileExists(path.resolve(cwd, exp.types))) {
+      if (exp.types && !fileExists(path.resolve(cwd, exp.types))) {
         missingFiles.push(exp.types)
       }
     }

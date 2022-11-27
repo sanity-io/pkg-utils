@@ -1,11 +1,11 @@
-import {_isRecord} from '../_isRecord'
 import {PkgExport} from '../config'
-import {_PackageJSON} from './_types'
-import {_validateExports} from './_validateExports'
+import {isRecord} from '../isRecord'
+import {PackageJSON} from './types'
+import {validateExports} from './validateExports'
 
 /** @internal */
-export function _parseExports(options: {
-  pkg: _PackageJSON
+export function parseExports(options: {
+  pkg: PackageJSON
   strict: boolean
 }): (PkgExport & {_path: string})[] {
   const {pkg, strict} = options
@@ -41,7 +41,7 @@ export function _parseExports(options: {
             errors.push('package.json: `exports["./package.json"] must be "./package.json".')
           }
         }
-      } else if (_isRecord(exportEntry)) {
+      } else if (isRecord(exportEntry)) {
         if (exportPath === '.') {
           if (
             exportEntry.require &&
@@ -89,7 +89,7 @@ export function _parseExports(options: {
 
   const _exports = [rootExport, ...extraExports]
 
-  errors.push(..._validateExports(_exports, {pkg}))
+  errors.push(...validateExports(_exports, {pkg}))
 
   if (errors.length) {
     throw new Error('\n- ' + errors.join('\n- '))

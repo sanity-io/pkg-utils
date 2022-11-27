@@ -1,10 +1,10 @@
 import fs from 'fs/promises'
 import pkgUp from 'pkg-up'
-import {_PackageJSON} from './_types'
-import {_validatePkg} from './_validatePkg'
+import {PackageJSON} from './types'
+import {validatePkg} from './validatePkg'
 
 /** @internal */
-export async function _loadPkg(options: {cwd: string}): Promise<_PackageJSON> {
+export async function loadPkg(options: {cwd: string}): Promise<PackageJSON> {
   const {cwd} = options
 
   const pkgPath = await pkgUp({cwd})
@@ -13,5 +13,5 @@ export async function _loadPkg(options: {cwd: string}): Promise<_PackageJSON> {
 
   const buf = await fs.readFile(pkgPath)
 
-  return _validatePkg(JSON.parse(buf.toString()))
+  return validatePkg(JSON.parse(buf.toString()))
 }

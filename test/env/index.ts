@@ -1,2 +1,2 @@
-export * from './_exec'
-export * from './_spawnProject'
+export * from './exec'
+export * from './spawnProject'

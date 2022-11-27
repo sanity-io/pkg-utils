@@ -1,13 +1,13 @@
 import chalk from 'chalk'
 import {Observable} from 'rxjs'
-import {_printExtractMessages} from '../../_printExtractMessages'
-import {_TaskHandler} from '../_types'
-import {_doExtract} from './_doExtract'
-import {_DtsError} from './_DtsError'
-import {_DtsResult, _DtsWatchTask} from './_types'
+import {printExtractMessages} from '../../printExtractMessages'
+import {TaskHandler} from '../types'
+import {doExtract} from './doExtract'
+import {DtsError} from './DtsError'
+import {DtsResult, DtsWatchTask} from './types'
 
 /** @internal */
-export const _dtsWatchTask: _TaskHandler<_DtsWatchTask, _DtsResult> = {
+export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
   name: (_ctx, task) =>
     [
       `build type definitions`,
@@ -18,7 +18,7 @@ export const _dtsWatchTask: _TaskHandler<_DtsWatchTask, _DtsResult> = {
     ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {
-      _doExtract(ctx, task)
+      doExtract(ctx, task)
         .then((result) => {
           observer.next(result)
           observer.complete()
@@ -29,7 +29,7 @@ export const _dtsWatchTask: _TaskHandler<_DtsWatchTask, _DtsResult> = {
   complete: (ctx, _task, result) => {
     const {logger} = ctx
 
-    _printExtractMessages(ctx, result.messages)
+    printExtractMessages(ctx, result.messages)
 
     logger.warn('watching typescript definitions is currently not supported')
     logger.log()
@@ -37,8 +37,8 @@ export const _dtsWatchTask: _TaskHandler<_DtsWatchTask, _DtsResult> = {
   error: (ctx, _task, err) => {
     const {logger} = ctx
 
-    if (err instanceof _DtsError) {
-      _printExtractMessages(ctx, err.messages)
+    if (err instanceof DtsError) {
+      printExtractMessages(ctx, err.messages)
     } else if (err instanceof Error) {
       logger.error(err)
     }

@@ -2,20 +2,20 @@
 
 import chalk from 'chalk'
 import {ZodError} from 'zod'
-import {_loadPkg} from './_loadPkg'
-import {_PackageJSON} from './_types'
+import {loadPkg} from './loadPkg'
+import {PackageJSON} from './types'
 
 /** @internal */
-export async function _loadPkgWithReporting(options: {cwd: string}): Promise<_PackageJSON> {
+export async function loadPkgWithReporting(options: {cwd: string}): Promise<PackageJSON> {
   try {
-    return await _loadPkg(options)
+    return await loadPkg(options)
   } catch (err) {
     if (err instanceof ZodError) {
       for (const issue of err.issues) {
         if (issue.code === 'invalid_type') {
           console.log(
             [
-              `${chalk.red('fail')}   \`${_formatPath(issue.path)}\` `,
+              `${chalk.red('fail')}   \`${formatPath(issue.path)}\` `,
               `in ./package.json must be of type ${chalk.magenta(issue.expected)} `,
               `(received ${chalk.magenta(issue.received)})`,
             ].join('')
@@ -30,7 +30,7 @@ export async function _loadPkgWithReporting(options: {cwd: string}): Promise<_Pa
   }
 }
 
-function _formatPath(segments: Array<string | number>) {
+function formatPath(segments: Array<string | number>) {
   return segments
     .map((s, idx) => {
       if (idx === 0) return s

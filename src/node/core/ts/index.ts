@@ -1,1 +1,1 @@
-export * from './_loadTSConfig'
+export * from './loadTSConfig'

@@ -2,10 +2,10 @@ import fs from 'fs'
 import path from 'path'
 import chalk from 'chalk'
 import treeify from 'treeify'
-import {PkgExport, _BuildContext} from './_core'
-import {_getFilesize} from './_getFilesize'
+import {PkgExport, BuildContext} from './core'
+import {getFilesize} from './getFilesize'
 
-export function _fileExists(file: string): boolean {
+export function fileExists(file: string): boolean {
   try {
     fs.accessSync(file)
 
@@ -15,15 +15,15 @@ export function _fileExists(file: string): boolean {
   }
 }
 
-function _getFileInfo(cwd: string, filePath: string) {
+function getFileInfo(cwd: string, filePath: string) {
   const p = path.resolve(cwd, filePath)
-  const exists = _fileExists(p)
-  const size = exists ? _getFilesize(p) : undefined
+  const exists = fileExists(p)
+  const size = exists ? getFilesize(p) : undefined
 
   return {exists, size}
 }
 
-export function _printPackageTree(ctx: _BuildContext): void {
+export function printPackageTree(ctx: BuildContext): void {
   const {cwd, exports, logger, pkg} = ctx
 
   if (!exports) return
@@ -37,8 +37,8 @@ export function _printPackageTree(ctx: _BuildContext): void {
     tree.bin = pkg.bin
   }
 
-  function _fileInfo(file: string) {
-    const info = _getFileInfo(cwd, file)
+  function fileInfo(file: string) {
+    const info = getFileInfo(cwd, file)
 
     if (!info.size) {
       return `${chalk.gray(file)} ${chalk.red('does not exist')}`
@@ -62,7 +62,7 @@ export function _printPackageTree(ctx: _BuildContext): void {
         }
 
         if (entry.types) {
-          exp.types = _fileInfo(entry.types)
+          exp.types = fileInfo(entry.types)
         } else {
           delete exp.types
         }
@@ -70,8 +70,8 @@ export function _printPackageTree(ctx: _BuildContext): void {
         if (entry.browser) {
           exp.browser = {source: entry.browser.source}
 
-          if (entry.browser.import) exp.browser.import = _fileInfo(entry.browser.import)
-          if (entry.browser.require) exp.browser.require = _fileInfo(entry.browser.require)
+          if (entry.browser.import) exp.browser.import = fileInfo(entry.browser.import)
+          if (entry.browser.require) exp.browser.require = fileInfo(entry.browser.require)
         } else {
           delete exp.browser
         }
@@ -79,25 +79,25 @@ export function _printPackageTree(ctx: _BuildContext): void {
         if (entry.node) {
           exp.node = {source: entry.node.source}
 
-          if (entry.node.import) exp.node.import = _fileInfo(entry.node.import)
-          if (entry.node.require) exp.node.require = _fileInfo(entry.node.require)
+          if (entry.node.import) exp.node.import = fileInfo(entry.node.import)
+          if (entry.node.require) exp.node.require = fileInfo(entry.node.require)
         } else {
           delete exp.node
         }
 
         if (entry.import) {
-          exp.import = _fileInfo(entry.import)
+          exp.import = fileInfo(entry.import)
         } else {
           delete exp.import
         }
 
         if (entry.require) {
-          exp.require = _fileInfo(entry.require)
+          exp.require = fileInfo(entry.require)
         } else {
           delete exp.require
         }
 
-        exp.default = _fileInfo(entry.default)
+        exp.default = fileInfo(entry.default)
 
         return [chalk.green(path.join(pkg.name, exportPath)), exp]
       })

@@ -1,6 +1,6 @@
-import {_PackageTargetVersions} from './_resolveBrowserslistVersions'
+import {PackageTargetVersions} from './resolveBrowserslistVersions'
 
-export function _resolveBrowserTarget(versions: _PackageTargetVersions): string[] | undefined {
+export function resolveBrowserTarget(versions: PackageTargetVersions): string[] | undefined {
   const target: string[] = []
 
   if (versions.chrome.length) {

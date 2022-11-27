@@ -1,7 +1,7 @@
 import ts from 'typescript'
 
 /** @internal */
-export async function _loadTSConfig(options: {
+export async function loadTSConfig(options: {
   cwd: string
   tsconfigPath: string
 }): Promise<ts.ParsedCommandLine> {

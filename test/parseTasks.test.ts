@@ -1,8 +1,8 @@
 import {expect, test, vi} from 'vitest'
-import {_BuildContext, _PackageJSON, _parseExports, _resolveBuildTasks} from '../src/node'
+import {BuildContext, PackageJSON, parseExports, resolveBuildTasks} from '../src/node'
 
 test('should parse tasks', () => {
-  const pkg: _PackageJSON = {
+  const pkg: PackageJSON = {
     type: 'module',
     name: 'test',
     version: '1.0.0',
@@ -15,9 +15,9 @@ test('should parse tasks', () => {
     },
   }
 
-  const exports = _parseExports({pkg, strict: true})
+  const exports = parseExports({pkg, strict: true})
 
-  const ctx: _BuildContext = {
+  const ctx: BuildContext = {
     cwd: '/test',
     distPath: '/test/dist',
     emitDeclarationOnly: false,
@@ -42,7 +42,7 @@ test('should parse tasks', () => {
     ts: {},
   }
 
-  const tasks = _resolveBuildTasks(ctx)
+  const tasks = resolveBuildTasks(ctx)
 
   expect(tasks).toEqual([
     {

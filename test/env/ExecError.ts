@@ -1,4 +1,4 @@
-export class _ExecError extends Error {
+export class ExecError extends Error {
   stdout: string
   stderr: string
 

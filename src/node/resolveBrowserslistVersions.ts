@@ -1,6 +1,6 @@
 import browserslist from 'browserslist'
 
-export interface _PackageTargetVersions {
+export interface PackageTargetVersions {
   chrome: string[]
   ff: string[]
   edge: string[]
@@ -10,14 +10,14 @@ export interface _PackageTargetVersions {
   node: string[]
 }
 
-function _sortAsNumber(a: string, b: string) {
+function sortAsNumber(a: string, b: string) {
   const aVersion = Number(a)
   const bVersion = Number(b)
 
   return aVersion - bVersion
 }
 
-export function _resolveBrowserslistVersions(query: string[]): _PackageTargetVersions {
+export function resolveBrowserslistVersions(query: string[]): PackageTargetVersions {
   const result = browserslist(query)
 
   const entries = result.map((key) => {
@@ -37,7 +37,7 @@ export function _resolveBrowserslistVersions(query: string[]): _PackageTargetVer
   const node = entries.filter((b) => b.name === 'node')
 
   // versions
-  const versions: _PackageTargetVersions = {
+  const versions: PackageTargetVersions = {
     chrome: andChr.concat(chrome).map((b) => b.version),
     ff: andFf.concat(ff).map((b) => b.version),
     edge: edge.map((b) => b.version),
@@ -48,13 +48,13 @@ export function _resolveBrowserslistVersions(query: string[]): _PackageTargetVer
   }
 
   // sort
-  versions.chrome.sort(_sortAsNumber)
-  versions.ff.sort(_sortAsNumber)
-  versions.edge.sort(_sortAsNumber)
-  versions.iosSaf.sort(_sortAsNumber)
-  versions.saf.sort(_sortAsNumber)
-  versions.opera.sort(_sortAsNumber)
-  versions.node.sort(_sortAsNumber)
+  versions.chrome.sort(sortAsNumber)
+  versions.ff.sort(sortAsNumber)
+  versions.edge.sort(sortAsNumber)
+  versions.iosSaf.sort(sortAsNumber)
+  versions.saf.sort(sortAsNumber)
+  versions.opera.sort(sortAsNumber)
+  versions.node.sort(sortAsNumber)
 
   return versions
 }

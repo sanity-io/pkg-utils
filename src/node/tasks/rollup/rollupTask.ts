@@ -4,12 +4,12 @@ import path from 'path'
 import chalk from 'chalk'
 import {rollup} from 'rollup'
 import {Observable} from 'rxjs'
-import {_BuildContext} from '../../_core'
-import {_RollupTask, _TaskHandler} from '../_types'
-import {_resolveRollupConfig} from './_resolveRollupConfig'
+import {BuildContext} from '../../core'
+import {RollupTask, TaskHandler} from '../types'
+import {resolveRollupConfig} from './resolveRollupConfig'
 
 /** @internal */
-export const _rollupTask: _TaskHandler<_RollupTask> = {
+export const rollupTask: TaskHandler<RollupTask> = {
   name: (ctx, task) =>
     `build javascript files (target ${task.target.join(' + ')}, format ${
       task.format
@@ -18,7 +18,7 @@ export const _rollupTask: _TaskHandler<_RollupTask> = {
       .join('\n       ')}`,
   exec: (ctx, task) => {
     return new Observable((observer) => {
-      _execPromise(ctx, task)
+      execPromise(ctx, task)
         .then((result) => {
           observer.next(result)
           observer.complete()
@@ -36,11 +36,11 @@ export const _rollupTask: _TaskHandler<_RollupTask> = {
   },
 }
 
-async function _execPromise(ctx: _BuildContext, task: _RollupTask) {
+async function execPromise(ctx: BuildContext, task: RollupTask) {
   const {files, distPath} = ctx
   const outDir = path.relative(ctx.cwd, distPath)
 
-  const {inputOptions, outputOptions} = _resolveRollupConfig(ctx, task)
+  const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
 
   // Create bundle
   const bundle = await rollup(inputOptions)

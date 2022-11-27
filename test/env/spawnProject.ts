@@ -7,12 +7,12 @@ import cpx from 'cpx'
 import mkdirp from 'mkdirp'
 import _rimraf from 'rimraf'
 import {v4 as uuid} from 'uuid'
-import {_exec} from './_exec'
-import {_ExecError} from './_ExecError'
+import {exec} from './exec'
+import {ExecError} from './ExecError'
 
 const rimraf = promisify(_rimraf)
 
-async function _tmpWorkspace() {
+async function tmpWorkspace() {
   const key = uuid()
   const workspacePath = path.resolve(__dirname, `__tmp__/${key}`)
 
@@ -24,7 +24,7 @@ async function _tmpWorkspace() {
   }
 }
 
-export function _spawnProject(name: string): Promise<{
+export function spawnProject(name: string): Promise<{
   cwd: string
   add: (pkg: string) => Promise<{stdout: string; stderr: string}>
   install: () => Promise<{stdout: string; stderr: string}>
@@ -36,7 +36,7 @@ export function _spawnProject(name: string): Promise<{
   run: (cmd: string) => Promise<{stdout: string; stderr: string}>
 }> {
   return new Promise((resolve, reject) => {
-    _tmpWorkspace()
+    tmpWorkspace()
       .then(({path: tmpPath, remove: tmpRemove}) => {
         const packagePath = path.resolve(__dirname, '../../playground', name)
 
@@ -57,9 +57,9 @@ export function _spawnProject(name: string): Promise<{
                 PATH: `${process.env.PATH}:${path.resolve(__dirname, '../../bin')}`,
               }
 
-              return _exec(cmd, {cwd: tmpPath, env})
+              return exec(cmd, {cwd: tmpPath, env})
             } catch (execErr) {
-              if (execErr instanceof _ExecError) {
+              if (execErr instanceof ExecError) {
                 console.log(execErr.stdout)
                 console.error(execErr.stderr)
 

@@ -9,7 +9,7 @@ const CONFIG_FILE_NAMES = [
   'package.config.mjs',
 ]
 
-export async function _findConfigFile(cwd: string): Promise<string | undefined> {
+export async function findConfigFile(cwd: string): Promise<string | undefined> {
   const pkgJsonPath = findConfig('package.json', {cwd})
 
   if (!pkgJsonPath) return undefined
@@ -19,7 +19,7 @@ export async function _findConfigFile(cwd: string): Promise<string | undefined> 
   for (const fileName of CONFIG_FILE_NAMES) {
     const configPath = path.resolve(pkgPath, fileName)
 
-    const exists = await _fileExists(configPath)
+    const exists = await fileExists(configPath)
 
     if (exists) {
       return configPath
@@ -29,7 +29,7 @@ export async function _findConfigFile(cwd: string): Promise<string | undefined> 
   return undefined
 }
 
-async function _fileExists(filePath: string) {
+async function fileExists(filePath: string) {
   try {
     await stat(filePath)
 

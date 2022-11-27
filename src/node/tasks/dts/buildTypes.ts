@@ -9,7 +9,7 @@ export const formatHost: ts.FormatDiagnosticsHost = {
 }
 
 /** @internal */
-export async function _buildTypes(options: {
+export async function buildTypes(options: {
   cwd: string
   outDir: string
   tsconfig: ts.ParsedCommandLine

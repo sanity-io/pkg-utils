@@ -2,11 +2,11 @@ import path from 'path'
 import chalk from 'chalk'
 import {RollupWatcherEvent, RollupWatchOptions, watch as rollupWatch} from 'rollup'
 import {Observable} from 'rxjs'
-import {_RollupWatchTask, _TaskHandler} from '../_types'
-import {_resolveRollupConfig} from './_resolveRollupConfig'
+import {RollupWatchTask, TaskHandler} from '../types'
+import {resolveRollupConfig} from './resolveRollupConfig'
 
 /** @internal */
-export const _rollupWatchTask: _TaskHandler<_RollupWatchTask, RollupWatcherEvent> = {
+export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> = {
   name: (ctx, task) =>
     `build javascript files (target ${task.target.join(' + ')}, format ${
       task.format
@@ -14,7 +14,7 @@ export const _rollupWatchTask: _TaskHandler<_RollupWatchTask, RollupWatcherEvent
       .map((e) => `${chalk.blue(path.join(ctx.pkg.name, e.path))}: ${e.source} -> ${e.output}`)
       .join('\n       ')}`,
   exec: (ctx, task) => {
-    const {inputOptions, outputOptions} = _resolveRollupConfig(ctx, task)
+    const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
 
     return new Observable((observer) => {
       const watchOptions: RollupWatchOptions = {

@@ -1,10 +1,10 @@
 import path from 'path'
 import {switchMap} from 'rxjs'
-import {_loadConfig, _loadPkgWithReporting} from './_core'
-import {_resolveBuildContext} from './_resolveBuildContext'
-import {_resolveWatchTasks} from './_resolveWatchTasks'
-import {_WatchTask, _TaskHandler, _watchTaskHandlers} from './_tasks'
-import {_watchConfigFiles} from './_watchConfigFiles'
+import {loadConfig, loadPkgWithReporting} from './core'
+import {resolveBuildContext} from './resolveBuildContext'
+import {resolveWatchTasks} from './resolveWatchTasks'
+import {WatchTask, TaskHandler, watchTaskHandlers} from './tasks'
+import {watchConfigFiles} from './watchConfigFiles'
 
 /** @public */
 export async function watch(options: {
@@ -14,31 +14,31 @@ export async function watch(options: {
 }): Promise<void> {
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
 
-  const configFiles$ = await _watchConfigFiles({cwd})
+  const configFiles$ = await watchConfigFiles({cwd})
 
   const ctx$ = configFiles$.pipe(
     switchMap(async (configFiles) => {
-      const _files = configFiles.map((f) => path.relative(cwd, f))
+      const files = configFiles.map((f) => path.relative(cwd, f))
 
-      const packageJsonPath = _files.find((f) => f === 'package.json')
+      const packageJsonPath = files.find((f) => f === 'package.json')
 
       if (!packageJsonPath) {
         throw new Error('missing package.json')
       }
 
-      const pkg = await _loadPkgWithReporting({cwd})
-      const config = await _loadConfig({cwd})
+      const pkg = await loadPkgWithReporting({cwd})
+      const config = await loadConfig({cwd})
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
-      return _resolveBuildContext({config, cwd, pkg, strict, tsconfig})
+      return resolveBuildContext({config, cwd, pkg, strict, tsconfig})
     })
   )
 
   ctx$.subscribe(async (ctx) => {
-    const watchTasks = _resolveWatchTasks(ctx)
+    const watchTasks = resolveWatchTasks(ctx)
 
     for (const task of watchTasks) {
-      const handler = _watchTaskHandlers[task.type] as _TaskHandler<_WatchTask, unknown>
+      const handler = watchTaskHandlers[task.type] as TaskHandler<WatchTask, unknown>
       const result$ = handler.exec(ctx, task)
 
       result$.subscribe({

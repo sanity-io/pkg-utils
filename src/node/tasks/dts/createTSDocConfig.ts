@@ -10,7 +10,7 @@ export interface TSDocCustomTag {
 }
 
 /** @internal */
-export async function _createTSDocConfig(opts: {
+export async function createTSDocConfig(opts: {
   customTags: TSDocCustomTag[]
 }): Promise<TSDocConfigFile | undefined> {
   const {customTags} = opts

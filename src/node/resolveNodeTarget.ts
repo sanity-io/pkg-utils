@@ -1,6 +1,6 @@
-import {_PackageTargetVersions} from './_resolveBrowserslistVersions'
+import {PackageTargetVersions} from './resolveBrowserslistVersions'
 
-export function _resolveNodeTarget(versions: _PackageTargetVersions): string[] | undefined {
+export function resolveNodeTarget(versions: PackageTargetVersions): string[] | undefined {
   const target: string[] = []
 
   if (versions.node.length) {

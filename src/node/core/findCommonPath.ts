@@ -1,10 +1,10 @@
 import path from 'path'
 
-export function _pathContains(containerPath: string, itemPath: string): boolean {
+export function pathContains(containerPath: string, itemPath: string): boolean {
   return !path.relative(containerPath, itemPath).startsWith('..')
 }
 
-export function _findCommonDirPath(filePaths: string[]): string | undefined {
+export function findCommonDirPath(filePaths: string[]): string | undefined {
   let ret: string | undefined = undefined
 
   for (const filePath of filePaths) {
@@ -22,7 +22,7 @@ export function _findCommonDirPath(filePaths: string[]): string | undefined {
         break
       }
 
-      if (_pathContains(dirPath, ret)) {
+      if (pathContains(dirPath, ret)) {
         ret = dirPath
         break
       }

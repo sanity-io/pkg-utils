@@ -1,13 +1,13 @@
-import {_MODULE_EXT} from '../_constants'
 import {PkgExport} from '../config'
-import {_PackageJSON} from './_types'
+import {MODULE_EXT} from '../constants'
+import {PackageJSON} from './types'
 
-export function _validateExports(
+export function validateExports(
   _exports: (PkgExport & {_path: string})[],
-  options: {pkg: _PackageJSON}
+  options: {pkg: PackageJSON}
 ): string[] {
   const {pkg} = options
-  const ext = _MODULE_EXT[pkg.type]
+  const ext = MODULE_EXT[pkg.type]
 
   const errors: string[] = []
 

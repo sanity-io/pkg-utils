@@ -1,4 +1,4 @@
-export * from './_loadConfig'
-export * from './_resolveConfigProperty'
+export * from './loadConfig'
+export * from './resolveConfigProperty'
 export * from './defineConfig'
 export * from './types'

@@ -1,25 +1,25 @@
 import fs from 'fs'
 import path from 'path'
-import {PkgExport, PkgFormat, PkgRuntime, _BuildContext} from './_core'
-import {_WatchTask, _DtsWatchTask, _RollupWatchTask, _RollupTaskEntry} from './_tasks'
+import {PkgExport, PkgFormat, PkgRuntime, BuildContext} from './core'
+import {WatchTask, DtsWatchTask, RollupWatchTask, RollupTaskEntry} from './tasks'
 
 /** @internal */
-export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
+export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
   const {config, cwd, pkg, target} = ctx
-  const tasks: _WatchTask[] = []
+  const tasks: WatchTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(
     ([_path, exp]) => ({_path, ...exp} as PkgExport & {_path: string})
   )
 
-  const dtsTask: _DtsWatchTask = {
+  const dtsTask: DtsWatchTask = {
     type: 'watch:dts',
     entries: [],
   }
 
-  const rollupTasks: Record<string, _RollupWatchTask> = {}
+  const rollupTasks: Record<string, RollupWatchTask> = {}
 
-  function _addRollupTaskEntry(format: PkgFormat, runtime: PkgRuntime, entry: _RollupTaskEntry) {
+  function addRollupTaskEntry(format: PkgFormat, runtime: PkgRuntime, entry: RollupTaskEntry) {
     const buildId = `${format}:${runtime}`
 
     if (rollupTasks[buildId]) {
@@ -56,7 +56,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
 
     if (!output) continue
 
-    _addRollupTaskEntry('commonjs', ctx.runtime, {
+    addRollupTaskEntry('commonjs', ctx.runtime, {
       path: exp._path,
       source: exp.source,
       output,
@@ -69,7 +69,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
 
     if (!output) continue
 
-    _addRollupTaskEntry('commonjs', 'browser', {
+    addRollupTaskEntry('commonjs', 'browser', {
       path: exp._path,
       source: exp.browser?.source || exp.source,
       output,
@@ -82,7 +82,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
 
     if (!output) continue
 
-    _addRollupTaskEntry('esm', ctx.runtime, {
+    addRollupTaskEntry('esm', ctx.runtime, {
       path: exp._path,
       source: exp.source,
       output,
@@ -95,7 +95,7 @@ export function _resolveWatchTasks(ctx: _BuildContext): _WatchTask[] {
 
     if (!output) continue
 
-    _addRollupTaskEntry('esm', 'browser', {
+    addRollupTaskEntry('esm', 'browser', {
       path: exp._path,
       source: exp.browser?.source || exp.source,
       output,

@@ -2,7 +2,7 @@
 
 import chalk from 'chalk'
 
-export function _spinner(msg: string): {complete: () => void; error: () => void} {
+export function createSpinner(msg: string): {complete: () => void; error: () => void} {
   const startTime = Date.now()
 
   console.log(`${chalk.yellow('run   ')} ${msg}`)

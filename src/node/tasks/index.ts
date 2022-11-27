@@ -1,19 +1,19 @@
-import {_BuildTaskHandlers, _WatchTaskHandlers} from './_types'
-import {_dtsTask, _dtsWatchTask} from './dts'
-import {_rollupTask, _rollupWatchTask} from './rollup'
+import {dtsTask, dtsWatchTask} from './dts'
+import {rollupTask, rollupWatchTask} from './rollup'
+import {BuildTaskHandlers, WatchTaskHandlers} from './types'
 
-export * from './_types'
+export * from './types'
 export * from './dts'
 export * from './rollup'
 
 /** @internal */
-export const _buildTaskHandlers: _BuildTaskHandlers = {
-  'build:dts': _dtsTask,
-  'build:js': _rollupTask,
+export const buildTaskHandlers: BuildTaskHandlers = {
+  'build:dts': dtsTask,
+  'build:js': rollupTask,
 }
 
 /** @internal */
-export const _watchTaskHandlers: _WatchTaskHandlers = {
-  'watch:dts': _dtsWatchTask,
-  'watch:js': _rollupWatchTask,
+export const watchTaskHandlers: WatchTaskHandlers = {
+  'watch:dts': dtsWatchTask,
+  'watch:js': rollupWatchTask,
 }

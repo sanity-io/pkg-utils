@@ -8,22 +8,22 @@ import replace from '@rollup/plugin-replace'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {terser} from 'rollup-plugin-terser'
-import {_BuildContext, _DEFAULTS, _MODULE_EXT, _resolveConfigProperty} from '../../_core'
-import {_RollupTask, _RollupWatchTask} from '../_types'
+import {BuildContext, DEFAULTS, MODULE_EXT, resolveConfigProperty} from '../../core'
+import {RollupTask, RollupWatchTask} from '../types'
 
-export interface _RollupConfig {
+export interface RollupConfig {
   inputOptions: InputOptions
   outputOptions: OutputOptions
 }
 
 /** @internal */
-export function _resolveRollupConfig(
-  ctx: _BuildContext,
-  buildTask: _RollupTask | _RollupWatchTask
-): _RollupConfig {
+export function resolveRollupConfig(
+  ctx: BuildContext,
+  buildTask: RollupTask | RollupWatchTask
+): RollupConfig {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
-  const outputExt = _MODULE_EXT[pkg.type][format]
+  const outputExt = MODULE_EXT[pkg.type][format]
   const minify = config?.minify ?? true
   const outDir = path.relative(cwd, distPath)
 
@@ -106,7 +106,7 @@ export function _resolveRollupConfig(
     getBabelOutputPlugin({
       babelrc: false,
       plugins: ['@babel/plugin-proposal-object-rest-spread'],
-      presets: [['@babel/preset-env', {targets: pkg.browserslist || _DEFAULTS.browserslist}]],
+      presets: [['@babel/preset-env', {targets: pkg.browserslist || DEFAULTS.browserslist}]],
     }),
     minify &&
       terser({
@@ -131,7 +131,7 @@ export function _resolveRollupConfig(
 
   const plugins = Array.isArray(userPlugins)
     ? defaultPlugins.concat(userPlugins)
-    : _resolveConfigProperty(config?.rollup?.plugins, defaultPlugins)
+    : resolveConfigProperty(config?.rollup?.plugins, defaultPlugins)
 
   return {
     inputOptions: {

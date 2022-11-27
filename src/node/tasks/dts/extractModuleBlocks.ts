@@ -8,7 +8,7 @@ import {Program} from 'typescript'
  * A workaround to find all module blocks in extract TS files.
  * @internal
  * */
-export async function _extractModuleBlocksFromTypes({
+export async function extractModuleBlocksFromTypes({
   tsOutDir,
   extractResult,
 }: {
@@ -26,7 +26,7 @@ export async function _extractModuleBlocksFromTypes({
 
   for (const sourceFile of sourceFiles) {
     if (sourceFile.text.includes('declare module')) {
-      moduleBlocks.push(..._extractModuleBlocks(sourceFile.text))
+      moduleBlocks.push(...extractModuleBlocks(sourceFile.text))
     }
   }
 
@@ -34,7 +34,7 @@ export async function _extractModuleBlocksFromTypes({
 }
 
 /** @internal */
-export function _extractModuleBlocks(fileContent: string): string[] {
+export function extractModuleBlocks(fileContent: string): string[] {
   const ast = parse(fileContent, {
     parser: typeScriptParser,
   }) as File

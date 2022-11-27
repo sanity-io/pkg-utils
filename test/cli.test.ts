@@ -1,9 +1,9 @@
 import path from 'path'
 import {describe, expect, test} from 'vitest'
-import {_spawnProject} from './env'
+import {spawnProject} from './env'
 
 test('should build `js` package', async () => {
-  const project = await _spawnProject('js')
+  const project = await spawnProject('js')
 
   await project.install()
 
@@ -16,7 +16,7 @@ test('should build `js` package', async () => {
 })
 
 test('should build `exports-dummy` package', async () => {
-  const project = await _spawnProject('exports-dummy')
+  const project = await spawnProject('exports-dummy')
 
   await project.install()
 
@@ -52,7 +52,7 @@ test('should build `exports-dummy` package', async () => {
 })
 
 test('should build `custom-dist` package', async () => {
-  const project = await _spawnProject('custom-dist')
+  const project = await spawnProject('custom-dist')
 
   await project.install()
 
@@ -70,7 +70,7 @@ test('should build `custom-dist` package', async () => {
 })
 
 test('should build `multi-export` package', async () => {
-  const project = await _spawnProject('multi-export')
+  const project = await spawnProject('multi-export')
 
   await project.install()
 
@@ -96,7 +96,7 @@ test('should build `multi-export` package', async () => {
 })
 
 test('should build `ts` package', async () => {
-  const project = await _spawnProject('ts')
+  const project = await spawnProject('ts')
 
   await project.install()
 
@@ -111,8 +111,8 @@ test('should build `ts` package', async () => {
 
 describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from package', async () => {
-    const exportsDummy = await _spawnProject('exports-dummy')
-    const runtime = await _spawnProject('runtime-webpack-v3')
+    const exportsDummy = await spawnProject('exports-dummy')
+    const runtime = await spawnProject('runtime-webpack-v3')
 
     // install and build dummy package
     await exportsDummy.install()
@@ -141,8 +141,8 @@ describe.skip('runtime: webpack v3', () => {
 
 describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from package', async () => {
-    const exportsDummy = await _spawnProject('exports-dummy')
-    const runtime = await _spawnProject('runtime-next-js')
+    const exportsDummy = await spawnProject('exports-dummy')
+    const runtime = await spawnProject('runtime-next-js')
 
     // install and build dummy package
     await exportsDummy.install()

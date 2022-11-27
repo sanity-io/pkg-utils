@@ -4,19 +4,19 @@ import {
   PkgConfigOptions,
   PkgExports,
   PkgRuntime,
-  _BuildContext,
-  _DEFAULTS,
-  _loadTSConfig,
-  _PackageJSON,
-  _parseExports,
-  _resolveConfigProperty,
-} from './_core'
-import {_findCommonDirPath, _pathContains} from './_core/_findCommonPath'
-import {_resolveBrowserslistVersions} from './_resolveBrowserslistVersions'
-import {_resolveBrowserTarget} from './_resolveBrowserTarget'
-import {_resolveNodeTarget} from './_resolveNodeTarget'
+  BuildContext,
+  DEFAULTS,
+  loadTSConfig,
+  PackageJSON,
+  parseExports,
+  resolveConfigProperty,
+} from './core'
+import {findCommonDirPath, pathContains} from './core/findCommonPath'
+import {resolveBrowserslistVersions} from './resolveBrowserslistVersions'
+import {resolveBrowserTarget} from './resolveBrowserTarget'
+import {resolveNodeTarget} from './resolveNodeTarget'
 
-function _createLogger(): _BuildContext['logger'] {
+function createLogger(): BuildContext['logger'] {
   return {
     /* eslint-disable no-console */
     log: (...args) => {
@@ -38,20 +38,20 @@ function _createLogger(): _BuildContext['logger'] {
   }
 }
 
-export async function _resolveBuildContext(options: {
+export async function resolveBuildContext(options: {
   config?: PkgConfigOptions
   cwd: string
   emitDeclarationOnly?: boolean
-  pkg: _PackageJSON
+  pkg: PackageJSON
   strict: boolean
   tsconfig: string
-}): Promise<_BuildContext> {
+}): Promise<BuildContext> {
   const {config, cwd, emitDeclarationOnly = false, pkg, strict, tsconfig: tsconfigPath} = options
-  const logger = _createLogger()
-  const tsconfig = await _loadTSConfig({cwd, tsconfigPath})
-  const targetVersions = _resolveBrowserslistVersions(pkg.browserslist || _DEFAULTS.browserslist)
-  const nodeTarget = _resolveNodeTarget(targetVersions)
-  const webTarget = _resolveBrowserTarget(targetVersions)
+  const logger = createLogger()
+  const tsconfig = await loadTSConfig({cwd, tsconfigPath})
+  const targetVersions = resolveBrowserslistVersions(pkg.browserslist || DEFAULTS.browserslist)
+  const nodeTarget = resolveNodeTarget(targetVersions)
+  const webTarget = resolveBrowserTarget(targetVersions)
 
   if (!nodeTarget) {
     throw new Error('no matching `node` target')
@@ -67,13 +67,13 @@ export async function _resolveBuildContext(options: {
     node: nodeTarget,
   }
 
-  const parsedExports = _parseExports({pkg, strict}).reduce<PkgExports>((acc, x) => {
+  const parsedExports = parseExports({pkg, strict}).reduce<PkgExports>((acc, x) => {
     const {_path: exportPath, ...exportEntry} = x
 
     return {...acc, [exportPath]: exportEntry}
   }, {})
 
-  const exports = _resolveConfigProperty(config?.exports, parsedExports)
+  const exports = resolveConfigProperty(config?.exports, parsedExports)
 
   const parsedExternal = [
     ...(pkg.dependencies ? Object.keys(pkg.dependencies) : []),
@@ -84,7 +84,7 @@ export async function _resolveBuildContext(options: {
   const external =
     config && Array.isArray(config.external)
       ? [...parsedExternal, ...config.external]
-      : _resolveConfigProperty(config?.external, parsedExternal)
+      : resolveConfigProperty(config?.external, parsedExternal)
 
   const outputPaths = Object.values(exports)
     .flatMap((exportEntry) => {
@@ -99,7 +99,7 @@ export async function _resolveBuildContext(options: {
     })
     .map((p) => path.resolve(cwd, p))
 
-  const commonDistPath = _findCommonDirPath(outputPaths)
+  const commonDistPath = findCommonDirPath(outputPaths)
 
   if (commonDistPath === cwd) {
     throw new Error(
@@ -107,7 +107,7 @@ export async function _resolveBuildContext(options: {
     )
   }
 
-  if (commonDistPath && !_pathContains(cwd, commonDistPath)) {
+  if (commonDistPath && !pathContains(cwd, commonDistPath)) {
     throw new Error('all output files must be located within the package')
   }
 
@@ -117,7 +117,7 @@ export async function _resolveBuildContext(options: {
     configDistPath &&
     commonDistPath &&
     configDistPath !== commonDistPath &&
-    !_pathContains(configDistPath, commonDistPath)
+    !pathContains(configDistPath, commonDistPath)
   ) {
     logger.log(`did you mean to configure \`dist: './${path.relative(cwd, commonDistPath)}'\`?`)
 
@@ -130,7 +130,7 @@ export async function _resolveBuildContext(options: {
     throw new Error('could not detect `dist` path')
   }
 
-  const ctx: _BuildContext = {
+  const ctx: BuildContext = {
     config,
     cwd,
     distPath,

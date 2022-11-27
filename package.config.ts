@@ -12,7 +12,7 @@ export default defineConfig({
     rules: {
       'ae-forgotten-export': 'error',
       'ae-incompatible-release-tags': 'error',
-      'ae-internal-missing-underscore': 'error',
+      'ae-internal-missing-underscore': 'off',
       'ae-missing-release-tag': 'error',
     },
   },

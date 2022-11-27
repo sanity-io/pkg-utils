@@ -1,5 +1,5 @@
 import {check} from '../node/check'
-import {_handleError} from './_handleError'
+import {handleError} from './handleError'
 
 export async function checkAction(options: {strict?: boolean; tsconfig?: string}): Promise<void> {
   try {
@@ -9,6 +9,6 @@ export async function checkAction(options: {strict?: boolean; tsconfig?: string}
       tsconfig: options.tsconfig,
     })
   } catch (err) {
-    _handleError(err)
+    handleError(err)
   }
 }

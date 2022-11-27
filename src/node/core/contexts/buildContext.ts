@@ -1,22 +1,22 @@
 import ts from 'typescript'
 import {PkgExports, PkgRuntime, PkgConfigOptions} from '../config'
-import {_PackageJSON} from '../pkg'
+import {PackageJSON} from '../pkg'
 
 /** @internal */
-export interface _BuildFile {
+export interface BuildFile {
   type: 'asset' | 'chunk' | 'types'
   path: string
 }
 
 /** @internal */
-export interface _BuildContext {
+export interface BuildContext {
   config?: PkgConfigOptions
   cwd: string
   distPath: string
   emitDeclarationOnly: boolean
   exports: PkgExports | undefined
   external: string[]
-  files: _BuildFile[]
+  files: BuildFile[]
   logger: {
     log: (...args: unknown[]) => void
     info: (...args: unknown[]) => void
@@ -24,7 +24,7 @@ export interface _BuildContext {
     error: (...args: unknown[]) => void
     success: (...args: unknown[]) => void
   }
-  pkg: _PackageJSON
+  pkg: PackageJSON
   runtime: PkgRuntime
   strict: boolean
   target: Record<PkgRuntime, string[]>

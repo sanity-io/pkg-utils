@@ -8,19 +8,19 @@ import {
 } from '@microsoft/api-extractor'
 import mkdirp from 'mkdirp'
 import prettier from 'prettier'
-import {PkgConfigOptions, _BuildFile} from '../../_core'
-import {_createApiExtractorConfig} from './_createApiExtractorConfig'
-import {_createTSDocConfig} from './_createTSDocConfig'
-import {_extractModuleBlocksFromTypes} from './_extractModuleBlocks'
-import {_getExtractMessagesConfig} from './_getExtractMessagesConfig'
+import {PkgConfigOptions, BuildFile} from '../../core'
+import {createApiExtractorConfig} from './createApiExtractorConfig'
+import {createTSDocConfig} from './createTSDocConfig'
+import {extractModuleBlocksFromTypes} from './extractModuleBlocks'
+import {getExtractMessagesConfig} from './getExtractMessagesConfig'
 
-export async function _extractTypes(options: {
+export async function extractTypes(options: {
   customTags: NonNullable<PkgConfigOptions['extract']>['customTags']
   cwd: string
   distPath: string
   exportPath: string
   filePath: string
-  files: _BuildFile[]
+  files: BuildFile[]
   projectPath: string
   rules?: NonNullable<PkgConfigOptions['extract']>['rules']
   sourceTypesPath: string
@@ -40,16 +40,16 @@ export async function _extractTypes(options: {
     tsconfigPath,
   } = options
 
-  const tsdocConfigFile = await _createTSDocConfig({
+  const tsdocConfigFile = await createTSDocConfig({
     customTags: customTags || [],
   })
 
   const extractorConfig: ExtractorConfig = ExtractorConfig.prepare({
-    configObject: _createApiExtractorConfig({
+    configObject: createApiExtractorConfig({
       distPath,
       exportPath,
       filePath,
-      messages: _getExtractMessagesConfig({rules}),
+      messages: getExtractMessagesConfig({rules}),
       projectFolder: projectPath,
       mainEntryPointFilePath: sourceTypesPath,
       tsconfigPath,
@@ -80,7 +80,7 @@ export async function _extractTypes(options: {
 
   await mkdirp(path.dirname(typesPath))
 
-  const moduleBlocks = await _extractModuleBlocksFromTypes({
+  const moduleBlocks = await extractModuleBlocksFromTypes({
     extractResult: extractorResult,
     tsOutDir: tmpPath,
   })

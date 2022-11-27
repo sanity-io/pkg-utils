@@ -1,9 +1,9 @@
 import outdent from 'outdent'
 import {expect, test} from 'vitest'
-import {_extractModuleBlocks} from '../src/node/_tasks/dts/_extractModuleBlocks'
+import {extractModuleBlocks} from '../src/node/tasks/dts/extractModuleBlocks'
 
 test('extract module block', () => {
-  const blocks = _extractModuleBlocks(
+  const blocks = extractModuleBlocks(
     `
     interface A {}
 

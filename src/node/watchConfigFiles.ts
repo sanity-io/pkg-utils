@@ -2,20 +2,20 @@ import path from 'path'
 import chalk from 'chalk'
 import {Observable} from 'rxjs'
 import {distinctUntilChanged, scan, startWith} from 'rxjs/operators'
-import {_globFiles} from './_globFiles'
-import {_watchFiles} from './_watchFiles'
+import {globFiles} from './globFiles'
+import {watchFiles} from './watchFiles'
 
-export async function _watchConfigFiles(options: {cwd: string}): Promise<Observable<string[]>> {
+export async function watchConfigFiles(options: {cwd: string}): Promise<Observable<string[]>> {
   const {cwd} = options
 
-  const initialFiles = await _globFiles([
+  const initialFiles = await globFiles([
     path.resolve(cwd, 'package.json'),
     path.resolve(cwd, 'package.config.cjs'),
     path.resolve(cwd, 'package.config.js'),
     path.resolve(cwd, 'package.config.ts'),
   ])
 
-  const fileEvent$ = _watchFiles([
+  const fileEvent$ = watchFiles([
     path.resolve(cwd, 'package.json'),
     path.resolve(cwd, 'package.config.cjs'),
     path.resolve(cwd, 'package.config.js'),

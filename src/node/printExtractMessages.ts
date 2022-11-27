@@ -1,9 +1,9 @@
 import path from 'path'
 import {ExtractorMessage} from '@microsoft/api-extractor'
 import chalk from 'chalk'
-import {_BuildContext} from './_core'
+import {BuildContext} from './core'
 
-export function _printExtractMessages(ctx: _BuildContext, messages: ExtractorMessage[]): void {
+export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessage[]): void {
   const {cwd, logger} = ctx
 
   const warnings = messages.filter((msg) => msg.logLevel === 'warning')

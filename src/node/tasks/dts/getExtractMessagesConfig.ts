@@ -1,7 +1,7 @@
 import {ExtractorLogLevel, IExtractorMessagesConfig} from '@microsoft/api-extractor'
-import {PkgRuleLevel, PkgConfigOptions} from '../../_core'
+import {PkgRuleLevel, PkgConfigOptions} from '../../core'
 
-const _LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
+const LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
   error: 'error' as ExtractorLogLevel.Error,
   info: 'info' as ExtractorLogLevel.Info,
   off: 'none' as ExtractorLogLevel.None,
@@ -9,18 +9,18 @@ const _LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
 }
 
 /** @internal */
-export function _getExtractMessagesConfig(options: {
+export function getExtractMessagesConfig(options: {
   rules: NonNullable<PkgConfigOptions['extract']>['rules']
 }): IExtractorMessagesConfig {
   const {rules} = options
 
-  function _ruleToLogLevel(
+  function ruleToLogLevel(
     key: keyof NonNullable<NonNullable<PkgConfigOptions['extract']>['rules']>,
     defaultLevel?: ExtractorLogLevel
   ) {
     const r = rules?.[key]
 
-    return (r ? _LOG_LEVELS[r] : defaultLevel || 'warning') as ExtractorLogLevel
+    return (r ? LOG_LEVELS[r] : defaultLevel || 'warning') as ExtractorLogLevel
   }
 
   return {
@@ -37,22 +37,22 @@ export function _getExtractMessagesConfig(options: {
       },
 
       'ae-forgotten-export': {
-        logLevel: _ruleToLogLevel('ae-forgotten-export', 'error' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('ae-forgotten-export', 'error' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 
       'ae-incompatible-release-tags': {
-        logLevel: _ruleToLogLevel('ae-incompatible-release-tags', 'error' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('ae-incompatible-release-tags', 'error' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 
       'ae-internal-missing-underscore': {
-        logLevel: _ruleToLogLevel('ae-internal-missing-underscore'),
+        logLevel: ruleToLogLevel('ae-internal-missing-underscore'),
         addToApiReportFile: false,
       },
 
       'ae-missing-release-tag': {
-        logLevel: _ruleToLogLevel('ae-missing-release-tag', 'error' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('ae-missing-release-tag', 'error' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 
@@ -69,17 +69,17 @@ export function _getExtractMessagesConfig(options: {
       },
 
       'tsdoc-link-tag-unescaped-text': {
-        logLevel: _ruleToLogLevel('tsdoc-link-tag-unescaped-text', 'warning' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('tsdoc-link-tag-unescaped-text', 'warning' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 
       'tsdoc-undefined-tag': {
-        logLevel: _ruleToLogLevel('tsdoc-undefined-tag', 'error' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('tsdoc-undefined-tag', 'error' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 
       'tsdoc-unsupported-tag': {
-        logLevel: _ruleToLogLevel('tsdoc-unsupported-tag', 'none' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('tsdoc-unsupported-tag', 'none' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
     },

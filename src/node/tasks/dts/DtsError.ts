@@ -1,7 +1,7 @@
 import {ExtractorMessage} from '@microsoft/api-extractor'
 
 /** @internal */
-export class _DtsError extends Error {
+export class DtsError extends Error {
   messages: ExtractorMessage[]
 
   constructor(message: string, messages: ExtractorMessage[]) {

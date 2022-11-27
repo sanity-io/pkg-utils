@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {_PackageJSON} from './_types'
+import {PackageJSON} from './types'
 
 const pkgSchema = z.object({
   type: z.optional(z.enum(['commonjs', 'module'])),
@@ -46,7 +46,7 @@ const pkgSchema = z.object({
   browserslist: z.optional(z.array(z.string())),
 })
 
-export function _validatePkg(input: unknown): _PackageJSON {
+export function validatePkg(input: unknown): PackageJSON {
   const pkg = pkgSchema.parse(input)
 
   return {...pkg, type: pkg.type || 'commonjs'}

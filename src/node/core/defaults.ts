@@ -1,5 +1,5 @@
 /** @internal */
-export const _DEFAULTS = {
+export const DEFAULTS = {
   browserslist: [
     '> 0.2% and supports es6-module and supports es6-module-dynamic-import',
     'not dead',

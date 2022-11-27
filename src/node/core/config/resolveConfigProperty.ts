@@ -1,7 +1,7 @@
 import {PkgConfigProperty, PkgConfigPropertyResolver} from './types'
 
 /** @internal */
-export function _resolveConfigProperty<T>(
+export function resolveConfigProperty<T>(
   prop: PkgConfigProperty<T> | undefined,
   initialValue: T
 ): T {

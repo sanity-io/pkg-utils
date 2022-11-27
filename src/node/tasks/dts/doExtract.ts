@@ -2,11 +2,11 @@ import path from 'path'
 import {promisify} from 'util'
 import {ExtractorMessage} from '@microsoft/api-extractor'
 import rimrafCallback from 'rimraf'
-import {_BuildContext} from '../../_core'
-import {_buildTypes} from './_buildTypes'
-import {_DtsError} from './_DtsError'
-import {_extractTypes} from './_extractTypes'
-import {_DtsResult, _DtsTask, _DtsWatchTask} from './_types'
+import {BuildContext} from '../../core'
+import {buildTypes} from './buildTypes'
+import {DtsError} from './DtsError'
+import {extractTypes} from './extractTypes'
+import {DtsResult, DtsTask, DtsWatchTask} from './types'
 
 const rimraf = promisify(rimrafCallback)
 
@@ -15,10 +15,10 @@ const rimraf = promisify(rimrafCallback)
  * - Create a type definition bundle for each export entry.
  * - When done, remove the temporary directory.
  */
-export async function _doExtract(
-  ctx: _BuildContext,
-  task: _DtsTask | _DtsWatchTask
-): Promise<_DtsResult> {
+export async function doExtract(
+  ctx: BuildContext,
+  task: DtsTask | DtsWatchTask
+): Promise<DtsResult> {
   const {config, cwd, files, strict, ts} = ctx
 
   if (!ts.config || !ts.configPath) {
@@ -33,7 +33,7 @@ export async function _doExtract(
 
   const tmpPath = path.resolve(outDir, '__tmp__')
 
-  await _buildTypes({cwd, outDir: tmpPath, strict, tsconfig: ts.config})
+  await buildTypes({cwd, outDir: tmpPath, strict, tsconfig: ts.config})
   const messages: ExtractorMessage[] = []
 
   const results: {sourcePath: string; filePath: string}[] = []
@@ -48,7 +48,7 @@ export async function _doExtract(
 
     const targetPath = path.resolve(cwd, entry.targetPath)
     const filePath = path.relative(outDir, targetPath)
-    const result = await _extractTypes({
+    const result = await extractTypes({
       customTags: config?.extract?.customTags,
       cwd,
       distPath: outDir,
@@ -67,7 +67,7 @@ export async function _doExtract(
     if (result.messages.some((msg) => msg.logLevel === 'error')) {
       await rimraf(tmpPath)
 
-      throw new _DtsError('encountered errors when extracting types', result.messages)
+      throw new DtsError('encountered errors when extracting types', result.messages)
     }
 
     results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePath: targetPath})

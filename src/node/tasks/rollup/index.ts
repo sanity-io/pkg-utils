@@ -1,2 +1,2 @@
-export * from './_rollupTask'
-export * from './_rollupWatchTask'
+export * from './rollupTask'
+export * from './rollupWatchTask'
