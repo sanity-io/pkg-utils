@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.1](https://github.com/sanity-io/pkg-utils/compare/v1.20.0...v1.20.1) (2022-11-27)
+
+### Bug Fixes
+
+- remove shared browserlist config ([528c4d3](https://github.com/sanity-io/pkg-utils/commit/528c4d304e8b8f99d261a6b18c9df2900e502831))
+
 ## [1.20.0](https://github.com/sanity-io/pkg-utils/compare/v1.19.0...v1.20.0) (2022-11-27)
 
 ### Features
