@@ -8,7 +8,12 @@ import replace from '@rollup/plugin-replace'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {terser} from 'rollup-plugin-terser'
-import {BuildContext, DEFAULTS, MODULE_EXT, resolveConfigProperty} from '../../core'
+import {
+  BuildContext,
+  DEFAULT_BROWSERSLIST_QUERY,
+  MODULE_EXT,
+  resolveConfigProperty,
+} from '../../core'
 import {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
@@ -106,7 +111,7 @@ export function resolveRollupConfig(
     getBabelOutputPlugin({
       babelrc: false,
       plugins: ['@babel/plugin-proposal-object-rest-spread'],
-      presets: [['@babel/preset-env', {targets: pkg.browserslist || DEFAULTS.browserslist}]],
+      presets: [['@babel/preset-env', {targets: pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY}]],
     }),
     minify &&
       terser({

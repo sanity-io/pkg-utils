@@ -5,7 +5,7 @@ import {
   PkgExports,
   PkgRuntime,
   BuildContext,
-  DEFAULTS,
+  DEFAULT_BROWSERSLIST_QUERY,
   loadTSConfig,
   PackageJSON,
   parseExports,
@@ -49,7 +49,7 @@ export async function resolveBuildContext(options: {
   const {config, cwd, emitDeclarationOnly = false, pkg, strict, tsconfig: tsconfigPath} = options
   const logger = createLogger()
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
-  const targetVersions = resolveBrowserslistVersions(pkg.browserslist || DEFAULTS.browserslist)
+  const targetVersions = resolveBrowserslistVersions(pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY)
   const nodeTarget = resolveNodeTarget(targetVersions)
   const webTarget = resolveBrowserTarget(targetVersions)
 
