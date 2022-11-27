@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.19.0](https://github.com/sanity-io/pkg-utils/compare/v1.18.0...v1.19.0) (2022-11-27)
+
+### Features
+
+- export `DEFAULT_BROWSERSLIST_QUERY` ([5def2e2](https://github.com/sanity-io/pkg-utils/commit/5def2e20919584abc1484d5f3586ba01070f7689))
+
 ## [1.18.0](https://github.com/sanity-io/pkg-utils/compare/v1.17.3...v1.18.0) (2022-11-08)
 
 ### Features
