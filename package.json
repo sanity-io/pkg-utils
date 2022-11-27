@@ -140,6 +140,11 @@
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
   "homepage": "https://github.com/sanity-io/pkg-utils#readme",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -148,5 +153,47 @@
     "overrides": {
       "@sanity/pkg-utils": "workspace:*"
     }
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "overrides": [
+      {
+        "files": [
+          "*.json5"
+        ],
+        "options": {
+          "singleQuote": false,
+          "quoteProps": "preserve"
+        }
+      },
+      {
+        "files": [
+          "*.yml"
+        ],
+        "options": {
+          "singleQuote": false
+        }
+      }
+    ]
+  },
+  "release": {
+    "extends": "@sanity/semantic-release-preset",
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "main",
+      "next",
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ]
   }
 }
