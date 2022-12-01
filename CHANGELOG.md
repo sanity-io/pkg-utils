@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.2](https://github.com/sanity-io/pkg-utils/compare/v1.20.1...v1.20.2) (2022-12-01)
+
+### Bug Fixes
+
+- refactor to `@rollup/plugin-terser` ([#12](https://github.com/sanity-io/pkg-utils/issues/12)) ([4bd427f](https://github.com/sanity-io/pkg-utils/commit/4bd427fece32097f826c31ae2c014ad1de0da9f8))
+
 ## [1.20.1](https://github.com/sanity-io/pkg-utils/compare/v1.20.0...v1.20.1) (2022-11-27)
 
 ### Bug Fixes
