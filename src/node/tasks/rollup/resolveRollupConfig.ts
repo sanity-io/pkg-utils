@@ -5,9 +5,9 @@ import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
+import terser from '@rollup/plugin-terser'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
-import {terser} from 'rollup-plugin-terser'
 import {
   BuildContext,
   DEFAULT_BROWSERSLIST_QUERY,
