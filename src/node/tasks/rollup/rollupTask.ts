@@ -40,17 +40,36 @@ async function execPromise(ctx: BuildContext, task: RollupTask) {
   const {files, distPath} = ctx
   const outDir = path.relative(ctx.cwd, distPath)
 
+  const _console = {
+    log: console.log,
+    warn: console.warn,
+    error: console.error,
+  }
+
   const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
 
-  // Create bundle
-  const bundle = await rollup(inputOptions)
+  console.log = () => undefined
+  console.warn = () => undefined
+  console.error = () => undefined
 
-  // an array of file names this bundle depends on
-  // console.log(bundle.watchFiles)
+  // Create bundle
+  const bundle = await rollup({
+    ...inputOptions,
+    onwarn(warning) {
+      if (!warning.code || !['CIRCULAR_DEPENDENCY'].includes(warning.code)) {
+        // rollupWarn(warning)
+        _console.warn.bind(console)(chalk.yellow('warn  '), warning.message)
+      }
+    },
+  })
 
   // generate output specific code in-memory
   // you can call this function multiple times on the same bundle object
   const {output} = await bundle.generate(outputOptions)
+
+  console.log = _console.log
+  console.warn = _console.warn
+  console.error = _console.error
 
   for (const chunkOrAsset of output) {
     if (chunkOrAsset.type === 'asset') {

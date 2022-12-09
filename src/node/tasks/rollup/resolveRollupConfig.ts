@@ -179,12 +179,6 @@ export function resolveRollupConfig(
         return {...acc, [entry.name]: entry.source}
       }, {}),
 
-      onwarn(warning, rollupWarn) {
-        if (!warning.code || !['CIRCULAR_DEPENDENCY'].includes(warning.code)) {
-          rollupWarn(warning)
-        }
-      },
-
       plugins,
 
       treeshake: {
