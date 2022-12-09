@@ -25,16 +25,14 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  try {
-    const {unregister} = register({extensions: ['.js', '.mjs', '.ts']})
+  const esbuildOptions = {extensions: ['.js', '.mjs', '.ts']}
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const mod = require(configFile)
+  const {unregister} = globalThis.__DEV__ ? {unregister: () => undefined} : register(esbuildOptions)
 
-    unregister()
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const mod = require(configFile)
 
-    return mod?.default || mod || undefined
-  } catch (_) {
-    return undefined
-  }
+  unregister()
+
+  return mod?.default || mod || undefined
 }
