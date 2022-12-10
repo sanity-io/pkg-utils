@@ -58,7 +58,7 @@ importers:
       outdent: ^0.8.0
       pkg-up: ^3.1.0
       prettier: ^2.8.1
-      pretty-bytes: ^5.6.0
+      pretty-bytes: ^6.0.0
       recast: ^0.22.0
       rimraf: ^3.0.2
       rollup: ^3.7.1
@@ -98,7 +98,7 @@ importers:
       mkdirp: 1.0.4
       pkg-up: 3.1.0
       prettier: 2.8.1
-      pretty-bytes: 5.6.0
+      pretty-bytes: 6.0.0
       recast: 0.22.0
       rimraf: 3.0.2
       rollup: 3.7.1
@@ -3132,6 +3132,7 @@ packages:
 
   /bindings/1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+    requiresBuild: true
     dependencies:
       file-uri-to-path: 1.0.0
     dev: true
@@ -5067,6 +5068,7 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -6885,6 +6887,7 @@ packages:
 
   /nan/2.16.0:
     resolution: {integrity: sha512-UdAqHyFngu7TfQKsCBgAA6pWDkT8MAO7d0jyOecVhN5354xbLqdn8mV9Tat9gepAupm0bt2DbeaSC8vS52MuFA==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -7671,9 +7674,9 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  /pretty-bytes/5.6.0:
-    resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
-    engines: {node: '>=6'}
+  /pretty-bytes/6.0.0:
+    resolution: {integrity: sha512-6UqkYefdogmzqAZWzJ7laYeJnaXDy2/J+ZqiiMtS7t7OfpXWTlaeGMwX8U6EFvPV/YWWEKRkS8hKS4k60WHTOg==}
+    engines: {node: ^14.13.1 || >=16.0.0}
     dev: false
 
   /process-nextick-args/2.0.1:
