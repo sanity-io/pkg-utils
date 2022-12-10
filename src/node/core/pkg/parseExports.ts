@@ -1,4 +1,4 @@
-import {PkgExport} from '../config'
+import {PkgExport, PkgModuleExport} from '../config'
 import {isRecord} from '../isRecord'
 import {PackageJSON} from './types'
 import {validateExports} from './validateExports'
@@ -10,7 +10,8 @@ export function parseExports(options: {
 }): (PkgExport & {_path: string})[] {
   const {pkg, strict} = options
 
-  const rootExport: PkgExport & {_path: string} = {
+  const rootExport: PkgModuleExport & {_path: string} = {
+    type: 'module',
     _exported: true,
     _path: '.',
     types: pkg.types,
@@ -36,12 +37,49 @@ export function parseExports(options: {
 
     for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
       if (exportPath.endsWith('.json')) {
+        if (typeof exportEntry !== 'string') {
+          errors.push(`\`exports["${exportPath}"]\` must be a string.`)
+          continue
+        }
+
         if (exportPath === './package.json') {
           if (exportEntry !== './package.json') {
-            errors.push('package.json: `exports["./package.json"] must be "./package.json".')
+            errors.push('package.json: `exports["./package.json"]` must equal "./package.json".')
+            continue
           }
         }
-      } else if (isRecord(exportEntry)) {
+
+        extraExports.push({
+          type: 'json',
+          _exported: true,
+          _path: exportPath,
+          default: exportEntry,
+        })
+        continue
+      }
+
+      if (exportPath.endsWith('.css')) {
+        if (typeof exportEntry !== 'string') {
+          errors.push(`\`exports["${exportPath}"]\` must be a string.`)
+          continue
+        }
+
+        if (!exportEntry.endsWith('.css')) {
+          errors.push(`\`exports["${exportPath}"]\` must end with ".css".`)
+          continue
+        }
+
+        // allow
+        extraExports.push({
+          type: 'css',
+          _exported: true,
+          _path: exportPath,
+          default: exportEntry,
+        })
+        continue
+      }
+
+      if (isRecord(exportEntry)) {
         if (exportPath === '.') {
           if (
             exportEntry.require &&
@@ -49,31 +87,32 @@ export function parseExports(options: {
             exportEntry.require !== rootExport.require
           ) {
             errors.push(
-              'package.json: mismatch between "main" and "exports.require". These must be equal.'
+              'package.json: Mismatch between `main` and `exports["."].require`. These must be equal.'
             )
           }
 
           if (exportEntry.import && rootExport.import && exportEntry.import !== rootExport.import) {
             errors.push(
-              'package.json: mismatch between "module" and "exports.import" These must be equal.'
+              'package.json: Mismatch between `module` and `exports["."].import`. These must be equal.'
             )
           }
 
           if (exportEntry.types && rootExport.types && exportEntry.types !== rootExport.types) {
             errors.push(
-              'package.json: mismatch between "types" and "exports.types". These must be equal.'
+              'package.json: Mismatch between `types` and `exports["."].types`. These must be equal.'
             )
           }
 
           if (exportEntry.source && rootExport.source && exportEntry.source !== rootExport.source) {
             errors.push(
-              'package.json: mismatch between "source" and "exports.source". These must be equal.'
+              'package.json: Mismatch between `source` and `exports["."].source`. These must be equal.'
             )
           }
 
           Object.assign(rootExport, exportEntry)
         } else {
           const extraExport: PkgExport & {_path: string} = {
+            type: 'module',
             _exported: true,
             _path: exportPath,
             ...exportEntry,
@@ -81,9 +120,11 @@ export function parseExports(options: {
 
           extraExports.push(extraExport)
         }
-      } else {
-        errors.push('package.json: exports must be an object')
+
+        continue
       }
+
+      errors.push('package.json: `exports` must be an object.')
     }
   }
 

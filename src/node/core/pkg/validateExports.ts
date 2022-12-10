@@ -12,16 +12,18 @@ export function validateExports(
   const errors: string[] = []
 
   for (const exp of _exports) {
-    if (exp.require && !exp.require.endsWith(ext.commonjs)) {
-      errors.push(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`
-      )
-    }
+    if (exp.type === 'module') {
+      if (exp.require && !exp.require.endsWith(ext.commonjs)) {
+        errors.push(
+          `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`
+        )
+      }
 
-    if (exp.import && !exp.import.endsWith(ext.esm)) {
-      errors.push(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`
-      )
+      if (exp.import && !exp.import.endsWith(ext.esm)) {
+        errors.push(
+          `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`
+        )
+      }
     }
   }
 

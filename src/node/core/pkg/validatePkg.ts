@@ -19,6 +19,7 @@ const pkgSchema = z.object({
     z.record(
       z.union([
         z.custom<`./${string}.json`>((val) => /^\.\/.*\.json$/.test(val as string)),
+        z.custom<`./${string}.css`>((val) => /^\.\/.*\.css$/.test(val as string)),
         z.object({
           types: z.optional(z.string()),
           source: z.string(),

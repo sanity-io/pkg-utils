@@ -41,6 +41,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
   // Parse `dts` tasks
   for (const exp of exports) {
+    if (exp.type !== 'module') continue
+
     const importId = path.join(pkg.name, exp._path)
 
     if (exp.types) {
@@ -61,6 +63,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
   if (!ctx.emitDeclarationOnly) {
     // Parse rollup:commonjs:* tasks
     for (const exp of exports) {
+      if (exp.type !== 'module') continue
+
       const output = exp.require
 
       if (!output) continue
@@ -74,6 +78,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
     // Parse rollup:esm:* tasks
     for (const exp of exports) {
+      if (exp.type !== 'module') continue
+
       const output = exp.import
 
       if (!output) continue
@@ -87,6 +93,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
     // Parse rollup:commonjs:browser tasks
     for (const exp of exports) {
+      if (exp.type !== 'module') continue
+
       const output = exp.browser?.require
 
       if (!output) continue
@@ -100,6 +108,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
     // Parse rollup:esm:browser tasks
     for (const exp of exports) {
+      if (exp.type !== 'module') continue
+
       const output = exp.browser?.import
 
       if (!output) continue
@@ -134,6 +144,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     // Write legacy exports files
     if (config?.legacyExports) {
       for (const exp of exports) {
+        if (exp.type !== 'module') continue
+
         if (exp._exported && exp._path !== '.') {
           const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
             /\.[^/.]+$/,

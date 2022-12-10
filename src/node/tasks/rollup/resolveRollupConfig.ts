@@ -12,6 +12,7 @@ import {
   BuildContext,
   DEFAULT_BROWSERSLIST_QUERY,
   MODULE_EXT,
+  PkgModuleExport,
   resolveConfigProperty,
 } from '../../core'
 import {RollupTask, RollupWatchTask} from '../types'
@@ -48,7 +49,10 @@ export function resolveRollupConfig(
   const exportIds =
     _exports && Object.keys(_exports).map((exportPath) => path.join(pkg.name, exportPath))
 
-  const sourcePaths = _exports && Object.values(_exports).map((e) => path.resolve(cwd, e.source))
+  const moduleExports =
+    _exports && (Object.values(_exports).filter((e) => e.type === 'module') as PkgModuleExport[])
+
+  const sourcePaths = moduleExports?.map((e) => path.resolve(cwd, e.source))
 
   const replacements = Object.fromEntries(
     Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)])

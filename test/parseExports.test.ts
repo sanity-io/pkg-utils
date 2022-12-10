@@ -24,6 +24,7 @@ describe('parseExports', () => {
 
     expect(exports).toEqual([
       {
+        type: 'module',
         _exported: true,
         _path: '.',
         types: undefined,
@@ -32,6 +33,12 @@ describe('parseExports', () => {
         import: undefined,
         require: './dist/index.js',
         default: './dist/index.js',
+      },
+      {
+        type: 'json',
+        _exported: true,
+        _path: './package.json',
+        default: './package.json',
       },
     ])
   })
@@ -84,6 +91,7 @@ describe('parseExports', () => {
 
     expect(exports).toEqual([
       {
+        type: 'module',
         _exported: true,
         _path: '.',
         types: './dist/types/src/index.d.ts',
@@ -96,6 +104,12 @@ describe('parseExports', () => {
         import: './dist/index.js',
         require: './dist/index.cjs',
         default: './dist/index.js',
+      },
+      {
+        type: 'json',
+        _exported: true,
+        _path: './package.json',
+        default: './package.json',
       },
     ])
   })
@@ -122,9 +136,9 @@ describe('parseExports', () => {
     }
 
     expect(() => parseExports({pkg, strict: true})).toThrow(
-      '\n- package.json: mismatch between "main" and "exports.require". These must be equal.' +
-        '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
-        '\n- package.json: `exports["./package.json"] must be "./package.json".' +
+      '\n- package.json: Mismatch between `main` and `exports["."].require`. These must be equal.' +
+        '\n- package.json: Mismatch between `module` and `exports["."].import`. These must be equal.' +
+        '\n- package.json: `exports["./package.json"]` must equal "./package.json".' +
         '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
         '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".esm.js"'
     )

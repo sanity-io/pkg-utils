@@ -10,7 +10,8 @@ export type PkgFormat = 'commonjs' | 'esm'
 export type PkgRuntime = '*' | 'browser' | 'node'
 
 /** @public */
-export interface PkgExport {
+export interface PkgModuleExport {
+  type: 'module'
   /** @internal */
   _exported?: boolean
   browser?: {
@@ -33,6 +34,25 @@ export interface PkgExport {
   require?: string
   default: string
 }
+
+/** @public */
+export interface PkgJSONExport {
+  type: 'json'
+  /** @internal */
+  _exported?: boolean
+  default: string
+}
+
+/** @public */
+export interface PkgCSSExport {
+  type: 'css'
+  /** @internal */
+  _exported?: boolean
+  default: string
+}
+
+/** @public */
+export type PkgExport = PkgModuleExport | PkgJSONExport | PkgCSSExport
 
 /** @public */
 export type PkgConfigPropertyResolver<T> = (prev: T) => T

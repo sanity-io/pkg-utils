@@ -25,6 +25,22 @@ export async function check(options: {
 
     // Check if there are missing files
     for (const [, exp] of Object.entries(ctx.exports || {})) {
+      if (exp.type === 'css') {
+        if (exp.default && !fileExists(path.resolve(cwd, exp.default))) {
+          missingFiles.push(exp.default)
+        }
+
+        continue
+      }
+
+      if (exp.type === 'json') {
+        if (exp.default && !fileExists(path.resolve(cwd, exp.default))) {
+          missingFiles.push(exp.default)
+        }
+
+        continue
+      }
+
       if (exp.source && !fileExists(path.resolve(cwd, exp.source))) {
         missingFiles.push(exp.source)
       }
@@ -54,6 +70,7 @@ export async function check(options: {
     }
 
     for (const exp of Object.values(ctx.exports || {})) {
+      if (exp.type !== 'module') continue
       if (!exp._exported) continue
       if (exp.require) _paths.require.push(exp.require)
       if (exp.import) _paths.import.push(exp.import)

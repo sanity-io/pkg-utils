@@ -88,6 +88,14 @@ export async function resolveBuildContext(options: {
 
   const outputPaths = Object.values(exports)
     .flatMap((exportEntry) => {
+      if (exportEntry.type === 'css') {
+        return []
+      }
+
+      if (exportEntry.type === 'json') {
+        return []
+      }
+
       return [
         exportEntry.import,
         exportEntry.require,
