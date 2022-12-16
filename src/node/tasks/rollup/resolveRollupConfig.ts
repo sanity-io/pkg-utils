@@ -73,7 +73,10 @@ export function resolveRollupConfig(
                 }
 
                 return JSON.stringify(
-                  path.relative(cwd, path.resolve(outDir, entry.name + outputExt))
+                  path.relative(
+                    cwd,
+                    path.resolve(outDir, entry.name + (outputExt === '.esm.js' ? '.js' : outputExt))
+                  )
                 )
               },
               'process.env.PKG_FORMAT': JSON.stringify(format),
