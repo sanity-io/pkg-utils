@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.4](https://github.com/sanity-io/pkg-utils/compare/v1.20.3...v1.20.4) (2022-12-16)
+
+### Bug Fixes
+
+- build correct `PKG_FILE_PATH` env variable ([20d6dfb](https://github.com/sanity-io/pkg-utils/commit/20d6dfb5693ee865b54be1e2b8eb6875ae2195a7))
+
 ## [1.20.3](https://github.com/sanity-io/pkg-utils/compare/v1.20.2...v1.20.3) (2022-12-09)
 
 ### Bug Fixes
