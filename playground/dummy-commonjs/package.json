@@ -1,0 +1,56 @@
+{
+  "private": true,
+  "name": "dummy-commonjs",
+  "version": "1.0.0",
+  "license": "MIT",
+  "types": "./dist/index.d.ts",
+  "source": "./src/index.ts",
+  "module": "./dist/index.esm.js",
+  "main": "./dist/index.js",
+  "browser": {
+    "./dist/index.js": "./dist/index.browser.js",
+    "./dist/index.esm.js": "./dist/index.browser.esm.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": {
+        "source": "./src/index.ts",
+        "require": "./dist/index.browser.js",
+        "import": "./dist/index.browser.esm.js"
+      },
+      "source": "./src/index.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.esm.js"
+    },
+    "./extra": {
+      "types": "./dist/extra.d.ts",
+      "browser": {
+        "source": "./src/extra.ts",
+        "require": "./dist/extra.browser.js",
+        "import": "./dist/extra.browser.esm.js"
+      },
+      "source": "./src/extra.ts",
+      "import": "./dist/extra.esm.js",
+      "require": "./dist/extra.js",
+      "default": "./dist/extra.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "extra": [
+        "./dist/extra.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "extra.js",
+    "src"
+  ],
+  "scripts": {
+    "build": "rimraf dist extra.js && pkg build --strict && pkg --strict"
+  }
+}

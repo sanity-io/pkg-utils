@@ -1,4 +1,4 @@
-import * as index from 'exports-dummy'
-import * as extra from 'exports-dummy/extra'
+import * as index from 'dummy-module'
+import * as extra from 'dummy-module/extra'
 
 export {index, extra}

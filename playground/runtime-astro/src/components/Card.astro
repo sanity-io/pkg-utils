@@ -1,0 +1,30 @@
+---
+export interface Props {
+  format: string;
+  runtime: string;
+  path: string;
+}
+
+const { format, runtime, path } = Astro.props;
+---
+
+<pre class="card">
+  format: {format}
+  runtime: {runtime}
+  path: {path}
+</pre>
+
+<style>
+  .card {
+    list-style: none;
+    display: flex;
+    padding: 0.15rem;
+    background-color: white;
+    background-image: var(--accent-gradient);
+    background-size: 400%;
+    border-radius: 0.5rem;
+    background-position: 100%;
+    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  }
+</style>

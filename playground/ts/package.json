@@ -4,13 +4,13 @@
   "name": "ts",
   "version": "0.0.0-development",
   "license": "MIT",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "source": "./src/index.ts",
   "module": "./dist/index.js",
   "main": "./dist/index.cjs",
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.ts",
+      "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",

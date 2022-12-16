@@ -15,35 +15,35 @@ test('should build `js` package', async () => {
   await project.remove()
 })
 
-test('should build `exports-dummy` package', async () => {
-  const project = await spawnProject('exports-dummy')
+test('should build `dummy-module` package', async () => {
+  const project = await spawnProject('dummy-module')
 
   await project.install()
 
   const {stdout} = await project.run('build')
 
   // types
-  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/src/index.d.ts')
-  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/src/extra.d.ts')
+  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.d.ts')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.d.ts')
 
   // commonjs
-  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.cjs')
-  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.browser.cjs')
-  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.cjs')
-  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.browser.cjs')
+  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.cjs')
+  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.browser.cjs')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.cjs')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.browser.cjs')
 
   // esm
-  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('exports-dummy: ./src/index.ts -> ./dist/index.browser.js')
-  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.js')
-  expect(stdout).toContain('exports-dummy/extra: ./src/extra.ts -> ./dist/extra.browser.js')
+  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.js')
+  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.browser.js')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.js')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.browser.js')
 
-  expect(await project.readFile('dist/src/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
   expect(await project.readFile('dist/index.browser.js')).toMatchSnapshot()
 
-  expect(await project.readFile('dist/src/extra.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/extra.d.ts')).toMatchSnapshot()
   expect(await project.readFile('dist/extra.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/extra.js')).toMatchSnapshot()
   expect(await project.readFile('dist/extra.browser.js')).toMatchSnapshot()
@@ -78,19 +78,19 @@ test('should build `multi-export` package', async () => {
 
   expect(stdout).toContain('./src/index.ts -> ./dist/index.cjs')
   expect(stdout).toContain('./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('./src/index.ts -> ./dist/src/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./dist/index.d.ts')
 
   expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.cjs')
   expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.js')
-  expect(stdout).toContain('./src/plugin.ts -> ./dist/src/plugin.d.ts')
+  expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.d.ts')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/src/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
 
   expect(await project.readFile('dist/plugin.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/plugin.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/src/plugin.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/plugin.d.ts')).toMatchSnapshot()
 
   await project.remove()
 })
@@ -102,16 +102,16 @@ test('should build `ts` package', async () => {
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('./src/index.ts -> ./dist/src/index.d.ts')
+  expect(stdout).toContain('./src/index.ts -> ./dist/index.d.ts')
 
-  expect(await project.readFile('dist/src/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
 
   await project.remove()
 })
 
 describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from package', async () => {
-    const exportsDummy = await spawnProject('exports-dummy')
+    const exportsDummy = await spawnProject('dummy-module')
     const runtime = await spawnProject('runtime-webpack-v3')
 
     // install and build dummy package
@@ -141,7 +141,7 @@ describe.skip('runtime: webpack v3', () => {
 
 describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from package', async () => {
-    const exportsDummy = await spawnProject('exports-dummy')
+    const exportsDummy = await spawnProject('dummy-module')
     const runtime = await spawnProject('runtime-next-js')
 
     // install and build dummy package

@@ -1,0 +1,30 @@
+---
+import Card from '../components/Card.astro'
+import Layout from '../layouts/Layout.astro';
+import * as commonjs from 'dummy-commonjs';
+import * as module from 'dummy-module';
+---
+
+<Layout title="Welcome to Astro.">
+  <main>
+    <Card
+      format={commonjs.format}
+      runtime={commonjs.runtime}
+      path={commonjs.path}
+    />
+
+    <Card
+      format={module.format}
+      runtime={module.runtime}
+      path={module.path}
+    />
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1.5rem;
+    max-width: 60ch;
+  }
+</style>

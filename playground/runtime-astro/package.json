@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "test-astro",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^1.6.15",
+    "dummy-commonjs": "workspace:*",
+    "dummy-module": "workspace:*"
+  }
+}

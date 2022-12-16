@@ -18,7 +18,7 @@ export {}
 "
 `;
 
-exports[`should build \`exports-dummy\` package 1`] = `
+exports[`should build \`dummy-module\` package 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -32,22 +32,41 @@ export {}
 "
 `;
 
-exports[`should build \`exports-dummy\` package 2`] = `
-"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});exports.format=\\"commonjs\\",exports.path=\\"dist/index.cjs\\",exports.runtime=\\"*\\";//# sourceMappingURL=index.cjs.map
+exports[`should build \`dummy-module\` package 2`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+const format = \\"commonjs\\";
+const runtime = \\"*\\";
+const path = \\"dist/index.cjs\\";
+exports.format = format;
+exports.path = path;
+exports.runtime = runtime;
+//# sourceMappingURL=index.cjs.map
 "
 `;
 
-exports[`should build \`exports-dummy\` package 3`] = `
-"const s=\\"esm\\",e=\\"*\\",t=\\"dist/index.js\\";export{s as format,t as path,e as runtime};//# sourceMappingURL=index.js.map
+exports[`should build \`dummy-module\` package 3`] = `
+"const format = \\"esm\\";
+const runtime = \\"*\\";
+const path = \\"dist/index.js\\";
+export { format, path, runtime };
+//# sourceMappingURL=index.js.map
 "
 `;
 
-exports[`should build \`exports-dummy\` package 4`] = `
-"const s=\\"esm\\",e=\\"browser\\",r=\\"dist/index.browser.js\\";export{s as format,r as path,e as runtime};//# sourceMappingURL=index.browser.js.map
+exports[`should build \`dummy-module\` package 4`] = `
+"const format = \\"esm\\";
+const runtime = \\"browser\\";
+const path = \\"dist/index.browser.js\\";
+export { format, path, runtime };
+//# sourceMappingURL=index.browser.js.map
 "
 `;
 
-exports[`should build \`exports-dummy\` package 5`] = `
+exports[`should build \`dummy-module\` package 5`] = `
 "/** @public */
 export declare const format: string
 
@@ -61,18 +80,37 @@ export {}
 "
 `;
 
-exports[`should build \`exports-dummy\` package 6`] = `
-"\\"use strict\\";Object.defineProperty(exports,\\"__esModule\\",{value:!0});exports.format=\\"commonjs\\",exports.path=\\"dist/extra.cjs\\",exports.runtime=\\"*\\";//# sourceMappingURL=extra.cjs.map
+exports[`should build \`dummy-module\` package 6`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+const format = \\"commonjs\\";
+const runtime = \\"*\\";
+const path = \\"dist/extra.cjs\\";
+exports.format = format;
+exports.path = path;
+exports.runtime = runtime;
+//# sourceMappingURL=extra.cjs.map
 "
 `;
 
-exports[`should build \`exports-dummy\` package 7`] = `
-"const s=\\"esm\\",t=\\"*\\",e=\\"dist/extra.js\\";export{s as format,e as path,t as runtime};//# sourceMappingURL=extra.js.map
+exports[`should build \`dummy-module\` package 7`] = `
+"const format = \\"esm\\";
+const runtime = \\"*\\";
+const path = \\"dist/extra.js\\";
+export { format, path, runtime };
+//# sourceMappingURL=extra.js.map
 "
 `;
 
-exports[`should build \`exports-dummy\` package 8`] = `
-"const r=\\"esm\\",s=\\"browser\\",e=\\"dist/extra.browser.js\\";export{r as format,e as path,s as runtime};//# sourceMappingURL=extra.browser.js.map
+exports[`should build \`dummy-module\` package 8`] = `
+"const format = \\"esm\\";
+const runtime = \\"browser\\";
+const path = \\"dist/extra.browser.js\\";
+export { format, path, runtime };
+//# sourceMappingURL=extra.browser.js.map
 "
 `;
 
