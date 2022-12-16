@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "runtime-vite",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "dummy-commonjs": "workspace:*",
+    "dummy-module": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4",
+    "vite": "^4.0.1"
+  }
+}

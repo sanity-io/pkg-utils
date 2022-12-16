@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.settings.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "references": [{"path": "./tsconfig.node.json"}]
+}
