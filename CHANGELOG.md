@@ -5,6 +5,22 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-beta.1](https://github.com/sanity-io/pkg-utils/compare/v1.20.4...v2.0.0-beta.1) (2022-12-17)
+
+### ⚠ BREAKING CHANGES
+
+- require `type` in `package.json`
+- require `.mjs` extensions for ESM modules
+
+### Features
+
+- warn when using `type: "commonjs"` ([228ee62](https://github.com/sanity-io/pkg-utils/commit/228ee6205be92647a06ef25dcfbb6f18b413df68))
+
+### Code Refactoring
+
+- require `.mjs` extensions for ESM modules ([24586c2](https://github.com/sanity-io/pkg-utils/commit/24586c22acf5197bbe3a69f7b4441a3fffb3bc86))
+- require `type` in `package.json` ([1c451b4](https://github.com/sanity-io/pkg-utils/commit/1c451b4ca65787938ec82ee1fabdf8aeddda975e))
+
 ## [1.20.4](https://github.com/sanity-io/pkg-utils/compare/v1.20.3...v1.20.4) (2022-12-16)
 
 ### Bug Fixes
