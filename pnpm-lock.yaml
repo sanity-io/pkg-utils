@@ -166,7 +166,7 @@ importers:
     dependencies:
       astro: 1.6.15
       dummy-commonjs: link:../dummy-commonjs
-      dummy-module: link:../../test/env/__tmp__/afe0d031-f8e3-4cb1-b642-7e9efadc5027
+      dummy-module: link:../dummy-module
 
   playground/runtime-next-js:
     specifiers:
@@ -176,12 +176,24 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      dummy-module: link:../../test/env/__tmp__/afe0d031-f8e3-4cb1-b642-7e9efadc5027
+      dummy-module: link:../dummy-module
       next: 13.0.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@types/react': 18.0.26
+
+  playground/runtime-node-commonjs:
+    specifiers:
+      dummy-commonjs: workspace:*
+    dependencies:
+      dummy-commonjs: link:../dummy-commonjs
+
+  playground/runtime-node-module:
+    specifiers:
+      dummy-module: workspace:*
+    dependencies:
+      dummy-module: link:../dummy-module
 
   playground/runtime-vite:
     specifiers:
@@ -191,7 +203,7 @@ importers:
       vite: ^4.0.1
     dependencies:
       dummy-commonjs: link:../dummy-commonjs
-      dummy-module: link:../../test/env/__tmp__/afe0d031-f8e3-4cb1-b642-7e9efadc5027
+      dummy-module: link:../dummy-module
     devDependencies:
       typescript: 4.9.4
       vite: 4.0.1
@@ -201,25 +213,10 @@ importers:
       dummy-module: workspace:*
       webpack: ^3.12.0
     devDependencies:
-      dummy-module: link:../../test/env/__tmp__/afe0d031-f8e3-4cb1-b642-7e9efadc5027
+      dummy-module: link:../dummy-module
       webpack: 3.12.0
 
   playground/ts:
-    specifiers: {}
-
-  test/env/__tmp__/5293cf31-47f7-4dd5-b119-78d206a48eb5:
-    specifiers: {}
-
-  test/env/__tmp__/ae2a113c-0dbb-4fb9-827c-6c4a9f1c6290:
-    specifiers: {}
-
-  test/env/__tmp__/afe0d031-f8e3-4cb1-b642-7e9efadc5027:
-    specifiers: {}
-
-  test/env/__tmp__/d711002c-0157-458a-ab9e-93117edfed8b:
-    specifiers: {}
-
-  test/env/__tmp__/fe76b27a-4ab3-4fc5-b896-3a079c34d187:
     specifiers: {}
 
 packages:
