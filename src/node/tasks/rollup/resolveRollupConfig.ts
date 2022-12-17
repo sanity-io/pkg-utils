@@ -73,10 +73,7 @@ export function resolveRollupConfig(
                 }
 
                 return JSON.stringify(
-                  path.relative(
-                    cwd,
-                    path.resolve(outDir, entry.name + (outputExt === '.esm.js' ? '.js' : outputExt))
-                  )
+                  path.relative(cwd, path.resolve(outDir, entry.name + outputExt))
                 )
               },
               'process.env.PKG_FORMAT': JSON.stringify(format),
@@ -192,7 +189,7 @@ export function resolveRollupConfig(
       chunkFileNames: () => `_chunks/[name]-[hash]${outputExt}`,
       compact: minify,
       dir: outDir,
-      entryFileNames: () => (outputExt === '.esm.js' ? `[name].js` : `[name]${outputExt}`),
+      entryFileNames: () => `[name]${outputExt}`,
       esModule: true,
       format,
       interop: 'compat',
