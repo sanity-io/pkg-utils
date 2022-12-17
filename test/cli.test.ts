@@ -7,7 +7,15 @@ test('should build `js` package', async () => {
 
   await project.install()
 
-  const {stdout} = await project.run('build')
+  const {stderr, stdout} = await project.run('build')
+
+  expect(stderr).toContain(
+    [
+      'Packages with `"type": "commonjs"` may not be compatible with popular bundlers like webpack',
+      'and rollup, and projects such as Astro and SvelteKit. Please consider using',
+      '`"type": "module"` instead.',
+    ].join(' ')
+  )
 
   expect(stdout).toContain('./src/index.js -> ./dist/index.mjs')
   expect(stdout).toContain('./src/index.js -> ./dist/index.js')

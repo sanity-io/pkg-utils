@@ -8,15 +8,28 @@ import {PackageJSON} from './types'
 /** @internal */
 export async function loadPkgWithReporting(options: {cwd: string}): Promise<PackageJSON> {
   try {
-    return await loadPkg(options)
+    const pkg = await loadPkg(options)
+
+    if (pkg.type === 'commonjs') {
+      console.warn(
+        [
+          `${chalk.yellow('warn')}   `,
+          'Packages with `"type": "commonjs"` may not be compatible with popular bundlers like ',
+          'webpack and rollup, and projects such as Astro and SvelteKit. Please consider using ',
+          '`"type": "module"` instead.',
+        ].join('')
+      )
+    }
+
+    return pkg
   } catch (err) {
     if (err instanceof ZodError) {
       for (const issue of err.issues) {
         if (issue.code === 'invalid_type') {
-          console.log(
+          console.error(
             [
               `${chalk.red('fail')}   \`${formatPath(issue.path)}\` `,
-              `in ./package.json must be of type ${chalk.magenta(issue.expected)} `,
+              `in \`./package.json\` must be of type ${chalk.magenta(issue.expected)} `,
               `(received ${chalk.magenta(issue.received)})`,
             ].join('')
           )
