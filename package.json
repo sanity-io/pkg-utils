@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "@sanity/pkg-utils",
   "version": "1.20.4",
   "author": "Sanity.io <hello@sanity.io>",
@@ -14,22 +15,22 @@
     "bundling"
   ],
   "source": "./src/node/index.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/index.esm.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "source": "./src/node/index.ts",
-      "import": "./dist/index.esm.js",
-      "require": "./dist/index.js",
-      "default": "./dist/index.esm.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
   "bin": {
-    "pkg": "./bin/pkg-utils.js",
-    "pkg-utils": "./bin/pkg-utils.js"
+    "pkg": "./bin/pkg-utils.cjs",
+    "pkg-utils": "./bin/pkg-utils.cjs"
   },
   "files": [
     "bin",
@@ -39,8 +40,8 @@
   ],
   "scripts": {
     "build": "run-s clean build:pkg check:pkg",
-    "build:pkg": "node -r esbuild-register scripts/build",
-    "check:pkg": "node -r esbuild-register scripts/check",
+    "build:pkg": "node --experimental-loader ./scripts/_experimental-loader.js -r esbuild-register scripts/build",
+    "check:pkg": "node --experimental-loader ./scripts/_experimental-loader.js -r esbuild-register scripts/check",
     "check:types": "tsc --build",
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
@@ -50,7 +51,7 @@
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
     "test": "vitest run",
-    "watch": "node -r esbuild-register scripts/watch"
+    "watch": "node --experimental-loader ./scripts/_experimental-loader.js -r esbuild-register scripts/watch"
   },
   "dependencies": {
     "@babel/core": "^7.20.5",
