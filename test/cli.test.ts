@@ -9,7 +9,7 @@ test('should build `js` package', async () => {
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('./src/index.js -> ./dist/index.esm.js')
+  expect(stdout).toContain('./src/index.js -> ./dist/index.mjs')
   expect(stdout).toContain('./src/index.js -> ./dist/index.js')
 
   await project.remove()

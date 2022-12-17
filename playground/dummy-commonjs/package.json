@@ -5,11 +5,11 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "source": "./src/index.ts",
-  "module": "./dist/index.esm.js",
+  "module": "./dist/index.mjs",
   "main": "./dist/index.js",
   "browser": {
     "./dist/index.js": "./dist/index.browser.js",
-    "./dist/index.esm.js": "./dist/index.browser.esm.js"
+    "./dist/index.mjs": "./dist/index.browser.mjs"
   },
   "exports": {
     ".": {
@@ -17,24 +17,24 @@
       "browser": {
         "source": "./src/index.ts",
         "require": "./dist/index.browser.js",
-        "import": "./dist/index.browser.esm.js"
+        "import": "./dist/index.browser.mjs"
       },
       "source": "./src/index.ts",
-      "import": "./dist/index.esm.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js",
-      "default": "./dist/index.esm.js"
+      "default": "./dist/index.mjs"
     },
     "./extra": {
       "types": "./dist/extra.d.ts",
       "browser": {
         "source": "./src/extra.ts",
         "require": "./dist/extra.browser.js",
-        "import": "./dist/extra.browser.esm.js"
+        "import": "./dist/extra.browser.mjs"
       },
       "source": "./src/extra.ts",
-      "import": "./dist/extra.esm.js",
+      "import": "./dist/extra.mjs",
       "require": "./dist/extra.js",
-      "default": "./dist/extra.esm.js"
+      "default": "./dist/extra.mjs"
     },
     "./package.json": "./package.json"
   },

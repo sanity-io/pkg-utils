@@ -117,7 +117,7 @@ describe('parseExports', () => {
         './package.json': './not/package.json',
       },
       main: './lib/index.js',
-      module: './lib/index.esm.js',
+      module: './lib/index.mjs',
       types: './lib/src/index.d.ts',
     }
 
@@ -126,7 +126,7 @@ describe('parseExports', () => {
         '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
         '\n- package.json: `exports["./package.json"] must be "./package.json".' +
         '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
-        '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".esm.js"'
+        '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".mjs"'
     )
   })
 })
