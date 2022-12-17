@@ -2,7 +2,7 @@ import {z} from 'zod'
 import {PackageJSON} from './types'
 
 const pkgSchema = z.object({
-  type: z.optional(z.enum(['commonjs', 'module'])),
+  type: z.enum(['commonjs', 'module']),
   name: z.string(),
   version: z.string(),
   license: z.string(),
