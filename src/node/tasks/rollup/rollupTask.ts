@@ -11,11 +11,20 @@ import {resolveRollupConfig} from './resolveRollupConfig'
 /** @internal */
 export const rollupTask: TaskHandler<RollupTask> = {
   name: (ctx, task) =>
-    `build javascript files (target ${task.target.join(' + ')}, format ${
-      task.format
-    })\n${task.entries
-      .map((e) => `${chalk.blue(path.join(ctx.pkg.name, e.path))}: ${e.source} -> ${e.output}`)
-      .join('\n')}`,
+    [
+      `Build javascript files...`,
+      `  format: ${chalk.yellow(task.format)}`,
+      `  target:`,
+      ...task.target.map((t) => `    - ${chalk.yellow(t)}`),
+      `  entries:`,
+      ...task.entries.map((e) =>
+        [
+          `    - `,
+          `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
+          `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+        ].join('')
+      ),
+    ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {
       execPromise(ctx, task)
@@ -43,11 +52,11 @@ function createSpyConsole() {
     error: console.error,
   }
 
-  const messages: {type: 'log' | 'warn' | 'error'; args: any[]}[] = []
+  const messages: {type: 'log' | 'warn' | 'error'; args: unknown[]}[] = []
 
-  console.log = (...args: any[]) => messages.push({type: 'log', args})
-  console.warn = (...args: any[]) => messages.push({type: 'warn', args})
-  console.error = (...args: any[]) => messages.push({type: 'error', args})
+  console.log = (...args: unknown[]) => messages.push({type: 'log', args})
+  console.warn = (...args: unknown[]) => messages.push({type: 'warn', args})
+  console.error = (...args: unknown[]) => messages.push({type: 'error', args})
 
   return {
     messages,

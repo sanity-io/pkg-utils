@@ -10,9 +10,13 @@ import {DtsResult, DtsTask} from './types'
 export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
   name: (_ctx, task) =>
     [
-      `build type definitions`,
-      ...task.entries.map(
-        (entry) => `${chalk.blue(entry.importId)}: ${entry.sourcePath} -> ${entry.targetPath}`
+      `Build type definitions...`,
+      `  entries:`,
+      ...task.entries.map((entry) =>
+        [
+          `    - ${chalk.cyan(entry.importId)}: `,
+          `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(entry.targetPath)}`,
+        ].join('')
       ),
     ].join('\n'),
   exec: (ctx, task) => {
