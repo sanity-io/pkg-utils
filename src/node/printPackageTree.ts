@@ -31,10 +31,12 @@ export function printPackageTree(ctx: BuildContext): void {
   logger.log(`${chalk.blue(pkg.name)}@${chalk.green(pkg.version)}`)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tree: Record<string, any> = {type: pkg.type}
+  const tree: Record<string, unknown> = {type: chalk.yellow(pkg.type)}
 
   if (pkg.bin) {
-    tree.bin = pkg.bin
+    tree.bin = Object.fromEntries(
+      Object.entries(pkg.bin).map(([name, file]) => [chalk.cyan(name), fileInfo(file)])
+    )
   }
 
   function fileInfo(file: string) {
@@ -44,7 +46,7 @@ export function printPackageTree(ctx: BuildContext): void {
       return `${chalk.gray(file)} ${chalk.red('does not exist')}`
     }
 
-    return `${file} ${chalk.gray(info.size)}`
+    return `${chalk.yellow(file)} ${chalk.gray(info.size)}`
   }
 
   tree.exports = Object.fromEntries(
@@ -52,13 +54,13 @@ export function printPackageTree(ctx: BuildContext): void {
       .filter(([, entry]) => entry._exported)
       .map(([exportPath, entry]) => {
         const exp: Omit<PkgExport, '_exported'> = {
-          source: entry.source,
           types: undefined,
+          source: fileInfo(entry.source),
           browser: undefined,
           node: undefined,
           import: undefined,
           require: undefined,
-          default: entry.default,
+          default: fileInfo(entry.default),
         }
 
         if (entry.types) {
@@ -68,7 +70,7 @@ export function printPackageTree(ctx: BuildContext): void {
         }
 
         if (entry.browser) {
-          exp.browser = {source: entry.browser.source}
+          exp.browser = {source: fileInfo(entry.browser.source)}
 
           if (entry.browser.import) exp.browser.import = fileInfo(entry.browser.import)
           if (entry.browser.require) exp.browser.require = fileInfo(entry.browser.require)
@@ -77,7 +79,7 @@ export function printPackageTree(ctx: BuildContext): void {
         }
 
         if (entry.node) {
-          exp.node = {source: entry.node.source}
+          exp.node = {source: fileInfo(entry.node.source)}
 
           if (entry.node.import) exp.node.import = fileInfo(entry.node.import)
           if (entry.node.require) exp.node.require = fileInfo(entry.node.require)
@@ -97,11 +99,9 @@ export function printPackageTree(ctx: BuildContext): void {
           delete exp.require
         }
 
-        exp.default = fileInfo(entry.default)
-
-        return [chalk.green(path.join(pkg.name, exportPath)), exp]
+        return [chalk.cyan(path.join(pkg.name, exportPath)), exp]
       })
   )
 
-  logger.log(treeify.asTree(tree, true, true))
+  logger.log(treeify.asTree(tree as Record<string, any>, true, true))
 }
