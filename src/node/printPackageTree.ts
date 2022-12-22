@@ -31,7 +31,7 @@ export function printPackageTree(ctx: BuildContext): void {
   logger.log(`${chalk.blue(pkg.name)}@${chalk.green(pkg.version)}`)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tree: Record<string, any> = {}
+  const tree: Record<string, any> = {type: pkg.type}
 
   if (pkg.bin) {
     tree.bin = pkg.bin
