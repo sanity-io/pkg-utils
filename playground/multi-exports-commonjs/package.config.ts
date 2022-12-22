@@ -7,6 +7,5 @@ export default defineConfig({
     },
   },
   legacyExports: true,
-  minify: false,
   tsconfig: 'tsconfig.dist.json',
 })
