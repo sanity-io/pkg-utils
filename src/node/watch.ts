@@ -1,6 +1,7 @@
 import path from 'path'
 import {switchMap} from 'rxjs'
 import {loadConfig, loadPkgWithReporting} from './core'
+import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveWatchTasks} from './resolveWatchTasks'
 import {WatchTask, TaskHandler, watchTaskHandlers} from './tasks'
@@ -14,7 +15,9 @@ export async function watch(options: {
 }): Promise<void> {
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
 
-  const configFiles$ = await watchConfigFiles({cwd})
+  const logger = createLogger()
+
+  const configFiles$ = await watchConfigFiles({cwd, logger})
 
   const ctx$ = configFiles$.pipe(
     switchMap(async (configFiles) => {
@@ -26,11 +29,11 @@ export async function watch(options: {
         throw new Error('missing package.json')
       }
 
-      const pkg = await loadPkgWithReporting({cwd})
+      const pkg = await loadPkgWithReporting({cwd, logger})
       const config = await loadConfig({cwd})
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
-      return resolveBuildContext({config, cwd, pkg, strict, tsconfig})
+      return resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})
     })
   )
 

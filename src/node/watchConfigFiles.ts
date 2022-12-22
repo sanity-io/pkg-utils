@@ -1,12 +1,15 @@
 import path from 'path'
-import chalk from 'chalk'
 import {Observable} from 'rxjs'
 import {distinctUntilChanged, scan, startWith} from 'rxjs/operators'
 import {globFiles} from './globFiles'
+import {Logger} from './logger'
 import {watchFiles} from './watchFiles'
 
-export async function watchConfigFiles(options: {cwd: string}): Promise<Observable<string[]>> {
-  const {cwd} = options
+export async function watchConfigFiles(options: {
+  cwd: string
+  logger: Logger
+}): Promise<Observable<string[]>> {
+  const {cwd, logger} = options
 
   const initialFiles = await globFiles([
     path.resolve(cwd, 'package.json'),
@@ -33,13 +36,11 @@ export async function watchConfigFiles(options: {cwd: string}): Promise<Observab
       }
 
       if (fileEvent.type === 'change') {
-        /* eslint-disable no-console */
-        console.log(
+        logger.log(
           '--------------------------------------------------------------------------------'
         )
-        console.log(chalk.blue('info  '), path.relative(cwd, fileEvent.file), 'changed')
-        console.log('')
-        /* eslint-enable no-console */
+        logger.info(path.relative(cwd, fileEvent.file), 'changed')
+        logger.log('')
 
         return files.slice(0) // trigger update
       }

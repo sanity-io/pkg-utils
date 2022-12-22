@@ -58,7 +58,6 @@ export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> =
     }
 
     if (event.code === 'ERROR') {
-      // logger.log('')
       logger.error(event.code, event)
 
       return

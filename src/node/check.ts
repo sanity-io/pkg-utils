@@ -1,6 +1,7 @@
 import path from 'path'
 import esbuild, {BuildFailure} from 'esbuild'
 import {loadConfig, loadPkgWithReporting} from './core'
+import {createLogger} from './logger'
 import {fileExists, printPackageTree} from './printPackageTree'
 import {resolveBuildContext} from './resolveBuildContext'
 
@@ -11,12 +12,12 @@ export async function check(options: {
   tsconfig?: string
 }): Promise<void> {
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
+  const logger = createLogger()
 
-  const pkg = await loadPkgWithReporting({cwd})
+  const pkg = await loadPkgWithReporting({cwd, logger})
   const config = await loadConfig({cwd})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
-  const ctx = await resolveBuildContext({config, cwd, pkg, strict, tsconfig})
-  const {logger} = ctx
+  const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})
 
   printPackageTree(ctx)
 

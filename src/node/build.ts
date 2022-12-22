@@ -1,4 +1,5 @@
 import {loadConfig, loadPkgWithReporting} from './core'
+import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveBuildTasks} from './resolveBuildTasks'
 import {createSpinner} from './spinner'
@@ -30,11 +31,21 @@ export async function build(options: {
   tsconfig?: string
 }): Promise<void> {
   const {cwd, emitDeclarationOnly, strict = false, tsconfig: tsconfigOption} = options
+  const logger = createLogger()
 
-  const pkg = await loadPkgWithReporting({cwd})
+  const pkg = await loadPkgWithReporting({cwd, logger})
   const config = await loadConfig({cwd})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
-  const ctx = await resolveBuildContext({config, cwd, emitDeclarationOnly, pkg, strict, tsconfig})
+
+  const ctx = await resolveBuildContext({
+    config,
+    cwd,
+    emitDeclarationOnly,
+    logger,
+    pkg,
+    strict,
+    tsconfig,
+  })
 
   const buildTasks = resolveBuildTasks(ctx)
 

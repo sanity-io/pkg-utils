@@ -1,5 +1,4 @@
 import path from 'path'
-import chalk from 'chalk'
 import {
   PkgConfigOptions,
   PkgExports,
@@ -12,42 +11,29 @@ import {
   resolveConfigProperty,
 } from './core'
 import {findCommonDirPath, pathContains} from './core/findCommonPath'
+import {Logger} from './logger'
 import {resolveBrowserslistVersions} from './resolveBrowserslistVersions'
 import {resolveBrowserTarget} from './resolveBrowserTarget'
 import {resolveNodeTarget} from './resolveNodeTarget'
-
-function createLogger(): BuildContext['logger'] {
-  return {
-    /* eslint-disable no-console */
-    log: (...args) => {
-      console.log(...args)
-    },
-    info: (...args) => {
-      console.log(chalk.blue('  info'), ...args)
-    },
-    warn: (...args) => {
-      console.log(chalk.yellow('  warn'), ...args)
-    },
-    error: (...args) => {
-      console.log(chalk.red('  fail'), ...args)
-    },
-    success: (...args) => {
-      console.log(chalk.green('  ok  '), ...args)
-    },
-    /* eslint-enable no-console */
-  }
-}
 
 export async function resolveBuildContext(options: {
   config?: PkgConfigOptions
   cwd: string
   emitDeclarationOnly?: boolean
+  logger: Logger
   pkg: PackageJSON
   strict: boolean
   tsconfig: string
 }): Promise<BuildContext> {
-  const {config, cwd, emitDeclarationOnly = false, pkg, strict, tsconfig: tsconfigPath} = options
-  const logger = createLogger()
+  const {
+    config,
+    cwd,
+    emitDeclarationOnly = false,
+    logger,
+    pkg,
+    strict,
+    tsconfig: tsconfigPath,
+  } = options
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
   const targetVersions = resolveBrowserslistVersions(pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY)
   const nodeTarget = resolveNodeTarget(targetVersions)

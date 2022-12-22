@@ -1,4 +1,5 @@
 import ts from 'typescript'
+import {Logger} from '../../logger'
 import {PkgExports, PkgRuntime, PkgConfigOptions} from '../config'
 import {PackageJSON} from '../pkg'
 
@@ -17,13 +18,7 @@ export interface BuildContext {
   exports: PkgExports | undefined
   external: string[]
   files: BuildFile[]
-  logger: {
-    log: (...args: unknown[]) => void
-    info: (...args: unknown[]) => void
-    warn: (...args: unknown[]) => void
-    error: (...args: unknown[]) => void
-    success: (...args: unknown[]) => void
-  }
+  logger: Logger
   pkg: PackageJSON
   runtime: PkgRuntime
   strict: boolean

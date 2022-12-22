@@ -1,34 +1,25 @@
-/* eslint-disable no-console */
-
 import chalk from 'chalk'
 import {ZodError} from 'zod'
+import {Logger} from '../../logger'
 import {loadPkg} from './loadPkg'
 import {PackageJSON} from './types'
 
 /** @internal */
-export async function loadPkgWithReporting(options: {cwd: string}): Promise<PackageJSON> {
+export async function loadPkgWithReporting(options: {
+  cwd: string
+  logger: Logger
+}): Promise<PackageJSON> {
+  const {cwd, logger} = options
+
   try {
-    const pkg = await loadPkg(options)
-
-    if (pkg.type === 'commonjs') {
-      console.warn(
-        [
-          `${chalk.yellow('warn')}   `,
-          'Packages with `"type": "commonjs"` may not be compatible with popular bundlers like ',
-          'webpack and rollup, and projects such as Astro and SvelteKit. Please consider using ',
-          '`"type": "module"` instead.',
-        ].join('')
-      )
-    }
-
-    return pkg
+    return await loadPkg({cwd})
   } catch (err) {
     if (err instanceof ZodError) {
       for (const issue of err.issues) {
         if (issue.code === 'invalid_type') {
-          console.error(
+          logger.error(
             [
-              `${chalk.red('fail')}   \`${formatPath(issue.path)}\` `,
+              `\`${formatPath(issue.path)}\` `,
               `in \`./package.json\` must be of type ${chalk.magenta(issue.expected)} `,
               `(received ${chalk.magenta(issue.received)})`,
             ].join('')
@@ -36,7 +27,7 @@ export async function loadPkgWithReporting(options: {cwd: string}): Promise<Pack
         }
       }
     } else {
-      console.error(err)
+      logger.error(err)
     }
 
     process.exit(1)

@@ -13,9 +13,9 @@ export const rollupTask: TaskHandler<RollupTask> = {
   name: (ctx, task) =>
     `build javascript files (target ${task.target.join(' + ')}, format ${
       task.format
-    })\n       ${task.entries
+    })\n${task.entries
       .map((e) => `${chalk.blue(path.join(ctx.pkg.name, e.path))}: ${e.source} -> ${e.output}`)
-      .join('\n       ')}`,
+      .join('\n')}`,
   exec: (ctx, task) => {
     return new Observable((observer) => {
       execPromise(ctx, task)
@@ -36,30 +36,43 @@ export const rollupTask: TaskHandler<RollupTask> = {
   },
 }
 
-async function execPromise(ctx: BuildContext, task: RollupTask) {
-  const {files, distPath} = ctx
-  const outDir = path.relative(ctx.cwd, distPath)
-
-  const _console = {
+function createSpyConsole() {
+  const original = {
     log: console.log,
     warn: console.warn,
     error: console.error,
   }
 
-  const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
+  const messages: {type: 'log' | 'warn' | 'error'; args: any[]}[] = []
 
-  console.log = () => undefined
-  console.warn = () => undefined
-  console.error = () => undefined
+  console.log = (...args: any[]) => messages.push({type: 'log', args})
+  console.warn = (...args: any[]) => messages.push({type: 'warn', args})
+  console.error = (...args: any[]) => messages.push({type: 'error', args})
+
+  return {
+    messages,
+    restore: () => {
+      console.log = original.log
+      console.warn = original.warn
+      console.error = original.error
+    },
+  }
+}
+
+async function execPromise(ctx: BuildContext, task: RollupTask) {
+  const {distPath, files, logger} = ctx
+  const outDir = path.relative(ctx.cwd, distPath)
+
+  // Prevent rollup from printing warnings to the console
+  const spyConsole = createSpyConsole()
+
+  const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
 
   // Create bundle
   const bundle = await rollup({
     ...inputOptions,
     onwarn(warning) {
-      if (!warning.code || !['CIRCULAR_DEPENDENCY'].includes(warning.code)) {
-        // rollupWarn(warning)
-        _console.warn.bind(console)(chalk.yellow('warn  '), warning.message)
-      }
+      spyConsole.messages.push({type: 'warn', args: [warning.message]})
     },
   })
 
@@ -67,9 +80,32 @@ async function execPromise(ctx: BuildContext, task: RollupTask) {
   // you can call this function multiple times on the same bundle object
   const {output} = await bundle.generate(outputOptions)
 
-  console.log = _console.log
-  console.warn = _console.warn
-  console.error = _console.error
+  // Restore console
+  spyConsole.restore()
+
+  for (const msg of spyConsole.messages) {
+    const text = String(msg.args[0])
+
+    if (text.startsWith('Dynamic import can only')) {
+      continue // ignore
+    }
+
+    if (text.startsWith('Sourcemap is likely to be incorrect')) {
+      continue // ignore
+    }
+
+    if (msg.type === 'log') {
+      logger.info(...msg.args)
+    }
+
+    if (msg.type === 'warn') {
+      logger.warn(...msg.args)
+    }
+
+    if (msg.type === 'error') {
+      logger.error(...msg.args)
+    }
+  }
 
   for (const chunkOrAsset of output) {
     if (chunkOrAsset.type === 'asset') {
