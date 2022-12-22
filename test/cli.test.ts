@@ -7,18 +7,10 @@ test('should build `js` package', async () => {
 
   await project.install()
 
-  const {stderr, stdout} = await project.run('build')
+  const {stdout} = await project.run('build')
 
-  expect(stderr).toContain(
-    [
-      'Packages with `"type": "commonjs"` may not be compatible with popular bundlers like webpack',
-      'and rollup, and projects such as Astro and SvelteKit. Please consider using',
-      '`"type": "module"` instead.',
-    ].join(' ')
-  )
-
-  expect(stdout).toContain('./src/index.js -> ./dist/index.mjs')
-  expect(stdout).toContain('./src/index.js -> ./dist/index.js')
+  expect(stdout).toContain('./src/index.js → ./dist/index.mjs')
+  expect(stdout).toContain('./src/index.js → ./dist/index.js')
 
   await project.remove()
 })
@@ -31,20 +23,20 @@ test('should build `dummy-module` package', async () => {
   const {stdout} = await project.run('build')
 
   // types
-  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.d.ts')
-  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.d.ts')
+  expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.d.ts')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.d.ts')
 
   // commonjs
-  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.cjs')
-  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.browser.cjs')
-  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.cjs')
-  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.browser.cjs')
+  expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.cjs')
+  expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.browser.cjs')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.cjs')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.browser.cjs')
 
   // esm
-  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('dummy-module: ./src/index.ts -> ./dist/index.browser.js')
-  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.js')
-  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts -> ./dist/extra.browser.js')
+  expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.js')
+  expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.browser.js')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.js')
+  expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.browser.js')
 
   expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
@@ -66,9 +58,9 @@ test('should build `custom-dist` package', async () => {
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('./src/index.ts -> ./lib/index.cjs')
-  expect(stdout).toContain('./src/index.ts -> ./lib/index.js')
-  expect(stdout).toContain('./src/index.ts -> ./lib/src/index.d.ts')
+  expect(stdout).toContain('./src/index.ts → ./lib/index.cjs')
+  expect(stdout).toContain('./src/index.ts → ./lib/index.js')
+  expect(stdout).toContain('./src/index.ts → ./lib/src/index.d.ts')
 
   expect(await project.readFile('lib/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('lib/index.js')).toMatchSnapshot()
@@ -84,13 +76,13 @@ test('should build `multi-export` package', async () => {
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('./src/index.ts -> ./dist/index.cjs')
-  expect(stdout).toContain('./src/index.ts -> ./dist/index.js')
-  expect(stdout).toContain('./src/index.ts -> ./dist/index.d.ts')
+  expect(stdout).toContain('./src/index.ts → ./dist/index.cjs')
+  expect(stdout).toContain('./src/index.ts → ./dist/index.js')
+  expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
-  expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.cjs')
-  expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.js')
-  expect(stdout).toContain('./src/plugin.ts -> ./dist/plugin.d.ts')
+  expect(stdout).toContain('./src/plugin.ts → ./dist/plugin.cjs')
+  expect(stdout).toContain('./src/plugin.ts → ./dist/plugin.js')
+  expect(stdout).toContain('./src/plugin.ts → ./dist/plugin.d.ts')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.js')).toMatchSnapshot()
@@ -110,7 +102,7 @@ test('should build `ts` package', async () => {
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('./src/index.ts -> ./dist/index.d.ts')
+  expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
   expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
 

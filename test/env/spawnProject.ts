@@ -9,6 +9,7 @@ import _rimraf from 'rimraf'
 import {v4 as uuid} from 'uuid'
 import {exec} from './exec'
 import {ExecError} from './ExecError'
+import {stripColor} from './stripColor'
 
 const rimraf = promisify(_rimraf)
 
@@ -63,7 +64,10 @@ export function spawnProject(name: string): Promise<{
                 console.log(execErr.stdout)
                 console.error(execErr.stderr)
 
-                return {stdout: execErr.stdout, stderr: execErr.stderr}
+                return {
+                  stdout: stripColor(execErr.stdout),
+                  stderr: stripColor(execErr.stderr),
+                }
               }
 
               throw execErr
