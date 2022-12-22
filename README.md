@@ -38,8 +38,8 @@ control. You may then add a configuration file named `package.config.ts` (or `.j
 import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
-  // Do not minify bundled JavaScript
-  minify: false,
+  // Minify bundled JavaScript
+  minify: true,
 })
 ```
 
@@ -138,7 +138,7 @@ need to support older Node.js versions or older bundlers.
 #### `minify`
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 Whether to minify the bundled JavaScript.
 
