@@ -16,7 +16,6 @@ export default defineConfig({
       'ae-missing-release-tag': 'error',
     },
   },
-  minify: false,
   rollup: {
     plugins: [
       visualizer({
