@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-beta.2](https://github.com/sanity-io/pkg-utils/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-12-22)
+
+### Features
+
+- print package type ([bacd4b7](https://github.com/sanity-io/pkg-utils/commit/bacd4b7a8d19bbaeb6c748e4409294a4152509ae))
+
+### Bug Fixes
+
+- improve build output ([567a1bd](https://github.com/sanity-io/pkg-utils/commit/567a1bda326c9f293d1cd9fabd5fece72e951370))
+- improve check output ([9f56ebf](https://github.com/sanity-io/pkg-utils/commit/9f56ebff6a278784cebfb26a31e3e60777ee37be))
+
 ## [2.0.0-beta.1](https://github.com/sanity-io/pkg-utils/compare/v1.20.4...v2.0.0-beta.1) (2022-12-17)
 
 ### ⚠ BREAKING CHANGES
