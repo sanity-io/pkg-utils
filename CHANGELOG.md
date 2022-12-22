@@ -5,6 +5,32 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/sanity-io/pkg-utils/compare/v1.20.4...v2.0.0) (2022-12-22)
+
+### ⚠ BREAKING CHANGES
+
+- default to `minify: false`
+- require `type` in `package.json`
+- require `.mjs` extensions for ESM modules
+
+### Features
+
+- print package type ([bacd4b7](https://github.com/sanity-io/pkg-utils/commit/bacd4b7a8d19bbaeb6c748e4409294a4152509ae))
+- support `.esm.js` extensions when using legacy exports ([2936d3f](https://github.com/sanity-io/pkg-utils/commit/2936d3f9ca974d36b038a0fc473dfb8a40294a52))
+- warn when using `type: "commonjs"` ([228ee62](https://github.com/sanity-io/pkg-utils/commit/228ee6205be92647a06ef25dcfbb6f18b413df68))
+
+### Bug Fixes
+
+- improve build output ([567a1bd](https://github.com/sanity-io/pkg-utils/commit/567a1bda326c9f293d1cd9fabd5fece72e951370))
+- improve check output ([9f56ebf](https://github.com/sanity-io/pkg-utils/commit/9f56ebff6a278784cebfb26a31e3e60777ee37be))
+- improve logging ([8f40188](https://github.com/sanity-io/pkg-utils/commit/8f4018894d094bb2c458b4b834a27f09d4212a0b))
+
+### Code Refactoring
+
+- default to `minify: false` ([16ab63e](https://github.com/sanity-io/pkg-utils/commit/16ab63e8b5b98474ea88d0d445540fc80550e637))
+- require `.mjs` extensions for ESM modules ([24586c2](https://github.com/sanity-io/pkg-utils/commit/24586c22acf5197bbe3a69f7b4441a3fffb3bc86))
+- require `type` in `package.json` ([1c451b4](https://github.com/sanity-io/pkg-utils/commit/1c451b4ca65787938ec82ee1fabdf8aeddda975e))
+
 ## [2.0.0-beta.3](https://github.com/sanity-io/pkg-utils/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-12-22)
 
 ### Features
