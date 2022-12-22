@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-beta.3](https://github.com/sanity-io/pkg-utils/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-12-22)
+
+### Features
+
+- support `.esm.js` extensions when using legacy exports ([2936d3f](https://github.com/sanity-io/pkg-utils/commit/2936d3f9ca974d36b038a0fc473dfb8a40294a52))
+
+### Bug Fixes
+
+- improve logging ([8f40188](https://github.com/sanity-io/pkg-utils/commit/8f4018894d094bb2c458b4b834a27f09d4212a0b))
+
 ## [2.0.0-beta.2](https://github.com/sanity-io/pkg-utils/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-12-22)
 
 ### Features
