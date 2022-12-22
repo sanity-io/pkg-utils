@@ -19,7 +19,7 @@ export async function doExtract(
   ctx: BuildContext,
   task: DtsTask | DtsWatchTask
 ): Promise<DtsResult> {
-  const {config, cwd, files, strict, ts} = ctx
+  const {config, cwd, files, logger, strict, ts} = ctx
 
   if (!ts.config || !ts.configPath) {
     return {type: 'dts', messages: [], results: []}
@@ -33,7 +33,7 @@ export async function doExtract(
 
   const tmpPath = path.resolve(outDir, '__tmp__')
 
-  await buildTypes({cwd, outDir: tmpPath, strict, tsconfig: ts.config})
+  await buildTypes({cwd, logger, outDir: tmpPath, strict, tsconfig: ts.config})
   const messages: ExtractorMessage[] = []
 
   const results: {sourcePath: string; filePath: string}[] = []

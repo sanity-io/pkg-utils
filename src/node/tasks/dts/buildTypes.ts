@@ -1,21 +1,16 @@
-/* eslint-disable no-console */
-
 import ts from 'typescript'
-
-export const formatHost: ts.FormatDiagnosticsHost = {
-  getCurrentDirectory: () => ts.sys.getCurrentDirectory(),
-  getNewLine: () => ts.sys.newLine,
-  getCanonicalFileName: ts.sys.useCaseSensitiveFileNames ? (f) => f : (f) => f.toLowerCase(),
-}
+import {Logger} from '../../logger'
+import {printDiagnostic} from './printDiagnostic'
 
 /** @internal */
 export async function buildTypes(options: {
   cwd: string
+  logger: Logger
   outDir: string
   tsconfig: ts.ParsedCommandLine
   strict: boolean
 }): Promise<void> {
-  const {outDir, tsconfig, strict = false} = options
+  const {cwd, logger, outDir, tsconfig, strict = false} = options
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,
@@ -32,24 +27,14 @@ export async function buildTypes(options: {
 
   const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
 
-  // TODO: improve logging
-  allDiagnostics.forEach((diagnostic) => {
-    if (diagnostic.file && diagnostic.start) {
-      const {line, character} = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
-      const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
-
-      console.log(`${diagnostic.file.fileName} ${line + 1}:${character + 1}\n${message}`)
-    } else {
-      console.log(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
-    }
-  })
+  for (const diagnostic of allDiagnostics) {
+    printDiagnostic({cwd, logger, diagnostic})
+  }
 
   if (emitResult.emitSkipped) {
     const errors = allDiagnostics.filter((diag) => diag.category === ts.DiagnosticCategory.Error)
 
     if (errors.length) {
-      console.error(ts.formatDiagnostics(errors, formatHost))
-
       if (strict) {
         throw new Error('failed to compile TypeScript definitions')
       }
