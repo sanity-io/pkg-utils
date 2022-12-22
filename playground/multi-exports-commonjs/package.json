@@ -1,27 +1,27 @@
 {
   "private": true,
-  "type": "module",
-  "name": "multi-export",
+  "type": "commonjs",
+  "name": "multi-export-commonjs",
   "version": "0.0.0-development",
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "source": "./src/index.ts",
-  "module": "./dist/index.js",
-  "main": "./dist/index.cjs",
+  "module": "./dist/index.esm.js",
+  "main": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.js"
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.esm.js"
     },
     "./plugin": {
       "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
-      "import": "./dist/plugin.js",
-      "require": "./dist/plugin.cjs",
-      "default": "./dist/plugin.js"
+      "import": "./dist/plugin.esm.js",
+      "require": "./dist/plugin.js",
+      "default": "./dist/plugin.esm.js"
     },
     "./package.json": "./package.json"
   },
@@ -33,6 +33,6 @@
     }
   },
   "scripts": {
-    "build": "rimraf dist && pkg build --strict && pkg --strict"
+    "build": "rimraf dist plugin.js && pkg build --strict && pkg --strict"
   }
 }

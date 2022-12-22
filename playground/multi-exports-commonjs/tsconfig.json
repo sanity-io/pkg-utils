@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.settings",
+  "include": ["./src"],
+  "compilerOptions": {
+    "noEmit": true,
+
+    "paths": {
+      "multi-export-commonjs": ["./src/index.ts"]
+    }
+  }
+}

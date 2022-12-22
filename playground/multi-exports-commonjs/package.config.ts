@@ -6,6 +6,7 @@ export default defineConfig({
       'ae-forgotten-export': 'off',
     },
   },
+  legacyExports: true,
   minify: false,
   tsconfig: 'tsconfig.dist.json',
 })
