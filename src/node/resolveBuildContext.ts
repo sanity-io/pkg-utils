@@ -9,6 +9,7 @@ import {
   PackageJSON,
   parseExports,
   resolveConfigProperty,
+  PkgExtMap,
 } from './core'
 import {findCommonDirPath, pathContains} from './core/findCommonPath'
 import {Logger} from './logger'
@@ -20,6 +21,7 @@ export async function resolveBuildContext(options: {
   config?: PkgConfigOptions
   cwd: string
   emitDeclarationOnly?: boolean
+  extMap: PkgExtMap
   logger: Logger
   pkg: PackageJSON
   strict: boolean
@@ -29,6 +31,7 @@ export async function resolveBuildContext(options: {
     config,
     cwd,
     emitDeclarationOnly = false,
+    extMap,
     logger,
     pkg,
     strict,
@@ -53,7 +56,7 @@ export async function resolveBuildContext(options: {
     node: nodeTarget,
   }
 
-  const parsedExports = parseExports({pkg, strict}).reduce<PkgExports>((acc, x) => {
+  const parsedExports = parseExports({extMap, pkg, strict}).reduce<PkgExports>((acc, x) => {
     const {_path: exportPath, ...exportEntry} = x
 
     return {...acc, [exportPath]: exportEntry}
@@ -123,6 +126,7 @@ export async function resolveBuildContext(options: {
     emitDeclarationOnly,
     exports,
     external,
+    extMap,
     files: [],
     logger,
     pkg,

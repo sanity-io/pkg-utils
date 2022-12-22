@@ -8,12 +8,7 @@ import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
-import {
-  BuildContext,
-  DEFAULT_BROWSERSLIST_QUERY,
-  MODULE_EXT,
-  resolveConfigProperty,
-} from '../../core'
+import {BuildContext, DEFAULT_BROWSERSLIST_QUERY, resolveConfigProperty} from '../../core'
 import {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
@@ -27,8 +22,8 @@ export function resolveRollupConfig(
   buildTask: RollupTask | RollupWatchTask
 ): RollupConfig {
   const {format, runtime, target} = buildTask
-  const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
-  const outputExt = MODULE_EXT[pkg.type][format]
+  const {config, cwd, exports: _exports, extMap, external, distPath, logger, pkg, ts} = ctx
+  const outputExt = extMap[pkg.type][format]
   const minify = config?.minify ?? true
   const outDir = path.relative(cwd, distPath)
 
@@ -186,10 +181,26 @@ export function resolveRollupConfig(
       },
     },
     outputOptions: {
-      chunkFileNames: () => `_chunks/[name]-[hash]${outputExt}`,
+      chunkFileNames: () => {
+        const parts = outputExt.split('.')
+
+        if (parts.length === 3) {
+          return `_chunks/[name]-[hash].${parts[2]}`
+        }
+
+        return `_chunks/[name]-[hash]${outputExt}`
+      },
       compact: minify,
       dir: outDir,
-      entryFileNames: () => `[name]${outputExt}`,
+      entryFileNames: () => {
+        const parts = outputExt.split('.')
+
+        if (parts.length === 3) {
+          return `[name].${parts[2]}`
+        }
+
+        return `[name]${outputExt}`
+      },
       esModule: true,
       format,
       interop: 'compat',

@@ -1,13 +1,13 @@
 import {PkgExport} from '../config'
-import {MODULE_EXT} from '../constants'
+import {PkgExtMap} from './pkgExt'
 import {PackageJSON} from './types'
 
 export function validateExports(
   _exports: (PkgExport & {_path: string})[],
-  options: {pkg: PackageJSON}
+  options: {extMap: PkgExtMap; pkg: PackageJSON}
 ): string[] {
-  const {pkg} = options
-  const ext = MODULE_EXT[pkg.type]
+  const {extMap, pkg} = options
+  const ext = extMap[pkg.type]
 
   const errors: string[] = []
 

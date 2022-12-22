@@ -1,4 +1,3 @@
-export * from './constants'
 export * from './defaults'
 export * from './isRecord'
 export * from './config'

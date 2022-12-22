@@ -1,8 +1,10 @@
 import {describe, expect, test} from 'vitest'
-import {PackageJSON, parseExports} from '../src/node'
+import {PackageJSON, getPkgExtMap, parseExports} from '../src/node'
 
 describe('parseExports', () => {
   test('parse basic package.json', () => {
+    const extMap = getPkgExtMap({legacyExports: false})
+
     const pkg: PackageJSON = {
       type: 'commonjs',
       name: 'test',
@@ -20,7 +22,7 @@ describe('parseExports', () => {
       },
     }
 
-    const exports = parseExports({pkg, strict: true})
+    const exports = parseExports({pkg, extMap, strict: true})
 
     expect(exports).toEqual([
       {
@@ -37,6 +39,8 @@ describe('parseExports', () => {
   })
 
   test('should throw if `package.json` is missing from the exports', () => {
+    const extMap = getPkgExtMap({legacyExports: false})
+
     const pkg: PackageJSON = {
       type: 'commonjs',
       name: 'test',
@@ -53,12 +57,14 @@ describe('parseExports', () => {
       },
     }
 
-    expect(() => parseExports({pkg, strict: true})).toThrow(
+    expect(() => parseExports({extMap, pkg, strict: true})).toThrow(
       '\n- package.json: `exports["./package.json"] must be declared.'
     )
   })
 
   test('parse package.json with browser files', () => {
+    const extMap = getPkgExtMap({legacyExports: false})
+
     const pkg: PackageJSON = {
       type: 'module',
       name: 'test',
@@ -80,7 +86,7 @@ describe('parseExports', () => {
       },
     }
 
-    const exports = parseExports({pkg, strict: true})
+    const exports = parseExports({extMap, pkg, strict: true})
 
     expect(exports).toEqual([
       {
@@ -101,6 +107,8 @@ describe('parseExports', () => {
   })
 
   test('package.json with multiple exports errors', () => {
+    const extMap = getPkgExtMap({legacyExports: false})
+
     const pkg: PackageJSON = {
       type: 'commonjs',
       name: 'test',
@@ -121,7 +129,7 @@ describe('parseExports', () => {
       types: './lib/src/index.d.ts',
     }
 
-    expect(() => parseExports({pkg, strict: true})).toThrow(
+    expect(() => parseExports({extMap, pkg, strict: true})).toThrow(
       '\n- package.json: mismatch between "main" and "exports.require". These must be equal.' +
         '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
         '\n- package.json: `exports["./package.json"] must be "./package.json".' +

@@ -1,14 +1,16 @@
 import {PkgExport} from '../config'
 import {isRecord} from '../isRecord'
+import {PkgExtMap} from './pkgExt'
 import {PackageJSON} from './types'
 import {validateExports} from './validateExports'
 
 /** @internal */
 export function parseExports(options: {
+  extMap: PkgExtMap
   pkg: PackageJSON
   strict: boolean
 }): (PkgExport & {_path: string})[] {
-  const {pkg, strict} = options
+  const {extMap, pkg, strict} = options
 
   const rootExport: PkgExport & {_path: string} = {
     _exported: true,
@@ -89,7 +91,7 @@ export function parseExports(options: {
 
   const _exports = [rootExport, ...extraExports]
 
-  errors.push(...validateExports(_exports, {pkg}))
+  errors.push(...validateExports(_exports, {extMap, pkg}))
 
   if (errors.length) {
     throw new Error('\n- ' + errors.join('\n- '))

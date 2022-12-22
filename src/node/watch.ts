@@ -1,6 +1,6 @@
 import path from 'path'
 import {switchMap} from 'rxjs'
-import {loadConfig, loadPkgWithReporting} from './core'
+import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveWatchTasks} from './resolveWatchTasks'
@@ -31,9 +31,10 @@ export async function watch(options: {
 
       const pkg = await loadPkgWithReporting({cwd, logger})
       const config = await loadConfig({cwd})
+      const extMap = getPkgExtMap({legacyExports: config?.legacyExports ?? false})
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
-      return resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})
+      return resolveBuildContext({config, cwd, extMap, logger, pkg, strict, tsconfig})
     })
   )
 

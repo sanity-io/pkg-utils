@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import {Logger} from '../../logger'
 import {PkgExports, PkgRuntime, PkgConfigOptions} from '../config'
-import {PackageJSON} from '../pkg'
+import {PackageJSON, PkgExtMap} from '../pkg'
 
 /** @internal */
 export interface BuildFile {
@@ -16,6 +16,7 @@ export interface BuildContext {
   distPath: string
   emitDeclarationOnly: boolean
   exports: PkgExports | undefined
+  extMap: PkgExtMap
   external: string[]
   files: BuildFile[]
   logger: Logger
