@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/sanity-io/pkg-utils/compare/v2.0.2...v2.0.3) (2022-12-23)
+
+### Bug Fixes
+
+- support the `use client` directive ([#27](https://github.com/sanity-io/pkg-utils/issues/27)) ([e8e31ab](https://github.com/sanity-io/pkg-utils/commit/e8e31ab816811f2efffc32738a189f4694457121))
+
 ## [2.0.2](https://github.com/sanity-io/pkg-utils/compare/v2.0.1...v2.0.2) (2022-12-23)
 
 ### Bug Fixes
