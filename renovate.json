@@ -6,6 +6,12 @@
       "description": "webpack is only used for integration testing for v3 specifically",
       "packageNames": ["webpack"],
       "allowedVersions": "<=3"
+    },
+    {
+      "description": "Dependency updates to other package jsons than the root should always use the chore scope as they aren't published to npm",
+      "matchFiles": ["playground/**/package.json"],
+      "extends": [":semanticCommitTypeAll(chore)"],
+      "groupSlug": "playground"
     }
   ]
 }
