@@ -110,6 +110,10 @@ export function resolveRollupConfig(
     }),
     minify &&
       terser({
+        compress: {
+          // Needed until https://github.com/terser/terser/issues/1320 is fixed
+          directives: false,
+        },
         output: {
           comments: (_node, comment) => {
             const text = comment.value
