@@ -88,12 +88,7 @@ export function resolveRollupConfig(
       extensions: ['.cjs', '.mjs', '.js', '.jsx', '.json', '.node'],
       preferBuiltins: true, // runtime === 'node',
     }),
-    commonjs({
-      esmExternals: false,
-      extensions: ['.js'],
-      // include: /\/node_modules\//,
-      // requireReturnsDefault: 'namespace',
-    }),
+    commonjs(),
     json(),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
