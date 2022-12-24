@@ -210,6 +210,7 @@ export function resolveRollupConfig(
       interop: 'compat',
       minifyInternalExports: minify,
       sourcemap: config?.sourcemap ?? true,
+      hoistTransitiveImports: false,
     },
   }
 }
