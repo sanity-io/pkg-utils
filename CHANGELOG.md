@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4-beta.1](https://github.com/sanity-io/pkg-utils/compare/v2.0.3...v2.0.4-beta.1) (2022-12-30)
+
+### Bug Fixes
+
+- allow `dynamicImportInCjs` in rollup v3 ([d1aab9f](https://github.com/sanity-io/pkg-utils/commit/d1aab9f0762b027bdca020f8a3a34ab043e1ffeb))
+- **deps:** update dependencies (non-major) ([246b648](https://github.com/sanity-io/pkg-utils/commit/246b6486e9c141e28c88f3ae14760b0c2f437f10))
+- disable transitive imports hoisting ([435c3d2](https://github.com/sanity-io/pkg-utils/commit/435c3d25d92fa3d2529390c2cd036f411d36676b))
+- remove `@babel/plugin-proposal-object-rest-spread` ([ac81a87](https://github.com/sanity-io/pkg-utils/commit/ac81a8790bdf6cbd116c69be6bbde39d291891ac))
+
 ## [2.0.3](https://github.com/sanity-io/pkg-utils/compare/v2.0.2...v2.0.3) (2022-12-23)
 
 ### Bug Fixes
