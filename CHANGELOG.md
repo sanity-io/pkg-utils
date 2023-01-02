@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/sanity-io/pkg-utils/compare/v2.0.7...v2.1.0) (2023-01-02)
+
+### Features
+
+- re-export CJS in ESM wrapper (`node.import` compat) ([4e1a4d8](https://github.com/sanity-io/pkg-utils/commit/4e1a4d822114dbaff45eb5baba8729d74d5c263c))
+
 ## [2.0.7](https://github.com/sanity-io/pkg-utils/compare/v2.0.6...v2.0.7) (2023-01-02)
 
 ### Bug Fixes
