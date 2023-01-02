@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.7](https://github.com/sanity-io/pkg-utils/compare/v2.0.6...v2.0.7) (2023-01-02)
+
+### Bug Fixes
+
+- optional `node.source` property ([4565d6f](https://github.com/sanity-io/pkg-utils/commit/4565d6f73cb3667ed749d2cf600acdbe1be86fa1))
+- print all errors ([f6bba7e](https://github.com/sanity-io/pkg-utils/commit/f6bba7e6c0b9cd34f4e9730b2a52a5965588bbe4))
+
 ## [2.0.6](https://github.com/sanity-io/pkg-utils/compare/v2.0.5...v2.0.6) (2023-01-02)
 
 ### Bug Fixes
