@@ -31,7 +31,7 @@ const pkgSchema = z.object({
           ),
           node: z.optional(
             z.object({
-              source: z.string(),
+              source: z.optional(z.string()),
               require: z.optional(z.string()),
               import: z.optional(z.string()),
             })

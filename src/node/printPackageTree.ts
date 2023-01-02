@@ -79,8 +79,9 @@ export function printPackageTree(ctx: BuildContext): void {
         }
 
         if (entry.node) {
-          exp.node = {source: fileInfo(entry.node.source)}
+          exp.node = {}
 
+          if (entry.node.source) exp.node.source = fileInfo(entry.node.source)
           if (entry.node.import) exp.node.import = fileInfo(entry.node.import)
           if (entry.node.require) exp.node.require = fileInfo(entry.node.require)
         } else {

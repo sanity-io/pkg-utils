@@ -20,7 +20,7 @@ export interface PackageJSON {
           import?: string
         }
         node?: {
-          source: string
+          source?: string
           require?: string
           import?: string
         }

@@ -82,8 +82,8 @@ export async function resolveBuildContext(options: {
         exportEntry.require,
         exportEntry.browser?.import,
         exportEntry.browser?.require,
-        exportEntry.node?.import,
-        exportEntry.node?.require,
+        exportEntry.node?.source && exportEntry.node.import,
+        exportEntry.node?.source && exportEntry.node.require,
       ].filter(Boolean) as string[]
     })
     .map((p) => path.resolve(cwd, p))

@@ -23,7 +23,7 @@ export interface PkgExport {
   //   default?: string
   // }
   node?: {
-    source: string
+    source?: string
     import?: string
     require?: string
   }
