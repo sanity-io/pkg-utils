@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import {PkgExport, PkgFormat, PkgRuntime, BuildContext} from './core'
-import {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
+import {BuildTask, DtsTask, NodeReExportFromCJSTask, RollupTask, RollupTaskEntry} from './tasks'
 
 /** @internal */
 export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
@@ -151,6 +151,34 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         }
       }
     }
+  }
+
+  const nodeReexportCjsEntries: NodeReExportFromCJSTask['entries'] = []
+
+  // Parse tasks to re-export from CommonJS for Node.js
+  for (const exp of exports) {
+    if (
+      exp.node &&
+      !exp.node.source &&
+      exp.node.import &&
+      exp.node.require &&
+      (exp.node.import.endsWith('.cjs.js') || exp.node.import.endsWith('.cjs.mjs'))
+    ) {
+      const importId = path.join(pkg.name, exp._path)
+
+      nodeReexportCjsEntries.push({
+        importId,
+        import: exp.node.import,
+        require: exp.node.require,
+      })
+    }
+  }
+
+  if (nodeReexportCjsEntries.length) {
+    tasks.push({
+      type: 'node:reexport-cjs',
+      entries: nodeReexportCjsEntries,
+    })
   }
 
   return tasks
