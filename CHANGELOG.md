@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/sanity-io/pkg-utils/compare/v2.0.3...v2.0.4) (2023-01-02)
+
+### Bug Fixes
+
+- **deps:** update dependencies (non-major) ([a9bd709](https://github.com/sanity-io/pkg-utils/commit/a9bd709150f07d801509feac05c86cd98e790ad9))
+
 ## [2.0.3](https://github.com/sanity-io/pkg-utils/compare/v2.0.2...v2.0.3) (2022-12-23)
 
 ### Bug Fixes
