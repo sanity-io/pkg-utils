@@ -20,13 +20,13 @@
         "require": "./dist/index.browser.cjs",
         "import": "./dist/index.browser.js"
       },
-      "node": {
-        "import": "./node/index.js",
-        "require": "./dist/index.cjs"
-      },
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
+      "node": {
+        "import": "./node/index.js",
+        "require": "./node/index.cjs"
+      },
       "default": "./dist/index.js"
     },
     "./extra": {
@@ -36,13 +36,13 @@
         "require": "./dist/extra.browser.cjs",
         "import": "./dist/extra.browser.js"
       },
-      "node": {
-        "import": "./node/extra.js",
-        "require": "./dist/extra.cjs"
-      },
       "source": "./src/extra.ts",
       "import": "./dist/extra.js",
       "require": "./dist/extra.cjs",
+      "node": {
+        "import": "./node/extra.js",
+        "require": "./node/extra.cjs"
+      },
       "default": "./dist/extra.js"
     },
     "./package.json": "./package.json"
@@ -56,9 +56,10 @@
   },
   "files": [
     "dist",
-    "extra.js"
+    "node",
+    "src"
   ],
   "scripts": {
-    "build": "rimraf dist extra.js && pkg build --strict && pkg --strict"
+    "build": "rimraf dist && pkg build --strict && pkg --strict"
   }
 }

@@ -14,6 +14,10 @@
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
+      "node": {
+        "import": "./dist/node/index.cjs.js",
+        "require": "./dist/index.cjs"
+      },
       "default": "./dist/index.js"
     },
     "./plugin": {
@@ -21,6 +25,10 @@
       "source": "./src/plugin.ts",
       "import": "./dist/plugin.js",
       "require": "./dist/plugin.cjs",
+      "node": {
+        "import": "./dist/node/plugin.cjs.js",
+        "require": "./dist/plugin.cjs"
+      },
       "default": "./dist/plugin.js"
     },
     "./package.json": "./package.json"

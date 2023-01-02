@@ -1,5 +1,5 @@
-import * as lib from '../dist/index.cjs'
+import cjs from '../dist/index.cjs'
 
-export const format = `node:${lib.format}`
-export const path = `node:${lib.path}`
-export const runtime = `node:${lib.runtime}`
+export const format = cjs.format
+export const runtime = cjs.runtime
+export const path = 'node/index.js'
