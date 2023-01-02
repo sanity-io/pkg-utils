@@ -101,7 +101,12 @@ export function resolveRollupConfig(
     getBabelOutputPlugin({
       babelrc: false,
       plugins: ['@babel/plugin-proposal-object-rest-spread'],
-      presets: [['@babel/preset-env', {targets: pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY}]],
+      presets: [
+        [
+          '@babel/preset-env',
+          {targets: pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY, modules: false},
+        ],
+      ],
     }),
     minify &&
       terser({
