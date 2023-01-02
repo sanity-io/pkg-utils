@@ -12,7 +12,13 @@ export async function loadPkgWithReporting(options: {
   const {cwd, logger} = options
 
   try {
-    return await loadPkg({cwd})
+    const pkg = await loadPkg({cwd})
+
+    if (pkg.type === undefined) {
+      logger.warn('no "type" field in package.json, defaulting to "commonjs"')
+    }
+
+    return pkg
   } catch (err) {
     if (err instanceof ZodError) {
       for (const issue of err.issues) {

@@ -1,6 +1,6 @@
 import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
-  legacyExports: true,
+  legacyExports: false,
   tsconfig: 'tsconfig.dist.json',
 })

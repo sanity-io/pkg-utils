@@ -7,7 +7,7 @@ export function validateExports(
   options: {extMap: PkgExtMap; pkg: PackageJSON}
 ): string[] {
   const {extMap, pkg} = options
-  const ext = extMap[pkg.type]
+  const ext = extMap[pkg.type || 'commonjs']
 
   const errors: string[] = []
 
