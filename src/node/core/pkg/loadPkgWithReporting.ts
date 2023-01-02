@@ -30,7 +30,10 @@ export async function loadPkgWithReporting(options: {
               `(received ${chalk.magenta(issue.received)})`,
             ].join('')
           )
+          continue
         }
+
+        logger.error(issue)
       }
     } else {
       logger.error(err)
