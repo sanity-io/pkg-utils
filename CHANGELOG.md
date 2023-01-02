@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.6](https://github.com/sanity-io/pkg-utils/compare/v2.0.5...v2.0.6) (2023-01-02)
+
+### Bug Fixes
+
+- allow `dynamicImportInCjs` in rollup v3 ([#28](https://github.com/sanity-io/pkg-utils/issues/28)) ([a0d73d6](https://github.com/sanity-io/pkg-utils/commit/a0d73d6590b8b2654aba1f4a55343c9fd20dd95e))
+- disable transitive imports hoisting ([#29](https://github.com/sanity-io/pkg-utils/issues/29)) ([ad1f22a](https://github.com/sanity-io/pkg-utils/commit/ad1f22a2416792f2d05151faa6f81e2eea0c60e4))
+
 ## [2.0.5](https://github.com/sanity-io/pkg-utils/compare/v2.0.4...v2.0.5) (2023-01-02)
 
 ### Bug Fixes
