@@ -23,7 +23,7 @@ export function resolveRollupConfig(
 ): RollupConfig {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, extMap, external, distPath, logger, pkg, ts} = ctx
-  const outputExt = extMap[pkg.type][format]
+  const outputExt = extMap[pkg.type || 'commonjs'][format]
   const minify = config?.minify ?? false
   const outDir = path.relative(cwd, distPath)
 
