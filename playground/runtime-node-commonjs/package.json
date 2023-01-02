@@ -1,16 +1,18 @@
 {
   "private": true,
-  "name": "runtime-node",
+  "type": "commonjs",
+  "name": "runtime-node-commonjs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "main": "node index.js"
+    "test": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "dummy-commonjs": "workspace:*"
+    "dummy-commonjs": "workspace:*",
+    "dummy-module": "workspace:*"
   }
 }

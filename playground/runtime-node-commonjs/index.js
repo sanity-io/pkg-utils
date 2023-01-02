@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-console */
 
-const mod = require('dummy-commonjs')
+const index = require('dummy-module')
+const extra = require('dummy-module/extra')
 
-console.log('mod', mod)
+console.log('index', index)
+console.log('extra', extra)

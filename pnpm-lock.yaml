@@ -189,13 +189,17 @@ importers:
   playground/runtime-node-commonjs:
     specifiers:
       dummy-commonjs: workspace:*
+      dummy-module: workspace:*
     dependencies:
       dummy-commonjs: link:../dummy-commonjs
+      dummy-module: link:../dummy-module
 
   playground/runtime-node-module:
     specifiers:
+      dummy-commonjs: workspace:*
       dummy-module: workspace:*
     dependencies:
+      dummy-commonjs: link:../dummy-commonjs
       dummy-module: link:../dummy-module
 
   playground/runtime-vite:

@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "private": true,
   "name": "dummy-commonjs",
   "version": "1.0.0",
@@ -19,6 +20,10 @@
         "require": "./dist/index.browser.js",
         "import": "./dist/index.browser.mjs"
       },
+      "node": {
+        "import": "./node/index.mjs",
+        "require": "./dist/index.js"
+      },
       "source": "./src/index.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
@@ -30,6 +35,10 @@
         "source": "./src/extra.ts",
         "require": "./dist/extra.browser.js",
         "import": "./dist/extra.browser.mjs"
+      },
+      "node": {
+        "import": "./node/extra.mjs",
+        "require": "./dist/extra.js"
       },
       "source": "./src/extra.ts",
       "import": "./dist/extra.mjs",

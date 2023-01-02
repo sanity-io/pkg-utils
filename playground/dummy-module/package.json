@@ -20,6 +20,10 @@
         "require": "./dist/index.browser.cjs",
         "import": "./dist/index.browser.js"
       },
+      "node": {
+        "import": "./node/index.js",
+        "require": "./dist/index.cjs"
+      },
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
@@ -31,6 +35,10 @@
         "source": "./src/extra.ts",
         "require": "./dist/extra.browser.cjs",
         "import": "./dist/extra.browser.js"
+      },
+      "node": {
+        "import": "./node/extra.js",
+        "require": "./dist/extra.cjs"
       },
       "source": "./src/extra.ts",
       "import": "./dist/extra.js",
