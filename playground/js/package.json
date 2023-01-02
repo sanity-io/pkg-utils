@@ -8,6 +8,7 @@
   "module": "./dist/index.mjs",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "rimraf dist && pkg build --strict && pkg --strict"
+    "build": "run-s clean && pkg build --strict && pkg --strict",
+    "clean": "rimraf dist"
   }
 }

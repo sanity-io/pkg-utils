@@ -19,6 +19,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "rimraf lib && pkg build --strict --tsconfig tsconfig.lib.json && pkg --strict --tsconfig tsconfig.lib.json"
+    "build": "run-s clean && pkg build --strict --tsconfig tsconfig.lib.json && pkg --strict --tsconfig tsconfig.lib.json",
+    "clean": "rimraf lib"
   }
 }

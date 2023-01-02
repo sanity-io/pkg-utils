@@ -43,14 +43,15 @@
     "build:pkg": "node --loader esbuild-register/loader -r esbuild-register scripts/build",
     "check:pkg": "node --loader esbuild-register/loader -r esbuild-register scripts/check",
     "check:types": "tsc --build",
-    "clean": "rimraf dist test/env/__tmp__",
+    "clean": "rimraf dist",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
     "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
+    "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
-    "test": "vitest run",
+    "test": "run-s playground:clean && rimraf test/env/__tmp__ && vitest run",
     "watch": "node --loader esbuild-register/loader -r esbuild-register scripts/watch"
   },
   "dependencies": {

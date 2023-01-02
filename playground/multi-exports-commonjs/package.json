@@ -33,6 +33,7 @@
     }
   },
   "scripts": {
-    "build": "rimraf dist plugin.js && pkg build --strict && pkg --strict"
+    "build": "run-s clean && pkg build --strict && pkg --strict",
+    "clean": "rimraf dist plugin.js"
   }
 }

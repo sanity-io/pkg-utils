@@ -5,7 +5,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "run-s && tsc && vite build",
+    "clean": "rimraf dist node_modules/.vite",
     "preview": "vite preview"
   },
   "dependencies": {

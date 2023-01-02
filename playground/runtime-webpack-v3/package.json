@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "build": "run-s dist && webpack",
+    "clean": "rimraf dist"
   },
   "devDependencies": {
     "dummy-module": "workspace:*",
