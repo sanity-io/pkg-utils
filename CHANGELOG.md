@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/sanity-io/pkg-utils/compare/v2.1.0...v2.1.1) (2023-01-04)
+
+### Bug Fixes
+
+- remove @babel/plugin-proposal-object-rest-spread ([#31](https://github.com/sanity-io/pkg-utils/issues/31)) ([44b8aad](https://github.com/sanity-io/pkg-utils/commit/44b8aad0d60198247360a537b3cd1b26bf5a7a1f))
+
 ## [2.1.0](https://github.com/sanity-io/pkg-utils/compare/v2.0.7...v2.1.0) (2023-01-02)
 
 ### Features
