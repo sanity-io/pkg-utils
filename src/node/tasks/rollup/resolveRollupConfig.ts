@@ -100,6 +100,7 @@ export function resolveRollupConfig(
     }),
     getBabelOutputPlugin({
       babelrc: false,
+      plugins: config?.babel?.plugins,
       presets: [
         [
           '@babel/preset-env',

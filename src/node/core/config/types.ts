@@ -1,3 +1,4 @@
+import {type PluginItem as BabelPluginItem} from '@babel/core'
 import {type Plugin as RollupPlugin} from 'rollup'
 
 // re-export
@@ -65,6 +66,10 @@ export interface TSDocCustomTag {
 
 /** @public */
 export interface PkgConfigOptions {
+  /** @alpha */
+  babel?: {
+    plugins?: BabelPluginItem[] | null | undefined
+  }
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>
