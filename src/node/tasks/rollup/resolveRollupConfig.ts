@@ -100,7 +100,7 @@ export function resolveRollupConfig(
     }),
     getBabelOutputPlugin({
       babelrc: false,
-      plugins: ['@babel/plugin-proposal-object-rest-spread'],
+      plugins: config?.babel?.plugins,
       presets: [
         [
           '@babel/preset-env',
