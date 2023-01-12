@@ -13,5 +13,9 @@ export async function loadPkg(options: {cwd: string}): Promise<PackageJSON> {
 
   const buf = await fs.readFile(pkgPath)
 
-  return validatePkg(JSON.parse(buf.toString()))
+  const raw = JSON.parse(buf.toString())
+
+  validatePkg(raw)
+
+  return raw
 }
