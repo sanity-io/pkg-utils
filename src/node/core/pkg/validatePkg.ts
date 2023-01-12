@@ -22,6 +22,7 @@ const pkgSchema = z.object({
         z.object({
           types: z.optional(z.string()),
           source: z.string(),
+          require: z.optional(z.string()),
           browser: z.optional(
             z.object({
               source: z.string(),
@@ -36,7 +37,6 @@ const pkgSchema = z.object({
               import: z.optional(z.string()),
             })
           ),
-          require: z.optional(z.string()),
           import: z.optional(z.string()),
           default: z.string(),
         }),
