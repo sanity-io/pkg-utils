@@ -15,9 +15,6 @@ export async function loadPkgWithReporting(options: {
   try {
     const pkg = await loadPkg({cwd})
 
-    if (pkg.type === undefined) {
-      logger.warn('no "type" field in package.json, defaulting to "commonjs"')
-
     // validate exports
     if (pkg.exports) {
       const _exports = Object.entries(pkg.exports)
