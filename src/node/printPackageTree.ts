@@ -31,7 +31,11 @@ export function printPackageTree(ctx: BuildContext): void {
   logger.log(`${chalk.blue(pkg.name)}@${chalk.green(pkg.version)}`)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tree: Record<string, unknown> = {type: chalk.yellow(pkg.type)}
+  const tree: Record<string, unknown> = {}
+
+  if (pkg.type) {
+    tree.type = chalk.yellow(pkg.type)
+  }
 
   if (pkg.bin) {
     tree.bin = Object.fromEntries(
@@ -57,9 +61,9 @@ export function printPackageTree(ctx: BuildContext): void {
           types: undefined,
           source: fileInfo(entry.source),
           browser: undefined,
+          require: undefined,
           node: undefined,
           import: undefined,
-          require: undefined,
           default: fileInfo(entry.default),
         }
 
@@ -78,6 +82,12 @@ export function printPackageTree(ctx: BuildContext): void {
           delete exp.browser
         }
 
+        if (entry.require) {
+          exp.require = fileInfo(entry.require)
+        } else {
+          delete exp.require
+        }
+
         if (entry.node) {
           exp.node = {}
 
@@ -92,12 +102,6 @@ export function printPackageTree(ctx: BuildContext): void {
           exp.import = fileInfo(entry.import)
         } else {
           delete exp.import
-        }
-
-        if (entry.require) {
-          exp.require = fileInfo(entry.require)
-        } else {
-          delete exp.require
         }
 
         return [chalk.cyan(path.join(pkg.name, exportPath)), exp]
