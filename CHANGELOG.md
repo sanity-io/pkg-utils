@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/sanity-io/pkg-utils/compare/v2.2.0...v2.2.1) (2023-01-13)
+
+### Bug Fixes
+
+- re-export default export ([da20199](https://github.com/sanity-io/pkg-utils/commit/da20199e437e841caf7a07bf886e48558e115fbf))
+
 ## [2.2.0](https://github.com/sanity-io/pkg-utils/compare/v2.1.1...v2.2.0) (2023-01-12)
 
 ### Features
