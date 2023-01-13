@@ -51,13 +51,40 @@ async function exec(ctx: BuildContext, task: NodeReExportFromCJSTask) {
       relativeImport = relativeImport.slice(2)
     }
 
-    const code = [
-      `import cjs from '${relativeImport}';`,
-      '',
-      ...Object.keys(mod).map((k) => `export const ${k} = cjs.${k};`),
-      '',
-    ].join('\n')
+    const code = compileESMWrapper(mod, relativeImport)
 
     await writeFile(targetPath, code, 'utf8')
   }
+}
+
+function compileESMWrapper(mod: any, relativeImport: string) {
+  const keys = Object.keys(mod).filter((k) => k !== '__esModule')
+
+  if (mod.__esModule) {
+    let code = `import cjs from '${relativeImport}';\n`
+
+    if (keys.length) {
+      code += `\n`
+      code += keys
+        .filter((k) => k !== 'default')
+        .map((k) => `export const ${k} = cjs.${k};\n`)
+        .join('')
+    }
+
+    code += `\n`
+    code += `export default cjs.default;\n`
+
+    return code
+  }
+
+  if (keys.length === 0) {
+    return `export {}\n`
+  }
+
+  let code = `import cjs from '${relativeImport}';\n`
+
+  code += `\n`
+  code += keys.map((k) => `export const ${k} = cjs.${k};\n`).join('')
+
+  return code
 }
