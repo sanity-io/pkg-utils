@@ -48,6 +48,7 @@
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown .",
     "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
+    "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
