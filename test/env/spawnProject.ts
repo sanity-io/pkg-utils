@@ -2,16 +2,13 @@
 
 import fs from 'fs/promises'
 import path from 'path'
-import {promisify} from 'util'
 import cpx from 'cpx'
 import mkdirp from 'mkdirp'
-import _rimraf from 'rimraf'
+import rimraf from 'rimraf'
 import {v4 as uuid} from 'uuid'
 import {exec} from './exec'
 import {ExecError} from './ExecError'
 import {stripColor} from './stripColor'
-
-const rimraf = promisify(_rimraf)
 
 async function tmpWorkspace() {
   const key = uuid()
