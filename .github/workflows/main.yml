@@ -25,6 +25,7 @@ jobs:
           cache: pnpm
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
+      - run: pnpm exec ls-engines
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm test
