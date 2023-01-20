@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.2](https://github.com/sanity-io/pkg-utils/compare/v2.2.1...v2.2.2) (2023-01-20)
+
+### Bug Fixes
+
+- **deps:** update dependency mkdirp to v2 ([#49](https://github.com/sanity-io/pkg-utils/issues/49)) ([5dd3be2](https://github.com/sanity-io/pkg-utils/commit/5dd3be2c03cb4aa5ef139300ca35c7122271e5cc))
+
 ## [2.2.1](https://github.com/sanity-io/pkg-utils/compare/v2.2.0...v2.2.1) (2023-01-13)
 
 ### Bug Fixes
