@@ -1,14 +1,11 @@
 import path from 'path'
-import {promisify} from 'util'
 import {ExtractorMessage} from '@microsoft/api-extractor'
-import rimrafCallback from 'rimraf'
+import rimraf from 'rimraf'
 import {BuildContext} from '../../core'
 import {buildTypes} from './buildTypes'
 import {DtsError} from './DtsError'
 import {extractTypes} from './extractTypes'
 import {DtsResult, DtsTask, DtsWatchTask} from './types'
-
-const rimraf = promisify(rimrafCallback)
 
 /**
  * - Build type definitions to a temporary directory using TypeScript compiler.
