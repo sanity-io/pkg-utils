@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.3](https://github.com/sanity-io/pkg-utils/compare/v2.2.2...v2.2.3) (2023-01-20)
+
+### Bug Fixes
+
+- **deps:** update dependency rimraf to v4 ([#48](https://github.com/sanity-io/pkg-utils/issues/48)) ([0e18e4f](https://github.com/sanity-io/pkg-utils/commit/0e18e4fbd559c5456a5efcf92f29c02c5508595b))
+
 ## [2.2.2](https://github.com/sanity-io/pkg-utils/compare/v2.2.1...v2.2.2) (2023-01-20)
 
 ### Bug Fixes
