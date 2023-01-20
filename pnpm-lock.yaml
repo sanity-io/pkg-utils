@@ -3579,7 +3579,7 @@ packages:
       devalue: 4.2.2
       diff: 5.1.0
       es-module-lexer: 1.1.0
-      estree-walker: 3.0.2
+      estree-walker: 3.0.3
       execa: 6.1.0
       fast-glob: 3.2.12
       github-slugger: 2.0.0
@@ -5638,8 +5638,10 @@ packages:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
     dev: false
 
-  /estree-walker/3.0.2:
-    resolution: {integrity: sha512-C03BvXCQIH/po+PNPONx/zSM9ziPr9weX8xNhYb/IJtdJ9z+L4z9VKPTB+UTHdmhnIopA2kc419ueyVyHVktwA==}
+  /estree-walker/3.0.3:
+    resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
+    dependencies:
+      '@types/estree': 1.0.0
     dev: false
 
   /esutils/2.0.3:
