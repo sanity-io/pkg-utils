@@ -12,15 +12,23 @@
     ".": {
       "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
-      "import": "./dist/index.esm.js",
       "require": "./dist/index.js",
+      "node": {
+        "import": "./dist/index.cjs.mjs",
+        "require": "./dist/index.js"
+      },
+      "import": "./dist/index.esm.js",
       "default": "./dist/index.esm.js"
     },
     "./plugin": {
       "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
-      "import": "./dist/plugin.esm.js",
       "require": "./dist/plugin.js",
+      "node": {
+        "import": "./dist/plugin.cjs.mjs",
+        "require": "./dist/plugin.js"
+      },
+      "import": "./dist/plugin.esm.js",
       "default": "./dist/plugin.esm.js"
     },
     "./package.json": "./package.json"

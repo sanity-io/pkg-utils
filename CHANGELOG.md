@@ -5,6 +5,25 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/sanity-io/pkg-utils/compare/v2.2.0...v2.2.1) (2023-01-13)
+
+### Bug Fixes
+
+- re-export default export ([da20199](https://github.com/sanity-io/pkg-utils/commit/da20199e437e841caf7a07bf886e48558e115fbf))
+
+## [2.2.0](https://github.com/sanity-io/pkg-utils/compare/v2.1.1...v2.2.0) (2023-01-12)
+
+### Features
+
+- validate order of export properties ([ddbd7be](https://github.com/sanity-io/pkg-utils/commit/ddbd7bede64593c8cef76f569dcf6c86186e70c5))
+
+### Bug Fixes
+
+- **build:** sort export map ([8b9afef](https://github.com/sanity-io/pkg-utils/commit/8b9afef8be1d66c2cbf5b1ac3bc4743d325504b4))
+- keep original order of export properties ([d1f3920](https://github.com/sanity-io/pkg-utils/commit/d1f3920cea4e78750c4a7155bb43fee07ec425ec))
+- order export properties ([4a04ad6](https://github.com/sanity-io/pkg-utils/commit/4a04ad6f818907a9ec391542ff2a293a7385b52b))
+- remove warning ([e905d3c](https://github.com/sanity-io/pkg-utils/commit/e905d3c8a50887f26100cd9277d8fb5377967196))
+
 ## [2.1.1](https://github.com/sanity-io/pkg-utils/compare/v2.1.0...v2.1.1) (2023-01-04)
 
 ### Bug Fixes

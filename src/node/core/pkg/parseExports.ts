@@ -22,8 +22,8 @@ export function parseExports(options: {
       require: pkg.main && pkg.browser[pkg.main],
       import: pkg.module && pkg.browser[pkg.module],
     },
-    import: pkg.module,
     require: pkg.main,
+    import: pkg.module,
     default: pkg.module || pkg.main || '',
   }
 

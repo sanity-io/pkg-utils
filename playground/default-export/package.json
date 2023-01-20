@@ -1,17 +1,15 @@
 {
   "private": true,
   "type": "module",
-  "name": "ts",
-  "version": "0.0.0-development",
+  "name": "default-export",
+  "version": "1.0.0",
   "license": "MIT",
-  "types": "./dist/index.d.ts",
-  "source": "./src/index.ts",
+  "source": "./src/index.js",
   "module": "./dist/index.js",
   "main": "./dist/index.cjs",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "source": "./src/index.ts",
+      "source": "./src/index.js",
       "require": "./dist/index.cjs",
       "node": {
         "import": "./dist/index.cjs.js",

@@ -15,34 +15,34 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
       "browser": {
         "source": "./src/index.ts",
         "require": "./dist/index.browser.cjs",
         "import": "./dist/index.browser.js"
       },
-      "source": "./src/index.ts",
-      "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "node": {
         "import": "./node/index.js",
         "require": "./node/index.cjs"
       },
+      "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./extra": {
       "types": "./dist/extra.d.ts",
+      "source": "./src/extra.ts",
       "browser": {
         "source": "./src/extra.ts",
         "require": "./dist/extra.browser.cjs",
         "import": "./dist/extra.browser.js"
       },
-      "source": "./src/extra.ts",
-      "import": "./dist/extra.js",
       "require": "./dist/extra.cjs",
       "node": {
         "import": "./node/extra.js",
         "require": "./node/extra.cjs"
       },
+      "import": "./dist/extra.js",
       "default": "./dist/extra.js"
     },
     "./package.json": "./package.json"
