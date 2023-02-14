@@ -172,17 +172,17 @@ importers:
 
   playground/runtime-astro:
     specifiers:
-      astro: ^2.0.8
+      astro: ^2.0.11
       dummy-commonjs: workspace:*
       dummy-module: workspace:*
     dependencies:
-      astro: 2.0.8
+      astro: 2.0.11
       dummy-commonjs: link:../dummy-commonjs
       dummy-module: link:../dummy-module
 
   playground/runtime-next-js:
     specifiers:
-      '@types/react': ^18.0.27
+      '@types/react': ^18.0.28
       dummy-module: workspace:*
       next: ^13.1.6
       react: ^18.2.0
@@ -193,7 +193,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
-      '@types/react': 18.0.27
+      '@types/react': 18.0.28
 
   playground/runtime-node-commonjs:
     specifiers:
@@ -270,13 +270,13 @@ packages:
       vscode-uri: 3.0.7
     dev: false
 
-  /@astrojs/markdown-remark/2.0.1_astro@2.0.8:
+  /@astrojs/markdown-remark/2.0.1_astro@2.0.11:
     resolution: {integrity: sha512-xQF1rXGJN18m+zZucwRRtmNehuhPMMhZhi6HWKrtpEAKnHSPk8lqf1GXgKH7/Sypglu8ivdECZ+EGs6kOYVasQ==}
     peerDependencies:
       astro: ^2.0.2
     dependencies:
       '@astrojs/prism': 2.0.0
-      astro: 2.0.8
+      astro: 2.0.11
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.1
       rehype-raw: 6.1.1
@@ -2925,8 +2925,8 @@ packages:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: true
 
-  /@types/react/18.0.27:
-    resolution: {integrity: sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==}
+  /@types/react/18.0.28:
+    resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -3483,14 +3483,14 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /astro/2.0.8:
-    resolution: {integrity: sha512-Rbp/6MfxzSVp8qJXjWWja555ZxdqS7Nk/IYg90VKvLNbDsnnBobZZ6vJp21T2e/my4sqJ6PZIOPVnxXr7OeQLQ==}
+  /astro/2.0.11:
+    resolution: {integrity: sha512-dXBuHE1ZYfafHyjhe7ZUkcZzGGInWrLCMeHAML//+mdySr/htDsiMo8DN25Ld5siKClsCvyXgxitu651wSWcyw==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 1.1.0
       '@astrojs/language-server': 0.28.3
-      '@astrojs/markdown-remark': 2.0.1_astro@2.0.8
+      '@astrojs/markdown-remark': 2.0.1_astro@2.0.11
       '@astrojs/telemetry': 2.0.0
       '@astrojs/webapi': 2.0.0
       '@babel/core': 7.20.12
@@ -3539,7 +3539,7 @@ packages:
       vite: 4.1.1
       vitefu: 0.2.4_vite@4.1.1
       yargs-parser: 21.1.1
-      zod: 3.20.2
+      zod: 3.20.6
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -11471,10 +11471,6 @@ packages:
       validator: 13.7.0
     optionalDependencies:
       commander: 9.5.0
-    dev: false
-
-  /zod/3.20.2:
-    resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
     dev: false
 
   /zod/3.20.6:
