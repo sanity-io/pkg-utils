@@ -2,21 +2,54 @@ name: CI & Release
 
 on:
   push:
+    branches:
+      - alpha
+      - beta
+      - next
   pull_request:
     branches:
       - alpha
       - beta
       - next
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
+  build:
+    runs-on: ${{ matrix.platform }}
+    name: Lint & Build
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
+        with:
+          cache: pnpm
+          node-version: lts/*
+      - run: pnpm install
+      - run: pnpm lint
+      - run: pnpm build
+
   test:
+    needs: build
     runs-on: ${{ matrix.platform }}
     name: Node.js ${{ matrix.node-version }} / ${{ matrix.platform }}
     strategy:
+      # A test failing on windows doesn't mean it'll fail on macos. It's useful to let all tests run to its completion to get the full picture
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest]
-        node-version: [lts/*, current]
+        # Run the testing suite on each major OS with the latest LTS release of Node.js
+        platform: [macos-latest, ubuntu-latest, window-latest]
+        node-version: [lts/*]
+        # It makes sense to also test the oldest, and latest, versions of Node.js, on ubuntu-only since it's the fastest CI runner
+        include:
+          - platform: ubuntu-latest
+            # Test the oldest LTS release of Node that's still receiving bugfixes and security patches, versions older than that have reached End-of-Life
+            node-version: lts/-2
+          - platform: ubuntu-latest
+            # Test the actively developed version that will become the latest LTS release next October
+            node-version: current
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
       - uses: pnpm/action-setup@v2
@@ -25,7 +58,6 @@ jobs:
           cache: pnpm
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
-      - run: pnpm lint
       - run: pnpm build
       - run: pnpm test
 
