@@ -32,7 +32,7 @@ jobs:
       - run: pnpm install
       - run: pnpm lint
       - run: pnpm build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
         name: Cache build output
         with:
           name: build-output
@@ -73,7 +73,7 @@ jobs:
           cache: pnpm
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3
         name: Restore build output
         with:
           name: build-output
