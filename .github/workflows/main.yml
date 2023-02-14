@@ -36,8 +36,9 @@ jobs:
         name: Cache build output
         with:
           name: build-output
-          path: dist/
-
+          path: |
+            bin/
+            dist/
   test:
     needs: build
     runs-on: ${{ matrix.platform }}
