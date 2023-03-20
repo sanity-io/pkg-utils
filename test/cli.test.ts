@@ -112,6 +112,35 @@ test.skipIf(isWindows)('should build `ts` package', async () => {
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `ts-node16` package', async () => {
+  const project = await spawnProject('ts-node16')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
+
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
+// @TODO enable test once @microsoft/api-extractor supports TS 5 and the `--moduleResolution bundler` option
+test.skip('should build `ts-bundler` package', async () => {
+  const project = await spawnProject('ts-bundler')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
+
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await spawnProject('dummy-module')
