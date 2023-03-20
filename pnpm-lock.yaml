@@ -215,13 +215,13 @@ importers:
     specifiers:
       dummy-commonjs: workspace:*
       dummy-module: workspace:*
-      typescript: ^4.9.5
+      typescript: ^5.0.2
       vite: ^4.1.4
     dependencies:
       dummy-commonjs: link:../dummy-commonjs
       dummy-module: link:../dummy-module
     devDependencies:
-      typescript: 4.9.5
+      typescript: 5.0.2
       vite: 4.1.4
 
   playground/runtime-webpack-v3:
@@ -10819,6 +10819,12 @@ packages:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+
+  /typescript/5.0.2:
+    resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
+    engines: {node: '>=12.20'}
+    hasBin: true
+    dev: true
 
   /ufo/1.1.1:
     resolution: {integrity: sha512-MvlCc4GHrmZdAllBc0iUDowff36Q9Ndw/UzqmEKyrfSzokTd9ZCy1i+IIk5hrYKkjoYVQyNbrw7/F8XJ2rEwTg==}
