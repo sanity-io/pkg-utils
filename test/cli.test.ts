@@ -126,8 +126,7 @@ test.skipIf(isWindows)('should build `ts-node16` package', async () => {
   await project.remove()
 })
 
-// @TODO enable test once @microsoft/api-extractor supports TS 5 and the `--moduleResolution bundler` option
-test.skip('should build `ts-bundler` package', async () => {
+test.skipIf(isWindows)('should build `ts-bundler` package', async () => {
   const project = await spawnProject('ts-bundler')
 
   await project.install()
