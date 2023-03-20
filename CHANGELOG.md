@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.11](https://github.com/sanity-io/pkg-utils/compare/v2.2.10...v2.2.11) (2023-03-20)
+
+### Bug Fixes
+
+- allow TS v5 ([0592e1c](https://github.com/sanity-io/pkg-utils/commit/0592e1c5b5f9a1a54ed300ec9005658bb049158e))
+- **deps:** update babel monorepo to ^7.21.3 ([#86](https://github.com/sanity-io/pkg-utils/issues/86)) ([eab8c08](https://github.com/sanity-io/pkg-utils/commit/eab8c08a8cfba4ca8e0b9be97d108f2753d9855c))
+
 ## [2.2.10](https://github.com/sanity-io/pkg-utils/compare/v2.2.9...v2.2.10) (2023-03-13)
 
 ### Bug Fixes
