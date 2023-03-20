@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.13](https://github.com/sanity-io/pkg-utils/compare/v2.2.12...v2.2.13) (2023-03-20)
+
+### Bug Fixes
+
+- globs not working on windows ([#85](https://github.com/sanity-io/pkg-utils/issues/85)) ([8bc500f](https://github.com/sanity-io/pkg-utils/commit/8bc500f6a0558631905fe013dab3b8a4edbc6502))
+
 ## [2.2.12](https://github.com/sanity-io/pkg-utils/compare/v2.2.11...v2.2.12) (2023-03-20)
 
 ### Bug Fixes
