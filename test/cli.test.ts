@@ -2,7 +2,10 @@ import path from 'path'
 import {describe, expect, test} from 'vitest'
 import {spawnProject} from './env'
 
-test('should build `js` package', async () => {
+// @TODO make these test suites work on Windows
+const isWindows = process.platform === 'win32'
+
+test.skipIf(isWindows)('should build `js` package', async () => {
   const project = await spawnProject('js')
 
   await project.install()
@@ -15,7 +18,7 @@ test('should build `js` package', async () => {
   await project.remove()
 })
 
-test('should build `dummy-module` package', async () => {
+test.skipIf(isWindows)('should build `dummy-module` package', async () => {
   const project = await spawnProject('dummy-module')
 
   await project.install()
@@ -51,7 +54,7 @@ test('should build `dummy-module` package', async () => {
   await project.remove()
 })
 
-test('should build `custom-dist` package', async () => {
+test.skipIf(isWindows)('should build `custom-dist` package', async () => {
   const project = await spawnProject('custom-dist')
 
   await project.install()
@@ -69,7 +72,7 @@ test('should build `custom-dist` package', async () => {
   await project.remove()
 })
 
-test('should build `multi-export` package', async () => {
+test.skipIf(isWindows)('should build `multi-export` package', async () => {
   const project = await spawnProject('multi-export')
 
   await project.install()
@@ -95,7 +98,7 @@ test('should build `multi-export` package', async () => {
   await project.remove()
 })
 
-test('should build `ts` package', async () => {
+test.skipIf(isWindows)('should build `ts` package', async () => {
   const project = await spawnProject('ts')
 
   await project.install()
