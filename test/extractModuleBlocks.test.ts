@@ -1,6 +1,9 @@
-import outdent from 'outdent'
+import {EOL} from 'node:os'
+import _outdent from 'outdent'
 import {expect, test} from 'vitest'
 import {extractModuleBlocks} from '../src/node/tasks/dts/extractModuleBlocks'
+
+const outdent = _outdent({newline: EOL})
 
 test('extract module block', () => {
   const blocks = extractModuleBlocks(
@@ -55,7 +58,8 @@ test('extract module block', () => {
 
   expect(blocks.length).toEqual(3)
 
-  expect(blocks[0]).toEqual(outdent`
+  expect(blocks[0]).toEqual(
+    outdent`
     declare module X {
       /**
        * @beta
@@ -63,7 +67,8 @@ test('extract module block', () => {
       interface A {
           a: string
       }
-    }`)
+    }`
+  )
 
   expect(blocks[1]).toEqual(outdent`
     /** @public */

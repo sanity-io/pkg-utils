@@ -48,9 +48,7 @@ jobs:
       fail-fast: false
       matrix:
         # Run the testing suite on each major OS with the latest LTS release of Node.js
-        # @TODO add windows when it works
-        # platform: [macos-latest, ubuntu-latest, window-latest]
-        platform: [macos-latest, ubuntu-latest]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [lts/*]
         # It makes sense to also test the oldest, and latest, versions of Node.js, on ubuntu-only since it's the fastest CI runner
         include:
