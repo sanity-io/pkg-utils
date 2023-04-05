@@ -66,10 +66,13 @@ jobs:
           git config --global core.eol lf
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
+        if: matrix.node-version != 'lts/-2'
       - uses: actions/setup-node@v3
         with:
-          cache: pnpm
+          cache: ${{ matrix.node-version == 'lts/-2' && 'npm' || 'pnpm' }}
           node-version: ${{ matrix.node-version }}
+      - run: npm install -g @pnpm/exe
+        if: matrix.node-version == 'lts/-2'
       - run: pnpm install
       - uses: actions/download-artifact@v3
         name: Restore build output
