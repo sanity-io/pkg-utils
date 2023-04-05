@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.14](https://github.com/sanity-io/pkg-utils/compare/v2.2.13...v2.2.14) (2023-04-05)
+
+### Bug Fixes
+
+- **deps:** update dependency @rollup/plugin-alias to v5 ([#116](https://github.com/sanity-io/pkg-utils/issues/116)) ([c31e1e9](https://github.com/sanity-io/pkg-utils/commit/c31e1e97a22a1e68bb998441ba0c3a44ae86225a))
+
 ## [2.2.13](https://github.com/sanity-io/pkg-utils/compare/v2.2.12...v2.2.13) (2023-03-20)
 
 ### Bug Fixes
