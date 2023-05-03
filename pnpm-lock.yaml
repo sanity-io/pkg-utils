@@ -22,7 +22,7 @@ importers:
       '@rollup/plugin-replace': ^5.0.2
       '@rollup/plugin-terser': ^0.4.0
       '@sanity/pkg-utils': workspace:*
-      '@sanity/semantic-release-preset': 4.1.0
+      '@sanity/semantic-release-preset': 4.1.1
       '@types/babel__core': ^7.20.0
       '@types/cpx': ^1.5.2
       '@types/find-config': ^1.0.1
@@ -109,7 +109,7 @@ importers:
       '@commitlint/cli': 17.5.1
       '@commitlint/config-conventional': 17.4.4
       '@sanity/pkg-utils': 'link:'
-      '@sanity/semantic-release-preset': 4.1.0_semantic-release@21.0.1
+      '@sanity/semantic-release-preset': 4.1.1_semantic-release@21.0.1
       '@types/babel__core': 7.20.0
       '@types/cpx': 1.5.2
       '@types/find-config': 1.0.1
@@ -2410,8 +2410,8 @@ packages:
       string-argv: 0.3.1
     dev: false
 
-  /@sanity/semantic-release-preset/4.1.0_semantic-release@21.0.1:
-    resolution: {integrity: sha512-ccByxKujVyANKsBOX8w13+3CAFKkoRAmtE9LwWVG77Ntb/v8TGTmD6ecqYU4F1k3UojCH/OP2Gj94irQa492vA==}
+  /@sanity/semantic-release-preset/4.1.1_semantic-release@21.0.1:
+    resolution: {integrity: sha512-U2+iKcCQbNWlG2gbmLqXCa+DY4KvDg6aKrzij+WNi5hjlBa4JLckRa/1AZJwxN7J+iEzwp7p8UdLgr/4UKjADQ==}
     engines: {node: '>=18'}
     peerDependencies:
       semantic-release: 20 || 21
@@ -5564,7 +5564,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
