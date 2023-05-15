@@ -6,7 +6,7 @@ import {
   ExtractorMessage,
   ExtractorResult,
 } from '@microsoft/api-extractor'
-import mkdirp from 'mkdirp'
+import {mkdirp} from 'mkdirp'
 import prettier from 'prettier'
 import {PkgConfigOptions, BuildFile} from '../../core'
 import {createApiExtractorConfig} from './createApiExtractorConfig'

@@ -3,7 +3,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import cpx from 'cpx'
-import mkdirp from 'mkdirp'
+import {mkdirp} from 'mkdirp'
 import rimraf from 'rimraf'
 import {v4 as uuid} from 'uuid'
 import {exec} from './exec'
