@@ -58,7 +58,7 @@ importers:
       pkg-up: ^3.1.0
       prettier: ^2.8.5
       pretty-bytes: ^5.6.0
-      recast: ^0.22.0
+      recast: ^0.23.0
       rimraf: ^4.4.0
       rollup: ^3.20.0
       rollup-plugin-esbuild: ^5.0.0
@@ -97,7 +97,7 @@ importers:
       pkg-up: 3.1.0
       prettier: 2.8.8
       pretty-bytes: 5.6.0
-      recast: 0.22.0
+      recast: 0.23.2
       rimraf: 4.4.1
       rollup: 3.21.6
       rollup-plugin-esbuild: 5.0.0_xacb5gh53sf5soxo6nqxnsbslu
@@ -3296,8 +3296,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /ast-types/0.15.2:
-    resolution: {integrity: sha512-c27loCv9QkZinsa5ProX751khO9DJl/AcB5c2KNtA6NRvHKS0PgLfcftz72KVq504vB0Gku5s2kUZzDBvQWvHg==}
+  /ast-types/0.16.1:
+    resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
     dependencies:
       tslib: 2.5.0
@@ -9174,12 +9174,12 @@ packages:
     dependencies:
       picomatch: 2.3.1
 
-  /recast/0.22.0:
-    resolution: {integrity: sha512-5AAx+mujtXijsEavc5lWXBPQqrM4+Dl5qNH96N2aNeuJFUzpiiToKPsxQD/zAIJHspz7zz0maX0PCtCTFVlixQ==}
+  /recast/0.23.2:
+    resolution: {integrity: sha512-Qv6cPfVZyMOtPszK6PgW70pUgm7gPlFitAPf0Q69rlOA0zLw2XdDcNmPbVGYicFGT9O8I7TZ/0ryJD+6COvIPw==}
     engines: {node: '>= 4'}
     dependencies:
       assert: 2.0.0
-      ast-types: 0.15.2
+      ast-types: 0.16.1
       esprima: 4.0.1
       source-map: 0.6.1
       tslib: 2.5.0
