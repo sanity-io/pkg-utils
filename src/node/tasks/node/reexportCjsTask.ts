@@ -1,7 +1,7 @@
 import {writeFile} from 'fs/promises'
 import path from 'path'
 import chalk from 'chalk'
-import mkdirp from 'mkdirp'
+import {mkdirp} from 'mkdirp'
 import {from} from 'rxjs'
 import {BuildContext} from '../../core'
 import {NodeReExportFromCJSTask, TaskHandler} from '../types'
