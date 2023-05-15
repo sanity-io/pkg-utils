@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.15](https://github.com/sanity-io/pkg-utils/compare/v2.2.14...v2.2.15) (2023-05-15)
+
+### Bug Fixes
+
+- **deps:** update dependencies (non-major) ([#125](https://github.com/sanity-io/pkg-utils/issues/125)) ([0bb4ebe](https://github.com/sanity-io/pkg-utils/commit/0bb4ebedf5f57347e0b6951d2a438bd1361a506a))
+- **deps:** update dependency @rollup/plugin-commonjs to v25 ([#129](https://github.com/sanity-io/pkg-utils/issues/129)) ([7de3c7f](https://github.com/sanity-io/pkg-utils/commit/7de3c7f884328674e80a07c6b5b776f604d66d38))
+- **deps:** update dependency mkdirp to v3 ([#126](https://github.com/sanity-io/pkg-utils/issues/126)) ([9a665b8](https://github.com/sanity-io/pkg-utils/commit/9a665b8c72b28972ed8dc0bcd0355446318f9910))
+- **deps:** update dependency rimraf to v5 ([#127](https://github.com/sanity-io/pkg-utils/issues/127)) ([2f6c946](https://github.com/sanity-io/pkg-utils/commit/2f6c9461316536c5ecdf064671606c36abdf8c18))
+
 ## [2.2.14](https://github.com/sanity-io/pkg-utils/compare/v2.2.13...v2.2.14) (2023-04-05)
 
 ### Bug Fixes
