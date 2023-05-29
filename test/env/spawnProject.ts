@@ -28,7 +28,7 @@ export function spawnProject(name: string): Promise<{
   install: () => Promise<{stdout: string; stderr: string}>
   pack: () => Promise<{path: string}>
   readFile: (filePath: string) => Promise<string>
-  remove: () => Promise<void>
+  remove: () => Promise<boolean>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   require: (id: string) => any
   run: (cmd: string) => Promise<{stdout: string; stderr: string}>
