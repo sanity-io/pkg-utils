@@ -19,7 +19,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "run-s clean && pkg build --strict --tsconfig tsconfig.dist.json && pkg --strict --tsconfig tsconfig.dist.json",
+    "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"
   },
   "devDependencies": {
