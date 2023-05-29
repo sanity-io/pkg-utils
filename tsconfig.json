@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.settings",
   "include": ["./*.cjs", "./*.ts", "./bin", "./package.json", "./scripts", "./src", "./test"],
+  "exclude": ["./test/env/__tmp__"],
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
