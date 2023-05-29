@@ -3,15 +3,15 @@ import {version} from '../../package.json'
 
 const cli = cac()
 
-// default commands checks package status
 cli
   .command('', 'Check')
+  .alias('check') // alias to align with the action name
   .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
-    const {checkAction: statusAction} = await import('./checkAction')
+    const {checkAction} = await import('./checkAction')
 
-    return statusAction(options)
+    return checkAction(options)
   })
 
 cli
