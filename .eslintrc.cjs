@@ -16,21 +16,12 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
   },
-  plugins: ['import', '@typescript-eslint', 'prettier'],
+  plugins: ['import', '@typescript-eslint', 'simple-import-sort', 'prettier'],
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'error',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
-    'import/order': [
-      'error',
-      {
-        alphabetize: {
-          caseInsensitive: true,
-          order: 'asc',
-        },
-      },
-    ],
     'no-console': 'error',
     'no-shadow': 'error',
     'no-warning-comments': ['warn', {location: 'start', terms: ['todo', '@todo', 'fixme']}],
@@ -45,6 +36,8 @@ module.exports = {
       {blankLine: 'always', prev: 'block-like', next: '*'},
       {blankLine: 'always', prev: '*', next: 'return'},
     ],
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
   },
 
   overrides: [
