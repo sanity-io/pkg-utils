@@ -1,14 +1,15 @@
-import fs from 'fs/promises'
-import path from 'path'
 import {
   Extractor,
   ExtractorConfig,
   ExtractorMessage,
   ExtractorResult,
 } from '@microsoft/api-extractor'
+import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
+import path from 'path'
 import prettier from 'prettier'
-import {PkgConfigOptions, BuildFile} from '../../core'
+
+import {BuildFile, PkgConfigOptions} from '../../core'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
 import {createTSDocConfig} from './createTSDocConfig'
 import {extractModuleBlocksFromTypes} from './extractModuleBlocks'

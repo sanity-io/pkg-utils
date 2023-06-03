@@ -1,8 +1,9 @@
+import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
-import chalk from 'chalk'
 import treeify from 'treeify'
-import {PkgExport, BuildContext} from './core'
+
+import {BuildContext, PkgExport} from './core'
 import {getFilesize} from './getFilesize'
 
 export function fileExists(file: string): boolean {

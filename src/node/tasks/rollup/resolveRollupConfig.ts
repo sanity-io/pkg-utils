@@ -1,4 +1,3 @@
-import path from 'path'
 import alias from '@rollup/plugin-alias'
 import {getBabelOutputPlugin} from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
@@ -6,8 +5,10 @@ import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
+import path from 'path'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
+
 import {BuildContext, DEFAULT_BROWSERSLIST_QUERY, resolveConfigProperty} from '../../core'
 import {RollupTask, RollupWatchTask} from '../types'
 

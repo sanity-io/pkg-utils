@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import pkgUp from 'pkg-up'
+
 import {PackageJSON} from './types'
 import {validatePkg} from './validatePkg'
 

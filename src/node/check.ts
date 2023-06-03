@@ -1,5 +1,6 @@
-import path from 'path'
 import esbuild, {BuildFailure} from 'esbuild'
+import path from 'path'
+
 import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
 import {createLogger} from './logger'
 import {fileExists, printPackageTree} from './printPackageTree'

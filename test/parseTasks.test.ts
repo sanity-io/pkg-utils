@@ -1,4 +1,5 @@
 import {expect, test, vi} from 'vitest'
+
 import {BuildContext, getPkgExtMap, PackageJSON, parseExports, resolveBuildTasks} from '../src/node'
 
 test('should parse tasks (type: module)', () => {

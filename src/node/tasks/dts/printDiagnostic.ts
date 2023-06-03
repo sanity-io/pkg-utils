@@ -1,6 +1,7 @@
-import path from 'path'
 import chalk from 'chalk'
+import path from 'path'
 import ts from 'typescript'
+
 import {Logger} from '../../logger'
 
 export function printDiagnostic(options: {

@@ -1,10 +1,11 @@
 import path from 'path'
 import {switchMap} from 'rxjs'
+
 import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveWatchTasks} from './resolveWatchTasks'
-import {WatchTask, TaskHandler, watchTaskHandlers} from './tasks'
+import {TaskHandler, WatchTask, watchTaskHandlers} from './tasks'
 import {watchConfigFiles} from './watchConfigFiles'
 
 /** @public */

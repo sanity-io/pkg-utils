@@ -1,7 +1,8 @@
-import path from 'path'
 import chalk from 'chalk'
+import path from 'path'
 import {rollup} from 'rollup'
 import {Observable} from 'rxjs'
+
 import {BuildContext} from '../../core'
 import {RollupTask, TaskHandler} from '../types'
 import {createConsoleSpy} from './consoleSpy'

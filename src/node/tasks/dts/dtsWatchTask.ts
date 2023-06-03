@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import {Observable} from 'rxjs'
+
 import {printExtractMessages} from '../../printExtractMessages'
 import {TaskHandler} from '../types'
 import {doExtract} from './doExtract'

@@ -46,7 +46,7 @@
     "clean": "rimraf dist",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
-    "format": "prettier --write --cache --ignore-unknown .",
+    "format": "prettier --write --cache --ignore-unknown . && eslint . --ext .cjs,.js,.ts,.tsx --fix --quiet",
     "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
     "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
@@ -130,7 +130,8 @@
   },
   "lint-staged": {
     "*": [
-      "prettier --write --cache --ignore-unknown"
+      "prettier --write --cache --ignore-unknown",
+      "eslint --ext .cjs,.js,.ts,.tsx --fix"
     ]
   },
   "repository": {

@@ -1,4 +1,5 @@
 import {expect, test} from 'vitest'
+
 import {findCommonDirPath} from './findCommonPath'
 
 test('should find common parent directory of paths', () => {

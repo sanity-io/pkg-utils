@@ -1,6 +1,7 @@
 import path from 'path'
 import {Observable} from 'rxjs'
 import {distinctUntilChanged, scan, startWith} from 'rxjs/operators'
+
 import {globFiles} from './globFiles'
 import {Logger} from './logger'
 import {watchFiles} from './watchFiles'

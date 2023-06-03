@@ -1,4 +1,4 @@
-import {type Plugin, definePlugin} from 'multi-export-commonjs'
+import {definePlugin, type Plugin} from 'multi-export-commonjs'
 
 /** @public */
 export function plugin(): Plugin {

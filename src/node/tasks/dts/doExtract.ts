@@ -1,6 +1,7 @@
-import path from 'path'
 import {ExtractorMessage} from '@microsoft/api-extractor'
+import path from 'path'
 import {rimraf} from 'rimraf'
+
 import {BuildContext} from '../../core'
 import {buildTypes} from './buildTypes'
 import {DtsError} from './DtsError'

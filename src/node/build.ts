@@ -3,7 +3,7 @@ import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveBuildTasks} from './resolveBuildTasks'
 import {createSpinner} from './spinner'
-import {BuildTask, TaskHandler, buildTaskHandlers} from './tasks'
+import {BuildTask, buildTaskHandlers, TaskHandler} from './tasks'
 
 /**
  * Build the distribution files of a npm package.

@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 
-import fs from 'fs/promises'
-import path from 'path'
 import cpx from 'cpx'
+import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
+import path from 'path'
 import {rimraf} from 'rimraf'
 import {v4 as uuid} from 'uuid'
+
 import {exec} from './exec'
 import {ExecError} from './ExecError'
 import {stripColor} from './stripColor'

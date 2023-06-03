@@ -1,15 +1,16 @@
 import path from 'path'
+
 import {
-  PkgConfigOptions,
-  PkgExports,
-  PkgRuntime,
   BuildContext,
   DEFAULT_BROWSERSLIST_QUERY,
   loadTSConfig,
   PackageJSON,
   parseExports,
-  resolveConfigProperty,
+  PkgConfigOptions,
+  PkgExports,
   PkgExtMap,
+  PkgRuntime,
+  resolveConfigProperty,
 } from './core'
 import {findCommonDirPath, pathContains} from './core/findCommonPath'
 import {Logger} from './logger'

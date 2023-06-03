@@ -1,5 +1,6 @@
 import {describe, expect, test} from 'vitest'
-import {PackageJSON, getPkgExtMap, parseExports} from '../src/node'
+
+import {getPkgExtMap, PackageJSON, parseExports} from '../src/node'
 
 describe('parseExports', () => {
   test('parse basic package.json', () => {

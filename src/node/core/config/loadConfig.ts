@@ -1,6 +1,7 @@
-import path from 'path'
 import {register} from 'esbuild-register/dist/node'
+import path from 'path'
 import pkgUp from 'pkg-up'
+
 import {findConfigFile} from './findConfigFile'
 import {PkgConfigOptions} from './types'
 

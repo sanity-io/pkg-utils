@@ -1,6 +1,8 @@
 import {EOL} from 'node:os'
+
 import _outdent from 'outdent'
 import {expect, test} from 'vitest'
+
 import {extractModuleBlocks} from '../src/node/tasks/dts/extractModuleBlocks'
 
 const outdent = _outdent({newline: EOL})

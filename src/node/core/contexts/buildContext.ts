@@ -1,6 +1,7 @@
 import ts from 'typescript'
+
 import {Logger} from '../../logger'
-import {PkgExports, PkgRuntime, PkgConfigOptions} from '../config'
+import {PkgConfigOptions, PkgExports, PkgRuntime} from '../config'
 import {PackageJSON, PkgExtMap} from '../pkg'
 
 /** @internal */

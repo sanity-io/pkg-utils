@@ -1,7 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import {PkgExport, PkgFormat, PkgRuntime, BuildContext} from './core'
-import {WatchTask, DtsWatchTask, RollupWatchTask, RollupTaskEntry} from './tasks'
+
+import {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
+import {DtsWatchTask, RollupTaskEntry, RollupWatchTask, WatchTask} from './tasks'
 
 /** @internal */
 export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {

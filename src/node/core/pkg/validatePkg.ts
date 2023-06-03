@@ -1,4 +1,5 @@
 import {z} from 'zod'
+
 import {PackageJSON} from './types'
 
 const pkgSchema = z.object({

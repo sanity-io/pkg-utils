@@ -1,5 +1,5 @@
-import path from 'path'
 import {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
+import path from 'path'
 
 export function createApiExtractorConfig(options: {
   distPath: string

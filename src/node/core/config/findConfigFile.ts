@@ -1,6 +1,6 @@
+import findConfig from 'find-config'
 import {stat} from 'fs/promises'
 import path from 'path'
-import findConfig from 'find-config'
 
 const CONFIG_FILE_NAMES = [
   'package.config.ts',
