@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.17](https://github.com/sanity-io/pkg-utils/compare/v2.2.16...v2.2.17) (2023-06-04)
+
+### Bug Fixes
+
+- add alias to `check` command ([28a85fd](https://github.com/sanity-io/pkg-utils/commit/28a85fdfb1d2e4ba7e2fb2698c8c8ad24a26b80f))
+- **deps:** update dependencies ([b6253d7](https://github.com/sanity-io/pkg-utils/commit/b6253d71f70342b75073d8d0f46214487c5c8ba1))
+- support latest maintained Node.js version ([2df5924](https://github.com/sanity-io/pkg-utils/commit/2df5924c35b7362b2fe2105a0fd1e3424d5d7b2f))
+
 ## [2.2.16](https://github.com/sanity-io/pkg-utils/compare/v2.2.15...v2.2.16) (2023-05-23)
 
 ### Bug Fixes
