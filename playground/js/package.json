@@ -1,12 +1,12 @@
 {
-  "private": true,
-  "type": "commonjs",
   "name": "js",
   "version": "1.0.0",
+  "private": true,
   "license": "MIT",
-  "source": "./src/index.js",
-  "module": "./dist/index.mjs",
+  "type": "commonjs",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "source": "./src/index.js",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"

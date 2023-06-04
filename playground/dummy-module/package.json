@@ -1,17 +1,9 @@
 {
-  "private": true,
-  "type": "module",
   "name": "dummy-module",
   "version": "1.0.0",
+  "private": true,
   "license": "MIT",
-  "types": "./dist/index.d.ts",
-  "source": "./src/index.ts",
-  "module": "./dist/index.js",
-  "main": "./dist/index.cjs",
-  "browser": {
-    "./dist/index.cjs": "./dist/index.browser.cjs",
-    "./dist/index.js": "./dist/index.browser.js"
-  },
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -47,6 +39,14 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "source": "./src/index.ts",
+  "browser": {
+    "./dist/index.cjs": "./dist/index.browser.cjs",
+    "./dist/index.js": "./dist/index.browser.js"
+  },
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "extra": [

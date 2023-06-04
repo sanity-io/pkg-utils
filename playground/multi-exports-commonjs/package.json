@@ -1,13 +1,9 @@
 {
-  "private": true,
-  "type": "commonjs",
   "name": "multi-export-commonjs",
   "version": "0.0.0-development",
+  "private": true,
   "license": "MIT",
-  "types": "./dist/index.d.ts",
-  "source": "./src/index.ts",
-  "module": "./dist/index.esm.js",
-  "main": "./dist/index.js",
+  "type": "commonjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -33,6 +29,10 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "plugin": [

@@ -1,16 +1,16 @@
 {
-  "private": true,
-  "type": "module",
   "name": "runtime-node-module",
   "version": "1.0.0",
+  "private": true,
   "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "dummy-commonjs": "workspace:*",
     "dummy-module": "workspace:*"

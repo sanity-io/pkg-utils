@@ -1,13 +1,9 @@
 {
-  "private": true,
-  "type": "module",
   "name": "ts",
   "version": "0.0.0-development",
+  "private": true,
   "license": "MIT",
-  "types": "./dist/index.d.ts",
-  "source": "./src/index.ts",
-  "module": "./dist/index.js",
-  "main": "./dist/index.cjs",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,6 +18,10 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"

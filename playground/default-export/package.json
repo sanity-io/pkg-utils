@@ -1,12 +1,9 @@
 {
-  "private": true,
-  "type": "module",
   "name": "default-export",
   "version": "1.0.0",
+  "private": true,
   "license": "MIT",
-  "source": "./src/index.js",
-  "module": "./dist/index.js",
-  "main": "./dist/index.cjs",
+  "type": "module",
   "exports": {
     ".": {
       "source": "./src/index.js",
@@ -20,6 +17,9 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "source": "./src/index.js",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"

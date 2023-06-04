@@ -1,17 +1,9 @@
 {
-  "type": "commonjs",
-  "private": true,
   "name": "dummy-commonjs",
   "version": "1.0.0",
+  "private": true,
   "license": "MIT",
-  "types": "./dist/index.d.ts",
-  "source": "./src/index.ts",
-  "module": "./dist/index.mjs",
-  "main": "./dist/index.js",
-  "browser": {
-    "./dist/index.js": "./dist/index.browser.js",
-    "./dist/index.mjs": "./dist/index.browser.mjs"
-  },
+  "type": "commonjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -47,6 +39,14 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "source": "./src/index.ts",
+  "browser": {
+    "./dist/index.js": "./dist/index.browser.js",
+    "./dist/index.mjs": "./dist/index.browser.mjs"
+  },
+  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "extra": [
