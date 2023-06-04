@@ -1,9 +1,6 @@
 {
-  "type": "module",
   "name": "@sanity/pkg-utils",
   "version": "2.2.16",
-  "author": "Sanity.io <hello@sanity.io>",
-  "license": "MIT",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -14,10 +11,17 @@
     "build",
     "bundling"
   ],
-  "source": "./src/node/index.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "homepage": "https://github.com/sanity-io/pkg-utils#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,6 +32,10 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "source": "./src/node/index.ts",
+  "types": "./dist/index.d.ts",
   "bin": {
     "pkg": "./bin/pkg-utils.cjs",
     "pkg-utils": "./bin/pkg-utils.cjs"
@@ -54,6 +62,62 @@
     "release": "semantic-release",
     "test": "run-s playground:clean && rimraf test/env/__tmp__ && vitest run",
     "watch": "node --loader esbuild-register/loader -r esbuild-register scripts/watch"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --cache --ignore-unknown",
+      "eslint --ext .cjs,.js,.ts,.tsx --fix"
+    ]
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "plugins": [
+      "prettier-plugin-packagejson"
+    ],
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "overrides": [
+      {
+        "files": [
+          "*.json5"
+        ],
+        "options": {
+          "quoteProps": "preserve",
+          "singleQuote": false
+        }
+      },
+      {
+        "files": [
+          "*.yml"
+        ],
+        "options": {
+          "singleQuote": false
+        }
+      }
+    ]
+  },
+  "release": {
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "main",
+      "next",
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ],
+    "extends": "@sanity/semantic-release-preset"
   },
   "dependencies": {
     "@babel/core": "^7.22.1",
@@ -126,77 +190,16 @@
   "peerDependencies": {
     "typescript": "^4.7 || ^5"
   },
+  "packageManager": "pnpm@8.6.0",
   "engines": {
     "node": ">=14.0.0"
-  },
-  "lint-staged": {
-    "*": [
-      "prettier --write --cache --ignore-unknown",
-      "eslint --ext .cjs,.js,.ts,.tsx --fix"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sanity-io/pkg-utils/issues"
-  },
-  "homepage": "https://github.com/sanity-io/pkg-utils#readme",
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   },
   "publishConfig": {
     "access": "public"
   },
-  "packageManager": "pnpm@8.6.0",
   "pnpm": {
     "overrides": {
       "@sanity/pkg-utils": "workspace:*"
     }
-  },
-  "prettier": {
-    "bracketSpacing": false,
-    "printWidth": 100,
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "overrides": [
-      {
-        "files": [
-          "*.json5"
-        ],
-        "options": {
-          "singleQuote": false,
-          "quoteProps": "preserve"
-        }
-      },
-      {
-        "files": [
-          "*.yml"
-        ],
-        "options": {
-          "singleQuote": false
-        }
-      }
-    ]
-  },
-  "release": {
-    "extends": "@sanity/semantic-release-preset",
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      "next",
-      {
-        "name": "beta",
-        "prerelease": true
-      },
-      {
-        "name": "alpha",
-        "prerelease": true
-      }
-    ]
   }
 }
