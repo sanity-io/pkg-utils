@@ -1,6 +1,7 @@
 import findConfig from 'find-config'
-import {stat} from 'fs/promises'
 import path from 'path'
+
+import {fileExists} from '../../fileExists'
 
 const CONFIG_FILE_NAMES = [
   'package.config.ts',
@@ -9,7 +10,8 @@ const CONFIG_FILE_NAMES = [
   'package.config.mjs',
 ]
 
-export async function findConfigFile(cwd: string): Promise<string | undefined> {
+/** @internal */
+export function findConfigFile(cwd: string): string | undefined {
   const pkgJsonPath = findConfig('package.json', {cwd})
 
   if (!pkgJsonPath) return undefined
@@ -19,7 +21,7 @@ export async function findConfigFile(cwd: string): Promise<string | undefined> {
   for (const fileName of CONFIG_FILE_NAMES) {
     const configPath = path.resolve(pkgPath, fileName)
 
-    const exists = await fileExists(configPath)
+    const exists = fileExists(configPath)
 
     if (exists) {
       return configPath
@@ -27,14 +29,4 @@ export async function findConfigFile(cwd: string): Promise<string | undefined> {
   }
 
   return undefined
-}
-
-async function fileExists(filePath: string) {
-  try {
-    await stat(filePath)
-
-    return true
-  } catch (_) {
-    return false
-  }
 }

@@ -1,20 +1,10 @@
 import chalk from 'chalk'
-import fs from 'fs'
 import path from 'path'
 import treeify from 'treeify'
 
 import {BuildContext, PkgExport} from './core'
+import {fileExists} from './fileExists'
 import {getFilesize} from './getFilesize'
-
-export function fileExists(file: string): boolean {
-  try {
-    fs.accessSync(file)
-
-    return true
-  } catch (_) {
-    return false
-  }
-}
 
 function getFileInfo(cwd: string, filePath: string) {
   const p = path.resolve(cwd, filePath)

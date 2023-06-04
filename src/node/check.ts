@@ -2,8 +2,9 @@ import esbuild, {BuildFailure} from 'esbuild'
 import path from 'path'
 
 import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
+import {fileExists} from './fileExists'
 import {createLogger} from './logger'
-import {fileExists, printPackageTree} from './printPackageTree'
+import {printPackageTree} from './printPackageTree'
 import {resolveBuildContext} from './resolveBuildContext'
 
 /** @public */
