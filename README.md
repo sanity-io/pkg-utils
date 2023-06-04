@@ -11,17 +11,19 @@ npm install @sanity/pkg-utils -D
 ## Basic usage
 
 ```sh
+# Initialize a new package
+npx @sanity/pkg-utils@latest init
+
 # In a Node.js package directory with `package.json` present
 
 # Check the package
-# This will validate the package.json file
-pkg-utils
+pkg-utils check
 
 # Build the package
-pkg-utils build --tsconfig tsconfig.dist.json
+pkg-utils build
 
 # Watch the package
-pkg-utils watch --tsconfig tsconfig.dist.json
+pkg-utils watch
 ```
 
 Run `pkg-utils -h` for more information on CLI usage.
@@ -38,8 +40,15 @@ control. You may then add a configuration file named `package.config.ts` (or `.j
 import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
-  // Minify bundled JavaScript
-  minify: true,
+  extract: {
+    rules: {
+      // do not require internal members to be prefixed with `_`
+      'ae-internal-missing-underscore': 'off',
+    },
+  },
+
+  // the path to the tsconfig file for distributed builds
+  tsconfig: 'tsconfig.dist.json',
 })
 ```
 
@@ -89,7 +98,7 @@ Override or modify the value of the `exports` before it’s parsed internally.
   ```
 - Default: `undefined`
 
-Configure the level of reporting of \`@microsoft/api-extractor\` (which is used to bundle the
+Configure the level of reporting of [API Extractor](https://api-extractor.com/) (which is used to bundle the
 type definitions, as well as lint the TSDoc of the package).
 
 #### `external`

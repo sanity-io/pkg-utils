@@ -26,6 +26,14 @@ cli
     return buildAction(options)
   })
 
+cli.command('init [path]', 'Initialize package').action(async (p) => {
+  const {initAction} = await import('./initAction')
+
+  return initAction({
+    path: p,
+  })
+})
+
 cli
   .command('watch', 'Watch package')
   .option('--strict', 'Strict mode')
