@@ -3,7 +3,10 @@ export interface PackageJSON {
   type?: 'commonjs' | 'module'
   version: string
   private?: boolean
+  author?: string | {name: string; email?: string; url?: string}
   name: string
+  description?: string
+  keywords?: string[]
   bin?: Record<string, string>
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
@@ -34,5 +37,15 @@ export interface PackageJSON {
   source?: string
   module?: string
   types?: string
+  files?: string[]
+  scripts?: Record<string, string>
   browserslist?: string[]
+  engines?: {
+    node?: string
+    npm?: string
+  }
+  repository?: string | {type: 'git'; url: string}
+  bugs?: string | {url: string; email?: string}
+  homepage?: string
+  license?: string
 }
