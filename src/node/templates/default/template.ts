@@ -23,6 +23,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
           try {
             gitUrlParse(v)
+
             return true
           } catch (err) {
             return 'invalid git url'
@@ -416,7 +417,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             outdent`
             {
               "extends": "./tsconfig.settings",
-              "include": ["./*.cjs", "./*.ts", "./src"],
+              "include": ["./*.cjs", "./*.ts", "./package.config.ts", "./src"],
               "compilerOptions": {
                 "rootDir": ".",
                 "outDir": "./dist",
@@ -434,6 +435,29 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       // source file
       if (features.typescript) {
         files.push({
+          name: 'package.config.ts',
+          contents: format(
+            resolve(packagePath, 'package.config.ts'),
+            outdent`
+            import {defineConfig} from '@sanity/pkg-utils'
+
+            export default defineConfig({
+              extract: {
+                rules: {
+                  // do not require internal members to be prefixed with \`_\`
+                  'ae-internal-missing-underscore': 'off',
+                },
+              },
+
+              // the path to the tsconfig file for distributed builds
+              tsconfig: 'tsconfig.dist.json',
+            })
+            `,
+            prettierConfig
+          ),
+        })
+
+        files.push({
           name: 'src/index.ts',
           contents: format(
             resolve(packagePath, 'src/index.ts'),
@@ -447,6 +471,26 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           ),
         })
       } else {
+        files.push({
+          name: 'package.config.js',
+          contents: format(
+            resolve(packagePath, 'package.config.js'),
+            outdent`
+            import {defineConfig} from '@sanity/pkg-utils'
+
+            export default defineConfig({
+              extract: {
+                rules: {
+                  // do not require internal members to be prefixed with \`_\`
+                  'ae-internal-missing-underscore': 'off',
+                },
+              },
+            })
+            `,
+            prettierConfig
+          ),
+        })
+
         files.push({
           name: 'src/index.js',
           contents: format(
@@ -501,6 +545,7 @@ async function resolveLatestDeps(deps: Record<string, string>) {
   for (const entry of depsEntries) {
     const [name, version] = entry
     const latestVersion = await getLatestVersion(name, version)
+
     latestDeps[name] = latestVersion ? `^${latestVersion}` : version
   }
 
