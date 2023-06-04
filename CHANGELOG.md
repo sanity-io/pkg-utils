@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.0](https://github.com/sanity-io/pkg-utils/compare/v2.2.17...v2.3.0) (2023-06-04)
+
+### Features
+
+- init command ([1d977bb](https://github.com/sanity-io/pkg-utils/commit/1d977bbdd5b5a12a2d2d1289843057c9595f6297))
+
+### Bug Fixes
+
+- **init:** add `package.config.ts` to template ([0374445](https://github.com/sanity-io/pkg-utils/commit/0374445891f68895751aeac16e74aa1ec4bea0fa))
+
 ## [2.2.17](https://github.com/sanity-io/pkg-utils/compare/v2.2.16...v2.2.17) (2023-06-04)
 
 ### Bug Fixes
