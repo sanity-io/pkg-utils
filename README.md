@@ -12,7 +12,7 @@ npm install @sanity/pkg-utils -D
 
 ```sh
 # Initialize a new package
-npx @sanity/pkg-utils@latest init
+pnpx @sanity/pkg-utils@latest init my-package
 
 # In a Node.js package directory with `package.json` present
 
