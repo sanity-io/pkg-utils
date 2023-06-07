@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>sanity-io/renovate-presets//ecosystem/auto", ":reviewer(team:ecosystem)"],
+  "extends": ["github>sanity-io/renovate-config"],
   "packageRules": [
     {
       "description": "webpack is only used for integration testing for v3 specifically",
