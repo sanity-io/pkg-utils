@@ -4,7 +4,7 @@
   "packageRules": [
     {
       "description": "webpack is only used for integration testing for v3 specifically",
-      "packageNames": ["webpack"],
+      "matchPackageNames": ["webpack"],
       "allowedVersions": "<=3"
     },
     {
