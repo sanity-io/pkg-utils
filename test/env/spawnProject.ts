@@ -4,7 +4,7 @@ import cpx from 'cpx'
 import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
 import path from 'path'
-import {rimraf} from 'rimraf'
+import rimraf from 'rimraf'
 import {v4 as uuid} from 'uuid'
 
 import {exec} from './exec'
