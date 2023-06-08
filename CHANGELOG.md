@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.2](https://github.com/sanity-io/pkg-utils/compare/v2.3.1...v2.3.2) (2023-06-08)
+
+### Bug Fixes
+
+- revert [#127](https://github.com/sanity-io/pkg-utils/issues/127), downgrade rimraf to v4 ([77eae19](https://github.com/sanity-io/pkg-utils/commit/77eae19da1ad221e25ce171712472cee3f2b2edc))
+
 ## [2.3.1](https://github.com/sanity-io/pkg-utils/compare/v2.3.0...v2.3.1) (2023-06-04)
 
 ### Bug Fixes
