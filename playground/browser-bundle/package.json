@@ -1,0 +1,14 @@
+{
+  "name": "browser-bundle",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "source": "./src/index.js",
+  "scripts": {
+    "build": "run-s clean && pkg build --strict && pkg check --strict",
+    "clean": "rimraf dist"
+  }
+}
