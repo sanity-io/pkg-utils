@@ -19,6 +19,25 @@ test.skipIf(isWindows)('should build `js` package', async () => {
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `browser-bundle` package', async () => {
+  const project = await spawnProject('browser-bundle')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.js → ./dist/index.js')
+  expect(stdout).toContain('./src/index.js → ./dist/index.cjs')
+
+  expect(stdout).toContain('./src/browser.js → ./dist/browser.js')
+  expect(stdout).toContain('./src/browser.js → ./dist/browser.cjs')
+
+  expect(await project.readFile('./dist/browser.js')).toMatchSnapshot()
+  expect(await project.readFile('./dist/browser.cjs')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 test.skipIf(isWindows)('should build `dummy-module` package', async () => {
   const project = await spawnProject('dummy-module')
 

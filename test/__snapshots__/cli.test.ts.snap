@@ -1,5 +1,24 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`should build \`browser-bundle\` package 1`] = `
+"const runtime = \\"browser\\";
+export { runtime };
+//# sourceMappingURL=browser.js.map
+"
+`;
+
+exports[`should build \`browser-bundle\` package 2`] = `
+"'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+const runtime = \\"browser\\";
+exports.runtime = runtime;
+//# sourceMappingURL=browser.cjs.map
+"
+`;
+
 exports[`should build \`custom-dist\` package 1`] = `
 "'use strict';
 
