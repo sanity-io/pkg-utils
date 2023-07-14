@@ -10,21 +10,47 @@ import {resolveRollupConfig} from './resolveRollupConfig'
 
 /** @internal */
 export const rollupTask: TaskHandler<RollupTask> = {
-  name: (ctx, task) =>
-    [
+  name: (ctx, task) => {
+    const bundleEntries = task.entries.filter((e) => e.path.includes('__$$bundle_'))
+    const entries = task.entries.filter((e) => !e.path.includes('__$$bundle_'))
+
+    const targetLines = task.target.length
+      ? [`  target:`, ...task.target.map((t) => `    - ${chalk.yellow(t)}`)]
+      : []
+
+    const bundlesLines = bundleEntries.length
+      ? [
+          '  bundles:',
+          ...bundleEntries.map((e) =>
+            [
+              `    - `,
+              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+            ].join('')
+          ),
+        ]
+      : []
+
+    const entriesLines = entries.length
+      ? [
+          '  entries:',
+          ...entries.map((e) =>
+            [
+              `    - `,
+              `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
+              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+            ].join('')
+          ),
+        ]
+      : []
+
+    return [
       `Build javascript files...`,
       `  format: ${chalk.yellow(task.format)}`,
-      `  target:`,
-      ...task.target.map((t) => `    - ${chalk.yellow(t)}`),
-      `  entries:`,
-      ...task.entries.map((e) =>
-        [
-          `    - `,
-          `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
-          `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
-        ].join('')
-      ),
-    ].join('\n'),
+      ...targetLines,
+      ...bundlesLines,
+      ...entriesLines,
+    ].join('\n')
+  },
   exec: (ctx, task) => {
     return new Observable((observer) => {
       execPromise(ctx, task)
