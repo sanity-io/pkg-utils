@@ -113,17 +113,19 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     }
 
     for (const bundle of bundles) {
+      const idx = bundles.indexOf(bundle)
+
       if (bundle.require) {
         addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
-          path: '__bundle__',
+          path: `__$$bundle_cjs_${idx}$$__`,
           source: bundle.source,
           output: bundle.require,
         })
       }
 
       if (bundle.import) {
-        addRollupTaskEntry('commonjs', bundle.runtime || ctx.runtime, {
-          path: '__bundle__',
+        addRollupTaskEntry('esm', bundle.runtime || ctx.runtime, {
+          path: `__$$bundle_esm_${idx}$$__`,
           source: bundle.source,
           output: bundle.import,
         })
