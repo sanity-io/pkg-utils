@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.4](https://github.com/sanity-io/pkg-utils/compare/v2.3.3...v2.3.4) (2023-07-14)
+
+### Bug Fixes
+
+- **build:** print bundles nicely ([85c5eeb](https://github.com/sanity-io/pkg-utils/commit/85c5eeb63b9cc1c12d9dfd9104693eccc5319128))
+- **build:** use correct target for extra bundles ([13f242f](https://github.com/sanity-io/pkg-utils/commit/13f242fdce04f58afb75a27545cdbf7a410fc022))
+- **check:** filter and print esbuild messages nicely ([f0d6501](https://github.com/sanity-io/pkg-utils/commit/f0d6501597aa7eae97bd72f8b4aa940e95e814cb))
+
 ## [2.3.3](https://github.com/sanity-io/pkg-utils/compare/v2.3.2...v2.3.3) (2023-06-12)
 
 ### Bug Fixes
