@@ -11,10 +11,10 @@ export interface ConsoleSpy {
   restore: () => void
 }
 
-export function createConsoleSpy(options: {
-  onRestored: (messages: ConsoleSpyMsg[]) => void
+export function createConsoleSpy(options?: {
+  onRestored?: (messages: ConsoleSpyMsg[]) => void
 }): ConsoleSpy {
-  const {onRestored} = options
+  const {onRestored} = options || {}
 
   const original = {
     log: console.log,
@@ -35,7 +35,7 @@ export function createConsoleSpy(options: {
       console.warn = original.warn
       console.error = original.error
 
-      onRestored(messages)
+      onRestored?.(messages)
     },
   }
 }

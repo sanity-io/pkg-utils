@@ -1,9 +1,10 @@
 import esbuild, {BuildFailure} from 'esbuild'
 import path from 'path'
 
+import {createConsoleSpy} from './consoleSpy'
 import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
 import {fileExists} from './fileExists'
-import {createLogger} from './logger'
+import {createLogger, Logger} from './logger'
 import {printPackageTree} from './printPackageTree'
 import {resolveBuildContext} from './resolveBuildContext'
 
@@ -52,91 +53,104 @@ export async function check(options: {
     }
 
     // Check if the files are resolved
-    const _paths: {require: string[]; import: string[]} = {
+    const exportPaths: {require: string[]; import: string[]} = {
       require: [],
       import: [],
     }
 
     for (const exp of Object.values(ctx.exports || {})) {
       if (!exp._exported) continue
-      if (exp.require) _paths.require.push(exp.require)
-      if (exp.import) _paths.import.push(exp.import)
+      if (exp.require) exportPaths.require.push(exp.require)
+      if (exp.import) exportPaths.import.push(exp.import)
     }
 
-    const external = Object.keys(pkg.dependencies || {}).concat(
-      Object.keys(pkg.devDependencies || {})
+    const external = [
+      ...Object.keys(pkg.dependencies || {}),
+      ...Object.keys(pkg.devDependencies || {}),
+    ]
+
+    const consoleSpy = createConsoleSpy()
+
+    if (exportPaths.import.length) {
+      checkExports(exportPaths.import, {cwd, external, format: 'esm', logger})
+    }
+
+    if (exportPaths.require.length) {
+      checkExports(exportPaths.require, {cwd, external, format: 'cjs', logger})
+    }
+
+    consoleSpy.restore()
+  }
+}
+
+async function checkExports(
+  exportPaths: string[],
+  options: {cwd: string; external: string[]; format: 'esm' | 'cjs'; logger: Logger}
+) {
+  const {cwd, external, format, logger} = options
+
+  const code = exportPaths
+    .map((id) => (format ? `import('${id}');` : `require('${id}');`))
+    .join('\n')
+
+  try {
+    const esbuildResult = await esbuild.build({
+      bundle: true,
+      external,
+      format,
+      logLevel: 'silent',
+      // otherwise output maps to stdout as we're using stdin
+      outfile: '/dev/null',
+      platform: 'node',
+      stdin: {
+        contents: code,
+        loader: 'js',
+        resolveDir: cwd,
+      },
+    })
+
+    if (esbuildResult.errors.length > 0) {
+      for (const msg of esbuildResult.errors) {
+        printEsbuildMessage(logger.warn, msg)
+
+        logger.log()
+      }
+
+      process.exit(1)
+    }
+
+    const esbuildWarnings = esbuildResult.warnings.filter((msg) => {
+      !(msg.detail || msg.text).includes(`does not affect esbuild's own target setting`)
+    })
+
+    for (const msg of esbuildWarnings) {
+      printEsbuildMessage(logger.warn, msg)
+
+      logger.log()
+    }
+  } catch (err) {
+    const {errors} = err as BuildFailure
+
+    for (const msg of errors) {
+      printEsbuildMessage(logger.error, msg)
+
+      logger.log()
+    }
+
+    process.exit(1)
+  }
+}
+
+function printEsbuildMessage(log: (...args: unknown[]) => void, msg: esbuild.Message) {
+  if (msg.location) {
+    log(
+      [
+        `${msg.detail || msg.text}\n`,
+        `${msg.location.line} | ${msg.location.lineText}\n`,
+        `in ./${msg.location.file}:${msg.location.line}:${msg.location.column}`,
+      ].join('')
     )
-
-    if (_paths.import.length) {
-      const code = _paths.import.map((id) => `import('${id}')`).join('\n')
-
-      try {
-        const esbuildResult = await esbuild.build({
-          external,
-          stdin: {
-            contents: code,
-            loader: 'js',
-            resolveDir: cwd,
-          },
-          format: 'esm',
-          bundle: true,
-          logLevel: 'silent',
-          // otherwise output maps to stdout as we're using stdin
-          outfile: '/dev/null',
-          platform: 'node',
-        })
-
-        if (esbuildResult.warnings.length > 0) {
-          logger.warn(...esbuildResult.warnings)
-        }
-      } catch (err) {
-        const {errors} = err as BuildFailure
-
-        for (const _err of errors) {
-          if (_err.location) {
-            logger.error(_err.detail || _err.text)
-            logger.error(`${_err.location.line} | ${_err.location.lineText}`)
-            logger.error(
-              'in',
-              `./${_err.location.file}:${_err.location.line}:${_err.location.column}`
-            )
-          } else {
-            logger.error(_err.detail || _err.text)
-          }
-
-          logger.log()
-        }
-
-        process.exit(1)
-      }
-    }
-
-    if (_paths.require.length) {
-      const code = _paths.require.map((id) => `require('${id}')`).join('\n')
-
-      const esbuildResult = await esbuild.build({
-        external,
-        stdin: {
-          contents: code,
-          loader: 'js',
-          resolveDir: cwd,
-        },
-        format: 'cjs',
-        bundle: true,
-        // otherwise output maps to stdout as we're using stdin
-        outfile: '/dev/null',
-        platform: 'node',
-      })
-
-      if (esbuildResult.errors.length > 0) {
-        // throw new Error(esbuildResult.errors.join(', '))
-        logger.error(esbuildResult.errors.join(', '))
-        process.exit(1)
-      }
-
-      if (esbuildResult.warnings.length > 0) {
-        logger.warn(...esbuildResult.warnings)
-      }
-    }
+  } else {
+    log(msg.detail || msg.text)
   }
 }

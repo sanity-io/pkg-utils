@@ -3,9 +3,9 @@ import path from 'path'
 import {rollup} from 'rollup'
 import {Observable} from 'rxjs'
 
+import {createConsoleSpy} from '../../consoleSpy'
 import {BuildContext} from '../../core'
 import {RollupTask, TaskHandler} from '../types'
-import {createConsoleSpy} from './consoleSpy'
 import {resolveRollupConfig} from './resolveRollupConfig'
 
 /** @internal */
