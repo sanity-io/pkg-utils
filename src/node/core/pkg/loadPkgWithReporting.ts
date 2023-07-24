@@ -33,19 +33,19 @@ export async function loadPkgWithReporting(options: {
 
         if (!assertOrder('require', 'import', keys)) {
           logger.warn(
-            `exports["${expPath}"]: the \`require\` property should come before the \`import\` property`
+            `exports["${expPath}"]: the \`require\` property should come before the \`import\` property`,
           )
         }
 
         if (!assertOrder('require', 'node', keys)) {
           logger.warn(
-            `exports["${expPath}"]: the \`require\` property should come before the \`node\` property`
+            `exports["${expPath}"]: the \`require\` property should come before the \`node\` property`,
           )
         }
 
         if (!assertOrder('node', 'import', keys)) {
           logger.warn(
-            `exports["${expPath}"]: the \`node\` property should come before \`import\` property`
+            `exports["${expPath}"]: the \`node\` property should come before \`import\` property`,
           )
         }
 
@@ -65,7 +65,7 @@ export async function loadPkgWithReporting(options: {
               `\`${formatPath(issue.path)}\` `,
               `in \`./package.json\` must be of type ${chalk.magenta(issue.expected)} `,
               `(received ${chalk.magenta(issue.received)})`,
-            ].join('')
+            ].join(''),
           )
           continue
         }

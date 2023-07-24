@@ -15,7 +15,7 @@ import {DtsResult, DtsTask, DtsWatchTask} from './types'
  */
 export async function doExtract(
   ctx: BuildContext,
-  task: DtsTask | DtsWatchTask
+  task: DtsTask | DtsWatchTask,
 ): Promise<DtsResult> {
   const {config, cwd, files, logger, strict, ts} = ctx
 
@@ -41,7 +41,7 @@ export async function doExtract(
 
     const sourceTypesPath = path.resolve(
       tmpPath,
-      path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts')
+      path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
     )
 
     const targetPath = path.resolve(cwd, entry.targetPath)

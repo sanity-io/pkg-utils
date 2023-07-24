@@ -30,7 +30,7 @@ export function printPackageTree(ctx: BuildContext): void {
 
   if (pkg.bin) {
     tree.bin = Object.fromEntries(
-      Object.entries(pkg.bin).map(([name, file]) => [chalk.cyan(name), fileInfo(file)])
+      Object.entries(pkg.bin).map(([name, file]) => [chalk.cyan(name), fileInfo(file)]),
     )
   }
 
@@ -96,7 +96,7 @@ export function printPackageTree(ctx: BuildContext): void {
         }
 
         return [chalk.cyan(path.join(pkg.name, exportPath)), exp]
-      })
+      }),
   )
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

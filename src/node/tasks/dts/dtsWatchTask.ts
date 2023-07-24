@@ -14,7 +14,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
       `build type definitions`,
       ...task.entries.map(
         (entry) =>
-          `       ${chalk.blue(entry.importId)}: ${entry.sourcePath} -> ${entry.targetPath}`
+          `       ${chalk.blue(entry.importId)}: ${entry.sourcePath} -> ${entry.targetPath}`,
       ),
     ].join('\n'),
   exec: (ctx, task) => {

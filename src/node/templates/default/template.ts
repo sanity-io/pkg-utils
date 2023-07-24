@@ -338,7 +338,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         files.push({
           name: '.eslintrc.cjs',
-          contents: format(
+          contents: await format(
             resolve(packagePath, '.eslintrc.cjs'),
             outdent`
             'use strict'
@@ -346,7 +346,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             /** @type import('eslint').Linter.Config */
             module.exports = ${JSON.stringify(eslintConfig, null, 2)}
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
       }
@@ -354,7 +354,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       if (features.typescript) {
         files.push({
           name: 'tsconfig.settings.json',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'tsconfig.settings.json'),
             outdent`
             {
@@ -388,13 +388,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               }
             }
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
 
         files.push({
           name: 'tsconfig.dist.json',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'tsconfig.dist.json'),
             outdent`
             {
@@ -408,13 +408,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               }
             }
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
 
         files.push({
           name: 'tsconfig.json',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'tsconfig.json'),
             outdent`
             {
@@ -429,7 +429,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               }
             }
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
       }
@@ -438,7 +438,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       if (features.typescript) {
         files.push({
           name: 'package.config.ts',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'package.config.ts'),
             outdent`
             import {defineConfig} from '@sanity/pkg-utils'
@@ -455,13 +455,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               tsconfig: 'tsconfig.dist.json',
             })
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
 
         files.push({
           name: 'src/index.ts',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'src/index.ts'),
             outdent`
             /** @public */
@@ -469,13 +469,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               //
             }
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
       } else {
         files.push({
           name: 'package.config.js',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'package.config.js'),
             outdent`
             import {defineConfig} from '@sanity/pkg-utils'
@@ -489,13 +489,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               },
             })
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
 
         files.push({
           name: 'src/index.js',
-          contents: format(
+          contents: await format(
             resolve(packagePath, 'src/index.js'),
             outdent`
             /** @public */
@@ -503,7 +503,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               //
             }
             `,
-            prettierConfig
+            prettierConfig,
           ),
         })
       }
@@ -524,10 +524,10 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
       files.push({
         name: 'package.json',
-        contents: format(
+        contents: await format(
           resolve(packagePath, 'package.json'),
           JSON.stringify(pkgJson, null, 2),
-          prettierConfig
+          prettierConfig,
         ),
       })
 

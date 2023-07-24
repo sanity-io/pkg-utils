@@ -9,7 +9,7 @@
     },
     {
       "description": "Dependency updates to other package jsons than the root should always use the chore scope as they aren't published to npm",
-      "matchPaths": ["playground/**/package.json"],
+      "matchFileNames": ["playground/**/package.json"],
       "extends": [":semanticCommitTypeAll(chore)"],
       "groupSlug": "playground"
     }

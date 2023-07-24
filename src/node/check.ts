@@ -85,7 +85,7 @@ export async function check(options: {
 
 async function checkExports(
   exportPaths: string[],
-  options: {cwd: string; external: string[]; format: 'esm' | 'cjs'; logger: Logger}
+  options: {cwd: string; external: string[]; format: 'esm' | 'cjs'; logger: Logger},
 ) {
   const {cwd, external, format, logger} = options
 
@@ -148,7 +148,7 @@ function printEsbuildMessage(log: (...args: unknown[]) => void, msg: esbuild.Mes
         `${msg.detail || msg.text}\n`,
         `${msg.location.line} | ${msg.location.lineText}\n`,
         `in ./${msg.location.file}:${msg.location.line}:${msg.location.column}`,
-      ].join('')
+      ].join(''),
     )
   } else {
     log(msg.detail || msg.text)

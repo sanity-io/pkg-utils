@@ -17,7 +17,7 @@ export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
         [
           `    - ${chalk.cyan(entry.importId)}: `,
           `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(entry.targetPath)}`,
-        ].join('')
+        ].join(''),
       ),
     ].join('\n'),
   exec: (ctx, task) => {

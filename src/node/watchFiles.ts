@@ -14,7 +14,7 @@ export function watchFiles(patterns: string[]): Observable<FileEvent> {
 
     function handleFileEvent(
       type: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir',
-      file: string
+      file: string,
     ) {
       observer.next({type, file})
     }

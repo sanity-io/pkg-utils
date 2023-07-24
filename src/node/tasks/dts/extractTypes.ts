@@ -90,10 +90,10 @@ export async function extractTypes(options: {
 
   await fs.writeFile(
     typesPath,
-    prettier.format(code, {
+    await prettier.format(code, {
       ...prettierConfig,
       filepath: typesPath,
-    })
+    }),
   )
 
   // Add to `files` in context

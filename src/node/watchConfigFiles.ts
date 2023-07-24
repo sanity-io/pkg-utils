@@ -38,7 +38,7 @@ export async function watchConfigFiles(options: {
 
       if (fileEvent.type === 'change') {
         logger.log(
-          '--------------------------------------------------------------------------------'
+          '--------------------------------------------------------------------------------',
         )
         logger.info(path.relative(cwd, fileEvent.file), 'changed')
         logger.log('')
@@ -49,6 +49,6 @@ export async function watchConfigFiles(options: {
       return files
     }, initialFiles),
     startWith(initialFiles),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   )
 }

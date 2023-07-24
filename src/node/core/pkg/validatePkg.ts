@@ -29,20 +29,20 @@ const pkgSchema = z.object({
               source: z.string(),
               require: z.optional(z.string()),
               import: z.optional(z.string()),
-            })
+            }),
           ),
           node: z.optional(
             z.object({
               source: z.optional(z.string()),
               require: z.optional(z.string()),
               import: z.optional(z.string()),
-            })
+            }),
           ),
           import: z.optional(z.string()),
           default: z.string(),
         }),
-      ])
-    )
+      ]),
+    ),
   ),
   browserslist: z.optional(z.array(z.string())),
 })

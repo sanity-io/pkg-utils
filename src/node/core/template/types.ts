@@ -32,7 +32,7 @@ export interface PkgTemplateDefinition {
   getFiles: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     options: Record<string, any>,
-    features: Record<string, boolean>
+    features: Record<string, boolean>,
   ) => Promise<PkgTemplateFile[]>
 }
 

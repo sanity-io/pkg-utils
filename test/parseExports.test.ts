@@ -59,7 +59,7 @@ describe('parseExports', () => {
     }
 
     expect(() => parseExports({extMap, pkg, strict: true})).toThrow(
-      '\n- package.json: `exports["./package.json"] must be declared.'
+      '\n- package.json: `exports["./package.json"] must be declared.',
     )
   })
 
@@ -135,7 +135,7 @@ describe('parseExports', () => {
         '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
         '\n- package.json: `exports["./package.json"] must be "./package.json".' +
         '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
-        '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".mjs"'
+        '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".mjs"',
     )
   })
 })

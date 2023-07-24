@@ -42,7 +42,7 @@ export async function createFromTemplate(options: {
             ? templateOption.initial(templateOptions)
             : templateOption.initial,
       },
-      {onCancel: () => process.exit(0)}
+      {onCancel: () => process.exit(0)},
     )
 
     templateOptions[templateOption.name] = templateOption.parse
@@ -61,7 +61,7 @@ export async function createFromTemplate(options: {
             message: `use ${templateFeature.name}?`,
             initial: templateFeature.initial,
           },
-          {onCancel: () => process.exit(0)}
+          {onCancel: () => process.exit(0)},
         )
       : undefined
 
