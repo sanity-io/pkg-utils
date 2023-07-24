@@ -99,5 +99,6 @@ export function printPackageTree(ctx: BuildContext): void {
       })
   )
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   logger.log(treeify.asTree(tree as Record<string, any>, true, true))
 }

@@ -261,6 +261,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       }
 
       if (features.eslint) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const eslintConfig: any = {
           root: true,
           env: {
@@ -310,6 +311,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             '@typescript-eslint/parser': '*',
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const eslintConfigOverride: any = {
             files: ['**/*.ts', '**/*.tsx'],
             parser: '@typescript-eslint/parser',

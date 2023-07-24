@@ -58,6 +58,7 @@ async function exec(ctx: BuildContext, task: NodeReExportFromCJSTask) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function compileESMWrapper(mod: any, relativeImport: string) {
   const keys = Object.keys(mod).filter((k) => k !== '__esModule')
 
