@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.6](https://github.com/sanity-io/pkg-utils/compare/v2.3.5...v2.3.6) (2023-07-24)
+
+### Bug Fixes
+
+- **deps:** bump prettier to v3 ([4728158](https://github.com/sanity-io/pkg-utils/commit/472815810a0b22acb2b76533bf8fb7445b7d33ce))
+
 ## [2.3.5](https://github.com/sanity-io/pkg-utils/compare/v2.3.4...v2.3.5) (2023-07-24)
 
 ### Bug Fixes
