@@ -17,7 +17,7 @@ export function getExtractMessagesConfig(options: {
 
   function ruleToLogLevel(
     key: keyof NonNullable<NonNullable<PkgConfigOptions['extract']>['rules']>,
-    defaultLevel?: ExtractorLogLevel
+    defaultLevel?: ExtractorLogLevel,
   ) {
     const r = rules?.[key]
 

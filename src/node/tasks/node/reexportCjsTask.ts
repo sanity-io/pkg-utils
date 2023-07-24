@@ -17,7 +17,7 @@ export const nodeReexportCjsTask: TaskHandler<NodeReExportFromCJSTask> = {
         [
           `    - ${chalk.cyan(entry.importId)}: `,
           `${chalk.yellow(entry.require)} ${chalk.gray('→')} ${chalk.yellow(entry.import)}`,
-        ].join('')
+        ].join(''),
       ),
     ].join('\n'),
   exec: (ctx, task) => {

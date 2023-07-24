@@ -4,7 +4,7 @@ import {ExecError} from './ExecError'
 
 export function exec(
   command: string,
-  options: child_process.ExecOptions = {}
+  options: child_process.ExecOptions = {},
 ): Promise<{stdout: string; stderr: string}> {
   return new Promise((resolve, reject) => {
     child_process.exec(command, options, (err, stdout, stderr) => {

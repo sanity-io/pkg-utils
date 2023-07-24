@@ -4,7 +4,7 @@ import {PackageJSON} from './types'
 
 export function validateExports(
   _exports: (PkgExport & {_path: string})[],
-  options: {extMap: PkgExtMap; pkg: PackageJSON}
+  options: {extMap: PkgExtMap; pkg: PackageJSON},
 ): string[] {
   const {extMap, pkg} = options
   const ext = extMap[pkg.type || 'commonjs']
@@ -14,13 +14,13 @@ export function validateExports(
   for (const exp of _exports) {
     if (exp.require && !exp.require.endsWith(ext.commonjs)) {
       errors.push(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`
+        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`,
       )
     }
 
     if (exp.import && !exp.import.endsWith(ext.esm)) {
       errors.push(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`
+        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`,
       )
     }
   }

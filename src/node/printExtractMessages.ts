@@ -30,7 +30,7 @@ export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessa
         ` - ${chalk.yellow('warning')} ${chalk.gray(msg.messageId)}\n`,
         msg.text,
         '\n',
-      ].join('')
+      ].join(''),
     )
   }
 
@@ -50,7 +50,7 @@ export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessa
         ` - ${chalk.red('error')} ${chalk.gray(msg.messageId)}\n`,
         msg.text,
         '\n',
-      ].join('')
+      ].join(''),
     )
   }
 

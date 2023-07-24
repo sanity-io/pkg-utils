@@ -93,7 +93,7 @@ export async function resolveBuildContext(options: {
 
   if (commonDistPath === cwd) {
     throw new Error(
-      'all output files must share a common parent directory which is not the root package directory'
+      'all output files must share a common parent directory which is not the root package directory',
     )
   }
 

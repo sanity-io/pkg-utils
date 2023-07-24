@@ -43,7 +43,7 @@ export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> =
           task.format
         })\n       ${task.entries
           .map((e) => `${chalk.blue(path.join(ctx.pkg.name, e.path))}: ${e.source} -> ${e.output}`)
-          .join('\n       ')}`
+          .join('\n       ')}`,
       )
       logger.log('')
 

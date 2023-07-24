@@ -10,7 +10,7 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
   const tasks: WatchTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(
-    ([_path, exp]) => ({_path, ...exp} as PkgExport & {_path: string})
+    ([_path, exp]) => ({_path, ...exp}) as PkgExport & {_path: string},
   )
 
   const dtsTask: DtsWatchTask = {
@@ -115,15 +115,15 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
       if (exp._exported && exp._path !== '.') {
         const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
           /\.[^/.]+$/,
-          ''
+          '',
         )
 
         if (relativeTargetPath) {
           fs.writeFileSync(
             path.resolve(cwd, `${exp._path}.js`),
             [`// AUTO-GENERATED – DO NOT EDIT`, `export * from '${relativeTargetPath}'`, ``].join(
-              '\n'
-            )
+              '\n',
+            ),
           )
         }
       }

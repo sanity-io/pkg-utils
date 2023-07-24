@@ -51,25 +51,25 @@ export function parseExports(options: {
             exportEntry.require !== rootExport.require
           ) {
             errors.push(
-              'package.json: mismatch between "main" and "exports.require". These must be equal.'
+              'package.json: mismatch between "main" and "exports.require". These must be equal.',
             )
           }
 
           if (exportEntry.import && rootExport.import && exportEntry.import !== rootExport.import) {
             errors.push(
-              'package.json: mismatch between "module" and "exports.import" These must be equal.'
+              'package.json: mismatch between "module" and "exports.import" These must be equal.',
             )
           }
 
           if (exportEntry.types && rootExport.types && exportEntry.types !== rootExport.types) {
             errors.push(
-              'package.json: mismatch between "types" and "exports.types". These must be equal.'
+              'package.json: mismatch between "types" and "exports.types". These must be equal.',
             )
           }
 
           if (exportEntry.source && rootExport.source && exportEntry.source !== rootExport.source) {
             errors.push(
-              'package.json: mismatch between "source" and "exports.source". These must be equal.'
+              'package.json: mismatch between "source" and "exports.source". These must be equal.',
             )
           }
 

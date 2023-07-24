@@ -36,7 +36,7 @@ export async function watch(options: {
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
       return resolveBuildContext({config, cwd, extMap, logger, pkg, strict, tsconfig})
-    })
+    }),
   )
 
   ctx$.subscribe(async (ctx) => {

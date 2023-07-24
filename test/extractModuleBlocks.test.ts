@@ -55,7 +55,7 @@ test('extract module block', () => {
       }
      }
         */
-  `
+  `,
   )
 
   expect(blocks.length).toEqual(3)
@@ -69,7 +69,7 @@ test('extract module block', () => {
       interface A {
           a: string
       }
-    }`
+    }`,
   )
 
   expect(blocks[1]).toEqual(outdent`

@@ -20,7 +20,7 @@ export interface RollupConfig {
 /** @internal */
 export function resolveRollupConfig(
   ctx: BuildContext,
-  buildTask: RollupTask | RollupWatchTask
+  buildTask: RollupTask | RollupWatchTask,
 ): RollupConfig {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, extMap, external, distPath, logger, pkg, ts} = ctx
@@ -31,7 +31,7 @@ export function resolveRollupConfig(
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
       return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0])]
-    })
+    }),
   )
 
   const entries = buildTask.entries.map((entry) => {
@@ -47,7 +47,7 @@ export function resolveRollupConfig(
   const sourcePaths = _exports && Object.values(_exports).map((e) => path.resolve(cwd, e.source))
 
   const replacements = Object.fromEntries(
-    Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)])
+    Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)]),
   )
 
   const defaultPlugins = [
@@ -69,7 +69,7 @@ export function resolveRollupConfig(
                 }
 
                 return JSON.stringify(
-                  path.relative(cwd, path.resolve(outDir, entry.name + outputExt))
+                  path.relative(cwd, path.resolve(outDir, entry.name + outputExt)),
                 )
               },
               'process.env.PKG_FORMAT': JSON.stringify(format),
@@ -156,8 +156,8 @@ export function resolveRollupConfig(
             logger.warn(
               `detected self-referencing import – treating as external: ${path.relative(
                 cwd,
-                idPath
-              )}`
+                idPath,
+              )}`,
             )
 
             return true

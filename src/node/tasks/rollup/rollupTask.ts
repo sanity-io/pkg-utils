@@ -25,7 +25,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
             [
               `    - `,
               `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
-            ].join('')
+            ].join(''),
           ),
         ]
       : []
@@ -38,7 +38,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
               `    - `,
               `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
               `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
-            ].join('')
+            ].join(''),
           ),
         ]
       : []

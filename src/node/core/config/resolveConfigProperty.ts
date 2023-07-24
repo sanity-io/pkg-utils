@@ -3,7 +3,7 @@ import {PkgConfigProperty, PkgConfigPropertyResolver} from './types'
 /** @internal */
 export function resolveConfigProperty<T>(
   prop: PkgConfigProperty<T> | undefined,
-  initialValue: T
+  initialValue: T,
 ): T {
   if (!prop) return initialValue
 

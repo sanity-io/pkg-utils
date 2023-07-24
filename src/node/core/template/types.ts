@@ -29,7 +29,7 @@ export interface PkgTemplateDefinition {
   }[]
   getFiles: (
     options: Record<string, any>,
-    features: Record<string, boolean>
+    features: Record<string, boolean>,
   ) => Promise<PkgTemplateFile[]>
 }
 
