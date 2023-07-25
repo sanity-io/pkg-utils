@@ -12,6 +12,10 @@
       "matchFileNames": ["playground/**/package.json"],
       "extends": [":semanticCommitTypeAll(chore)"],
       "groupSlug": "playground"
+    },
+    {
+      "matchDepTypes": ["dependencies"],
+      "rangeStrategy": "bump"
     }
   ]
 }
