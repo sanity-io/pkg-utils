@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.9](https://github.com/sanity-io/pkg-utils/compare/v2.3.8...v2.3.9) (2023-07-25)
+
+### Bug Fixes
+
+- add provenance ([245dbf9](https://github.com/sanity-io/pkg-utils/commit/245dbf904189d37bcfc9dface20f326c63c570ce))
+
 ## [2.3.8](https://github.com/sanity-io/pkg-utils/compare/v2.3.7...v2.3.8) (2023-07-25)
 
 ### Bug Fixes
