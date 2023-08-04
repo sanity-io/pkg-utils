@@ -114,6 +114,26 @@ async function execPromise(ctx: BuildContext, task: RollupTask) {
     const bundle = await rollup({
       ...inputOptions,
       onwarn(warning) {
+        if (
+          // Ignore the directive warning until the preserveDirectives plugin does it automatically: https://github.com/Ephem/rollup-plugin-preserve-directives#rollup-plugin-preserve-directives-warning
+          warning.message.includes(
+            'Module level directives cause errors when bundled, "use client" in',
+          )
+        ) {
+          // If the preserve option isn't enabled, then extend the message with a note about how to enable
+          if (!ctx.config?.preserveModuleDirectives) {
+            consoleSpy.messages.push({
+              type: 'warn',
+              code: warning.code,
+              args: [
+                `${warning.message} You can preserve it by setting "preserveModuleDirectives: true" in your "package.config.ts"`,
+              ],
+            })
+          }
+
+          return
+        }
+
         consoleSpy.messages.push({
           type: 'warn',
           code: warning.code,

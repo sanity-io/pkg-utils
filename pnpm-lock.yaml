@@ -116,6 +116,9 @@ importers:
       rollup-plugin-esbuild:
         specifier: ^5.0.0
         version: 5.0.0(esbuild@0.18.19)(rollup@3.27.2)
+      rollup-plugin-preserve-directives:
+        specifier: ^0.2.0
+        version: 0.2.0(rollup@3.27.2)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -282,6 +285,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      use-client-directive:
+        specifier: workspace:*
+        version: link:../use-client-directive
     devDependencies:
       '@types/react':
         specifier: ^18.2.18
@@ -335,6 +341,15 @@ importers:
   playground/ts-bundler: {}
 
   playground/ts-node16: {}
+
+  playground/use-client-directive:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.18
+        version: 18.2.18
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
 
 packages:
 
@@ -7635,7 +7650,6 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
-    dev: false
 
   /loupe@2.3.6:
     resolution: {integrity: sha512-RaPMZKiMy8/JruncMU5Bt6na1eftNoo++R4Y+N2FrxkDVTrGvcyzFTsaGif4QTeKESheMGegbhw6iUAq+5A8zA==}
@@ -9498,7 +9512,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /read-pkg-up@10.0.0:
     resolution: {integrity: sha512-jgmKiS//w2Zs+YbX039CorlkOp8FIVbSAN8r8GJHDsGlmNPXo+VeHkqAwCiQVTTx5/LwLZTcEw59z3DvcLbr0g==}
@@ -9984,6 +9997,15 @@ packages:
       rollup: 3.27.2
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /rollup-plugin-preserve-directives@0.2.0(rollup@3.27.2):
+    resolution: {integrity: sha512-KUwbBaFvD1zFIDNnOkR+u64sSod3m0l6q46/SzTOa4GTQ6hp6w0FRr2u7x99YkY9qhlna5panmTmuLWeJ/2KWw==}
+    peerDependencies:
+      rollup: 2.x || 3.x
+    dependencies:
+      magic-string: 0.30.2
+      rollup: 3.27.2
     dev: false
 
   /rollup-plugin-visualizer@5.9.2(rollup@3.27.2):
