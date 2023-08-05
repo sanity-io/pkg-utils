@@ -9,7 +9,7 @@ export default defineConfig({
     },
   ],
   extract: {
-    rules: {
+     rules: {
       'ae-forgotten-export': 'error',
       'ae-incompatible-release-tags': 'error',
       'ae-internal-missing-underscore': 'off',
