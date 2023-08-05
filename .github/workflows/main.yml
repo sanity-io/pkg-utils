@@ -64,6 +64,13 @@ jobs:
       - run: pnpm playground:build
         env:
           NODE_OPTIONS: --max_old_space_size=8192
+      - name: Archive build outputs of runtime tests
+        uses: actions/upload-artifact@v3
+        with:
+          name: runtime-dist
+          path: |
+            playground/runtime-*/dist
+            playground/runtime-*/.next
 
   test:
     needs: build
