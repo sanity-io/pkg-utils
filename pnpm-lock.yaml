@@ -225,6 +225,9 @@ importers:
       vitest:
         specifier: ^0.34.1
         version: 0.34.1
+      vitest-github-actions-reporter:
+        specifier: ^0.10.0
+        version: 0.10.0(vitest@0.34.1)
 
   playground/babel-plugin:
     devDependencies:
@@ -333,11 +336,26 @@ importers:
 
   playground/ts-node16: {}
 
+  test/env/__tmp__/47ee0f33-5de4-4cff-a413-351389ddd73b: {}
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /@actions/core@1.10.0:
+    resolution: {integrity: sha512-2aZDDa3zrrZbP5ZYg159sNoLRb61nQ7awl5pSvIq5Qpj81vwDzdMRKzkWJGJuwVvWpvZKx7vspJALyvaaIQyug==}
+    dependencies:
+      '@actions/http-client': 2.1.1
+      uuid: 8.3.2
+    dev: true
+
+  /@actions/http-client@2.1.1:
+    resolution: {integrity: sha512-qhrkRMB40bbbLo7gF+0vu+X+UawOvQQqNAA/5Unx774RS8poaOhThDOG6BGmxvAnxhQnDp2BG/ZUm65xZILTpw==}
+    dependencies:
+      tunnel: 0.0.6
     dev: true
 
   /@ampproject/remapping@2.2.1:
@@ -10952,6 +10970,11 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
+  /tunnel@0.0.6:
+    resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
+    engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
+    dev: true
+
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -11301,6 +11324,11 @@ packages:
       which-typed-array: 1.1.9
     dev: false
 
+  /uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: true
+
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
@@ -11423,6 +11451,16 @@ packages:
     dependencies:
       vite: 4.4.8(@types/node@20.4.8)
     dev: false
+
+  /vitest-github-actions-reporter@0.10.0(vitest@0.34.1):
+    resolution: {integrity: sha512-ctFM1xlOVsXCNp5+LkaBZBhN1Iq5y9vVMZ9+Czls2CimOUKt0lH24MV1S0EzKysNUT7efs2OOSdmc6lgR8hqXg==}
+    engines: {node: '>=14.16.0'}
+    peerDependencies:
+      vitest: '>=0.28.5'
+    dependencies:
+      '@actions/core': 1.10.0
+      vitest: 0.34.1
+    dev: true
 
   /vitest@0.34.1:
     resolution: {integrity: sha512-G1PzuBEq9A75XSU88yO5G4vPT20UovbC/2osB2KEuV/FisSIIsw7m5y2xMdB7RsAGHAfg2lPmp2qKr3KWliVlQ==}
