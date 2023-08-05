@@ -71,6 +71,7 @@ jobs:
           path: |
             playground/runtime-*/dist
             playground/runtime-*/.next
+            !playground/runtime-*/.next/cache
 
   test:
     needs: build
