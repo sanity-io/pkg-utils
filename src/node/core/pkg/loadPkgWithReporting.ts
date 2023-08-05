@@ -15,6 +15,7 @@ export async function loadPkgWithReporting(options: {
 
   try {
     const pkg = await loadPkg({cwd})
+    let shouldError = false
 
     // validate exports
     if (pkg.exports) {
@@ -28,31 +29,103 @@ export async function loadPkgWithReporting(options: {
         const keys = Object.keys(exp)
 
         if (!assertFirst('types', keys)) {
-          logger.warn(`exports["${expPath}"]: the \`types\` property should be the first property`)
+          shouldError = true
+          logger.error(`exports["${expPath}"]: the \`types\` property should be the first property`)
         }
 
-        if (!assertOrder('require', 'import', keys)) {
-          logger.warn(
-            `exports["${expPath}"]: the \`require\` property should come before the \`import\` property`,
-          )
-        }
+        if (exp.node) {
+          const nodeKeys = Object.keys(exp.node)
 
-        if (!assertOrder('require', 'node', keys)) {
-          logger.warn(
-            `exports["${expPath}"]: the \`require\` property should come before the \`node\` property`,
-          )
-        }
+          if (!assertOrder('module', 'import', nodeKeys)) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node.module\` property should come before the \`node.import\` property`,
+            )
+          }
 
-        if (!assertOrder('node', 'import', keys)) {
-          logger.warn(
-            `exports["${expPath}"]: the \`node\` property should come before \`import\` property`,
-          )
+          if (!assertOrder('import', 'require', nodeKeys)) {
+            logger.warn(
+              `exports["${expPath}"]: the \`node.import\` property should come before the \`node.require\` property`,
+            )
+          }
+
+          if (!assertOrder('module', 'require', nodeKeys)) {
+            logger.warn(
+              `exports["${expPath}"]: the \`node.module\` property should come before \`node.require\` property`,
+            )
+          }
+
+          if (exp.import && exp.node.import && !assertOrder('node', 'import', keys)) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node\` property should come before the \`import\` property`,
+            )
+          }
+
+          if (exp.module && exp.node.module && !assertOrder('node', 'module', keys)) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node\` property should come before the \`module\` property`,
+            )
+          }
+
+          // If there's a `node.import` property but not a `node.require` we can assume `node.import` is wrapping `import` and `node.module` should be added for bundlers
+          if (exp.node.import && !exp.node.require && !exp.node.module) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node.module\` property should be added so bundlers don't unintentionally try to bundle \`node.import\``,
+            )
+          }
+
+          if (
+            exp.node.import &&
+            !exp.node.require &&
+            exp.node.module &&
+            exp.import &&
+            exp.node.module !== exp.import
+          ) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node.module\` property should match \`import\``,
+            )
+          }
+
+          if (exp.require && exp.node.require && exp.require === exp.node.require) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node.require\` property isn't necessary as it's identical to \`require\``,
+            )
+          } else if (exp.require && exp.node.require && !assertOrder('node', 'require', keys)) {
+            shouldError = true
+            logger.error(
+              `exports["${expPath}"]: the \`node\` property should come before the \`require\` property`,
+            )
+          }
+        } else {
+          if (!assertOrder('import', 'require', keys)) {
+            logger.warn(
+              `exports["${expPath}"]: the \`import\` property should come before the \`require\` property`,
+            )
+          }
+
+          if (!assertOrder('module', 'import', keys)) {
+            logger.warn(
+              `exports["${expPath}"]: the \`module\` property should come before \`import\` property`,
+            )
+          }
         }
 
         if (!assertLast('default', keys)) {
-          logger.warn(`exports["${expPath}"]: the \`default\` property should be the last property`)
+          shouldError = true
+          logger.error(
+            `exports["${expPath}"]: the \`default\` property should be the last property`,
+          )
         }
       }
+    }
+
+    if (shouldError) {
+      process.exit(1)
     }
 
     return pkg

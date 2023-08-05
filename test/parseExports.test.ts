@@ -138,4 +138,227 @@ describe('parseExports', () => {
         '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".mjs"',
     )
   })
+
+  describe('allows a wide variety of conditional exports', () => {
+    test.each([
+      [
+        {
+          require: './dist/index.cjs',
+          default: './dist/index.js',
+        },
+        `"import" isn't required when "default" is present`,
+      ],
+      [
+        {
+          import: './dist/index.js',
+          default: './dist/index.cjs',
+        },
+        `"require" isn't required when "default" is present`,
+      ],
+      [
+        {
+          browser: {
+            types: './dist/index.browser.d.ts',
+            source: './src/index.browser.ts',
+            import: './dist/index.js',
+            require: './dist/index.cjs',
+          },
+          import: './dist/index.js',
+          require: './dist/index.cjs',
+        },
+        `"browser" can output both a "import" and "require" condition`,
+      ],
+      [
+        {
+          require: './dist/index.cjs',
+          browser: {
+            types: './dist/index.browser.d.ts',
+            source: './src/index.browser.ts',
+            import: './dist/index.js',
+          },
+          import: './dist/index.js',
+        },
+        `"browser" can optionally override just "import"`,
+      ],
+      [
+        {
+          node: {
+            source: './src/index.node.ts',
+            import: './dist/index.node.js',
+            require: './dist/index.node.cjs',
+          },
+          import: './dist/index.js',
+          require: './dist/index.cjs',
+        },
+        `"node" can output both a "import" and "require" condition`,
+      ],
+      [
+        {
+          require: './dist/index.cjs',
+          node: {
+            module: './dist/index.js',
+            import: './dist/index.cjs.js',
+          },
+          import: './dist/index.js',
+        },
+        `"node" can be used to implement a wrapper that protects against the "dual package hazard"`,
+      ],
+    ])('%o', (json, msg) => {
+      const extMap = getPkgExtMap({legacyExports: false})
+
+      const pkg = {
+        type: 'module',
+        name: 'test',
+        version: '0.0.0-test',
+        exports: {
+          '.': {
+            types: './dist/index.d.ts',
+            source: './src/index.ts',
+            ...json,
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      expect(() => parseExports({extMap, pkg, strict: true}), msg).not.toThrow()
+    })
+  })
+
+  describe.todo('enforces best practices', () => {
+    test.each([
+      [
+        {
+          default: './dist/index.js',
+        },
+        `"source" is required`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+        },
+        `"default" is required`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          types: './dist/index.d.ts',
+          require: './dist/index.cjs',
+          default: './dist/index.js',
+        },
+        `"types" should be first`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          default: './dist/index.js',
+          require: './dist/index.cjs',
+        },
+        `"default" should be last`,
+      ],
+      [
+        {
+          types: './dist/index.d.ts',
+          require: './dist/index.cjs',
+          source: './src/index.ts',
+          default: './dist/index.js',
+        },
+        `"source" should be after "types"`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          import: './dist/index.js',
+          node: {
+            module: './dist/index.js',
+            import: './dist/index.cjs.js',
+          },
+          default: './dist/index.js',
+        },
+        `"node.import" must be before "import"`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          node: {
+            module: './dist/index.js',
+            import: './dist/index.cjs.js',
+            require: './dist/index.cjs',
+          },
+          import: './dist/index.js',
+          require: './dist/index.cjs',
+          default: './dist/index.js',
+        },
+        `"node.require" is unnecesary if it's the same as "require"`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          node: {
+            import: './dist/index.cjs.js',
+          },
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        `"node.module" must be specified when a "node.import" dual package hazard is used`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          module: './dist/index.js',
+          node: {
+            import: './dist/index.cjs.js',
+          },
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        `"module" should be moved to "node.module" when it's the same as "import"`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          node: {
+            import: './node/index.js',
+            require: './node/index.cjs',
+          },
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        `"node.require" must be before "require"`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          import: './dist/index.js',
+          node: {
+            import: './node/index.js',
+            require: './node/index.cjs',
+          },
+          require: './dist/index.cjs',
+          default: './dist/index.js',
+        },
+        `"node.import" must be before "import"`,
+      ],
+    ])('%o throws because %s', (json, msg) => {
+      const extMap = getPkgExtMap({legacyExports: false})
+
+      const pkg = {
+        type: 'module',
+        name: 'test',
+        version: '0.0.0-test',
+        exports: {
+          // @ts-expect-error -- a lot of the examples are intentionally invalid
+          '.': json,
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      // @ts-expect-error -- a lot of the examples are intentionally invalid
+      expect(() => parseExports({extMap, pkg, strict: true}), msg).toThrowErrorMatchingSnapshot()
+    })
+  })
 })
