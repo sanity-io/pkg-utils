@@ -17,7 +17,9 @@ export default function IndexPage(props: InferGetStaticPropsType<typeof getStati
   // different on the server and client. This is a problem for React, because
   // it expects the values to be the same on the server and client.
   const [{index, extra}, setState] = useState(props)
+
   useEffect(() => setState({index: _index, extra: _extra}), [])
+
   return (
     <div>
       <div>
