@@ -76,7 +76,7 @@ function compileESMWrapper(mod: any, relativeImport: string) {
 
   if (mod.__esModule) {
     // If there is no default export, we shouldn't add it as it'll be undefined
-    if ('default' in keys) {
+    if ('default' in mod) {
       code += `export default cjs.default;\n`
     }
   } else {
