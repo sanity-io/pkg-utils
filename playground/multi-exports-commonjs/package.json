@@ -10,8 +10,7 @@
       "source": "./src/index.ts",
       "require": "./dist/index.js",
       "node": {
-        "import": "./dist/index.cjs.mjs",
-        "require": "./dist/index.js"
+        "import": "./dist/index.cjs.mjs"
       },
       "import": "./dist/index.esm.js",
       "default": "./dist/index.esm.js"
@@ -21,8 +20,7 @@
       "source": "./src/plugin.ts",
       "require": "./dist/plugin.js",
       "node": {
-        "import": "./dist/plugin.cjs.mjs",
-        "require": "./dist/plugin.js"
+        "import": "./dist/plugin.cjs.mjs"
       },
       "import": "./dist/plugin.esm.js",
       "default": "./dist/plugin.esm.js"
