@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.12](https://github.com/sanity-io/pkg-utils/compare/v2.3.11...v2.3.12) (2023-08-06)
+
+### Bug Fixes
+
+- handle edge case for default exports ([17158bd](https://github.com/sanity-io/pkg-utils/commit/17158bd6118ced8a1e4b92bfc773eee964c424d6))
+
 ## [2.3.11](https://github.com/sanity-io/pkg-utils/compare/v2.3.10...v2.3.11) (2023-08-06)
 
 ### Bug Fixes
