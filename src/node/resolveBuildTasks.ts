@@ -164,7 +164,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
       exp.node &&
       !exp.node.source &&
       exp.node.import &&
-      exp.node.require &&
+      (exp.node.require || exp.require) &&
       (exp.node.import.endsWith('.cjs.js') || exp.node.import.endsWith('.cjs.mjs'))
     ) {
       const importId = path.join(pkg.name, exp._path)
@@ -172,7 +172,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
       nodeReexportCjsEntries.push({
         importId,
         import: exp.node.import,
-        require: exp.node.require,
+        require: (exp.node.require || exp.require)!,
       })
     }
   }
