@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.11](https://github.com/sanity-io/pkg-utils/compare/v2.3.10...v2.3.11) (2023-08-06)
+
+### Bug Fixes
+
+- don't add `cjs.default` if there is no default export in `source` ([ea7b53c](https://github.com/sanity-io/pkg-utils/commit/ea7b53cac9b9d303477a17b43646af055dca77c5))
+
 ## [2.3.10](https://github.com/sanity-io/pkg-utils/compare/v2.3.9...v2.3.10) (2023-08-02)
 
 ### Bug Fixes
