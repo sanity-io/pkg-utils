@@ -8,6 +8,7 @@ import terser from '@rollup/plugin-terser'
 import path from 'path'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
+import preserveDirectives from 'rollup-plugin-preserve-directives'
 
 import {BuildContext, DEFAULT_BROWSERSLIST_QUERY, resolveConfigProperty} from '../../core'
 import {RollupTask, RollupWatchTask} from '../types'
@@ -111,10 +112,12 @@ export function resolveRollupConfig(
     }),
     minify &&
       terser({
-        compress: {
-          // Needed until https://github.com/terser/terser/issues/1320 is fixed
-          directives: false,
-        },
+        compress: config?.preserveModuleDirectives
+          ? {
+              // Needed until https://github.com/terser/terser/issues/1320 is fixed
+              directives: false,
+            }
+          : true,
         output: {
           comments: (_node, comment) => {
             const text = comment.value
@@ -130,6 +133,8 @@ export function resolveRollupConfig(
           },
         },
       }),
+    // Allows marking export files with `'use client'` at the top
+    config?.preserveModuleDirectives && preserveDirectives(),
   ].filter(Boolean) as Plugin[]
 
   const userPlugins = config?.rollup?.plugins
@@ -212,6 +217,7 @@ export function resolveRollupConfig(
       minifyInternalExports: minify,
       sourcemap: config?.sourcemap ?? true,
       hoistTransitiveImports: false,
+      preserveModules: config?.preserveModuleDirectives ? true : false,
     },
   }
 }
