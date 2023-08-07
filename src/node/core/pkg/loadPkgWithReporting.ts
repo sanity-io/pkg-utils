@@ -70,10 +70,14 @@ export async function loadPkgWithReporting(options: {
           }
 
           // If there's a `node.import` property but not a `node.require` we can assume `node.import` is wrapping `import` and `node.module` should be added for bundlers
-          if (exp.node.import && !exp.node.require && !exp.node.module) {
+          if (
+            exp.node.import &&
+            (!exp.node.require || exp.require === exp.node.require) &&
+            !exp.node.module
+          ) {
             shouldError = true
             logger.error(
-              `exports["${expPath}"]: the \`node.module\` property should be added so bundlers don't unintentionally try to bundle \`node.import\``,
+              `exports["${expPath}"]: the \`node.module\` property should be added so bundlers don't unintentionally try to bundle \`node.import\`. Its value should be \`"module": "${exp.import}"\``,
             )
           }
 
