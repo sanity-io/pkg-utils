@@ -19,14 +19,16 @@ export interface PackageJSON {
         types?: string
         browser?: {
           source: string
-          require?: string
           import?: string
+          require?: string
         }
         node?: {
           source?: string
-          require?: string
+          module?: string
           import?: string
+          require?: string
         }
+        module?: string
         import?: string
         require?: string
         default: string

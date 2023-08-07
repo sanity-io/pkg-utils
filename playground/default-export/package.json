@@ -9,6 +9,7 @@
       "source": "./src/index.js",
       "require": "./dist/index.cjs",
       "node": {
+        "module": "./dist/index.js",
         "import": "./dist/index.cjs.js"
       },
       "import": "./dist/index.js",

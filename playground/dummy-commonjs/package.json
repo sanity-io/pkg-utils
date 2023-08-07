@@ -10,16 +10,16 @@
       "source": "./src/index.ts",
       "browser": {
         "source": "./src/index.ts",
-        "require": "./dist/index.browser.js",
-        "import": "./dist/index.browser.mjs"
+        "import": "./dist/index.browser.mjs",
+        "require": "./dist/index.browser.js"
       },
-      "module": "./dist/index.mjs",
-      "require": "./dist/index.js",
       "node": {
+        "module": "./dist/index.mjs",
         "import": "./node/index.mjs",
         "require": "./node/index.js"
       },
       "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
       "default": "./dist/index.mjs"
     },
     "./extra": {
@@ -27,15 +27,16 @@
       "source": "./src/extra.ts",
       "browser": {
         "source": "./src/extra.ts",
-        "require": "./dist/extra.browser.js",
-        "import": "./dist/extra.browser.mjs"
+        "import": "./dist/extra.browser.mjs",
+        "require": "./dist/extra.browser.js"
       },
-      "require": "./dist/extra.js",
       "node": {
+        "module": "./dist/extra.mjs",
         "import": "./node/extra.mjs",
         "require": "./node/extra.js"
       },
       "import": "./dist/extra.mjs",
+      "require": "./dist/extra.js",
       "default": "./dist/extra.mjs"
     },
     "./package.json": "./package.json"

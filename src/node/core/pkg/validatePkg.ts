@@ -23,22 +23,24 @@ const pkgSchema = z.object({
         z.object({
           types: z.optional(z.string()),
           source: z.string(),
-          require: z.optional(z.string()),
           browser: z.optional(
             z.object({
               source: z.string(),
-              require: z.optional(z.string()),
               import: z.optional(z.string()),
+              require: z.optional(z.string()),
             }),
           ),
           node: z.optional(
             z.object({
               source: z.optional(z.string()),
-              require: z.optional(z.string()),
+              module: z.optional(z.string()),
               import: z.optional(z.string()),
+              require: z.optional(z.string()),
             }),
           ),
+          module: z.optional(z.string()),
           import: z.optional(z.string()),
+          require: z.optional(z.string()),
           default: z.string(),
         }),
       ]),
