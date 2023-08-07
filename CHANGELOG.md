@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.14](https://github.com/sanity-io/pkg-utils/compare/v2.3.13...v2.3.14) (2023-08-07)
+
+### Bug Fixes
+
+- **deps:** Update dependency esbuild to ^0.18.19 ([#175](https://github.com/sanity-io/pkg-utils/issues/175)) ([e11c73a](https://github.com/sanity-io/pkg-utils/commit/e11c73af87d55ed5ad887d23e0a8252485ad0f7b))
+- improve astro compatibilty ([#172](https://github.com/sanity-io/pkg-utils/issues/172)) ([96043ed](https://github.com/sanity-io/pkg-utils/commit/96043ed6eeafb4c37fbb6fcbb56a0facfec571e7))
+
 ## [2.3.13](https://github.com/sanity-io/pkg-utils/compare/v2.3.12...v2.3.13) (2023-08-07)
 
 ### Bug Fixes
