@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.13](https://github.com/sanity-io/pkg-utils/compare/v2.3.12...v2.3.13) (2023-08-07)
+
+### Bug Fixes
+
+- make "node.require" optional when re-exporting CJS ([#171](https://github.com/sanity-io/pkg-utils/issues/171)) ([a75f377](https://github.com/sanity-io/pkg-utils/commit/a75f37724ab7347e3803dd63eb941bee707fa68d))
+
 ## [2.3.12](https://github.com/sanity-io/pkg-utils/compare/v2.3.11...v2.3.12) (2023-08-06)
 
 ### Bug Fixes
