@@ -10,8 +10,7 @@
       "source": "./src/index.ts",
       "require": "./dist/index.cjs",
       "node": {
-        "import": "./dist/index.cjs.js",
-        "require": "./dist/index.cjs"
+        "import": "./dist/index.cjs.js"
       },
       "import": "./dist/index.js",
       "default": "./dist/index.js"
@@ -21,8 +20,7 @@
       "source": "./src/plugin.ts",
       "require": "./dist/plugin.cjs",
       "node": {
-        "import": "./dist/plugin.cjs.js",
-        "require": "./dist/plugin.cjs"
+        "import": "./dist/plugin.cjs.js"
       },
       "import": "./dist/plugin.js",
       "default": "./dist/plugin.js"
