@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/sanity-io/pkg-utils/compare/v2.4.1...v2.4.2) (2023-08-08)
+
+### Bug Fixes
+
+- make `node.module` optional ([0896d7a](https://github.com/sanity-io/pkg-utils/commit/0896d7a2a1ea5024261d71141038fcf11fc567ad))
+
 ## [2.4.1](https://github.com/sanity-io/pkg-utils/compare/v2.4.0...v2.4.1) (2023-08-07)
 
 ### Bug Fixes
