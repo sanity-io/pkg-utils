@@ -75,8 +75,7 @@ export async function loadPkgWithReporting(options: {
             (!exp.node.require || exp.require === exp.node.require) &&
             !exp.node.module
           ) {
-            shouldError = true
-            logger.error(
+            logger.warn(
               `exports["${expPath}"]: the \`node.module\` property should be added so bundlers don't unintentionally try to bundle \`node.import\`. Its value should be \`"module": "${exp.import}"\``,
             )
           }

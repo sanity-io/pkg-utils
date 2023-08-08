@@ -302,7 +302,7 @@ describe('parseExports', () => {
           import: './dist/index.js',
           default: './dist/index.js',
         },
-        `"node.module" must be specified when a "node.import" dual package hazard is used`,
+        `"node.module" should be specified when a "node.import" dual package hazard is used`,
       ],
       [
         {
