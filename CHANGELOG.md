@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.5](https://github.com/sanity-io/pkg-utils/compare/v2.4.4...v2.4.5) (2023-08-09)
+
+### Bug Fixes
+
+- **build:** include `recast` (commonjs) module in bundle ([402e95f](https://github.com/sanity-io/pkg-utils/commit/402e95f0965c48dc91ca547d0059936a4337dac5))
+
 ## [2.4.4](https://github.com/sanity-io/pkg-utils/compare/v2.4.3...v2.4.4) (2023-08-09)
 
 ### Bug Fixes
