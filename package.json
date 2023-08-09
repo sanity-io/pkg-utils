@@ -60,7 +60,9 @@
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
     "release": "semantic-release",
-    "test": "run-s playground:clean && rimraf test/env/__tmp__ && vitest run",
+    "test": "run-s playground:clean test:clean vitest:run",
+    "test:clean": "rimraf test/env/__tmp__",
+    "vitest:run": "vitest run",
     "watch": "node --loader esbuild-register/loader -r esbuild-register scripts/watch"
   },
   "commitlint": {
