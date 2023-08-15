@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.6](https://github.com/sanity-io/pkg-utils/compare/v2.4.5...v2.4.6) (2023-08-15)
+
+### Bug Fixes
+
+- **deps:** Update dependency @rollup/plugin-commonjs to ^25.0.4 ([#188](https://github.com/sanity-io/pkg-utils/issues/188)) ([a7f919e](https://github.com/sanity-io/pkg-utils/commit/a7f919e459369f56cf9e9391e3c4ab0aee5766e0))
+- **deps:** update dependency esbuild to ^0.19.2 ([#192](https://github.com/sanity-io/pkg-utils/issues/192)) ([9876740](https://github.com/sanity-io/pkg-utils/commit/98767408cad1f30dbf15648db53d3aaf7449871e))
+- **deps:** update dependency zod to ^3.22.0 ([#196](https://github.com/sanity-io/pkg-utils/issues/196)) ([18a2f16](https://github.com/sanity-io/pkg-utils/commit/18a2f1610f63bffce969b2f35449029d6bc75872))
+
 ## [2.4.5](https://github.com/sanity-io/pkg-utils/compare/v2.4.4...v2.4.5) (2023-08-09)
 
 ### Bug Fixes
