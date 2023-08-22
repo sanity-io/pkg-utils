@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.8](https://github.com/sanity-io/pkg-utils/compare/v2.4.7...v2.4.8) (2023-08-22)
+
+### Bug Fixes
+
+- **deps:** update rollup packages ([#206](https://github.com/sanity-io/pkg-utils/issues/206)) ([d795c28](https://github.com/sanity-io/pkg-utils/commit/d795c28ef2165d9beb3d9e4c3894b4c73aea99e6))
+
 ## [2.4.7](https://github.com/sanity-io/pkg-utils/compare/v2.4.6...v2.4.7) (2023-08-21)
 
 ### Bug Fixes
