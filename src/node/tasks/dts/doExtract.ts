@@ -62,10 +62,10 @@ export async function doExtract(
 
     messages.push(...result.messages)
 
-    if (result.messages.some((msg) => msg.logLevel === 'error')) {
+    const errors = result.messages.filter((msg) => msg.logLevel === 'error')
+    if (errors.length > 0) {
       await rimraf(tmpPath)
-
-      throw new DtsError('encountered errors when extracting types', result.messages)
+      throw new DtsError(`encountered ${errors.length} errors when extracting types`, errors)
     }
 
     results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePath: targetPath})
