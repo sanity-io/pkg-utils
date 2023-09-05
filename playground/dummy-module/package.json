@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -12,11 +13,6 @@
         "source": "./src/index.ts",
         "import": "./dist/index.browser.js",
         "require": "./dist/index.browser.cjs"
-      },
-      "node": {
-        "module": "./dist/index.js",
-        "import": "./node/index.js",
-        "require": "./node/index.cjs"
       },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
@@ -29,11 +25,6 @@
         "source": "./src/extra.ts",
         "import": "./dist/extra.browser.js",
         "require": "./dist/extra.browser.cjs"
-      },
-      "node": {
-        "module": "./dist/extra.js",
-        "import": "./node/extra.js",
-        "require": "./node/extra.cjs"
       },
       "import": "./dist/extra.js",
       "require": "./dist/extra.cjs",
@@ -58,7 +49,6 @@
   },
   "files": [
     "dist",
-    "node",
     "src"
   ],
   "scripts": {

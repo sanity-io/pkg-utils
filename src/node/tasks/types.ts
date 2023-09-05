@@ -32,13 +32,7 @@ export interface RollupWatchTask {
 }
 
 /** @internal */
-export interface NodeReExportFromCJSTask {
-  type: 'node:reexport-cjs'
-  entries: {importId: string; import: string; require: string}[]
-}
-
-/** @internal */
-export type BuildTask = DtsTask | RollupTask | NodeReExportFromCJSTask
+export type BuildTask = DtsTask | RollupTask
 
 /** @internal */
 export type WatchTask = DtsWatchTask | RollupWatchTask
@@ -55,7 +49,6 @@ export type TaskHandler<Task, Result = void> = {
 export interface BuildTaskHandlers {
   'build:dts': TaskHandler<DtsTask, DtsResult>
   'build:js': TaskHandler<RollupTask>
-  'node:reexport-cjs': TaskHandler<NodeReExportFromCJSTask>
 }
 
 /** @internal */

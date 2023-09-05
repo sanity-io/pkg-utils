@@ -33,12 +33,10 @@ const pkgSchema = z.object({
           node: z.optional(
             z.object({
               source: z.optional(z.string()),
-              module: z.optional(z.string()),
               import: z.optional(z.string()),
               require: z.optional(z.string()),
             }),
           ),
-          module: z.optional(z.string()),
           import: z.optional(z.string()),
           require: z.optional(z.string()),
           default: z.string(),

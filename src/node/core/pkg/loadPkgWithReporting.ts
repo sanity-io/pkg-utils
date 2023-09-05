@@ -33,28 +33,14 @@ export async function loadPkgWithReporting(options: {
           logger.error(`exports["${expPath}"]: the \`types\` property should be the first property`)
         }
 
+        if (exp.module) {
+          shouldError = true
+          logger.error(
+            `exports["${expPath}"]: the \`module\` condition shouldn't be used as it's not well supported in all bundlers.`,
+          )
+        }
+
         if (exp.node) {
-          const nodeKeys = Object.keys(exp.node)
-
-          if (!assertOrder('module', 'import', nodeKeys)) {
-            shouldError = true
-            logger.error(
-              `exports["${expPath}"]: the \`node.module\` property should come before the \`node.import\` property`,
-            )
-          }
-
-          if (!assertOrder('import', 'require', nodeKeys)) {
-            logger.warn(
-              `exports["${expPath}"]: the \`node.import\` property should come before the \`node.require\` property`,
-            )
-          }
-
-          if (!assertOrder('module', 'require', nodeKeys)) {
-            logger.warn(
-              `exports["${expPath}"]: the \`node.module\` property should come before \`node.require\` property`,
-            )
-          }
-
           if (exp.import && exp.node.import && !assertOrder('node', 'import', keys)) {
             shouldError = true
             logger.error(
@@ -62,23 +48,22 @@ export async function loadPkgWithReporting(options: {
             )
           }
 
-          if (exp.module && exp.node.module && !assertOrder('node', 'module', keys)) {
+          if (exp.node.module) {
             shouldError = true
             logger.error(
-              `exports["${expPath}"]: the \`node\` property should come before the \`module\` property`,
+              `exports["${expPath}"]: the \`node.module\` condition shouldn't be used as it's not well supported in all bundlers. A better strategy is to refactor the codebase to no longer be vulnerable to the "dual package hazard"`,
             )
           }
 
           if (
+            !exp.node.source &&
             exp.node.import &&
-            !exp.node.require &&
-            exp.node.module &&
-            exp.import &&
-            exp.node.module !== exp.import
+            (exp.node.require || exp.require) &&
+            (exp.node.import.endsWith('.cjs.js') || exp.node.import.endsWith('.cjs.mjs'))
           ) {
             shouldError = true
             logger.error(
-              `exports["${expPath}"]: the \`node.module\` property should match \`import\``,
+              `exports["${expPath}"]: the \`node.import\` re-export pattern shouldn't be used as it's not well supported in all bundlers. A better strategy is to refactor the codebase to no longer be vulnerable to the "dual package hazard"`,
             )
           }
 
@@ -97,12 +82,6 @@ export async function loadPkgWithReporting(options: {
           if (!assertOrder('import', 'require', keys)) {
             logger.warn(
               `exports["${expPath}"]: the \`import\` property should come before the \`require\` property`,
-            )
-          }
-
-          if (!assertOrder('module', 'import', keys)) {
-            logger.warn(
-              `exports["${expPath}"]: the \`module\` property should come before \`import\` property`,
             )
           }
         }
