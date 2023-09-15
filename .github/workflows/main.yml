@@ -85,10 +85,11 @@ jobs:
         platform: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [lts/*]
         # It makes sense to also test latest version of Node.js, on ubuntu-only since it's the fastest CI runner
-        include:
-          - platform: ubuntu-latest
+        # @TODO re-enable after the nightly is stable
+        # include:
+        #  - platform: ubuntu-latest
             # Test the actively developed version that will become the latest LTS release next October
-            node-version: current
+        #    node-version: current
     steps:
       - name: Set git to use LF
         if: matrix.platform == 'windows-latest'
