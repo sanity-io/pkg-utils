@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.9](https://github.com/sanity-io/pkg-utils/compare/v2.4.8...v2.4.9) (2023-09-15)
+
+### Bug Fixes
+
+- **node.module:** stop warning about missing `node.module` ([5e6cee5](https://github.com/sanity-io/pkg-utils/commit/5e6cee5d8aaa3cddbe54e1f6e17bd92dbeee88f3))
+- throw DtsError with errors only ([#221](https://github.com/sanity-io/pkg-utils/issues/221)) ([983cf10](https://github.com/sanity-io/pkg-utils/commit/983cf10746f025a305c3a0966a0c1fbeb0a13d33))
+
 ## [2.4.8](https://github.com/sanity-io/pkg-utils/compare/v2.4.7...v2.4.8) (2023-08-22)
 
 ### Bug Fixes
