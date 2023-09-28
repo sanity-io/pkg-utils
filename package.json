@@ -122,9 +122,9 @@
     "extends": "@sanity/semantic-release-preset"
   },
   "dependencies": {
-    "@babel/core": "^7.22.15",
-    "@babel/preset-env": "^7.22.15",
-    "@babel/types": "^7.22.15",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/types": "^7.23.0",
     "@microsoft/api-extractor": "^7.36.4",
     "@microsoft/tsdoc-config": "^0.16.2",
     "@rollup/plugin-alias": "^5.0.0",
@@ -154,7 +154,7 @@
     "pretty-bytes": "^5.6.0",
     "prompts": "^2.4.2",
     "rimraf": "^4.4.1",
-    "rollup": "^3.28.1",
+    "rollup": "^3.29.4",
     "rollup-plugin-esbuild": "^5.0.0",
     "rollup-plugin-preserve-directives": "^0.2.0",
     "rxjs": "^7.8.1",
@@ -177,12 +177,12 @@
     "@types/rimraf": "^3.0.2",
     "@types/treeify": "^1.0.0",
     "@types/uuid": "^9.0.4",
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
     "commitizen": "^4.3.0",
     "cpx": "^1.5.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.48.0",
+    "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-prettier": "^5.0.0",
@@ -193,16 +193,16 @@
     "outdent": "^0.8.0",
     "recast": "^0.23.4",
     "rollup-plugin-visualizer": "^5.9.2",
-    "semantic-release": "^21.1.1",
+    "semantic-release": "^21.1.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.3",
+    "vitest": "^0.34.5",
     "vitest-github-actions-reporter": "^0.10.0"
   },
   "peerDependencies": {
     "typescript": "^4.7 || ^5"
   },
-  "packageManager": "pnpm@8.7.1",
+  "packageManager": "pnpm@8.8.0",
   "engines": {
     "node": ">=16.0.0"
   },
