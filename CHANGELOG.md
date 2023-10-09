@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.0](https://github.com/sanity-io/pkg-utils/compare/v2.4.10...v3.0.0) (2023-10-09)
+
+### ⚠ BREAKING CHANGES
+
+- **deps:** update dependency rollup to v4 (#256)
+
+### Bug Fixes
+
+- **deps:** update dependency rollup to v4 ([#256](https://github.com/sanity-io/pkg-utils/issues/256)) ([6ed5aa7](https://github.com/sanity-io/pkg-utils/commit/6ed5aa71fbf2d42fbc335de6d7dfe3242c23bc71))
+
 ## [2.4.10](https://github.com/sanity-io/pkg-utils/compare/v2.4.9...v2.4.10) (2023-10-09)
 
 ### Bug Fixes
