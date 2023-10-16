@@ -184,6 +184,12 @@ export function resolveRollupConfig(
         return {...acc, [entry.name]: entry.source}
       }, {}),
 
+      watch: {
+        chokidar: {
+          usePolling: true
+        }
+      },
+
       plugins,
 
       treeshake: {
