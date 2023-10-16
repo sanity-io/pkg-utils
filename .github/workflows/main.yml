@@ -82,7 +82,7 @@ jobs:
         # @TODO re-enable after the nightly is stable
         # include:
         #  - platform: ubuntu-latest
-            # Test the actively developed version that will become the latest LTS release next October
+        # Test the actively developed version that will become the latest LTS release next October
         #    node-version: current
     steps:
       - name: Set git to use LF

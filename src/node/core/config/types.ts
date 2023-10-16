@@ -114,11 +114,6 @@ export interface PkgConfigOptions {
    * Build package with support for legacy exports (writes root `<export>.js` files)
    */
   legacyExports?: boolean
-  /**
-   * Preserves module directives, such as `'use client'`
-   * @alpha
-   */
-  preserveModuleDirectives?: boolean
   minify?: boolean
   /** @alpha */
   rollup?: {
