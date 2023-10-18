@@ -7,15 +7,13 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.1.0](https://github.com/sanity-io/pkg-utils/compare/v3.0.0...v3.1.0) (2023-10-16)
 
-
 ### Features
 
-* Chokidar use polling on rollup watch ([#268](https://github.com/sanity-io/pkg-utils/issues/268)) ([1d63c2f](https://github.com/sanity-io/pkg-utils/commit/1d63c2fdc55a315a47ee74a1621d097943345b42))
-
+- Chokidar use polling on rollup watch ([#268](https://github.com/sanity-io/pkg-utils/issues/268)) ([1d63c2f](https://github.com/sanity-io/pkg-utils/commit/1d63c2fdc55a315a47ee74a1621d097943345b42))
 
 ### Bug Fixes
 
-* remove experimental `preserveModuleDirectives` option ([fadf008](https://github.com/sanity-io/pkg-utils/commit/fadf008105716531684bccacb2ad95c5753a0d4d))
+- remove experimental `preserveModuleDirectives` option ([fadf008](https://github.com/sanity-io/pkg-utils/commit/fadf008105716531684bccacb2ad95c5753a0d4d))
 
 ## [3.0.0](https://github.com/sanity-io/pkg-utils/compare/v2.4.10...v3.0.0) (2023-10-09)
 
