@@ -160,8 +160,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       '@types/treeify':
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       '@types/uuid':
         specifier: ^9.0.5
         version: 9.0.5
@@ -2884,8 +2884,8 @@ packages:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
     dev: true
 
-  /@types/treeify@1.0.1:
-    resolution: {integrity: sha512-LKtbHwOf5FjWXri/6l6kxMPLVJV69VoyTL2IS+icQcr6k9ffVgXMCvnVXRFWpv5bQED/Gdl8KU+CfuwTAg5HkA==}
+  /@types/treeify@1.0.2:
+    resolution: {integrity: sha512-eY3f8UdMuLFTyPrdy8VsPGnVvAVYlYggJbIgPcmEYVscRWwET/p1zFfids3dYAZhmSolJWPtfwFTD27IWfNAbw==}
     dev: true
 
   /@types/unist@2.0.8:
@@ -3846,6 +3846,7 @@ packages:
   /callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
+    requiresBuild: true
     dev: true
 
   /camelcase-keys@6.2.2:
@@ -8548,6 +8549,7 @@ packages:
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
+    requiresBuild: true
     dependencies:
       callsites: 3.1.0
     dev: true
@@ -9345,6 +9347,7 @@ packages:
   /resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
+    requiresBuild: true
     dev: true
 
   /resolve-from@5.0.0:
