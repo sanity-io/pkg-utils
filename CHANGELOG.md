@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.0](https://github.com/sanity-io/pkg-utils/compare/v3.1.1...v3.2.0) (2023-10-23)
+
+
+### Features
+
+* allow setting `bundledPackages` in api extractor ([3f7fce8](https://github.com/sanity-io/pkg-utils/commit/3f7fce8a04dfdf6ed96d4523bb09bde91886897e))
+
 ## [3.1.1](https://github.com/sanity-io/pkg-utils/compare/v3.1.0...v3.1.1) (2023-10-18)
 
 ### Bug Fixes
