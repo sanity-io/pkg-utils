@@ -2,6 +2,7 @@ import {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import path from 'path'
 
 export function createApiExtractorConfig(options: {
+  bundledPackages?: string[]
   distPath: string
   exportPath: string
   filePath: string
@@ -11,6 +12,7 @@ export function createApiExtractorConfig(options: {
   tsconfigPath: string
 }): IConfigFile {
   const {
+    bundledPackages,
     distPath,
     exportPath,
     filePath,
@@ -25,7 +27,7 @@ export function createApiExtractorConfig(options: {
       enabled: false,
       reportFileName: '<unscopedPackageName>.api.md',
     },
-    // bundledPackages: [],
+    bundledPackages,
     compiler: {
       tsconfigFilePath: tsconfigPath,
     },

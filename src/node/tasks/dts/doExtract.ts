@@ -47,6 +47,7 @@ export async function doExtract(
     const targetPath = path.resolve(cwd, entry.targetPath)
     const filePath = path.relative(outDir, targetPath)
     const result = await extractTypes({
+      bundledPackages: config?.extract?.bundledPackages,
       customTags: config?.extract?.customTags,
       cwd,
       distPath: outDir,

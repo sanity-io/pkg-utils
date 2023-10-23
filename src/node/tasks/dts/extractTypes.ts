@@ -16,6 +16,7 @@ import {extractModuleBlocksFromTypes} from './extractModuleBlocks'
 import {getExtractMessagesConfig} from './getExtractMessagesConfig'
 
 export async function extractTypes(options: {
+  bundledPackages?: string[]
   customTags: NonNullable<PkgConfigOptions['extract']>['customTags']
   cwd: string
   distPath: string
@@ -29,6 +30,7 @@ export async function extractTypes(options: {
   tsconfigPath: string
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
   const {
+    bundledPackages,
     customTags,
     distPath,
     exportPath,
@@ -47,6 +49,7 @@ export async function extractTypes(options: {
 
   const extractorConfig: ExtractorConfig = ExtractorConfig.prepare({
     configObject: createApiExtractorConfig({
+      bundledPackages,
       distPath,
       exportPath,
       filePath,

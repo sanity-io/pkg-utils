@@ -79,6 +79,7 @@ export interface PkgConfigOptions {
   dist?: string
   exports?: PkgConfigProperty<PkgExports>
   extract?: {
+    bundledPackages?: string[]
     customTags?: TSDocCustomTag[]
     rules?: {
       'ae-forgotten-export'?: PkgRuleLevel
