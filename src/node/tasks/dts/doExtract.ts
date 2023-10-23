@@ -47,7 +47,7 @@ export async function doExtract(
     const targetPath = path.resolve(cwd, entry.targetPath)
     const filePath = path.relative(outDir, targetPath)
     const result = await extractTypes({
-      bundledPackages: config?.extract?.bundledPackages,
+      bundledPackages: config?.extract?.bundledPackages || [],
       customTags: config?.extract?.customTags,
       cwd,
       distPath: outDir,
@@ -64,6 +64,7 @@ export async function doExtract(
     messages.push(...result.messages)
 
     const errors = result.messages.filter((msg) => msg.logLevel === 'error')
+
     if (errors.length > 0) {
       await rimraf(tmpPath)
       throw new DtsError(`encountered ${errors.length} errors when extracting types`, errors)

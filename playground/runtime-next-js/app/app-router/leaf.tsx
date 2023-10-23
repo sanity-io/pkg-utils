@@ -7,5 +7,6 @@ import {useResult} from 'use-client-directive'
 
 export default function Leaf() {
   const result = useResult()
+
   return <div>useContext={result}</div>
 }
