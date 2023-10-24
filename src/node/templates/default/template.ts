@@ -106,6 +106,11 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         initial: true,
       },
       {
+        name: 'prettier',
+        optional: true,
+        initial: true,
+      },
+      {
         name: 'typescript',
         optional: true,
         initial: true,
@@ -121,69 +126,86 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           .filter(Boolean)
           .join(' ') ?? undefined
 
-      const prettierConfig: PrettierConfig = {
-        bracketSpacing: false,
-        printWidth: 100,
-        semi: false,
-        singleQuote: true,
-        tabWidth: 2,
-        plugins: ['prettier-plugin-packagejson'],
-        overrides: [
-          {
-            files: ['*.yml'],
-            options: {
-              singleQuote: false,
-            },
-          },
-        ],
-      }
+      const prettierConfig: PrettierConfig | undefined = features.prettier
+        ? {
+            bracketSpacing: false,
+            plugins: ['prettier-plugin-packagejson'],
+            printWidth: 100,
+            quoteProps: 'consistent',
+            semi: false,
+            singleQuote: true,
+            tabWidth: 2,
+            overrides: [
+              {
+                files: ['*.yml'],
+                options: {
+                  singleQuote: false,
+                },
+              },
+            ],
+          }
+        : undefined
 
       const pkgJson: PackageJSON & {
         prettier?: PrettierConfig
         ['lint-staged']?: Record<string, string[]>
       } = {
         name,
-        version: '0.0.0',
-        description: options.description ?? undefined,
-        keywords: [],
-        license: options.license,
+        'version': '0.0.0',
+        'description': options.description ?? undefined,
+        'keywords': [],
+        'homepage': undefined,
+        'bugs': undefined,
+        'repository': undefined,
+        'license': options.license,
         author,
-        type: 'module',
-        exports: {
+        'type': 'module',
+        'exports': {
           '.': {
             types: undefined,
             source: features.typescript ? './src/index.ts' : './src/index.js',
-            require: './dist/index.cjs',
             import: './dist/index.js',
+            require: './dist/index.cjs',
             default: './dist/index.js',
           },
           './package.json': './package.json',
         },
-        main: './dist/index.cjs',
-        module: './dist/index.js',
-        source: features.typescript ? './src/index.ts' : './src/index.js',
-        files: ['dist', 'src'],
-        scripts: {
-          build: 'run-s clean pkg:build pkg:check',
-          clean: 'rimraf dist',
-          format: 'prettier --write --cache --ignore-unknown .',
+        'main': './dist/index.cjs',
+        'module': './dist/index.js',
+        'source': features.typescript ? './src/index.ts' : './src/index.js',
+        'types': undefined,
+        'files': ['dist', 'src'],
+        'scripts': {
+          'build': 'run-s clean pkg:build pkg:check',
+          'clean': 'rimraf dist',
+          'format': features.prettier ? 'prettier --write --cache --ignore-unknown .' : undefined,
           'pkg:build': 'pkg build --strict',
           'pkg:check': 'pkg check --strict',
         },
-        prettier: prettierConfig,
-        'lint-staged': {
-          '*': ['prettier --write --cache --ignore-unknown'],
-        },
-        dependencies: {},
-        devDependencies: {
+        'lint-staged': features.prettier
+          ? {
+              '*': ['prettier --write --cache --ignore-unknown'],
+            }
+          : undefined,
+        // prettier: prettierConfig,
+        'dependencies': {},
+        'devDependencies': {
           '@sanity/pkg-utils': '*',
+          '@typescript-eslint/eslint-plugin': undefined,
+          '@typescript-eslint/parser': undefined,
+          'eslint': undefined,
+          'eslint-config-prettier': undefined,
+          'eslint-plugin-import': undefined,
+          'eslint-plugin-prettier': undefined,
+          'eslint-plugin-simple-import-sort': undefined,
           'lint-staged': '*',
           'npm-run-all': '*',
-          prettier: '*',
-          'prettier-plugin-packagejson': '*',
-          rimraf: '*',
+          'prettier': features.prettier ? '*' : undefined,
+          'prettier-plugin-packagejson': features.prettier ? '*' : undefined,
+          'rimraf': '*',
+          'typescript': undefined,
         },
-        engines: {
+        'engines': {
           node: '>=18.0.0',
         },
       }
@@ -212,21 +234,33 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         contents: outdent`
         *.local
         *.log
+        *.tgz
 
         .DS_Store
-        etc
         dist
+        etc
         node_modules
         `,
       })
 
-      files.push({
-        name: '.prettierignore',
-        contents: outdent`
-        /dist
-        /pnpm-lock.yaml
-        `,
-      })
+      if (features.prettier) {
+        files.push({
+          name: '.prettierignore',
+          contents: outdent`
+          dist
+          pnpm-lock.yaml
+          `,
+        })
+
+        files.push({
+          name: '.prettierrc',
+          contents: await format(
+            resolve(packagePath, '.prettierrc.json'),
+            JSON.stringify(prettierConfig, null, 2) + '\n',
+            prettierConfig,
+          ),
+        })
+      }
 
       if (repo) {
         pkgJson.repository = {
@@ -250,7 +284,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         pkgJson.scripts = {
           ...pkgJson.scripts,
-          ['type:check']: 'tsc --build',
+          ['ts:check']: 'tsc --build',
         }
 
         const devDependencies = pkgJson.devDependencies
@@ -269,23 +303,32 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             es6: true,
             node: true,
           },
-          extends: ['eslint:recommended', 'plugin:prettier/recommended'],
+          extends: [
+            'eslint:recommended',
+            features.prettier ? 'plugin:prettier/recommended' : undefined,
+          ].filter(Boolean),
           parserOptions: {
             ecmaVersion: 2020,
             sourceType: 'module',
           },
-          plugins: ['import', 'prettier'],
+          plugins: [
+            'import',
+            'simple-import-sort',
+            features.prettier ? 'prettier' : undefined,
+          ].filter(Boolean),
           rules: {
             'no-console': 'error',
             'no-shadow': 'error',
             'no-warning-comments': ['warn', {location: 'start', terms: ['todo', 'fixme']}],
+            'quote-props': ['warn', 'consistent-as-needed'],
+            'strict': ['warn', 'global'],
           },
         }
 
         files.push({
           name: '.eslintignore',
           contents: outdent`
-          /dist
+          dist
           `,
         })
 
@@ -298,10 +341,11 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         pkgJson.devDependencies = {
           ...pkgJson.devDependencies,
-          eslint: '*',
-          'eslint-config-prettier': '*',
+          'eslint': '*',
+          'eslint-config-prettier': features.prettier ? '*' : undefined,
+          'eslint-plugin-simple-import-sort': '*',
           'eslint-plugin-import': '*',
-          'eslint-plugin-prettier': '*',
+          'eslint-plugin-prettier': features.prettier ? '*' : undefined,
         }
 
         if (features.typescript) {
@@ -320,11 +364,16 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             },
             extends: [
               'eslint:recommended',
-              'plugin:prettier/recommended',
+              features.prettier ? 'plugin:prettier/recommended' : undefined,
               'plugin:@typescript-eslint/eslint-recommended',
               'plugin:@typescript-eslint/recommended',
             ].filter(Boolean),
-            plugins: ['import', '@typescript-eslint', 'prettier'].filter(Boolean),
+            plugins: [
+              'import',
+              '@typescript-eslint',
+              'simple-import-sort',
+              features.prettier ? 'prettier' : undefined,
+            ].filter(Boolean),
             rules: {
               '@typescript-eslint/explicit-module-boundary-types': 'error',
               '@typescript-eslint/interface-name-prefix': 'off',
@@ -359,32 +408,32 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             outdent`
             {
               "compilerOptions": {
-                "module": "ES2020",
-                "target": "ES2020",
-                "declaration": true,
-                "declarationMap": true,
-                "sourceMap": true,
-
-                // Strict type-checking
-                "strict": true,
-                "noImplicitAny": true,
-                "strictNullChecks": true,
-                "strictFunctionTypes": true,
-                "strictPropertyInitialization": true,
-                "noImplicitThis": true,
-                "alwaysStrict": true,
-
-                // Additional checks
-                "noUnusedLocals": true,
-                "noUnusedParameters": true,
-                "noImplicitReturns": true,
-                "noFallthroughCasesInSwitch": true,
+                // Completeness
                 "skipLibCheck": true,
 
-                // Module resolution
-                "moduleResolution": "node",
+                // Interop constraints
                 "allowSyntheticDefaultImports": true,
-                "esModuleInterop": true
+                "esModuleInterop": true,
+
+                // Language and environment
+                "target": "ES2020",
+
+                // Modules
+                "module": "ES2020",
+                "moduleResolution": "Node",
+
+                // Type checking
+                "alwaysStrict": true,
+                "noFallthroughCasesInSwitch": true,
+                "noImplicitAny": true,
+                "noImplicitReturns": true,
+                "noImplicitThis": true,
+                "noUnusedLocals": true,
+                "noUnusedParameters": true,
+                "strict": true,
+                "strictFunctionTypes": true,
+                "strictNullChecks": true,
+                "strictPropertyInitialization": true
               }
             }
             `,
@@ -400,10 +449,10 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             {
               "extends": "./tsconfig.settings",
               "include": ["./src"],
+              "exclude": ["./src/**/*.test.ts"],
               "compilerOptions": {
                 "rootDir": ".",
                 "outDir": "./dist",
-                "emitDeclarationOnly": true,
                 "resolveJsonModule": true
               }
             }
@@ -419,7 +468,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             outdent`
             {
               "extends": "./tsconfig.settings",
-              "include": ["./*.cjs", "./*.ts", "./package.config.ts", "./src"],
+              "include": ["./**/*.cjs", "./**/*.ts", "./**/*.tsx"],
+              "exclude": ["./node_modules"],
               "compilerOptions": {
                 "rootDir": ".",
                 "outDir": "./dist",
@@ -443,14 +493,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             outdent`
             import {defineConfig} from '@sanity/pkg-utils'
 
+            // https://github.com/sanity-io/pkg-utils#configuration
             export default defineConfig({
-              extract: {
-                rules: {
-                  // do not require internal members to be prefixed with \`_\`
-                  'ae-internal-missing-underscore': 'off',
-                },
-              },
-
               // the path to the tsconfig file for distributed builds
               tsconfig: 'tsconfig.dist.json',
             })
@@ -536,19 +580,22 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
   }
 }
 
-function format(filepath: string, input: string, prettierOptions: PrettierConfig) {
-  return prettier.format(input, {...prettierOptions, filepath})
+function format(filepath: string, input: string, prettierOptions: PrettierConfig | undefined) {
+  return prettier.format(input, {...prettierOptions, plugins: [], filepath})
 }
 
-async function resolveLatestDeps(deps: Record<string, string>) {
+async function resolveLatestDeps(deps: Record<string, string | undefined>) {
   const depsEntries = Object.entries(deps)
   const latestDeps: Record<string, string> = {}
 
   for (const entry of depsEntries) {
     const [name, version] = entry
-    const latestVersion = await getLatestVersion(name, version)
 
-    latestDeps[name] = latestVersion ? `^${latestVersion}` : version
+    if (version) {
+      const latestVersion = await getLatestVersion(name, version)
+
+      latestDeps[name] = latestVersion ? `^${latestVersion}` : version
+    }
   }
 
   return latestDeps
