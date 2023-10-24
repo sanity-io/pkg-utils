@@ -8,9 +8,9 @@ export interface PackageJSON {
   description?: string
   keywords?: string[]
   bin?: Record<string, string>
-  dependencies?: Record<string, string>
-  devDependencies?: Record<string, string>
-  peerDependencies?: Record<string, string>
+  dependencies?: Record<string, string | undefined>
+  devDependencies?: Record<string, string | undefined>
+  peerDependencies?: Record<string, string | undefined>
   exports?: Record<
     string,
     | `./${string}.json`
@@ -40,7 +40,7 @@ export interface PackageJSON {
   module?: string
   types?: string
   files?: string[]
-  scripts?: Record<string, string>
+  scripts?: Record<string, string | undefined>
   browserslist?: string[]
   engines?: {
     node?: string
