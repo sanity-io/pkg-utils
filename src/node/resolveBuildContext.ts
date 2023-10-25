@@ -53,8 +53,8 @@ export async function resolveBuildContext(options: {
 
   const target: Record<PkgRuntime, string[]> = {
     '*': webTarget.concat(nodeTarget),
-    browser: webTarget,
-    node: nodeTarget,
+    'browser': webTarget,
+    'node': nodeTarget,
   }
 
   const parsedExports = parseExports({extMap, pkg, strict}).reduce<PkgExports>((acc, x) => {

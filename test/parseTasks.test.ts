@@ -39,8 +39,8 @@ test('should parse tasks (type: module)', () => {
     runtime: '*',
     target: {
       '*': ['chrome102', 'node14'],
-      browser: ['chrome102'],
-      node: ['node14'],
+      'browser': ['chrome102'],
+      'node': ['node14'],
     },
     strict: true,
     ts: {},
@@ -145,8 +145,8 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
     runtime: '*',
     target: {
       '*': ['chrome102', 'node14'],
-      browser: ['chrome102'],
-      node: ['node14'],
+      'browser': ['chrome102'],
+      'node': ['node14'],
     },
     strict: true,
     ts: {},

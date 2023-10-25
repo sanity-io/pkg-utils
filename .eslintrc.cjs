@@ -29,6 +29,7 @@ module.exports = {
       {blankLine: 'always', prev: 'block-like', next: '*'},
       {blankLine: 'always', prev: '*', next: 'return'},
     ],
+    'quote-props': ['warn', 'consistent'],
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },

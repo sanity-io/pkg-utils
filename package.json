@@ -75,35 +75,6 @@
       "eslint --ext .cjs,.js,.ts,.tsx --fix"
     ]
   },
-  "prettier": {
-    "bracketSpacing": false,
-    "plugins": [
-      "prettier-plugin-packagejson"
-    ],
-    "printWidth": 100,
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "overrides": [
-      {
-        "files": [
-          "*.json5"
-        ],
-        "options": {
-          "quoteProps": "preserve",
-          "singleQuote": false
-        }
-      },
-      {
-        "files": [
-          "*.yml"
-        ],
-        "options": {
-          "singleQuote": false
-        }
-      }
-    ]
-  },
   "dependencies": {
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.23.2",

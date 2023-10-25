@@ -32,7 +32,7 @@ export function getExtractMessagesConfig(options: {
     },
 
     extractorMessageReporting: {
-      default: {
+      'default': {
         logLevel: 'warning' as ExtractorLogLevel,
         addToApiReportFile: false,
       },
@@ -64,7 +64,7 @@ export function getExtractMessagesConfig(options: {
     },
 
     tsdocMessageReporting: {
-      default: {
+      'default': {
         logLevel: 'warning' as ExtractorLogLevel,
         addToApiReportFile: false,
       },
