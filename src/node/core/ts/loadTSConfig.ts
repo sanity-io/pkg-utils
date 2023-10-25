@@ -4,13 +4,13 @@ import ts from 'typescript'
 export async function loadTSConfig(options: {
   cwd: string
   tsconfigPath: string
-}): Promise<ts.ParsedCommandLine> {
+}): Promise<ts.ParsedCommandLine | undefined> {
   const {cwd, tsconfigPath} = options
 
   const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, tsconfigPath)
 
   if (!configPath) {
-    throw new Error(`could not find a valid '${tsconfigPath}'`)
+    return undefined
   }
 
   const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
