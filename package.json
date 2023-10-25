@@ -51,7 +51,7 @@
     "build:pkg": "node -r esbuild-register scripts/build",
     "check:pkg": "node -r esbuild-register scripts/check",
     "check:types": "tsc --build",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "format": "prettier --write --cache --ignore-unknown . && eslint . --ext .cjs,.js,.ts,.tsx --fix --quiet",
