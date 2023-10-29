@@ -321,6 +321,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             'no-shadow': 'error',
             'no-warning-comments': ['warn', {location: 'start', terms: ['todo', 'fixme']}],
             'quote-props': ['warn', 'consistent-as-needed'],
+            'simple-import-sort/exports': 'warn',
+            'simple-import-sort/imports': 'warn',
             'strict': ['warn', 'global'],
           },
         }
