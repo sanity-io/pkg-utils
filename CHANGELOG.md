@@ -7,12 +7,11 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.2.1](https://github.com/sanity-io/pkg-utils/compare/v3.2.0...v3.2.1) (2023-10-25)
 
-
 ### Bug Fixes
 
-* do not require tsconfig ([2ab178c](https://github.com/sanity-io/pkg-utils/commit/2ab178c8163a028132a932d3e168be3b069b6867))
-* improve `PackageJSON` type ([5c8d4ed](https://github.com/sanity-io/pkg-utils/commit/5c8d4edd9801522abb3b12f66df6585b521e824d))
-* template ([8f95136](https://github.com/sanity-io/pkg-utils/commit/8f9513623a6708672962afb67ac6d90f1d9f4bb2))
+- do not require tsconfig ([2ab178c](https://github.com/sanity-io/pkg-utils/commit/2ab178c8163a028132a932d3e168be3b069b6867))
+- improve `PackageJSON` type ([5c8d4ed](https://github.com/sanity-io/pkg-utils/commit/5c8d4edd9801522abb3b12f66df6585b521e824d))
+- template ([8f95136](https://github.com/sanity-io/pkg-utils/commit/8f9513623a6708672962afb67ac6d90f1d9f4bb2))
 
 ## [3.2.0](https://github.com/sanity-io/pkg-utils/compare/v3.1.1...v3.2.0) (2023-10-23)
 
