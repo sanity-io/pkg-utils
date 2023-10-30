@@ -1,6 +1,6 @@
 {
   "name": "@sanity/pkg-utils",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -86,7 +86,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-replace": "^5.0.4",
     "@rollup/plugin-terser": "^0.4.4",
     "browserslist": "^4.22.1",
     "cac": "^6.7.14",
@@ -108,7 +108,7 @@
     "pretty-bytes": "^5.6.0",
     "prompts": "^2.4.2",
     "rimraf": "^4.4.1",
-    "rollup": "^4.1.5",
+    "rollup": "^4.1.4",
     "rollup-plugin-esbuild": "^6.1.0",
     "rxjs": "^7.8.1",
     "treeify": "^1.1.0",
@@ -116,8 +116,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.2.0",
-    "@commitlint/config-conventional": "^18.1.0",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
     "@sanity/pkg-utils": "workspace:*",
     "@types/babel__core": "^7.20.3",
     "@types/cpx": "^1.5.4",
@@ -129,8 +129,8 @@
     "@types/rimraf": "^3.0.2",
     "@types/treeify": "^1.0.2",
     "@types/uuid": "^9.0.6",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
     "commitizen": "^4.3.0",
     "cpx": "^1.5.0",
     "cz-conventional-changelog": "^3.3.0",
@@ -153,7 +153,7 @@
   "peerDependencies": {
     "typescript": "^4.7 || ^5"
   },
-  "packageManager": "pnpm@8.10.0",
+  "packageManager": "pnpm@8.9.2",
   "engines": {
     "node": ">=16.0.0"
   },
