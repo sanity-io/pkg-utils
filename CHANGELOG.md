@@ -7,11 +7,10 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.2.3](https://github.com/sanity-io/pkg-utils/compare/v3.2.2...v3.2.3) (2023-11-05)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency @microsoft/api-extractor to ^7.38.2 ([#310](https://github.com/sanity-io/pkg-utils/issues/310)) ([7d239c7](https://github.com/sanity-io/pkg-utils/commit/7d239c707ea72ee87b856a7ccc7d9654d00dbb3a))
-* **deps:** update dependency astro to ^3.4.3 ([#311](https://github.com/sanity-io/pkg-utils/issues/311)) ([d04aaaa](https://github.com/sanity-io/pkg-utils/commit/d04aaaab95fdefdc55cc351cef4e06c3a92a7674))
+- **deps:** update dependency @microsoft/api-extractor to ^7.38.2 ([#310](https://github.com/sanity-io/pkg-utils/issues/310)) ([7d239c7](https://github.com/sanity-io/pkg-utils/commit/7d239c707ea72ee87b856a7ccc7d9654d00dbb3a))
+- **deps:** update dependency astro to ^3.4.3 ([#311](https://github.com/sanity-io/pkg-utils/issues/311)) ([d04aaaa](https://github.com/sanity-io/pkg-utils/commit/d04aaaab95fdefdc55cc351cef4e06c3a92a7674))
 
 ## [3.2.2](https://github.com/sanity-io/pkg-utils/compare/v3.2.1...v3.2.2) (2023-10-30)
 
