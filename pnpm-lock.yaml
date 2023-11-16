@@ -145,8 +145,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@types/git-url-parse':
-        specifier: ^9.0.2
-        version: 9.0.2
+        specifier: ^9.0.3
+        version: 9.0.3
       '@types/node':
         specifier: ^20.8.7
         version: 20.8.10
@@ -2758,8 +2758,8 @@ packages:
     resolution: {integrity: sha512-lu9wTsys7S8ctcYkOtH+AaEyr8PAUyCBVxrDQP/IZ+G0kw2+cpQwIWxaruU6cxbw4WZIjti9Gky96kff4dZ7YA==}
     dev: true
 
-  /@types/git-url-parse@9.0.2:
-    resolution: {integrity: sha512-WLeklQNHJVFaChgqO0GdlSxvTPIofIPz/rK2UJdDXkkCYZjy8nonkl4RwssvD/BbKYoFHcvJ7qlAE1RvYNaHOQ==}
+  /@types/git-url-parse@9.0.3:
+    resolution: {integrity: sha512-Wrb8zeghhpKbYuqAOg203g+9YSNlrZWNZYvwxJuDF4dTmerijqpnGbI79yCuPtHSXHPEwv1pAFUB4zsSqn82Og==}
     dev: true
 
   /@types/glob@8.1.0:
@@ -4132,6 +4132,7 @@ packages:
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+    requiresBuild: true
 
   /color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
