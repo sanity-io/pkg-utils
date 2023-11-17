@@ -142,7 +142,7 @@ importers:
         specifier: ^1.5.4
         version: 1.5.4
       '@types/find-config':
-        specifier: ^1.0.3
+        specifier: ^1.0.4
         version: 1.0.4
       '@types/git-url-parse':
         specifier: ^9.0.3
@@ -9316,6 +9316,7 @@ packages:
 
   /remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
+    requiresBuild: true
     dev: true
 
   /repeat-element@1.1.4:
