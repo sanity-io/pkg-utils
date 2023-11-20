@@ -76,9 +76,9 @@
     ]
   },
   "dependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/preset-env": "^7.23.2",
-    "@babel/types": "^7.23.0",
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/types": "^7.23.3",
     "@microsoft/api-extractor": "^7.38.3",
     "@microsoft/tsdoc-config": "^0.16.2",
     "@rollup/plugin-alias": "^5.0.1",
@@ -103,12 +103,12 @@
     "outdent": "^0.8.0",
     "parse-git-config": "^3.0.0",
     "pkg-up": "^3.1.0",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.0",
     "prettier-plugin-packagejson": "^2.4.6",
     "pretty-bytes": "^5.6.0",
     "prompts": "^2.4.2",
     "rimraf": "^4.4.1",
-    "rollup": "^4.3.0",
+    "rollup": "^4.5.0",
     "rollup-plugin-esbuild": "^6.1.0",
     "rxjs": "^7.8.1",
     "treeify": "^1.1.0",
@@ -116,8 +116,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.2.0",
-    "@commitlint/config-conventional": "^18.1.0",
+    "@commitlint/cli": "^18.4.2",
+    "@commitlint/config-conventional": "^18.4.2",
     "@sanity/pkg-utils": "workspace:*",
     "@types/babel__core": "^7.20.4",
     "@types/cpx": "^1.5.5",
@@ -129,12 +129,12 @@
     "@types/rimraf": "^3.0.2",
     "@types/treeify": "^1.0.3",
     "@types/uuid": "^9.0.7",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
     "commitizen": "^4.3.0",
     "cpx": "^1.5.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.53.0",
+    "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-prettier": "^5.0.1",
@@ -153,7 +153,7 @@
   "peerDependencies": {
     "typescript": "^4.7 || ^5"
   },
-  "packageManager": "pnpm@8.10.2",
+  "packageManager": "pnpm@8.10.5",
   "engines": {
     "node": ">=16.0.0"
   },
