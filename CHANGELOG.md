@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.4](https://github.com/sanity-io/pkg-utils/compare/v3.2.3...v3.2.4) (2023-11-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.38.3 ([#317](https://github.com/sanity-io/pkg-utils/issues/317)) ([ac2d844](https://github.com/sanity-io/pkg-utils/commit/ac2d844b8679f0e52fa5a3bca62fbf3f759c97da))
+* **deps:** update dependency astro to ^3.5.3 ([#318](https://github.com/sanity-io/pkg-utils/issues/318)) ([21d3e55](https://github.com/sanity-io/pkg-utils/commit/21d3e55bf399c790b75f1b061be0469640cf4dbb))
+* **deps:** update dependency astro to ^3.5.5 ([#325](https://github.com/sanity-io/pkg-utils/issues/325)) ([b651984](https://github.com/sanity-io/pkg-utils/commit/b651984d2ca20874e8414769d6a1dfad3999b427))
+
 ## [3.2.3](https://github.com/sanity-io/pkg-utils/compare/v3.2.2...v3.2.3) (2023-11-05)
 
 ### Bug Fixes
