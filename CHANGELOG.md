@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.2.5](https://github.com/sanity-io/pkg-utils/compare/v3.2.4...v3.2.5) (2023-11-27)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency esbuild to ^0.19.8 ([#335](https://github.com/sanity-io/pkg-utils/issues/335)) ([00aac1b](https://github.com/sanity-io/pkg-utils/commit/00aac1b239125922132d5c9418ba305ae6291646))
+- **deps:** update dependency esbuild to ^0.19.8 ([#335](https://github.com/sanity-io/pkg-utils/issues/335)) ([00aac1b](https://github.com/sanity-io/pkg-utils/commit/00aac1b239125922132d5c9418ba305ae6291646))
 
 ## [3.2.4](https://github.com/sanity-io/pkg-utils/compare/v3.2.3...v3.2.4) (2023-11-20)
 
