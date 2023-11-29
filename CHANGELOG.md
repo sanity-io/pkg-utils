@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.0](https://github.com/sanity-io/pkg-utils/compare/v3.2.5...v3.3.0) (2023-11-29)
+
+
+### Features
+
+* allow setting experimental rollup output options ([a4b80c6](https://github.com/sanity-io/pkg-utils/commit/a4b80c67410fd05c750a4389c4969b159aa4092c))
+
 ## [3.2.5](https://github.com/sanity-io/pkg-utils/compare/v3.2.4...v3.2.5) (2023-11-27)
 
 ### Bug Fixes
