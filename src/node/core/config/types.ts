@@ -1,5 +1,5 @@
 import {type PluginItem as BabelPluginItem} from '@babel/core'
-import {type Plugin as RollupPlugin} from 'rollup'
+import {NormalizedOutputOptions, type Plugin as RollupPlugin} from 'rollup'
 
 // re-export
 export type {RollupPlugin}
@@ -119,6 +119,7 @@ export interface PkgConfigOptions {
   /** @alpha */
   rollup?: {
     plugins?: PkgConfigProperty<RollupPlugin[]>
+    output?: Partial<NormalizedOutputOptions>
   }
   /**
    * Default runtime of package exports
