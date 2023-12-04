@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.3.2](https://github.com/sanity-io/pkg-utils/compare/v3.3.1...v3.3.2) (2023-12-04)
 
-
 ### Bug Fixes
 
-* test new output vars ([227f8e7](https://github.com/sanity-io/pkg-utils/commit/227f8e7904e2a13e591e6600350d99ed53954671))
+- test new output vars ([227f8e7](https://github.com/sanity-io/pkg-utils/commit/227f8e7904e2a13e591e6600350d99ed53954671))
 
 ## [3.3.1](https://github.com/sanity-io/pkg-utils/compare/v3.3.0...v3.3.1) (2023-12-04)
 
