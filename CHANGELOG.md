@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.1](https://github.com/sanity-io/pkg-utils/compare/v3.3.0...v3.3.1) (2023-12-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency browserslist to ^4.22.2 ([#358](https://github.com/sanity-io/pkg-utils/issues/358)) ([2fbbe8e](https://github.com/sanity-io/pkg-utils/commit/2fbbe8e680a53212a62e135e2a4b1cc46264677b))
+* **deps:** update dependency prettier-plugin-packagejson to ^2.4.7 ([#360](https://github.com/sanity-io/pkg-utils/issues/360)) ([eed9ca1](https://github.com/sanity-io/pkg-utils/commit/eed9ca15d6b2864efe23d1bc0fba61dddff75c9f))
+* **deps:** update dependency rollup to ^4.6.1 ([#353](https://github.com/sanity-io/pkg-utils/issues/353)) ([fe3e0c5](https://github.com/sanity-io/pkg-utils/commit/fe3e0c5a4cc0089d212931a70bcc0e6d2fe7396b))
+
 ## [3.3.0](https://github.com/sanity-io/pkg-utils/compare/v3.2.5...v3.3.0) (2023-11-29)
 
 ### Features
