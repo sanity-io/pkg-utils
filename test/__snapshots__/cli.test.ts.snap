@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`should build \`browser-bundle\` package 1`] = `
-"const runtime = \\"browser\\";
+"const runtime = "browser";
 export { runtime };
 //# sourceMappingURL=browser.js.map
 "
@@ -13,7 +13,7 @@ exports[`should build \`browser-bundle\` package 2`] = `
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-const runtime = \\"browser\\";
+const runtime = "browser";
 exports.runtime = runtime;
 //# sourceMappingURL=browser.cjs.map
 "
@@ -25,14 +25,14 @@ exports[`should build \`custom-dist\` package 1`] = `
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-const VERSION = \\"1.0.0\\";
+const VERSION = "1.0.0";
 exports.VERSION = VERSION;
 //# sourceMappingURL=index.cjs.map
 "
 `;
 
 exports[`should build \`custom-dist\` package 2`] = `
-"const VERSION = \\"1.0.0\\";
+"const VERSION = "1.0.0";
 export { VERSION };
 //# sourceMappingURL=index.js.map
 "
@@ -66,9 +66,9 @@ exports[`should build \`dummy-module\` package 2`] = `
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-const format = \\"commonjs\\";
-const runtime = \\"*\\";
-const path = \\"dist/index.cjs\\";
+const format = "commonjs";
+const runtime = "*";
+const path = "dist/index.cjs";
 exports.format = format;
 exports.path = path;
 exports.runtime = runtime;
@@ -77,18 +77,18 @@ exports.runtime = runtime;
 `;
 
 exports[`should build \`dummy-module\` package 3`] = `
-"const format = \\"esm\\";
-const runtime = \\"*\\";
-const path = \\"dist/index.js\\";
+"const format = "esm";
+const runtime = "*";
+const path = "dist/index.js";
 export { format, path, runtime };
 //# sourceMappingURL=index.js.map
 "
 `;
 
 exports[`should build \`dummy-module\` package 4`] = `
-"const format = \\"esm\\";
-const runtime = \\"browser\\";
-const path = \\"dist/index.browser.js\\";
+"const format = "esm";
+const runtime = "browser";
+const path = "dist/index.browser.js";
 export { format, path, runtime };
 //# sourceMappingURL=index.browser.js.map
 "
@@ -114,9 +114,9 @@ exports[`should build \`dummy-module\` package 6`] = `
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-const format = \\"commonjs\\";
-const runtime = \\"*\\";
-const path = \\"dist/extra.cjs\\";
+const format = "commonjs";
+const runtime = "*";
+const path = "dist/extra.cjs";
 exports.format = format;
 exports.path = path;
 exports.runtime = runtime;
@@ -125,18 +125,18 @@ exports.runtime = runtime;
 `;
 
 exports[`should build \`dummy-module\` package 7`] = `
-"const format = \\"esm\\";
-const runtime = \\"*\\";
-const path = \\"dist/extra.js\\";
+"const format = "esm";
+const runtime = "*";
+const path = "dist/extra.js";
 export { format, path, runtime };
 //# sourceMappingURL=extra.js.map
 "
 `;
 
 exports[`should build \`dummy-module\` package 8`] = `
-"const format = \\"esm\\";
-const runtime = \\"browser\\";
-const path = \\"dist/extra.browser.js\\";
+"const format = "esm";
+const runtime = "browser";
+const path = "dist/extra.browser.js";
 export { format, path, runtime };
 //# sourceMappingURL=extra.browser.js.map
 "
@@ -203,7 +203,7 @@ Object.defineProperty(exports, '__esModule', {
 var multiExport = require('multi-export');
 function plugin() {
   return multiExport.definePlugin({
-    name: \\"plugin\\"
+    name: "plugin"
   });
 }
 exports.plugin = plugin;
@@ -215,7 +215,7 @@ exports[`should build \`multi-export\` package 5`] = `
 "import { definePlugin } from 'multi-export';
 function plugin() {
   return definePlugin({
-    name: \\"plugin\\"
+    name: "plugin"
   });
 }
 export { plugin };
