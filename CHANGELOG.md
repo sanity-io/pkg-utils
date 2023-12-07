@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.3.3](https://github.com/sanity-io/pkg-utils/compare/v3.3.2...v3.3.3) (2023-12-07)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency @microsoft/api-extractor to ^7.38.5 ([#370](https://github.com/sanity-io/pkg-utils/issues/370)) ([f7eb65e](https://github.com/sanity-io/pkg-utils/commit/f7eb65e139be75a00dcc06b576f725c03b4e1ea4))
+- **deps:** update dependency @microsoft/api-extractor to ^7.38.5 ([#370](https://github.com/sanity-io/pkg-utils/issues/370)) ([f7eb65e](https://github.com/sanity-io/pkg-utils/commit/f7eb65e139be75a00dcc06b576f725c03b4e1ea4))
 
 ## [3.3.2](https://github.com/sanity-io/pkg-utils/compare/v3.3.1...v3.3.2) (2023-12-04)
 
