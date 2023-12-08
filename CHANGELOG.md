@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.3.4](https://github.com/sanity-io/pkg-utils/compare/v3.3.3...v3.3.4) (2023-12-08)
 
-
 ### Bug Fixes
 
-* **deps:** Update rollup ([#379](https://github.com/sanity-io/pkg-utils/issues/379)) ([db0782b](https://github.com/sanity-io/pkg-utils/commit/db0782b2e4e40dba11bd4a50d98b80feab1a115f))
+- **deps:** Update rollup ([#379](https://github.com/sanity-io/pkg-utils/issues/379)) ([db0782b](https://github.com/sanity-io/pkg-utils/commit/db0782b2e4e40dba11bd4a50d98b80feab1a115f))
 
 ## [3.3.3](https://github.com/sanity-io/pkg-utils/compare/v3.3.2...v3.3.3) (2023-12-07)
 
