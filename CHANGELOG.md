@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.7](https://github.com/sanity-io/pkg-utils/compare/v3.3.6...v3.3.7) (2024-01-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.39.1 ([#401](https://github.com/sanity-io/pkg-utils/issues/401)) ([922114e](https://github.com/sanity-io/pkg-utils/commit/922114e77dd95308f82147e3f6b5343cc734dd98))
+* **deps:** update dependency git-url-parse to v14 ([#407](https://github.com/sanity-io/pkg-utils/issues/407)) ([5b331a5](https://github.com/sanity-io/pkg-utils/commit/5b331a51df6c41faaf482eeebb879d289bfe0550))
+* **deps:** update dependency prettier-plugin-packagejson to ^2.4.9 ([#402](https://github.com/sanity-io/pkg-utils/issues/402)) ([b0af946](https://github.com/sanity-io/pkg-utils/commit/b0af946d373134080973d2c2d303f0fe7af97e9a))
+
 ## [3.3.6](https://github.com/sanity-io/pkg-utils/compare/v3.3.5...v3.3.6) (2024-01-02)
 
 ### Bug Fixes
