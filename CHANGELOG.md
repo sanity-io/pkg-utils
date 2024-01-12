@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [3.3.8](https://github.com/sanity-io/pkg-utils/compare/v3.3.7...v3.3.8) (2024-01-12)
 
-
 ### Bug Fixes
 
-* **deps:** Update babel monorepo ([#410](https://github.com/sanity-io/pkg-utils/issues/410)) ([d909c67](https://github.com/sanity-io/pkg-utils/commit/d909c6799c9856fb285953c00eaedcf8177617c2))
+- **deps:** Update babel monorepo ([#410](https://github.com/sanity-io/pkg-utils/issues/410)) ([d909c67](https://github.com/sanity-io/pkg-utils/commit/d909c6799c9856fb285953c00eaedcf8177617c2))
 
 ## [3.3.7](https://github.com/sanity-io/pkg-utils/compare/v3.3.6...v3.3.7) (2024-01-08)
 
