@@ -7,15 +7,13 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.1.0](https://github.com/sanity-io/pkg-utils/compare/v4.0.0...v4.1.0) (2024-01-25)
 
-
 ### Features
 
-* add support for shared browerslist configs ([#430](https://github.com/sanity-io/pkg-utils/issues/430)) ([d35abef](https://github.com/sanity-io/pkg-utils/commit/d35abefa1aef3ea7f9d86b8a6d4eb82b1b27b87a))
-
+- add support for shared browerslist configs ([#430](https://github.com/sanity-io/pkg-utils/issues/430)) ([d35abef](https://github.com/sanity-io/pkg-utils/commit/d35abefa1aef3ea7f9d86b8a6d4eb82b1b27b87a))
 
 ### Bug Fixes
 
-* use `browserslist-to-esbuild` ([#426](https://github.com/sanity-io/pkg-utils/issues/426)) ([fe3a8d9](https://github.com/sanity-io/pkg-utils/commit/fe3a8d9583ad6be7afc228412bcd6cd56d6332e7))
+- use `browserslist-to-esbuild` ([#426](https://github.com/sanity-io/pkg-utils/issues/426)) ([fe3a8d9](https://github.com/sanity-io/pkg-utils/commit/fe3a8d9583ad6be7afc228412bcd6cd56d6332e7))
 
 ## [4.0.0](https://github.com/sanity-io/pkg-utils/compare/v3.3.8...v4.0.0) (2024-01-25)
 
