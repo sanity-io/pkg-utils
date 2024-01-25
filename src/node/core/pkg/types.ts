@@ -41,7 +41,7 @@ export interface PackageJSON {
   types?: string
   files?: string[]
   scripts?: Record<string, string | undefined>
-  browserslist?: string[]
+  browserslist?: string | string[]
   engines?: {
     node?: string
     npm?: string

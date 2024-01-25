@@ -39,7 +39,18 @@ export async function resolveBuildContext(options: {
     tsconfig: tsconfigPath,
   } = options
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
-  const targetVersions = browserslistToEsbuild(pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY)
+
+  /* eslint-disable padding-line-between-statements */
+  let browserslist = pkg.browserslist
+  if (!browserslist) {
+    logger.warn(
+      'Could not detect a `browserslist` property in `package.json`, using default configuration. Add `"browserslist": "extends @sanity/browserslist-config"` to silence this warning.',
+    )
+    browserslist = DEFAULT_BROWSERSLIST_QUERY
+  }
+  const targetVersions = browserslistToEsbuild(browserslist)
+  /* eslint-enable padding-line-between-statements */
+
   const nodeTarget = resolveNodeTarget(targetVersions)
   const webTarget = resolveBrowserTarget(targetVersions)
 

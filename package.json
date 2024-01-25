@@ -75,6 +75,7 @@
       "eslint --ext .cjs,.js,.ts,.tsx --fix"
     ]
   },
+  "browserslist": "extends @sanity/browserslist-config",
   "dependencies": {
     "@babel/core": "^7.23.7",
     "@babel/types": "^7.23.6",
@@ -87,6 +88,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
+    "@sanity/browserslist-config": "^1.0.0",
     "browserslist": "^4.22.2",
     "cac": "^6.7.14",
     "chalk": "^4.1.2",
