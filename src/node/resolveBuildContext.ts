@@ -1,3 +1,4 @@
+import browserslistToEsbuild from 'browserslist-to-esbuild'
 import path from 'path'
 
 import {
@@ -14,7 +15,6 @@ import {
 } from './core'
 import {findCommonDirPath, pathContains} from './core/findCommonPath'
 import {Logger} from './logger'
-import {resolveBrowserslistVersions} from './resolveBrowserslistVersions'
 import {resolveBrowserTarget} from './resolveBrowserTarget'
 import {resolveNodeTarget} from './resolveNodeTarget'
 
@@ -39,7 +39,7 @@ export async function resolveBuildContext(options: {
     tsconfig: tsconfigPath,
   } = options
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
-  const targetVersions = resolveBrowserslistVersions(pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY)
+  const targetVersions = browserslistToEsbuild(pkg.browserslist || DEFAULT_BROWSERSLIST_QUERY)
   const nodeTarget = resolveNodeTarget(targetVersions)
   const webTarget = resolveBrowserTarget(targetVersions)
 
