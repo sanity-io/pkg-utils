@@ -7,19 +7,18 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.0.0](https://github.com/sanity-io/pkg-utils/compare/v3.3.8...v4.0.0) (2024-01-25)
 
-
 ### ⚠ BREAKING CHANGES
 
-* only run babel if a custom babel plugin is specified
-* remove `@babel/preset-env`
+- only run babel if a custom babel plugin is specified
+- remove `@babel/preset-env`
 
 ### Bug Fixes
 
-* **deps:** update dependency @microsoft/api-extractor to ^7.39.4 ([#418](https://github.com/sanity-io/pkg-utils/issues/418)) ([31cd33f](https://github.com/sanity-io/pkg-utils/commit/31cd33f3817cdde9f8d2e4e1110026368e3d26be))
-* **deps:** update dependency esbuild to ^0.19.12 ([#422](https://github.com/sanity-io/pkg-utils/issues/422)) ([565e307](https://github.com/sanity-io/pkg-utils/commit/565e307ed5b69ef0a36f404a0c7aa597d2ac5f8b))
-* **deps:** update dependency jsonc-parser to ^3.2.1 ([#423](https://github.com/sanity-io/pkg-utils/issues/423)) ([63d307a](https://github.com/sanity-io/pkg-utils/commit/63d307aef78f1faa33c87c383139e8656936fbb4))
-* only run babel if a custom babel plugin is specified ([6436993](https://github.com/sanity-io/pkg-utils/commit/643699383b60de54194b0d7719387b8f41444e09))
-* remove `@babel/preset-env` ([276042e](https://github.com/sanity-io/pkg-utils/commit/276042e232feccb65b9a422da8bff58258055c11))
+- **deps:** update dependency @microsoft/api-extractor to ^7.39.4 ([#418](https://github.com/sanity-io/pkg-utils/issues/418)) ([31cd33f](https://github.com/sanity-io/pkg-utils/commit/31cd33f3817cdde9f8d2e4e1110026368e3d26be))
+- **deps:** update dependency esbuild to ^0.19.12 ([#422](https://github.com/sanity-io/pkg-utils/issues/422)) ([565e307](https://github.com/sanity-io/pkg-utils/commit/565e307ed5b69ef0a36f404a0c7aa597d2ac5f8b))
+- **deps:** update dependency jsonc-parser to ^3.2.1 ([#423](https://github.com/sanity-io/pkg-utils/issues/423)) ([63d307a](https://github.com/sanity-io/pkg-utils/commit/63d307aef78f1faa33c87c383139e8656936fbb4))
+- only run babel if a custom babel plugin is specified ([6436993](https://github.com/sanity-io/pkg-utils/commit/643699383b60de54194b0d7719387b8f41444e09))
+- remove `@babel/preset-env` ([276042e](https://github.com/sanity-io/pkg-utils/commit/276042e232feccb65b9a422da8bff58258055c11))
 
 ## [3.3.8](https://github.com/sanity-io/pkg-utils/compare/v3.3.7...v3.3.8) (2024-01-12)
 
