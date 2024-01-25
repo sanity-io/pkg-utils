@@ -5,6 +5,20 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/sanity-io/pkg-utils/compare/v3.3.8...v4.0.0) (2024-01-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* only run babel if a custom babel plugin is specified
+* remove `@babel/preset-env`
+
+### Bug Fixes
+
+* **deps:** update dependency jsonc-parser to ^3.2.1 ([#423](https://github.com/sanity-io/pkg-utils/issues/423)) ([63d307a](https://github.com/sanity-io/pkg-utils/commit/63d307aef78f1faa33c87c383139e8656936fbb4))
+* only run babel if a custom babel plugin is specified ([6436993](https://github.com/sanity-io/pkg-utils/commit/643699383b60de54194b0d7719387b8f41444e09))
+* remove `@babel/preset-env` ([276042e](https://github.com/sanity-io/pkg-utils/commit/276042e232feccb65b9a422da8bff58258055c11))
+
 ## [3.3.8](https://github.com/sanity-io/pkg-utils/compare/v3.3.7...v3.3.8) (2024-01-12)
 
 ### Bug Fixes
