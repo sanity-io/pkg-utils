@@ -9,7 +9,7 @@ import path from 'path'
 import {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 
-import {BuildContext, DEFAULT_BROWSERSLIST_QUERY, resolveConfigProperty} from '../../core'
+import {BuildContext, resolveConfigProperty} from '../../core'
 import {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
@@ -99,10 +99,11 @@ export function resolveRollupConfig(
       target,
       tsconfig: ctx.ts.configPath || 'tsconfig.json',
     }),
-    getBabelOutputPlugin({
-      babelrc: false,
-      plugins: config?.babel?.plugins,
-    }),
+    Array.isArray(config?.babel?.plugins) &&
+      getBabelOutputPlugin({
+        babelrc: false,
+        plugins: config?.babel?.plugins,
+      }),
     minify &&
       terser({
         compress: true,
