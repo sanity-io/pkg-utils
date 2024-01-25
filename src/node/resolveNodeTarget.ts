@@ -1,11 +1,5 @@
-import {PackageTargetVersions} from './resolveBrowserslistVersions'
-
-export function resolveNodeTarget(versions: PackageTargetVersions): string[] | undefined {
-  const target: string[] = []
-
-  if (versions.node.length) {
-    target.push(`node${versions.node[0]}`)
-  }
+export function resolveNodeTarget(versions: string[]): string[] | undefined {
+  const target: string[] = versions.filter((version) => version.startsWith('node'))
 
   if (target.length === 0) {
     return undefined
