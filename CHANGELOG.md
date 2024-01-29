@@ -7,11 +7,10 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.1.1](https://github.com/sanity-io/pkg-utils/compare/v4.1.0...v4.1.1) (2024-01-29)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency browserslist to ^4.22.3 ([#438](https://github.com/sanity-io/pkg-utils/issues/438)) ([82de0e7](https://github.com/sanity-io/pkg-utils/commit/82de0e7108cf3389124b516776c85c1f5318a60b))
-* **deps:** update dependency esbuild to ^0.20.0 ([#439](https://github.com/sanity-io/pkg-utils/issues/439)) ([679c7c9](https://github.com/sanity-io/pkg-utils/commit/679c7c9836f1c3515c20faa3ebb30e1857337919))
+- **deps:** update dependency browserslist to ^4.22.3 ([#438](https://github.com/sanity-io/pkg-utils/issues/438)) ([82de0e7](https://github.com/sanity-io/pkg-utils/commit/82de0e7108cf3389124b516776c85c1f5318a60b))
+- **deps:** update dependency esbuild to ^0.20.0 ([#439](https://github.com/sanity-io/pkg-utils/issues/439)) ([679c7c9](https://github.com/sanity-io/pkg-utils/commit/679c7c9836f1c3515c20faa3ebb30e1857337919))
 
 ## [4.1.0](https://github.com/sanity-io/pkg-utils/compare/v4.0.0...v4.1.0) (2024-01-25)
 
