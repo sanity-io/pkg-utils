@@ -258,8 +258,8 @@ importers:
   playground/runtime-astro:
     dependencies:
       astro:
-        specifier: ^4.2.6
-        version: 4.2.6(@types/node@20.10.6)(typescript@5.3.3)
+        specifier: ^4.3.0
+        version: 4.3.0(@types/node@20.10.6)(typescript@5.3.3)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -383,8 +383,8 @@ packages:
     resolution: {integrity: sha512-06DD2ZnItMwUnH81LBLco3tWjcZ1lGU9rLCCBaeUCGYe9cI0wKyY2W3kDyoW1I6GmcWgt1fu+D1CTvz+FIKf8A==}
     dev: false
 
-  /@astrojs/markdown-remark@4.2.0:
-    resolution: {integrity: sha512-qQB+LoxmIqzkhLXaQAzfzlBxZU1jeQYailsifurz89WeY0Q8ywIj8uQQSyqxb7rPPg3ZfdNdxsN9lF5UaCRn0w==}
+  /@astrojs/markdown-remark@4.2.1:
+    resolution: {integrity: sha512-2RQBIwrq+2qPYtp99bH+eL5hfbK0BoxXla85lHsRpIX/IsGqFrPX6pXI2cbWPihBwGbKCdxS6uZNX2QerZWwpQ==}
     dependencies:
       '@astrojs/prism': 3.0.0
       github-slugger: 2.0.0
@@ -2464,14 +2464,14 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /astro@4.2.6(@types/node@20.10.6)(typescript@5.3.3):
-    resolution: {integrity: sha512-k5i8pEI2r45JTkoE0I4JyhOH/dZFpjUA4AONbRd9Gr1LtnGOhKHDftiYOrRLUGx91q7BzoW3DOk+h4yZM4yC3g==}
+  /astro@4.3.0(@types/node@20.10.6)(typescript@5.3.3):
+    resolution: {integrity: sha512-DSn7q7KJ9lmA7B3faz6uaIIRTzJduKNYRAsgXDn+wH1Jso33PFOU3ZcI4knlMAqhFW3MX8WorB8Hg6kR+waQXg==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 2.5.1
       '@astrojs/internal-helpers': 0.2.1
-      '@astrojs/markdown-remark': 4.2.0
+      '@astrojs/markdown-remark': 4.2.1
       '@astrojs/telemetry': 3.0.4
       '@babel/core': 7.23.9
       '@babel/generator': 7.23.6
