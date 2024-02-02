@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.1.2](https://github.com/sanity-io/pkg-utils/compare/v4.1.1...v4.1.2) (2024-02-01)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency prettier-plugin-packagejson to ^2.4.10 ([#446](https://github.com/sanity-io/pkg-utils/issues/446)) ([269ca72](https://github.com/sanity-io/pkg-utils/commit/269ca72a0a5a75847c028b511f365815bf5cc9bf))
+- **deps:** update dependency prettier-plugin-packagejson to ^2.4.10 ([#446](https://github.com/sanity-io/pkg-utils/issues/446)) ([269ca72](https://github.com/sanity-io/pkg-utils/commit/269ca72a0a5a75847c028b511f365815bf5cc9bf))
 
 ## [4.1.1](https://github.com/sanity-io/pkg-utils/compare/v4.1.0...v4.1.1) (2024-01-29)
 
