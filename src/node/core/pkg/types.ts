@@ -42,6 +42,7 @@ export interface PackageJSON {
   files?: string[]
   scripts?: Record<string, string | undefined>
   browserslist?: string | string[]
+  sideEffects?: boolean | string[]
   engines?: {
     node?: string
     npm?: string

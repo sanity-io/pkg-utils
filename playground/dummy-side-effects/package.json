@@ -1,0 +1,30 @@
+{
+  "name": "dummy-side-effects",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["./side-effect*"],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.cjs",
+      "default": "./index.js"
+    },
+    "./side-effect": {
+      "types": "./side-effect.d.ts",
+      "require": "./side-effect.cjs",
+      "default": "./side-effect.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.cjs",
+    "index.d.ts",
+    "side-effect.js",
+    "side-effect.cjs",
+    "side-effect.d.ts"
+  ]
+}

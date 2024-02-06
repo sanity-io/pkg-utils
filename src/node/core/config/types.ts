@@ -1,5 +1,5 @@
-import {type PluginItem as BabelPluginItem} from '@babel/core'
-import {NormalizedOutputOptions, type Plugin as RollupPlugin} from 'rollup'
+import type {PluginItem as BabelPluginItem} from '@babel/core'
+import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 
 // re-export
 export type {RollupPlugin}
@@ -120,6 +120,13 @@ export interface PkgConfigOptions {
   rollup?: {
     plugins?: PkgConfigProperty<RollupPlugin[]>
     output?: Partial<NormalizedOutputOptions>
+    /**
+     * Default options are `preset: 'recommended'` and `propertyReadSideEffects: false`
+     * @alpha
+     */
+    treeshake?: TreeshakingOptions
+    /** @alpha */
+    experimentalLogSideEffects?: boolean
   }
   /**
    * Default runtime of package exports

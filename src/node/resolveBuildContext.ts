@@ -42,7 +42,7 @@ export async function resolveBuildContext(options: {
 
   /* eslint-disable padding-line-between-statements */
   let browserslist = pkg.browserslist
-  if (!browserslist) {
+  if (strict && !browserslist) {
     logger.warn(
       'Could not detect a `browserslist` property in `package.json`, using default configuration. Add `"browserslist": "extends @sanity/browserslist-config"` to silence this warning.',
     )
@@ -50,6 +50,12 @@ export async function resolveBuildContext(options: {
   }
   const targetVersions = browserslistToEsbuild(browserslist)
   /* eslint-enable padding-line-between-statements */
+
+  if (strict && typeof pkg.sideEffects === 'undefined') {
+    logger.error(
+      'No `sideEffects` field in `package.json`, assuming all files are side-effectful. Add `"sideEffects": true` to silence this warning. See https://webpack.js.org/guides/tree-shaking/#clarifying-tree-shaking-and-sideeffects for how to define `sideEffects`.',
+    )
+  }
 
   const nodeTarget = resolveNodeTarget(targetVersions)
   const webTarget = resolveBrowserTarget(targetVersions)
