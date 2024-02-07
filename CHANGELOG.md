@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.4](https://github.com/sanity-io/pkg-utils/compare/v4.1.3...v4.1.4) (2024-02-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.40.0 ([#464](https://github.com/sanity-io/pkg-utils/issues/464)) ([f2af378](https://github.com/sanity-io/pkg-utils/commit/f2af378cb21f0f7afdfefc211475838b52ab23f1))
+* **deps:** update dependency @sanity/browserslist-config to ^1.0.1 ([#468](https://github.com/sanity-io/pkg-utils/issues/468)) ([95d28f2](https://github.com/sanity-io/pkg-utils/commit/95d28f243ea9188bb3a96dcf48d9cc5be64d408b))
+* **deps:** update dependency chokidar to ^3.6.0 ([#465](https://github.com/sanity-io/pkg-utils/issues/465)) ([ec07deb](https://github.com/sanity-io/pkg-utils/commit/ec07debbe5bb9d7fe3ec8683a8507b907dc28df9))
+
 ## [4.1.3](https://github.com/sanity-io/pkg-utils/compare/v4.1.2...v4.1.3) (2024-02-06)
 
 ### Bug Fixes
