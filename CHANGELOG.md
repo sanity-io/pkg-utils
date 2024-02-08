@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.1.5](https://github.com/sanity-io/pkg-utils/compare/v4.1.4...v4.1.5) (2024-02-08)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency @microsoft/api-extractor to ^7.40.1 ([#470](https://github.com/sanity-io/pkg-utils/issues/470)) ([566c8b9](https://github.com/sanity-io/pkg-utils/commit/566c8b977721e039c9ede51db0190b8e062e1aa2))
+- **deps:** update dependency @microsoft/api-extractor to ^7.40.1 ([#470](https://github.com/sanity-io/pkg-utils/issues/470)) ([566c8b9](https://github.com/sanity-io/pkg-utils/commit/566c8b977721e039c9ede51db0190b8e062e1aa2))
 
 ## [4.1.4](https://github.com/sanity-io/pkg-utils/compare/v4.1.3...v4.1.4) (2024-02-07)
 
