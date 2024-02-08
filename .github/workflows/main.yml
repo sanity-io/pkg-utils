@@ -21,7 +21,7 @@ jobs:
     name: Lint & Build
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
       - uses: actions/setup-node@v4
         with:
           cache: pnpm
@@ -44,7 +44,7 @@ jobs:
     name: Playground builds
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
       - uses: actions/setup-node@v4
         with:
           cache: pnpm
@@ -91,7 +91,7 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+      - uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
       - uses: actions/setup-node@v4
         with:
           cache: pnpm
