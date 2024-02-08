@@ -18,8 +18,8 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@microsoft/api-extractor':
-        specifier: ^7.40.0
-        version: 7.40.0(@types/node@20.10.6)
+        specifier: ^7.40.1
+        version: 7.40.1(@types/node@20.10.6)
       '@microsoft/tsdoc-config':
         specifier: ^0.16.2
         version: 0.16.2
@@ -1338,24 +1338,24 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@microsoft/api-extractor-model@7.28.8(@types/node@20.10.6):
-    resolution: {integrity: sha512-/q6ds8XQVqs4Tq0/HueFiMk0wwJH8RaXHm+Z7XJ9ffeZ+6/oQUh6E0++uVfNoMD0JmZvLTV8++UgQ4dXMRQFWA==}
+  /@microsoft/api-extractor-model@7.28.9(@types/node@20.10.6):
+    resolution: {integrity: sha512-lM77dV+VO46MGp5lu4stUBnO3jyr+CrDzU+DtapcOQEZUqJxPYUoK5zjeD+gRZ9ckgGMZC94ch6FBkpmsjwQgw==}
     dependencies:
       '@microsoft/tsdoc': 0.14.2
       '@microsoft/tsdoc-config': 0.16.2
-      '@rushstack/node-core-library': 3.65.0(@types/node@20.10.6)
+      '@rushstack/node-core-library': 3.66.0(@types/node@20.10.6)
     transitivePeerDependencies:
       - '@types/node'
     dev: false
 
-  /@microsoft/api-extractor@7.40.0(@types/node@20.10.6):
-    resolution: {integrity: sha512-U4yTHabfut6WuYUnSM2+FWUsNIJ+w8ZfQGqZWLjH5I/MZvCyDBFyPDIhZAnndd4Vd3pwl4eSBpeMDe8etkCxpA==}
+  /@microsoft/api-extractor@7.40.1(@types/node@20.10.6):
+    resolution: {integrity: sha512-xHn2Zkh6s5JIjP94SG6VtIlIeRJcASgfZpDKV+bgoddMt1X4ujSZFOz7uEGNYNO7mEtdVOvpNKBpC4CDytD8KQ==}
     hasBin: true
     dependencies:
-      '@microsoft/api-extractor-model': 7.28.8(@types/node@20.10.6)
+      '@microsoft/api-extractor-model': 7.28.9(@types/node@20.10.6)
       '@microsoft/tsdoc': 0.14.2
       '@microsoft/tsdoc-config': 0.16.2
-      '@rushstack/node-core-library': 3.65.0(@types/node@20.10.6)
+      '@rushstack/node-core-library': 3.66.0(@types/node@20.10.6)
       '@rushstack/rig-package': 0.5.1
       '@rushstack/ts-command-line': 4.17.1
       colors: 1.2.5
@@ -1726,8 +1726,8 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@rushstack/node-core-library@3.65.0(@types/node@20.10.6):
-    resolution: {integrity: sha512-4AistGV/26JjSMrBuCc0bh13ayQ5mZo/SpnJjETkmkoKNaqIQpZdWr/T04Sa3DLBc4U2e61cx5ZpDzvTVCo+pQ==}
+  /@rushstack/node-core-library@3.66.0(@types/node@20.10.6):
+    resolution: {integrity: sha512-nXyddNe3T9Ph14TrIfjtLZ+GDzC7HL/wF+ZKC18qmRVtz2xXLd1ZzreVgiAgGDwn8ZUWZ/7q//gQJk96iWjSrg==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
