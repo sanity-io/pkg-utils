@@ -47,6 +47,7 @@ const pkgSchema = z.object({
     ),
   ),
   browserslist: z.optional(z.union([z.string(), z.array(z.string())])),
+  sideEffects: z.optional(z.union([z.boolean(), z.array(z.string())])),
 })
 
 export function validatePkg(input: unknown): PackageJSON {

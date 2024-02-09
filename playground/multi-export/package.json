@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "sideEffects": ["./side-effect*"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,6 +28,27 @@
       "import": "./dist/plugin.js",
       "default": "./dist/plugin.js"
     },
+    "./pure": {
+      "types": "./dist/pure.d.ts",
+      "source": "./src/pure.ts",
+      "import": "./dist/pure.js",
+      "require": "./dist/pure.cjs",
+      "default": "./dist/pure.js"
+    },
+    "./side-effect": {
+      "types": "./dist/side-effect.d.ts",
+      "source": "./src/side-effect.ts",
+      "import": "./dist/side-effect.js",
+      "require": "./dist/side-effect.cjs",
+      "default": "./dist/side-effect.js"
+    },
+    "./no-side-effect": {
+      "types": "./dist/no-side-effect.d.ts",
+      "source": "./src/no-side-effect.ts",
+      "import": "./dist/no-side-effect.js",
+      "require": "./dist/no-side-effect.cjs",
+      "default": "./dist/no-side-effect.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
@@ -37,11 +59,24 @@
     "*": {
       "plugin": [
         "./dist/plugin.d.ts"
+      ],
+      "pure": [
+        "./dist/pure.d.ts"
+      ],
+      "side-effect": [
+        "./dist/side-effect.d.ts"
+      ],
+      "no-side-effect": [
+        "./dist/no-side-effect.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "dummy-side-effects": "workspace:*"
   }
 }
+

@@ -159,6 +159,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         'repository': undefined,
         'license': options.license,
         author,
+        'sideEffects': false,
         'type': 'module',
         'exports': {
           '.': {
@@ -188,6 +189,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             }
           : undefined,
         // prettier: prettierConfig,
+        'browserslist': 'extends @sanity/browserslist-config',
         'dependencies': {},
         'devDependencies': {
           '@sanity/pkg-utils': '*',

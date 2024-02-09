@@ -245,11 +245,17 @@ importers:
 
   playground/dummy-module: {}
 
+  playground/dummy-side-effects: {}
+
   playground/extra-bundles: {}
 
   playground/js: {}
 
-  playground/multi-export: {}
+  playground/multi-export:
+    dependencies:
+      dummy-side-effects:
+        specifier: workspace:*
+        version: link:../dummy-side-effects
 
   playground/multi-exports-commonjs: {}
 

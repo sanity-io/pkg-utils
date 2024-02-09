@@ -180,8 +180,11 @@ export function resolveRollupConfig(
       plugins,
 
       treeshake: {
+        preset: 'recommended',
         propertyReadSideEffects: false,
+        ...config?.rollup?.treeshake,
       },
+      experimentalLogSideEffects: config?.rollup?.experimentalLogSideEffects,
     },
     outputOptions: {
       chunkFileNames: () => {
