@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
+  "sideEffects": [
+    "./side-effect*"
+  ],
   "type": "module",
-  "sideEffects": ["./side-effect*"],
   "exports": {
     ".": {
       "types": "./index.d.ts",
