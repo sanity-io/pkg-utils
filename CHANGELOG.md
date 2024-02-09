@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.2.0](https://github.com/sanity-io/pkg-utils/compare/v4.1.5...v4.2.0) (2024-02-09)
 
-
 ### Features
 
-* improve treeshaking ([#463](https://github.com/sanity-io/pkg-utils/issues/463)) ([91831a3](https://github.com/sanity-io/pkg-utils/commit/91831a37b7d0a87d78a727ccb39d1e4593fbd172))
+- improve treeshaking ([#463](https://github.com/sanity-io/pkg-utils/issues/463)) ([91831a3](https://github.com/sanity-io/pkg-utils/commit/91831a37b7d0a87d78a727ccb39d1e4593fbd172))
 
 ## [4.1.5](https://github.com/sanity-io/pkg-utils/compare/v4.1.4...v4.1.5) (2024-02-08)
 
