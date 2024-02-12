@@ -7,10 +7,9 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.2.1](https://github.com/sanity-io/pkg-utils/compare/v4.2.0...v4.2.1) (2024-02-12)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency rollup to ^4.10.0 ([#480](https://github.com/sanity-io/pkg-utils/issues/480)) ([cbc1ea5](https://github.com/sanity-io/pkg-utils/commit/cbc1ea50a1aabcbd202c1c322bf067bbc02d9807))
+- **deps:** update dependency rollup to ^4.10.0 ([#480](https://github.com/sanity-io/pkg-utils/issues/480)) ([cbc1ea5](https://github.com/sanity-io/pkg-utils/commit/cbc1ea50a1aabcbd202c1c322bf067bbc02d9807))
 
 ## [4.2.0](https://github.com/sanity-io/pkg-utils/compare/v4.1.5...v4.2.0) (2024-02-09)
 
