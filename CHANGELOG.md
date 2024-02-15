@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.2](https://github.com/sanity-io/pkg-utils/compare/v4.2.1...v4.2.2) (2024-02-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency astro to ^4.3.6 ([#485](https://github.com/sanity-io/pkg-utils/issues/485)) ([3c9cc66](https://github.com/sanity-io/pkg-utils/commit/3c9cc66e85b8958502483b7d3b3bca98db753c0c))
+* **deps:** update dependency browserslist to ^4.23.0 ([#492](https://github.com/sanity-io/pkg-utils/issues/492)) ([22078df](https://github.com/sanity-io/pkg-utils/commit/22078dfffa4bccf581fcb8a01c66ca14d4fce70e))
+* **deps:** update dependency rollup to ^4.11.0 ([#493](https://github.com/sanity-io/pkg-utils/issues/493)) ([c01619f](https://github.com/sanity-io/pkg-utils/commit/c01619fbc2926e5041b19ac5fa27fa7931d4035f))
+
 ## [4.2.1](https://github.com/sanity-io/pkg-utils/compare/v4.2.0...v4.2.1) (2024-02-12)
 
 ### Bug Fixes
