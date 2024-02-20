@@ -7,13 +7,12 @@ All notable changes to this project will be documented in this file. See
 
 ## [4.2.4](https://github.com/sanity-io/pkg-utils/compare/v4.2.3...v4.2.4) (2024-02-20)
 
-
 ### Bug Fixes
 
-* **deps:** update dependency @microsoft/api-extractor to ^7.40.2 ([#504](https://github.com/sanity-io/pkg-utils/issues/504)) ([e66b744](https://github.com/sanity-io/pkg-utils/commit/e66b7442f868e044dc6a7235183aca430ac74ee7))
-* **deps:** update dependency @microsoft/api-extractor to ^7.40.3 ([#508](https://github.com/sanity-io/pkg-utils/issues/508)) ([df20db0](https://github.com/sanity-io/pkg-utils/commit/df20db00f140feb59fff76567e3a10e8d96ec655))
-* **deps:** update dependency @sanity/browserslist-config to ^1.0.2 ([d58beee](https://github.com/sanity-io/pkg-utils/commit/d58beeeb2b9060436059f42eb9d6743cd521c181))
-* **deps:** update dependency esbuild to ^0.20.1 ([#509](https://github.com/sanity-io/pkg-utils/issues/509)) ([f062233](https://github.com/sanity-io/pkg-utils/commit/f062233be6e0108c39d478826edca771980000e2))
+- **deps:** update dependency @microsoft/api-extractor to ^7.40.2 ([#504](https://github.com/sanity-io/pkg-utils/issues/504)) ([e66b744](https://github.com/sanity-io/pkg-utils/commit/e66b7442f868e044dc6a7235183aca430ac74ee7))
+- **deps:** update dependency @microsoft/api-extractor to ^7.40.3 ([#508](https://github.com/sanity-io/pkg-utils/issues/508)) ([df20db0](https://github.com/sanity-io/pkg-utils/commit/df20db00f140feb59fff76567e3a10e8d96ec655))
+- **deps:** update dependency @sanity/browserslist-config to ^1.0.2 ([d58beee](https://github.com/sanity-io/pkg-utils/commit/d58beeeb2b9060436059f42eb9d6743cd521c181))
+- **deps:** update dependency esbuild to ^0.20.1 ([#509](https://github.com/sanity-io/pkg-utils/issues/509)) ([f062233](https://github.com/sanity-io/pkg-utils/commit/f062233be6e0108c39d478826edca771980000e2))
 
 ## [4.2.3](https://github.com/sanity-io/pkg-utils/compare/v4.2.2...v4.2.3) (2024-02-16)
 
