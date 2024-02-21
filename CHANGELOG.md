@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.9](https://github.com/sanity-io/pkg-utils/compare/v4.2.8...v4.2.9) (2024-02-21)
+
+
+### Bug Fixes
+
+* only minifyInternalExports when compact is true ([8a9d83d](https://github.com/sanity-io/pkg-utils/commit/8a9d83dfa55ea97b991415381ede5f418079e45d))
+
 ## [4.2.8](https://github.com/sanity-io/pkg-utils/compare/v4.2.7...v4.2.8) (2024-02-21)
 
 
