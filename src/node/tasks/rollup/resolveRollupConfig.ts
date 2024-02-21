@@ -98,6 +98,7 @@ export function resolveRollupConfig(
       jsxImportSource: config?.jsxImportSource ?? 'react',
       target,
       tsconfig: ctx.ts.configPath || 'tsconfig.json',
+      treeShaking: true,
     }),
     Array.isArray(config?.babel?.plugins) &&
       getBabelOutputPlugin({
@@ -113,7 +114,7 @@ export function resolveRollupConfig(
             const type = comment.type
 
             // Check if this is a multiline comment
-            if (type == 'comment2') {
+            if (type === 'comment2') {
               // Keep licensing comments
               return /@preserve|@license|@cc_on/i.test(text)
             }
