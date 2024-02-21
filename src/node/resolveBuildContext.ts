@@ -42,10 +42,12 @@ export async function resolveBuildContext(options: {
 
   /* eslint-disable padding-line-between-statements */
   let browserslist = pkg.browserslist
-  if (strict && !browserslist) {
-    logger.warn(
-      'Could not detect a `browserslist` property in `package.json`, using default configuration. Add `"browserslist": "extends @sanity/browserslist-config"` to silence this warning.',
-    )
+  if (!browserslist) {
+    if (strict) {
+      logger.warn(
+        'Could not detect a `browserslist` property in `package.json`, using default configuration. Add `"browserslist": "extends @sanity/browserslist-config"` to silence this warning.',
+      )
+    }
     browserslist = DEFAULT_BROWSERSLIST_QUERY
   }
   const targetVersions = browserslistToEsbuild(browserslist)
