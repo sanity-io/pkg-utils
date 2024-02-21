@@ -99,7 +99,7 @@ export function resolveRollupConfig(
       target,
       tsconfig: ctx.ts.configPath || 'tsconfig.json',
       treeShaking: true,
-      minifySyntax: minify,
+      minifySyntax: config?.minify !== false,
     }),
     Array.isArray(config?.babel?.plugins) &&
       getBabelOutputPlugin({
