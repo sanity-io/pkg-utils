@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.6](https://github.com/sanity-io/pkg-utils/compare/v4.2.5...v4.2.6) (2024-02-21)
+
+
+### Bug Fixes
+
+* set terser compress directives to false ([b707e4d](https://github.com/sanity-io/pkg-utils/commit/b707e4df42eca5422f9f4c544e65b9db07b1149d))
+
 ## [4.2.5](https://github.com/sanity-io/pkg-utils/compare/v4.2.4...v4.2.5) (2024-02-21)
 
 
