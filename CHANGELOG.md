@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.8](https://github.com/sanity-io/pkg-utils/compare/v4.2.7...v4.2.8) (2024-02-21)
+
+
+### Bug Fixes
+
+* always mark template literal as supported ([f9b809e](https://github.com/sanity-io/pkg-utils/commit/f9b809e282b59d884564b4e727411f2125489a7a))
+* **deps:** update dependency @sanity/browserslist-config to ^1.0.3 ([7b438b4](https://github.com/sanity-io/pkg-utils/commit/7b438b4aa81b01b1571f91d5e1639e0093e4e75e))
+* ensure browserslist defaults are set ([271518f](https://github.com/sanity-io/pkg-utils/commit/271518f5504eb30b994ae7f0e0de52d1adbb6cb0))
+
 ## [4.2.7](https://github.com/sanity-io/pkg-utils/compare/v4.2.6...v4.2.7) (2024-02-21)
 
 
