@@ -108,7 +108,7 @@ export function resolveRollupConfig(
       }),
     minify &&
       terser({
-        compress: true,
+        compress: {directives: false},
         output: {
           comments: (_node, comment) => {
             const text = comment.value
