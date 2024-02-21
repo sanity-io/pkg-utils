@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.5](https://github.com/sanity-io/pkg-utils/compare/v4.2.4...v4.2.5) (2024-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.40.5 ([#513](https://github.com/sanity-io/pkg-utils/issues/513)) ([0a24a40](https://github.com/sanity-io/pkg-utils/commit/0a24a40560549c156ded3d25ea893b3b45980c68))
+* enable esbuild syntax minifier ([da6f2f4](https://github.com/sanity-io/pkg-utils/commit/da6f2f4d731effe0d77671bb1dec6f3739e9fe2c))
+* enable esbuild tree shaking ([51ff892](https://github.com/sanity-io/pkg-utils/commit/51ff892b3ff6bbfa778c416bb3d24a6f3ed66bc8))
+
 ## [4.2.4](https://github.com/sanity-io/pkg-utils/compare/v4.2.3...v4.2.4) (2024-02-20)
 
 ### Bug Fixes
