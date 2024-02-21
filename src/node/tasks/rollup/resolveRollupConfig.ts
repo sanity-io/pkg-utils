@@ -215,7 +215,6 @@ export function resolveRollupConfig(
       esModule: true,
       format,
       interop: 'compat',
-      minifyInternalExports: minify,
       sourcemap: config?.sourcemap ?? true,
       hoistTransitiveImports: false,
       ...config?.rollup?.output,
