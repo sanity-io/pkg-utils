@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.7](https://github.com/sanity-io/pkg-utils/compare/v4.2.6...v4.2.7) (2024-02-21)
+
+
+### Bug Fixes
+
+* minify syntax by default ([09ffc73](https://github.com/sanity-io/pkg-utils/commit/09ffc73a7ee665414239dedc0df34c1ed76fcde2))
+
 ## [4.2.6](https://github.com/sanity-io/pkg-utils/compare/v4.2.5...v4.2.6) (2024-02-21)
 
 
