@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.11](https://github.com/sanity-io/pkg-utils/compare/v4.2.10...v4.2.11) (2024-02-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency prettier-plugin-packagejson to ^2.4.12 ([#525](https://github.com/sanity-io/pkg-utils/issues/525)) ([502e2a5](https://github.com/sanity-io/pkg-utils/commit/502e2a5f96714f31fa27c64b6d1cf4655afba005))
+
 ## [4.2.10](https://github.com/sanity-io/pkg-utils/compare/v4.2.9...v4.2.10) (2024-02-22)
 
 
