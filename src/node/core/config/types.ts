@@ -127,6 +127,12 @@ export interface PkgConfigOptions {
     treeshake?: TreeshakingOptions
     /** @alpha */
     experimentalLogSideEffects?: boolean
+    /**
+     * Adds [hash] to chunk filenames, generally only useful if `@sanity/pkg-utils` is used to deploy a package directly to a CDN.
+     * It's not needed when publishing to npm for consumption by other libraries, bundlers and frameworks.
+     * @defaultValue false
+     */
+    hashChunkFileNames?: boolean
   }
   /**
    * Default runtime of package exports
