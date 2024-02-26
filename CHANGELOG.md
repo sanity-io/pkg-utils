@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.0](https://github.com/sanity-io/pkg-utils/compare/v4.2.11...v4.3.0) (2024-02-26)
+
+
+### Features
+
+* make `[hash]` in chunk file names opt-in ([5181ac4](https://github.com/sanity-io/pkg-utils/commit/5181ac41c7d1cc5934f585a0149be2041aa4cc09))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.41.0 ([#531](https://github.com/sanity-io/pkg-utils/issues/531)) ([e982e76](https://github.com/sanity-io/pkg-utils/commit/e982e7621412317d448ce371b41ede210b8cd8a2))
+
 ## [4.2.11](https://github.com/sanity-io/pkg-utils/compare/v4.2.10...v4.2.11) (2024-02-23)
 
 
