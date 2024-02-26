@@ -264,8 +264,8 @@ importers:
   playground/runtime-astro:
     dependencies:
       astro:
-        specifier: ^4.4.3
-        version: 4.4.3(@types/node@20.11.19)(typescript@5.3.3)
+        specifier: ^4.4.4
+        version: 4.4.4(@types/node@20.11.19)(typescript@5.3.3)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -2502,8 +2502,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /astro@4.4.3(@types/node@20.11.19)(typescript@5.3.3):
-    resolution: {integrity: sha512-9Ih+2mJv+i3XgGfU8m9evkNU7NEQWvOhqGsskrCwKmltuTtLol2hPw+eIfE49Yfktzfj5qLC6ZGkPxCJu5gkhA==}
+  /astro@4.4.4(@types/node@20.11.19)(typescript@5.3.3):
+    resolution: {integrity: sha512-EZrDTN888w4sFKqavGsHu8jSaymyxNwnoqIq5NKlMG9WNU/Xn4Yn41pUdBuAOrgNzRp1NyXXhhV6GV1pN71V2Q==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
