@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.1](https://github.com/sanity-io/pkg-utils/compare/v4.3.0...v4.3.1) (2024-03-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.42.1 ([#538](https://github.com/sanity-io/pkg-utils/issues/538)) ([841b846](https://github.com/sanity-io/pkg-utils/commit/841b846a2672654c0ffc16cfbedb635ed42046d9))
+
 ## [4.3.0](https://github.com/sanity-io/pkg-utils/compare/v4.2.11...v4.3.0) (2024-02-26)
 
 
