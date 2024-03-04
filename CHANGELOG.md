@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.0](https://github.com/sanity-io/pkg-utils/compare/v4.3.1...v4.4.0) (2024-03-04)
+
+
+### Features
+
+* add support for svelte ([#546](https://github.com/sanity-io/pkg-utils/issues/546)) ([d765af0](https://github.com/sanity-io/pkg-utils/commit/d765af0d2496d087a878a707df9937fcce6db844))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @microsoft/api-extractor to ^7.42.3 ([#543](https://github.com/sanity-io/pkg-utils/issues/543)) ([9ad938c](https://github.com/sanity-io/pkg-utils/commit/9ad938ca284a42357b7bca4ba744ed17849bbc68))
+
 ## [4.3.1](https://github.com/sanity-io/pkg-utils/compare/v4.3.0...v4.3.1) (2024-03-01)
 
 
