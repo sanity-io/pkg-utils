@@ -33,6 +33,11 @@ export interface PackageJSON {
         require?: string
         default: string
       }
+    | {
+        types?: string
+        svelte: string
+        default?: string
+      }
   >
   main?: string
   browser?: Record<string, string>

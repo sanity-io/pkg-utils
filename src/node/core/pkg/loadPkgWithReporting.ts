@@ -22,7 +22,7 @@ export async function loadPkgWithReporting(options: {
       const _exports = Object.entries(pkg.exports)
 
       for (const [expPath, exp] of _exports) {
-        if (typeof exp === 'string') {
+        if (typeof exp === 'string' || 'svelte' in exp) {
           continue
         }
 

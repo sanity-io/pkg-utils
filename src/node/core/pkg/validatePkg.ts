@@ -43,6 +43,11 @@ const pkgSchema = z.object({
           require: z.optional(z.string()),
           default: z.string(),
         }),
+        z.object({
+          types: z.optional(z.string()),
+          svelte: z.string(),
+          default: z.optional(z.string()),
+        }),
       ]),
     ),
   ),
