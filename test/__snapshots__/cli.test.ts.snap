@@ -219,13 +219,10 @@ export {
 `;
 
 exports[`should build \`multi-export\` package 6`] = `
-"/** @public */
-export declare function plugin(): Plugin_2
+"import {Plugin as Plugin_2} from 'multi-export'
 
 /** @public */
-declare interface Plugin_2 {
-  name: string
-}
+export declare function plugin(): Plugin_2
 
 export {}
 "
