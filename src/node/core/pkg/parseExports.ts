@@ -43,6 +43,8 @@ export function parseExports(options: {
             errors.push('package.json: `exports["./package.json"] must be "./package.json".')
           }
         }
+      } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {
+        // @TODO should we report a warning or a debug message here about a detected svelte export that is ignored?
       } else if (isRecord(exportEntry)) {
         if (exportPath === '.') {
           if (
