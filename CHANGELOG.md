@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.1](https://github.com/sanity-io/pkg-utils/compare/v4.4.0...v4.4.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency astro to ^4.4.10 ([#558](https://github.com/sanity-io/pkg-utils/issues/558)) ([6f2d2b6](https://github.com/sanity-io/pkg-utils/commit/6f2d2b644016b55ea92fc7f8609c3493a3d505a5))
+* **deps:** update dependency rollup to ^4.12.1 ([#565](https://github.com/sanity-io/pkg-utils/issues/565)) ([85d3255](https://github.com/sanity-io/pkg-utils/commit/85d3255a74d2b59b3c5b91c7368811d48ee16263))
+
 ## [4.4.0](https://github.com/sanity-io/pkg-utils/compare/v4.3.1...v4.4.0) (2024-03-04)
 
 
