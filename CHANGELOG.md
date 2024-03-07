@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.0](https://github.com/sanity-io/pkg-utils/compare/v4.4.1...v5.0.0) (2024-03-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove `node.import` ESM CJS wrapper support ([#226](https://github.com/sanity-io/pkg-utils/issues/226))
+
+### Features
+
+* remove `node.import` ESM CJS wrapper support ([#226](https://github.com/sanity-io/pkg-utils/issues/226)) ([28aa84d](https://github.com/sanity-io/pkg-utils/commit/28aa84d8aa23cf9e219ca1cd56e87acc6036d5cc))
+
 ## [4.4.1](https://github.com/sanity-io/pkg-utils/compare/v4.4.0...v4.4.1) (2024-03-06)
 
 
