@@ -254,8 +254,8 @@ importers:
   playground/multi-export:
     dependencies:
       '@sanity/visual-editing':
-        specifier: ^1.6.0
-        version: 1.6.0(@sanity/client@6.15.1)(@sveltejs/kit@2.5.2)(svelte@4.2.12)
+        specifier: ^1.7.0
+        version: 1.7.0(@sanity/client@6.15.1)(@sveltejs/kit@2.5.2)(svelte@4.2.12)
       dummy-side-effects:
         specifier: workspace:*
         version: link:../dummy-side-effects
@@ -1918,12 +1918,12 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /@sanity/visual-editing@1.6.0(@sanity/client@6.15.1)(@sveltejs/kit@2.5.2)(svelte@4.2.12):
-    resolution: {integrity: sha512-6WGrbmwfcyVOuuz5VP2gYCtRNaL458R98G+Hd+1FjXVwZ7b/hPwU97/JQ2Qc0lmjCplPMZzHERGcPXBWyrl9SQ==}
+  /@sanity/visual-editing@1.7.0(@sanity/client@6.15.1)(@sveltejs/kit@2.5.2)(svelte@4.2.12):
+    resolution: {integrity: sha512-jQm5hKZs9+Bu/8nXDSMl3IQkyIJnu87Xjk4Ca/FHtnfJ2D3JY3TJgcHnUlaBJPKi45lwmqq1VcstcACvtLT5lw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
-      '@sanity/client': ^6.15.1
+      '@sanity/client': ^6.15.2
       '@sveltejs/kit': '>= 2'
       next: '>= 13'
       svelte: '>= 4'
@@ -1948,7 +1948,7 @@ packages:
       react-is: 18.2.0
       scroll-into-view-if-needed: 3.1.0
       svelte: 4.2.12
-      valibot: 0.29.0
+      valibot: 0.30.0
     dev: false
 
   /@sinclair/typebox@0.27.8:
@@ -10265,8 +10265,8 @@ packages:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
     dev: true
 
-  /valibot@0.29.0:
-    resolution: {integrity: sha512-JhZn08lwZPhAamOCfBwBkv/btQt4KeQhekULPH8crH053zUCLSOGEF2zKExu3bFf245tsj6J1dY0ysd/jUiMIQ==}
+  /valibot@0.30.0:
+    resolution: {integrity: sha512-5POBdbSkM+3nvJ6ZlyQHsggisfRtyT4tVTo1EIIShs6qCdXJnyWU5TJ68vr8iTg5zpOLjXLRiBqNx+9zwZz/rA==}
     dev: false
 
   /validate-npm-package-license@3.0.4:
