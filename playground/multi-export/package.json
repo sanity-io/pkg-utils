@@ -11,23 +11,15 @@
     ".": {
       "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
-      "require": "./dist/index.cjs",
-      "node": {
-        "module": "./dist/index.js",
-        "import": "./dist/index.cjs.js"
-      },
       "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./plugin": {
       "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
-      "require": "./dist/plugin.cjs",
-      "node": {
-        "module": "./dist/plugin.js",
-        "import": "./dist/plugin.cjs.js"
-      },
       "import": "./dist/plugin.js",
+      "require": "./dist/plugin.cjs",
       "default": "./dist/plugin.js"
     },
     "./pure": {

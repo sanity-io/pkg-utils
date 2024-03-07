@@ -4,27 +4,20 @@
   "private": true,
   "license": "MIT",
   "type": "commonjs",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
-      "require": "./dist/index.js",
-      "node": {
-        "module": "./dist/index.esm.js",
-        "import": "./dist/index.cjs.mjs"
-      },
       "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
       "default": "./dist/index.esm.js"
     },
     "./plugin": {
       "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
-      "require": "./dist/plugin.js",
-      "node": {
-        "module": "./dist/plugin.esm.js",
-        "import": "./dist/plugin.cjs.mjs"
-      },
       "import": "./dist/plugin.esm.js",
+      "require": "./dist/plugin.js",
       "default": "./dist/plugin.esm.js"
     },
     "./package.json": "./package.json"

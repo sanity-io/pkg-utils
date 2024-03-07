@@ -192,17 +192,6 @@ describe('parseExports', () => {
         },
         `"node" can output both a "import" and "require" condition`,
       ],
-      [
-        {
-          require: './dist/index.cjs',
-          node: {
-            module: './dist/index.js',
-            import: './dist/index.cjs.js',
-          },
-          import: './dist/index.js',
-        },
-        `"node" can be used to implement a wrapper that protects against the "dual package hazard"`,
-      ],
     ])('%o', (json, msg) => {
       const extMap = getPkgExtMap({legacyExports: false})
 
@@ -272,7 +261,28 @@ describe('parseExports', () => {
           import: './dist/index.js',
           node: {
             module: './dist/index.js',
-            import: './dist/index.cjs.js',
+          },
+          default: './dist/index.js',
+        },
+        `"node.module" considered harmful`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          module: './dist/index.js',
+          require: './dist/index.cjs',
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        `"module" considered harmful`,
+      ],
+      [
+        {
+          source: './src/index.ts',
+          require: './dist/index.cjs',
+          import: './dist/index.js',
+          node: {
+            import: './dist/index.node.js',
           },
           default: './dist/index.js',
         },
@@ -282,8 +292,7 @@ describe('parseExports', () => {
         {
           source: './src/index.ts',
           node: {
-            module: './dist/index.js',
-            import: './dist/index.cjs.js',
+            import: './dist/index.node.js',
             require: './dist/index.cjs',
           },
           import: './dist/index.js',
@@ -294,28 +303,13 @@ describe('parseExports', () => {
       ],
       [
         {
-          source: './src/index.ts',
           require: './dist/index.cjs',
           node: {
             import: './dist/index.cjs.js',
           },
           import: './dist/index.js',
-          default: './dist/index.js',
         },
-        `"node.module" should be specified when a "node.import" dual package hazard is used`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          require: './dist/index.cjs',
-          module: './dist/index.js',
-          node: {
-            import: './dist/index.cjs.js',
-          },
-          import: './dist/index.js',
-          default: './dist/index.js',
-        },
-        `"module" should be moved to "node.module" when it's the same as "import"`,
+        `the "node" re-export pattern considered harmful, protect against the "dual package hazard" in ways that have high ecosystem compatibility`,
       ],
       [
         {
