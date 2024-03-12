@@ -73,15 +73,13 @@
     "build": "run-s clean && pkg build --strict && svelte-kit sync && svelte-package -i ./src/svelte -o dist-svelte && pkg check --strict",
     "clean": "rimraf dist"
   },
-  "dependencies": {
-    "@sanity/visual-editing": "^1.7.1",
-    "dummy-side-effects": "workspace:*"
-  },
   "devDependencies": {
+    "@sanity/visual-editing": "^1.7.1",
     "@sveltejs/adapter-auto": "^3.1.1",
     "@sveltejs/kit": "^2.5.3",
     "@sveltejs/package": "^2.3.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
+    "dummy-side-effects": "workspace:*",
     "svelte": "^4.2.12",
     "vite": "^5.1.6"
   },
