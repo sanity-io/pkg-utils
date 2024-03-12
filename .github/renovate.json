@@ -11,13 +11,12 @@
     {
       "description": "Dependency updates to other package jsons than the root should always use the chore scope as they aren't published to npm",
       "matchFileNames": ["playground/**/package.json"],
-      "extends": [":semanticCommitTypeAll(chore)"],
+      "semanticCommitType": "chore",
       "groupSlug": "playground"
     },
     {
       "matchDepTypes": ["dependencies"],
-      "rangeStrategy": "bump",
-      "semanticCommitType": "fix"
+      "rangeStrategy": "bump"
     }
   ]
 }
