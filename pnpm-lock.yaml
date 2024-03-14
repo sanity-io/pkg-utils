@@ -285,8 +285,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^4.5.2
-        version: 4.5.2(@types/node@20.11.26)(typescript@5.4.2)
+        specifier: ^4.5.3
+        version: 4.5.3(@types/node@20.11.26)(typescript@5.4.2)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -2796,8 +2796,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /astro@4.5.2(@types/node@20.11.26)(typescript@5.4.2):
-    resolution: {integrity: sha512-Nq3GojlwXJ3XD047khraCWu/6aqGFfcyq7Q0blpTBSZnCz2s4Zri04PHvUkbKF7TK2UljkFuTXKP0CE4ZuJi9Q==}
+  /astro@4.5.3(@types/node@20.11.26)(typescript@5.4.2):
+    resolution: {integrity: sha512-MEiLeAr3+THeadTZCQ4U+DI9VTTUZdYrPEPedSKmQwqnkiPkLjpLgx4yOcyH7Yp4t57+SWiC6W0rt7lPGM36Fg==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
@@ -2811,7 +2811,6 @@ packages:
       '@babel/plugin-transform-react-jsx': 7.23.4(@babel/core@7.24.0)
       '@babel/traverse': 7.24.0
       '@babel/types': 7.24.0
-      '@shikijs/core': 1.1.7
       '@types/babel__core': 7.20.5
       acorn: 8.11.3
       aria-query: 5.3.0
@@ -2842,7 +2841,6 @@ packages:
       js-yaml: 4.1.0
       kleur: 4.1.5
       magic-string: 0.30.8
-      mdast-util-to-hast: 13.0.2
       mime: 3.0.0
       ora: 7.0.1
       p-limit: 5.0.0
@@ -3548,6 +3546,7 @@ packages:
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+    requiresBuild: true
 
   /color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
@@ -3955,6 +3954,7 @@ packages:
   /deep-extend@0.6.0:
     resolution: {integrity: sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==}
     engines: {node: '>=4.0.0'}
+    requiresBuild: true
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -9557,6 +9557,7 @@ packages:
   /strip-json-comments@2.0.1:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
 
   /strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
