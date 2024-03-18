@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.4](https://github.com/sanity-io/pkg-utils/compare/v5.0.3...v5.0.4) (2024-03-18)
+
+
+### Bug Fixes
+
+* prefix chunks folder with `[format]` instead of the filename ([c4fadaf](https://github.com/sanity-io/pkg-utils/commit/c4fadaf67428f5c0204885be7f4e5355c6f17638))
+
 ## [5.0.3](https://github.com/sanity-io/pkg-utils/compare/v5.0.2...v5.0.3) (2024-03-18)
 
 
