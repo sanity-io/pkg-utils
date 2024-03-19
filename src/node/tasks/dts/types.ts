@@ -1,4 +1,4 @@
-import {ExtractorMessage} from '@microsoft/api-extractor'
+import type {ExtractorMessage} from '@microsoft/api-extractor'
 
 /** @internal */
 export interface DtsWatchTask {
@@ -7,7 +7,7 @@ export interface DtsWatchTask {
     exportPath: string
     importId: string
     sourcePath: string
-    targetPath: string
+    targetPaths: string[]
   }[]
 }
 
@@ -18,7 +18,7 @@ export interface DtsTask {
     exportPath: string
     importId: string
     sourcePath: string
-    targetPath: string
+    targetPaths: string[]
   }[]
 }
 
@@ -26,5 +26,5 @@ export interface DtsTask {
 export interface DtsResult {
   type: 'dts'
   messages: ExtractorMessage[]
-  results: {sourcePath: string; filePath: string}[]
+  results: {sourcePath: string; filePaths: string[]}[]
 }

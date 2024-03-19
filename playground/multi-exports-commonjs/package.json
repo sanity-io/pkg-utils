@@ -7,14 +7,12 @@
   "type": "commonjs",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
       "import": "./dist/index.esm.js",
       "require": "./dist/index.js",
       "default": "./dist/index.esm.js"
     },
     "./plugin": {
-      "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
       "import": "./dist/plugin.esm.js",
       "require": "./dist/plugin.js",

@@ -15,7 +15,6 @@ export function parseExports(options: {
   const rootExport: PkgExport & {_path: string} = {
     _exported: true,
     _path: '.',
-    types: pkg.types,
     source: pkg.source || '',
     browser: pkg.browser && {
       source: pkg.source || '',
@@ -30,6 +29,16 @@ export function parseExports(options: {
   const extraExports: (PkgExport & {_path: string})[] = []
 
   const errors: string[] = []
+
+  if (strict && !pkg.types && pkg.source?.endsWith('.ts')) {
+    errors.push(
+      'package.json: `types` must be declared for the npm listing to show as a TypeScript module.',
+    )
+  }
+
+  if (strict && 'typings' in pkg) {
+    errors.push('package.json: `typings` should be `types`')
+  }
 
   if (pkg.exports) {
     if (strict && !pkg.exports['./package.json']) {
@@ -60,12 +69,6 @@ export function parseExports(options: {
           if (exportEntry.import && rootExport.import && exportEntry.import !== rootExport.import) {
             errors.push(
               'package.json: mismatch between "module" and "exports.import" These must be equal.',
-            )
-          }
-
-          if (exportEntry.types && rootExport.types && exportEntry.types !== rootExport.types) {
-            errors.push(
-              'package.json: mismatch between "types" and "exports.types". These must be equal.',
             )
           }
 

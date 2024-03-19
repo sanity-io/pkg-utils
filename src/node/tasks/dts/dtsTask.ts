@@ -13,12 +13,16 @@ export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
     [
       'Build type definitions...',
       '  entries:',
-      ...task.entries.map((entry) =>
-        [
-          `    - ${chalk.cyan(entry.importId)}: `,
-          `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(entry.targetPath)}`,
-        ].join(''),
-      ),
+      ...task.entries.map((entry) => {
+        return entry.targetPaths
+          .map((targetPath) => {
+            return [
+              `    - ${chalk.cyan(entry.importId)}: `,
+              `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(targetPath)}`,
+            ].join('')
+          })
+          .join('\n')
+      }),
     ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {
