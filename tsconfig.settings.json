@@ -3,18 +3,19 @@
     // Completeness
     "skipLibCheck": true,
 
-    // Interop constraints
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-
     // Language and environment
     "target": "ES2020",
 
     // Modules
-    "module": "ES2020",
-    "moduleResolution": "Node",
+    "module": "Preserve",
+    // These options are set when "module" is "Preserve"
+    // "moduleResolution": "Bundler",
+    // "esModuleInterop": true,
+    // "resolveJsonModule": true,
+    "moduleDetection": "force",
 
     // Type checking
+    "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,

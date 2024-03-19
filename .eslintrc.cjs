@@ -49,6 +49,8 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/member-delimiter-style': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
+        'simple-import-sort/imports': 'error',
+        'simple-import-sort/exports': 'error',
       },
     },
   ],

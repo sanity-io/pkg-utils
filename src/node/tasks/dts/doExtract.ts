@@ -57,6 +57,7 @@ export async function doExtract(
       projectPath: cwd,
       rules: config?.extract?.rules,
       sourceTypesPath: sourceTypesPath,
+      tsconfig: ts.config,
       tmpPath,
       tsconfigPath: path.resolve(cwd, ts.configPath || 'tsconfig.json'),
     })

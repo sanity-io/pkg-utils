@@ -8,6 +8,7 @@ import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
 import path from 'path'
 import prettier from 'prettier'
+import ts from 'typescript'
 
 import type {BuildFile, PkgConfigOptions} from '../../core'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
@@ -27,6 +28,7 @@ export async function extractTypes(options: {
   rules?: NonNullable<PkgConfigOptions['extract']>['rules']
   sourceTypesPath: string
   tmpPath: string
+  tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
   const {
@@ -40,6 +42,7 @@ export async function extractTypes(options: {
     rules,
     sourceTypesPath,
     tmpPath,
+    tsconfig,
     tsconfigPath,
   } = options
 
@@ -56,6 +59,7 @@ export async function extractTypes(options: {
       messages: getExtractMessagesConfig({rules}),
       projectFolder: projectPath,
       mainEntryPointFilePath: sourceTypesPath,
+      tsconfig,
       tsconfigPath,
     }),
     configObjectFullPath: undefined,
