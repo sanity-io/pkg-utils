@@ -1,7 +1,6 @@
-import {expect, test} from 'vitest'
-
 import apiExtractorJson from '@microsoft/api-extractor/package.json' assert {type: 'json'}
 import pkgUtilsJson from '@sanity/pkg-utils/package.json' assert {type: 'json'}
+import {expect, test} from 'vitest'
 
 /**
  * Why are we requiring the same version of TypeScript as @microsoft/api-extractor?
