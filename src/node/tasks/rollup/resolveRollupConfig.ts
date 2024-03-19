@@ -195,12 +195,13 @@ export function resolveRollupConfig(
       chunkFileNames: () => {
         const parts = outputExt.split('.')
         const prefix = config?.rollup?.hashChunkFileNames ? '[name]-[hash]' : '[name]'
+        const folder = config?.rollup?.hashChunkFileNames ? '_chunks' : '_chunks-[format]'
 
         if (parts.length === 3) {
-          return `_chunks-[format]/${prefix}.${parts[2]}`
+          return `${folder}/${prefix}.${parts[2]}`
         }
 
-        return `_chunks-[format]/${prefix}${outputExt}`
+        return `${folder}/${prefix}${outputExt}`
       },
       compact: minify,
       dir: outDir,
