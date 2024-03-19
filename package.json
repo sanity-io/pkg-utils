@@ -80,7 +80,7 @@
   "dependencies": {
     "@babel/core": "^7.24.1",
     "@babel/types": "^7.24.0",
-    "@microsoft/api-extractor": "^7.43.0",
+    "@microsoft/api-extractor": "7.43.0",
     "@microsoft/tsdoc-config": "^0.16.2",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-babel": "^6.0.4",
@@ -149,12 +149,12 @@
     "recast": "^0.23.6",
     "rollup-plugin-visualizer": "^5.12.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.2",
+    "typescript": "5.4.2",
     "vitest": "^1.4.0",
     "vitest-github-actions-reporter": "^0.11.1"
   },
   "peerDependencies": {
-    "typescript": "^4.7 || ^5"
+    "typescript": "5.4.2"
   },
   "packageManager": "pnpm@8.15.5",
   "engines": {
