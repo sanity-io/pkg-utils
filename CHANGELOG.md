@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.0](https://github.com/sanity-io/pkg-utils/compare/v5.0.7...v5.1.0) (2024-03-19)
+
+
+### Features
+
+* support `module: "Preserve"` in TS 5.4 ([8f62425](https://github.com/sanity-io/pkg-utils/commit/8f624254903e7d86f9b4769606bc7cdedc4bbeef))
+
+
+### Bug Fixes
+
+* use the same `typescript` version as `@microsoft/api-extractor` ([d63fab6](https://github.com/sanity-io/pkg-utils/commit/d63fab6904abc84185f2f986a92fb91d9341e35c))
+
 ## [5.0.7](https://github.com/sanity-io/pkg-utils/compare/v5.0.6...v5.0.7) (2024-03-19)
 
 
