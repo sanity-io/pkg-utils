@@ -1,7 +1,7 @@
-import {PkgExport} from '../config'
+import type {PkgExport} from '../config'
 import {isRecord} from '../isRecord'
-import {PkgExtMap} from './pkgExt'
-import {PackageJSON} from './types'
+import type {PkgExtMap} from './pkgExt'
+import type {PackageJSON} from './types'
 import {validateExports} from './validateExports'
 
 /** @internal */

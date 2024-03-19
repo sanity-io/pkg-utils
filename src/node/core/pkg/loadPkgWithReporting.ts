@@ -1,10 +1,10 @@
 import chalk from 'chalk'
 import {ZodError} from 'zod'
 
-import {Logger} from '../../logger'
 import {assertFirst, assertLast, assertOrder} from './helpers'
+import type {Logger} from '../../logger'
 import {loadPkg} from './loadPkg'
-import {PackageJSON} from './types'
+import type {PackageJSON} from './types'
 
 /** @internal */
 export async function loadPkgWithReporting(options: {

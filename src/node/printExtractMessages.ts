@@ -1,8 +1,8 @@
-import {ExtractorMessage} from '@microsoft/api-extractor'
+import type {ExtractorMessage} from '@microsoft/api-extractor'
 import chalk from 'chalk'
 import path from 'path'
 
-import {BuildContext} from './core'
+import type {BuildContext} from './core'
 
 export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessage[]): void {
   const {cwd, logger} = ctx
