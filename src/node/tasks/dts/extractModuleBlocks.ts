@@ -1,8 +1,8 @@
 import type {File} from '@babel/types'
-import {ExtractorResult} from '@microsoft/api-extractor'
+import type {ExtractorResult} from '@microsoft/api-extractor'
 import {parse, print} from 'recast'
 import typeScriptParser from 'recast/parsers/typescript'
-import {Program} from 'typescript'
+import type {Program} from 'typescript'
 
 /**
  * A workaround to find all module blocks in extract TS files.
