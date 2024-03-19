@@ -2,5 +2,31 @@
   "name": "reference-esm",
   "description": "A reference implementation of TypeScript 5.4 best practice for a module that is ESM by default, and also ships CJS.",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "browser": {
+        "import": "./lib/index.browser.js",
+        "require": "./lib/index.browser.cjs"
+      },
+      "node": {
+        "import": "./lib/index.node.js",
+        "require": "./lib/index.node.cjs"
+      },
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "tsc",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "20.1.1",
+    "typescript": "5.4.2"
+  }
 }

@@ -282,6 +282,32 @@ importers:
 
   playground/node-api: {}
 
+  playground/reference-cjs:
+    devDependencies:
+      '@tsconfig/node-lts':
+        specifier: 20.1.1
+        version: 20.1.1
+      typescript:
+        specifier: 5.4.2
+        version: 5.4.2
+
+  playground/reference-cjs-legacy: {}
+
+  playground/reference-cjs-only: {}
+
+  playground/reference-esm:
+    devDependencies:
+      '@tsconfig/node-lts':
+        specifier: 20.1.1
+        version: 20.1.1
+      typescript:
+        specifier: 5.4.2
+        version: 5.4.2
+
+  playground/reference-esm-legacy: {}
+
+  playground/reference-esm-only: {}
+
   playground/runtime-astro:
     devDependencies:
       astro:
@@ -2072,6 +2098,10 @@ packages:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
       tslib: 2.6.2
+    dev: true
+
+  /@tsconfig/node-lts@20.1.1:
+    resolution: {integrity: sha512-V7wHydi1dv8I8xiOX3pJ0lhC+MlOakznvLks94J6y/TqQK6DBcbdD1G4jEq8yU+s6lBASPn4e1Ci636fDqeyvQ==}
     dev: true
 
   /@tsconfig/node10@1.0.9:
