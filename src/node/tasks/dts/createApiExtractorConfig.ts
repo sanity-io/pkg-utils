@@ -1,4 +1,4 @@
-import {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
+import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import path from 'path'
 
 export function createApiExtractorConfig(options: {

@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
-import {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
-import {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
+import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
+import type {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
 
 /** @internal */
 export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
@@ -146,7 +146,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
           if (relativeTargetPath) {
             fs.writeFileSync(
               path.resolve(cwd, `${exp._path}.js`),
-              [`// AUTO-GENERATED – DO NOT EDIT`, `export * from '${relativeTargetPath}'`, ``].join(
+              ['// AUTO-GENERATED – DO NOT EDIT', `export * from '${relativeTargetPath}'`, ''].join(
                 '\n',
               ),
             )

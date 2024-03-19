@@ -1,12 +1,12 @@
-import {ExtractorMessage} from '@microsoft/api-extractor'
+import type {ExtractorMessage} from '@microsoft/api-extractor'
 import path from 'path'
 import rimraf from 'rimraf'
 
-import {BuildContext} from '../../core'
+import type {BuildContext} from '../../core'
 import {buildTypes} from './buildTypes'
 import {DtsError} from './DtsError'
 import {extractTypes} from './extractTypes'
-import {DtsResult, DtsTask, DtsWatchTask} from './types'
+import type {DtsResult, DtsTask, DtsWatchTask} from './types'
 
 /**
  * - Build type definitions to a temporary directory using TypeScript compiler.

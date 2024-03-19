@@ -6,11 +6,11 @@ import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import path from 'path'
-import {InputOptions, OutputOptions, Plugin} from 'rollup'
+import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 
-import {BuildContext, resolveConfigProperty} from '../../core'
-import {RollupTask, RollupWatchTask} from '../types'
+import {type BuildContext, resolveConfigProperty} from '../../core'
+import type {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -58,7 +58,7 @@ export function resolveRollupConfig(
           ? {...replacements}
           : {
               'process.env.PKG_FILE_PATH': (arg) => {
-                const sourcePath = './' + path.relative(cwd, arg)
+                const sourcePath = `./${path.relative(cwd, arg)}`
                 const entry = entries.find((e) => e.source === sourcePath)
 
                 if (!entry) {
