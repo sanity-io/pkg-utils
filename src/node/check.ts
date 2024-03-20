@@ -1,10 +1,10 @@
-import esbuild, {BuildFailure} from 'esbuild'
+import esbuild, {type BuildFailure} from 'esbuild'
 import path from 'path'
 
 import {createConsoleSpy} from './consoleSpy'
 import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
 import {fileExists} from './fileExists'
-import {createLogger, Logger} from './logger'
+import {createLogger, type Logger} from './logger'
 import {printPackageTree} from './printPackageTree'
 import {resolveBuildContext} from './resolveBuildContext'
 
@@ -17,7 +17,7 @@ export async function check(options: {
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
   const logger = createLogger()
 
-  const pkg = await loadPkgWithReporting({cwd, logger})
+  const pkg = await loadPkgWithReporting({cwd, logger, strict})
   const config = await loadConfig({cwd})
   const extMap = getPkgExtMap({legacyExports: config?.legacyExports ?? false})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'

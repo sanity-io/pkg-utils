@@ -33,7 +33,8 @@ export async function build(options: {
   const {cwd, emitDeclarationOnly, strict = false, tsconfig: tsconfigOption} = options
   const logger = createLogger()
 
-  const pkg = await loadPkgWithReporting({cwd, logger})
+  const pkg = await loadPkgWithReporting({cwd, logger, strict})
+
   const config = await loadConfig({cwd})
   const extMap = getPkgExtMap({legacyExports: config?.legacyExports ?? false})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
