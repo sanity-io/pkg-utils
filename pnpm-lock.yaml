@@ -254,8 +254,8 @@ importers:
   playground/multi-export:
     devDependencies:
       '@sanity/visual-editing':
-        specifier: ^1.8.2
-        version: 1.8.2(@sanity/client@6.15.6)(@sveltejs/kit@2.5.4)(svelte@4.2.12)
+        specifier: ^1.8.3
+        version: 1.8.3(@sanity/client@6.15.7)(@sveltejs/kit@2.5.4)(svelte@4.2.12)
       '@sveltejs/adapter-auto':
         specifier: ^3.1.1
         version: 3.1.1(@sveltejs/kit@2.5.4)
@@ -1930,13 +1930,13 @@ packages:
     resolution: {integrity: sha512-UkJuiTyROgPcxbvpHYyXwr+T88Np4eLzu3h05gMgeZ2hv3EM7g/4VMyng5HuA1JdPQPEdq8bmmfQDR+u4KC+TA==}
     dev: false
 
-  /@sanity/client@6.15.6:
-    resolution: {integrity: sha512-pnKmi5kjuyw4fMz9JXzQq7ivAR8A52Thkkzmaue125uz6olPBvVGQmQ8tk1xOuKu3eX73nKZpFuCw4eqkG9/iA==}
+  /@sanity/client@6.15.7:
+    resolution: {integrity: sha512-WplOC9jSsqAUcIRm0Agpo38fQRLcYA0SA8yclmsr6lG84Q3uE27ZtyBPvd5+Hx5zzM8mRgdkhZ7yXR/EVGQkhA==}
     engines: {node: '>=14.18'}
     dependencies:
       '@sanity/eventsource': 5.0.1
       '@vercel/stega': 0.1.0
-      get-it: 8.4.14
+      get-it: 8.4.15
       rxjs: 7.8.1
     transitivePeerDependencies:
       - supports-color
@@ -1951,13 +1951,13 @@ packages:
       eventsource: 2.0.2
     dev: true
 
-  /@sanity/preview-url-secret@1.6.4(@sanity/client@6.15.6):
-    resolution: {integrity: sha512-iOu6n5Zt7kuWoOYRliS2o/MDDBWcWkrnwwss2tglIBl744RPRkz0yi9qulnpAqMnWrZyIU8fV1yPCdg0RY+olw==}
+  /@sanity/preview-url-secret@1.6.5(@sanity/client@6.15.7):
+    resolution: {integrity: sha512-zY57ZSKHIgiI/naW18Y7XvLwR1cPra2VIrcZQn2nBuL294fRpZkwBF+M62j6oroU5nKXGQt5P82VM1sXdqXdmw==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@sanity/client': ^6.14.4
+      '@sanity/client': ^6.15.7
     dependencies:
-      '@sanity/client': 6.15.6
+      '@sanity/client': 6.15.7
       '@sanity/uuid': 3.0.2
     dev: true
 
@@ -1968,12 +1968,12 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /@sanity/visual-editing@1.8.2(@sanity/client@6.15.6)(@sveltejs/kit@2.5.4)(svelte@4.2.12):
-    resolution: {integrity: sha512-/ODNkE/dFywP2UbIofJy4ZW9uPneNEIxRiibI+H8IgB9as6FNqlaiDzBvbLIr8TZlWY++as0aoAU1PZkPvyp1w==}
+  /@sanity/visual-editing@1.8.3(@sanity/client@6.15.7)(@sveltejs/kit@2.5.4)(svelte@4.2.12):
+    resolution: {integrity: sha512-/f3UAUcGlCMh5V6KDa4GqL1Rfxol+QrEjaZGpmyH4FFwvGi1RZRI7pgsuBSh/f9Bl3MdM6oHFhsw2Tx4Pwiujw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
-      '@sanity/client': ^6.15.5
+      '@sanity/client': ^6.15.7
       '@sveltejs/kit': '>= 2'
       next: '>= 13'
       svelte: '>= 4'
@@ -1989,8 +1989,8 @@ packages:
       svelte:
         optional: true
     dependencies:
-      '@sanity/client': 6.15.6
-      '@sanity/preview-url-secret': 1.6.4(@sanity/client@6.15.6)
+      '@sanity/client': 6.15.7
+      '@sanity/preview-url-secret': 1.6.5(@sanity/client@6.15.7)
       '@sveltejs/kit': 2.5.4(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.6)
       '@vercel/stega': 0.1.0
       react: 18.2.0
@@ -5334,8 +5334,8 @@ packages:
       hasown: 2.0.2
     dev: true
 
-  /get-it@8.4.14:
-    resolution: {integrity: sha512-dhiRE7Xk8/mg/RhKr9u01KY3nQzVPZfN3shKkEWj1TsuACkZtEeVAuQ5tF5np0qIcSayWowKOcQ5dxCnZBM+hg==}
+  /get-it@8.4.15:
+    resolution: {integrity: sha512-UcFJxHQcEgZdP6ZoUUP/95HlLKPaysrL82UO81qEUre/WO8vxhIws9u7divaotsErAF6RsZfGcZc6WCRvadYHw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       debug: 4.3.4
@@ -5355,7 +5355,7 @@ packages:
     resolution: {integrity: sha512-Q6IBWr/zzw57zIkJmNhI23eRTw3nZ4BWWK034meLwOYU9L3J3IpXiyM73u2pYUwN6U7ahkerCwg2T0jlxiLwsw==}
     engines: {node: '>=14.18'}
     dependencies:
-      get-it: 8.4.14
+      get-it: 8.4.15
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
       semver: 7.6.0
