@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.4](https://github.com/sanity-io/pkg-utils/compare/v5.1.3...v5.1.4) (2024-03-20)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @babel/core to ^7.24.3 ([#641](https://github.com/sanity-io/pkg-utils/issues/641)) ([33cad3a](https://github.com/sanity-io/pkg-utils/commit/33cad3a0eebd59b047620ff2c70a533184ec56d0))
+
 ## [5.1.3](https://github.com/sanity-io/pkg-utils/compare/v5.1.2...v5.1.3) (2024-03-20)
 
 
