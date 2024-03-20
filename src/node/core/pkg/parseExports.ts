@@ -30,7 +30,7 @@ export function parseExports(options: {
 
   const errors: string[] = []
 
-  if (strict && !pkg.types && pkg.source?.endsWith('.ts')) {
+  if (strict && !pkg.types && pkg.source?.endsWith('.ts') && pkg.exports) {
     errors.push(
       'package.json: `types` must be declared for the npm listing to show as a TypeScript module.',
     )
