@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.2](https://github.com/sanity-io/pkg-utils/compare/v5.1.1...v5.1.2) (2024-03-20)
+
+
+### Bug Fixes
+
+* only require top-level `types` if there are `exports` ([77143b7](https://github.com/sanity-io/pkg-utils/commit/77143b75aad3abaa3bba74e3dd03b88a6544e427))
+* require a `type` in package.json when in strict mode ([#631](https://github.com/sanity-io/pkg-utils/issues/631)) ([191482b](https://github.com/sanity-io/pkg-utils/commit/191482bdf3816a737078a3a8c33f8c667515ca08))
+
 ## [5.1.1](https://github.com/sanity-io/pkg-utils/compare/v5.1.0...v5.1.1) (2024-03-20)
 
 
