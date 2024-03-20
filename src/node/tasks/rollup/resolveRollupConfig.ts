@@ -207,7 +207,7 @@ export function resolveRollupConfig(
       entryFileNames,
       esModule: true,
       format,
-      interop: 'auto',
+      interop: 'compat',
       sourcemap: config?.sourcemap ?? true,
       hoistTransitiveImports: false,
       ...config?.rollup?.output,
