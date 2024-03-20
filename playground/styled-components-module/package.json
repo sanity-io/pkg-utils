@@ -24,8 +24,8 @@
   ],
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
-    "test": "node test.mjs",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "test": "node test.mjs"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
