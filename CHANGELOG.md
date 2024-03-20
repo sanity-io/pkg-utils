@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.3](https://github.com/sanity-io/pkg-utils/compare/v5.1.2...v5.1.3) (2024-03-20)
+
+
+### Bug Fixes
+
+* emit valid ESM in CJS modules when `legacyExports: true` ([#635](https://github.com/sanity-io/pkg-utils/issues/635)) ([26f9e1c](https://github.com/sanity-io/pkg-utils/commit/26f9e1c636e21f697a26fd2f9e3d078caf7b509d))
+
 ## [5.1.2](https://github.com/sanity-io/pkg-utils/compare/v5.1.1...v5.1.2) (2024-03-20)
 
 
