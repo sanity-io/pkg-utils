@@ -10,12 +10,20 @@ import type {PackageJSON} from './types'
 export async function loadPkgWithReporting(options: {
   cwd: string
   logger: Logger
+  strict: boolean
 }): Promise<PackageJSON> {
-  const {cwd, logger} = options
+  const {cwd, logger, strict} = options
 
   try {
     const pkg = await loadPkg({cwd})
     let shouldError = false
+
+    if (strict && !pkg.type) {
+      shouldError = true
+      logger.error(
+        `the \`type\` field in \`./package.json\` must be either "module" or "commonjs")`,
+      )
+    }
 
     // validate exports
     if (pkg.exports) {
