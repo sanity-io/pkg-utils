@@ -1,8 +1,8 @@
 import chalk from 'chalk'
 import {ZodError} from 'zod'
 
-import {assertFirst, assertLast, assertOrder} from './helpers'
 import type {Logger} from '../../logger'
+import {assertLast, assertOrder} from './helpers'
 import {loadPkg} from './loadPkg'
 import type {PackageJSON} from './types'
 
@@ -28,9 +28,11 @@ export async function loadPkgWithReporting(options: {
 
         const keys = Object.keys(exp)
 
-        if (!assertFirst('types', keys)) {
+        if (exp.types) {
           shouldError = true
-          logger.error(`exports["${expPath}"]: the \`types\` property should be the first property`)
+          logger.error(
+            `exports["${expPath}"]: the \`types\` condition shouldn't be used as dts files are generated in such a way that both CJS and ESM is supported`,
+          )
         }
 
         if (exp.module) {

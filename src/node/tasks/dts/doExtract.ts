@@ -34,7 +34,7 @@ export async function doExtract(
   await buildTypes({cwd, logger, outDir: tmpPath, strict, tsconfig: ts.config})
   const messages: ExtractorMessage[] = []
 
-  const results: {sourcePath: string; filePath: string}[] = []
+  const results: {sourcePath: string; filePaths: string[]}[] = []
 
   for (const entry of task.entries) {
     const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
@@ -44,8 +44,8 @@ export async function doExtract(
       path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
     )
 
-    const targetPath = path.resolve(cwd, entry.targetPath)
-    const filePath = path.relative(outDir, targetPath)
+    const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
+    const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
     const result = await extractTypes({
       bundledPackages: config?.extract?.bundledPackages || [],
       customTags: config?.extract?.customTags,
@@ -53,7 +53,7 @@ export async function doExtract(
       distPath: outDir,
       exportPath,
       files,
-      filePath: filePath,
+      filePaths,
       projectPath: cwd,
       rules: config?.extract?.rules,
       sourceTypesPath: sourceTypesPath,
@@ -71,7 +71,7 @@ export async function doExtract(
       throw new DtsError(`encountered ${errors.length} errors when extracting types`, errors)
     }
 
-    results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePath: targetPath})
+    results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePaths: targetPaths})
   }
 
   await rimraf(tmpPath)

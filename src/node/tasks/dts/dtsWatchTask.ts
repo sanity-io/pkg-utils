@@ -2,20 +2,24 @@ import chalk from 'chalk'
 import {Observable} from 'rxjs'
 
 import {printExtractMessages} from '../../printExtractMessages'
-import {TaskHandler} from '../types'
+import type {TaskHandler} from '../types'
 import {doExtract} from './doExtract'
 import {DtsError} from './DtsError'
-import {DtsResult, DtsWatchTask} from './types'
+import type {DtsResult, DtsWatchTask} from './types'
 
 /** @internal */
 export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
   name: (_ctx, task) =>
     [
       `build type definitions`,
-      ...task.entries.map(
-        (entry) =>
-          `       ${chalk.blue(entry.importId)}: ${entry.sourcePath} -> ${entry.targetPath}`,
-      ),
+      ...task.entries.map((entry) => {
+        return entry.targetPaths.map((targetPath) => {
+          return [
+            `    - ${chalk.cyan(entry.importId)}: `,
+            `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(targetPath)}`,
+          ].join('')
+        })
+      }),
     ].join('\n'),
   exec: (ctx, task) => {
     return new Observable((observer) => {

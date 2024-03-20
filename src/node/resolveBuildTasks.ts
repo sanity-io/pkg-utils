@@ -3,6 +3,7 @@ import path from 'path'
 
 import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
 import type {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
+import {getTargetPaths} from './tasks/dts/getTargetPaths'
 
 /** @internal */
 export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
@@ -44,12 +45,48 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
   for (const exp of exports) {
     const importId = path.join(pkg.name, exp._path)
 
-    if (exp.types) {
+    if (exp.source?.endsWith('.ts')) {
       dtsTask.entries.push({
         importId,
         exportPath: exp._path,
         sourcePath: exp.source,
-        targetPath: exp.types,
+        targetPaths: getTargetPaths(pkg.type, exp),
+      })
+    }
+
+    if (exp.browser?.source?.endsWith('.ts')) {
+      dtsTask.entries.push({
+        importId,
+        exportPath: exp._path,
+        sourcePath: exp.browser.source,
+        targetPaths: getTargetPaths(pkg.type, exp.browser),
+      })
+    }
+
+    if (exp.node?.source?.endsWith('.ts')) {
+      dtsTask.entries.push({
+        importId,
+        exportPath: exp._path,
+        sourcePath: exp.node.source,
+        targetPaths: getTargetPaths(pkg.type, exp.node),
+      })
+    }
+  }
+
+  // Handle dts tasks for bundles
+  for (const bundle of bundles) {
+    if (bundle.source?.endsWith('.ts')) {
+      // importId needs to be how the bundle is used, like `@sanity/pkg-utils/dist/cli`
+      // exportPath needs to be the path to the bundle, like `./dist/cli`
+      // targetPaths is then: [./dist/cli.d.ts, ./dist/cli.d.cts]
+      const exportPath = (bundle.import || bundle.require)!.replace(/\.[mc]?js$/, '')
+      const importId = path.join(pkg.name, exportPath)
+
+      dtsTask.entries.push({
+        importId,
+        exportPath,
+        sourcePath: bundle.source,
+        targetPaths: getTargetPaths(pkg.type, bundle),
       })
     }
   }

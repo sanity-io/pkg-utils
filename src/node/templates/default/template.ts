@@ -278,12 +278,6 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       if (features.typescript) {
         pkgJson.types = './dist/index.d.ts'
 
-        const mainExport = pkgJson.exports?.['.']
-
-        if (isRecord(mainExport)) {
-          mainExport.types = './dist/index.d.ts'
-        }
-
         pkgJson.scripts = {
           ...pkgJson.scripts,
           ['ts:check']: 'tsc --build',

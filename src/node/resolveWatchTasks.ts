@@ -1,8 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
-import {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
-import {DtsWatchTask, RollupTaskEntry, RollupWatchTask, WatchTask} from './tasks'
+import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
+import type {DtsWatchTask, RollupTaskEntry, RollupWatchTask, WatchTask} from './tasks'
+import {getTargetPaths} from './tasks/dts/getTargetPaths'
 
 /** @internal */
 export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
@@ -41,12 +42,30 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
   for (const exp of exports) {
     const importId = path.join(pkg.name, exp._path)
 
-    if (exp.types) {
+    if (exp.source?.endsWith('.ts')) {
       dtsTask.entries.push({
         importId,
         exportPath: exp._path,
         sourcePath: exp.source,
-        targetPath: exp.types,
+        targetPaths: getTargetPaths(pkg.type, exp),
+      })
+    }
+
+    if (exp.browser?.source?.endsWith('.ts')) {
+      dtsTask.entries.push({
+        importId,
+        exportPath: exp._path,
+        sourcePath: exp.browser.source,
+        targetPaths: getTargetPaths(pkg.type, exp.browser),
+      })
+    }
+
+    if (exp.node?.source?.endsWith('.ts')) {
+      dtsTask.entries.push({
+        importId,
+        exportPath: exp._path,
+        sourcePath: exp.node.source,
+        targetPaths: getTargetPaths(pkg.type, exp.node),
       })
     }
   }

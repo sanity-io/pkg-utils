@@ -9,12 +9,10 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
       "require": "./index.cjs",
       "default": "./index.js"
     },
     "./side-effect": {
-      "types": "./side-effect.d.ts",
       "require": "./side-effect.cjs",
       "default": "./side-effect.js"
     },

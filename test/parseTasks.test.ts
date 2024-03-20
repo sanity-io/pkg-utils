@@ -12,6 +12,7 @@ test('should parse tasks (type: module)', () => {
     source: './src/index.ts',
     main: './dist/index.cjs',
     module: './dist/index.js',
+    types: './dist/index.d.ts',
     browser: {
       './dist/index.cjs': './dist/index.browser.cjs',
       './dist/index.js': './dist/index.browser.js',
@@ -49,6 +50,23 @@ test('should parse tasks (type: module)', () => {
   const tasks = resolveBuildTasks(ctx)
 
   expect(tasks).toEqual([
+    {
+      entries: [
+        {
+          exportPath: '.',
+          importId: 'test',
+          sourcePath: './src/index.ts',
+          targetPaths: ['./dist/index.d.ts', './dist/index.d.cts'],
+        },
+        {
+          exportPath: '.',
+          importId: 'test',
+          sourcePath: './src/index.ts',
+          targetPaths: ['./dist/index.browser.d.ts', './dist/index.browser.d.cts'],
+        },
+      ],
+      type: 'build:dts',
+    },
     {
       type: 'build:js',
       buildId: 'commonjs:*',
@@ -118,6 +136,7 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
     source: './src/index.ts',
     main: './dist/index.js',
     module: './dist/index.esm.js',
+    types: './dist/index.d.ts',
     browser: {
       './dist/index.js': './dist/index.browser.js',
       './dist/index.esm.js': './dist/index.browser.esm.js',
@@ -155,6 +174,23 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
   const tasks = resolveBuildTasks(ctx)
 
   expect(tasks).toEqual([
+    {
+      type: 'build:dts',
+      entries: [
+        {
+          exportPath: '.',
+          importId: 'test',
+          sourcePath: './src/index.ts',
+          targetPaths: ['./dist/index.esm.d.mts', './dist/index.d.ts'],
+        },
+        {
+          exportPath: '.',
+          importId: 'test',
+          sourcePath: './src/index.ts',
+          targetPaths: ['./dist/index.browser.esm.d.mts', './dist/index.browser.d.ts'],
+        },
+      ],
+    },
     {
       type: 'build:js',
       buildId: 'commonjs:*',

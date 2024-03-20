@@ -13,6 +13,7 @@ describe('parseExports', () => {
       bin: {test: './dist/cli.js'},
       source: './src/index.ts',
       main: './dist/index.js',
+      types: './dist/index.d.ts',
       exports: {
         '.': {
           source: './src/index.ts',
@@ -231,28 +232,10 @@ describe('parseExports', () => {
       [
         {
           source: './src/index.ts',
-          types: './dist/index.d.ts',
-          require: './dist/index.cjs',
-          default: './dist/index.js',
-        },
-        `"types" should be first`,
-      ],
-      [
-        {
-          source: './src/index.ts',
           default: './dist/index.js',
           require: './dist/index.cjs',
         },
         `"default" should be last`,
-      ],
-      [
-        {
-          types: './dist/index.d.ts',
-          require: './dist/index.cjs',
-          source: './src/index.ts',
-          default: './dist/index.js',
-        },
-        `"source" should be after "types"`,
       ],
       [
         {

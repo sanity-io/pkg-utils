@@ -83,11 +83,11 @@ test.skipIf(isWindows)('should build `custom-dist` package', async () => {
 
   expect(stdout).toContain('./src/index.ts → ./lib/index.cjs')
   expect(stdout).toContain('./src/index.ts → ./lib/index.js')
-  expect(stdout).toContain('./src/index.ts → ./lib/src/index.d.ts')
+  expect(stdout).toContain('./src/index.ts → ./lib/index.d.ts')
 
   expect(await project.readFile('lib/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('lib/index.js')).toMatchSnapshot()
-  expect(await project.readFile('lib/src/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('lib/index.d.ts')).toMatchSnapshot()
 
   await project.remove()
 })

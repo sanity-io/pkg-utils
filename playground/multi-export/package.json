@@ -9,28 +9,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./plugin": {
-      "types": "./dist/plugin.d.ts",
       "source": "./src/plugin.ts",
       "import": "./dist/plugin.js",
       "require": "./dist/plugin.cjs",
       "default": "./dist/plugin.js"
     },
     "./pure": {
-      "types": "./dist/pure.d.ts",
       "source": "./src/pure.ts",
       "import": "./dist/pure.js",
       "require": "./dist/pure.cjs",
       "default": "./dist/pure.js"
     },
     "./side-effect": {
-      "types": "./dist/side-effect.d.ts",
       "source": "./src/side-effect.ts",
       "import": "./dist/side-effect.js",
       "require": "./dist/side-effect.cjs",
@@ -41,7 +37,6 @@
       "svelte": "./dist-svelte/index.js"
     },
     "./no-side-effect": {
-      "types": "./dist/no-side-effect.d.ts",
       "source": "./src/no-side-effect.ts",
       "import": "./dist/no-side-effect.js",
       "require": "./dist/no-side-effect.cjs",

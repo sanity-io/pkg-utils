@@ -49,19 +49,12 @@ export function printPackageTree(ctx: BuildContext): void {
       .filter(([, entry]) => entry._exported)
       .map(([exportPath, entry]) => {
         const exp: Omit<PkgExport, '_exported'> = {
-          types: undefined,
           source: fileInfo(entry.source),
           browser: undefined,
           require: undefined,
           node: undefined,
           import: undefined,
           default: fileInfo(entry.default),
-        }
-
-        if (entry.types) {
-          exp.types = fileInfo(entry.types)
-        } else {
-          delete exp.types
         }
 
         if (entry.browser) {

@@ -7,7 +7,6 @@
   "type": "commonjs",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "source": "./src/index.ts",
       "browser": {
         "source": "./src/index.ts",
@@ -19,7 +18,6 @@
       "default": "./dist/index.mjs"
     },
     "./extra": {
-      "types": "./dist/extra.d.ts",
       "source": "./src/extra.ts",
       "browser": {
         "source": "./src/extra.ts",

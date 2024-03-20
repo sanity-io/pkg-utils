@@ -41,14 +41,14 @@ export async function check(options: {
       if (exp.import && !fileExists(path.resolve(cwd, exp.import))) {
         missingFiles.push(exp.import)
       }
+    }
 
-      if (exp.types && !fileExists(path.resolve(cwd, exp.types))) {
-        missingFiles.push(exp.types)
-      }
+    if (ctx.pkg.types && !fileExists(path.resolve(cwd, ctx.pkg.types))) {
+      missingFiles.push(ctx.pkg.types)
     }
 
     if (missingFiles.length) {
-      logger.error('missing files')
+      logger.error(`missing files: ${missingFiles.join(', ')}`)
       process.exit(1)
     }
 

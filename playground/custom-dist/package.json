@@ -7,7 +7,6 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./lib/src/index.d.ts",
       "source": "./src/index.ts",
       "import": "./lib/index.js",
       "require": "./lib/index.cjs",
@@ -18,7 +17,7 @@
   "main": "./lib/index.cjs",
   "module": "./lib/index.js",
   "source": "./src/index.ts",
-  "types": "./lib/src/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf lib"

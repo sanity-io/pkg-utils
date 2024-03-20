@@ -8,7 +8,7 @@ import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
 import path from 'path'
 import prettier from 'prettier'
-import ts from 'typescript'
+import type ts from 'typescript'
 
 import type {BuildFile, PkgConfigOptions} from '../../core'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
@@ -22,7 +22,7 @@ export async function extractTypes(options: {
   cwd: string
   distPath: string
   exportPath: string
-  filePath: string
+  filePaths: string[]
   files: BuildFile[]
   projectPath: string
   rules?: NonNullable<PkgConfigOptions['extract']>['rules']
@@ -37,7 +37,7 @@ export async function extractTypes(options: {
     distPath,
     exportPath,
     files,
-    filePath,
+    filePaths,
     projectPath,
     rules,
     sourceTypesPath,
@@ -50,6 +50,9 @@ export async function extractTypes(options: {
     customTags: customTags || [],
   })
 
+  const filePath = filePaths[0].replace(/\.d\.[mc]ts$/, '.d.ts')
+  // If there are package.config.ts `bundles` we might not have something that should leave behind a `.d.ts` file and need to handle that
+  const shouldCleanUpDts = !filePaths.includes(filePath)
   const extractorConfig: ExtractorConfig = ExtractorConfig.prepare({
     configObject: createApiExtractorConfig({
       bundledPackages,
@@ -94,20 +97,26 @@ export async function extractTypes(options: {
   })
 
   const code = [typesBuf.toString(), ...moduleBlocks].join('\n\n')
-
-  await fs.writeFile(
-    typesPath,
-    await prettier.format(code, {
-      ...prettierConfig,
-      filepath: typesPath,
-    }),
-  )
-
-  // Add to `files` in context
-  files.push({
-    type: 'types',
-    path: typesPath,
+  const prettyCode = await prettier.format(code, {
+    ...prettierConfig,
+    filepath: typesPath,
   })
+
+  for (const expFilePath of filePaths) {
+    const expTypesPath = path.resolve(distPath, expFilePath)
+
+    await fs.writeFile(expTypesPath, prettyCode)
+
+    // Add to `files` in context
+    files.push({
+      type: 'types',
+      path: expTypesPath,
+    })
+  }
+
+  if (shouldCleanUpDts) {
+    await fs.unlink(typesPath)
+  }
 
   return {extractorResult, messages}
 }
