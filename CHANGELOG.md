@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/sanity-io/pkg-utils/compare/v5.1.0...v5.1.1) (2024-03-20)
+
+
+### Bug Fixes
+
+* ensure no "Masquerading as ESM|CJS" dts errors ([#627](https://github.com/sanity-io/pkg-utils/issues/627)) ([e54dc10](https://github.com/sanity-io/pkg-utils/commit/e54dc100686631bbf2fbae37515097c6785ca53d))
+
 ## [5.1.0](https://github.com/sanity-io/pkg-utils/compare/v5.0.7...v5.1.0) (2024-03-19)
 
 
