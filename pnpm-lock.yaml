@@ -275,7 +275,7 @@ importers:
         specifier: ^4.2.12
         version: 4.2.12
       vite:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2(@types/node@20.11.29)
 
   playground/multi-exports-commonjs: {}
@@ -416,7 +416,7 @@ importers:
         specifier: 5.4.2
         version: 5.4.2
       vite:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2(@types/node@20.11.29)
 
   playground/runtime-vite:
@@ -431,7 +431,7 @@ importers:
         specifier: 5.4.2
         version: 5.4.2
       vite:
-        specifier: ^5.1.6
+        specifier: ^5.2.2
         version: 5.2.2(@types/node@20.11.29)
 
   playground/runtime-webpack-v3:
@@ -2977,6 +2977,7 @@ packages:
   /assign-symbols@1.0.0:
     resolution: {integrity: sha512-Q+JC7Whu8HhmTdBph/Tq59IoRtoy6KAm5zzPv00WdujX82lbAL8K7WVjne7vdCsAmbF4AYaDOPyO3k0kl8qIrw==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: true
 
   /ast-types@0.16.1:
