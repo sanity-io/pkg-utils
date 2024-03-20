@@ -9,8 +9,9 @@ import path from 'path'
 import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 
+import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
 import {type BuildContext, resolveConfigProperty} from '../../core'
-import type {RollupTask, RollupWatchTask} from '../types'
+import type {RollupLegacyTask, RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -20,11 +21,12 @@ export interface RollupConfig {
 /** @internal */
 export function resolveRollupConfig(
   ctx: BuildContext,
-  buildTask: RollupTask | RollupWatchTask,
+  buildTask: RollupTask | RollupLegacyTask | RollupWatchTask,
 ): RollupConfig {
   const {format, runtime, target} = buildTask
-  const {config, cwd, exports: _exports, extMap, external, distPath, logger, pkg, ts} = ctx
-  const outputExt = extMap[pkg.type || 'commonjs'][format]
+  const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
+  const isLegacyExports = buildTask.type === 'build:legacy'
+  const outputExt = isLegacyExports ? extMap.legacy : extMap[pkg.type || 'commonjs'][format]
   const minify = config?.minify ?? false
   const outDir = path.relative(cwd, distPath)
 
@@ -83,11 +85,9 @@ export function resolveRollupConfig(
       entries: {...pathAliases},
     }),
     nodeResolve({
-      // mainFields: ['module', 'jsnext', 'main'],
       browser: runtime === 'browser',
-      // exportConditions: [runtime === 'node' ? 'node' : 'browser'],
       extensions: ['.cjs', '.mjs', '.js', '.jsx', '.json', '.node'],
-      preferBuiltins: true, // runtime === 'node',
+      preferBuiltins: true,
     }),
     commonjs(),
     json(),
@@ -107,7 +107,7 @@ export function resolveRollupConfig(
     Array.isArray(config?.babel?.plugins) &&
       getBabelOutputPlugin({
         babelrc: false,
-        plugins: config?.babel?.plugins,
+        plugins: config.babel.plugins,
       }),
     minify &&
       terser({
@@ -115,10 +115,10 @@ export function resolveRollupConfig(
         output: {
           comments: (_node, comment) => {
             const text = comment.value
-            const type = comment.type
+            const cType = comment.type
 
             // Check if this is a multiline comment
-            if (type === 'comment2') {
+            if (cType === 'comment2') {
               // Keep licensing comments
               return /@preserve|@license|@cc_on/i.test(text)
             }
@@ -134,6 +134,15 @@ export function resolveRollupConfig(
   const plugins = Array.isArray(userPlugins)
     ? defaultPlugins.concat(userPlugins)
     : resolveConfigProperty(config?.rollup?.plugins, defaultPlugins)
+
+  const hashChunkFileNames = config?.rollup?.hashChunkFileNames ?? false
+  const chunksFolder = isLegacyExports
+    ? '_legacy'
+    : hashChunkFileNames
+      ? '_chunks'
+      : '_chunks-[format]'
+  const chunkFileNames = `${chunksFolder}/${hashChunkFileNames ? '[name]-[hash]' : '[name]'}${outputExt}`
+  const entryFileNames = isLegacyExports ? '[name].js' : `[name]${outputExt}`
 
   return {
     inputOptions: {
@@ -192,31 +201,13 @@ export function resolveRollupConfig(
       experimentalLogSideEffects: config?.rollup?.experimentalLogSideEffects,
     },
     outputOptions: {
-      chunkFileNames: () => {
-        const parts = outputExt.split('.')
-        const prefix = config?.rollup?.hashChunkFileNames ? '[name]-[hash]' : '[name]'
-        const folder = config?.rollup?.hashChunkFileNames ? '_chunks' : '_chunks-[format]'
-
-        if (parts.length === 3) {
-          return `${folder}/${prefix}.${parts[2]}`
-        }
-
-        return `${folder}/${prefix}${outputExt}`
-      },
+      chunkFileNames,
       compact: minify,
       dir: outDir,
-      entryFileNames: () => {
-        const parts = outputExt.split('.')
-
-        if (parts.length === 3) {
-          return `[name].${parts[2]}`
-        }
-
-        return `[name]${outputExt}`
-      },
+      entryFileNames,
       esModule: true,
       format,
-      interop: 'compat',
+      interop: 'auto',
       sourcemap: config?.sourcemap ?? true,
       hoistTransitiveImports: false,
       ...config?.rollup?.output,

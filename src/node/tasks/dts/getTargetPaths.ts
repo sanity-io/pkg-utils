@@ -1,7 +1,11 @@
 import type {PackageJSON, PkgBundle, PkgExport} from '../../core'
 
-const fileEnding = /\.[mc]?js$/
-const dtsEnding = '.d.ts'
+/** @internal */
+export const fileEnding = /\.[mc]?js$/
+/** @internal */
+export const dtsEnding = '.d.ts'
+/** @internal */
+export const legacyEnding = '.esm.js'
 const mtsEnding = '.d.mts'
 const ctsEnding = '.d.cts'
 

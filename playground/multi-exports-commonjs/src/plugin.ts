@@ -6,3 +6,5 @@ export function plugin(): Plugin {
     name: 'plugin',
   })
 }
+
+export * from './shared'

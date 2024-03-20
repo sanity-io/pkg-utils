@@ -5,29 +5,16 @@ import {Observable} from 'rxjs'
 
 import {createConsoleSpy} from '../../consoleSpy'
 import type {BuildContext} from '../../core'
-import type {RollupTask, TaskHandler} from '../types'
+import type {RollupLegacyTask, TaskHandler} from '../types'
 import {resolveRollupConfig} from './resolveRollupConfig'
 
 /** @internal */
-export const rollupTask: TaskHandler<RollupTask> = {
+export const rollupLegacyTask: TaskHandler<RollupLegacyTask> = {
   name: (ctx, task) => {
-    const bundleEntries = task.entries.filter((e) => e.path.includes('__$$bundle_'))
     const entries = task.entries.filter((e) => !e.path.includes('__$$bundle_'))
 
     const targetLines = task.target.length
-      ? [`  target:`, ...task.target.map((t) => `    - ${chalk.yellow(t)}`)]
-      : []
-
-    const bundlesLines = bundleEntries.length
-      ? [
-          '  bundles:',
-          ...bundleEntries.map((e) =>
-            [
-              `    - `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
-            ].join(''),
-          ),
-        ]
+      ? ['  target:', ...task.target.map((t) => `    - ${chalk.yellow(t)}`)]
       : []
 
     const entriesLines = entries.length
@@ -35,7 +22,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
           '  entries:',
           ...entries.map((e) =>
             [
-              `    - `,
+              '    - ',
               `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
               `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
             ].join(''),
@@ -43,11 +30,12 @@ export const rollupTask: TaskHandler<RollupTask> = {
         ]
       : []
 
+    // @TODO list out the root level files that are generated
+
     return [
-      `Build javascript files...`,
+      'Build legacy exports...',
       `  format: ${chalk.yellow(task.format)}`,
       ...targetLines,
-      ...bundlesLines,
       ...entriesLines,
     ].join('\n')
   },
@@ -70,7 +58,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
   },
 }
 
-async function execPromise(ctx: BuildContext, task: RollupTask) {
+async function execPromise(ctx: BuildContext, task: RollupLegacyTask) {
   const {distPath, files, logger} = ctx
   const outDir = path.relative(ctx.cwd, distPath)
 

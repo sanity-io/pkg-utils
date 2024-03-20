@@ -40,7 +40,11 @@ export async function buildTypes(options: {
   const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
 
   for (const diagnostic of allDiagnostics) {
-    printDiagnostic({cwd, logger, diagnostic})
+    // @TODO match the import with known export paths
+    // Ignore TS2307 errors as they'll be captured elsewhere if they're actually a problem
+    if (diagnostic.code !== 2307) {
+      printDiagnostic({cwd, logger, diagnostic})
+    }
   }
 
   if (emitResult.emitSkipped) {

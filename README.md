@@ -142,7 +142,7 @@ The name of the library from which to import JSX factory and fragment names.
 - Default: `false`
 
 Build package with support for legacy exports (writes root `<export>.js` files). Use this if you
-need to support older Node.js versions or older bundlers.
+need to support older bundlers.
 
 #### `minify`
 
