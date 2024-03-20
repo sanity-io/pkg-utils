@@ -1,8 +1,8 @@
-import {RollupWatcherEvent} from 'rollup'
-import {Observable} from 'rxjs'
+import type {RollupWatcherEvent} from 'rollup'
+import type {Observable} from 'rxjs'
 
-import {BuildContext, PkgRuntime} from '../core'
-import {DtsResult, DtsTask, DtsWatchTask} from './dts'
+import type {BuildContext, PkgRuntime} from '../core'
+import type {DtsResult, DtsTask, DtsWatchTask} from './dts'
 
 /** @internal */
 export interface RollupTaskEntry {
@@ -22,6 +22,16 @@ export interface RollupTask {
 }
 
 /** @internal */
+export interface RollupLegacyTask {
+  type: 'build:legacy'
+  buildId: string
+  entries: RollupTaskEntry[]
+  runtime: PkgRuntime
+  format: 'esm'
+  target: string[]
+}
+
+/** @internal */
 export interface RollupWatchTask {
   type: 'watch:js'
   buildId: string
@@ -32,7 +42,7 @@ export interface RollupWatchTask {
 }
 
 /** @internal */
-export type BuildTask = DtsTask | RollupTask
+export type BuildTask = DtsTask | RollupTask | RollupLegacyTask
 
 /** @internal */
 export type WatchTask = DtsWatchTask | RollupWatchTask
@@ -49,6 +59,7 @@ export type TaskHandler<Task, Result = void> = {
 export interface BuildTaskHandlers {
   'build:dts': TaskHandler<DtsTask, DtsResult>
   'build:js': TaskHandler<RollupTask>
+  'build:legacy': TaskHandler<RollupLegacyTask>
 }
 
 /** @internal */

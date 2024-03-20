@@ -1,10 +1,8 @@
 import {expect, test, vi} from 'vitest'
 
-import {BuildContext, getPkgExtMap, PackageJSON, parseExports, resolveBuildTasks} from '../src/node'
+import {type BuildContext, type PackageJSON, parseExports, resolveBuildTasks} from '../src/node'
 
 test('should parse tasks (type: module)', () => {
-  const extMap = getPkgExtMap({legacyExports: false})
-
   const pkg: PackageJSON = {
     type: 'module',
     name: 'test',
@@ -19,14 +17,13 @@ test('should parse tasks (type: module)', () => {
     },
   }
 
-  const exports = parseExports({extMap, pkg, strict: true})
+  const exports = parseExports({pkg, strict: true, legacyExports: false})
 
   const ctx: BuildContext = {
     cwd: '/test',
     distPath: '/test/dist',
     emitDeclarationOnly: false,
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
-    extMap,
     external: [],
     files: [],
     logger: {
@@ -127,30 +124,27 @@ test('should parse tasks (type: module)', () => {
 })
 
 test('should parse tasks (type: commonjs, legacyExports: true)', () => {
-  const extMap = getPkgExtMap({legacyExports: true})
-
   const pkg: PackageJSON = {
     type: 'commonjs',
     name: 'test',
     version: '1.0.0',
     source: './src/index.ts',
     main: './dist/index.js',
-    module: './dist/index.esm.js',
+    module: './dist/index.mjs',
     types: './dist/index.d.ts',
     browser: {
       './dist/index.js': './dist/index.browser.js',
-      './dist/index.esm.js': './dist/index.browser.esm.js',
+      './dist/index.mjs': './dist/index.browser.mjs',
     },
   }
 
-  const exports = parseExports({extMap, pkg, strict: true})
+  const exports = parseExports({pkg, strict: true, legacyExports: true})
 
   const ctx: BuildContext = {
     cwd: '/test',
     distPath: '/test/dist',
     emitDeclarationOnly: false,
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
-    extMap,
     external: [],
     files: [],
     logger: {
@@ -181,13 +175,13 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
           exportPath: '.',
           importId: 'test',
           sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.esm.d.mts', './dist/index.d.ts'],
+          targetPaths: ['./dist/index.d.mts', './dist/index.d.ts'],
         },
         {
           exportPath: '.',
           importId: 'test',
           sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.browser.esm.d.mts', './dist/index.browser.d.ts'],
+          targetPaths: ['./dist/index.browser.d.mts', './dist/index.browser.d.ts'],
         },
       ],
     },
@@ -212,7 +206,7 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
         {
           path: '.',
           source: './src/index.ts',
-          output: './dist/index.esm.js',
+          output: './dist/index.mjs',
         },
       ],
       runtime: '*',
@@ -240,7 +234,7 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
         {
           path: '.',
           source: './src/index.ts',
-          output: './dist/index.browser.esm.js',
+          output: './dist/index.browser.mjs',
         },
       ],
       runtime: 'browser',

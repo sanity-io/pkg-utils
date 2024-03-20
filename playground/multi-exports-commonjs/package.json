@@ -8,15 +8,15 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./dist/index.esm.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js",
-      "default": "./dist/index.esm.js"
+      "default": "./dist/index.js"
     },
     "./plugin": {
       "source": "./src/plugin.ts",
-      "import": "./dist/plugin.esm.js",
+      "import": "./dist/plugin.mjs",
       "require": "./dist/plugin.js",
-      "default": "./dist/plugin.esm.js"
+      "default": "./dist/plugin.js"
     },
     "./package.json": "./package.json"
   },

@@ -4,6 +4,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "jsx": "preserve",
 
     // Strict type-checking
     "strict": true,
@@ -24,6 +25,6 @@
     // Module resolution
     "module": "Preserve",
     "moduleDetection": "force",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": false
   }
 }

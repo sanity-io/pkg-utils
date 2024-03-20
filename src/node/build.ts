@@ -1,4 +1,4 @@
-import {getPkgExtMap, loadConfig, loadPkgWithReporting} from './core'
+import {loadConfig, loadPkgWithReporting} from './core'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveBuildTasks} from './resolveBuildTasks'
@@ -36,14 +36,12 @@ export async function build(options: {
   const pkg = await loadPkgWithReporting({cwd, logger, strict})
 
   const config = await loadConfig({cwd})
-  const extMap = getPkgExtMap({legacyExports: config?.legacyExports ?? false})
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
   const ctx = await resolveBuildContext({
     config,
     cwd,
     emitDeclarationOnly,
-    extMap,
     logger,
     pkg,
     strict,

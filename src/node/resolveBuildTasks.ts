@@ -2,8 +2,8 @@ import fs from 'fs'
 import path from 'path'
 
 import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
-import type {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
-import {getTargetPaths} from './tasks/dts/getTargetPaths'
+import type {BuildTask, DtsTask, RollupLegacyTask, RollupTask, RollupTaskEntry} from './tasks'
+import {fileEnding, getTargetPaths, legacyEnding} from './tasks/dts/getTargetPaths'
 
 /** @internal */
 export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
@@ -23,6 +23,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
   }
 
   const rollupTasks: Record<string, RollupTask> = {}
+  const rollupLegacyTasks: Record<string, RollupLegacyTask> = {}
 
   function addRollupTaskEntry(format: PkgFormat, runtime: PkgRuntime, entry: RollupTaskEntry) {
     const buildId = `${format}:${runtime}`
@@ -36,6 +37,24 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         entries: [entry],
         runtime,
         format,
+        target: target[runtime],
+      }
+    }
+  }
+
+  function addRollupLegacyTaskEntry(runtime: PkgRuntime, entry: RollupTaskEntry) {
+    const buildId = `esm:${runtime}`
+
+    if (rollupLegacyTasks[buildId]) {
+      rollupLegacyTasks[buildId].entries.push(entry)
+    } else {
+      rollupLegacyTasks[buildId] = {
+        type: 'build:legacy',
+        buildId,
+        entries: [entry],
+        runtime,
+        format: 'esm',
+        // @TODO set a different target here that is compatible with legacy bundlers and testing tools like brownfield jest
         target: target[runtime],
       }
     }
@@ -149,6 +168,25 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
       })
     }
 
+    // Create rollup bundles that legacy export files will re-export
+    if (config?.legacyExports) {
+      for (const exp of exports) {
+        const runtime = exp.browser?.import || exp.browser?.require ? 'browser' : ctx.runtime
+        const output = exp.browser?.import || exp.import || exp.browser?.require || exp.require
+
+        if (!output) continue
+
+        // Change the suffix to what the legacy exports will use
+        const legacyOutput = output.replace(fileEnding, legacyEnding)
+
+        addRollupLegacyTaskEntry(runtime, {
+          path: exp._path,
+          source: exp.browser?.source || exp.source,
+          output: legacyOutput,
+        })
+      }
+    }
+
     for (const bundle of bundles) {
       const idx = bundles.indexOf(bundle)
 
@@ -169,16 +207,20 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
       }
     }
 
-    tasks.push(...Object.values(rollupTasks))
+    tasks.push(...Object.values(rollupTasks), ...Object.values(rollupLegacyTasks))
 
     // Write legacy exports files
     if (config?.legacyExports) {
       for (const exp of exports) {
         if (exp._exported && exp._path !== '.') {
-          const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
-            /\.[^/.]+$/,
-            '',
-          )
+          const output = (
+            exp.browser?.import ||
+            exp.import ||
+            exp.browser?.require ||
+            exp.require ||
+            ''
+          ).replace(fileEnding, legacyEnding)
+          const relativeTargetPath = output.replace(/\.[^/.]+$/, '')
 
           if (relativeTargetPath) {
             fs.writeFileSync(

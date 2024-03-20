@@ -1,16 +1,17 @@
-import {PkgExport} from '../config'
-import {PkgExtMap} from './pkgExt'
-import {PackageJSON} from './types'
+import type {PkgExport} from '../config'
+import {pkgExtMap as extMap} from './pkgExt'
+import type {PackageJSON} from './types'
 
 export function validateExports(
   _exports: (PkgExport & {_path: string})[],
-  options: {extMap: PkgExtMap; pkg: PackageJSON},
+  options: {pkg: PackageJSON},
 ): string[] {
-  const {extMap, pkg} = options
+  const {pkg} = options
   const ext = extMap[pkg.type || 'commonjs']
 
   const errors: string[] = []
 
+  // @TODO validate that no exports declare the legacy exports
   for (const exp of _exports) {
     if (exp.require && !exp.require.endsWith(ext.commonjs)) {
       errors.push(

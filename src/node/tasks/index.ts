@@ -1,6 +1,6 @@
 import {dtsTask, dtsWatchTask} from './dts'
-import {rollupTask, rollupWatchTask} from './rollup'
-import {BuildTaskHandlers, WatchTaskHandlers} from './types'
+import {rollupLegacyTask, rollupTask, rollupWatchTask} from './rollup'
+import type {BuildTaskHandlers, WatchTaskHandlers} from './types'
 
 export * from './dts'
 export * from './rollup'
@@ -10,6 +10,7 @@ export * from './types'
 export const buildTaskHandlers: BuildTaskHandlers = {
   'build:dts': dtsTask,
   'build:js': rollupTask,
+  'build:legacy': rollupLegacyTask,
 }
 
 /** @internal */

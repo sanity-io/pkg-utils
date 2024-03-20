@@ -1,16 +1,16 @@
+import {legacyEnding} from '../../tasks/dts/getTargetPaths'
 import type {PkgExport} from '../config'
 import {isRecord} from '../isRecord'
-import type {PkgExtMap} from './pkgExt'
 import type {PackageJSON} from './types'
 import {validateExports} from './validateExports'
 
 /** @internal */
 export function parseExports(options: {
-  extMap: PkgExtMap
   pkg: PackageJSON
   strict: boolean
+  legacyExports: boolean
 }): (PkgExport & {_path: string})[] {
-  const {extMap, pkg, strict} = options
+  const {pkg, strict, legacyExports} = options
 
   const rootExport: PkgExport & {_path: string} = {
     _exported: true,
@@ -30,17 +30,19 @@ export function parseExports(options: {
 
   const errors: string[] = []
 
-  if (strict && !pkg.types && pkg.source?.endsWith('.ts') && pkg.exports) {
-    errors.push(
-      'package.json: `types` must be declared for the npm listing to show as a TypeScript module.',
-    )
-  }
+  // @TODO validate typesVersions when legacyExports is true
 
   if (strict && 'typings' in pkg) {
     errors.push('package.json: `typings` should be `types`')
   }
 
   if (pkg.exports) {
+    if (strict && !pkg.types && pkg.source?.endsWith('.ts')) {
+      errors.push(
+        'package.json: `types` must be declared for the npm listing to show as a TypeScript module.',
+      )
+    }
+
     if (strict && !pkg.exports['./package.json']) {
       errors.push('package.json: `exports["./package.json"] must be declared.')
     }
@@ -66,10 +68,30 @@ export function parseExports(options: {
             )
           }
 
-          if (exportEntry.import && rootExport.import && exportEntry.import !== rootExport.import) {
-            errors.push(
-              'package.json: mismatch between "module" and "exports.import" These must be equal.',
-            )
+          if (legacyExports) {
+            const indexLegacyExport = (
+              exportEntry.browser?.import ||
+              exportEntry.import ||
+              exportEntry.browser?.require ||
+              exportEntry.require ||
+              ''
+            ).replace(/(\.esm)?\.[mc]?js$/, legacyEnding)
+
+            if (indexLegacyExport !== rootExport.import) {
+              errors.push(
+                `package.json: "module" should be "${indexLegacyExport}" when "legacyExports" is true`,
+              )
+            }
+          } else {
+            if (
+              exportEntry.import &&
+              rootExport.import &&
+              exportEntry.import !== rootExport.import
+            ) {
+              errors.push(
+                'package.json: mismatch between "module" and "exports.import" These must be equal.',
+              )
+            }
           }
 
           if (exportEntry.source && rootExport.source && exportEntry.source !== rootExport.source) {
@@ -96,7 +118,7 @@ export function parseExports(options: {
 
   const _exports = [rootExport, ...extraExports]
 
-  errors.push(...validateExports(_exports, {extMap, pkg}))
+  errors.push(...validateExports(_exports, {pkg}))
 
   if (errors.length) {
     throw new Error('\n- ' + errors.join('\n- '))
