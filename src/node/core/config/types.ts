@@ -93,6 +93,10 @@ export interface PkgConfigOptions {
   }
   /**
    * Packages to exclude from bundles.
+   * Provide an array to merge with default exclusions, use a function to replace them:
+   * ```
+   * exclude: (prev) => prev.filter(package => package !== 'foo')
+   * ```
    */
   external?: PkgConfigProperty<string[]>
   /**
