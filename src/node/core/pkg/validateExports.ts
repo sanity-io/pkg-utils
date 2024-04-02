@@ -7,7 +7,8 @@ export function validateExports(
   options: {pkg: PackageJSON},
 ): string[] {
   const {pkg} = options
-  const ext = extMap[pkg.type || 'commonjs']
+  const type = pkg.type || 'commonjs'
+  const ext = extMap[type]
 
   const errors: string[] = []
 
@@ -15,13 +16,13 @@ export function validateExports(
   for (const exp of _exports) {
     if (exp.require && !exp.require.endsWith(ext.commonjs)) {
       errors.push(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`,
+        `package.json with \`type: "${type}"\` - \`exports["${exp._path}"].require\` must end with "${ext.commonjs}"`,
       )
     }
 
     if (exp.import && !exp.import.endsWith(ext.esm)) {
       errors.push(
-        `package.json with \`type: "${pkg.type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`,
+        `package.json with \`type: "${type}"\` - \`exports["${exp._path}"].import\` must end with "${ext.esm}"`,
       )
     }
   }
