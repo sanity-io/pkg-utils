@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.6](https://github.com/sanity-io/pkg-utils/compare/v5.1.5...v5.1.6) (2024-04-02)
+
+
+### Bug Fixes
+
+* only require `type: commonjs` when `legacyExports: false` ([#662](https://github.com/sanity-io/pkg-utils/issues/662)) ([de5fe2c](https://github.com/sanity-io/pkg-utils/commit/de5fe2c4dd20fde0fccd7b768995c064f50ac6ae))
+
 ## [5.1.5](https://github.com/sanity-io/pkg-utils/compare/v5.1.4...v5.1.5) (2024-04-02)
 
 
