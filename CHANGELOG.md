@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.7](https://github.com/sanity-io/pkg-utils/compare/v5.1.6...v5.1.7) (2024-04-02)
+
+
+### Bug Fixes
+
+* `type: "undefined"` should be `type: "commonjs"` ([befbe86](https://github.com/sanity-io/pkg-utils/commit/befbe860172399c44615e6a7cfb72bc4f2d5e7d5))
+
 ## [5.1.6](https://github.com/sanity-io/pkg-utils/compare/v5.1.5...v5.1.6) (2024-04-02)
 
 
