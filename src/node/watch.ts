@@ -30,8 +30,9 @@ export async function watch(options: {
         throw new Error('missing package.json')
       }
 
-      const pkg = await loadPkgWithReporting({cwd, logger, strict})
       const config = await loadConfig({cwd})
+      const legacyExports = config?.legacyExports ?? false
+      const pkg = await loadPkgWithReporting({cwd, logger, strict, legacyExports})
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
       return resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})

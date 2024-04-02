@@ -33,9 +33,10 @@ export async function build(options: {
   const {cwd, emitDeclarationOnly, strict = false, tsconfig: tsconfigOption} = options
   const logger = createLogger()
 
-  const pkg = await loadPkgWithReporting({cwd, logger, strict})
-
   const config = await loadConfig({cwd})
+  const legacyExports = config?.legacyExports ?? false
+  const pkg = await loadPkgWithReporting({cwd, logger, strict, legacyExports})
+
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
   const ctx = await resolveBuildContext({
