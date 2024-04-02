@@ -264,7 +264,7 @@ importers:
         version: 2.5.4(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.2.2)
       '@sveltejs/package':
         specifier: ^2.3.0
-        version: 2.3.0(svelte@4.2.12)(typescript@5.4.3)
+        version: 2.3.0(svelte@4.2.12)(typescript@5.4.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.2)
@@ -311,8 +311,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^4.5.8
-        version: 4.5.8(@types/node@20.11.29)(typescript@5.4.2)
+        specifier: ^4.5.12
+        version: 4.5.12(@types/node@20.11.29)(typescript@5.4.2)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -523,12 +523,12 @@ packages:
     resolution: {integrity: sha512-XpC8MAaWjD1ff6/IfkRq/5k1EFj6zhCNqXRd5J43SVJEBj/Bsmizkm8N0xOYscGcDFQkRgEw6/eKnI5x/1l6aA==}
     dev: true
 
-  /@astrojs/internal-helpers@0.3.0:
-    resolution: {integrity: sha512-tGmHvrhpzuz0JBHaJX8GywN9g4rldVNHtkoVDC3m/DdzBO70jGoVuc0uuNVglRYnsdwkbG0K02Iw3nOOR3/Y4g==}
+  /@astrojs/internal-helpers@0.4.0:
+    resolution: {integrity: sha512-6B13lz5n6BrbTqCTwhXjJXuR1sqiX/H6rTxzlXx+lN1NnV4jgnq/KJldCQaUWJzPL5SiWahQyinxAbxQtwgPHA==}
     dev: true
 
-  /@astrojs/markdown-remark@4.3.1:
-    resolution: {integrity: sha512-eJFi600tkRjTFiwzY9oD8AgCgB7gFqyWCKWuZ33dATVBgLiROD+zlMZ8STZzU7+ZALvmiUAun/K7umTmP5YfVQ==}
+  /@astrojs/markdown-remark@4.3.2:
+    resolution: {integrity: sha512-4Oa4VaYiBd0MatB+rWIU/0A8pZH/sK3c2QkRYb+OO2lPl+qzevJtWaZY8hAQc4qurIOlRdn6B6ofDAGhWw+DSg==}
     dependencies:
       '@astrojs/prism': 3.0.0
       github-slugger: 2.0.0
@@ -2082,7 +2082,7 @@ packages:
       vite: 5.2.2(@types/node@20.11.29)
     dev: true
 
-  /@sveltejs/package@2.3.0(svelte@4.2.12)(typescript@5.4.3):
+  /@sveltejs/package@2.3.0(svelte@4.2.12)(typescript@5.4.2):
     resolution: {integrity: sha512-wmtwEfi3gQnmtotAjygRHR6cmLfpblQl1dU764f3N2I5DPe34llFs44bHOYcuk91Bp2sSq6bWUmNwxGlYCchOA==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
@@ -2094,7 +2094,7 @@ packages:
       sade: 1.8.1
       semver: 7.6.0
       svelte: 4.2.12
-      svelte2tsx: 0.7.4(svelte@4.2.12)(typescript@5.4.3)
+      svelte2tsx: 0.7.4(svelte@4.2.12)(typescript@5.4.2)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -2987,14 +2987,14 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /astro@4.5.8(@types/node@20.11.29)(typescript@5.4.2):
-    resolution: {integrity: sha512-bhKsoZQWT6LW8aYMvTGglZTPa3rYRbcdc2buiJyFPCvSWOOyZmxqpp6vtQ+x6fXxD8P1NecM/c4g5GaPi+MokQ==}
+  /astro@4.5.12(@types/node@20.11.29)(typescript@5.4.2):
+    resolution: {integrity: sha512-xIJcFI2hbyV8+h5pWjL7SKD1jIP0K01fYVAH+gdAt0mJaXy+u8Mj+goD0cPlK6sEaykR+7zxQLYGKJ44U4qarg==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 2.7.0
-      '@astrojs/internal-helpers': 0.3.0
-      '@astrojs/markdown-remark': 4.3.1
+      '@astrojs/internal-helpers': 0.4.0
+      '@astrojs/markdown-remark': 4.3.2
       '@astrojs/telemetry': 3.0.4
       '@babel/core': 7.24.3
       '@babel/generator': 7.24.1
@@ -5493,24 +5493,6 @@ packages:
       hasown: 2.0.2
     dev: true
 
-  /get-it@8.4.15:
-    resolution: {integrity: sha512-UcFJxHQcEgZdP6ZoUUP/95HlLKPaysrL82UO81qEUre/WO8vxhIws9u7divaotsErAF6RsZfGcZc6WCRvadYHw==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      debug: 4.3.4
-      decompress-response: 7.0.0
-      follow-redirects: 1.15.6(debug@4.3.4)
-      into-stream: 6.0.0
-      is-plain-object: 5.0.0
-      is-retry-allowed: 2.2.0
-      is-stream: 2.0.1
-      parse-headers: 2.0.5
-      progress-stream: 2.0.0
-      tunnel-agent: 0.6.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /get-it@8.4.16:
     resolution: {integrity: sha512-NrdV3P0bI4Zh/R0GXIsY3da5mJUd1lT8hGcfwb3KU9E/ewnJ1e8YAWQycAtj3mxrjesBf8ZBq3TDKqyM8AJkJg==}
     engines: {node: '>=14.0.0'}
@@ -5527,13 +5509,12 @@ packages:
       tunnel-agent: 0.6.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /get-latest-version@5.1.0:
     resolution: {integrity: sha512-Q6IBWr/zzw57zIkJmNhI23eRTw3nZ4BWWK034meLwOYU9L3J3IpXiyM73u2pYUwN6U7ahkerCwg2T0jlxiLwsw==}
     engines: {node: '>=14.18'}
     dependencies:
-      get-it: 8.4.15
+      get-it: 8.4.16
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
       semver: 7.6.0
@@ -10052,7 +10033,7 @@ packages:
       typescript: 5.4.2
     dev: true
 
-  /svelte2tsx@0.7.4(svelte@4.2.12)(typescript@5.4.3):
+  /svelte2tsx@0.7.4(svelte@4.2.12)(typescript@5.4.2):
     resolution: {integrity: sha512-zAtbQD7JmeKe0JWdKO6l38t7P6wFP0+YTc0LLFdtzWdHEddcE+/VMvJquQI9NNsnrinUbtS9JF3kosPNeglMcQ==}
     peerDependencies:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
@@ -10061,7 +10042,7 @@ packages:
       dedent-js: 1.0.1
       pascal-case: 3.1.2
       svelte: 4.2.12
-      typescript: 5.4.3
+      typescript: 5.4.2
     dev: true
 
   /svelte@4.2.12:
@@ -10445,12 +10426,6 @@ packages:
     resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.4.3:
-    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ufo@1.5.2:
     resolution: {integrity: sha512-eiutMaL0J2MKdhcOM1tUy13pIrYnyR87fEd8STJQFrrAwImwvlXkxlZEjaKah8r2viPohld08lt73QfLG1NxMg==}
