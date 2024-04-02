@@ -97,7 +97,7 @@ importers:
         version: 3.2.5
       prettier-plugin-packagejson:
         specifier: ^2.4.12
-        version: 2.4.12(prettier@3.2.5)
+        version: 2.4.14(prettier@3.2.5)
       pretty-bytes:
         specifier: ^5.6.0
         version: 5.6.0
@@ -264,7 +264,7 @@ importers:
         version: 2.5.4(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.2.2)
       '@sveltejs/package':
         specifier: ^2.3.0
-        version: 2.3.0(svelte@4.2.12)(typescript@5.4.3)
+        version: 2.3.0(svelte@4.2.12)(typescript@5.4.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.2
         version: 3.0.2(svelte@4.2.12)(vite@5.2.2)
@@ -2082,7 +2082,7 @@ packages:
       vite: 5.2.2(@types/node@20.11.29)
     dev: true
 
-  /@sveltejs/package@2.3.0(svelte@4.2.12)(typescript@5.4.3):
+  /@sveltejs/package@2.3.0(svelte@4.2.12)(typescript@5.4.2):
     resolution: {integrity: sha512-wmtwEfi3gQnmtotAjygRHR6cmLfpblQl1dU764f3N2I5DPe34llFs44bHOYcuk91Bp2sSq6bWUmNwxGlYCchOA==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
@@ -2094,7 +2094,7 @@ packages:
       sade: 1.8.1
       semver: 7.6.0
       svelte: 4.2.12
-      svelte2tsx: 0.7.4(svelte@4.2.12)(typescript@5.4.3)
+      svelte2tsx: 0.7.4(svelte@4.2.12)(typescript@5.4.2)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -5493,24 +5493,6 @@ packages:
       hasown: 2.0.2
     dev: true
 
-  /get-it@8.4.15:
-    resolution: {integrity: sha512-UcFJxHQcEgZdP6ZoUUP/95HlLKPaysrL82UO81qEUre/WO8vxhIws9u7divaotsErAF6RsZfGcZc6WCRvadYHw==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      debug: 4.3.4
-      decompress-response: 7.0.0
-      follow-redirects: 1.15.6(debug@4.3.4)
-      into-stream: 6.0.0
-      is-plain-object: 5.0.0
-      is-retry-allowed: 2.2.0
-      is-stream: 2.0.1
-      parse-headers: 2.0.5
-      progress-stream: 2.0.0
-      tunnel-agent: 0.6.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /get-it@8.4.16:
     resolution: {integrity: sha512-NrdV3P0bI4Zh/R0GXIsY3da5mJUd1lT8hGcfwb3KU9E/ewnJ1e8YAWQycAtj3mxrjesBf8ZBq3TDKqyM8AJkJg==}
     engines: {node: '>=14.0.0'}
@@ -5527,13 +5509,12 @@ packages:
       tunnel-agent: 0.6.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /get-latest-version@5.1.0:
     resolution: {integrity: sha512-Q6IBWr/zzw57zIkJmNhI23eRTw3nZ4BWWK034meLwOYU9L3J3IpXiyM73u2pYUwN6U7ahkerCwg2T0jlxiLwsw==}
     engines: {node: '>=14.18'}
     dependencies:
-      get-it: 8.4.15
+      get-it: 8.4.16
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
       semver: 7.6.0
@@ -8566,8 +8547,8 @@ packages:
       fast-diff: 1.3.0
     dev: true
 
-  /prettier-plugin-packagejson@2.4.12(prettier@3.2.5):
-    resolution: {integrity: sha512-hifuuOgw5rHHTdouw9VrhT8+Nd7UwxtL1qco8dUfd4XUFQL6ia3xyjSxhPQTsGnSYFraTWy5Omb+MZm/OWDTpQ==}
+  /prettier-plugin-packagejson@2.4.14(prettier@3.2.5):
+    resolution: {integrity: sha512-sli+gV5tW7uxvzDZQscaBtSfbyAW2ToL6n/HGt51PipwX9vI7M54vefG0mKSfklVkT29TNGO6Mo6g8c6Z79gmw==}
     peerDependencies:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
@@ -8575,7 +8556,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.2.5
-      sort-package-json: 2.8.0
+      sort-package-json: 2.10.0
       synckit: 0.9.0
     dev: false
 
@@ -9537,8 +9518,8 @@ packages:
     resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
     dev: false
 
-  /sort-package-json@2.8.0:
-    resolution: {integrity: sha512-PxeNg93bTJWmDGnu0HADDucoxfFiKkIr73Kv85EBThlI1YQPdc0XovBgg2llD0iABZbu2SlKo8ntGmOP9wOj/g==}
+  /sort-package-json@2.10.0:
+    resolution: {integrity: sha512-MYecfvObMwJjjJskhxYfuOADkXp1ZMMnCFC8yhp+9HDsk7HhR336hd7eiBs96lTXfiqmUNI+WQCeCMRBhl251g==}
     hasBin: true
     dependencies:
       detect-indent: 7.0.1
@@ -9547,6 +9528,7 @@ packages:
       git-hooks-list: 3.1.0
       globby: 13.2.2
       is-plain-obj: 4.1.0
+      semver: 7.6.0
       sort-object-keys: 1.1.3
     dev: false
 
@@ -10052,7 +10034,7 @@ packages:
       typescript: 5.4.2
     dev: true
 
-  /svelte2tsx@0.7.4(svelte@4.2.12)(typescript@5.4.3):
+  /svelte2tsx@0.7.4(svelte@4.2.12)(typescript@5.4.2):
     resolution: {integrity: sha512-zAtbQD7JmeKe0JWdKO6l38t7P6wFP0+YTc0LLFdtzWdHEddcE+/VMvJquQI9NNsnrinUbtS9JF3kosPNeglMcQ==}
     peerDependencies:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
@@ -10061,7 +10043,7 @@ packages:
       dedent-js: 1.0.1
       pascal-case: 3.1.2
       svelte: 4.2.12
-      typescript: 5.4.3
+      typescript: 5.4.2
     dev: true
 
   /svelte@4.2.12:
@@ -10445,12 +10427,6 @@ packages:
     resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.4.3:
-    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ufo@1.5.2:
     resolution: {integrity: sha512-eiutMaL0J2MKdhcOM1tUy13pIrYnyR87fEd8STJQFrrAwImwvlXkxlZEjaKah8r2viPohld08lt73QfLG1NxMg==}
