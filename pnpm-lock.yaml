@@ -254,8 +254,8 @@ importers:
   playground/multi-export:
     devDependencies:
       '@sanity/visual-editing':
-        specifier: ^1.8.4
-        version: 1.8.4(@sanity/client@6.15.7)(@sveltejs/kit@2.5.5)(svelte@4.2.12)
+        specifier: ^1.8.5
+        version: 1.8.5(@sanity/client@6.15.7)(@sveltejs/kit@2.5.5)(svelte@4.2.12)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.0
         version: 3.2.0(@sveltejs/kit@2.5.5)
@@ -2019,12 +2019,12 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /@sanity/visual-editing@1.8.4(@sanity/client@6.15.7)(@sveltejs/kit@2.5.5)(svelte@4.2.12):
-    resolution: {integrity: sha512-wqvm26KDFB/Ww0J9XT8caPDWTHhemOWySlF9w3TtDTg5iWVoT6iYjKxi0yVoA7xAEtB0SmDUek6wSZhRhXG1LA==}
+  /@sanity/visual-editing@1.8.5(@sanity/client@6.15.7)(@sveltejs/kit@2.5.5)(svelte@4.2.12):
+    resolution: {integrity: sha512-R3Uvq+f/QMgextFspKw/ElrCbKe0+JwMRetfKqehBFZaIDj2ThNyjox5uK9ThqRBRZ18pUae3znojXFHtBxw0A==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
-      '@sanity/client': ^6.15.7
+      '@sanity/client': ^6.15.9
       '@sveltejs/kit': '>= 2'
       next: '>= 13'
       svelte: '>= 4'
