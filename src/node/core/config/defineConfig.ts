@@ -1,6 +1,6 @@
-import {PkgConfigOptions} from './types'
+import type {PkgConfigOptions} from './types'
 
 /** @public */
-export function defineConfig(configOptions: PkgConfigOptions): PkgConfigOptions {
+export function defineConfig<const T extends PkgConfigOptions>(configOptions: T): T {
   return configOptions
 }
