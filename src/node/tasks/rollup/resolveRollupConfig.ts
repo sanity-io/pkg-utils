@@ -196,6 +196,7 @@ export function resolveRollupConfig(
       treeshake: {
         preset: 'recommended',
         propertyReadSideEffects: false,
+        moduleSideEffects: 'no-external',
         ...config?.rollup?.treeshake,
       },
       experimentalLogSideEffects: config?.rollup?.experimentalLogSideEffects,
