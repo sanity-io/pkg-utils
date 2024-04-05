@@ -171,8 +171,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     // Create rollup bundles that legacy export files will re-export
     if (config?.legacyExports) {
       for (const exp of exports) {
-        const runtime = exp.browser?.import || exp.browser?.require ? 'browser' : ctx.runtime
-        const output = exp.browser?.import || exp.import || exp.browser?.require || exp.require
+        const runtime = exp.browser?.import ? 'browser' : ctx.runtime
+        const output = exp.browser?.import || exp.import
 
         if (!output) continue
 
@@ -213,13 +213,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     if (config?.legacyExports) {
       for (const exp of exports) {
         if (exp._exported && exp._path !== '.') {
-          const output = (
-            exp.browser?.import ||
-            exp.import ||
-            exp.browser?.require ||
-            exp.require ||
-            ''
-          ).replace(fileEnding, legacyEnding)
+          const output = (exp.browser?.import || exp.import || '').replace(fileEnding, legacyEnding)
           const relativeTargetPath = output.replace(/\.[^/.]+$/, '')
 
           if (relativeTargetPath) {
