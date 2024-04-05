@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.10](https://github.com/sanity-io/pkg-utils/compare/v5.1.9...v5.1.10) (2024-04-05)
+
+
+### Bug Fixes
+
+* add `const T` to narrow types returned by `defineConfig` ([be29777](https://github.com/sanity-io/pkg-utils/commit/be297775ed5024f6c202a1d6ef623da7572547d4))
+* set `moduleSideEffects: 'no-external'` by default ([51afe8a](https://github.com/sanity-io/pkg-utils/commit/51afe8a96cc8d460962a078f7b6972679b01ec20))
+
 ## [5.1.9](https://github.com/sanity-io/pkg-utils/compare/v5.1.8...v5.1.9) (2024-04-04)
 
 
