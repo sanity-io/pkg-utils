@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.11](https://github.com/sanity-io/pkg-utils/compare/v5.1.10...v5.1.11) (2024-04-05)
+
+
+### Bug Fixes
+
+* don't generate legacy exports for CJS-only exports ([b38aa49](https://github.com/sanity-io/pkg-utils/commit/b38aa49baee43e4ec7daf3792f9c94d5b5654f46))
+
 ## [5.1.10](https://github.com/sanity-io/pkg-utils/compare/v5.1.9...v5.1.10) (2024-04-05)
 
 
