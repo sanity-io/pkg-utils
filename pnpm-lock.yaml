@@ -254,8 +254,8 @@ importers:
   playground/multi-export:
     devDependencies:
       '@sanity/visual-editing':
-        specifier: ^1.8.5
-        version: 1.8.5(@sanity/client@6.15.9)(@sveltejs/kit@2.5.5)(svelte@4.2.12)
+        specifier: ^1.8.7
+        version: 1.8.7(@sanity/client@6.15.11)(@sveltejs/kit@2.5.5)(svelte@4.2.12)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.0
         version: 3.2.0(@sveltejs/kit@2.5.5)
@@ -1978,13 +1978,13 @@ packages:
     resolution: {integrity: sha512-UkJuiTyROgPcxbvpHYyXwr+T88Np4eLzu3h05gMgeZ2hv3EM7g/4VMyng5HuA1JdPQPEdq8bmmfQDR+u4KC+TA==}
     dev: false
 
-  /@sanity/client@6.15.9:
-    resolution: {integrity: sha512-fIWKn5wb7HsFxWVPu/yxMjVpivQn2C0iMrxGs0UJa+W0tg+hilrPskWxtFo37rIuY+vhLhzIyDrL4mCGqs+cpg==}
+  /@sanity/client@6.15.11:
+    resolution: {integrity: sha512-+dAEEKy6LrugjbssVnmef1ZoXOodiEj+0jMzqpygHmw0+uuyeb0jCvAnDdguF1thY/n3H1x+N1edt0CvVrD7Qg==}
     engines: {node: '>=14.18'}
     dependencies:
       '@sanity/eventsource': 5.0.1
       '@vercel/stega': 0.1.0
-      get-it: 8.4.17
+      get-it: 8.4.18
       rxjs: 7.8.1
     transitivePeerDependencies:
       - supports-color
@@ -1999,13 +1999,13 @@ packages:
       eventsource: 2.0.2
     dev: true
 
-  /@sanity/preview-url-secret@1.6.5(@sanity/client@6.15.9):
-    resolution: {integrity: sha512-zY57ZSKHIgiI/naW18Y7XvLwR1cPra2VIrcZQn2nBuL294fRpZkwBF+M62j6oroU5nKXGQt5P82VM1sXdqXdmw==}
+  /@sanity/preview-url-secret@1.6.7(@sanity/client@6.15.11):
+    resolution: {integrity: sha512-vlBz8iGdiR9CtXAdV+sdTrE8bIDhJvn/cHITY9ISY33kleOKY+QY0SGm4v3w9Plt0BZCLWpqlW90jsFC6IO4PA==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@sanity/client': ^6.15.7
+      '@sanity/client': ^6.15.11
     dependencies:
-      '@sanity/client': 6.15.9
+      '@sanity/client': 6.15.11
       '@sanity/uuid': 3.0.2
     dev: true
 
@@ -2016,12 +2016,12 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /@sanity/visual-editing@1.8.5(@sanity/client@6.15.9)(@sveltejs/kit@2.5.5)(svelte@4.2.12):
-    resolution: {integrity: sha512-R3Uvq+f/QMgextFspKw/ElrCbKe0+JwMRetfKqehBFZaIDj2ThNyjox5uK9ThqRBRZ18pUae3znojXFHtBxw0A==}
+  /@sanity/visual-editing@1.8.7(@sanity/client@6.15.11)(@sveltejs/kit@2.5.5)(svelte@4.2.12):
+    resolution: {integrity: sha512-jUWa11VYvg7Ws/mCRXwBz0X/CmqPFG2dAfvSahqQ3x5LzIcXFaJ3BU0b+9xcEXr0wIEO+/l+eMsEQVAtBhezPw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
-      '@sanity/client': ^6.15.9
+      '@sanity/client': ^6.15.11
       '@sveltejs/kit': '>= 2'
       next: '>= 13'
       svelte: '>= 4'
@@ -2037,8 +2037,8 @@ packages:
       svelte:
         optional: true
     dependencies:
-      '@sanity/client': 6.15.9
-      '@sanity/preview-url-secret': 1.6.5(@sanity/client@6.15.9)
+      '@sanity/client': 6.15.11
+      '@sanity/preview-url-secret': 1.6.7(@sanity/client@6.15.11)
       '@sveltejs/kit': 2.5.5(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.2.8)
       '@vercel/stega': 0.1.0
       react: 18.2.0
@@ -3092,6 +3092,7 @@ packages:
     resolution: {integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==}
     engines: {node: '>= 4.5.0'}
     hasBin: true
+    requiresBuild: true
     dev: true
 
   /available-typed-arrays@1.0.7:
@@ -4173,6 +4174,7 @@ packages:
   /decode-uri-component@0.2.2:
     resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
     engines: {node: '>=0.10'}
+    requiresBuild: true
     dev: true
 
   /decompress-response@6.0.0:
@@ -5490,8 +5492,8 @@ packages:
       hasown: 2.0.2
     dev: true
 
-  /get-it@8.4.17:
-    resolution: {integrity: sha512-GloykKQFXggi8dZcJ4KVJahAc6hbuZ/RT/gVfCGpQw3t7jtm4xtq2f37tXajeqSA2icTYgkypluyPH1/bJ6ibA==}
+  /get-it@8.4.18:
+    resolution: {integrity: sha512-cOrL+qRSix45onwUNEO/ITrtuh2cvJT+vCFG2qahC/dFBC2z03LxLTwAZ33VPptoytBJN4Ht0AdnYCDBUm/M+Q==}
     engines: {node: '>=14.0.0'}
     dependencies:
       debug: 4.3.4
@@ -5511,7 +5513,7 @@ packages:
     resolution: {integrity: sha512-Q6IBWr/zzw57zIkJmNhI23eRTw3nZ4BWWK034meLwOYU9L3J3IpXiyM73u2pYUwN6U7ahkerCwg2T0jlxiLwsw==}
     engines: {node: '>=14.18'}
     dependencies:
-      get-it: 8.4.17
+      get-it: 8.4.18
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
       semver: 7.6.0
@@ -7672,6 +7674,7 @@ packages:
 
   /ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
+    requiresBuild: true
     dev: true
 
   /ms@2.1.2:
@@ -8977,6 +8980,7 @@ packages:
   /resolve-url@0.2.1:
     resolution: {integrity: sha512-ZuF55hVUQaaczgOIwqWzkEcEidmlD/xl44x1UZnhOXcYuFN2S6+rcxpG+C1N3So0wvNI3DmJICUFfu2SxhBmvg==}
     deprecated: https://github.com/lydell/resolve-url#deprecated
+    requiresBuild: true
     dev: true
 
   /resolve@1.19.0:
@@ -9550,6 +9554,7 @@ packages:
   /source-map-url@0.4.1:
     resolution: {integrity: sha512-cPiFOTLUKvJFIg4SKVScy4ilPPW6rFgMgfuZJPNoDuMs3nC1HbMUycBoJw77xFIp6z1UJQJOfx6C9GMH80DiTw==}
     deprecated: See https://github.com/lydell/source-map-url#deprecated
+    requiresBuild: true
     dev: true
 
   /source-map@0.5.7:
@@ -10208,6 +10213,7 @@ packages:
   /to-regex-range@2.1.1:
     resolution: {integrity: sha512-ZZWNfCjUokXXDGXFpZehJIkZqq91BcULFq/Pi7M5i4JnxXdhMKAK682z8bCW3o8Hj1wuuzoKcW3DfVzaP6VuNg==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       is-number: 3.0.0
       repeat-string: 1.6.1
@@ -10636,6 +10642,7 @@ packages:
   /urix@0.1.0:
     resolution: {integrity: sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==}
     deprecated: Please see https://github.com/lydell/urix#deprecated
+    requiresBuild: true
     dev: true
 
   /url@0.11.3:
