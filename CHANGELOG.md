@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/sanity-io/pkg-utils/compare/v6.0.0...v6.0.1) (2024-04-08)
+
+
+### Bug Fixes
+
+* optimize lodash plugin crashed on TS syntax ([e7b1baf](https://github.com/sanity-io/pkg-utils/commit/e7b1baf3afabf7e0767b8cd1f2dfbb5c7005e889))
+
 ## [6.0.0](https://github.com/sanity-io/pkg-utils/compare/v5.1.12...v6.0.0) (2024-04-08)
 
 
