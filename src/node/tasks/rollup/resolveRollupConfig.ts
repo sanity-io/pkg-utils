@@ -1,5 +1,6 @@
 import path from 'node:path'
 
+import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
 import alias from '@rollup/plugin-alias'
 import {getBabelOutputPlugin} from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
@@ -11,7 +12,7 @@ import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
-import {type BuildContext, resolveConfigProperty} from '../../core'
+import {type BuildContext, type PackageJSON, resolveConfigProperty} from '../../core'
 import type {RollupLegacyTask, RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
@@ -53,6 +54,8 @@ export function resolveRollupConfig(
     Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)]),
   )
 
+  const {optimizeLodash: enableOptimizeLodash = hasDependency(pkg, 'lodash')} = config?.rollup || {}
+
   const defaultPlugins = [
     replace({
       preventAssignment: true,
@@ -91,6 +94,13 @@ export function resolveRollupConfig(
       preferBuiltins: true,
     }),
     commonjs(),
+    enableOptimizeLodash &&
+      optimizeLodashImports({
+        useLodashEs: format === 'esm' && hasDependency(pkg, 'lodash-es') ? true : undefined,
+        ...(typeof config?.rollup?.optimizeLodash === 'boolean'
+          ? {}
+          : config?.rollup?.optimizeLodash),
+      }),
     json(),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
@@ -215,4 +225,12 @@ export function resolveRollupConfig(
       ...config?.rollup?.output,
     },
   }
+}
+
+function hasDependency(pkg: PackageJSON, packageName: string): boolean {
+  return pkg.dependencies
+    ? packageName in pkg.dependencies
+    : pkg.peerDependencies
+      ? packageName in pkg.peerDependencies
+      : false
 }
