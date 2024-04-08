@@ -24,8 +24,8 @@
   ],
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
-    "test": "node test.cjs && node test.mjs",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "test": "node test.cjs && node test.mjs"
   },
   "dependencies": {
     "lodash": "^4.17.21",
