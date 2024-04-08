@@ -129,6 +129,7 @@
     "@types/parse-git-config": "^3.0.4",
     "@types/prompts": "^2.4.9",
     "@types/rimraf": "^3.0.2",
+    "@types/semver": "^7.5.8",
     "@types/treeify": "^1.0.3",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
@@ -148,13 +149,14 @@
     "outdent": "^0.8.0",
     "recast": "^0.23.6",
     "rollup-plugin-visualizer": "^5.12.0",
+    "semver": "^7.6.0",
     "ts-node": "^10.9.2",
     "typescript": "5.4.2",
     "vitest": "^1.4.0",
     "vitest-github-actions-reporter": "^0.11.1"
   },
   "peerDependencies": {
-    "typescript": "5.4.2"
+    "typescript": "5.4.x"
   },
   "packageManager": "pnpm@8.15.6",
   "engines": {
