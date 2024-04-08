@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.0](https://github.com/sanity-io/pkg-utils/compare/v5.1.12...v6.0.0) (2024-04-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* use `node:` protocol on built in modules
+
+### Features
+
+* add lodash optimization ([#696](https://github.com/sanity-io/pkg-utils/issues/696)) ([4a4f84c](https://github.com/sanity-io/pkg-utils/commit/4a4f84c4d790cc533f27253b9bb1ab54639b0a26))
+* use `node:` protocol on built in modules ([7fdad52](https://github.com/sanity-io/pkg-utils/commit/7fdad523d2b97c9f86956b5be62b12cb83517946))
+
 ## [5.1.12](https://github.com/sanity-io/pkg-utils/compare/v5.1.11...v5.1.12) (2024-04-07)
 
 
