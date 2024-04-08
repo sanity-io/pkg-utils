@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/sanity-io/pkg-utils/compare/v6.0.1...v6.0.2) (2024-04-08)
+
+
+### Bug Fixes
+
+* allow wider `typescript` semver range ([#699](https://github.com/sanity-io/pkg-utils/issues/699)) ([63fa409](https://github.com/sanity-io/pkg-utils/commit/63fa409434504a77bc252941446f42a70991337a))
+
 ## [6.0.1](https://github.com/sanity-io/pkg-utils/compare/v6.0.0...v6.0.1) (2024-04-08)
 
 
