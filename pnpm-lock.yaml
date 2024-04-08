@@ -23,6 +23,9 @@ importers:
       '@microsoft/tsdoc-config':
         specifier: ^0.16.2
         version: 0.16.2
+      '@optimize-lodash/rollup-plugin':
+        specifier: 4.0.4
+        version: 4.0.4(rollup@4.14.1)
       '@rollup/plugin-alias':
         specifier: ^5.1.0
         version: 5.1.0(rollup@4.14.1)
@@ -242,6 +245,32 @@ importers:
   playground/default-export: {}
 
   playground/dummy-commonjs: {}
+
+  playground/dummy-lodash:
+    dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/lodash':
+        specifier: ^4.17.0
+        version: 4.17.0
+
+  playground/dummy-lodash-es:
+    dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/lodash':
+        specifier: ^4.17.0
+        version: 4.17.0
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
 
   playground/dummy-module: {}
 
@@ -1693,6 +1722,25 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
+  /@optimize-lodash/rollup-plugin@4.0.4(rollup@4.14.1):
+    resolution: {integrity: sha512-zcbnqx7oQWmGA3Xaf6I8m64+Rufebz4fnSuOHf0++aGqHdwbf19t5OdIebn8Deeb1DoyHbaWVezuTZyKw0vBJw==}
+    engines: {node: '>= 12'}
+    peerDependencies:
+      rollup: '>=2.x'
+    dependencies:
+      '@optimize-lodash/transform': 3.0.3
+      '@rollup/pluginutils': 5.0.5(rollup@4.14.1)
+      rollup: 4.14.1
+    dev: false
+
+  /@optimize-lodash/transform@3.0.3:
+    resolution: {integrity: sha512-LeH2C2nYPfwKLQ1OX7jrfZOYTyRajOhhgoCdz47+5d2oBP8YKL/NknCAcDt2QkzLDLbtZ5QHhKZN56S2D/I1JA==}
+    engines: {node: '>= 12'}
+    dependencies:
+      estree-walker: 2.0.2
+      magic-string: 0.30.9
+    dev: false
+
   /@pkgr/core@0.1.1:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -1847,6 +1895,21 @@ packages:
       serialize-javascript: 6.0.2
       smob: 1.5.0
       terser: 5.30.3
+    dev: false
+
+  /@rollup/pluginutils@5.0.5(rollup@4.14.1):
+    resolution: {integrity: sha512-6aEYR910NyP73oHiJglti74iRyOwgFU4x3meH/H8OJx6Ry0j6cOVZ5X/wTvub7G7Ao6qaHBEaNsV3GLJkSsF+Q==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.5
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 4.14.1
     dev: false
 
   /@rollup/pluginutils@5.1.0(rollup@4.14.1):
@@ -2442,6 +2505,16 @@ packages:
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.17.0
+    dev: true
+
+  /@types/lodash@4.17.0:
+    resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
     dev: true
 
   /@types/mdast@4.0.3:
@@ -7094,6 +7167,10 @@ packages:
     dependencies:
       p-locate: 6.0.0
     dev: true
+
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}

@@ -1,4 +1,5 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
+import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 
 // re-export
@@ -137,6 +138,14 @@ export interface PkgConfigOptions {
      * @defaultValue false
      */
     hashChunkFileNames?: boolean
+    /**
+     * Optimizes lodash imports using `@optimize-lodash/rollup-plugin` when set to `true`.
+     * It's enabled if `lodash` is found in `dependencies` or `peerDependencies`.
+     * It will use `lodash-es` for ESM targets if found in `dependencies` or `peerDependencies`.
+     * @defaultValue true
+     * @alpha
+     */
+    optimizeLodash?: boolean | OptimizeLodashOptions
   }
   /**
    * Default runtime of package exports
