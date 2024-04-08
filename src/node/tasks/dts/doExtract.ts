@@ -1,5 +1,6 @@
+import path from 'node:path'
+
 import type {ExtractorMessage} from '@microsoft/api-extractor'
-import path from 'path'
 import rimraf from 'rimraf'
 
 import type {BuildContext} from '../../core'

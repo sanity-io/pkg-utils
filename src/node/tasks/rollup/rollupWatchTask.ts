@@ -1,9 +1,10 @@
+import path from 'node:path'
+
 import chalk from 'chalk'
-import path from 'path'
-import {RollupWatcherEvent, RollupWatchOptions, watch as rollupWatch} from 'rollup'
+import {type RollupWatcherEvent, type RollupWatchOptions, watch as rollupWatch} from 'rollup'
 import {Observable} from 'rxjs'
 
-import {RollupWatchTask, TaskHandler} from '../types'
+import type {RollupWatchTask, TaskHandler} from '../types'
 import {resolveRollupConfig} from './resolveRollupConfig'
 
 /** @internal */

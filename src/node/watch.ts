@@ -1,4 +1,5 @@
-import path from 'path'
+import path from 'node:path'
+
 import {switchMap} from 'rxjs'
 
 import {loadConfig, loadPkgWithReporting} from './core'

@@ -1,5 +1,6 @@
+import path from 'node:path'
+
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
-import path from 'path'
 import ts from 'typescript'
 
 export function createApiExtractorConfig(options: {

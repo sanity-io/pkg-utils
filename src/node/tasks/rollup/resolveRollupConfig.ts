@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import alias from '@rollup/plugin-alias'
 import {getBabelOutputPlugin} from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
@@ -5,7 +7,6 @@ import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
-import path from 'path'
 import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 

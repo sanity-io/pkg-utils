@@ -1,12 +1,13 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
 import {
   Extractor,
   ExtractorConfig,
   type ExtractorMessage,
   type ExtractorResult,
 } from '@microsoft/api-extractor'
-import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
-import path from 'path'
 import prettier from 'prettier'
 import type ts from 'typescript'
 

@@ -1,6 +1,7 @@
-import {lstat} from 'fs/promises'
+import {lstat} from 'node:fs/promises'
+import {resolve} from 'node:path'
+
 import {mkdirp} from 'mkdirp'
-import {resolve} from 'path'
 
 import {createFromTemplate} from './core/template'
 import {fileExists} from './fileExists'

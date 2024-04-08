@@ -1,9 +1,10 @@
+import path from 'node:path'
+
 import {register} from 'esbuild-register/dist/node'
-import path from 'path'
 import pkgUp from 'pkg-up'
 
 import {findConfigFile} from './findConfigFile'
-import {PkgConfigOptions} from './types'
+import type {PkgConfigOptions} from './types'
 
 /** @internal */
 export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptions | undefined> {

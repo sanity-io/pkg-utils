@@ -1,5 +1,6 @@
+import path from 'node:path'
+
 import findConfig from 'find-config'
-import path from 'path'
 
 import {fileExists} from '../../fileExists'
 

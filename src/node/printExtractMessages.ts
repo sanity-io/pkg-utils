@@ -1,6 +1,7 @@
+import path from 'node:path'
+
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 import chalk from 'chalk'
-import path from 'path'
 
 import type {BuildContext} from './core'
 

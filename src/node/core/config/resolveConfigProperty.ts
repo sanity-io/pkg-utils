@@ -1,4 +1,4 @@
-import {PkgConfigProperty, PkgConfigPropertyResolver} from './types'
+import type {PkgConfigProperty, PkgConfigPropertyResolver} from './types'
 
 /** @internal */
 export function resolveConfigProperty<T>(

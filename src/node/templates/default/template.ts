@@ -1,11 +1,18 @@
+import {resolve} from 'node:path'
+
 import getLatestVersion from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
 import parseGitConfig from 'parse-git-config'
-import {resolve} from 'path'
-import prettier, {Config as PrettierConfig} from 'prettier'
+import prettier, {type Config as PrettierConfig} from 'prettier'
 
-import {defineTemplateOption, isRecord, PackageJSON, PkgTemplate, PkgTemplateFile} from '../../core'
+import {
+  defineTemplateOption,
+  isRecord,
+  type PackageJSON,
+  type PkgTemplate,
+  type PkgTemplateFile,
+} from '../../core'
 
 const RE_NAME = /^(?:@(?:[a-z0-9-*~][a-z0-9-*._~]*)\/)?[a-z0-9-~][a-z0-9-._~]*$/i
 

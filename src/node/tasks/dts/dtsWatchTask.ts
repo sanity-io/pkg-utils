@@ -11,7 +11,7 @@ import type {DtsResult, DtsWatchTask} from './types'
 export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
   name: (_ctx, task) =>
     [
-      `build type definitions`,
+      'build type definitions',
       ...task.entries.map((entry) => {
         return entry.targetPaths.map((targetPath) => {
           return [

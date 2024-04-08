@@ -1,5 +1,6 @@
+import {readFile} from 'node:fs/promises'
+
 import {TSDocConfigFile} from '@microsoft/tsdoc-config'
-import {readFile} from 'fs/promises'
 import {parse} from 'jsonc-parser'
 
 /** @public */

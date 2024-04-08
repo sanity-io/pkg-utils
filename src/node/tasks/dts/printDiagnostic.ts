@@ -1,8 +1,9 @@
+import path from 'node:path'
+
 import chalk from 'chalk'
-import path from 'path'
 import ts from 'typescript'
 
-import {Logger} from '../../logger'
+import type {Logger} from '../../logger'
 
 export function printDiagnostic(options: {
   cwd: string

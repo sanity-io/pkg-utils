@@ -1,4 +1,4 @@
-import {ExtractorMessage} from '@microsoft/api-extractor'
+import type {ExtractorMessage} from '@microsoft/api-extractor'
 
 /** @internal */
 export class DtsError extends Error {

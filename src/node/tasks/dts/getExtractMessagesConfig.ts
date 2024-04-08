@@ -1,6 +1,6 @@
-import {ExtractorLogLevel, IExtractorMessagesConfig} from '@microsoft/api-extractor'
+import type {ExtractorLogLevel, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 
-import {PkgConfigOptions, PkgRuleLevel} from '../../core'
+import type {PkgConfigOptions, PkgRuleLevel} from '../../core'
 
 const LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
   error: 'error' as ExtractorLogLevel.Error,

@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
 import type {DtsWatchTask, RollupTaskEntry, RollupWatchTask, WatchTask} from './tasks'

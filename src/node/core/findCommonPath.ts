@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 
 export function pathContains(containerPath: string, itemPath: string): boolean {
   return !path.relative(containerPath, itemPath).startsWith('..')

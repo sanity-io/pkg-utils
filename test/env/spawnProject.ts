@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
 import cpx from 'cpx'
-import fs from 'fs/promises'
 import {mkdirp} from 'mkdirp'
-import path from 'path'
 import rimraf from 'rimraf'
 import {v4 as uuid} from 'uuid'
 

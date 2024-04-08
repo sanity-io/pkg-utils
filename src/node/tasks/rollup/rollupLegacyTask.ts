@@ -1,5 +1,6 @@
+import path from 'node:path'
+
 import chalk from 'chalk'
-import path from 'path'
 import {rollup} from 'rollup'
 import {Observable} from 'rxjs'
 

@@ -1,4 +1,4 @@
-import {statSync} from 'fs'
+import {statSync} from 'node:fs'
 
 /** @internal */
 export function fileExists(filePath: string): boolean {

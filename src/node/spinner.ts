@@ -12,7 +12,7 @@ export function createSpinner(msg: string): {complete: () => void; error: () => 
       console.log(`${chalk.green('[success]')} ${chalk.gray(`${Date.now() - startTime}ms`)}`)
     },
     error: () => {
-      console.log(`${chalk.red(`[error]`)} ${chalk.gray(`${Date.now() - startTime}ms`)}`)
+      console.log(`${chalk.red('[error]')} ${chalk.gray(`${Date.now() - startTime}ms`)}`)
     },
   }
 }

@@ -1,5 +1,6 @@
+import path from 'node:path'
+
 import browserslistToEsbuild from 'browserslist-to-esbuild'
-import path from 'path'
 
 import {
   type BuildContext,
