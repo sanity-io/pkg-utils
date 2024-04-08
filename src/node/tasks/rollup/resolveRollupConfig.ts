@@ -94,13 +94,6 @@ export function resolveRollupConfig(
       preferBuiltins: true,
     }),
     commonjs(),
-    enableOptimizeLodash &&
-      optimizeLodashImports({
-        useLodashEs: format === 'esm' && hasDependency(pkg, 'lodash-es') ? true : undefined,
-        ...(typeof config?.rollup?.optimizeLodash === 'boolean'
-          ? {}
-          : config?.rollup?.optimizeLodash),
-      }),
     json(),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
@@ -119,6 +112,13 @@ export function resolveRollupConfig(
       getBabelOutputPlugin({
         babelrc: false,
         plugins: config.babel.plugins,
+      }),
+    enableOptimizeLodash &&
+      optimizeLodashImports({
+        useLodashEs: format === 'esm' && hasDependency(pkg, 'lodash-es') ? true : undefined,
+        ...(typeof config?.rollup?.optimizeLodash === 'boolean'
+          ? {}
+          : config?.rollup?.optimizeLodash),
       }),
     minify &&
       terser({
