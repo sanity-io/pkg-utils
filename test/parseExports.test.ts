@@ -31,7 +31,7 @@ describe('parseExports', () => {
         types: undefined,
         source: './src/index.ts',
         browser: undefined,
-        import: undefined,
+        import: '',
         require: './dist/index.js',
         default: './dist/index.js',
       },
@@ -124,9 +124,7 @@ describe('parseExports', () => {
     }
 
     expect(() => parseExports({pkg, strict: true, legacyExports: false})).toThrow(
-      '\n- package.json: mismatch between "main" and "exports.require". These must be equal.' +
-        '\n- package.json: mismatch between "module" and "exports.import" These must be equal.' +
-        '\n- package.json: `exports["./package.json"] must be "./package.json".' +
+      '\n- package.json: `exports["./package.json"] must be "./package.json".' +
         '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
         '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".mjs"',
     )

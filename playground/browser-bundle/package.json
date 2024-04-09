@@ -4,6 +4,15 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "source": "./src/index.js",

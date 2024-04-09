@@ -2,5 +2,50 @@
   "name": "reference-esm-only",
   "version": "0.0.0",
   "private": true,
-  "description": "A reference implementation of TypeScript 5.4 best practice for a module that is ESM by default, and does not offer CJS."
+  "description": "A reference implementation of TypeScript 5.4 best practice for a module that is ESM by default, and does not offer CJS.",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "browser": {
+        "source": "./src/index.ts",
+        "import": "./dist/index.browser.js"
+      },
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./extra": {
+      "source": "./src/extra.ts",
+      "browser": {
+        "source": "./src/extra.ts",
+        "import": "./dist/extra.browser.js"
+      },
+      "import": "./dist/extra.js",
+      "default": "./dist/extra.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "extra": [
+        "./dist/extra.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "run-s clean && pkg build --strict && pkg check --strict",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "20.1.3",
+    "typescript": "5.4.4"
+  }
 }

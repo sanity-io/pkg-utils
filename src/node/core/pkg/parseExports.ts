@@ -21,9 +21,21 @@ export function parseExports(options: {
       require: pkg.main && pkg.browser[pkg.main],
       import: pkg.module && pkg.browser[pkg.module],
     },
-    require: pkg.main,
-    import: pkg.module,
-    default: pkg.module || pkg.main || '',
+    require: legacyExports
+      ? pkg.main
+      : typeof pkg.exports?.['.'] === 'object' && 'require' in pkg.exports['.']
+        ? pkg.exports['.'].require
+        : '',
+    import: legacyExports
+      ? pkg.module
+      : typeof pkg.exports?.['.'] === 'object' && 'import' in pkg.exports['.']
+        ? pkg.exports['.'].import
+        : '',
+    default: legacyExports
+      ? pkg.module || pkg.main || ''
+      : typeof pkg.exports?.['.'] === 'object' && 'default' in pkg.exports['.']
+        ? pkg.exports['.'].default || ''
+        : pkg.module || pkg.main || '',
   }
 
   const extraExports: (PkgExport & {_path: string})[] = []
