@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": true,
+
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleDetection": "force",
 
     // Strict type-checking
     "strict": true,
@@ -20,10 +23,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-
-    // Module resolution
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "allowSyntheticDefaultImports": true
   }
 }

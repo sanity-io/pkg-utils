@@ -20,6 +20,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
+    "check:types": "tsc",
     "clean": "rimraf dist"
   }
 }
