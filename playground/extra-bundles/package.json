@@ -4,9 +4,6 @@
   "private": true,
   "license": "MIT",
   "type": "commonjs",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "source": "./src/index.js",
   "exports": {
     ".": {
       "source": "./src/index.js",
@@ -16,6 +13,9 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "source": "./src/index.js",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"
