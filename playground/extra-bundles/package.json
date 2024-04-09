@@ -7,6 +7,15 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "source": "./src/index.js",
+  "exports": {
+    ".": {
+      "source": "./src/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",
     "clean": "rimraf dist"

@@ -15,6 +15,20 @@ test('should parse tasks (type: module)', () => {
       './dist/index.cjs': './dist/index.browser.cjs',
       './dist/index.js': './dist/index.browser.js',
     },
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        browser: {
+          source: './src/index.ts',
+          import: './dist/index.browser.js',
+          require: './dist/index.browser.cjs',
+        },
+        import: './dist/index.js',
+        require: './dist/index.cjs',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
   }
 
   const exports = parseExports({pkg, strict: true, legacyExports: false})

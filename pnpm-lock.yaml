@@ -341,7 +341,14 @@ importers:
 
   playground/reference-esm-legacy: {}
 
-  playground/reference-esm-only: {}
+  playground/reference-esm-only:
+    devDependencies:
+      '@tsconfig/node-lts':
+        specifier: 20.1.3
+        version: 20.1.3
+      typescript:
+        specifier: 5.4.4
+        version: 5.4.4
 
   playground/runtime-astro:
     devDependencies:
