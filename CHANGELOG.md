@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.0](https://github.com/sanity-io/pkg-utils/compare/v6.1.0...v6.2.0) (2024-04-10)
+
+
+### Features
+
+* improve `exports` validation ([#707](https://github.com/sanity-io/pkg-utils/issues/707)) ([21f0342](https://github.com/sanity-io/pkg-utils/commit/21f03421dc395e872c534efecc32c5f0d9ec8e94))
+
 ## [6.1.0](https://github.com/sanity-io/pkg-utils/compare/v6.0.2...v6.1.0) (2024-04-09)
 
 
