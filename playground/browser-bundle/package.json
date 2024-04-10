@@ -16,7 +16,7 @@
   },
   "main": "./dist/index.cjs",
   "scripts": {
-    "build": "run-s clean && pkg build --strict && pkg check --strict",
+    "build": "run-s clean && pkg build --strict --check",
     "clean": "rimraf dist"
   }
 }

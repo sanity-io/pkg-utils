@@ -20,10 +20,21 @@ cli
   .option('--emitDeclarationOnly', 'Emit d.ts only')
   .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
+  .option('--check', 'Run the check command after build (same as running `pkg build && pkg check`)')
   .action(async (options) => {
+    const {check = false, ...buildOptions} = options
     const {buildAction} = await import('./buildAction')
 
-    return buildAction(options)
+    await buildAction(buildOptions)
+
+    if (check) {
+      const {checkAction} = await import('./checkAction')
+
+      await checkAction({
+        strict: options.strict,
+        tsconfig: options.tsconfig,
+      })
+    }
   })
 
 cli.command('init [path]', 'Initialize package').action(async (p) => {
