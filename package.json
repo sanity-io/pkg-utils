@@ -34,7 +34,6 @@
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "source": "./src/node/index.ts",
   "types": "./dist/index.d.ts",
   "bin": {
     "pkg": "./bin/pkg-utils.cjs",
@@ -44,7 +43,8 @@
     "bin",
     "dist",
     "!dist/stats.html",
-    "src"
+    "src",
+    "!src/**/*.test.ts"
   ],
   "scripts": {
     "build": "run-s clean build:pkg check:pkg",
@@ -59,9 +59,9 @@
     "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
-    "test": "run-s playground:clean test:clean vitest:run",
-    "test:clean": "rimraf test/env/__tmp__",
-    "vitest:run": "vitest run",
+    "pretest": "run-s playground:clean",
+    "test": "vitest",
+    "test:update-snapshots": "pnpm test run -- --update",
     "watch": "node -r esbuild-register scripts/watch"
   },
   "commitlint": {

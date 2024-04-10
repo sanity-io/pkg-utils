@@ -16,7 +16,6 @@
   },
   "main": "./lib/index.cjs",
   "module": "./lib/index.esm.js",
-  "source": "./src/index.ts",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",

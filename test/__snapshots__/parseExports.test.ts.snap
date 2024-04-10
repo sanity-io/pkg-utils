@@ -1,0 +1,656 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > maps "source" to "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > uses the "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > uses the "main" and "source" fields to specify a suggested "exports" definition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "import": "./lib/index.mjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
+[Error: 
+- package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > gracefully falls back if the browsers field is invalid 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/index.browser.mjs"
+-       "require": "./lib/index.browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > it handles "browsers" if it only redirects "source" 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/index.browser.mjs"
+-       "require": "./lib/index.browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > minimal CJS package.json requires a default condition when legacyExports: true 1`] = `
+[Error: 
+- package.json - \`exports["."].default\` should be set to "./dist/index.js" when "legacyExports" is true
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > minimal CJS-only package.json requires a default condition when legacyExports: true 1`] = `
+[Error: 
+- package.json - \`exports["."].default\` should be set to "./dist/index.js" when "legacyExports" is true
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > the top level "module" condition is required when legacyExports: true 1`] = `
+[Error: 
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > the top level "module" must end with \`.esm.js\` 1`] = `
+[Error: 
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > maps "source" to "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > uses the "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > uses the "main" and "source" fields to specify a suggested "exports" definition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
+[Error: 
+- package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "exports" key is required > maps "source" to "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/browser.js"
+-       "require": "./lib/browser.cjs"
+-     }
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "exports" key is required > uses the "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/browser.js"
+-       "require": "./lib/browser.cjs"
+-     }
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "exports" key is required > uses the "main" and "source" fields to specify a suggested "exports" definition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
+[Error: 
+- package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > legacyExports: true > gracefully falls back if the browsers field is invalid 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/index.browser.js"
+-       "require": "./lib/index.browser.cjs"
+-     }
+-     "import": "./lib/index.js",
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > legacyExports: true > it handles "browsers" if it only redirects "source" 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/index.browser.js"
+-       "require": "./lib/index.browser.cjs"
+-     }
+-     "import": "./lib/index.js",
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > legacyExports: true > minimal ESM package.json requires a default condition when legacyExports: true 1`] = `
+[Error: 
+- package.json - \`exports["."].default\` should be set to "./dist/index.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > legacyExports: true > minimal ESM-only package.json requires a default condition when legacyExports: true 1`] = `
+[Error: 
+- package.json - \`exports["."].default\` should be set to "./dist/index.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > legacyExports: true > the top level "module" condition is required when legacyExports: true 1`] = `
+[Error: 
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > legacyExports: true > the top level "module" must end with \`.esm.js\` 1`] = `
+[Error: 
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > maps "source" to "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/browser.js"
+-       "require": "./lib/browser.cjs"
+-     }
+-     "import": "./lib/index.js",
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > uses the "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/browser.js"
+-       "require": "./lib/browser.cjs"
+-     }
+-     "import": "./lib/index.js",
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > uses the "main" and "source" fields to specify a suggested "exports" definition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "import": "./lib/index.js",
+-     "require": "./lib/index.cjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
+[Error: 
+- package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "exports" key is required > maps "source" to "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "exports" key is required > uses the "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "exports" key is required > uses the "main" and "source" fields to specify a suggested "exports" definition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "import": "./lib/index.mjs",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
+[Error: 
+- package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > gracefully falls back if the browsers field is invalid 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/index.browser.mjs"
+-       "require": "./lib/index.browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > it handles "browsers" if it only redirects "source" 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/index.browser.mjs"
+-       "require": "./lib/index.browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > minimal CJS package.json requires a default condition when legacyExports: true 1`] = `
+[Error: 
+- package.json - \`exports["."].default\` should be set to "./dist/index.js" when "legacyExports" is true
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > minimal CJS-only package.json requires a default condition when legacyExports: true 1`] = `
+[Error: 
+- package.json - \`exports["."].default\` should be set to "./dist/index.js" when "legacyExports" is true
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > the top level "module" condition is required when legacyExports: true 1`] = `
+[Error: 
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > the top level "module" must end with \`.esm.js\` 1`] = `
+[Error: 
+- package.json: "module" should be "./dist/index.esm.js" when "legacyExports" is true]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "exports" key is required > maps "source" to "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/browser.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, please set a minimal configuration, for example:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.js",
+-     "default": "./dist/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "exports" key is required > uses the "browsers" field to specify a "browser" condition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "browser": {
+-       "source": "./src/index.ts",
+-       "import": "./lib/browser.mjs"
+-       "require": "./lib/browser.js"
+-     }
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "exports" key is required > uses the "main" and "source" fields to specify a suggested "exports" definition 1`] = `
+[Error: 
+- package.json: \`exports\` are missing, it should be:
+- "exports": {
+-   ".": {
+-     "source": "./src/index.ts",
+-     "import": "./lib/index.mjs",
+-     "require": "./lib/index.js",
+-     "default": "./lib/index.js"
+-   },
+-   "./package.json": "./package.json"
+- }]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
+[Error: 
+- package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;

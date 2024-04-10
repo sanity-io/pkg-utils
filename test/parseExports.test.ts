@@ -2,329 +2,619 @@ import {describe, expect, test} from 'vitest'
 
 import {type PackageJSON, parseExports} from '../src/node'
 
-describe('parseExports', () => {
-  test('parse basic package.json', () => {
-    const pkg: PackageJSON = {
-      type: 'commonjs',
-      name: 'test',
-      version: '0.0.0-test',
-      bin: {test: './dist/cli.js'},
-      source: './src/index.ts',
-      main: './dist/index.js',
-      types: './dist/index.d.ts',
-      exports: {
-        '.': {
-          source: './src/index.ts',
-          require: './dist/index.js',
-          default: './dist/index.js',
-        },
-        './package.json': './package.json',
-      },
-    }
+const name = 'test'
+const version = '0.0.0-test'
+const defaults = {
+  '.': {
+    source: './src/index.ts',
+    import: './dist/index.mjs',
+    require: './dist/index.cjs',
+    default: './dist/index.js',
+  },
+} as const
 
-    const exports = parseExports({pkg, strict: true, legacyExports: false})
+describe.each([
+  {type: 'commonjs' as const, legacyExports: false},
+  {type: 'module' as const, legacyExports: false},
+  {type: undefined, legacyExports: false},
+  {type: 'commonjs' as const, legacyExports: true},
+  {type: 'module' as const, legacyExports: true},
+  {type: undefined, legacyExports: true},
+])('parseExports({type: $type, legacyExports: $legacyExports})', ({type, legacyExports}) => {
+  const testParseExports = (
+    options: Omit<Parameters<typeof parseExports>[0], 'strict' | 'legacyExports'>,
+  ) => parseExports({strict: true, legacyExports, ...options})
+  const reference = {
+    '.': {
+      source: defaults['.'].source,
+      import: defaults['.'][type === 'module' ? 'default' : 'import'],
+      require: defaults['.'][type !== 'module' ? 'default' : 'require'],
+      default: defaults['.'].default,
+    },
+    './package.json': './package.json',
+  } as const
 
-    expect(exports).toEqual([
-      {
-        _exported: true,
-        _path: '.',
-        types: undefined,
-        source: './src/index.ts',
-        browser: undefined,
-        import: '',
-        require: './dist/index.js',
-        default: './dist/index.js',
-      },
-    ])
-  })
-
-  test('should throw if `package.json` is missing from the exports', () => {
-    const pkg: PackageJSON = {
-      type: 'commonjs',
-      name: 'test',
-      version: '0.0.0-test',
-      bin: {test: './dist/cli.js'},
-      source: './src/index.ts',
-      main: './dist/index.js',
-      exports: {
-        '.': {
-          source: './src/index.ts',
-          require: './dist/index.js',
-          default: './dist/index.js',
-        },
-      },
-    }
-
-    expect(() => parseExports({pkg, strict: true, legacyExports: false})).toThrow(
-      '\n- package.json: `exports["./package.json"] must be declared.',
-    )
-  })
-
-  test('parse package.json with browser files', () => {
-    const pkg: PackageJSON = {
-      type: 'module',
-      name: 'test',
-      version: '0.0.0-test',
-      exports: {
-        '.': {
-          types: './dist/types/src/index.d.ts',
-          browser: {
-            source: './src/index.ts',
-            require: './dist/index.cjs',
-            import: './dist/index.js',
-          },
-          source: './src/index.ts',
-          require: './dist/index.cjs',
-          import: './dist/index.js',
-          default: './dist/index.js',
-        },
-        './package.json': './package.json',
-      },
-    }
-
-    const exports = parseExports({pkg, strict: true, legacyExports: false})
-
-    expect(exports).toEqual([
-      {
-        _exported: true,
-        _path: '.',
-        types: './dist/types/src/index.d.ts',
-        source: './src/index.ts',
-        browser: {
-          source: './src/index.ts',
-          require: './dist/index.cjs',
-          import: './dist/index.js',
-        },
-        import: './dist/index.js',
-        require: './dist/index.cjs',
-        default: './dist/index.js',
-      },
-    ])
-  })
-
-  test('package.json with multiple exports errors', () => {
-    const pkg: PackageJSON = {
-      type: 'commonjs',
-      name: 'test',
-      version: '0.0.0-test',
-      source: './src/index.ts',
-      exports: {
-        '.': {
-          types: './lib/src/index.d.ts',
-          source: './src/index.ts',
-          import: './lib/index.wrong.suffix',
-          require: './lib/index.wrong.suffix',
-          default: './lib/index.js',
-        },
-        './package.json': './not/package.json',
-      },
-      main: './lib/index.js',
-      module: './lib/index.mjs',
-      types: './lib/src/index.d.ts',
-    }
-
-    expect(() => parseExports({pkg, strict: true, legacyExports: false})).toThrow(
-      '\n- package.json: `exports["./package.json"] must be "./package.json".' +
-        '\n- package.json with `type: "commonjs"` - `exports["."].require` must end with ".js"' +
-        '\n- package.json with `type: "commonjs"` - `exports["."].import` must end with ".mjs"',
-    )
-  })
-
-  describe('allows a wide variety of conditional exports', () => {
-    test.each([
-      [
-        {
-          require: './dist/index.cjs',
-          default: './dist/index.js',
-        },
-        `"import" isn't required when "default" is present`,
-      ],
-      [
-        {
-          import: './dist/index.js',
-          default: './dist/index.cjs',
-        },
-        `"require" isn't required when "default" is present`,
-      ],
-      [
-        {
-          browser: {
-            types: './dist/index.browser.d.ts',
-            source: './src/index.browser.ts',
-            import: './dist/index.js',
-            require: './dist/index.cjs',
-          },
-          import: './dist/index.js',
-          require: './dist/index.cjs',
-        },
-        `"browser" can output both a "import" and "require" condition`,
-      ],
-      [
-        {
-          require: './dist/index.cjs',
-          browser: {
-            types: './dist/index.browser.d.ts',
-            source: './src/index.browser.ts',
-            import: './dist/index.js',
-          },
-          import: './dist/index.js',
-        },
-        `"browser" can optionally override just "import"`,
-      ],
-      [
-        {
-          node: {
-            source: './src/index.node.ts',
-            import: './dist/index.node.js',
-            require: './dist/index.node.cjs',
-          },
-          import: './dist/index.js',
-          require: './dist/index.cjs',
-        },
-        `"node" can output both a "import" and "require" condition`,
-      ],
-    ])('%o', (json, msg) => {
+  describe.skipIf(legacyExports)('valid package.json examples', () => {
+    test('parse basic package.json', () => {
       const pkg = {
-        type: 'module',
-        name: 'test',
-        version: '0.0.0-test',
+        type,
+        name,
+        version,
+        main: reference['.'].require,
+        types: './dist/index.d.ts',
+        exports: reference,
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          ...reference['.'],
+        },
+      ])
+    })
+
+    test.skipIf(type === 'module')('parse minimal CJS package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.js',
+        types: './dist/index.d.ts',
         exports: {
           '.': {
-            types: './dist/index.d.ts',
             source: './src/index.ts',
-            ...json,
+            import: './dist/index.mjs',
             default: './dist/index.js',
           },
           './package.json': './package.json',
         },
       } satisfies PackageJSON
 
-      expect(() => parseExports({pkg, strict: true, legacyExports: false}), msg).not.toThrow()
-    })
-  })
+      const exports = testParseExports({pkg})
 
-  describe.todo('enforces best practices', () => {
-    test.each([
-      [
+      expect(exports).toEqual([
         {
-          default: './dist/index.js',
+          _exported: true,
+          _path: '.',
+          ...reference['.'],
         },
-        `"source" is required`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-        },
-        `"default" is required`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          default: './dist/index.js',
-          require: './dist/index.cjs',
-        },
-        `"default" should be last`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          require: './dist/index.cjs',
-          import: './dist/index.js',
-          node: {
-            module: './dist/index.js',
-          },
-          default: './dist/index.js',
-        },
-        `"node.module" considered harmful`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          module: './dist/index.js',
-          require: './dist/index.cjs',
-          import: './dist/index.js',
-          default: './dist/index.js',
-        },
-        `"module" considered harmful`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          require: './dist/index.cjs',
-          import: './dist/index.js',
-          node: {
-            import: './dist/index.node.js',
-          },
-          default: './dist/index.js',
-        },
-        `"node.import" must be before "import"`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          node: {
-            import: './dist/index.node.js',
-            require: './dist/index.cjs',
-          },
-          import: './dist/index.js',
-          require: './dist/index.cjs',
-          default: './dist/index.js',
-        },
-        `"node.require" is unnecesary if it's the same as "require"`,
-      ],
-      [
-        {
-          require: './dist/index.cjs',
-          node: {
-            import: './dist/index.cjs.js',
-          },
-          import: './dist/index.js',
-        },
-        `the "node" re-export pattern considered harmful, protect against the "dual package hazard" in ways that have high ecosystem compatibility`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          require: './dist/index.cjs',
-          node: {
-            import: './node/index.js',
-            require: './node/index.cjs',
-          },
-          import: './dist/index.js',
-          default: './dist/index.js',
-        },
-        `"node.require" must be before "require"`,
-      ],
-      [
-        {
-          source: './src/index.ts',
-          import: './dist/index.js',
-          node: {
-            import: './node/index.js',
-            require: './node/index.cjs',
-          },
-          require: './dist/index.cjs',
-          default: './dist/index.js',
-        },
-        `"node.import" must be before "import"`,
-      ],
-    ])('%o throws because %s', (json, msg) => {
+      ])
+    })
+
+    test.skipIf(type === 'module')('parse minimal CJS-only package.json', () => {
       const pkg = {
-        type: 'module',
-        name: 'test',
-        version: '0.0.0-test',
+        type,
+        name,
+        version,
+        main: './dist/index.js',
+        types: './dist/index.d.ts',
         exports: {
-          // @ts-expect-error -- a lot of the examples are intentionally invalid
-          '.': json,
+          '.': {
+            source: './src/index.ts',
+            default: './dist/index.js',
+          },
           './package.json': './package.json',
         },
       } satisfies PackageJSON
 
-      expect(
-        // @ts-expect-error -- a lot of the examples are intentionally invalid
-        () => parseExports({pkg, strict: true, legacyExports: false}),
-        msg,
-      ).toThrowErrorMatchingSnapshot()
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          source: './src/index.ts',
+          require: './dist/index.js',
+          default: './dist/index.js',
+        },
+      ])
+    })
+
+    test.skipIf(type !== 'module')('parse minimal ESM package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.cjs',
+        types: './dist/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            require: './dist/index.cjs',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          ...reference['.'],
+        },
+      ])
+    })
+
+    test.skipIf(type !== 'module')('parse minimal ESM-only package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.js',
+        types: './dist/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          source: './src/index.ts',
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+      ])
+    })
+  })
+
+  describe.runIf(legacyExports)('valid package.json examples when legacyExports is used', () => {
+    test('parse basic package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: reference['.'].require,
+        module: './dist/index.esm.js',
+        types: './dist/index.d.ts',
+        exports: reference,
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          ...reference['.'],
+        },
+      ])
+    })
+
+    test.skipIf(type === 'module')('parse minimal CJS package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.js',
+        module: './dist/index.esm.js',
+        types: './dist/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            import: './dist/index.mjs',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          ...reference['.'],
+        },
+      ])
+    })
+
+    test.skipIf(type === 'module')('parse minimal CJS-only package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.js',
+        module: './dist/index.esm.js',
+        types: './dist/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            require: './dist/index.js',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          source: './src/index.ts',
+          require: './dist/index.js',
+          default: './dist/index.js',
+        },
+      ])
+    })
+
+    test.skipIf(type !== 'module')('parse minimal ESM package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.cjs',
+        module: './dist/index.esm.js',
+        types: './dist/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            require: './dist/index.cjs',
+            import: './dist/index.js',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          ...reference['.'],
+        },
+      ])
+    })
+
+    test.skipIf(type !== 'module')('parse minimal ESM-only package.json', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        main: './dist/index.js',
+        module: './dist/index.esm.js',
+        types: './dist/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            import: './dist/index.js',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      const exports = testParseExports({pkg})
+
+      expect(exports).toEqual([
+        {
+          _exported: true,
+          _path: '.',
+          source: './src/index.ts',
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+      ])
+    })
+  })
+
+  describe('invalid packages', () => {
+    describe('the "exports" key is required', () => {
+      test('uses the "browsers" field to specify a "browser" condition', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          source: './src/index.ts',
+          main: './lib/index.js',
+          module: './lib/index.esm.js',
+          types: './lib/index.d.ts',
+          browser: (type === 'module'
+            ? {
+                './lib/index.cjs': './lib/browser.cjs',
+                './lib/index.js': './lib/browser.js',
+              }
+            : type === 'commonjs'
+              ? {
+                  './lib/index.mjs': './lib/browser.mjs',
+                  './lib/index.js': './lib/browser.js',
+                }
+              : {
+                  './lib/index.js': './lib/browser.js',
+                }) as Record<string, string>,
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowError(/"browser"/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('maps "source" to "browsers" field to specify a "browser" condition', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          source: './src/index.ts',
+          main: './lib/index.js',
+          module: './lib/index.esm.js',
+          types: './lib/index.d.ts',
+          browser: (type === 'module'
+            ? {
+                './src/index.ts': './src/browser.ts',
+                './lib/index.cjs': './lib/browser.cjs',
+                './lib/index.js': './lib/browser.js',
+              }
+            : type === 'commonjs'
+              ? {
+                  './src/index.ts': './src/browser.ts',
+                  './lib/index.mjs': './lib/browser.mjs',
+                  './lib/index.js': './lib/browser.js',
+                }
+              : {
+                  './src/index.ts': './src/browser.ts',
+                  './lib/index.js': './lib/browser.js',
+                }) as Record<string, string>,
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowError(/"browser"/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('uses the "main" and "source" fields to specify a suggested "exports" definition', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          source: './src/index.ts',
+          main: './lib/index.js',
+          types: './dist/index.d.ts',
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('shows a best effort message if there is no "main" field', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          source: './src/index.ts',
+          types: './dist/index.d.ts',
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('shows a best effort message if there is no "source" field either', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          types: './dist/index.d.ts',
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+    })
+
+    test('the "source" field should be removed when "exports" is set', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        source: './src/index.ts',
+        main: './lib/index.js',
+        types: './lib/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './lib/index.js',
+          },
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      expect(() => testParseExports({pkg})).toThrowError(/the "source" property can be removed/)
+      expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+    })
+
+    describe.runIf(legacyExports)('legacyExports: true', () => {
+      test('it handles "browsers" if it only redirects "source"', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          source: './src/index.ts',
+          main: './lib/index.js',
+          module: './lib/index.esm.js',
+          types: './lib/index.d.ts',
+          browser: {
+            './src/index.ts': './src/browser.ts',
+          } as Record<string, string>,
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowError(/"browser"/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('gracefully falls back if the browsers field is invalid', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          source: './src/index.ts',
+          main: './lib/index.js',
+          module: './lib/index.esm.js',
+          types: './lib/index.d.ts',
+          browser: {} as Record<string, string>,
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
+        expect(() => testParseExports({pkg})).toThrowError(/"browser"/)
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('the top level "module" must end with `.esm.js`', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          main: reference['.'].require,
+          module: reference['.'].import,
+          types: './dist/index.d.ts',
+          exports: reference,
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test('the top level "module" condition is required when legacyExports: true', () => {
+        const pkg = {
+          type,
+          name,
+          version,
+          main: reference['.'].require,
+          types: './dist/index.d.ts',
+          exports: reference,
+        } satisfies PackageJSON
+
+        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+      })
+
+      test.runIf(type !== 'module')(
+        'minimal CJS package.json requires a default condition when legacyExports: true',
+        () => {
+          const pkg = {
+            type,
+            name,
+            version,
+            main: './dist/index.js',
+            types: './dist/index.d.ts',
+            exports: {
+              // @ts-expect-error - Testing invalid input
+              '.': {
+                source: './src/index.ts',
+                import: './dist/index.mjs',
+                require: './dist/index.js',
+              },
+              './package.json': './package.json',
+            },
+          } satisfies PackageJSON
+
+          expect(() =>
+            // @ts-expect-error - Testing invalid input
+            testParseExports({pkg}),
+          ).toThrowErrorMatchingSnapshot()
+        },
+      )
+
+      test.runIf(type !== 'module')(
+        'minimal CJS-only package.json requires a default condition when legacyExports: true',
+        () => {
+          const pkg = {
+            type,
+            name,
+            version,
+            main: './dist/index.js',
+            types: './dist/index.d.ts',
+            exports: {
+              // @ts-expect-error - Testing invalid input
+              '.': {
+                source: './src/index.ts',
+                require: './dist/index.js',
+              },
+              './package.json': './package.json',
+            },
+          } satisfies PackageJSON
+
+          // @ts-expect-error - Testing invalid input
+          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+        },
+      )
+
+      test.runIf(type === 'module')(
+        'minimal ESM package.json requires a default condition when legacyExports: true',
+        () => {
+          const pkg = {
+            type,
+            name,
+            version,
+            main: './dist/index.cjs',
+            module: './dist/index.esm.js',
+            types: './dist/index.d.ts',
+            exports: {
+              // @ts-expect-error - Testing invalid input
+              '.': {
+                source: './src/index.ts',
+                import: './dist/index.js',
+                require: './dist/index.cjs',
+              },
+              './package.json': './package.json',
+            },
+          } satisfies PackageJSON
+
+          expect(() =>
+            // @ts-expect-error - Testing invalid input
+            testParseExports({pkg}),
+          ).toThrowErrorMatchingSnapshot()
+        },
+      )
+
+      test.runIf(type === 'module')(
+        'minimal ESM-only package.json requires a default condition when legacyExports: true',
+        () => {
+          const pkg = {
+            type,
+            name,
+            version,
+            main: './dist/index.js',
+            module: './dist/index.esm.js',
+            types: './dist/index.d.ts',
+            exports: {
+              // @ts-expect-error - Testing invalid input
+              '.': {
+                source: './src/index.ts',
+                import: './dist/index.js',
+              },
+              './package.json': './package.json',
+            },
+          } satisfies PackageJSON
+
+          // @ts-expect-error - Testing invalid input
+          expect(() => testParseExports({pkg, legacyExports})).toThrowErrorMatchingSnapshot()
+        },
+      )
+
+      test.skip('ensure the "browsers" field is correct when used')
+      test.skip('require the "browsers" field is used when browser export conditions exists')
+    })
+
+    describe.skipIf(legacyExports)('legacyExports: false', () => {
+      test.skip('the top level "module" field should be removed')
+      test.skip('the top level "browser" field should be moved into "browser" export conditions')
     })
   })
 })

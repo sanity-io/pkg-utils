@@ -31,11 +31,12 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.browser.esm.js",
-  "source": "./src/index.ts",
+  "module": "./dist/index.esm.js",
   "browser": {
-    "./dist/index.cjs": "./dist/index.browser.esm.js",
-    "./dist/index.js": "./dist/index.browser.esm.js"
+    "./dist/index.cjs": "./dist/index.browser.cjs",
+    "./dist/index.js": "./dist/index.browser.esm.js",
+    "./dist/extra.cjs": "./dist/extra.browser.cjs",
+    "./dist/extra.js": "./dist/extra.browser.esm.js"
   },
   "types": "./dist/index.d.ts",
   "typesVersions": {

@@ -1,4 +1,4 @@
-import {legacyEnding} from '../../tasks/dts/getTargetPaths'
+import {cjsEnding, defaultEnding, legacyEnding, mjsEnding} from '../../tasks/dts/getTargetPaths'
 
 /** @internal */
 export interface PkgExtMap {
@@ -8,18 +8,18 @@ export interface PkgExtMap {
 }
 
 /** @internal */
-export const pkgExtMap: PkgExtMap = {
+export const pkgExtMap = {
   // pkg.type: "commonjs"
   commonjs: {
-    commonjs: '.js',
-    esm: '.mjs',
+    commonjs: defaultEnding,
+    esm: mjsEnding,
   },
 
   // pkg.type: "module"
   module: {
-    commonjs: '.cjs',
-    esm: '.js',
+    commonjs: cjsEnding,
+    esm: defaultEnding,
   },
   // package.config.legacyExports: true
   legacy: legacyEnding,
-}
+} satisfies PkgExtMap

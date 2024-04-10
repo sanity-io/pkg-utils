@@ -31,12 +31,6 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "source": "./src/index.ts",
-  "browser": {
-    "./dist/index.js": "./dist/index.browser.js",
-    "./dist/index.mjs": "./dist/index.browser.mjs"
-  },
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
