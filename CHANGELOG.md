@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.1](https://github.com/sanity-io/pkg-utils/compare/v6.4.0...v6.4.1) (2024-04-10)
+
+
+### Bug Fixes
+
+* tweak clean message ([be74a64](https://github.com/sanity-io/pkg-utils/commit/be74a6491c2af3bc3e0fe5e64bd99fb60e720e9b))
+
 ## [6.4.0](https://github.com/sanity-io/pkg-utils/compare/v6.3.0...v6.4.0) (2024-04-10)
 
 
