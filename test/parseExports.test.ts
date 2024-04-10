@@ -608,13 +608,13 @@ describe.each([
         },
       )
 
-      test.skip('ensure the "browsers" field is correct when used')
-      test.skip('require the "browsers" field is used when browser export conditions exists')
+      test.todo('ensure the "browsers" field is correct when used')
+      test.todo('require the "browsers" field is used when browser export conditions exists')
     })
 
     describe.skipIf(legacyExports)('legacyExports: false', () => {
-      test.skip('the top level "module" field should be removed')
-      test.skip('the top level "browser" field should be moved into "browser" export conditions')
+      test.todo('the top level "module" field should be removed')
+      test.todo('the top level "browser" field should be moved into "browser" export conditions')
     })
   })
 })
