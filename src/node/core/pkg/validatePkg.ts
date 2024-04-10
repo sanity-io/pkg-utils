@@ -51,8 +51,31 @@ const pkgSchema = z.object({
   ),
   browserslist: z.optional(z.union([z.string(), z.array(z.string())])),
   sideEffects: z.optional(z.union([z.boolean(), z.array(z.string())])),
+  // @TODO type this properly
+  typesVersions: z.optional(z.any()),
 })
 
+// Create a map over known keys to catch casing mistakes
+const typoMap = new Map<string, string>()
+
+for (const key of pkgSchema.keyof()._def.values) {
+  typoMap.set(key.toUpperCase(), key)
+}
+
 export function validatePkg(input: unknown): PackageJSON {
-  return pkgSchema.parse(input)
+  const pkg = pkgSchema.parse(input)
+
+  const invalidKey = Object.keys(input as PackageJSON).find((key) => {
+    const needle = key.toUpperCase()
+    return typoMap.has(needle) ? typoMap.get(needle) !== key : false
+  })
+
+  if (invalidKey) {
+    throw new TypeError(
+      `
+- package.json: "${invalidKey}" is not a valid key. Did you mean "${typoMap.get(invalidKey.toUpperCase())}"?`,
+    )
+  }
+
+  return pkg
 }

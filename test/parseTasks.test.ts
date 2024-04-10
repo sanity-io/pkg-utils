@@ -7,7 +7,6 @@ test('should parse tasks (type: module)', () => {
     type: 'module',
     name: 'test',
     version: '1.0.0',
-    source: './src/index.ts',
     main: './dist/index.cjs',
     module: './dist/index.js',
     types: './dist/index.d.ts',
@@ -142,19 +141,34 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
     type: 'commonjs',
     name: 'test',
     version: '1.0.0',
-    source: './src/index.ts',
     main: './dist/index.js',
-    module: './dist/index.mjs',
+    module: './dist/index.esm.js',
     types: './dist/index.d.ts',
     browser: {
       './dist/index.js': './dist/index.browser.js',
       './dist/index.mjs': './dist/index.browser.mjs',
+      './dist/index.esm.js': './dist/index.browser.esm.js',
+    },
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        browser: {
+          source: './src/index.ts',
+          import: './dist/index.browser.mjs',
+          require: './dist/index.browser.js',
+        },
+        import: './dist/index.mjs',
+        require: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
     },
   }
 
   const exports = parseExports({pkg, strict: true, legacyExports: true})
 
   const ctx: BuildContext = {
+    config: {legacyExports: true},
     cwd: '/test',
     distPath: '/test/dist',
     emitDeclarationOnly: false,
@@ -254,6 +268,20 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
       runtime: 'browser',
       format: 'esm',
       target: ['chrome102'],
+    },
+    {
+      buildId: 'esm:browser',
+      entries: [
+        {
+          output: './dist/index.browser.esm.js',
+          path: '.',
+          source: './src/index.ts',
+        },
+      ],
+      format: 'esm',
+      runtime: 'browser',
+      target: ['chrome102'],
+      type: 'build:legacy',
     },
   ])
 })

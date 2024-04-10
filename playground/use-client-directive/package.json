@@ -16,8 +16,6 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "run-s clean && pkg build --strict && pkg check --strict",

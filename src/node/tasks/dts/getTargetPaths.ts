@@ -3,11 +3,17 @@ import type {PackageJSON, PkgBundle, PkgExport} from '../../core'
 /** @internal */
 export const fileEnding = /\.[mc]?js$/
 /** @internal */
-export const dtsEnding = '.d.ts'
+export const dtsEnding = '.d.ts' as const
 /** @internal */
-export const legacyEnding = '.esm.js'
-const mtsEnding = '.d.mts'
-const ctsEnding = '.d.cts'
+export const defaultEnding = '.js' as const
+/** @internal */
+export const legacyEnding = `.esm${defaultEnding}` as const
+/** @internal */
+export const mjsEnding = '.mjs' as const
+/** @internal */
+export const cjsEnding = '.cjs' as const
+const mtsEnding = '.d.mts' as const
+const ctsEnding = '.d.cts' as const
 
 /** @internal */
 export function getTargetPaths(
