@@ -615,7 +615,34 @@ describe.each([
             type,
             name,
             version,
-            main: defaults['.'].require,
+            main: defaults['.'].default,
+            module: './dist/index.esm.js',
+            types: './dist/index.d.ts',
+            exports: {
+              '.': {
+                source: defaults['.'].source,
+                import: defaults['.'].default,
+                require: defaults['.'].default,
+                default: defaults['.'].import,
+              },
+              './package.json': './package.json',
+            },
+          } satisfies PackageJSON
+
+          expect(() => testParseExports({pkg})).toThrowError(/must end with ".mjs"/)
+          expect(() => testParseExports({pkg})).not.toThrowError(/mismatch/)
+          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+        },
+      )
+
+      test.runIf(type === 'module')(
+        '.cjs file endings are mandatory when "type" is "module"',
+        () => {
+          const pkg = {
+            type,
+            name,
+            version,
+            main: defaults['.'].default,
             module: './dist/index.esm.js',
             types: './dist/index.d.ts',
             exports: {
@@ -629,7 +656,8 @@ describe.each([
             },
           } satisfies PackageJSON
 
-          expect(() => testParseExports({pkg})).toThrowError(/must end with ".mjs"/)
+          expect(() => testParseExports({pkg})).toThrowError(/must end with ".cjs"/)
+          expect(() => testParseExports({pkg})).not.toThrowError(/mismatch/)
           expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
         },
       )
