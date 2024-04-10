@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.0](https://github.com/sanity-io/pkg-utils/compare/v6.2.1...v6.3.0) (2024-04-10)
+
+
+### Features
+
+* add `--check` flag to `build` to auto run `check` after build ([35a6d42](https://github.com/sanity-io/pkg-utils/commit/35a6d4278e0eae66e27c8326bad93d56108f8083))
+
 ## [6.2.1](https://github.com/sanity-io/pkg-utils/compare/v6.2.0...v6.2.1) (2024-04-10)
 
 
