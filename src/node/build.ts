@@ -63,7 +63,7 @@ export async function build(options: {
 
   if (clean) {
     logger.log(
-      `Cleaning the contents of the \`dist\` folder: './${path.relative(cwd, ctx.distPath)}'`,
+      `Deleting the \`dist\` folder: './${path.relative(cwd, ctx.distPath)}' before building...`,
     )
     await rimraf(ctx.distPath)
   }
