@@ -78,6 +78,12 @@ exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packag
 - package.json: the "source" property can be removed, as it is equal to exports["."].source.]
 `;
 
+exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > .mjs file endings are mandatory when "type" is "commonjs" 1`] = `
+[Error: 
+- package.json: mismatch between "main" and "exports.require". These must be equal.
+- package.json with \`type: "commonjs"\` - \`exports["."].import\` must end with ".mjs"]
+`;
+
 exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > legacyExports: true > gracefully falls back if the browsers field is invalid 1`] = `
 [Error: 
 - package.json: \`exports\` are missing, it should be:
@@ -512,6 +518,12 @@ exports[`parseExports({type: undefined, legacyExports: false}) > invalid package
 exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "source" field should be removed when "exports" is set 1`] = `
 [Error: 
 - package.json: the "source" property can be removed, as it is equal to exports["."].source.]
+`;
+
+exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > .mjs file endings are mandatory when "type" is "commonjs" 1`] = `
+[Error: 
+- package.json: mismatch between "main" and "exports.require". These must be equal.
+- package.json with \`type: "commonjs"\` - \`exports["."].import\` must end with ".mjs"]
 `;
 
 exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > legacyExports: true > gracefully falls back if the browsers field is invalid 1`] = `
