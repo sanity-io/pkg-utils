@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.0](https://github.com/sanity-io/pkg-utils/compare/v6.3.0...v6.4.0) (2024-04-10)
+
+
+### Features
+
+* add `--clean` flag for `build` to auto rimraf dist ([35b609a](https://github.com/sanity-io/pkg-utils/commit/35b609a8ee9d8bfe411c7c9ad3b14012b654cac0))
+
 ## [6.3.0](https://github.com/sanity-io/pkg-utils/compare/v6.2.1...v6.3.0) (2024-04-10)
 
 
