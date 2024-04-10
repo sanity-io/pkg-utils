@@ -63,7 +63,7 @@
     }
   },
   "scripts": {
-    "build": "run-s clean && pkg build --strict && svelte-kit sync && svelte-package -i ./src/svelte -o dist-svelte && pkg check --strict",
+    "build": "pkg build --strict --clean && svelte-kit sync && svelte-package -i ./src/svelte -o dist-svelte && pkg check --strict",
     "clean": "rimraf dist"
   },
   "devDependencies": {

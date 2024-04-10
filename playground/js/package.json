@@ -15,7 +15,7 @@
   },
   "main": "./dist/index.js",
   "scripts": {
-    "build": "run-s clean && pkg build --strict --check",
+    "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
   }
 }

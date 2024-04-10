@@ -1,3 +1,7 @@
+import path from 'node:path'
+
+import rimraf from 'rimraf'
+
 import {loadConfig, loadPkgWithReporting} from './core'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
@@ -29,11 +33,19 @@ export async function build(options: {
   emitDeclarationOnly?: boolean
   strict?: boolean
   tsconfig?: string
+  clean?: boolean
 }): Promise<void> {
-  const {cwd, emitDeclarationOnly, strict = false, tsconfig: tsconfigOption} = options
+  const {
+    cwd,
+    emitDeclarationOnly,
+    strict = false,
+    tsconfig: tsconfigOption,
+    clean = false,
+  } = options
   const logger = createLogger()
 
   const config = await loadConfig({cwd})
+
   const legacyExports = config?.legacyExports ?? false
   const pkg = await loadPkgWithReporting({cwd, logger, strict, legacyExports})
 
@@ -48,6 +60,13 @@ export async function build(options: {
     strict,
     tsconfig,
   })
+
+  if (clean) {
+    logger.log(
+      `Cleaning the contents of the \`dist\` folder: './${path.relative(cwd, ctx.distPath)}'`,
+    )
+    await rimraf(ctx.distPath)
+  }
 
   const buildTasks = resolveBuildTasks(ctx)
 

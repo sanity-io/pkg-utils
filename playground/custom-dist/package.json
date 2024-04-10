@@ -18,7 +18,7 @@
   "module": "./lib/index.esm.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "run-s clean && pkg build --strict --check",
+    "build": "pkg build --strict --check --clean",
     "clean": "rimraf lib"
   }
 }

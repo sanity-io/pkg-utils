@@ -5,6 +5,7 @@ export async function buildAction(options: {
   emitDeclarationOnly?: boolean
   strict?: boolean
   tsconfig?: string
+  clean?: boolean
 }): Promise<void> {
   try {
     await build({
@@ -12,6 +13,7 @@ export async function buildAction(options: {
       emitDeclarationOnly: options.emitDeclarationOnly,
       strict: options.strict,
       tsconfig: options.tsconfig,
+      clean: options.clean,
     })
   } catch (err) {
     handleError(err)
