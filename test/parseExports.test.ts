@@ -608,6 +608,32 @@ describe.each([
         },
       )
 
+      test.skipIf(type === 'module')(
+        '.mjs file endings are mandatory when "type" is "commonjs"',
+        () => {
+          const pkg = {
+            type,
+            name,
+            version,
+            main: defaults['.'].require,
+            module: './dist/index.esm.js',
+            types: './dist/index.d.ts',
+            exports: {
+              '.': {
+                source: defaults['.'].source,
+                import: defaults['.'].default,
+                require: defaults['.'].default,
+                default: defaults['.'].default,
+              },
+              './package.json': './package.json',
+            },
+          } satisfies PackageJSON
+
+          expect(() => testParseExports({pkg})).toThrowError(/must end with ".mjs"/)
+          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+        },
+      )
+
       test.todo('ensure the "browsers" field is correct when used')
       test.todo('require the "browsers" field is used when browser export conditions exists')
     })
