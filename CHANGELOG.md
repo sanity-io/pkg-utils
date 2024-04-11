@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.0](https://github.com/sanity-io/pkg-utils/compare/v6.4.1...v6.5.0) (2024-04-11)
+
+
+### Features
+
+* add `strictOptions` to config to toggle `--strict` checks ([#724](https://github.com/sanity-io/pkg-utils/issues/724)) ([396ce6c](https://github.com/sanity-io/pkg-utils/commit/396ce6cbdc9dc94b1d1d0b98575c77e67c94a27e))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency prettier-plugin-packagejson to ^2.5.0 ([#722](https://github.com/sanity-io/pkg-utils/issues/722)) ([1c5f7d3](https://github.com/sanity-io/pkg-utils/commit/1c5f7d38188bd01da15afccae6944d3cc5270add))
+
 ## [6.4.1](https://github.com/sanity-io/pkg-utils/compare/v6.4.0...v6.4.1) (2024-04-10)
 
 
