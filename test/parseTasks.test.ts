@@ -24,6 +24,7 @@ test('should parse tasks (type: module)', () => {
       './dist/index.cjs': './dist/index.browser.cjs',
       './dist/index.js': './dist/index.browser.js',
     },
+    files: ['dist'],
     exports: {
       '.': {
         source: './src/index.ts',
@@ -159,6 +160,7 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
       './dist/index.mjs': './dist/index.browser.mjs',
       './dist/index.esm.js': './dist/index.browser.esm.js',
     },
+    files: ['dist'],
     exports: {
       '.': {
         source: './src/index.ts',

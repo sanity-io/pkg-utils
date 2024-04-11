@@ -15,6 +15,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
+  "files": ["dist"],
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "pkg build --strict --check --clean",

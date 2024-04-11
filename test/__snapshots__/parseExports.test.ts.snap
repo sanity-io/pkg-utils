@@ -18,18 +18,6 @@ exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packag
 - }]
 `;
 
-exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
-[Error: 
-- package.json: \`exports\` are missing, please set a minimal configuration, for example:
-- "exports": {
--   ".": {
--     "source": "./src/index.js",
--     "default": "./dist/index.js"
--   },
--   "./package.json": "./package.json"
-- }]
-`;
-
 exports[`parseExports({type: 'commonjs', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
 [Error: 
 - package.json: \`exports\` are missing, please set a minimal configuration, for example:
@@ -162,18 +150,6 @@ exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid package
 - }]
 `;
 
-exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
-[Error: 
-- package.json: \`exports\` are missing, please set a minimal configuration, for example:
-- "exports": {
--   ".": {
--     "source": "./src/index.js",
--     "default": "./dist/index.js"
--   },
--   "./package.json": "./package.json"
-- }]
-`;
-
 exports[`parseExports({type: 'commonjs', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
 [Error: 
 - package.json: \`exports\` are missing, please set a minimal configuration, for example:
@@ -237,18 +213,6 @@ exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages
 -     }
 -     "require": "./lib/index.cjs",
 -     "default": "./lib/index.js"
--   },
--   "./package.json": "./package.json"
-- }]
-`;
-
-exports[`parseExports({type: 'module', legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
-[Error: 
-- package.json: \`exports\` are missing, please set a minimal configuration, for example:
-- "exports": {
--   ".": {
--     "source": "./src/index.js",
--     "default": "./dist/index.js"
 -   },
 -   "./package.json": "./package.json"
 - }]
@@ -384,18 +348,6 @@ exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages 
 - }]
 `;
 
-exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
-[Error: 
-- package.json: \`exports\` are missing, please set a minimal configuration, for example:
-- "exports": {
--   ".": {
--     "source": "./src/index.js",
--     "default": "./dist/index.js"
--   },
--   "./package.json": "./package.json"
-- }]
-`;
-
 exports[`parseExports({type: 'module', legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "source" field either 1`] = `
 [Error: 
 - package.json: \`exports\` are missing, please set a minimal configuration, for example:
@@ -459,18 +411,6 @@ exports[`parseExports({type: undefined, legacyExports: false}) > invalid package
 -     }
 -     "import": "./lib/index.mjs",
 -     "default": "./lib/index.js"
--   },
--   "./package.json": "./package.json"
-- }]
-`;
-
-exports[`parseExports({type: undefined, legacyExports: false}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
-[Error: 
-- package.json: \`exports\` are missing, please set a minimal configuration, for example:
-- "exports": {
--   ".": {
--     "source": "./src/index.js",
--     "default": "./dist/index.js"
 -   },
 -   "./package.json": "./package.json"
 - }]
@@ -603,18 +543,6 @@ exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages
 -     "import": "./lib/index.mjs",
 -     "require": "./lib/index.js",
 -     "default": "./lib/index.js"
--   },
--   "./package.json": "./package.json"
-- }]
-`;
-
-exports[`parseExports({type: undefined, legacyExports: true}) > invalid packages > the "exports" key is required > shows a best effort message if there is no "main" field 1`] = `
-[Error: 
-- package.json: \`exports\` are missing, please set a minimal configuration, for example:
-- "exports": {
--   ".": {
--     "source": "./src/index.js",
--     "default": "./dist/index.js"
 -   },
 -   "./package.json": "./package.json"
 - }]

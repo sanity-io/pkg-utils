@@ -19,6 +19,9 @@ export const strictOptions = z
     noPackageJsonTypings: toggle.default('error'),
     noImplicitSideEffects: toggle.default('warn'),
     noImplicitBrowsersList: toggle.default('warn'),
+    alwaysPackageJsonTypes: toggle.default('error'),
+    alwaysPackageJsonMain: toggle.default('error'),
+    alwaysPackageJsonFiles: toggle.default('error'),
   })
   .strict()
 
@@ -58,6 +61,21 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   noImplicitBrowsersList?: ToggleType
+  /**
+   * If typescript is used then `types` in `package.json` should be specified for npm listings to show the TS icon.
+   * @defaultValue 'error'
+   */
+  alwaysPackageJsonTypes?: ToggleType
+  /**
+   * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it
+   * @defaultValue 'error'
+   */
+  alwaysPackageJsonMain?: ToggleType
+  /**
+   * Using `.npmignore` is error prone, it's best practice to always declare `files` instead
+   * @defaultValue 'error'
+   */
+  alwaysPackageJsonFiles?: ToggleType
 }
 
 /** @internal */
