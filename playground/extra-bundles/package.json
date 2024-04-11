@@ -14,7 +14,9 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"

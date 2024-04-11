@@ -24,7 +24,6 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
   "main": "./dist/index.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",
@@ -35,6 +34,9 @@
       ]
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist plugin.js"
