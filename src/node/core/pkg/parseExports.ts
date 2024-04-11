@@ -1,3 +1,5 @@
+import type {Logger} from '../../logger'
+import type {InferredStrictOptions} from '../../strict'
 import {defaultEnding, fileEnding, legacyEnding} from '../../tasks/dts/getTargetPaths'
 import type {PkgExport} from '../config'
 import {isRecord} from '../isRecord'
@@ -9,11 +11,21 @@ import {validateExports} from './validateExports'
 export function parseExports(options: {
   pkg: PackageJSON
   strict: boolean
+  strictOptions: InferredStrictOptions
   legacyExports: boolean
+  logger: Logger
 }): (PkgExport & {_path: string})[] {
-  const {pkg, strict, legacyExports} = options
+  const {pkg, strict, strictOptions, legacyExports, logger} = options
   const type = pkg.type || 'commonjs'
   const errors: string[] = []
+
+  const report = (kind: 'warn' | 'error', message: string) => {
+    if (kind === 'warn') {
+      logger.warn(message)
+    } else {
+      errors.push(message)
+    }
+  }
 
   if (pkg.source) {
     if (
@@ -145,8 +157,8 @@ export function parseExports(options: {
 
   // @TODO validate typesVersions when legacyExports is true
 
-  if (strict && 'typings' in pkg) {
-    errors.push('package.json: `typings` should be `types`')
+  if (strict && strictOptions.noPackageJsonTypings !== 'off' && 'typings' in pkg) {
+    report(strictOptions.noPackageJsonTypings, 'package.json: `typings` should be `types`')
   }
 
   if (strict && !pkg.types && pkg.source?.endsWith('.ts')) {

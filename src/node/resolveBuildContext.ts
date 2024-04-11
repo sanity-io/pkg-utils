@@ -17,6 +17,7 @@ import {findCommonDirPath, pathContains} from './core/findCommonPath'
 import type {Logger} from './logger'
 import {resolveBrowserTarget} from './resolveBrowserTarget'
 import {resolveNodeTarget} from './resolveNodeTarget'
+import {parseStrictOptions} from './strict'
 
 export async function resolveBuildContext(options: {
   config?: PkgConfigOptions
@@ -37,24 +38,41 @@ export async function resolveBuildContext(options: {
     tsconfig: tsconfigPath,
   } = options
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
+  const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
 
   /* eslint-disable padding-line-between-statements */
   let browserslist = pkg.browserslist
   if (!browserslist) {
-    if (strict) {
-      logger.warn(
-        'Could not detect a `browserslist` property in `package.json`, using default configuration. Add `"browserslist": "extends @sanity/browserslist-config"` to silence this warning.',
-      )
+    if (strict && strictOptions.noImplicitBrowsersList !== 'off') {
+      if (strictOptions.noImplicitBrowsersList === 'error') {
+        throw new Error(
+          '\n- ' +
+            `package.json: "browserslist" is missing, set it to \`"browserslist": "extends @sanity/browserslist-config"\``,
+        )
+      } else {
+        logger.warn(
+          'Could not detect a `browserslist` property in `package.json`, using default configuration. Add `"browserslist": "extends @sanity/browserslist-config"` to silence this warning.',
+        )
+      }
     }
     browserslist = DEFAULT_BROWSERSLIST_QUERY
   }
   const targetVersions = browserslistToEsbuild(browserslist)
   /* eslint-enable padding-line-between-statements */
 
-  if (strict && typeof pkg.sideEffects === 'undefined') {
-    logger.error(
-      'No `sideEffects` field in `package.json`, assuming all files are side-effectful. Add `"sideEffects": true` to silence this warning. See https://webpack.js.org/guides/tree-shaking/#clarifying-tree-shaking-and-sideeffects for how to define `sideEffects`.',
-    )
+  if (
+    strict &&
+    strictOptions.noImplicitSideEffects !== 'off' &&
+    typeof pkg.sideEffects === 'undefined'
+  ) {
+    const msg =
+      'package.json: `sideEffects` is missing, see https://webpack.js.org/guides/tree-shaking/#clarifying-tree-shaking-and-sideeffects for how to define `sideEffects`'
+
+    if (strictOptions.noImplicitSideEffects === 'error') {
+      throw new Error(msg)
+    } else {
+      logger.warn(msg)
+    }
   }
 
   const nodeTarget = resolveNodeTarget(targetVersions)
@@ -78,6 +96,8 @@ export async function resolveBuildContext(options: {
     pkg,
     strict,
     legacyExports: config?.legacyExports ?? false,
+    strictOptions,
+    logger,
   }).reduce<PkgExports>((acc, x) => {
     const {_path: exportPath, ...exportEntry} = x
 

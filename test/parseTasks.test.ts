@@ -1,6 +1,16 @@
 import {expect, test, vi} from 'vitest'
 
-import {type BuildContext, type PackageJSON, parseExports, resolveBuildTasks} from '../src/node'
+import {
+  type BuildContext,
+  createLogger,
+  type PackageJSON,
+  parseExports,
+  resolveBuildTasks,
+} from '../src/node'
+import {parseStrictOptions} from '../src/node/strict'
+
+const strictOptions = parseStrictOptions({})
+const logger = createLogger()
 
 test('should parse tasks (type: module)', () => {
   const pkg: PackageJSON = {
@@ -30,7 +40,7 @@ test('should parse tasks (type: module)', () => {
     },
   }
 
-  const exports = parseExports({pkg, strict: true, legacyExports: false})
+  const exports = parseExports({pkg, strict: true, strictOptions, logger, legacyExports: false})
 
   const ctx: BuildContext = {
     cwd: '/test',
@@ -165,7 +175,7 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
     },
   }
 
-  const exports = parseExports({pkg, strict: true, legacyExports: true})
+  const exports = parseExports({pkg, strict: true, logger, strictOptions, legacyExports: true})
 
   const ctx: BuildContext = {
     config: {legacyExports: true},
