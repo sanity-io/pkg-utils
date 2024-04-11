@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.1](https://github.com/sanity-io/pkg-utils/compare/v6.6.0...v6.6.1) (2024-04-11)
+
+
+### Bug Fixes
+
+* add `parseStrictOptions` export ([#734](https://github.com/sanity-io/pkg-utils/issues/734)) ([6b9e7a0](https://github.com/sanity-io/pkg-utils/commit/6b9e7a0a561c49bb09816ce34a3f9247b51f78a0))
+
 ## [6.6.0](https://github.com/sanity-io/pkg-utils/compare/v6.5.0...v6.6.0) (2024-04-11)
 
 
