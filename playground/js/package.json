@@ -13,8 +13,10 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
   "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"

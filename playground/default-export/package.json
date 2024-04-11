@@ -14,8 +14,10 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
   "main": "./dist/index.cjs",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
