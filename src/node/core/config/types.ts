@@ -2,8 +2,10 @@ import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 
+import type {StrictOptions} from '../../strict'
+
 // re-export
-export type {RollupPlugin}
+export type {RollupPlugin, StrictOptions}
 
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'
@@ -157,4 +159,8 @@ export interface PkgConfigOptions {
    */
   src?: string
   tsconfig?: string
+  /**
+   * Configure what checks are made when running `--strict` builds and checks
+   */
+  strictOptions?: StrictOptions
 }

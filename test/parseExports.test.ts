@@ -1,6 +1,7 @@
 import {describe, expect, test} from 'vitest'
 
-import {type PackageJSON, parseExports} from '../src/node'
+import {createLogger, type PackageJSON, parseExports} from '../src/node'
+import {parseStrictOptions} from '../src/node/strict'
 
 const name = 'test'
 const version = '0.0.0-test'
@@ -12,6 +13,8 @@ const defaults = {
     default: './dist/index.js',
   },
 } as const
+const strictOptions = parseStrictOptions({})
+const logger = createLogger()
 
 describe.each([
   {type: 'commonjs' as const, legacyExports: false},
@@ -22,8 +25,11 @@ describe.each([
   {type: undefined, legacyExports: true},
 ])('parseExports({type: $type, legacyExports: $legacyExports})', ({type, legacyExports}) => {
   const testParseExports = (
-    options: Omit<Parameters<typeof parseExports>[0], 'strict' | 'legacyExports'>,
-  ) => parseExports({strict: true, legacyExports, ...options})
+    options: Omit<
+      Parameters<typeof parseExports>[0],
+      'strict' | 'strictOptions' | 'legacyExports' | 'logger'
+    >,
+  ) => parseExports({strict: true, legacyExports, logger, strictOptions, ...options})
   const reference = {
     '.': {
       source: defaults['.'].source,
