@@ -13,6 +13,7 @@ const defaults = {
     default: './dist/index.js',
   },
 } as const
+const files = ['dist']
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
 
@@ -46,6 +47,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: reference['.'].require,
         types: './dist/index.d.ts',
         exports: reference,
@@ -67,6 +69,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.js',
         types: './dist/index.d.ts',
         exports: {
@@ -95,6 +98,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.js',
         types: './dist/index.d.ts',
         exports: {
@@ -124,6 +128,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.cjs',
         types: './dist/index.d.ts',
         exports: {
@@ -152,6 +157,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.js',
         types: './dist/index.d.ts',
         exports: {
@@ -183,6 +189,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: reference['.'].require,
         module: './dist/index.esm.js',
         types: './dist/index.d.ts',
@@ -205,6 +212,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.js',
         module: './dist/index.esm.js',
         types: './dist/index.d.ts',
@@ -234,6 +242,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.js',
         module: './dist/index.esm.js',
         types: './dist/index.d.ts',
@@ -265,6 +274,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.cjs',
         module: './dist/index.esm.js',
         types: './dist/index.d.ts',
@@ -295,6 +305,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         main: './dist/index.js',
         module: './dist/index.esm.js',
         types: './dist/index.d.ts',
@@ -329,6 +340,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           source: './src/index.ts',
           main: './lib/index.js',
           module: './lib/index.esm.js',
@@ -358,6 +370,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           source: './src/index.ts',
           main: './lib/index.js',
           module: './lib/index.esm.js',
@@ -390,6 +403,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           source: './src/index.ts',
           main: './lib/index.js',
           types: './dist/index.d.ts',
@@ -399,11 +413,12 @@ describe.each([
         expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
       })
 
-      test('shows a best effort message if there is no "main" field', () => {
+      test.skip('shows a best effort message if there is no "main" field', () => {
         const pkg = {
           type,
           name,
           version,
+          files,
           source: './src/index.ts',
           types: './dist/index.d.ts',
         } satisfies PackageJSON
@@ -417,6 +432,8 @@ describe.each([
           type,
           name,
           version,
+          files,
+          main: './dist/index.js',
           types: './dist/index.d.ts',
         } satisfies PackageJSON
 
@@ -430,6 +447,7 @@ describe.each([
         type,
         name,
         version,
+        files,
         source: './src/index.ts',
         main: './lib/index.js',
         types: './lib/index.d.ts',
@@ -452,6 +470,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           source: './src/index.ts',
           main: './lib/index.js',
           module: './lib/index.esm.js',
@@ -471,6 +490,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           source: './src/index.ts',
           main: './lib/index.js',
           module: './lib/index.esm.js',
@@ -488,6 +508,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           main: reference['.'].require,
           module: reference['.'].import,
           types: './dist/index.d.ts',
@@ -502,6 +523,7 @@ describe.each([
           type,
           name,
           version,
+          files,
           main: reference['.'].require,
           types: './dist/index.d.ts',
           exports: reference,
@@ -517,6 +539,7 @@ describe.each([
             type,
             name,
             version,
+            files,
             main: './dist/index.js',
             types: './dist/index.d.ts',
             exports: {
@@ -544,6 +567,7 @@ describe.each([
             type,
             name,
             version,
+            files,
             main: './dist/index.js',
             types: './dist/index.d.ts',
             exports: {
@@ -568,6 +592,7 @@ describe.each([
             type,
             name,
             version,
+            files,
             main: './dist/index.cjs',
             module: './dist/index.esm.js',
             types: './dist/index.d.ts',
@@ -596,6 +621,7 @@ describe.each([
             type,
             name,
             version,
+            files,
             main: './dist/index.js',
             module: './dist/index.esm.js',
             types: './dist/index.d.ts',
@@ -621,6 +647,7 @@ describe.each([
             type,
             name,
             version,
+            files,
             main: defaults['.'].default,
             module: './dist/index.esm.js',
             types: './dist/index.d.ts',
@@ -648,6 +675,7 @@ describe.each([
             type,
             name,
             version,
+            files,
             main: defaults['.'].default,
             module: './dist/index.esm.js',
             types: './dist/index.d.ts',

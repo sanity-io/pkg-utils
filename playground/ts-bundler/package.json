@@ -16,6 +16,7 @@
   },
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"

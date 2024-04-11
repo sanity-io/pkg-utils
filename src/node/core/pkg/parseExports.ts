@@ -27,6 +27,17 @@ export function parseExports(options: {
     }
   }
 
+  if (!pkg.main && strict && strictOptions.alwaysPackageJsonMain !== 'off') {
+    report(strictOptions.alwaysPackageJsonMain, 'package.json: `main` must be declared')
+  }
+
+  if (!Array.isArray(pkg.files) && strict && strictOptions.alwaysPackageJsonFiles !== 'off') {
+    report(
+      strictOptions.alwaysPackageJsonFiles,
+      'package.json: `files` should be used over `.npmignore`',
+    )
+  }
+
   if (pkg.source) {
     if (
       strict &&
@@ -125,34 +136,6 @@ export function parseExports(options: {
     )
   }
 
-  /*
-  const rootExports: PkgExport & {_path: string} = {
-    _exported: true,
-    _path: '.',
-    source: pkg.source || '',
-    browser: pkg.browser && {
-      source: pkg.source || '',
-      require: pkg.main && pkg.browser[pkg.main],
-      import: pkg.module && pkg.browser[pkg.module],
-    },
-    require: legacyExports
-      ? pkg.main
-      : typeof pkg.exports?.['.'] === 'object' && 'require' in pkg.exports['.']
-        ? pkg.exports['.'].require
-        : '',
-    import: legacyExports
-      ? pkg.module
-      : typeof pkg.exports?.['.'] === 'object' && 'import' in pkg.exports['.']
-        ? pkg.exports['.'].import
-        : '',
-    default: legacyExports
-      ? pkg.module || pkg.main || ''
-      : typeof pkg.exports?.['.'] === 'object' && 'default' in pkg.exports['.']
-        ? pkg.exports['.'].default || ''
-        : pkg.module || pkg.main || '',
-  }
-  // */
-
   const _exports: (PkgExport & {_path: string})[] = []
 
   // @TODO validate typesVersions when legacyExports is true
@@ -161,8 +144,16 @@ export function parseExports(options: {
     report(strictOptions.noPackageJsonTypings, 'package.json: `typings` should be `types`')
   }
 
-  if (strict && !pkg.types && pkg.source?.endsWith('.ts')) {
-    errors.push(
+  if (
+    strict &&
+    strictOptions.alwaysPackageJsonTypes !== 'off' &&
+    !pkg.types &&
+    typeof pkg.exports?.['.'] === 'object' &&
+    'source' in pkg.exports['.'] &&
+    pkg.exports['.'].source?.endsWith('.ts')
+  ) {
+    report(
+      strictOptions.alwaysPackageJsonTypes,
       'package.json: `types` must be declared for the npm listing to show as a TypeScript module.',
     )
   }
