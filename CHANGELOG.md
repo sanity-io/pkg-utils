@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.0](https://github.com/sanity-io/pkg-utils/compare/v6.5.0...v6.6.0) (2024-04-11)
+
+
+### Features
+
+* validate `types`, `files` and `main` fields ([#730](https://github.com/sanity-io/pkg-utils/issues/730)) ([e7b9338](https://github.com/sanity-io/pkg-utils/commit/e7b9338caf9164d065b1bd5eca6e6a252fb278af))
+
 ## [6.5.0](https://github.com/sanity-io/pkg-utils/compare/v6.4.1...v6.5.0) (2024-04-11)
 
 
