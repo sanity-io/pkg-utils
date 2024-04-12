@@ -1,8 +1,16 @@
 {
   "extends": "./tsconfig.build.json",
-  "include": ["./src"],
+  "include": ["./package.json", "./src", "./typings"],
+  "exclude": [
+    "./src/**/__fixtures__",
+    "./src/**/__mocks__",
+    "./src/**/__workshop__",
+    "./src/**/*.test.ts",
+    "./src/**/*.test.tsx"
+  ],
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "noImplicitAny": false
   }
 }

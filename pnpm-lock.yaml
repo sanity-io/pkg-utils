@@ -488,6 +488,8 @@ importers:
         specifier: ^3.12.0
         version: 3.12.0
 
+  playground/sanity: {}
+
   playground/styled-components-module:
     dependencies:
       '@rollup/plugin-commonjs':
@@ -535,6 +537,12 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+
+  playground/vision:
+    devDependencies:
+      sanity:
+        specifier: workspace:*
+        version: link:../sanity
 
 packages:
 
