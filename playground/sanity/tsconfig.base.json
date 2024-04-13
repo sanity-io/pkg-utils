@@ -2,6 +2,11 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "description": "Shared TS config that are used for builds, dts generation, etl extract, and vscode/intellisense",
   "compilerOptions": {
+    "paths": {
+      "sanity/*": ["./src/_exports/*"],
+      "sanity": ["./src/_exports/index.ts"]
+    },
+
     // Everything needs to use the same lib settings for `paths` to work consistently throughout the monorepo
     "lib": ["dom", "es2020", "ES2022.Error"],
 
