@@ -37,9 +37,7 @@ export async function buildTypes(options: {
     const errors = allDiagnostics.filter((diag) => diag.category === ts.DiagnosticCategory.Error)
 
     if (errors.length) {
-      if (strict) {
-        throw new Error('failed to compile TypeScript definitions')
-      }
+      throw new Error('failed to compile TypeScript definitions')
     }
   }
 }
