@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.3](https://github.com/sanity-io/pkg-utils/compare/v6.6.2...v6.6.3) (2024-04-13)
+
+
+### Bug Fixes
+
+* passthrough `module: preserve` to `.d.ts` rollup ([#745](https://github.com/sanity-io/pkg-utils/issues/745)) ([2ea236b](https://github.com/sanity-io/pkg-utils/commit/2ea236b0e5c49717e6cc40274d326acab12ea39e))
+
 ## [6.6.2](https://github.com/sanity-io/pkg-utils/compare/v6.6.1...v6.6.2) (2024-04-13)
 
 

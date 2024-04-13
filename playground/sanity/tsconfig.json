@@ -2,10 +2,6 @@
   "extends": "./tsconfig.base.json",
   "include": ["./package.json", "./src"],
   "compilerOptions": {
-    "rootDir": ".",
-    "paths": {
-      "sanity/*": ["./src/_exports/*"],
-      "sanity": ["./src/_exports/index.ts"]
-    }
+    "rootDir": "."
   }
 }
