@@ -1,11 +1,5 @@
 {
   "extends": "./tsconfig.settings",
   "include": ["./src"],
-  "exclude": ["./src/svelte"],
-  "compilerOptions": {
-    "rootDir": ".",
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist"
-  }
+  "exclude": ["./src/svelte"]
 }
