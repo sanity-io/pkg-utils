@@ -67,6 +67,7 @@ export function validatePkg(input: unknown): PackageJSON {
 
   const invalidKey = Object.keys(input as PackageJSON).find((key) => {
     const needle = key.toUpperCase()
+
     return typoMap.has(needle) ? typoMap.get(needle) !== key : false
   })
 
