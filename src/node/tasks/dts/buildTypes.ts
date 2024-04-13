@@ -11,7 +11,7 @@ export async function buildTypes(options: {
   tsconfig: ts.ParsedCommandLine
   strict: boolean
 }): Promise<void> {
-  const {cwd, logger, outDir, tsconfig, strict = false} = options
+  const {cwd, logger, outDir, tsconfig} = options
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,
