@@ -20,6 +20,7 @@ export async function buildTypes(options: {
     emitDeclarationOnly: true,
     noEmit: false,
     outDir,
+    /*
     // Support the new `module: 'preserve'` option in TypeScript 5.4
     ...(tsconfig.options.module === ts.ModuleKind.Preserve
       ? {
@@ -31,6 +32,7 @@ export async function buildTypes(options: {
           resolveJsonModule: true,
         }
       : {}),
+      // */
   }
 
   const program = ts.createProgram(tsconfig.fileNames, compilerOptions)
