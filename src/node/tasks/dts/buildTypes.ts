@@ -21,17 +21,6 @@ export async function buildTypes(options: {
     noEmit: false,
     noEmitOnError: strict ? true : tsconfig.options.noEmitOnError ?? true,
     outDir,
-    // Support the new `module: 'preserve'` option in TypeScript 5.4
-    ...(tsconfig.options.module === ts.ModuleKind.Preserve
-      ? {
-          // Set the equivalent options to `module: 'Preserve'`
-          // https://github.com/microsoft/TypeScript/pull/56785/files?file-filters%5B%5D=.js&file-filters%5B%5D=.json&file-filters%5B%5D=.symbols&file-filters%5B%5D=.ts&file-filters%5B%5D=.types&show-viewed-files=true#diff-31d3c12bafea26bc9e8c8a77920c41af0c593206442add70c45a06c063767445
-          module: ts.ModuleKind.ESNext,
-          moduleResolution: ts.ModuleResolutionKind.Bundler,
-          esModuleInterop: true,
-          resolveJsonModule: true,
-        }
-      : {}),
   }
 
   const program = ts.createProgram(tsconfig.fileNames, compilerOptions)
