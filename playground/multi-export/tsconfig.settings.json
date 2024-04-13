@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "paths": {
+      "multi-export": ["./src/index.ts"]
+    },
+
+    "rootDir": ".",
+    "outDir": "./dist",
+    "noEmit": true,
+
     "target": "ES2020",
     "declaration": true,
 
