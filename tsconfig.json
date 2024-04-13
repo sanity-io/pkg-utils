@@ -3,10 +3,6 @@
   "include": ["./*.cjs", "./*.ts", "./bin", "./package.json", "./scripts", "./src", "./test"],
   "exclude": ["./test/env/__tmp__"],
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./dist",
-
-    "noEmit": true,
     "allowJs": true,
 
     "baseUrl": "./src",
