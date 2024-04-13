@@ -1,0 +1,41 @@
+{
+  "name": "sanity",
+  "version": "3.37.2",
+  "description": "A minimal repro of how sanity likes to bundle things",
+  "sideEffects": false,
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "source": "./src/_exports/index.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    },
+    "./router": {
+      "source": "./src/_exports/router.ts",
+      "import": "./lib/router.mjs",
+      "require": "./lib/router.js",
+      "default": "./lib/router.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.esm.js",
+  "types": "./lib/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "router": [
+        "./lib/router.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "lib",
+    "src",
+    "router.js"
+  ],
+  "scripts": {
+    "build": "pkg-utils build --check --clean",
+    "prepublishOnly": "npm run build"
+  }
+}
