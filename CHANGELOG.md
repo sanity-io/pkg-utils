@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.4](https://github.com/sanity-io/pkg-utils/compare/v6.6.3...v6.6.4) (2024-04-13)
+
+
+### Bug Fixes
+
+* make `noEmitOnError: true` by default ([#748](https://github.com/sanity-io/pkg-utils/issues/748)) ([3754975](https://github.com/sanity-io/pkg-utils/commit/375497506476a50636c2dcd67306d49ce07a323b))
+* support self referencing `path` compiler options ([#751](https://github.com/sanity-io/pkg-utils/issues/751)) ([717b63e](https://github.com/sanity-io/pkg-utils/commit/717b63e35efa09cfe36218772c4ea2b4142817e8))
+
 ## [6.6.3](https://github.com/sanity-io/pkg-utils/compare/v6.6.2...v6.6.3) (2024-04-13)
 
 
