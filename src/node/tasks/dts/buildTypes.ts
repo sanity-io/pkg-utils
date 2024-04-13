@@ -19,6 +19,7 @@ export async function buildTypes(options: {
     declarationDir: outDir,
     emitDeclarationOnly: true,
     noEmit: false,
+    noEmitOnError: strict ? true : tsconfig.options.noEmitOnError ?? true,
     outDir,
     // Support the new `module: 'preserve'` option in TypeScript 5.4
     ...(tsconfig.options.module === ts.ModuleKind.Preserve
