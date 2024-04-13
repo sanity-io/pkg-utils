@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.5](https://github.com/sanity-io/pkg-utils/compare/v6.6.4...v6.6.5) (2024-04-13)
+
+
+### Bug Fixes
+
+* always fail the build on errors, not just on `--strict` ([#746](https://github.com/sanity-io/pkg-utils/issues/746)) ([aa601dc](https://github.com/sanity-io/pkg-utils/commit/aa601dcc807f1f3491aae989936055644d1fd74b))
+
 ## [6.6.4](https://github.com/sanity-io/pkg-utils/compare/v6.6.3...v6.6.4) (2024-04-13)
 
 
