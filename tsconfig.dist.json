@@ -3,9 +3,8 @@
   "include": ["./package.json", "./src"],
   "exclude": ["./src/**/*.test.ts"],
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./dist",
-
-    "emitDeclarationOnly": true
+    "paths": {
+      "@sanity/pkg-utils": ["./src/node"]
+    }
   }
 }
