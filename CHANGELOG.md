@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.6](https://github.com/sanity-io/pkg-utils/compare/v6.6.5...v6.6.6) (2024-04-16)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency rollup to ^4.14.3 ([#759](https://github.com/sanity-io/pkg-utils/issues/759)) ([c585e38](https://github.com/sanity-io/pkg-utils/commit/c585e38b15716677fedf70678ec546d0c07412af))
+
 ## [6.6.5](https://github.com/sanity-io/pkg-utils/compare/v6.6.4...v6.6.5) (2024-04-13)
 
 
