@@ -1,37 +1,7 @@
 {
+  "extends": "@sanity/pkg-utils/tsconfig/strictest.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./dist",
-    "noEmit": true,
-
-    // Completeness
-    "skipLibCheck": true,
-
-    // Language and environment
-    "target": "ES2020",
-
-    // Modules
-    "module": "Preserve",
-    // These options are set when "module" is "Preserve"
-    // "moduleResolution": "Bundler",
-    // "esModuleInterop": true,
-    // "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    "forceConsistentCasingInFileNames": true,
-
-    // Type checking
-    "allowSyntheticDefaultImports": true,
-    "alwaysStrict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "strict": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true
+    "outDir": "./dist"
   }
 }

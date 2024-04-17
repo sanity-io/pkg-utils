@@ -3,8 +3,6 @@
   "include": ["./*.cjs", "./*.ts", "./bin", "./package.json", "./scripts", "./src", "./test"],
   "exclude": ["./test/env/__tmp__"],
   "compilerOptions": {
-    "allowJs": true,
-
     "baseUrl": "./src",
     "paths": {
       "@sanity/pkg-utils": ["./node"]

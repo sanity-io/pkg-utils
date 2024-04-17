@@ -8,18 +8,15 @@
     ".": {
       "source": "./src/index.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./cli": {
       "source": "./src/cli.ts",
-      "require": "./dist/cli.js",
       "default": "./dist/cli.js"
     },
     "./plugin": {
       "source": "./src/plugin.ts",
       "import": "./dist/plugin.mjs",
-      "require": "./dist/plugin.js",
       "default": "./dist/plugin.js"
     },
     "./package.json": "./package.json"

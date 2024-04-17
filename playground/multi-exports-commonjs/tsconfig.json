@@ -1,4 +1,5 @@
 {
+  "extends": "@sanity/pkg-utils/tsconfig/recommended.json",
   "include": ["./src"],
   "compilerOptions": {
     "paths": {
@@ -7,11 +8,6 @@
 
     "rootDir": ".",
     "outDir": "./dist",
-
-    "target": "ES2020",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
 
     // Strict type-checking
     "strict": true,
@@ -27,11 +23,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-
-    // Module resolution
-    "module": "Preserve",
-    "moduleDetection": "force",
-    "allowSyntheticDefaultImports": true
+    "skipLibCheck": true
   }
 }
