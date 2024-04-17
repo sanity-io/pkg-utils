@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.7](https://github.com/sanity-io/pkg-utils/compare/v6.6.6...v6.6.7) (2024-04-17)
+
+
+### Bug Fixes
+
+* no unsafe index access ([0128669](https://github.com/sanity-io/pkg-utils/commit/01286698966f78792daf3d89ff45882001fbe67d))
+
 ## [6.6.6](https://github.com/sanity-io/pkg-utils/compare/v6.6.5...v6.6.6) (2024-04-16)
 
 
