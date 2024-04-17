@@ -2,19 +2,19 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "description": "Sets the right defaults for usage with @sanity/pkg-utils and that JSX is compiled with esbuild, and ESM and CJS with rollup.",
   "compilerOptions": {
-    "lib": ["ESNext"],
     "target": "ESNext",
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
+    "lib": ["ESNext"],
     "jsx": "preserve",
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "allowJs": true,
     "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true
+    "skipLibCheck": true
   }
 }

@@ -4,12 +4,12 @@
   "extends": "./recommended.json",
   "compilerOptions": {
     "checkJs": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
-    "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true
   }
 }
