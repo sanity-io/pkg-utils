@@ -48,7 +48,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         name: 'pkgName',
         type: 'string',
         description: 'package name',
-        initial: (options) => options.repo?.name || undefined,
+        initial: (options) => options['repo']?.name || undefined,
         validate: (v) => {
           if (!v) return 'package name is required'
 
@@ -85,13 +85,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         name: 'authorName',
         type: 'string',
         description: 'package author name',
-        initial: gitConfig?.user?.name,
+        initial: gitConfig?.['user']?.name,
       }),
       defineTemplateOption({
         name: 'authorEmail',
         type: 'string',
         description: 'package author email',
-        initial: gitConfig?.user?.email,
+        initial: gitConfig?.['user']?.email,
       }),
       defineTemplateOption({
         name: 'license',
@@ -129,11 +129,11 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       const {fullName: name} = pkgName
 
       const author =
-        [options.authorName, options.authorEmail && `<${options.authorEmail}>`]
+        [options['authorName'], options['authorEmail'] && `<${options['authorEmail']}>`]
           .filter(Boolean)
           .join(' ') ?? undefined
 
-      const prettierConfig: PrettierConfig | undefined = features.prettier
+      const prettierConfig: PrettierConfig | undefined = features['prettier']
         ? {
             bracketSpacing: false,
             plugins: ['prettier-plugin-packagejson'],
@@ -159,19 +159,19 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       } = {
         name,
         'version': '0.0.0',
-        'description': options.description ?? undefined,
+        'description': options['description'] ?? undefined,
         'keywords': [],
         'homepage': undefined,
         'bugs': undefined,
         'repository': undefined,
-        'license': options.license,
+        'license': options['license'],
         author,
         'sideEffects': false,
         'type': 'module',
         'exports': {
           '.': {
             types: undefined,
-            source: features.typescript ? './src/index.ts' : './src/index.js',
+            source: features['typescript'] ? './src/index.ts' : './src/index.js',
             import: './dist/index.js',
             require: './dist/index.cjs',
             default: './dist/index.js',
@@ -180,17 +180,19 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         },
         'main': './dist/index.cjs',
         'module': './dist/index.js',
-        'source': features.typescript ? './src/index.ts' : './src/index.js',
+        'source': features['typescript'] ? './src/index.ts' : './src/index.js',
         'types': undefined,
         'files': ['dist', 'src'],
         'scripts': {
           'build': 'run-s clean pkg:build pkg:check',
           'clean': 'rimraf dist',
-          'format': features.prettier ? 'prettier --write --cache --ignore-unknown .' : undefined,
+          'format': features['prettier']
+            ? 'prettier --write --cache --ignore-unknown .'
+            : undefined,
           'pkg:build': 'pkg build --strict',
           'pkg:check': 'pkg check --strict',
         },
-        'lint-staged': features.prettier
+        'lint-staged': features['prettier']
           ? {
               '*': ['prettier --write --cache --ignore-unknown'],
             }
@@ -209,8 +211,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           'eslint-plugin-simple-import-sort': undefined,
           'lint-staged': '*',
           'npm-run-all': '*',
-          'prettier': features.prettier ? '*' : undefined,
-          'prettier-plugin-packagejson': features.prettier ? '*' : undefined,
+          'prettier': features['prettier'] ? '*' : undefined,
+          'prettier-plugin-packagejson': features['prettier'] ? '*' : undefined,
           'rimraf': '*',
           'typescript': undefined,
         },
@@ -252,7 +254,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         `,
       })
 
-      if (features.prettier) {
+      if (features['prettier']) {
         files.push({
           name: '.prettierignore',
           contents: outdent`
@@ -282,7 +284,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         pkgJson.homepage = `https://${repo.source}/${repo.owner}/${repo.name}#readme`
       }
 
-      if (features.typescript) {
+      if (features['typescript']) {
         pkgJson.types = './dist/index.d.ts'
 
         pkgJson.scripts = {
@@ -297,7 +299,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         }
       }
 
-      if (features.eslint) {
+      if (features['eslint']) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const eslintConfig: any = {
           root: true,
@@ -308,7 +310,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           },
           extends: [
             'eslint:recommended',
-            features.prettier ? 'plugin:prettier/recommended' : undefined,
+            features['prettier'] ? 'plugin:prettier/recommended' : undefined,
           ].filter(Boolean),
           parserOptions: {
             ecmaVersion: 2020,
@@ -317,7 +319,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           plugins: [
             'import',
             'simple-import-sort',
-            features.prettier ? 'prettier' : undefined,
+            features['prettier'] ? 'prettier' : undefined,
           ].filter(Boolean),
           rules: {
             'no-console': 'error',
@@ -339,7 +341,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         pkgJson.scripts = {
           ...pkgJson.scripts,
-          lint: features.typescript
+          lint: features['typescript']
             ? 'eslint . --ext .cjs,.js,.ts,.tsx'
             : 'eslint . --ext .cjs,.js',
         }
@@ -347,13 +349,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         pkgJson.devDependencies = {
           ...pkgJson.devDependencies,
           'eslint': '*',
-          'eslint-config-prettier': features.prettier ? '*' : undefined,
+          'eslint-config-prettier': features['prettier'] ? '*' : undefined,
           'eslint-plugin-simple-import-sort': '*',
           'eslint-plugin-import': '*',
-          'eslint-plugin-prettier': features.prettier ? '*' : undefined,
+          'eslint-plugin-prettier': features['prettier'] ? '*' : undefined,
         }
 
-        if (features.typescript) {
+        if (features['typescript']) {
           pkgJson.devDependencies = {
             ...pkgJson.devDependencies,
             '@typescript-eslint/eslint-plugin': '*',
@@ -369,7 +371,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             },
             extends: [
               'eslint:recommended',
-              features.prettier ? 'plugin:prettier/recommended' : undefined,
+              features['prettier'] ? 'plugin:prettier/recommended' : undefined,
               'plugin:@typescript-eslint/eslint-recommended',
               'plugin:@typescript-eslint/recommended',
             ].filter(Boolean),
@@ -377,7 +379,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               'import',
               '@typescript-eslint',
               'simple-import-sort',
-              features.prettier ? 'prettier' : undefined,
+              features['prettier'] ? 'prettier' : undefined,
             ].filter(Boolean),
             rules: {
               '@typescript-eslint/explicit-module-boundary-types': 'error',
@@ -405,7 +407,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         })
       }
 
-      if (features.typescript) {
+      if (features['typescript']) {
         files.push({
           name: 'tsconfig.settings.json',
           contents: await format(
@@ -490,7 +492,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       }
 
       // source file
-      if (features.typescript) {
+      if (features['typescript']) {
         files.push({
           name: 'package.config.ts',
           contents: await format(

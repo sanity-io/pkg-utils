@@ -80,7 +80,7 @@ export function resolveRollupConfig(
               },
               'process.env.PKG_FORMAT': JSON.stringify(format),
               'process.env.PKG_RUNTIME': JSON.stringify(runtime),
-              'process.env.PKG_VERSION': JSON.stringify(process.env.PKG_VERSION || pkg.version),
+              'process.env.PKG_VERSION': JSON.stringify(process.env['PKG_VERSION'] || pkg.version),
               ...replacements,
             }),
       },

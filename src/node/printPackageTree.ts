@@ -26,11 +26,11 @@ export function printPackageTree(ctx: BuildContext): void {
   const tree: Record<string, unknown> = {}
 
   if (pkg.type) {
-    tree.type = chalk.yellow(pkg.type)
+    tree['type'] = chalk.yellow(pkg.type)
   }
 
   if (pkg.bin) {
-    tree.bin = Object.fromEntries(
+    tree['bin'] = Object.fromEntries(
       Object.entries(pkg.bin).map(([name, file]) => [chalk.cyan(name), fileInfo(file)]),
     )
   }
@@ -45,7 +45,7 @@ export function printPackageTree(ctx: BuildContext): void {
     return `${chalk.yellow(file)} ${chalk.gray(info.size)}`
   }
 
-  tree.exports = Object.fromEntries(
+  tree['exports'] = Object.fromEntries(
     Object.entries(exports)
       .filter(([, entry]) => entry._exported)
       .map(([exportPath, entry]) => {
