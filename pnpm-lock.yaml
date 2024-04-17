@@ -356,8 +356,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^4.6.1
-        version: 4.6.1(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
+        specifier: ^4.6.2
+        version: 4.6.2(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -1643,6 +1643,9 @@ packages:
   '@types/conventional-commits-parser@5.0.0':
     resolution: {integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==}
 
+  '@types/cookie@0.5.4':
+    resolution: {integrity: sha512-7z/eR6O859gyWIAjuvBWFzNURmf2oPBmJlfVWkwehU5nzIyjwBsTh7WMmEEV4JFnHuQ3ex4oyTvfKzcyJVDBNA==}
+
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
@@ -2011,8 +2014,8 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
-  astro@4.6.1:
-    resolution: {integrity: sha512-gcL22NEhuRi4wu9/x5Kn2eJf7nT6GeU5BxdN6AHbUnX6UzEDIWtpgHs5lBIZYExKbHKN9PjEGXWQzQtFwLU+5g==}
+  astro@4.6.2:
+    resolution: {integrity: sha512-Kl+Wd7MJMQFnI3+V0JxF4HPbs8M67eltqQgtztReOwDLSl0VnOd39rM61W/3LEh10FZ0F13xrDgtdgfXzuLVbg==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -7390,6 +7393,8 @@ snapshots:
     dependencies:
       '@types/node': 20.12.4
 
+  '@types/cookie@0.5.4': {}
+
   '@types/cookie@0.6.0': {}
 
   '@types/cpx@1.5.5':
@@ -7857,7 +7862,7 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  astro@4.6.1(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
+  astro@4.6.2(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
     dependencies:
       '@astrojs/compiler': 2.7.1
       '@astrojs/internal-helpers': 0.4.0
@@ -7870,6 +7875,7 @@ snapshots:
       '@babel/traverse': 7.24.1
       '@babel/types': 7.24.0
       '@types/babel__core': 7.20.5
+      '@types/cookie': 0.5.4
       acorn: 8.11.3
       aria-query: 5.3.0
       axobject-query: 4.0.0
