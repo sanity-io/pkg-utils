@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.0](https://github.com/sanity-io/pkg-utils/compare/v6.6.7...v6.7.0) (2024-04-17)
+
+
+### Features
+
+* add tsconfig presets ([fb2fd7a](https://github.com/sanity-io/pkg-utils/commit/fb2fd7a4dbbf2429e01e6aa42755ea73fce8ca22))
+
 ## [6.6.7](https://github.com/sanity-io/pkg-utils/compare/v6.6.6...v6.6.7) (2024-04-17)
 
 
