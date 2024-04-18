@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.7.1](https://github.com/sanity-io/pkg-utils/compare/v6.7.0...v6.7.1) (2024-04-18)
+
+
+### Bug Fixes
+
+* **recommended:** add `dom` and `dom.iterable` to `lib` ([d7be3bf](https://github.com/sanity-io/pkg-utils/commit/d7be3bf67630f0eaa3530dfb7b36851e14b19a0e))
+* **strictest:** add `noImplicitOverride` ([4ee2f52](https://github.com/sanity-io/pkg-utils/commit/4ee2f529747a19763f263957d6a7fb8896db6e59))
+
 ## [6.7.0](https://github.com/sanity-io/pkg-utils/compare/v6.6.7...v6.7.0) (2024-04-17)
 
 
