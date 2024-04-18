@@ -31,8 +31,11 @@
       "default": "./dist/index.js"
     },
     "./tsconfig/recommended.json": "./tsconfig/recommended.json",
+    "./tsconfig/recommended": "./tsconfig/recommended.json",
     "./tsconfig/strict.json": "./tsconfig/strict.json",
+    "./tsconfig/strict": "./tsconfig/strict.json",
     "./tsconfig/strictest.json": "./tsconfig/strictest.json",
+    "./tsconfig": "./tsconfig/strictest.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
@@ -80,6 +83,7 @@
     ]
   },
   "browserslist": "extends @sanity/browserslist-config",
+  "prettier": "@untile/prettier-config",
   "dependencies": {
     "@babel/core": "^7.24.4",
     "@babel/types": "^7.24.0",
