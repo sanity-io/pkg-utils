@@ -135,7 +135,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           .join(' ') ?? undefined
 
       const pkgJson: PackageJSON & {
-        prettier?: 'extends @sanity/prettier-config'
+        prettier?: '@sanity/prettier-config'
         ['lint-staged']?: Record<string, string[]>
       } = {
         name,
@@ -178,7 +178,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               '*': ['prettier --write --cache --ignore-unknown'],
             }
           : undefined,
-        'prettier': features['prettier'] ?'extends @sanity/prettier-config' : undefined,
+        'prettier': features['prettier'] ? '@sanity/prettier-config' : undefined,
         'browserslist': 'extends @sanity/browserslist-config',
         'dependencies': {},
         'devDependencies': {
