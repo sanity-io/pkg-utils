@@ -1,14 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "description": "Stricter than strict",
   "extends": "./strict.json",
   "compilerOptions": {
-    "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "noImplicitThis": true,
     "alwaysStrict": true,
-    "noImplicitReturns": true
-  },
-  "description": "Stricter than strict"
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true
+  }
 }
