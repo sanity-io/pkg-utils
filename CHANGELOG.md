@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.0](https://github.com/sanity-io/pkg-utils/compare/v6.7.2...v6.8.0) (2024-04-18)
+
+
+### Features
+
+* use `@sanity/prettier-config` ([c9b1cc8](https://github.com/sanity-io/pkg-utils/commit/c9b1cc8e5da081a5d77db626ac676531aad6c68b))
+
 ## [6.7.2](https://github.com/sanity-io/pkg-utils/compare/v6.7.1...v6.7.2) (2024-04-18)
 
 
