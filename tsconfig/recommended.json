@@ -3,7 +3,7 @@
   "description": "Sets the right defaults for usage with @sanity/pkg-utils and that JSX is compiled with esbuild, and ESM and CJS with rollup.",
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "jsx": "preserve",
     "module": "Preserve",
     "moduleDetection": "force",
