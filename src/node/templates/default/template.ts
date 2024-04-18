@@ -1,5 +1,6 @@
 import {resolve} from 'node:path'
 
+import prettierConfig from '@sanity/prettier-config'
 import getLatestVersion from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
@@ -133,28 +134,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           .filter(Boolean)
           .join(' ') ?? undefined
 
-      const prettierConfig: PrettierConfig | undefined = features['prettier']
-        ? {
-            bracketSpacing: false,
-            plugins: ['prettier-plugin-packagejson'],
-            printWidth: 100,
-            quoteProps: 'consistent',
-            semi: false,
-            singleQuote: true,
-            tabWidth: 2,
-            overrides: [
-              {
-                files: ['*.yml'],
-                options: {
-                  singleQuote: false,
-                },
-              },
-            ],
-          }
-        : undefined
-
       const pkgJson: PackageJSON & {
-        prettier?: PrettierConfig
+        prettier?: 'extends @sanity/prettier-config'
         ['lint-staged']?: Record<string, string[]>
       } = {
         name,
@@ -197,7 +178,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
               '*': ['prettier --write --cache --ignore-unknown'],
             }
           : undefined,
-        // prettier: prettierConfig,
+        'prettier': features['prettier'] ?'extends @sanity/prettier-config' : undefined,
         'browserslist': 'extends @sanity/browserslist-config',
         'dependencies': {},
         'devDependencies': {
@@ -261,15 +242,6 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           dist
           pnpm-lock.yaml
           `,
-        })
-
-        files.push({
-          name: '.prettierrc',
-          contents: await format(
-            resolve(packagePath, '.prettierrc.json'),
-            JSON.stringify(prettierConfig, null, 2) + '\n',
-            prettierConfig,
-          ),
         })
       }
 
