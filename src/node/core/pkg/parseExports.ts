@@ -163,7 +163,10 @@ export function parseExports(options: {
   }
 
   for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
-    if (exportPath.endsWith('.json')) {
+    if (
+      exportPath.endsWith('.json') ||
+      (typeof exportEntry === 'string' && exportEntry.endsWith('.json'))
+    ) {
       if (exportPath === './package.json') {
         if (exportEntry !== './package.json') {
           errors.push('package.json: `exports["./package.json"] must be "./package.json".')
