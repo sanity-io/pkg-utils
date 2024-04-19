@@ -139,8 +139,8 @@ importers:
         specifier: workspace:*
         version: 'link:'
       '@sanity/prettier-config':
-        specifier: ^1.0.0
-        version: 1.0.0(prettier@3.2.5)
+        specifier: ^1.0.2
+        version: 1.0.2(prettier@3.2.5)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -1457,8 +1457,8 @@ packages:
   '@sanity/eventsource@5.0.1':
     resolution: {integrity: sha512-BFdRPTqVI76Nh18teu8850lV8DETdtJilFAlmQq/BdoXo88BSWBSTkIIi+H6AW1O9Nd7uT+9VRBqKuL2HKrYlA==}
 
-  '@sanity/prettier-config@1.0.0':
-    resolution: {integrity: sha512-VmSme8h6cpCBZmfH88FOxLmkh4pDuU1hk0cJaxOzECtYiZYiUj0W2XSv2aycjjOsUFHctq+2x/ChyqCSHnyeJA==}
+  '@sanity/prettier-config@1.0.2':
+    resolution: {integrity: sha512-V4HinfhMYxQoyXefJ2B8zJnwlf7A8mVzAzKk24B/iCg4pkVlMGc8bj0buu9Uieh4bNeHvEAHOIQv+Xd7tiLuNA==}
     peerDependencies:
       prettier: ^3.2.5
 
@@ -7213,7 +7213,7 @@ snapshots:
       event-source-polyfill: 1.0.31
       eventsource: 2.0.2
 
-  '@sanity/prettier-config@1.0.0(prettier@3.2.5)':
+  '@sanity/prettier-config@1.0.2(prettier@3.2.5)':
     dependencies:
       prettier: 3.2.5
       prettier-plugin-packagejson: 2.5.0(prettier@3.2.5)
