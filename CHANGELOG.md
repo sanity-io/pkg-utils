@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.1](https://github.com/sanity-io/pkg-utils/compare/v6.8.0...v6.8.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @sanity/prettier-config to ^1.0.2 ([#779](https://github.com/sanity-io/pkg-utils/issues/779)) ([358c94a](https://github.com/sanity-io/pkg-utils/commit/358c94ab9905f352f8c82fb1d3ec12bd0384a1a5))
+* **deps:** Update dependency zod to v3.22.5 ([#782](https://github.com/sanity-io/pkg-utils/issues/782)) ([6a9704a](https://github.com/sanity-io/pkg-utils/commit/6a9704a7eecc6c237919b71fe6be7b6f8d255dbf))
+
 ## [6.8.0](https://github.com/sanity-io/pkg-utils/compare/v6.7.2...v6.8.0) (2024-04-18)
 
 
