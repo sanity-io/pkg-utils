@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.2](https://github.com/sanity-io/pkg-utils/compare/v6.8.1...v6.8.2) (2024-04-22)
+
+
+### Bug Fixes
+
+* **deps:** stop inlining recast ([b1f31e1](https://github.com/sanity-io/pkg-utils/commit/b1f31e11fc7d848153987ec27ec7e5dd4b88128b))
+* **deps:** Update dependency rollup to ^4.16.1 ([#790](https://github.com/sanity-io/pkg-utils/issues/790)) ([0bf9f30](https://github.com/sanity-io/pkg-utils/commit/0bf9f3031a1cc58fbfc9e61ca8572fa48821adc5))
+* **deps:** Update dependency zod to v3.23.0 ([#791](https://github.com/sanity-io/pkg-utils/issues/791)) ([d333760](https://github.com/sanity-io/pkg-utils/commit/d33376071d7af036028cbf58cbc784a020893a5e))
+
 ## [6.8.1](https://github.com/sanity-io/pkg-utils/compare/v6.8.0...v6.8.1) (2024-04-19)
 
 
