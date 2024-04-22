@@ -1,7 +1,7 @@
 import type {File} from '@babel/types'
 import type {ExtractorResult} from '@microsoft/api-extractor'
 import {parse, print} from 'recast'
-import typeScriptParser from 'recast/parsers/typescript'
+import typeScriptParser from 'recast/parsers/typescript.js'
 import type {Program} from 'typescript'
 
 /**
