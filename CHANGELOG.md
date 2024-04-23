@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.4](https://github.com/sanity-io/pkg-utils/compare/v6.8.3...v6.8.4) (2024-04-23)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency rollup to ^4.16.4 ([#803](https://github.com/sanity-io/pkg-utils/issues/803)) ([e060b4f](https://github.com/sanity-io/pkg-utils/commit/e060b4f881973744a20d6f74e653aa58b2e4a4cf))
+* **deps:** Update dependency zod-validation-error to v3.2.0 ([#800](https://github.com/sanity-io/pkg-utils/issues/800)) ([2404bb3](https://github.com/sanity-io/pkg-utils/commit/2404bb36f003200ca849a25bfacd9a50d390373b))
+
 ## [6.8.3](https://github.com/sanity-io/pkg-utils/compare/v6.8.2...v6.8.3) (2024-04-23)
 
 
