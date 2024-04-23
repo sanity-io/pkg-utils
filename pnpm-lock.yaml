@@ -425,10 +425,10 @@ importers:
         specifier: ^8.56.10
         version: 8.56.10
       '@typescript-eslint/eslint-plugin':
-        specifier: ^7.7.0
+        specifier: ^7.7.1
         version: 7.7.1(@typescript-eslint/parser@7.7.1(eslint@9.0.0)(typescript@5.4.5))(eslint@9.0.0)(typescript@5.4.5)
       '@typescript-eslint/parser':
-        specifier: ^7.7.0
+        specifier: ^7.7.1
         version: 7.7.1(eslint@9.0.0)(typescript@5.4.5)
       eslint:
         specifier: ^9.0.0
@@ -437,8 +437,8 @@ importers:
         specifier: ^9.1.0
         version: 9.1.0(eslint@9.0.0)
       eslint-plugin-svelte:
-        specifier: ^2.37.0
-        version: 2.37.0(eslint@9.0.0)(svelte@4.2.15)(ts-node@10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.5))(@types/node@20.12.4)(typescript@5.4.5))
+        specifier: ^2.38.0
+        version: 2.38.0(eslint@9.0.0)(svelte@4.2.15)(ts-node@10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.5))(@types/node@20.12.4)(typescript@5.4.5))
       multi-export:
         specifier: workspace:*
         version: link:../multi-export
@@ -514,7 +514,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       rollup:
-        specifier: ^4.16.1
+        specifier: ^4.16.3
         version: 4.16.3
       rollup-plugin-esbuild:
         specifier: ^6.1.1
@@ -2921,12 +2921,12 @@ packages:
     peerDependencies:
       eslint: '>=5.0.0'
 
-  eslint-plugin-svelte@2.37.0:
-    resolution: {integrity: sha512-H/2Gz7agYHEMEEzRuLYuCmAIdjuBnbhFG9hOK0yCdSBvvJGJMkjo+lR6j67OIvLOavgp4L7zA5LnDKi8WqdPhQ==}
+  eslint-plugin-svelte@2.38.0:
+    resolution: {integrity: sha512-IwwxhHzitx3dr0/xo0z4jjDlb2AAHBPKt+juMyKKGTLlKi1rZfA4qixMwnveU20/JTHyipM6keX4Vr7LZFYc9g==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0-0 || ^9.0.0-0
-      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.95
+      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.112
     peerDependenciesMeta:
       svelte:
         optional: true
@@ -5658,11 +5658,11 @@ packages:
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
 
-  svelte-eslint-parser@0.34.0:
-    resolution: {integrity: sha512-jOozxWbHVtIFt6fvettJK9T9aK1AyrcWBJzqcjqJxkr7QfgMYWjHNVlG/qFFOr72cw8mUVS/D/8BO6HlPEtNug==}
+  svelte-eslint-parser@0.35.0:
+    resolution: {integrity: sha512-CtbPseajW0gjwEvHiuzYJkPDjAcHz2FaHt540j6RVYrZgnE6xWkzUBodQ4I3nV+G5AS0Svt8K6aIA/CIU9xT2Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.94
+      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.112
     peerDependenciesMeta:
       svelte:
         optional: true
@@ -9087,7 +9087,7 @@ snapshots:
     dependencies:
       eslint: 8.57.0
 
-  eslint-plugin-svelte@2.37.0(eslint@9.0.0)(svelte@4.2.15)(ts-node@10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.5))(@types/node@20.12.4)(typescript@5.4.5)):
+  eslint-plugin-svelte@2.38.0(eslint@9.0.0)(svelte@4.2.15)(ts-node@10.9.2(@swc/core@1.4.13(@swc/helpers@0.5.5))(@types/node@20.12.4)(typescript@5.4.5)):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@9.0.0)
       '@jridgewell/sourcemap-codec': 1.4.15
@@ -9101,7 +9101,7 @@ snapshots:
       postcss-safe-parser: 6.0.0(postcss@8.4.38)
       postcss-selector-parser: 6.0.16
       semver: 7.6.0
-      svelte-eslint-parser: 0.34.0(svelte@4.2.15)
+      svelte-eslint-parser: 0.35.0(svelte@4.2.15)
     optionalDependencies:
       svelte: 4.2.15
     transitivePeerDependencies:
@@ -12340,7 +12340,7 @@ snapshots:
       - stylus
       - sugarss
 
-  svelte-eslint-parser@0.34.0(svelte@4.2.15):
+  svelte-eslint-parser@0.35.0(svelte@4.2.15):
     dependencies:
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
