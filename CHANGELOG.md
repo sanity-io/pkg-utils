@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.6](https://github.com/sanity-io/pkg-utils/compare/v6.8.5...v6.8.6) (2024-04-24)
+
+
+### Bug Fixes
+
+* skip export conditions without a `source` ([20612e7](https://github.com/sanity-io/pkg-utils/commit/20612e7831c40796ddb4f0455a534b8b0674ae58))
+
 ## [6.8.5](https://github.com/sanity-io/pkg-utils/compare/v6.8.4...v6.8.5) (2024-04-24)
 
 
