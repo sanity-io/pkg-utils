@@ -126,11 +126,11 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       zod:
-        specifier: 3.23.3
-        version: 3.23.3
+        specifier: 3.23.4
+        version: 3.23.4
       zod-validation-error:
         specifier: 3.2.0
-        version: 3.2.0(zod@3.23.3)
+        version: 3.2.0(zod@3.23.4)
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.3.0
@@ -6177,8 +6177,8 @@ packages:
     peerDependencies:
       zod: ^3.18.0
 
-  zod@3.23.3:
-    resolution: {integrity: sha512-tPvq1B/2Yu/dh2uAIH2/BhUlUeLIUvAjr6dpL/75I0pCYefHgjhXk1o1Kob3kTU8C7yU1j396jFHlsVWFi9ogg==}
+  zod@3.23.4:
+    resolution: {integrity: sha512-/AtWOKbBgjzEYYQRNfoGKHObgfAZag6qUJX1VbHo2PRBgS+wfWagEY2mizjfyAPcGesrJOcx/wcl0L9WnVrHFw==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7706,8 +7706,8 @@ snapshots:
       vitefu: 0.2.5(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3))
       which-pm: 2.1.1
       yargs-parser: 21.1.1
-      zod: 3.23.3
-      zod-to-json-schema: 3.22.5(zod@3.23.3)
+      zod: 3.23.4
+      zod-to-json-schema: 3.22.5(zod@3.23.4)
     optionalDependencies:
       sharp: 0.32.6
     transitivePeerDependencies:
@@ -12809,14 +12809,14 @@ snapshots:
     optionalDependencies:
       commander: 9.5.0
 
-  zod-to-json-schema@3.22.5(zod@3.23.3):
+  zod-to-json-schema@3.22.5(zod@3.23.4):
     dependencies:
-      zod: 3.23.3
+      zod: 3.23.4
 
-  zod-validation-error@3.2.0(zod@3.23.3):
+  zod-validation-error@3.2.0(zod@3.23.4):
     dependencies:
-      zod: 3.23.3
+      zod: 3.23.4
 
-  zod@3.23.3: {}
+  zod@3.23.4: {}
 
   zwitch@2.0.4: {}
