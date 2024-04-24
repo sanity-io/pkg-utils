@@ -22,7 +22,7 @@ const pkgSchema = z.object({
         z.custom<`./${string}.json`>((val) => /^\.\/.*\.json$/.test(val as string)),
         z.object({
           types: z.optional(z.string()),
-          source: z.string(),
+          source: z.optional(z.string()),
           browser: z.optional(
             z.object({
               source: z.string(),
