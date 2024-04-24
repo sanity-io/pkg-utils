@@ -15,7 +15,7 @@ export interface PackageJSON {
     string,
     | `./${string}.json`
     | {
-        source: string
+        source?: string
         types?: string
         browser?: {
           source: string

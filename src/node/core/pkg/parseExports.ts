@@ -174,7 +174,7 @@ export function parseExports(options: {
       }
     } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {
       // @TODO should we report a warning or a debug message here about a detected svelte export that is ignored?
-    } else if (isRecord(exportEntry)) {
+    } else if (isPkgExport(exportEntry)) {
       const exp = {
         _exported: true,
         _path: exportPath,
@@ -240,7 +240,7 @@ export function parseExports(options: {
       }
 
       _exports.push(exp)
-    } else {
+    } else if (!isRecord(exportEntry)) {
       errors.push('package.json: exports must be an object')
     }
   }
@@ -252,4 +252,8 @@ export function parseExports(options: {
   }
 
   return _exports
+}
+
+function isPkgExport(value: unknown): value is PkgExport {
+  return isRecord(value) && 'source' in value && typeof value['source'] === 'string'
 }
