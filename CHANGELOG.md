@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.5](https://github.com/sanity-io/pkg-utils/compare/v6.8.4...v6.8.5) (2024-04-24)
+
+
+### Bug Fixes
+
+* allow optional `source` condition ([620d645](https://github.com/sanity-io/pkg-utils/commit/620d645cf5d5c26bccd20e76aabc48b81bf8848f))
+
 ## [6.8.4](https://github.com/sanity-io/pkg-utils/compare/v6.8.3...v6.8.4) (2024-04-23)
 
 
