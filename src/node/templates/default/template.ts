@@ -183,6 +183,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         'dependencies': {},
         'devDependencies': {
           '@sanity/pkg-utils': '*',
+          '@sanity/prettier-config': features['prettier'] ? '*' : undefined,
           '@typescript-eslint/eslint-plugin': undefined,
           '@typescript-eslint/parser': undefined,
           'eslint': undefined,
@@ -193,7 +194,6 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           'lint-staged': '*',
           'npm-run-all': '*',
           'prettier': features['prettier'] ? '*' : undefined,
-          'prettier-plugin-packagejson': features['prettier'] ? '*' : undefined,
           'rimraf': '*',
           'typescript': undefined,
         },
