@@ -151,9 +151,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         'type': 'module',
         'exports': {
           '.': {
-            types: undefined,
             source: features['typescript'] ? './src/index.ts' : './src/index.js',
-            import: './dist/index.js',
             require: './dist/index.cjs',
             default: './dist/index.js',
           },
@@ -161,29 +159,23 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         },
         'main': './dist/index.cjs',
         'module': './dist/index.js',
-        'source': features['typescript'] ? './src/index.ts' : './src/index.js',
         'types': undefined,
         'files': ['dist', 'src'],
         'scripts': {
-          'build': 'run-s clean pkg:build pkg:check',
-          'clean': 'rimraf dist',
-          'format': features['prettier']
-            ? 'prettier --write --cache --ignore-unknown .'
-            : undefined,
-          'pkg:build': 'pkg build --strict',
-          'pkg:check': 'pkg check --strict',
+          build: 'pkg build --strict --clean --check',
+          format: features['prettier'] ? 'prettier --write --cache --ignore-unknown .' : undefined,
         },
         'lint-staged': features['prettier']
           ? {
               '*': ['prettier --write --cache --ignore-unknown'],
             }
           : undefined,
-        'prettier': features['prettier'] ? '@sanity/prettier-config' : undefined,
         'browserslist': 'extends @sanity/browserslist-config',
+        'prettier': features['prettier'] ? '@sanity/prettier-config' : undefined,
         'dependencies': {},
         'devDependencies': {
-          '@sanity/pkg-utils': '*',
-          '@sanity/prettier-config': features['prettier'] ? '*' : undefined,
+          '@sanity/pkg-utils': '^6',
+          '@sanity/prettier-config': features['prettier'] ? '^1' : undefined,
           '@typescript-eslint/eslint-plugin': undefined,
           '@typescript-eslint/parser': undefined,
           'eslint': undefined,
@@ -191,10 +183,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           'eslint-plugin-import': undefined,
           'eslint-plugin-prettier': undefined,
           'eslint-plugin-simple-import-sort': undefined,
-          'lint-staged': '*',
-          'npm-run-all': '*',
-          'prettier': features['prettier'] ? '*' : undefined,
-          'rimraf': '*',
+          'lint-staged': '^15',
+          'prettier': features['prettier'] ? '^3' : undefined,
           'typescript': undefined,
         },
         'engines': {
@@ -267,7 +257,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         const devDependencies = pkgJson.devDependencies
 
         if (isRecord(devDependencies)) {
-          devDependencies['typescript'] = '*'
+          devDependencies['typescript'] = '^5.4'
         }
       }
 
@@ -320,18 +310,18 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         pkgJson.devDependencies = {
           ...pkgJson.devDependencies,
-          'eslint': '*',
-          'eslint-config-prettier': features['prettier'] ? '*' : undefined,
-          'eslint-plugin-simple-import-sort': '*',
-          'eslint-plugin-import': '*',
-          'eslint-plugin-prettier': features['prettier'] ? '*' : undefined,
+          'eslint': '^8',
+          'eslint-config-prettier': features['prettier'] ? '^9' : undefined,
+          'eslint-plugin-import': '^2',
+          'eslint-plugin-prettier': features['prettier'] ? '^5' : undefined,
+          'eslint-plugin-simple-import-sort': '^12',
         }
 
         if (features['typescript']) {
           pkgJson.devDependencies = {
             ...pkgJson.devDependencies,
-            '@typescript-eslint/eslint-plugin': '*',
-            '@typescript-eslint/parser': '*',
+            '@typescript-eslint/eslint-plugin': '^7',
+            '@typescript-eslint/parser': '^7',
           }
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -386,33 +376,10 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             resolve(packagePath, 'tsconfig.settings.json'),
             outdent`
             {
+              "extends": "@sanity/pkg-utils/tsconfig/strictest.json",
               "compilerOptions": {
-                // Completeness
-                "skipLibCheck": true,
-
-                // Interop constraints
-                "allowSyntheticDefaultImports": true,
-                "esModuleInterop": true,
-
-                // Language and environment
-                "target": "ES2020",
-
-                // Modules
-                "module": "ES2020",
-                "moduleResolution": "Node",
-
-                // Type checking
-                "alwaysStrict": true,
-                "noFallthroughCasesInSwitch": true,
-                "noImplicitAny": true,
-                "noImplicitReturns": true,
-                "noImplicitThis": true,
-                "noUnusedLocals": true,
-                "noUnusedParameters": true,
-                "strict": true,
-                "strictFunctionTypes": true,
-                "strictNullChecks": true,
-                "strictPropertyInitialization": true
+                "rootDir": ".",
+                "outDir": "./dist"
               }
             }
             `,
@@ -428,12 +395,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             {
               "extends": "./tsconfig.settings",
               "include": ["./src"],
-              "exclude": ["./src/**/*.test.ts"],
-              "compilerOptions": {
-                "rootDir": ".",
-                "outDir": "./dist",
-                "resolveJsonModule": true
-              }
+              "exclude": ["./src/**/*.test.ts"]
             }
             `,
             prettierConfig,
@@ -448,14 +410,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             {
               "extends": "./tsconfig.settings",
               "include": ["./**/*.cjs", "./**/*.ts", "./**/*.tsx"],
-              "exclude": ["./node_modules"],
-              "compilerOptions": {
-                "rootDir": ".",
-                "outDir": "./dist",
-                "noEmit": true,
-                "allowJs": true,
-                "resolveJsonModule": true,
-              }
+              "exclude": ["./node_modules"]
             }
             `,
             prettierConfig,
