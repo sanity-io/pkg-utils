@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.10](https://github.com/sanity-io/pkg-utils/compare/v6.8.9...v6.8.10) (2024-05-02)
+
+
+### Bug Fixes
+
+* `@sanity/prettier-config` is used in the `init` command ([#834](https://github.com/sanity-io/pkg-utils/issues/834)) ([7903bf3](https://github.com/sanity-io/pkg-utils/commit/7903bf3ff8130f600995ad8cc41aa0297b500154))
+* update `init` template to current best practices ([#835](https://github.com/sanity-io/pkg-utils/issues/835)) ([9acc566](https://github.com/sanity-io/pkg-utils/commit/9acc56655f774aab577b7aac2e4e0dd2d99c1e80))
+
 ## [6.8.9](https://github.com/sanity-io/pkg-utils/compare/v6.8.8...v6.8.9) (2024-04-30)
 
 
