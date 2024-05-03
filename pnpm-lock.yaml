@@ -292,8 +292,8 @@ importers:
   playground/multi-export:
     devDependencies:
       '@sanity/visual-editing':
-        specifier: ^1.8.16
-        version: 1.8.16(@sanity/client@6.15.14)(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(next@14.2.3(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.15)
+        specifier: ^1.8.17
+        version: 1.8.17(@sanity/client@6.15.14)(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(next@14.2.3(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.15)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.0
         version: 3.2.0(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))
@@ -1449,8 +1449,8 @@ packages:
   '@sanity/uuid@3.0.2':
     resolution: {integrity: sha512-vzdhqOrX7JGbMyK40KuIwwyXHm7GMLOGuYgn3xlC09e4ZVNofUO5mgezQqnRv0JAMthIRhofqs9f6ufUjMKOvw==}
 
-  '@sanity/visual-editing@1.8.16':
-    resolution: {integrity: sha512-oKhEldPGudHo1hdbc8WNI7okELjGbBYujDkPir6qOqi5KNct6fWiqIzWCLtwISF4JUvCiIyLyWdzSWhQjplkkA==}
+  '@sanity/visual-editing@1.8.17':
+    resolution: {integrity: sha512-OMMo6Sy4zbxY2XlnRsbOZfnG05NWzw9czELwQx9YC2WMLMCNQeBfERzHDJkLptbxyapW6wBC3klG85srcjLPTw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
@@ -4914,8 +4914,8 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-is@18.3.0:
-    resolution: {integrity: sha512-wRiUsea88TjKDc4FBEn+sLvIDesp6brMbGWnJGjew2waAc9evdhja/2LvePc898HJbHw0L+MTWy7NhpnELAvLQ==}
+  react-is@18.3.1:
+    resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -7113,13 +7113,13 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing@1.8.16(@sanity/client@6.15.14)(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(next@14.2.3(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.15)':
+  '@sanity/visual-editing@1.8.17(@sanity/client@6.15.14)(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(svelte@4.2.15)(vite@5.2.10(@types/node@20.12.4)(terser@5.30.3)))(next@14.2.3(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(svelte@4.2.15)':
     dependencies:
       '@sanity/preview-url-secret': 1.6.11(@sanity/client@6.15.14)
       '@vercel/stega': 0.1.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-is: 18.3.0
+      react-is: 18.3.1
       scroll-into-view-if-needed: 3.1.0
       valibot: 0.30.0
     optionalDependencies:
@@ -11233,7 +11233,7 @@ snapshots:
     dependencies:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
-      react-is: 18.3.0
+      react-is: 18.3.1
 
   prismjs@1.29.0: {}
 
@@ -11310,7 +11310,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-is@18.3.0: {}
+  react-is@18.3.1: {}
 
   react@18.3.1:
     dependencies:
