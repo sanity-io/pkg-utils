@@ -1432,8 +1432,8 @@ packages:
     resolution: {integrity: sha512-GusjgP57Xm/CVqHBAVjv4jLSFD9Pu6KliNpHAQVRRQRKVZ5grl0Rd85UDowXziLFGD3OjHH3ssdQWXR3jzKGkA==}
     engines: {node: '>=14.18'}
 
-  '@sanity/eventsource@5.0.1':
-    resolution: {integrity: sha512-BFdRPTqVI76Nh18teu8850lV8DETdtJilFAlmQq/BdoXo88BSWBSTkIIi+H6AW1O9Nd7uT+9VRBqKuL2HKrYlA==}
+  '@sanity/eventsource@5.0.2':
+    resolution: {integrity: sha512-/B9PMkUvAlUrpRq0y+NzXgRv5lYCLxZNsBJD2WXVnqZYOfByL9oQBV7KiTaARuObp5hcQYuPfOAVjgXe3hrixA==}
 
   '@sanity/prettier-config@1.0.2':
     resolution: {integrity: sha512-V4HinfhMYxQoyXefJ2B8zJnwlf7A8mVzAzKk24B/iCg4pkVlMGc8bj0buu9Uieh4bNeHvEAHOIQv+Xd7tiLuNA==}
@@ -1641,11 +1641,11 @@ packages:
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
-  '@types/event-source-polyfill@1.0.2':
-    resolution: {integrity: sha512-qE5zrFd73BRs5oSjVys6g/5GboqOMbzLRTUFPAhfULvvvbRAOXw9m4Wk+p1BtoZm4JgW7TljGGfVabBqvi3eig==}
+  '@types/event-source-polyfill@1.0.5':
+    resolution: {integrity: sha512-iaiDuDI2aIFft7XkcwMzDWLqo7LVDixd2sR6B4wxJut9xcp/Ev9bO4EFg4rm6S9QxATLBj5OPxdeocgmhjwKaw==}
 
-  '@types/eventsource@1.1.12':
-    resolution: {integrity: sha512-KlVguyxdoO8VkAhOMwOemK+NhFAg0gOwJHgimrWJUgM6LrdVW2nLa+d47WVWQcs8feRn0eeP+5yUDmDfzLBjRA==}
+  '@types/eventsource@1.1.15':
+    resolution: {integrity: sha512-XQmGcbnxUNa06HR3VBVkc9+A2Vpi9ZyLJcdS5dwaQQ/4ZMWFO+5c90FnMUpbtMZwB/FChoYHwuVg8TvkECacTA==}
 
   '@types/find-config@1.0.4':
     resolution: {integrity: sha512-BCXaKgzHK7KnfCQBRQBWGTA+QajOE9uFolXPt+9EktiiMS56D8oXF2ZCh9eCxuEyfqDmX/mYIcmWg9j9f659eg==}
@@ -3197,6 +3197,10 @@ packages:
 
   get-it@8.4.23:
     resolution: {integrity: sha512-dmjxAuUmGC09pYc/tpaueuxg8SP7Z0HYeBspaWsnmHBaBNxWdPATrD+q9LIbQ04IYLmbqp7ORaKODoprOz+uBA==}
+    engines: {node: '>=14.0.0'}
+
+  get-it@8.4.28:
+    resolution: {integrity: sha512-zLUAazo/UMrm7tvhhHD6w/eKVuilXPW8zR1klDmGKZPP6LhWZ0iUWjel8EVi3OIeSMKS53XwDl5paiGsqCwhxQ==}
     engines: {node: '>=14.0.0'}
 
   get-latest-version@5.1.0:
@@ -7084,17 +7088,17 @@ snapshots:
 
   '@sanity/client@6.15.14':
     dependencies:
-      '@sanity/eventsource': 5.0.1
+      '@sanity/eventsource': 5.0.2
       '@vercel/stega': 0.1.0
-      get-it: 8.4.23
+      get-it: 8.4.28
       rxjs: 7.8.1
     transitivePeerDependencies:
-      - supports-color
+      - debug
 
-  '@sanity/eventsource@5.0.1':
+  '@sanity/eventsource@5.0.2':
     dependencies:
-      '@types/event-source-polyfill': 1.0.2
-      '@types/eventsource': 1.1.12
+      '@types/event-source-polyfill': 1.0.5
+      '@types/eventsource': 1.1.15
       event-source-polyfill: 1.0.31
       eventsource: 2.0.2
 
@@ -7305,9 +7309,9 @@ snapshots:
 
   '@types/estree@1.0.5': {}
 
-  '@types/event-source-polyfill@1.0.2': {}
+  '@types/event-source-polyfill@1.0.5': {}
 
-  '@types/eventsource@1.1.12': {}
+  '@types/eventsource@1.1.15': {}
 
   '@types/find-config@1.0.4': {}
 
@@ -9365,6 +9369,18 @@ snapshots:
       tunnel-agent: 0.6.0
     transitivePeerDependencies:
       - supports-color
+
+  get-it@8.4.28:
+    dependencies:
+      decompress-response: 7.0.0
+      follow-redirects: 1.15.6(debug@4.3.4)
+      into-stream: 6.0.0
+      is-retry-allowed: 2.2.0
+      is-stream: 2.0.1
+      progress-stream: 2.0.0
+      tunnel-agent: 0.6.0
+    transitivePeerDependencies:
+      - debug
 
   get-latest-version@5.1.0:
     dependencies:
