@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.13](https://github.com/sanity-io/pkg-utils/compare/v6.8.12...v6.8.13) (2024-05-07)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency esbuild to ^0.21.1 ([#857](https://github.com/sanity-io/pkg-utils/issues/857)) ([0732a40](https://github.com/sanity-io/pkg-utils/commit/0732a400d9132de73b3846f08ad54c7a73efc6ac))
+* **deps:** Update dependency zod to v3.23.7 ([#858](https://github.com/sanity-io/pkg-utils/issues/858)) ([d6ea09a](https://github.com/sanity-io/pkg-utils/commit/d6ea09aec7109590789d227a5b64d022417b5bfd))
+
 ## [6.8.12](https://github.com/sanity-io/pkg-utils/compare/v6.8.11...v6.8.12) (2024-05-07)
 
 
