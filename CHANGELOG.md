@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.12](https://github.com/sanity-io/pkg-utils/compare/v6.8.11...v6.8.12) (2024-05-07)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.43.2 ([#852](https://github.com/sanity-io/pkg-utils/issues/852)) ([51d13df](https://github.com/sanity-io/pkg-utils/commit/51d13dfaf9e9feac7d26587d572aae07f58a8128))
+* **deps:** Update dependency esbuild to ^0.21.0 ([#853](https://github.com/sanity-io/pkg-utils/issues/853)) ([759b0ef](https://github.com/sanity-io/pkg-utils/commit/759b0ef1788ac77f71a1c2ec07e52404675f5eb9))
+
 ## [6.8.11](https://github.com/sanity-io/pkg-utils/compare/v6.8.10...v6.8.11) (2024-05-03)
 
 
