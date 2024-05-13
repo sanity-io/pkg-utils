@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.14](https://github.com/sanity-io/pkg-utils/compare/v6.8.13...v6.8.14) (2024-05-13)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.43.4 ([#864](https://github.com/sanity-io/pkg-utils/issues/864)) ([c638051](https://github.com/sanity-io/pkg-utils/commit/c6380510ad5d4393e5688270078a4163e268ee5f))
+* **deps:** Update dependency esbuild to ^0.21.2 ([#870](https://github.com/sanity-io/pkg-utils/issues/870)) ([42fb09f](https://github.com/sanity-io/pkg-utils/commit/42fb09fcfac92ae50f659632783593c2507805b4))
+* **deps:** Update dependency recast to v0.23.7 ([#871](https://github.com/sanity-io/pkg-utils/issues/871)) ([5933c60](https://github.com/sanity-io/pkg-utils/commit/5933c60950ab2f9da8205cc0388b9935abb6f048))
+* **deps:** Update dependency zod to v3.23.8 ([#865](https://github.com/sanity-io/pkg-utils/issues/865)) ([b92e760](https://github.com/sanity-io/pkg-utils/commit/b92e7606c8b365deffd372ad24b4ea0133900a56))
+* **deps:** Update dependency zod-validation-error to v3.3.0 ([#867](https://github.com/sanity-io/pkg-utils/issues/867)) ([2ab53ad](https://github.com/sanity-io/pkg-utils/commit/2ab53ad0232b82c62df8295f16341b6b9e30e582))
+
 ## [6.8.13](https://github.com/sanity-io/pkg-utils/compare/v6.8.12...v6.8.13) (2024-05-07)
 
 
