@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.15](https://github.com/sanity-io/pkg-utils/compare/v6.8.14...v6.8.15) (2024-05-14)
+
+
+### Bug Fixes
+
+* only enable `minifyInternalExports` by default when `minify: true` ([#878](https://github.com/sanity-io/pkg-utils/issues/878)) ([ee50f48](https://github.com/sanity-io/pkg-utils/commit/ee50f481e6490d9ceda63a43b259e0688e6869e9))
+
 ## [6.8.14](https://github.com/sanity-io/pkg-utils/compare/v6.8.13...v6.8.14) (2024-05-13)
 
 
