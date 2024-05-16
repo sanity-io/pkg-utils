@@ -356,8 +356,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^4.8.3
-        version: 4.8.3(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
+        specifier: ^4.8.4
+        version: 4.8.4(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -2135,8 +2135,8 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
-  astro@4.8.3:
-    resolution: {integrity: sha512-pgIKopkmAUXY3EJHdG7zQpudtBzYAsd94A1R7jmLpH2LFZvzHEkAdHnunmSVmgikJCNqtEo3bUCHgLnCPQaN1g==}
+  astro@4.8.4:
+    resolution: {integrity: sha512-3UExI/Pq47tvdSmYJTDkoyuygIibO+293MBkwc5iUzK5Cu/U4H7P3LwTyP8Gp/wQX+2zBEUifEb4oNO1HfUn2g==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -3337,10 +3337,6 @@ packages:
   get-intrinsic@1.2.4:
     resolution: {integrity: sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==}
     engines: {node: '>= 0.4'}
-
-  get-it@8.4.28:
-    resolution: {integrity: sha512-zLUAazo/UMrm7tvhhHD6w/eKVuilXPW8zR1klDmGKZPP6LhWZ0iUWjel8EVi3OIeSMKS53XwDl5paiGsqCwhxQ==}
-    engines: {node: '>=14.0.0'}
 
   get-it@8.4.30:
     resolution: {integrity: sha512-pd361r0zg6zEMobLZQ77VYHgfcC3WBkTwhgZE0+TOkIWMU9406ejVdROxt73fqMZW70w32qxbCi5nAlAwtqABw==}
@@ -7957,7 +7953,7 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  astro@4.8.3(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
+  astro@4.8.4(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
     dependencies:
       '@astrojs/compiler': 2.8.0
       '@astrojs/internal-helpers': 0.4.0
@@ -9576,18 +9572,6 @@ snapshots:
       has-symbols: 1.0.3
       hasown: 2.0.2
 
-  get-it@8.4.28:
-    dependencies:
-      decompress-response: 7.0.0
-      follow-redirects: 1.15.6
-      into-stream: 6.0.0
-      is-retry-allowed: 2.2.0
-      is-stream: 2.0.1
-      progress-stream: 2.0.0
-      tunnel-agent: 0.6.0
-    transitivePeerDependencies:
-      - debug
-
   get-it@8.4.30:
     dependencies:
       decompress-response: 7.0.0
@@ -9602,7 +9586,7 @@ snapshots:
 
   get-latest-version@5.1.0:
     dependencies:
-      get-it: 8.4.28
+      get-it: 8.4.30
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
       semver: 7.6.2
