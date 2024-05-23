@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.18](https://github.com/sanity-io/pkg-utils/compare/v6.8.17...v6.8.18) (2024-05-23)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.43.8 ([#896](https://github.com/sanity-io/pkg-utils/issues/896)) ([fbd286c](https://github.com/sanity-io/pkg-utils/commit/fbd286ce0e2995a92eee5da2cf88db166c57239b))
+* **deps:** Update rollup packages ([#897](https://github.com/sanity-io/pkg-utils/issues/897)) ([12c9a90](https://github.com/sanity-io/pkg-utils/commit/12c9a905df413f1efe928cc47baf6dc9755f4707))
+* **deps:** Update rollup packages ([#898](https://github.com/sanity-io/pkg-utils/issues/898)) ([efc28cd](https://github.com/sanity-io/pkg-utils/commit/efc28cd1e1c4b0ad89eb57cd6888ad3108584130))
+
 ## [6.8.17](https://github.com/sanity-io/pkg-utils/compare/v6.8.16...v6.8.17) (2024-05-21)
 
 
