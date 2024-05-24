@@ -356,8 +356,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^4.8.7
-        version: 4.8.7(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
+        specifier: ^4.9.1
+        version: 4.9.1(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -368,8 +368,8 @@ importers:
   playground/runtime-next-js:
     devDependencies:
       '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
+        specifier: ^18.3.3
+        version: 18.3.3
       dummy-module:
         specifier: workspace:*
         version: link:../dummy-module
@@ -505,8 +505,8 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
+        specifier: ^18.3.3
+        version: 18.3.3
       babel-plugin-styled-components:
         specifier: ^2.1.4
         version: 2.1.4(@babel/core@7.24.5)(styled-components@6.1.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -532,8 +532,8 @@ importers:
   playground/use-client-directive:
     devDependencies:
       '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
+        specifier: ^18.3.3
+        version: 18.3.3
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1836,8 +1836,8 @@ packages:
   '@types/pug@2.0.10':
     resolution: {integrity: sha512-Sk/uYFOBAB7mb74XcpizmH0KOR2Pv3D2Hmrh1Dmy5BmK3MpdSa5kqZcg6EKBdklU0bFXX9gCfzvpnyUehrPIuA==}
 
-  '@types/react@18.3.2':
-    resolution: {integrity: sha512-Btgg89dAnqD4vV7R3hlwOxgqobUQKgx3MmrQRi0yYbs/P0ym8XozIAlkqVilPqHQwXs4e9Tf63rrCgl58BcO4w==}
+  '@types/react@18.3.3':
+    resolution: {integrity: sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -2151,8 +2151,8 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
-  astro@4.8.7:
-    resolution: {integrity: sha512-bTtv6zv94+U5cQdwy89LWTnocEfJ2Tfy6vpYYSUthfj12HtOpk0ykGW7YBe9a69NHqPwivSOvRjXOxGKigL9qA==}
+  astro@4.9.1:
+    resolution: {integrity: sha512-9TsoAu0WBPiqyAIj9H0JW7R+tIjPjFsPKo70Nja6WL3imTTuUJQmnCre4ZVmoNV3oicTTlb+N4zjRYANW0Ty9A==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -7565,7 +7565,7 @@ snapshots:
 
   '@types/pug@2.0.10': {}
 
-  '@types/react@18.3.2':
+  '@types/react@18.3.3':
     dependencies:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3
@@ -7961,7 +7961,7 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  astro@4.8.7(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
+  astro@4.9.1(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
     dependencies:
       '@astrojs/compiler': 2.8.0
       '@astrojs/internal-helpers': 0.4.0
