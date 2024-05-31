@@ -2,7 +2,7 @@ import path from 'node:path'
 
 import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
 import alias from '@rollup/plugin-alias'
-import {getBabelOutputPlugin} from '@rollup/plugin-babel'
+import {babel, getBabelOutputPlugin} from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
@@ -95,6 +95,23 @@ export function resolveRollupConfig(
     }),
     commonjs(),
     json(),
+    config?.babel?.reactCompiler &&
+      babel({
+        babelrc: false,
+        presets: ['@babel/preset-typescript'],
+        babelHelpers: 'bundled',
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        plugins: [
+          [
+            'babel-plugin-react-compiler',
+            {
+              ...(typeof config?.babel?.reactCompiler === 'object'
+                ? config?.babel?.reactCompiler
+                : {}),
+            },
+          ],
+        ],
+      }),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
       jsxFactory: config?.jsxFactory ?? 'createElement',
