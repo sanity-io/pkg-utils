@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.8.19](https://github.com/sanity-io/pkg-utils/compare/v6.8.18...v6.8.19) (2024-06-03)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.24.6 ([#903](https://github.com/sanity-io/pkg-utils/issues/903)) ([bd2863c](https://github.com/sanity-io/pkg-utils/commit/bd2863c3581f22884f01e6c88c55426f152c666d))
+* **deps:** update dependency @microsoft/api-extractor to v7.46.2 ([#921](https://github.com/sanity-io/pkg-utils/issues/921)) ([787229a](https://github.com/sanity-io/pkg-utils/commit/787229aaae649f0c07e374a5147c11784d7531e1))
+* **deps:** Update dependency esbuild to ^0.21.4 ([#904](https://github.com/sanity-io/pkg-utils/issues/904)) ([2971384](https://github.com/sanity-io/pkg-utils/commit/297138401fb50866fa97fcbd6303a979e89af1ef))
+* **deps:** Update dependency prettier to ^3.3.0 ([#920](https://github.com/sanity-io/pkg-utils/issues/920)) ([0d0792f](https://github.com/sanity-io/pkg-utils/commit/0d0792f145b5a5880dfe8c7ab5a39af46e9eaf0b))
+* **deps:** Update dependency recast to v0.23.9 ([#918](https://github.com/sanity-io/pkg-utils/issues/918)) ([51f4687](https://github.com/sanity-io/pkg-utils/commit/51f4687efd97072addd5c98848d5cd84cdfd8365))
+
 ## [6.8.18](https://github.com/sanity-io/pkg-utils/compare/v6.8.17...v6.8.18) (2024-05-23)
 
 
