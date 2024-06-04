@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.0](https://github.com/sanity-io/pkg-utils/compare/v6.8.19...v6.9.0) (2024-06-04)
+
+
+### Features
+
+* add React Compiler support ([#922](https://github.com/sanity-io/pkg-utils/issues/922)) ([fdbba7b](https://github.com/sanity-io/pkg-utils/commit/fdbba7b34c4497d699551f023ca21e5df17a675b))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.47.0 ([#901](https://github.com/sanity-io/pkg-utils/issues/901)) ([1abd757](https://github.com/sanity-io/pkg-utils/commit/1abd757265cac0179f204e48f33f8eff94f36cb5))
+
 ## [6.8.19](https://github.com/sanity-io/pkg-utils/compare/v6.8.18...v6.8.19) (2024-06-03)
 
 
