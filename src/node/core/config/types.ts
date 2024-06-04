@@ -72,6 +72,14 @@ export interface PkgConfigOptions {
   /** @alpha */
   babel?: {
     plugins?: BabelPluginItem[] | null | undefined
+    /** @alpha */
+    reactCompiler?:
+      | boolean
+      | {
+          compilationMode: 'infer' | 'annotation' | 'all'
+          panicThreshold: 'all_errors' | 'critical_errors' | 'none'
+          sources?: Array<string> | ((filename: string) => boolean) | null
+        }
   }
   bundles?: PkgBundle[]
   /** @alpha */

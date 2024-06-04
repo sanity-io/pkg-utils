@@ -1,6 +1,6 @@
 {
   "name": "@sanity/pkg-utils",
-  "version": "6.8.19",
+  "version": "6.8.20-canary.0",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -86,6 +86,7 @@
   "prettier": "@sanity/prettier-config",
   "dependencies": {
     "@babel/core": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
     "@babel/types": "^7.24.6",
     "@microsoft/api-extractor": "7.46.2",
     "@microsoft/tsdoc-config": "0.17.0",
@@ -98,6 +99,7 @@
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
     "@sanity/browserslist-config": "^1.0.3",
+    "babel-plugin-react-compiler": "0.0.0-experimental-938cd9a-20240601",
     "browserslist": "^4.23.0",
     "cac": "^6.7.14",
     "chalk": "^4.1.2",
