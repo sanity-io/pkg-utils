@@ -58,6 +58,7 @@ export function resolveRollupConfig(
 
   const defaultPlugins = [
     replace({
+      sourcemap: config?.sourcemap ?? false,
       preventAssignment: true,
       values: {
         ...(pkg.name === '@sanity/pkg-utils'
@@ -97,6 +98,9 @@ export function resolveRollupConfig(
     json(),
     config?.babel?.reactCompiler &&
       babel({
+        // @ts-expect-error The provided types are wrong. See https://babeljs.io/docs/options#inputsourcemap
+        inputSourceMap: false,
+        sourceMaps: config?.sourcemap ?? false,
         babelrc: false,
         presets: ['@babel/preset-typescript'],
         babelHelpers: 'bundled',
@@ -113,6 +117,7 @@ export function resolveRollupConfig(
         ],
       }),
     esbuild({
+      sourceMap: config?.sourcemap ?? false,
       jsx: config?.jsx ?? 'automatic',
       jsxFactory: config?.jsxFactory ?? 'createElement',
       jsxFragment: config?.jsxFragment ?? 'Fragment',
@@ -127,6 +132,9 @@ export function resolveRollupConfig(
     }),
     Array.isArray(config?.babel?.plugins) &&
       getBabelOutputPlugin({
+        // @ts-expect-error The provided types are wrong. See https://babeljs.io/docs/options#inputsourcemap
+        inputSourceMap: false,
+        sourceMaps: config?.sourcemap ?? false,
         babelrc: false,
         plugins: config.babel.plugins,
       }),
@@ -139,6 +147,7 @@ export function resolveRollupConfig(
       }),
     minify &&
       terser({
+        sourceMap: false,
         compress: {directives: false},
         output: {
           comments: (_node, comment) => {
