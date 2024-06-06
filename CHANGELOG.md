@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.1](https://github.com/sanity-io/pkg-utils/compare/v6.9.0...v6.9.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.24.7 ([#930](https://github.com/sanity-io/pkg-utils/issues/930)) ([df86850](https://github.com/sanity-io/pkg-utils/commit/df8685022aace41cf3d50a4d217b0f716df077bd))
+* **deps:** Update dependency @rollup/plugin-commonjs to v26 ([#935](https://github.com/sanity-io/pkg-utils/issues/935)) ([b40a816](https://github.com/sanity-io/pkg-utils/commit/b40a816526eef1b40983b882b996d0c41a7783e6))
+* **deps:** Update dependency @rollup/plugin-replace to ^5.0.7 ([#931](https://github.com/sanity-io/pkg-utils/issues/931)) ([5b88b5f](https://github.com/sanity-io/pkg-utils/commit/5b88b5f22b91100017afe5a9b434f5cc0a3cc126))
+* **deps:** Update dependency prettier to ^3.3.1 ([#932](https://github.com/sanity-io/pkg-utils/issues/932)) ([05670fd](https://github.com/sanity-io/pkg-utils/commit/05670fdef762840fe96d76e150f0ac1e54c94d30))
+
 ## [6.9.0](https://github.com/sanity-io/pkg-utils/compare/v6.8.19...v6.9.0) (2024-06-04)
 
 
