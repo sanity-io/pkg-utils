@@ -363,7 +363,7 @@ importers:
     devDependencies:
       astro:
         specifier: ^4.9.3
-        version: 4.9.3(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
+        version: 4.10.0(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -2248,8 +2248,8 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
-  astro@4.9.3:
-    resolution: {integrity: sha512-LhiKZMee56GI7+zIt15bXZVX4JSnj4syTrQdkYNgE+Y0udMad0x8RgJGzc2NMOK31e6w/SL+NFSvnt/d1kgs5w==}
+  astro@4.10.0:
+    resolution: {integrity: sha512-UNVGGZIwdEPIUumcwgIQnd90b4/PslReY9q3xy/Q6bIq/kvK0duIWCbhFPwf06xu+1tExziP9Jl+klvLXM0LfA==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -8219,7 +8219,7 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  astro@4.9.3(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
+  astro@4.10.0(@types/node@20.12.4)(terser@5.30.3)(typescript@5.4.5):
     dependencies:
       '@astrojs/compiler': 2.8.0
       '@astrojs/internal-helpers': 0.4.0
