@@ -251,7 +251,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         pkgJson.scripts = {
           ...pkgJson.scripts,
-          ['ts:check']: 'tsc --build',
+          ['ts:check']: 'tsc --noEmit',
         }
 
         const devDependencies = pkgJson.devDependencies
