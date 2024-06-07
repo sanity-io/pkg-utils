@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.2](https://github.com/sanity-io/pkg-utils/compare/v6.9.1...v6.9.2) (2024-06-07)
+
+
+### Bug Fixes
+
+* don't emit files during type-checking ([#937](https://github.com/sanity-io/pkg-utils/issues/937)) ([6d08c7a](https://github.com/sanity-io/pkg-utils/commit/6d08c7a63162a82f74464e19a6d7df10fb571f9c))
+
 ## [6.9.1](https://github.com/sanity-io/pkg-utils/compare/v6.9.0...v6.9.1) (2024-06-06)
 
 
