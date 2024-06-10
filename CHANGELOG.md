@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.9.3](https://github.com/sanity-io/pkg-utils/compare/v6.9.2...v6.9.3) (2024-06-10)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency browserslist to ^4.23.1 ([#947](https://github.com/sanity-io/pkg-utils/issues/947)) ([f9ac68e](https://github.com/sanity-io/pkg-utils/commit/f9ac68e49f34c29a3d0531f8050dd847dca53e36))
+* **deps:** Update dependency esbuild to ^0.21.5 ([#948](https://github.com/sanity-io/pkg-utils/issues/948)) ([27dc271](https://github.com/sanity-io/pkg-utils/commit/27dc271a1766b4b4896c123d4090e3b7d188fda3))
+
 ## [6.9.2](https://github.com/sanity-io/pkg-utils/compare/v6.9.1...v6.9.2) (2024-06-07)
 
 
