@@ -21,25 +21,35 @@ const pkgSchema = z.object({
       z.union([
         z.custom<`./${string}.json`>((val) => /^\.\/.*\.json$/.test(val as string)),
         z.object({
-          types: z.optional(z.string()),
-          source: z.optional(z.string()),
-          browser: z.optional(
+          'types': z.optional(z.string()),
+          'source': z.optional(z.string()),
+          'browser': z.optional(
             z.object({
               source: z.string(),
               import: z.optional(z.string()),
               require: z.optional(z.string()),
             }),
           ),
-          node: z.optional(
+          'react-compiler': z.optional(
+            // z.union([
+            // @TODO add support for a string shortcut
+            // z.string(),
+            z.object({
+              source: z.optional(z.string()),
+              default: z.string(),
+            }),
+            // ]),
+          ),
+          'node': z.optional(
             z.object({
               source: z.optional(z.string()),
               import: z.optional(z.string()),
               require: z.optional(z.string()),
             }),
           ),
-          import: z.optional(z.string()),
-          require: z.optional(z.string()),
-          default: z.string(),
+          'import': z.optional(z.string()),
+          'require': z.optional(z.string()),
+          'default': z.string(),
         }),
         z.object({
           types: z.optional(z.string()),

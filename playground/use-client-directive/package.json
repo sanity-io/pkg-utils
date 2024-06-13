@@ -9,6 +9,10 @@
     ".": {
       "source": "./src/index.ts",
       "react-server": "./lib/index.js",
+      "react-compiler": {
+        "source": "./src/index.ts",
+        "default": "./dist/index.compiled.js"
+      },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"

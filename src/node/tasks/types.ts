@@ -32,6 +32,15 @@ export interface RollupLegacyTask {
 }
 
 /** @internal */
+export interface RollupReactCompilerTask {
+  type: 'build:react-compiler'
+  entries: RollupTaskEntry[]
+  runtime: 'browser'
+  format: 'esm'
+  target: string[]
+}
+
+/** @internal */
 export interface RollupWatchTask {
   type: 'watch:js'
   buildId: string
@@ -42,7 +51,7 @@ export interface RollupWatchTask {
 }
 
 /** @internal */
-export type BuildTask = DtsTask | RollupTask | RollupLegacyTask
+export type BuildTask = DtsTask | RollupTask | RollupLegacyTask | RollupReactCompilerTask
 
 /** @internal */
 export type WatchTask = DtsWatchTask | RollupWatchTask
@@ -59,6 +68,7 @@ export type TaskHandler<Task, Result = void> = {
 export interface BuildTaskHandlers {
   'build:dts': TaskHandler<DtsTask, DtsResult>
   'build:js': TaskHandler<RollupTask>
+  'build:react-compiler': TaskHandler<RollupReactCompilerTask>
   'build:legacy': TaskHandler<RollupLegacyTask>
 }
 
