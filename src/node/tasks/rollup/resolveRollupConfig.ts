@@ -13,7 +13,7 @@ import esbuild from 'rollup-plugin-esbuild'
 
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
 import {type BuildContext, type PackageJSON, resolveConfigProperty} from '../../core'
-import type {RollupLegacyTask, RollupTask, RollupWatchTask} from '../types'
+import type {RollupLegacyTask, RollupReactCompilerTask, RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -23,11 +23,12 @@ export interface RollupConfig {
 /** @internal */
 export function resolveRollupConfig(
   ctx: BuildContext,
-  buildTask: RollupTask | RollupLegacyTask | RollupWatchTask,
+  buildTask: RollupTask | RollupLegacyTask | RollupReactCompilerTask | RollupWatchTask,
 ): RollupConfig {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
   const isLegacyExports = buildTask.type === 'build:legacy'
+  const isReactCompiler = buildTask.type === 'build:react-compiler'
   const outputExt = isLegacyExports ? extMap.legacy : extMap[pkg.type || 'commonjs'][format]
   const minify = config?.minify ?? false
   const outDir = path.relative(cwd, distPath)
@@ -95,22 +96,13 @@ export function resolveRollupConfig(
     }),
     commonjs(),
     json(),
-    config?.babel?.reactCompiler &&
+    (isReactCompiler || config?.babel?.reactCompiler) &&
       babel({
         babelrc: false,
         presets: ['@babel/preset-typescript'],
         babelHelpers: 'bundled',
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
-        plugins: [
-          [
-            'babel-plugin-react-compiler',
-            {
-              ...(typeof config?.babel?.reactCompiler === 'object'
-                ? config?.babel?.reactCompiler
-                : {}),
-            },
-          ],
-        ],
+        plugins: [['babel-plugin-react-compiler', config?.reactCompilerOptions || {}]],
       }),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
@@ -164,11 +156,13 @@ export function resolveRollupConfig(
     : resolveConfigProperty(config?.rollup?.plugins, defaultPlugins)
 
   const hashChunkFileNames = config?.rollup?.hashChunkFileNames ?? false
-  const chunksFolder = isLegacyExports
-    ? '_legacy'
-    : hashChunkFileNames
-      ? '_chunks'
-      : '_chunks-[format]'
+  const chunksFolder = isReactCompiler
+    ? '_compiled'
+    : isLegacyExports
+      ? '_legacy'
+      : hashChunkFileNames
+        ? '_chunks'
+        : '_chunks-[format]'
   const chunkFileNames = `${chunksFolder}/${hashChunkFileNames ? '[name]-[hash]' : '[name]'}${outputExt}`
   const entryFileNames = isLegacyExports ? '[name].js' : `[name]${outputExt}`
 

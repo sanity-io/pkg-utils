@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 
 const Context = createContext<'success' | 'failure'>('failure')
 
@@ -8,3 +8,10 @@ export const Provider = ({children}: {children: React.ReactNode}) => (
 )
 /** @public */
 export const useResult = () => useContext(Context)
+
+/** @public */
+export const useMemoResult = () => {
+  const result = useContext(Context)
+
+  return useMemo(() => result, [])
+}

@@ -2,7 +2,14 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
-import type {BuildTask, DtsTask, RollupLegacyTask, RollupTask, RollupTaskEntry} from './tasks'
+import type {
+  BuildTask,
+  DtsTask,
+  RollupLegacyTask,
+  RollupReactCompilerTask,
+  RollupTask,
+  RollupTaskEntry,
+} from './tasks'
 import {fileEnding, getTargetPaths, legacyEnding} from './tasks/dts/getTargetPaths'
 
 /** @internal */
@@ -24,6 +31,13 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
   const rollupTasks: Record<string, RollupTask> = {}
   const rollupLegacyTasks: Record<string, RollupLegacyTask> = {}
+  const rollupReactCompilerTask: RollupReactCompilerTask = {
+    type: 'build:react-compiler',
+    runtime: 'browser',
+    format: 'esm',
+    entries: [],
+    target: target.browser,
+  }
 
   function addRollupTaskEntry(format: PkgFormat, runtime: PkgRuntime, entry: RollupTaskEntry) {
     const buildId = `${format}:${runtime}`
@@ -60,6 +74,10 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     }
   }
 
+  function addRollupReactCompilerTaskEntry(entry: RollupTaskEntry) {
+    rollupReactCompilerTask.entries.push(entry)
+  }
+
   // Parse `dts` tasks
   for (const exp of exports) {
     const importId = path.join(pkg.name, exp._path)
@@ -90,6 +108,16 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         targetPaths: getTargetPaths(pkg.type, exp.node),
       })
     }
+
+    // @TODO implement this
+    // if (exp['react-compiler']?.source?.endsWith('.ts')) {
+    //   dtsTask.entries.push({
+    //     importId,
+    //     exportPath: exp._path,
+    //     sourcePath: exp['react-compiler'].source,
+    //     targetPaths: getTargetPaths(pkg.type, exp['react-compiler']),
+    //   })
+    // }
   }
 
   // Handle dts tasks for bundles
@@ -166,6 +194,24 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         source: exp.browser?.source || exp.source,
         output,
       })
+    }
+
+    // Parse rollup:react-compiler tasks
+    for (const exp of exports) {
+      const output = exp['react-compiler']?.default
+
+      if (!output) continue
+
+      addRollupReactCompilerTaskEntry({
+        path: exp._path,
+        source: exp['react-compiler']?.source || exp.source,
+        output,
+      })
+    }
+
+    // Add react-compiler task
+    if (rollupReactCompilerTask.entries.length) {
+      tasks.push(rollupReactCompilerTask)
     }
 
     // Create rollup bundles that legacy export files will re-export

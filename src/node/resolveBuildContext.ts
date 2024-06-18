@@ -126,6 +126,8 @@ export async function resolveBuildContext(options: {
         exportEntry.browser?.require,
         exportEntry.node?.source && exportEntry.node.import,
         exportEntry.node?.source && exportEntry.node.require,
+        // @TODO implement this
+        // exportEntry['react-compiler']?.source && exportEntry['react-compiler']?.default,
       ].filter(Boolean) as string[]
     })
     .map((p) => path.resolve(cwd, p))

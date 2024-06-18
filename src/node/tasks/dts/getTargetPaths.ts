@@ -63,6 +63,17 @@ export function getTargetPaths(
         )
       }
     }
+
+    if (!expOrBundle['react-compiler']?.source) {
+      if (expOrBundle['react-compiler']?.default) {
+        set.add(
+          expOrBundle['react-compiler'].default.replace(
+            fileEnding,
+            type === 'module' ? dtsEnding : mtsEnding,
+          ),
+        )
+      }
+    }
   }
 
   return Array.from(set)
