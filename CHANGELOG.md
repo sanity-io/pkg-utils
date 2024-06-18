@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.0](https://github.com/sanity-io/pkg-utils/compare/v6.9.3...v6.10.0) (2024-06-18)
+
+
+### Features
+
+* add `rollup:react-compiler` task ([#963](https://github.com/sanity-io/pkg-utils/issues/963)) ([1002fac](https://github.com/sanity-io/pkg-utils/commit/1002facd7aa5dbfffb987ce3ebc3f8124499684d))
+
 ## [6.9.3](https://github.com/sanity-io/pkg-utils/compare/v6.9.2...v6.9.3) (2024-06-10)
 
 
