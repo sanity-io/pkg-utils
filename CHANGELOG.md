@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.1](https://github.com/sanity-io/pkg-utils/compare/v6.10.0...v6.10.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency esbuild to ^0.23.0 ([#978](https://github.com/sanity-io/pkg-utils/issues/978)) ([542fd40](https://github.com/sanity-io/pkg-utils/commit/542fd40e2de47aef15c456b83509cc96c559005a))
+* **deps:** Update dependency jsonc-parser to ^3.3.1 ([#979](https://github.com/sanity-io/pkg-utils/issues/979)) ([22cfc35](https://github.com/sanity-io/pkg-utils/commit/22cfc35a35dbfdc334efccdbd442097edda8da1a))
+* **deps:** update dependency typescript to v5.5.3 ([#980](https://github.com/sanity-io/pkg-utils/issues/980)) ([83c2838](https://github.com/sanity-io/pkg-utils/commit/83c283814e5492130c51a755755b674a75556202))
+* **deps:** Update dependency uuid to v10 ([#982](https://github.com/sanity-io/pkg-utils/issues/982)) ([cd9f181](https://github.com/sanity-io/pkg-utils/commit/cd9f181bea91aea25c5b29fa2f24e1068c5c2d75))
+
 ## [6.10.0](https://github.com/sanity-io/pkg-utils/compare/v6.9.3...v6.10.0) (2024-06-18)
 
 
