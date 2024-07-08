@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.2](https://github.com/sanity-io/pkg-utils/compare/v6.10.1...v6.10.2) (2024-07-08)
+
+
+### Bug Fixes
+
+* add non-external deps to `bundledPacages` by default ([#985](https://github.com/sanity-io/pkg-utils/issues/985)) ([96a1254](https://github.com/sanity-io/pkg-utils/commit/96a1254c6a67530adf8b8068dfbe28faa0dc0611)), closes [#967](https://github.com/sanity-io/pkg-utils/issues/967)
+
 ## [6.10.1](https://github.com/sanity-io/pkg-utils/compare/v6.10.0...v6.10.1) (2024-07-03)
 
 
