@@ -14,9 +14,11 @@ export default defineConfig({
 
           console.error(`[${severity}] ${reason}`)
           console.log(`${filename}:${loc.start.line}:${loc.start.column} ${description}`)
+
           for (const suggestion of suggestions) {
             console.log(suggestion.description)
           }
+
           console.groupEnd()
         }
       },

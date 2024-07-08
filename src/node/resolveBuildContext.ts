@@ -116,6 +116,18 @@ export async function resolveBuildContext(options: {
     config && Array.isArray(config.external)
       ? [...parsedExternal, ...config.external]
       : resolveConfigProperty(config?.external, parsedExternal)
+  // Merge bundledPackages with dev deps, replace if it's a function
+  const externalWithTypes = new Set([pkg.name, ...external, ...external.map(transformPackageName)])
+  const bundledDependencies = [
+    ...(pkg.devDependencies ? Object.keys(pkg.devDependencies) : []),
+  ].filter(
+    // Do not bundle anything that is marked as external
+    (_) => !externalWithTypes.has(_),
+  )
+  const bundledPackages =
+    config && Array.isArray(config.extract?.bundledPackages)
+      ? [...bundledDependencies, ...config.extract.bundledPackages]
+      : resolveConfigProperty(config?.extract?.bundledPackages, bundledDependencies)
 
   const outputPaths = Object.values(exports)
     .flatMap((exportEntry) => {
@@ -170,6 +182,7 @@ export async function resolveBuildContext(options: {
     emitDeclarationOnly,
     exports,
     external,
+    bundledPackages,
     files: [],
     logger,
     pkg,
@@ -183,4 +196,19 @@ export async function resolveBuildContext(options: {
   }
 
   return ctx
+}
+
+function transformPackageName(packageName: string): string {
+  if (packageName.startsWith('@types/')) {
+    // If it already starts with @types, return it as is
+    return packageName
+  } else if (packageName.startsWith('@')) {
+    // Handle scoped packages
+    const [scope, name] = packageName.split('/')
+
+    return `@types/${scope.slice(1)}__${name}`
+  } else {
+    // Handle regular packages
+    return `@types/${packageName}`
+  }
 }

@@ -179,7 +179,14 @@ export interface PkgConfigOptions {
   dist?: string
   exports?: PkgConfigProperty<PkgExports>
   extract?: {
-    bundledPackages?: string[]
+    /**
+     * Packages in `devDependencies` that are not in `external` are automatically added to the `bundledPackages` config.
+     * You can exclude a package from being bundled by using a callback:
+     * ```
+     * bundledPackages: (prev) => prev.filter(package => package !== 'sanity')
+     * ```
+     */
+    bundledPackages?: PkgConfigProperty<string[]>
     customTags?: TSDocCustomTag[]
     rules?: {
       'ae-forgotten-export'?: PkgRuleLevel
