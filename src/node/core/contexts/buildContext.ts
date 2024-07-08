@@ -18,6 +18,7 @@ export interface BuildContext {
   emitDeclarationOnly: boolean
   exports: PkgExports | undefined
   external: string[]
+  bundledPackages: string[]
   files: BuildFile[]
   logger: Logger
   pkg: PackageJSON

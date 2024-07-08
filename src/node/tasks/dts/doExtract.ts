@@ -18,7 +18,7 @@ export async function doExtract(
   ctx: BuildContext,
   task: DtsTask | DtsWatchTask,
 ): Promise<DtsResult> {
-  const {config, cwd, files, logger, strict, ts} = ctx
+  const {config, cwd, files, logger, strict, ts, bundledPackages} = ctx
 
   if (!ts.config || !ts.configPath) {
     return {type: 'dts', messages: [], results: []}
@@ -48,7 +48,7 @@ export async function doExtract(
     const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
     const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
     const result = await extractTypes({
-      bundledPackages: config?.extract?.bundledPackages || [],
+      bundledPackages: bundledPackages || [],
       customTags: config?.extract?.customTags,
       cwd,
       distPath: outDir,
