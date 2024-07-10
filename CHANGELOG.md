@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.3](https://github.com/sanity-io/pkg-utils/compare/v6.10.2...v6.10.3) (2024-07-10)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency browserslist to ^4.23.2 ([#989](https://github.com/sanity-io/pkg-utils/issues/989)) ([11835cb](https://github.com/sanity-io/pkg-utils/commit/11835cb8481bcd86c96bc62629f45d2f6ae44d4e))
+* **deps:** Update dependency rollup to ^4.18.1 ([#990](https://github.com/sanity-io/pkg-utils/issues/990)) ([3c99482](https://github.com/sanity-io/pkg-utils/commit/3c994825c47afd7c4c135cb9581b5b5482b341be))
+
 ## [6.10.2](https://github.com/sanity-io/pkg-utils/compare/v6.10.1...v6.10.2) (2024-07-08)
 
 
