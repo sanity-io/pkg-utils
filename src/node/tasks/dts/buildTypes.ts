@@ -19,7 +19,7 @@ export async function buildTypes(options: {
     declarationDir: outDir,
     emitDeclarationOnly: true,
     noEmit: false,
-    noEmitOnError: strict ? true : 9tsconfig.options.noEmitOnError ?? true),
+    noEmitOnError: strict ? true : (tsconfig.options.noEmitOnError ?? true),
     outDir,
   }
 
