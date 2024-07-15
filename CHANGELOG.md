@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.4](https://github.com/sanity-io/pkg-utils/compare/v6.10.3...v6.10.4) (2024-07-15)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.24.8 ([#999](https://github.com/sanity-io/pkg-utils/issues/999)) ([04fae4d](https://github.com/sanity-io/pkg-utils/commit/04fae4da083a29fdf9305a1b286022a8cf459e4e))
+* **deps:** Update dependency prettier to ^3.3.3 ([#1003](https://github.com/sanity-io/pkg-utils/issues/1003)) ([921443c](https://github.com/sanity-io/pkg-utils/commit/921443ceedb4a8ead49948c2e56313d6fae1b677))
+
 ## [6.10.3](https://github.com/sanity-io/pkg-utils/compare/v6.10.2...v6.10.3) (2024-07-10)
 
 
