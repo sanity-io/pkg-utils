@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import esbuild, {type BuildFailure} from 'esbuild'
+import esbuild, {type BuildFailure, type Message} from 'esbuild'
 
 import {createConsoleSpy} from './consoleSpy'
 import {loadConfig, loadPkgWithReporting} from './core'
@@ -130,10 +130,20 @@ async function checkExports(
       logger.log()
     }
   } catch (err) {
-    const {errors} = err as BuildFailure
+    if (isEsbuildFailure(err)) {
+      const {errors} = err
 
-    for (const msg of errors) {
-      printEsbuildMessage(logger.error, msg)
+      for (const msg of errors) {
+        printEsbuildMessage(logger.error, msg)
+
+        logger.log()
+      }
+    } else if (err instanceof Error) {
+      logger.error(err.stack || err.message)
+
+      logger.log()
+    } else {
+      logger.error(`${err}`)
 
       logger.log()
     }
@@ -154,4 +164,27 @@ function printEsbuildMessage(log: (...args: unknown[]) => void, msg: esbuild.Mes
   } else {
     log(msg.detail || msg.text)
   }
+}
+
+function isEsbuildFailure(err: unknown): err is BuildFailure {
+  return (
+    err instanceof Error &&
+    'errors' in err &&
+    Array.isArray(err.errors) &&
+    err.errors.every(isEsbuildMessage) &&
+    'warnings' in err &&
+    Array.isArray(err.warnings) &&
+    err.warnings.every(isEsbuildMessage)
+  )
+}
+
+function isEsbuildMessage(msg: unknown): msg is Message {
+  return (
+    typeof msg === 'object' &&
+    msg !== null &&
+    'text' in msg &&
+    typeof msg.text === 'string' &&
+    'location' in msg &&
+    (msg.location === null || typeof msg.location === 'object')
+  )
 }
