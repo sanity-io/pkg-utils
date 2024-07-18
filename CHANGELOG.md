@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.6](https://github.com/sanity-io/pkg-utils/compare/v6.10.5...v6.10.6) (2024-07-18)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.24.9 ([#1013](https://github.com/sanity-io/pkg-utils/issues/1013)) ([ea19492](https://github.com/sanity-io/pkg-utils/commit/ea19492bdc74c5a4a19d0d0e072d4e374a5e8c6a))
+* **deps:** Update dependency @microsoft/api-extractor to v7.47.2 ([#1014](https://github.com/sanity-io/pkg-utils/issues/1014)) ([061f237](https://github.com/sanity-io/pkg-utils/commit/061f237d70cf6396998ca1b868aa956f152e07f9))
+* **deps:** Update dependency git-url-parse to ^14.1.0 ([#1015](https://github.com/sanity-io/pkg-utils/issues/1015)) ([845faef](https://github.com/sanity-io/pkg-utils/commit/845faef68a1ea8f594ba41cfce2fae71bc6db23e))
+
 ## [6.10.5](https://github.com/sanity-io/pkg-utils/compare/v6.10.4...v6.10.5) (2024-07-18)
 
 
