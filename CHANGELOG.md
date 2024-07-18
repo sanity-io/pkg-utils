@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.5](https://github.com/sanity-io/pkg-utils/compare/v6.10.4...v6.10.5) (2024-07-18)
+
+
+### Bug Fixes
+
+* **check:** add type-guarding for non-esbuild errors ([#1004](https://github.com/sanity-io/pkg-utils/issues/1004)) ([761b7f5](https://github.com/sanity-io/pkg-utils/commit/761b7f50d35cb44f8c6ead7b27448b891578c16d))
+
 ## [6.10.4](https://github.com/sanity-io/pkg-utils/compare/v6.10.3...v6.10.4) (2024-07-15)
 
 
