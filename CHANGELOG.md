@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.7](https://github.com/sanity-io/pkg-utils/compare/v6.10.6...v6.10.7) (2024-07-30)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.25.2 ([#1028](https://github.com/sanity-io/pkg-utils/issues/1028)) ([c108b48](https://github.com/sanity-io/pkg-utils/commit/c108b488817d9727edb4a7f8575317d70f5c0e33))
+* **deps:** Update dependency @microsoft/api-extractor to v7.47.4 ([#1023](https://github.com/sanity-io/pkg-utils/issues/1023)) ([fd9d399](https://github.com/sanity-io/pkg-utils/commit/fd9d3997b4af7f08fa08d494085902f62a185c0b))
+* **deps:** Update dependency esbuild-register to ^3.6.0 ([#1029](https://github.com/sanity-io/pkg-utils/issues/1029)) ([0aba96d](https://github.com/sanity-io/pkg-utils/commit/0aba96d67f68a6e2ac5bafe961e95d8371d7b8e6))
+* **deps:** Update dependency rollup to ^4.19.1 ([#1030](https://github.com/sanity-io/pkg-utils/issues/1030)) ([ef633ad](https://github.com/sanity-io/pkg-utils/commit/ef633adb2b8bf3b14e0509f38d5e7e03bba53ef9))
+* **deps:** update dependency typescript to v5.5.4 ([#1024](https://github.com/sanity-io/pkg-utils/issues/1024)) ([2d8fbdc](https://github.com/sanity-io/pkg-utils/commit/2d8fbdcfee37421c1fe9e94c39ab96fdc54be9bb))
+
 ## [6.10.6](https://github.com/sanity-io/pkg-utils/compare/v6.10.5...v6.10.6) (2024-07-18)
 
 
