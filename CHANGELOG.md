@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.8](https://github.com/sanity-io/pkg-utils/compare/v6.10.7...v6.10.8) (2024-08-01)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @optimize-lodash/rollup-plugin to v5 ([#1044](https://github.com/sanity-io/pkg-utils/issues/1044)) ([77e3070](https://github.com/sanity-io/pkg-utils/commit/77e3070542ac6cf29e5a74392338ebeef75ed9e3))
+* **deps:** Update dependency rollup to ^4.19.2 ([#1038](https://github.com/sanity-io/pkg-utils/issues/1038)) ([0410d5d](https://github.com/sanity-io/pkg-utils/commit/0410d5dd5114ecadf34fb1fa748c484473eec946))
+* **deps:** Update dependency zod-validation-error to v3.3.1 ([#1039](https://github.com/sanity-io/pkg-utils/issues/1039)) ([b4486d0](https://github.com/sanity-io/pkg-utils/commit/b4486d03ccd1a64a323f4289747ebb0bd1edaedf))
+
 ## [6.10.7](https://github.com/sanity-io/pkg-utils/compare/v6.10.6...v6.10.7) (2024-07-30)
 
 
