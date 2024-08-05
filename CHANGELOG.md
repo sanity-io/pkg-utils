@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.10.9](https://github.com/sanity-io/pkg-utils/compare/v6.10.8...v6.10.9) (2024-08-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.47.5 ([#1048](https://github.com/sanity-io/pkg-utils/issues/1048)) ([6db3efa](https://github.com/sanity-io/pkg-utils/commit/6db3efadd6c04a2e458dcbc2123704f130ab70b5))
+* **deps:** Update dependency browserslist to ^4.23.3 ([#1049](https://github.com/sanity-io/pkg-utils/issues/1049)) ([e4d9b01](https://github.com/sanity-io/pkg-utils/commit/e4d9b019a0879bd7c147ff942c7196fd52f43c77))
+* **deps:** Update dependency rollup to ^4.20.0 ([#1050](https://github.com/sanity-io/pkg-utils/issues/1050)) ([72960af](https://github.com/sanity-io/pkg-utils/commit/72960af1af8594c1db040e910a87a53d9fb00bf7))
+
 ## [6.10.8](https://github.com/sanity-io/pkg-utils/compare/v6.10.7...v6.10.8) (2024-08-01)
 
 
