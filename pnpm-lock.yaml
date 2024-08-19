@@ -301,8 +301,8 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9(@sanity/client@6.20.1)(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(next@15.0.0-rc.0(@babel/core@7.25.2)(babel-plugin-react-compiler@0.0.0-experimental-938cd9a-20240601)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.18)
       '@sveltejs/adapter-auto':
-        specifier: ^3.2.2
-        version: 3.2.2(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))
+        specifier: ^3.2.4
+        version: 3.2.4(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))
       '@sveltejs/kit':
         specifier: ^2.5.20
         version: 2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1))
@@ -419,8 +419,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@sveltejs/adapter-auto':
-        specifier: ^3.2.2
-        version: 3.2.2(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))
+        specifier: ^3.2.4
+        version: 3.2.4(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))
       '@sveltejs/kit':
         specifier: ^2.5.20
         version: 2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1))
@@ -1680,8 +1680,8 @@ packages:
   '@shikijs/core@1.12.0':
     resolution: {integrity: sha512-mc1cLbm6UQ8RxLc0dZES7v5rkH+99LxQp/ZvTqV3NLyYsO/fD6JhEflP1H5b2SDq9gI0+0G36AVZWxvounfR9w==}
 
-  '@sveltejs/adapter-auto@3.2.2':
-    resolution: {integrity: sha512-Mso5xPCA8zgcKrv+QioVlqMZkyUQ5MjDJiEPuG/Z7cV/5tmwV7LmcVWk5tZ+H0NCOV1x12AsoSpt/CwFwuVXMA==}
+  '@sveltejs/adapter-auto@3.2.4':
+    resolution: {integrity: sha512-a64AKYbfTUrVwU0xslzv1Jf3M8bj0IwhptaXmhgIkjXspBXhD0od9JiItQHchijpLMGdEDcYBlvqySkEawv6mQ==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
 
@@ -3498,10 +3498,6 @@ packages:
   get-intrinsic@1.2.4:
     resolution: {integrity: sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==}
     engines: {node: '>= 0.4'}
-
-  get-it@8.6.3:
-    resolution: {integrity: sha512-I7AKP1Xl2q2j4ucvU0yMtiM+xZKgzD1Fvyh1YcZCT66i+wNrxJAonV+H1yynB3gerZ17uA00IXg61LVLdDeiCg==}
-    engines: {node: '>=14.0.0'}
 
   get-it@8.6.4:
     resolution: {integrity: sha512-4bYWtWFPwkHoru0OLVsPhgScATPo8/Ne3PFar0WTrs85Th7qOnRm/y1stJfQzVZfjssBwBM5l0eAVK4ScgLGeg==}
@@ -7559,7 +7555,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
-  '@sveltejs/adapter-auto@3.2.2(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))':
+  '@sveltejs/adapter-auto@3.2.4(@sveltejs/kit@2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))':
     dependencies:
       '@sveltejs/kit': 2.5.20(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1)))(svelte@4.2.18)(vite@5.3.5(@types/node@20.14.9)(terser@5.31.1))
       import-meta-resolve: 4.1.0
@@ -9857,16 +9853,6 @@ snapshots:
       has-symbols: 1.0.3
       hasown: 2.0.2
 
-  get-it@8.6.3:
-    dependencies:
-      decompress-response: 7.0.0
-      follow-redirects: 1.15.6
-      is-retry-allowed: 2.2.0
-      progress-stream: 2.0.0
-      tunnel-agent: 0.6.0
-    transitivePeerDependencies:
-      - debug
-
   get-it@8.6.4:
     dependencies:
       decompress-response: 7.0.0
@@ -9879,7 +9865,7 @@ snapshots:
 
   get-latest-version@5.1.0:
     dependencies:
-      get-it: 8.6.3
+      get-it: 8.6.4
       registry-auth-token: 5.0.2
       registry-url: 5.1.0
       semver: 7.6.3
