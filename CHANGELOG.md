@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.0](https://github.com/sanity-io/pkg-utils/compare/v6.10.12...v6.11.0) (2024-09-02)
+
+
+### Features
+
+* **watcher:** add support for dts incremental rebuilds ([#1095](https://github.com/sanity-io/pkg-utils/issues/1095)) ([575641e](https://github.com/sanity-io/pkg-utils/commit/575641ea00f29ae1517d36206c9db353196e9f64))
+
 ## [6.10.12](https://github.com/sanity-io/pkg-utils/compare/v6.10.11...v6.10.12) (2024-09-01)
 
 
