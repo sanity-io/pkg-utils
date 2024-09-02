@@ -6,7 +6,7 @@ global.__DEV__ = true
 
 watch({
   cwd: path.resolve(__dirname, '..'),
-  tsconfig: 'tsconfig.dist.json',
+  strict: true,
 }).catch((err) => {
   // eslint-disable-next-line no-console
   console.error(err.stack)
