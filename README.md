@@ -6,6 +6,7 @@ Simple utilities for modern [npm](https://www.npmjs.com/) packages.
 npm install @sanity/pkg-utils -D
 ```
 
+
 [![npm version](https://img.shields.io/npm/v/@sanity/pkg-utils.svg?style=flat-square)](https://www.npmjs.com/package/@sanity/pkg-utils)
 
 ## Basic usage
