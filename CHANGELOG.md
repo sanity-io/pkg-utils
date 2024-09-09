@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.1](https://github.com/sanity-io/pkg-utils/compare/v6.11.0...v6.11.1) (2024-09-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency typescript to v5.6.2 ([#1106](https://github.com/sanity-io/pkg-utils/issues/1106)) ([cd8e309](https://github.com/sanity-io/pkg-utils/commit/cd8e30985702126ed37c53897842ade2fa821ae5))
+
 ## [6.11.0](https://github.com/sanity-io/pkg-utils/compare/v6.10.12...v6.11.0) (2024-09-02)
 
 
