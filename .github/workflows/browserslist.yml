@@ -29,10 +29,10 @@ jobs:
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
       - uses: peter-evans/create-pull-request@8867c4aba1b742c39f8d0ba35429c2dfa4b6cb20 # v7
         with:
-          author: github-actions <41898282+github-actions[bot]@users.noreply.github.com>
           body: I ran `npx update-browserslist-db@latest` 🧑‍💻
           branch: actions/update-browserslist-database-if-needed
           commit-message: "chore: update browserslist db"
           labels: 🤖 bot
+          sign-commits: true
           title: "chore: update browserslist db"
           token: ${{ steps.app-token.outputs.token }}
