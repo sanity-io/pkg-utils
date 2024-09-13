@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.2](https://github.com/sanity-io/pkg-utils/compare/v6.11.1...v6.11.2) (2024-09-13)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.47.9 ([#1112](https://github.com/sanity-io/pkg-utils/issues/1112)) ([365f9f4](https://github.com/sanity-io/pkg-utils/commit/365f9f4701a835b34a5f43c40c72279097c2e930))
+* **deps:** Update dependency babel-plugin-react-compiler to v0.0.0-experimental-fe484b5-20240912 ([#1113](https://github.com/sanity-io/pkg-utils/issues/1113)) ([5d79074](https://github.com/sanity-io/pkg-utils/commit/5d79074d13bb91bf003cd9f6b97bbb295fb05f5f))
+* **deps:** Update dependency rollup to ^4.21.3 ([#1114](https://github.com/sanity-io/pkg-utils/issues/1114)) ([814b9db](https://github.com/sanity-io/pkg-utils/commit/814b9db5c089d9bd4dfed8846957ac06096f9b1a))
+
 ## [6.11.1](https://github.com/sanity-io/pkg-utils/compare/v6.11.0...v6.11.1) (2024-09-09)
 
 
