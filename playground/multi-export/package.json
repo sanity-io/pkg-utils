@@ -34,7 +34,8 @@
     },
     "./svelte": {
       "types": "./dist-svelte/index.d.ts",
-      "svelte": "./dist-svelte/index.js"
+      "svelte": "./dist-svelte/index.js",
+      "default": "./dist-svelte/index.js"
     },
     "./no-side-effect": {
       "source": "./src/no-side-effect.ts",
