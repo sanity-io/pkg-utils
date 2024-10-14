@@ -29,14 +29,10 @@ export interface PackageJSON {
           require?: string
         }
         module?: string
+        svelte?: string
         import?: string
         require?: string
         default: string
-      }
-    | {
-        types?: string
-        svelte: string
-        default?: string
       }
   >
   main?: string
