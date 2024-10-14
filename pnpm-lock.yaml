@@ -36,8 +36,8 @@ importers:
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.25.8)(@types/babel__core@7.20.5)(rollup@4.21.3)
       '@rollup/plugin-commonjs':
-        specifier: ^26.0.1
-        version: 26.0.1(rollup@4.21.3)
+        specifier: ^28.0.0
+        version: 28.0.0(rollup@4.21.3)
       '@rollup/plugin-json':
         specifier: ^6.1.0
         version: 6.1.0(rollup@4.21.3)
@@ -459,7 +459,7 @@ importers:
         version: 4.2.19
       svelte-check:
         specifier: ^4.0.2
-        version: 4.0.2(svelte@4.2.19)(typescript@5.6.3)
+        version: 4.0.2(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.6.3)
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
@@ -1457,6 +1457,15 @@ packages:
 
   '@rollup/plugin-commonjs@26.0.1':
     resolution: {integrity: sha512-UnsKoZK6/aGIH6AdkptXhNvhaqftcjq3zZdT+LY5Ftms6JR06nADcDsYp5hTU9E2lbJUEOhdlY5J4DNTneM+jQ==}
+    engines: {node: '>=16.0.0 || 14 >= 14.17'}
+    peerDependencies:
+      rollup: ^2.68.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/plugin-commonjs@28.0.0':
+    resolution: {integrity: sha512-BJcu+a+Mpq476DMXG+hevgPSl56bkUoi88dKT8t3RyUp8kGuOh+2bU8Gs7zXDlu+fyZggnJ+iOBGrb/O1SorYg==}
     engines: {node: '>=16.0.0 || 14 >= 14.17'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0||^4.0.0
@@ -7367,6 +7376,18 @@ snapshots:
     optionalDependencies:
       rollup: 4.21.3
 
+  '@rollup/plugin-commonjs@28.0.0(rollup@4.21.3)':
+    dependencies:
+      '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      fdir: 6.3.0(picomatch@2.3.1)
+      is-reference: 1.2.1
+      magic-string: 0.30.11
+      picomatch: 2.3.1
+    optionalDependencies:
+      rollup: 4.21.3
+
   '@rollup/plugin-json@6.1.0(rollup@4.21.3)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
@@ -9710,7 +9731,9 @@ snapshots:
     dependencies:
       reusify: 1.0.4
 
-  fdir@6.3.0: {}
+  fdir@6.3.0(picomatch@2.3.1):
+    optionalDependencies:
+      picomatch: 2.3.1
 
   figures@3.2.0:
     dependencies:
@@ -12572,11 +12595,11 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@4.0.2(svelte@4.2.19)(typescript@5.6.3):
+  svelte-check@4.0.2(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.6.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 3.6.0
-      fdir: 6.3.0
+      fdir: 6.3.0(picomatch@2.3.1)
       picocolors: 1.0.1
       sade: 1.8.1
       svelte: 4.2.19
