@@ -5,6 +5,21 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.3](https://github.com/sanity-io/pkg-utils/compare/v6.11.2...v6.11.3) (2024-10-14)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo ([#1121](https://github.com/sanity-io/pkg-utils/issues/1121)) ([5e52da5](https://github.com/sanity-io/pkg-utils/commit/5e52da5ce68291c4639818c7cbf0dfe3cb502201))
+* **deps:** Update dependency @rollup/plugin-commonjs to v28 ([#1128](https://github.com/sanity-io/pkg-utils/issues/1128)) ([88dee54](https://github.com/sanity-io/pkg-utils/commit/88dee547ac073a6b94e2ce0994843ed791658db0))
+* **deps:** Update dependency @rollup/plugin-replace to v6 ([#1130](https://github.com/sanity-io/pkg-utils/issues/1130)) ([0da7d9d](https://github.com/sanity-io/pkg-utils/commit/0da7d9d53239ae85ac4284b08d945c1eeaf8600f))
+* **deps:** Update dependency browserslist to ^4.24.0 ([#1125](https://github.com/sanity-io/pkg-utils/issues/1125)) ([f91f569](https://github.com/sanity-io/pkg-utils/commit/f91f5697e5afcb841473d13d2bd58ad4ff1cf9c4))
+* **deps:** Update dependency esbuild to ^0.24.0 ([#1126](https://github.com/sanity-io/pkg-utils/issues/1126)) ([d3a7443](https://github.com/sanity-io/pkg-utils/commit/d3a7443932d51243ea2400fbd9cf88adb088e076))
+* **deps:** Update dependency rollup to ^4.24.0 ([#1137](https://github.com/sanity-io/pkg-utils/issues/1137)) ([25b7992](https://github.com/sanity-io/pkg-utils/commit/25b799239cc383a308ab4cf3ed52ca829ac7b842))
+* **deps:** update dependency typescript to v5.6.3 ([#1123](https://github.com/sanity-io/pkg-utils/issues/1123)) ([d1d0d6e](https://github.com/sanity-io/pkg-utils/commit/d1d0d6e9c9270f421c2d240f7cc6bad3d6b98c9e))
+* **deps:** Update dependency zod-validation-error to v3.4.0 ([#1127](https://github.com/sanity-io/pkg-utils/issues/1127)) ([4b889d7](https://github.com/sanity-io/pkg-utils/commit/4b889d78c9700ed6b264d34667a08eedb7351bb9))
+* **deps:** Update rollup packages ([#1122](https://github.com/sanity-io/pkg-utils/issues/1122)) ([c566f96](https://github.com/sanity-io/pkg-utils/commit/c566f9604bc5a5bfb30ffb4f0ee3ca17c0838188))
+
 ## [6.11.2](https://github.com/sanity-io/pkg-utils/compare/v6.11.1...v6.11.2) (2024-09-13)
 
 
