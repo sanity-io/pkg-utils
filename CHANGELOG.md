@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.4](https://github.com/sanity-io/pkg-utils/compare/v6.11.3...v6.11.4) (2024-10-14)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency chokidar to v4 ([#1155](https://github.com/sanity-io/pkg-utils/issues/1155)) ([b94c5ea](https://github.com/sanity-io/pkg-utils/commit/b94c5ea80d44a4973d8aaee4fae76a9eb41be026))
+
 ## [6.11.3](https://github.com/sanity-io/pkg-utils/compare/v6.11.2...v6.11.3) (2024-10-14)
 
 
