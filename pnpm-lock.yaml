@@ -21,8 +21,8 @@ importers:
         specifier: ^7.25.8
         version: 7.25.8
       '@microsoft/api-extractor':
-        specifier: 7.47.9
-        version: 7.47.9(@types/node@20.16.11)
+        specifier: 7.47.11
+        version: 7.47.11(@types/node@20.16.11)
       '@microsoft/tsdoc-config':
         specifier: 0.17.0
         version: 0.17.0
@@ -1278,8 +1278,8 @@ packages:
   '@microsoft/api-extractor-model@7.29.8':
     resolution: {integrity: sha512-t3Z/xcO6TRbMcnKGVMs4uMzv/gd5j0NhMiJIGjD4cJMeFJ1Hf8wnLSx37vxlRlL0GWlGJhnFgxvnaL6JlS+73g==}
 
-  '@microsoft/api-extractor@7.47.9':
-    resolution: {integrity: sha512-TTq30M1rikVsO5wZVToQT/dGyJY7UXJmjiRtkHPLb74Prx3Etw8+bX7Bv7iLuby6ysb7fuu1NFWqma+csym8Jw==}
+  '@microsoft/api-extractor@7.47.11':
+    resolution: {integrity: sha512-lrudfbPub5wzBhymfFtgZKuBvXxoSIAdrvS2UbHjoMT2TjIEddq6Z13pcve7A03BAouw0x8sW8G4txdgfiSwpQ==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.17.0':
@@ -1570,8 +1570,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@rushstack/ts-command-line@4.22.8':
-    resolution: {integrity: sha512-XbFjOoV7qZHJnSuFUHv0pKaFA4ixyCuki+xMjsMfDwfvQjs5MYG0IK5COal3tRnG7KCDe2l/G+9LrzYE/RJhgg==}
+  '@rushstack/ts-command-line@4.23.0':
+    resolution: {integrity: sha512-jYREBtsxduPV6ptNq8jOKp9+yx0ld1Tb/Tkdnlj8gTjazl1sF3DwX2VbluyYrNd0meWIL0bNeer7WDf5tKFjaQ==}
 
   '@sanity/browserslist-config@1.0.3':
     resolution: {integrity: sha512-UkJuiTyROgPcxbvpHYyXwr+T88Np4eLzu3h05gMgeZ2hv3EM7g/4VMyng5HuA1JdPQPEdq8bmmfQDR+u4KC+TA==}
@@ -7126,7 +7126,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.47.9(@types/node@20.16.11)':
+  '@microsoft/api-extractor@7.47.11(@types/node@20.16.11)':
     dependencies:
       '@microsoft/api-extractor-model': 7.29.8(@types/node@20.16.11)
       '@microsoft/tsdoc': 0.15.0
@@ -7134,7 +7134,7 @@ snapshots:
       '@rushstack/node-core-library': 5.9.0(@types/node@20.16.11)
       '@rushstack/rig-package': 0.5.3
       '@rushstack/terminal': 0.14.2(@types/node@20.16.11)
-      '@rushstack/ts-command-line': 4.22.8(@types/node@20.16.11)
+      '@rushstack/ts-command-line': 4.23.0(@types/node@20.16.11)
       lodash: 4.17.21
       minimatch: 3.0.8
       resolve: 1.22.8
@@ -7366,7 +7366,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.16.11
 
-  '@rushstack/ts-command-line@4.22.8(@types/node@20.16.11)':
+  '@rushstack/ts-command-line@4.23.0(@types/node@20.16.11)':
     dependencies:
       '@rushstack/terminal': 0.14.2(@types/node@20.16.11)
       '@types/argparse': 1.0.38
