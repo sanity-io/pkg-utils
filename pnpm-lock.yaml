@@ -505,8 +505,8 @@ importers:
   playground/use-client-directive:
     dependencies:
       babel-plugin-react-compiler:
-        specifier: 0.0.0-experimental-fa06e2c-20241016
-        version: 0.0.0-experimental-fa06e2c-20241016
+        specifier: 19.0.0-beta-6fc168f-20241025
+        version: 19.0.0-beta-6fc168f-20241025
     devDependencies:
       '@types/react':
         specifier: ^18.3.11
@@ -2276,11 +2276,11 @@ packages:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
 
-  babel-plugin-react-compiler@0.0.0-experimental-fa06e2c-20241016:
-    resolution: {integrity: sha512-ASXNEtiyWcSnt38qTuu5972o+XYcz5pdkfvtLnhG1fglaQg9pFmfhC5274EH1QXxOFhgDOSd/foZ+H2o/a1noA==}
-
   babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912:
     resolution: {integrity: sha512-iGtEbwQeiLXba8o8ESTjogmQ8rTP6xHi+w3JIxR8HmKAb+SYZ3cljRhpOEsrxZIXuk3L9w9o98BJFIcxaVyFag==}
+
+  babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025:
+    resolution: {integrity: sha512-wFVeXhF0hkiRe4bEM0jzeTFMlMbcKNTwhXcFvqUIVB6WXf+3vdwOWGWnw7jwvDb2mzvsIZOFt/96itOFt1rwjw==}
 
   babel-runtime@6.26.0:
     resolution: {integrity: sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==}
@@ -8215,16 +8215,6 @@ snapshots:
 
   axobject-query@4.1.0: {}
 
-  babel-plugin-react-compiler@0.0.0-experimental-fa06e2c-20241016:
-    dependencies:
-      '@babel/generator': 7.2.0
-      '@babel/types': 7.26.0
-      chalk: 4.1.2
-      invariant: 2.2.4
-      pretty-format: 24.9.0
-      zod: 3.23.8
-      zod-validation-error: 2.1.0(zod@3.23.8)
-
   babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912:
     dependencies:
       '@babel/generator': 7.2.0
@@ -8234,6 +8224,10 @@ snapshots:
       pretty-format: 24.9.0
       zod: 3.23.8
       zod-validation-error: 2.1.0(zod@3.23.8)
+
+  babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025:
+    dependencies:
+      '@babel/types': 7.26.0
 
   babel-runtime@6.26.0:
     dependencies:
