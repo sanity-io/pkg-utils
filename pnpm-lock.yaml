@@ -54,8 +54,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       babel-plugin-react-compiler:
-        specifier: 0.0.0-experimental-fe484b5-20240912
-        version: 0.0.0-experimental-fe484b5-20240912
+        specifier: 19.0.0-beta-6fc168f-20241025
+        version: 19.0.0-beta-6fc168f-20241025
       browserslist:
         specifier: ^4.24.2
         version: 4.24.2
@@ -299,7 +299,7 @@ importers:
     devDependencies:
       '@sanity/visual-editing':
         specifier: ^2.4.1
-        version: 2.4.1(@sanity/client@6.22.1)(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)
+        version: 2.4.1(@sanity/client@6.22.1)(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.5
         version: 3.2.5(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))
@@ -381,7 +381,7 @@ importers:
         version: link:../dummy-module
       next:
         specifier: 15.0.0-rc.1
-        version: 15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
+        version: 15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       react:
         specifier: 19.0.0-rc-fb9a90fa48-20240614
         version: 19.0.0-rc-fb9a90fa48-20240614
@@ -2306,8 +2306,8 @@ packages:
   babel-plugin-react-compiler@0.0.0-experimental-fa06e2c-20241016:
     resolution: {integrity: sha512-ASXNEtiyWcSnt38qTuu5972o+XYcz5pdkfvtLnhG1fglaQg9pFmfhC5274EH1QXxOFhgDOSd/foZ+H2o/a1noA==}
 
-  babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912:
-    resolution: {integrity: sha512-iGtEbwQeiLXba8o8ESTjogmQ8rTP6xHi+w3JIxR8HmKAb+SYZ3cljRhpOEsrxZIXuk3L9w9o98BJFIcxaVyFag==}
+  babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025:
+    resolution: {integrity: sha512-wFVeXhF0hkiRe4bEM0jzeTFMlMbcKNTwhXcFvqUIVB6WXf+3vdwOWGWnw7jwvDb2mzvsIZOFt/96itOFt1rwjw==}
 
   babel-runtime@6.26.0:
     resolution: {integrity: sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==}
@@ -7461,7 +7461,7 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing@2.4.1(@sanity/client@6.22.1)(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)':
+  '@sanity/visual-editing@2.4.1(@sanity/client@6.22.1)(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)':
     dependencies:
       '@sanity/comlink': 1.1.1
       '@sanity/mutate': 0.10.1-canary.5(xstate@5.18.2)
@@ -7477,7 +7477,7 @@ snapshots:
     optionalDependencies:
       '@sanity/client': 6.22.1
       '@sveltejs/kit': 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.9(@types/node@20.16.11)(terser@5.34.1))
-      next: 15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
+      next: 15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       svelte: 4.2.19
     transitivePeerDependencies:
       - debug
@@ -8306,15 +8306,9 @@ snapshots:
       zod: 3.23.8
       zod-validation-error: 2.1.0(zod@3.23.8)
 
-  babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912:
+  babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025:
     dependencies:
-      '@babel/generator': 7.2.0
       '@babel/types': 7.26.0
-      chalk: 4.1.2
-      invariant: 2.2.4
-      pretty-format: 24.9.0
-      zod: 3.23.8
-      zod-validation-error: 2.1.0(zod@3.23.8)
 
   babel-runtime@6.26.0:
     dependencies:
@@ -11181,7 +11175,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@0.0.0-experimental-fe484b5-20240912)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614):
+  next@15.0.0-rc.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614):
     dependencies:
       '@next/env': 15.0.0-rc.1
       '@swc/counter': 0.1.3
@@ -11201,7 +11195,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.0.0-rc.1
       '@next/swc-win32-arm64-msvc': 15.0.0-rc.1
       '@next/swc-win32-x64-msvc': 15.0.0-rc.1
-      babel-plugin-react-compiler: 0.0.0-experimental-fe484b5-20240912
+      babel-plugin-react-compiler: 19.0.0-beta-6fc168f-20241025
       sharp: 0.33.5
     transitivePeerDependencies:
       - '@babel/core'
