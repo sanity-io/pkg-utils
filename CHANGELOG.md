@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.6](https://github.com/sanity-io/pkg-utils/compare/v6.11.5...v6.11.6) (2024-10-28)
+
+
+### Bug Fixes
+
+* make `babel-plugin-react-compiler` a peer dep ([#1179](https://github.com/sanity-io/pkg-utils/issues/1179)) ([2d884a4](https://github.com/sanity-io/pkg-utils/commit/2d884a48a16bbdeb1f80c24f20a72c075c1b07f6))
+
 ## [6.11.5](https://github.com/sanity-io/pkg-utils/compare/v6.11.4...v6.11.5) (2024-10-28)
 
 
