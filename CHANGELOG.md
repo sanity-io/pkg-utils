@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.5](https://github.com/sanity-io/pkg-utils/compare/v6.11.4...v6.11.5) (2024-10-28)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.26.0 ([#1168](https://github.com/sanity-io/pkg-utils/issues/1168)) ([ef2005b](https://github.com/sanity-io/pkg-utils/commit/ef2005bf537190179a7d1fd57c1eabce2d7fa179))
+* **deps:** Update dependency browserslist to ^4.24.2 ([#1175](https://github.com/sanity-io/pkg-utils/issues/1175)) ([dfd0389](https://github.com/sanity-io/pkg-utils/commit/dfd0389b470ac2133e9a5622c5a74869b969353d))
+* **deps:** Update dependency rollup to ^4.24.2 ([#1176](https://github.com/sanity-io/pkg-utils/issues/1176)) ([cb2a9a1](https://github.com/sanity-io/pkg-utils/commit/cb2a9a164876d87e5023aa3702f4fbce013eb0a8))
+
 ## [6.11.4](https://github.com/sanity-io/pkg-utils/compare/v6.11.3...v6.11.4) (2024-10-17)
 
 
