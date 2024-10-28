@@ -299,13 +299,13 @@ importers:
     devDependencies:
       '@sanity/visual-editing':
         specifier: ^2.4.2
-        version: 2.4.2(@sanity/client@6.22.1)(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)
+        version: 2.4.2(@sanity/client@6.22.1)(@sveltejs/kit@2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)
       '@sveltejs/adapter-auto':
         specifier: ^3.3.1
-        version: 3.3.1(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))
+        version: 3.3.1(@sveltejs/kit@2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))
       '@sveltejs/kit':
-        specifier: ^2.7.1
-        version: 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
+        specifier: ^2.7.3
+        version: 2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
       '@sveltejs/package':
         specifier: ^2.3.7
         version: 2.3.7(svelte@4.2.19)(typescript@5.6.3)
@@ -420,10 +420,10 @@ importers:
         version: 1.0.0
       '@sveltejs/adapter-auto':
         specifier: ^3.3.1
-        version: 3.3.1(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))
+        version: 3.3.1(@sveltejs/kit@2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))
       '@sveltejs/kit':
-        specifier: ^2.7.1
-        version: 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
+        specifier: ^2.7.3
+        version: 2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
         version: 3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
@@ -1650,8 +1650,8 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
 
-  '@sveltejs/kit@2.7.1':
-    resolution: {integrity: sha512-TBVnkwgYQT3EafGQK6Eyh5FlLEBlRhCmqPTwcdOs+QdnyUc3eCAxRWtXlFxIWtmk6pqv11zdng8qTpThdTogew==}
+  '@sveltejs/kit@2.7.3':
+    resolution: {integrity: sha512-Vx7nq5MJ86I8qXYsVidC5PX6xm+uxt8DydvOdmJoyOK7LvGP18OFEG359yY+aa51t6pENvqZAMqAREQQx1OI2Q==}
     engines: {node: '>=18.13'}
     hasBin: true
     peerDependencies:
@@ -7417,7 +7417,7 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing@2.4.2(@sanity/client@6.22.1)(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)':
+  '@sanity/visual-editing@2.4.2(@sanity/client@6.22.1)(@sveltejs/kit@2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@4.2.19)':
     dependencies:
       '@sanity/comlink': 1.1.1
       '@sanity/mutate': 0.10.1-canary.5(xstate@5.18.2)
@@ -7433,7 +7433,7 @@ snapshots:
       xstate: 5.18.2
     optionalDependencies:
       '@sanity/client': 6.22.1
-      '@sveltejs/kit': 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
+      '@sveltejs/kit': 2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
       next: 15.0.1(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-6fc168f-20241025)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       svelte: 4.2.19
     transitivePeerDependencies:
@@ -7466,12 +7466,12 @@ snapshots:
 
   '@shikijs/vscode-textmate@9.3.0': {}
 
-  '@sveltejs/adapter-auto@3.3.1(@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))':
+  '@sveltejs/adapter-auto@3.3.1(@sveltejs/kit@2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))':
     dependencies:
-      '@sveltejs/kit': 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
+      '@sveltejs/kit': 2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
       import-meta-resolve: 4.1.0
 
-  '@sveltejs/kit@2.7.1(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))':
+  '@sveltejs/kit@2.7.3(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1)))(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 3.1.2(svelte@4.2.19)(vite@5.4.10(@types/node@20.16.11)(terser@5.34.1))
       '@types/cookie': 0.6.0
