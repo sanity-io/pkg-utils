@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.7](https://github.com/sanity-io/pkg-utils/compare/v6.11.6...v6.11.7) (2024-10-29)
+
+
+### Bug Fixes
+
+* add `target` to `ReactCompilerOptions` ([#1186](https://github.com/sanity-io/pkg-utils/issues/1186)) ([2e900ea](https://github.com/sanity-io/pkg-utils/commit/2e900ea0f2314906b7a2239b0ce1e7ae54f98e67))
+
 ## [6.11.6](https://github.com/sanity-io/pkg-utils/compare/v6.11.5...v6.11.6) (2024-10-28)
 
 
