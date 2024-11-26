@@ -5,6 +5,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.13](https://github.com/sanity-io/pkg-utils/compare/v6.11.12...v6.11.13) (2024-11-26)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.48.0 ([#1220](https://github.com/sanity-io/pkg-utils/issues/1220)) ([0173475](https://github.com/sanity-io/pkg-utils/commit/01734756efeb7f993e771ba6c63ed4f78ef7a614))
+* **deps:** Update dependency @microsoft/tsdoc-config to v0.17.1 ([#1218](https://github.com/sanity-io/pkg-utils/issues/1218)) ([c4678c3](https://github.com/sanity-io/pkg-utils/commit/c4678c37fef9c6324834c0e97875f05ab562b1f4))
+* **deps:** Update dependency git-url-parse to v16 ([#1214](https://github.com/sanity-io/pkg-utils/issues/1214)) ([d5837d6](https://github.com/sanity-io/pkg-utils/commit/d5837d62e0129a925f778195d45b1b83cc4959a9))
+* **deps:** Update dependency prettier to ^3.4.0 ([#1221](https://github.com/sanity-io/pkg-utils/issues/1221)) ([b4b0edc](https://github.com/sanity-io/pkg-utils/commit/b4b0edcc68b6b4c326bf0a73b0f9911fe0505b12))
+* **deps:** Update dependency rollup to ^4.27.4 ([#1219](https://github.com/sanity-io/pkg-utils/issues/1219)) ([a169bca](https://github.com/sanity-io/pkg-utils/commit/a169bca3ed3e1faab393f7628ed14358e793ebde))
+* **deps:** update dependency typescript to v5.7.2 ([#1222](https://github.com/sanity-io/pkg-utils/issues/1222)) ([d98f2fb](https://github.com/sanity-io/pkg-utils/commit/d98f2fbdd6b062d6a2775d95da94a24c713f9fa5))
+* **deps:** Update dependency uuid to v11 ([#1215](https://github.com/sanity-io/pkg-utils/issues/1215)) ([ece5069](https://github.com/sanity-io/pkg-utils/commit/ece50695fdcb543f8283c0b58e593f686f1ce43d))
+
 ## [6.11.12](https://github.com/sanity-io/pkg-utils/compare/v6.11.11...v6.11.12) (2024-11-18)
 
 
