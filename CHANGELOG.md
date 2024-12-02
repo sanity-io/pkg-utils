@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.14](https://github.com/sanity-io/pkg-utils/compare/v6.11.13...v6.11.14) (2024-12-02)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency prettier to ^3.4.1 ([#1238](https://github.com/sanity-io/pkg-utils/issues/1238)) ([67163a1](https://github.com/sanity-io/pkg-utils/commit/67163a1146b0bff0606b9e6d013df5c87926133a))
+* **deps:** Update dependency rollup to ^4.28.0 ([#1242](https://github.com/sanity-io/pkg-utils/issues/1242)) ([7c474bf](https://github.com/sanity-io/pkg-utils/commit/7c474bf7e89c5155eea758c7e9863844417f9213))
+
 ## [6.11.13](https://github.com/sanity-io/pkg-utils/compare/v6.11.12...v6.11.13) (2024-11-26)
 
 
