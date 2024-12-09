@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.11.15](https://github.com/sanity-io/pkg-utils/compare/v6.11.14...v6.11.15) (2024-12-09)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @babel/types to ^7.26.3 ([#1243](https://github.com/sanity-io/pkg-utils/issues/1243)) ([dd9c922](https://github.com/sanity-io/pkg-utils/commit/dd9c922b0eaea5a786397a572a74fc664618394c))
+* **deps:** Update dependency prettier to ^3.4.2 ([#1244](https://github.com/sanity-io/pkg-utils/issues/1244)) ([81430b8](https://github.com/sanity-io/pkg-utils/commit/81430b8eb3c2e06ac35792e8d602bba930b6fc99))
+* **deps:** Update dependency rollup to ^4.28.1 ([#1246](https://github.com/sanity-io/pkg-utils/issues/1246)) ([dd46f6c](https://github.com/sanity-io/pkg-utils/commit/dd46f6c097cfd239f21925b7789ccd2731562d38))
+
 ## [6.11.14](https://github.com/sanity-io/pkg-utils/compare/v6.11.13...v6.11.14) (2024-12-02)
 
 
