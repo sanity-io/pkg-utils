@@ -99,8 +99,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       prettier:
-        specifier: ^3.4.1
-        version: 3.4.1
+        specifier: ^3.4.2
+        version: 3.4.2
       pretty-bytes:
         specifier: ^5.6.0
         version: 5.6.0
@@ -146,7 +146,7 @@ importers:
         version: 'link:'
       '@sanity/prettier-config':
         specifier: ^1.0.3
-        version: 1.0.3(prettier@3.4.1)
+        version: 1.0.3(prettier@3.4.2)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -188,7 +188,7 @@ importers:
         version: 7.18.0(eslint@8.57.1)(typescript@5.7.2)
       babel-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-df7b47d-20241124
+        version: 19.0.0-beta-37ed2a7-20241206
       browserslist-to-esbuild:
         specifier: 2.1.1
         version: 2.1.1(browserslist@4.24.2)
@@ -212,7 +212,7 @@ importers:
         version: 2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)
       eslint-plugin-prettier:
         specifier: ^5.2.1
-        version: 5.2.1(@types/eslint@8.56.12)(eslint-config-prettier@9.1.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.4.1)
+        version: 5.2.1(@types/eslint@8.56.12)(eslint-config-prettier@9.1.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.4.2)
       eslint-plugin-simple-import-sort:
         specifier: ^12.1.1
         version: 12.1.1(eslint@8.57.1)
@@ -299,7 +299,7 @@ importers:
     devDependencies:
       '@sanity/visual-editing':
         specifier: ^2.10.2
-        version: 2.10.2(@sanity/client@6.22.4)(@sveltejs/kit@2.8.5(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@5.2.9)
+        version: 2.10.2(@sanity/client@6.22.4)(@sveltejs/kit@2.8.5(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@5.2.9)
       '@sveltejs/adapter-auto':
         specifier: ^3.3.1
         version: 3.3.1(@sveltejs/kit@2.8.5(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))
@@ -381,7 +381,7 @@ importers:
         version: link:../dummy-module
       next:
         specifier: 15.0.3
-        version: 15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
+        version: 15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       react:
         specifier: 19.0.0-rc-fb9a90fa48-20240614
         version: 19.0.0-rc-fb9a90fa48-20240614
@@ -450,10 +450,10 @@ importers:
         version: link:../multi-export
       prettier:
         specifier: ^3.3.3
-        version: 3.4.1
+        version: 3.4.2
       prettier-plugin-svelte:
         specifier: ^3.3.2
-        version: 3.3.2(prettier@3.4.1)(svelte@5.2.9)
+        version: 3.3.2(prettier@3.4.2)(svelte@5.2.9)
       svelte:
         specifier: ^5.2.9
         version: 5.2.9
@@ -506,7 +506,7 @@ importers:
     dependencies:
       babel-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-df7b47d-20241124
+        version: 19.0.0-beta-37ed2a7-20241206
     devDependencies:
       '@types/react':
         specifier: ^18.3.12
@@ -2291,8 +2291,8 @@ packages:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
 
-  babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124:
-    resolution: {integrity: sha512-93iSASR20HNsotcOTQ+KPL0zpgfRFVWL86AtXpmHp995HuMVnC9femd8Winr3GxkPEh8lEOyaw3nqY4q2HUm5w==}
+  babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206:
+    resolution: {integrity: sha512-nnkrHpeDKM8A5laq9tmFvvGbbDQ7laGfQLp50cvCkCXmWrPcZdCtaQpNh8UJS/yLREJnv2R4JDL5ADfxyAn+yQ==}
 
   babel-runtime@6.26.0:
     resolution: {integrity: sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==}
@@ -5079,8 +5079,8 @@ packages:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
 
-  prettier@3.4.1:
-    resolution: {integrity: sha512-G+YdqtITVZmOJje6QkXQWzl3fSfMxFwm1tjTyo9exhkmWSqC4Yhd1+lug++IlR2mvRVAxEDDWYkQdeSztajqgg==}
+  prettier@3.4.2:
+    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -7421,10 +7421,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sanity/prettier-config@1.0.3(prettier@3.4.1)':
+  '@sanity/prettier-config@1.0.3(prettier@3.4.2)':
     dependencies:
-      prettier: 3.4.1
-      prettier-plugin-packagejson: 2.5.3(prettier@3.4.1)
+      prettier: 3.4.2
+      prettier-plugin-packagejson: 2.5.3(prettier@3.4.2)
 
   '@sanity/preview-url-secret@2.0.4(@sanity/client@6.22.4)':
     dependencies:
@@ -7436,7 +7436,7 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing@2.10.2(@sanity/client@6.22.4)(@sveltejs/kit@2.8.5(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@5.2.9)':
+  '@sanity/visual-editing@2.10.2(@sanity/client@6.22.4)(@sveltejs/kit@2.8.5(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(next@15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(svelte@5.2.9)':
     dependencies:
       '@sanity/comlink': 2.0.0
       '@sanity/mutate': 0.11.0-canary.3(xstate@5.19.0)
@@ -7454,7 +7454,7 @@ snapshots:
     optionalDependencies:
       '@sanity/client': 6.22.4
       '@sveltejs/kit': 2.8.5(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1)))(svelte@5.2.9)(vite@5.4.11(@types/node@20.16.11)(terser@5.34.1))
-      next: 15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
+      next: 15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       svelte: 5.2.9
     transitivePeerDependencies:
       - debug
@@ -8260,7 +8260,7 @@ snapshots:
 
   axobject-query@4.1.0: {}
 
-  babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124:
+  babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206:
     dependencies:
       '@babel/types': 7.26.0
 
@@ -9278,10 +9278,10 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-prettier@5.2.1(@types/eslint@8.56.12)(eslint-config-prettier@9.1.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.4.1):
+  eslint-plugin-prettier@5.2.1(@types/eslint@8.56.12)(eslint-config-prettier@9.1.0(eslint@8.57.1))(eslint@8.57.1)(prettier@3.4.2):
     dependencies:
       eslint: 8.57.1
-      prettier: 3.4.1
+      prettier: 3.4.2
       prettier-linter-helpers: 1.0.0
       synckit: 0.9.2
     optionalDependencies:
@@ -11134,7 +11134,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-df7b47d-20241124)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614):
+  next@15.0.3(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-37ed2a7-20241206)(react-dom@19.0.0-rc-fb9a90fa48-20240614(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614):
     dependencies:
       '@next/env': 15.0.3
       '@swc/counter': 0.1.3
@@ -11154,7 +11154,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.0.3
       '@next/swc-win32-arm64-msvc': 15.0.3
       '@next/swc-win32-x64-msvc': 15.0.3
-      babel-plugin-react-compiler: 19.0.0-beta-df7b47d-20241124
+      babel-plugin-react-compiler: 19.0.0-beta-37ed2a7-20241206
       sharp: 0.33.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -11595,19 +11595,19 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier-plugin-packagejson@2.5.3(prettier@3.4.1):
+  prettier-plugin-packagejson@2.5.3(prettier@3.4.2):
     dependencies:
       sort-package-json: 2.10.1
       synckit: 0.9.2
     optionalDependencies:
-      prettier: 3.4.1
+      prettier: 3.4.2
 
-  prettier-plugin-svelte@3.3.2(prettier@3.4.1)(svelte@5.2.9):
+  prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@5.2.9):
     dependencies:
-      prettier: 3.4.1
+      prettier: 3.4.2
       svelte: 5.2.9
 
-  prettier@3.4.1: {}
+  prettier@3.4.2: {}
 
   pretty-bytes@5.6.0: {}
 
