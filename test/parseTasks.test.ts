@@ -11,6 +11,7 @@ import {parseStrictOptions} from '../src/node/strict'
 
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
+const cwd = process.cwd()
 
 test('should parse tasks (type: module)', () => {
   const pkg: PackageJSON = {
@@ -41,9 +42,17 @@ test('should parse tasks (type: module)', () => {
     },
   }
 
-  const exports = parseExports({pkg, strict: true, strictOptions, logger, legacyExports: false})
+  const exports = parseExports({
+    cwd,
+    pkg,
+    strict: true,
+    strictOptions,
+    logger,
+    legacyExports: false,
+  })
 
   const ctx: BuildContext = {
+    bundledPackages: [],
     cwd: '/test',
     distPath: '/test/dist',
     emitDeclarationOnly: false,
@@ -177,9 +186,17 @@ test('should parse tasks (type: commonjs, legacyExports: true)', () => {
     },
   }
 
-  const exports = parseExports({pkg, strict: true, logger, strictOptions, legacyExports: true})
+  const exports = parseExports({
+    cwd,
+    pkg,
+    strict: true,
+    logger,
+    strictOptions,
+    legacyExports: true,
+  })
 
   const ctx: BuildContext = {
+    bundledPackages: [],
     config: {legacyExports: true},
     cwd: '/test',
     distPath: '/test/dist',

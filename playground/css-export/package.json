@@ -1,0 +1,27 @@
+{
+  "name": "css-export",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "source": "./src/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./css/styles.css": "./src/css/styles.css",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist"
+  }
+}

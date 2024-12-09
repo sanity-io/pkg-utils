@@ -93,6 +93,7 @@ export async function resolveBuildContext(options: {
   }
 
   const parsedExports = parseExports({
+    cwd,
     pkg,
     strict,
     legacyExports: config?.legacyExports ?? false,

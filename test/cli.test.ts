@@ -161,6 +161,19 @@ test.skipIf(isWindows)('should build `ts-bundler` package', async () => {
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `css-export` package', async () => {
+  const project = await spawnProject('css-export')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.js → ./dist/index.js')
+  // @TODO test that styles.css is available as an export from the package
+
+  await project.remove()
+})
+
 describe.skip('runtime: webpack v3', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await spawnProject('dummy-module')
