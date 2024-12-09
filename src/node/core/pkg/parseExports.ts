@@ -172,6 +172,8 @@ export function parseExports(options: {
           errors.push('package.json: `exports["./package.json"] must be "./package.json".')
         }
       }
+    } else if (exportPath.endsWith('.css')) {
+      // @TODO Validate that CSS file actually exists
     } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {
       // @TODO should we report a warning or a debug message here about a detected svelte export that is ignored?
     } else if (isPkgExport(exportEntry)) {
