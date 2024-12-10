@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.12.0](https://github.com/sanity-io/pkg-utils/compare/v6.11.15...v6.12.0) (2024-12-10)
+
+
+### Features
+
+* allow CSS exports ([#1247](https://github.com/sanity-io/pkg-utils/issues/1247)) ([4540e5b](https://github.com/sanity-io/pkg-utils/commit/4540e5bb868a90ea5e552df57516bbac9abb3c59))
+
 ## [6.11.15](https://github.com/sanity-io/pkg-utils/compare/v6.11.14...v6.11.15) (2024-12-09)
 
 
