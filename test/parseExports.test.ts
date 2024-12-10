@@ -16,6 +16,7 @@ const defaults = {
 const files = ['dist']
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
+const cwd = process.cwd()
 
 describe.each([
   {type: 'commonjs' as const, legacyExports: false},
@@ -28,9 +29,9 @@ describe.each([
   const testParseExports = (
     options: Omit<
       Parameters<typeof parseExports>[0],
-      'strict' | 'strictOptions' | 'legacyExports' | 'logger'
+      'strict' | 'strictOptions' | 'legacyExports' | 'logger' | 'cwd'
     >,
-  ) => parseExports({strict: true, legacyExports, logger, strictOptions, ...options})
+  ) => parseExports({strict: true, legacyExports, logger, strictOptions, cwd, ...options})
   const reference = {
     '.': {
       source: defaults['.'].source,
@@ -462,6 +463,74 @@ describe.each([
 
       expect(() => testParseExports({pkg})).toThrowError(/the "source" property can be removed/)
       expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+    })
+
+    test('css exports must be strings (paths)', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        files,
+        main: './lib/index.js',
+        types: './lib/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './lib/index.js',
+          },
+          './style.css': {source: './src/style.css', default: './lib/style.css'},
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      expect(() => testParseExports({pkg})).toThrowError(
+        'package.json: `exports["./style.css"]`: export conditions not supported for CSS files.',
+      )
+    })
+
+    test('css exports must exist on file system', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        files,
+        main: './lib/index.js',
+        types: './lib/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './lib/index.js',
+          },
+          './style.css': './src/style.css',
+          './package.json': './package.json',
+        },
+      } satisfies PackageJSON
+
+      expect(() => testParseExports({pkg})).toThrowError(
+        'package.json: `exports["./style.css"]`: file does not exist.',
+      )
+    })
+
+    test('the "package.json" field should be set to "./package.json" (if set)', () => {
+      const pkg = {
+        type,
+        name,
+        version,
+        files,
+        main: './lib/index.js',
+        types: './lib/index.d.ts',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './lib/index.js',
+          },
+          './package.json': './other.json',
+        },
+      } satisfies PackageJSON
+
+      expect(() => testParseExports({pkg})).toThrowError(
+        'package.json: `exports["./package.json"]` must be "./package.json"',
+      )
     })
 
     describe.runIf(legacyExports)('legacyExports: true', () => {

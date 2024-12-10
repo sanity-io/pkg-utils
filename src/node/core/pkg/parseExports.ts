@@ -1,3 +1,6 @@
+import {existsSync} from 'node:fs'
+import {resolve as resolvePath} from 'node:path'
+
 import type {Logger} from '../../logger'
 import type {InferredStrictOptions} from '../../strict'
 import {defaultEnding, fileEnding, legacyEnding} from '../../tasks/dts/getTargetPaths'
@@ -9,13 +12,14 @@ import {validateExports} from './validateExports'
 
 /** @internal */
 export function parseExports(options: {
+  cwd: string
   pkg: PackageJSON
   strict: boolean
   strictOptions: InferredStrictOptions
   legacyExports: boolean
   logger: Logger
 }): (PkgExport & {_path: string})[] {
-  const {pkg, strict, strictOptions, legacyExports, logger} = options
+  const {cwd, pkg, strict, strictOptions, legacyExports, logger} = options
   const type = pkg.type || 'commonjs'
   const errors: string[] = []
 
@@ -169,8 +173,18 @@ export function parseExports(options: {
     ) {
       if (exportPath === './package.json') {
         if (exportEntry !== './package.json') {
-          errors.push('package.json: `exports["./package.json"] must be "./package.json".')
+          errors.push('package.json: `exports["./package.json"]` must be "./package.json".')
         }
+      }
+    } else if (exportPath.endsWith('.css')) {
+      if (typeof exportEntry === 'string' && !existsSync(resolvePath(cwd, exportEntry))) {
+        errors.push(
+          `package.json: \`exports[${JSON.stringify(exportPath)}]\`: file does not exist.`,
+        )
+      } else if (typeof exportEntry !== 'string') {
+        errors.push(
+          `package.json: \`exports[${JSON.stringify(exportPath)}]\`: export conditions not supported for CSS files.`,
+        )
       }
     } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {
       // @TODO should we report a warning or a debug message here about a detected svelte export that is ignored?

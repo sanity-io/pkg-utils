@@ -14,6 +14,7 @@ export interface PackageJSON {
   exports?: Record<
     string,
     | `./${string}.json`
+    | `./${string}.css`
     | {
         source?: string
         types?: string
