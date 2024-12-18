@@ -21,12 +21,11 @@ jobs:
     name: Lint & Build
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           cache: pnpm
           node-version: lts/*
-      - run: corepack enable && pnpm --version
       - run: pnpm install
       - run: pnpm lint
       - run: pnpm build

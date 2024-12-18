@@ -1,9 +1,5 @@
-'use strict'
+import {defineConfig} from '@sanity/pkg-utils'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {defineConfig} = require('@sanity/pkg-utils')
-
-/** @type import('@sanity/pkg-utils').PkgConfigOptions */
 module.exports = defineConfig({
   bundles: [
     {
