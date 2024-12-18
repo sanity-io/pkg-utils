@@ -5,6 +5,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.12.1](https://github.com/sanity-io/pkg-utils/compare/v6.12.0...v6.12.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.48.1 ([#1255](https://github.com/sanity-io/pkg-utils/issues/1255)) ([ab1b221](https://github.com/sanity-io/pkg-utils/commit/ab1b2215b9474ef69d98e61beef27c72cce28ec5))
+* **deps:** Update dependency @rollup/plugin-node-resolve to v16 ([622101d](https://github.com/sanity-io/pkg-utils/commit/622101d30e962b1ced76b4dcc3c27dd0899bc4bd))
+* **deps:** Update dependency @sanity/browserslist-config to v1.0.4 ([c29354b](https://github.com/sanity-io/pkg-utils/commit/c29354bf37bbb888fc70139584810eacea5f0de2))
+* **deps:** Update dependency browserslist to ^4.24.3 ([2725c1a](https://github.com/sanity-io/pkg-utils/commit/2725c1a586155c7be4e3883c44df9644cb84b3aa))
+* **deps:** Update dependency chokidar to ^4.0.2 ([824b345](https://github.com/sanity-io/pkg-utils/commit/824b34512a84b5473a29b2ffa76a8556043ac433))
+* **deps:** Update dependency zod to v3.24.1 ([#1262](https://github.com/sanity-io/pkg-utils/issues/1262)) ([bdaecba](https://github.com/sanity-io/pkg-utils/commit/bdaecba7ad090fa7ead2793eeb18613ea7dfd734))
+* **deps:** Update rollup packages ([079e3bb](https://github.com/sanity-io/pkg-utils/commit/079e3bb59f8ff1dc8f1b3b2d7f437a3f1c859de8))
+
 ## [6.12.0](https://github.com/sanity-io/pkg-utils/compare/v6.11.15...v6.12.0) (2024-12-10)
 
 
