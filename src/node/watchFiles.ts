@@ -1,8 +1,9 @@
 import chokidar from 'chokidar'
+import type {EventName} from 'chokidar/handler.js'
 import {Observable} from 'rxjs'
 
 export interface FileEvent {
-  type: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir'
+  type: EventName
   file: string
 }
 
@@ -12,11 +13,12 @@ export function watchFiles(patterns: string[]): Observable<FileEvent> {
       ignoreInitial: true,
     })
 
-    function handleFileEvent(
-      type: 'add' | 'addDir' | 'change' | 'unlink' | 'unlinkDir',
-      file: string,
-    ) {
-      observer.next({type, file})
+    function handleFileEvent(type: EventName, file: string | Error) {
+      if (type === 'error' || file instanceof Error) {
+        observer.error(file)
+      } else {
+        observer.next({type, file})
+      }
     }
 
     watcher.on('all', handleFileEvent)
