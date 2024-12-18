@@ -1,4 +1,4 @@
-import { words, allowed } from './words.server';
+import { allowed, words } from './words.server';
 
 export class Game {
 	index: number;
@@ -54,6 +54,7 @@ export class Game {
 		for (let i = 0; i < 5; i += 1) {
 			if (answer[i] === '_') {
 				const index = available.indexOf(letters[i]);
+
 				if (index !== -1) {
 					answer[i] = 'c';
 					available[index] = ' ';
