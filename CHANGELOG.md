@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.12.2](https://github.com/sanity-io/pkg-utils/compare/v6.12.1...v6.12.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* **deps:** upgrade `@sanity/browserslist-config` ([200c08e](https://github.com/sanity-io/pkg-utils/commit/200c08e80c3b965f4067ef8ce553d2e0410d66ce))
+
 ## [6.12.1](https://github.com/sanity-io/pkg-utils/compare/v6.12.0...v6.12.1) (2024-12-18)
 
 
