@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.12.3](https://github.com/sanity-io/pkg-utils/compare/v6.12.2...v6.12.3) (2024-12-31)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency chokidar to ^4.0.3 ([#1257](https://github.com/sanity-io/pkg-utils/issues/1257)) ([ac43df5](https://github.com/sanity-io/pkg-utils/commit/ac43df58e7e6962ef371f9dc0ff5e6784d0493cf))
+* **deps:** Update dependency esbuild to ^0.24.2 ([#1272](https://github.com/sanity-io/pkg-utils/issues/1272)) ([88ebd7a](https://github.com/sanity-io/pkg-utils/commit/88ebd7ae23d6be367262e3ad8c6fd63bcbe525c1))
+
 ## [6.12.2](https://github.com/sanity-io/pkg-utils/compare/v6.12.1...v6.12.2) (2024-12-19)
 
 
