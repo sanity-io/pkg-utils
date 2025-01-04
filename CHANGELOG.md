@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.0](https://github.com/sanity-io/pkg-utils/compare/v6.12.3...v6.13.0) (2025-01-04)
+
+
+### Features
+
+* support `babel-plugin-styled-components` ([#1282](https://github.com/sanity-io/pkg-utils/issues/1282)) ([a9ec4ef](https://github.com/sanity-io/pkg-utils/commit/a9ec4ef9210bbb4aecb4a58fd88304824eea559f))
+
 ## [6.12.3](https://github.com/sanity-io/pkg-utils/compare/v6.12.2...v6.12.3) (2024-12-31)
 
 
