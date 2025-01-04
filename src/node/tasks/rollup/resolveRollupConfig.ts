@@ -131,7 +131,8 @@ export function resolveRollupConfig(
       }),
     minify &&
       terser({
-        compress: {directives: false},
+        compress: {directives: false, passes: 10},
+        ecma: 2020,
         output: {
           comments: (_node, comment) => {
             const text = comment.value
@@ -145,6 +146,7 @@ export function resolveRollupConfig(
 
             return false
           },
+          preserve_annotations: true,
         },
       }),
   ].filter(Boolean) as Plugin[]
