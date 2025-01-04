@@ -170,6 +170,31 @@ export interface PkgConfigOptions {
     plugins?: BabelPluginItem[] | null | undefined
     /** @alpha */
     reactCompiler?: boolean
+    /** @alpha */
+    styledComponents?:
+      | boolean
+      | {
+          /** @defaultValue true */
+          displayName?: boolean
+          /**
+           * @defaultValue []
+           * @example ["@xstyled/styled-components", "@xstyled/styled-components/*"]
+           */
+          topLevelImportPaths?: string[]
+          /** @defaultValue true */
+          ssr?: boolean
+          /** @defaultValue fale */
+          fileName?: boolean
+          /** @defaultValue ["index"] */
+          meaninglessFileNames?: string[]
+          /** @defaultValue true */
+          minify?: boolean
+          /** @defaultValue false */
+          transpileTemplateLiterals?: boolean
+          namespace?: string
+          /** @defaultValue true */
+          pure?: boolean
+        }
   }
   /**
    * Configure the React Compiler.

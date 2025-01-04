@@ -1,5 +1,6 @@
 import path from 'node:path'
 
+import type {PluginItem} from '@babel/core'
 import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
 import alias from '@rollup/plugin-alias'
 import {babel, getBabelOutputPlugin} from '@rollup/plugin-babel'
@@ -96,13 +97,35 @@ export function resolveRollupConfig(
     }),
     commonjs(),
     json(),
-    (isReactCompiler || config?.babel?.reactCompiler) &&
+    (isReactCompiler || config?.babel?.reactCompiler || config?.babel?.styledComponents) &&
       babel({
         babelrc: false,
         presets: ['@babel/preset-typescript'],
         babelHelpers: 'bundled',
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
-        plugins: [['babel-plugin-react-compiler', config?.reactCompilerOptions || {}]],
+        plugins: [
+          // The styled-components plugin needs to run before the react-compiler plugin, in case the css prop is used
+          config?.babel?.styledComponents && [
+            'babel-plugin-styled-components',
+            {
+              // Unnecessary, as the way we use styled-components in Sanity is usually by wrapping `@sanity/ui` primitives, not declaring new ones like "const Button = styled.button``"
+              fileName: false,
+              // Native template literals take less space than this transpilation
+              transpileTemplateLiterals: false,
+              // Massively helps dead code elimination and tree-shaking
+              pure: true,
+              // disabled, as pkg-utils tends to be used for npm publishing, while other tooling, like `sanity dev`, `next dev`, etc are used for testing
+              cssProp: false,
+              ...(typeof config.babel.styledComponents === 'object'
+                ? config.babel.styledComponents
+                : {}),
+            },
+          ],
+          (isReactCompiler || config?.babel?.reactCompiler) && [
+            'babel-plugin-react-compiler',
+            config?.reactCompilerOptions || {},
+          ],
+        ].filter(Boolean) as PluginItem[],
       }),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
@@ -131,7 +154,8 @@ export function resolveRollupConfig(
       }),
     minify &&
       terser({
-        compress: {directives: false},
+        compress: {directives: false, passes: 10},
+        ecma: 2020,
         output: {
           comments: (_node, comment) => {
             const text = comment.value
@@ -145,6 +169,7 @@ export function resolveRollupConfig(
 
             return false
           },
+          preserve_annotations: true,
         },
       }),
   ].filter(Boolean) as Plugin[]
