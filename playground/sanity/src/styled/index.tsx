@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {createGlobalStyle, css, styled} from 'styled-components'
 
 const Button = styled.button<{$primary?: boolean}>`
@@ -83,6 +84,8 @@ const Code = styled.span`
 
 /** @public */
 export function Story() {
+  const [, setCount] = useState(0)
+
   return (
     <Body>
       <GlobalStyle />
@@ -95,9 +98,9 @@ export function Story() {
         </Subtitle>
       </Heading>
       <Content>
-        <Button onClick={() => alert('Clicked!')}>Normal Button</Button>
-        <Button $primary onClick={() => alert('Clicked!')}>
-          Primary Button
+        <Button onClick={() => setCount((prev) => ++prev)}>Increment</Button>
+        <Button $primary onClick={() => setCount((prev) => --prev)}>
+          Decrement
         </Button>
       </Content>
     </Body>

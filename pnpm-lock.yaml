@@ -501,6 +501,12 @@ importers:
       '@types/react':
         specifier: ^19.0.2
         version: 19.0.2
+      babel-plugin-react-compiler:
+        specifier: beta
+        version: 19.0.0-beta-55955c9-20241229
+      babel-plugin-styled-components:
+        specifier: ^2.1.4
+        version: 2.1.4(@babel/core@7.26.0)(styled-components@6.1.13(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -2236,6 +2242,11 @@ packages:
 
   babel-plugin-react-compiler@19.0.0-beta-55955c9-20241229:
     resolution: {integrity: sha512-APpa9fRiG5UN5kxnB/vznaSBKbXwAWZs6QshN3MLntzWa4cUhOxzUSd7Ohmr5sLQaM0ZHjjOg07pw1ZoR7+Oog==}
+
+  babel-plugin-styled-components@2.1.4:
+    resolution: {integrity: sha512-Xgp9g+A/cG47sUyRwwYxGM4bR/jDRg5N6it/8+HxCnbT5XNKSKDT9xm4oag/osgqjC2It/vH0yXsomOG6k558g==}
+    peerDependencies:
+      styled-components: '>= 2'
 
   babel-runtime@6.26.0:
     resolution: {integrity: sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==}
@@ -8386,6 +8397,18 @@ snapshots:
   babel-plugin-react-compiler@19.0.0-beta-55955c9-20241229:
     dependencies:
       '@babel/types': 7.26.3
+
+  babel-plugin-styled-components@2.1.4(@babel/core@7.26.0)(styled-components@6.1.13(react-dom@19.0.0(react@19.0.0))(react@19.0.0)):
+    dependencies:
+      '@babel/helper-annotate-as-pure': 7.25.9
+      '@babel/helper-module-imports': 7.25.9
+      '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.0)
+      lodash: 4.17.21
+      picomatch: 2.3.1
+      styled-components: 6.1.13(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
 
   babel-runtime@6.26.0:
     dependencies:
