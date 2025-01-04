@@ -17,6 +17,12 @@
       "require": "./lib/router.js",
       "default": "./lib/router.js"
     },
+    "./styled": {
+      "source": "./src/_exports/styled.ts",
+      "import": "./lib/styled.mjs",
+      "require": "./lib/styled.js",
+      "default": "./lib/styled.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./lib/index.js",
@@ -26,16 +32,31 @@
     "*": {
       "router": [
         "./lib/router.d.ts"
+      ],
+      "styled": [
+        "./lib/styled.d.ts"
       ]
     }
   },
   "files": [
     "lib",
     "src",
-    "router.js"
+    "router.js",
+    "styled.js"
   ],
   "scripts": {
     "build": "pkg-utils build --check --clean",
     "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "styled-components": "^6.1.13"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "styled-components": "*"
   }
 }
