@@ -22,12 +22,12 @@
   "scripts": {
     "build": "pkg build --strict --check --clean"
   },
-  "peerDependencies": {
-    "react": "^19"
-  },
   "devDependencies": {
     "@types/react": "^19.0.3",
     "babel-plugin-react-compiler": "beta",
     "react": "^19.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19"
   }
 }

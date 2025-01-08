@@ -22,9 +22,6 @@
   "scripts": {
     "build": "pkg build --strict --check --clean"
   },
-  "peerDependencies": {
-    "react": "^18 || ^19"
-  },
   "dependencies": {
     "react-compiler-runtime": "beta"
   },
@@ -32,5 +29,8 @@
     "@types/react": "^18.3.18",
     "babel-plugin-react-compiler": "beta",
     "react": "^18.3.1"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
   }
 }
