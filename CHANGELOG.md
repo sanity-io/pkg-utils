@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.4](https://github.com/sanity-io/pkg-utils/compare/v6.13.3...v6.13.4) (2025-01-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency typescript to v5.7.3 ([#1305](https://github.com/sanity-io/pkg-utils/issues/1305)) ([fd90ac1](https://github.com/sanity-io/pkg-utils/commit/fd90ac1cb307a6d26f8d37e7da93c57a71b47a69))
+* remove unused legacy react compiler build task ([#1304](https://github.com/sanity-io/pkg-utils/issues/1304)) ([7ee3da7](https://github.com/sanity-io/pkg-utils/commit/7ee3da7bf626b11bd6e9214491dd0506fc60992d))
+* revert regression in [#1298](https://github.com/sanity-io/pkg-utils/issues/1298) ([445ffc9](https://github.com/sanity-io/pkg-utils/commit/445ffc9026cf6e090b76db7fdfd003bbc7afb72b))
+
 ## [6.13.3](https://github.com/sanity-io/pkg-utils/compare/v6.13.2...v6.13.3) (2025-01-08)
 
 
