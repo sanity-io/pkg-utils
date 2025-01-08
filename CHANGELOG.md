@@ -5,6 +5,21 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.0](https://github.com/sanity-io/pkg-utils/compare/v6.13.4...v7.0.0) (2025-01-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove `legacyExports` ([#1315](https://github.com/sanity-io/pkg-utils/issues/1315))
+* remove `ae-forgotten-export` ([#1311](https://github.com/sanity-io/pkg-utils/issues/1311))
+* **deps:** Update dependency @microsoft/api-extractor to v7.49.0
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.49.0 ([bba1c34](https://github.com/sanity-io/pkg-utils/commit/bba1c34047246371f625ff456c4a1a81b3107d8e))
+* remove `ae-forgotten-export` ([#1311](https://github.com/sanity-io/pkg-utils/issues/1311)) ([924d0c2](https://github.com/sanity-io/pkg-utils/commit/924d0c2cb83ef4f3454e90e332f53439a2f82b2d))
+* remove `legacyExports` ([#1315](https://github.com/sanity-io/pkg-utils/issues/1315)) ([36d8155](https://github.com/sanity-io/pkg-utils/commit/36d8155df9129d3c1753c219be0fcd2244487242))
+
 ## [6.13.4](https://github.com/sanity-io/pkg-utils/compare/v6.13.3...v6.13.4) (2025-01-08)
 
 
