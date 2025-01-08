@@ -16,30 +16,26 @@ export type PkgRuntime = '*' | 'browser' | 'node'
 /** @public */
 export interface PkgExport {
   /** @internal */
-  '_exported'?: boolean
-  'browser'?: {
+  _exported?: boolean
+  browser?: {
     source: string
     import?: string
     require?: string
-  }
-  'react-compiler'?: {
-    source?: string
-    default: string
   }
   // electron?: {
   //   node?: string
   //   default?: string
   // }
-  'node'?: {
+  node?: {
     source?: string
     import?: string
     require?: string
   }
-  'types'?: string
-  'source': string
-  'import'?: string
-  'require'?: string
-  'default': string
+  types?: string
+  source: string
+  import?: string
+  require?: string
+  default: string
 }
 
 /** @public */
