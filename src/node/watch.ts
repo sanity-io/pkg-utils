@@ -32,8 +32,7 @@ export async function watch(options: {
       }
 
       const config = await loadConfig({cwd})
-      const legacyExports = config?.legacyExports ?? false
-      const pkg = await loadPkgWithReporting({cwd, logger, strict, legacyExports})
+      const pkg = await loadPkgWithReporting({cwd, logger, strict})
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
       return resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})

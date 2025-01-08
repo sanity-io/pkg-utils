@@ -3,7 +3,7 @@ import {resolve as resolvePath} from 'node:path'
 
 import type {Logger} from '../../logger'
 import type {InferredStrictOptions} from '../../strict'
-import {defaultEnding, fileEnding, legacyEnding} from '../../tasks/dts/getTargetPaths'
+import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths'
 import type {PkgExport} from '../config'
 import {isRecord} from '../isRecord'
 import {pkgExtMap} from './pkgExt'
@@ -16,10 +16,9 @@ export function parseExports(options: {
   pkg: PackageJSON
   strict: boolean
   strictOptions: InferredStrictOptions
-  legacyExports: boolean
   logger: Logger
 }): (PkgExport & {_path: string})[] {
-  const {cwd, pkg, strict, strictOptions, legacyExports, logger} = options
+  const {cwd, pkg, strict, strictOptions, logger} = options
   const type = pkg.type || 'commonjs'
   const errors: string[] = []
 
@@ -72,20 +71,12 @@ export function parseExports(options: {
           browserConditions.push(
             `      "import": ${JSON.stringify(pkg.browser?.[pkg.main].replace(fileEnding, extMap.esm))}`,
           )
-        } else if (legacyExports) {
-          const browserImport = pkg.main.replace(fileEnding, `.browser${extMap.esm}`)
-
-          browserConditions.push(`      "import": ${JSON.stringify(browserImport)}`)
         }
 
         if (pkg.browser?.[pkg.main]) {
           browserConditions.push(
             `      "require": ${JSON.stringify(pkg.browser[pkg.main].replace(fileEnding, extMap.commonjs))}`,
           )
-        } else if (legacyExports) {
-          const browserRequire = pkg.main.replace(fileEnding, `.browser${extMap.commonjs}`)
-
-          browserConditions.push(`      "require": ${JSON.stringify(browserRequire)}`)
         }
 
         if (browserConditions.length) {
@@ -106,11 +97,8 @@ export function parseExports(options: {
           `    "source": ${JSON.stringify(pkg.source)},`,
           // If browser conditions are detected then add them to the suggestion
           ...(maybeBrowserCondition.length > 0 ? maybeBrowserCondition : []),
-          // If legacy exports are enabled we suggest the full list of exports, if not we can use the terse version
-          (legacyExports || type === 'commonjs') &&
-            `    "import": ${JSON.stringify(importExport)},`,
-          (legacyExports || type === 'module') &&
-            `    "require": ${JSON.stringify(requireExport)},`,
+          type === 'commonjs' && `    "import": ${JSON.stringify(importExport)},`,
+          type === 'module' && `    "require": ${JSON.stringify(requireExport)},`,
           `    "default": ${JSON.stringify(defaultExport)}`,
           `  },`,
           `  "./package.json": "./package.json"`,
@@ -141,8 +129,6 @@ export function parseExports(options: {
   }
 
   const _exports: (PkgExport & {_path: string})[] = []
-
-  // @TODO validate typesVersions when legacyExports is true
 
   if (strict && strictOptions.noPackageJsonTypings !== 'off' && 'typings' in pkg) {
     report(strictOptions.noPackageJsonTypings, 'package.json: `typings` should be `types`')
@@ -202,18 +188,6 @@ export function parseExports(options: {
         if (fallback) {
           exp.default = fallback
         }
-
-        if (legacyExports) {
-          if (fallback) {
-            errors.push(
-              `package.json - \`exports["${exp._path}"].default\` should be set to "${fallback}" when "legacyExports" is true`,
-            )
-          } else {
-            errors.push(
-              `package.json - \`exports["${exp._path}"].default\` should be specified when "legacyExports" is true`,
-            )
-          }
-        }
       }
 
       // Infer the `require` condition based on the `type` and other conditions
@@ -233,23 +207,10 @@ export function parseExports(options: {
           )
         }
 
-        if (legacyExports) {
-          const indexLegacyExport = (exportEntry.import || exportEntry.require || '').replace(
-            /(\.esm)?\.[mc]?js$/,
-            legacyEnding,
+        if (exportEntry.import && pkg.module && exportEntry.import !== pkg.module) {
+          errors.push(
+            'package.json: mismatch between "module" and "exports.import" These must be equal.',
           )
-
-          if (indexLegacyExport !== pkg.module) {
-            errors.push(
-              `package.json: "module" should be "${indexLegacyExport}" when "legacyExports" is true`,
-            )
-          }
-        } else {
-          if (exportEntry.import && pkg.module && exportEntry.import !== pkg.module) {
-            errors.push(
-              'package.json: mismatch between "module" and "exports.import" These must be equal.',
-            )
-          }
         }
       }
 

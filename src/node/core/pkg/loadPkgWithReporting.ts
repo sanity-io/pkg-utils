@@ -11,23 +11,15 @@ export async function loadPkgWithReporting(options: {
   cwd: string
   logger: Logger
   strict: boolean
-  legacyExports: boolean
 }): Promise<PackageJSON> {
-  const {cwd, logger, strict, legacyExports} = options
+  const {cwd, logger, strict} = options
 
   try {
     const pkg = await loadPkg({cwd})
     let shouldError = false
 
     if (strict) {
-      if (legacyExports && pkg.type === 'commonjs') {
-        shouldError = true
-        logger.error(
-          `the \`type\` field in \`./package.json\` shouldn't be "commonjs" when \`legacyExports\` is set to true)`,
-        )
-      }
-
-      if (!legacyExports && !pkg.type) {
+      if (!pkg.type) {
         shouldError = true
         logger.error(
           `the \`type\` field in \`./package.json\` must be either "module" or "commonjs")`,

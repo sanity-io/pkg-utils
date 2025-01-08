@@ -12,7 +12,6 @@ export function validateExports(
 
   const errors: string[] = []
 
-  // @TODO validate that no exports declare the legacy exports
   for (const exp of _exports) {
     if (exp.require && !exp.require.endsWith(ext.commonjs)) {
       errors.push(
