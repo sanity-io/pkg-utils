@@ -1,4 +1,4 @@
-import {type Plugin} from './types'
+import type {Plugin} from './types'
 
 /** @public */
 export function definePlugin(plugin: Plugin): Plugin {

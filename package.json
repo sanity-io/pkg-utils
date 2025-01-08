@@ -1,6 +1,6 @@
 {
   "name": "@sanity/pkg-utils",
-  "version": "6.13.2",
+  "version": "6.13.3-canary.4",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -67,7 +67,7 @@
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
     "pretest": "run-s playground:clean",
-    "test": "vitest",
+    "test": "vitest run",
     "test:update-snapshots": "pnpm test run -- --update",
     "watch": "node -r esbuild-register scripts/watch"
   },
@@ -88,7 +88,7 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
     "@babel/types": "^7.26.3",
-    "@microsoft/api-extractor": "7.48.1",
+    "@microsoft/api-extractor": "7.49.0",
     "@microsoft/tsdoc-config": "0.17.1",
     "@optimize-lodash/rollup-plugin": "5.0.0",
     "@rollup/plugin-alias": "^5.1.1",
@@ -163,8 +163,7 @@
     "semver": "^7.6.0",
     "ts-node": "^10.9.2",
     "typescript": "5.7.2",
-    "vitest": "^2.1.8",
-    "vitest-github-actions-reporter": "^0.11.1"
+    "vitest": "^2.1.8"
   },
   "peerDependencies": {
     "babel-plugin-react-compiler": "*",

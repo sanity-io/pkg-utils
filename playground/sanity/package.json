@@ -4,6 +4,7 @@
   "description": "A minimal repro of how sanity likes to bundle things",
   "license": "MIT",
   "sideEffects": false,
+  "type": "commonjs",
   "exports": {
     ".": {
       "source": "./src/_exports/index.ts",
@@ -26,7 +27,7 @@
     "./package.json": "./package.json"
   },
   "main": "./lib/index.js",
-  "module": "./lib/index.esm.js",
+  "module": "./lib/index.mjs",
   "types": "./lib/index.d.ts",
   "typesVersions": {
     "*": {
@@ -45,7 +46,7 @@
     "styled.js"
   ],
   "scripts": {
-    "build": "pkg-utils build --check --clean",
+    "build": "pkg-utils build --check --clean --strict",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

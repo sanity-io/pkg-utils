@@ -183,8 +183,16 @@ export declare function definePlugin(plugin: Plugin_2): Plugin_2
 /** @public */
 declare interface Plugin_2 {
   name: string
+  options?: PluginOptions
 }
 export {Plugin_2 as Plugin}
+
+declare interface PluginOptions {
+  /**
+   * @defaultValue true
+   */
+  enabled?: boolean
+}
 
 export {}
 "
@@ -219,10 +227,21 @@ export {
 `;
 
 exports[`should build \`multi-export\` package 6`] = `
-"import {Plugin as Plugin_2} from 'multi-export'
+"/** @public */
+export declare function plugin(): Plugin_2
 
 /** @public */
-export declare function plugin(): Plugin_2
+declare interface Plugin_2 {
+  name: string
+  options?: PluginOptions
+}
+
+declare interface PluginOptions {
+  /**
+   * @defaultValue true
+   */
+  enabled?: boolean
+}
 
 export {}
 "
