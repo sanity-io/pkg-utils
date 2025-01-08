@@ -174,36 +174,6 @@ test.skipIf(isWindows)('should build `css-export` package', async () => {
   await project.remove()
 })
 
-describe.skip('runtime: webpack v3', () => {
-  test('import `dist/*.browser.js` from package', async () => {
-    const exportsDummy = await spawnProject('dummy-module')
-    const runtime = await spawnProject('runtime-webpack-v3')
-
-    // install and build dummy package
-    await exportsDummy.install()
-    await exportsDummy.run('build')
-
-    await runtime.install()
-
-    // build (uses webpack v3)
-    await runtime.run('build')
-
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const {index, extra} = runtime.require('dist/main.js')
-
-    expect(index.runtime).toBe('browser')
-    expect(index.format).toBe('esm')
-    expect(index.path).toBe('dist/index.browser.js')
-
-    expect(extra.runtime).toBe('browser')
-    expect(extra.format).toBe('esm')
-    expect(extra.path).toBe('dist/extra.browser.js')
-
-    await runtime.remove()
-    await exportsDummy.remove()
-  })
-})
-
 describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await spawnProject('dummy-module')

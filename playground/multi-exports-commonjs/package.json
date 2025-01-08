@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "sideEffects": false,
+  "type": "commonjs",
   "exports": {
     ".": {
       "source": "./src/index.ts",
@@ -22,7 +23,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.esm.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
@@ -35,7 +36,6 @@
     "dist"
   ],
   "scripts": {
-    "build": "pkg build --strict --check --clean",
-    "clean": "rimraf plugin.js"
+    "build": "pkg build --strict --check --clean"
   }
 }
