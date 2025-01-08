@@ -255,10 +255,9 @@ export interface PkgConfigOptions {
    */
   jsxImportSource?: string
   /**
-   * Build package with support for legacy exports (writes root `<export>.js` files)
-   * @deprecated - will be removed in the next major version
+   * @deprecated no longer supported
    */
-  legacyExports?: boolean
+  legacyExports?: never
   minify?: boolean
   /** @alpha */
   rollup?: {

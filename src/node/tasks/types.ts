@@ -22,16 +22,6 @@ export interface RollupTask {
 }
 
 /** @internal */
-export interface RollupLegacyTask {
-  type: 'build:legacy'
-  buildId: string
-  entries: RollupTaskEntry[]
-  runtime: PkgRuntime
-  format: 'esm'
-  target: string[]
-}
-
-/** @internal */
 export interface RollupWatchTask {
   type: 'watch:js'
   buildId: string
@@ -42,7 +32,7 @@ export interface RollupWatchTask {
 }
 
 /** @internal */
-export type BuildTask = DtsTask | RollupTask | RollupLegacyTask
+export type BuildTask = DtsTask | RollupTask
 
 /** @internal */
 export type WatchTask = DtsWatchTask | RollupWatchTask
@@ -59,7 +49,6 @@ export type TaskHandler<Task, Result = void> = {
 export interface BuildTaskHandlers {
   'build:dts': TaskHandler<DtsTask, DtsResult>
   'build:js': TaskHandler<RollupTask>
-  'build:legacy': TaskHandler<RollupLegacyTask>
 }
 
 /** @internal */

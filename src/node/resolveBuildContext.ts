@@ -96,7 +96,6 @@ export async function resolveBuildContext(options: {
     cwd,
     pkg,
     strict,
-    legacyExports: config?.legacyExports ?? false,
     strictOptions,
     logger,
   }).reduce<PkgExports>((acc, x) => {

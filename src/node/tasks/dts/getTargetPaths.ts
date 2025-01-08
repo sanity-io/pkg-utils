@@ -7,8 +7,6 @@ export const dtsEnding = '.d.ts' as const
 /** @internal */
 export const defaultEnding = '.js' as const
 /** @internal */
-export const legacyEnding = `.esm${defaultEnding}` as const
-/** @internal */
 export const mjsEnding = '.mjs' as const
 /** @internal */
 export const cjsEnding = '.cjs' as const

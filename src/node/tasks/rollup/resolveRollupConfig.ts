@@ -14,7 +14,7 @@ import esbuild from 'rollup-plugin-esbuild'
 
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
 import {type BuildContext, type PackageJSON, resolveConfigProperty} from '../../core'
-import type {RollupLegacyTask, RollupTask, RollupWatchTask} from '../types'
+import type {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -24,12 +24,11 @@ export interface RollupConfig {
 /** @internal */
 export function resolveRollupConfig(
   ctx: BuildContext,
-  buildTask: RollupTask | RollupLegacyTask | RollupWatchTask,
+  buildTask: RollupTask | RollupWatchTask,
 ): RollupConfig {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
-  const isLegacyExports = buildTask.type === 'build:legacy'
-  const outputExt = isLegacyExports ? extMap.legacy : extMap[pkg.type || 'commonjs'][format]
+  const outputExt = extMap[pkg.type || 'commonjs'][format]
   const minify = config?.minify ?? false
   const outDir = path.relative(cwd, distPath)
 
@@ -180,13 +179,9 @@ export function resolveRollupConfig(
     : resolveConfigProperty(config?.rollup?.plugins, defaultPlugins)
 
   const hashChunkFileNames = config?.rollup?.hashChunkFileNames ?? false
-  const chunksFolder = isLegacyExports
-    ? '_legacy'
-    : hashChunkFileNames
-      ? '_chunks'
-      : '_chunks-[format]'
+  const chunksFolder = hashChunkFileNames ? '_chunks' : '_chunks-[format]'
   const chunkFileNames = `${chunksFolder}/${hashChunkFileNames ? '[name]-[hash]' : '[name]'}${outputExt}`
-  const entryFileNames = isLegacyExports ? '[name].js' : `[name]${outputExt}`
+  const entryFileNames = `[name]${outputExt}`
 
   return {
     inputOptions: {

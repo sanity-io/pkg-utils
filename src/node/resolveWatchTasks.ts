@@ -1,4 +1,3 @@
-import fs from 'node:fs'
 import path from 'node:path'
 
 import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
@@ -7,7 +6,7 @@ import {getTargetPaths} from './tasks/dts/getTargetPaths'
 
 /** @internal */
 export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
-  const {config, cwd, pkg, target} = ctx
+  const {pkg, target} = ctx
   const tasks: WatchTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(
@@ -127,27 +126,6 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
   }
 
   tasks.push(...Object.values(rollupTasks))
-
-  // Write legacy exports files
-  if (config?.legacyExports) {
-    for (const exp of exports) {
-      if (exp._exported && exp._path !== '.') {
-        const relativeTargetPath = (exp.browser?.import || exp.import || '').replace(
-          /\.[^/.]+$/,
-          '',
-        )
-
-        if (relativeTargetPath) {
-          fs.writeFileSync(
-            path.resolve(cwd, `${exp._path}.js`),
-            [`// AUTO-GENERATED – DO NOT EDIT`, `export * from '${relativeTargetPath}'`, ``].join(
-              '\n',
-            ),
-          )
-        }
-      }
-    }
-  }
 
   return tasks
 }
