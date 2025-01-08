@@ -22,6 +22,11 @@
       "matchPackageNames": ["typescript"],
       "rangeStrategy": "bump",
       "semanticCommitType": "fix"
+    },
+    {
+      "matchFileNames": ["playground/react-18/package.json"],
+      "matchPackageNames": ["react"],
+      "allowedVersions": "<=18"
     }
   ]
 }
