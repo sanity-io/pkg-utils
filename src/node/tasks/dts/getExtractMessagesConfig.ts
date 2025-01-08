@@ -38,7 +38,7 @@ export function getExtractMessagesConfig(options: {
       },
 
       'ae-forgotten-export': {
-        logLevel: ruleToLogLevel('ae-forgotten-export', 'error' as ExtractorLogLevel),
+        logLevel: ruleToLogLevel('ae-forgotten-export', 'none' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 

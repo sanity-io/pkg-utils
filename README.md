@@ -89,7 +89,6 @@ Override or modify the value of the `exports` before it’s parsed internally.
   ```ts
   {
     rules?: {
-      'ae-forgotten-export'?: PkgRuleLevel
       'ae-incompatible-release-tags'?: PkgRuleLevel
       'ae-internal-missing-underscore'?: PkgRuleLevel
       'ae-missing-release-tag'?: PkgRuleLevel

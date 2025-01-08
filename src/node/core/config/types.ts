@@ -222,6 +222,9 @@ export interface PkgConfigOptions {
     bundledPackages?: PkgConfigProperty<string[]>
     customTags?: TSDocCustomTag[]
     rules?: {
+      /**
+       * @deprecated as it's no longer needed since TypeScript 5.5 https://github.com/microsoft/TypeScript/issues/42873
+       */
       'ae-forgotten-export'?: PkgRuleLevel
       'ae-incompatible-release-tags'?: PkgRuleLevel
       'ae-internal-missing-underscore'?: PkgRuleLevel
