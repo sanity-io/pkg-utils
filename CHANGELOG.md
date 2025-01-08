@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.3](https://github.com/sanity-io/pkg-utils/compare/v6.13.2...v6.13.3) (2025-01-08)
+
+
+### Bug Fixes
+
+* deprecate `ae-forgotten-export` ([6f916d3](https://github.com/sanity-io/pkg-utils/commit/6f916d392830f6d2762fbfc0d302ef92967c9aea))
+* deprecate `legacyExports` ([354b4a5](https://github.com/sanity-io/pkg-utils/commit/354b4a5377967671ca9c35a6f29d2914bcadc84d))
+* **deps:** Update dependency @microsoft/api-extractor to v7.49.0 ([#1298](https://github.com/sanity-io/pkg-utils/issues/1298)) ([af37de2](https://github.com/sanity-io/pkg-utils/commit/af37de2abd614017e6f1c9ba2bba7490ebee03eb))
+* **deps:** Update dependency browserslist to ^4.24.4 ([#1300](https://github.com/sanity-io/pkg-utils/issues/1300)) ([fa245be](https://github.com/sanity-io/pkg-utils/commit/fa245beb21469bbc4fe968875b8dd2edd85c93af))
+
 ## [6.13.2](https://github.com/sanity-io/pkg-utils/compare/v6.13.1...v6.13.2) (2025-01-07)
 
 
