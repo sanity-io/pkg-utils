@@ -221,7 +221,7 @@ export interface PkgConfigOptions {
       /**
        * @deprecated as it's no longer needed since TypeScript 5.5 https://github.com/microsoft/TypeScript/issues/42873
        */
-      'ae-forgotten-export'?: PkgRuleLevel
+      'ae-forgotten-export'?: never
       'ae-incompatible-release-tags'?: PkgRuleLevel
       'ae-internal-missing-underscore'?: PkgRuleLevel
       'ae-missing-release-tag'?: PkgRuleLevel
