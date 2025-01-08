@@ -1,6 +1,6 @@
 {
-  "name": "use-client-directive",
-  "version": "1.0.0",
+  "name": "react-18",
+  "version": "0.0.0-development",
   "private": true,
   "license": "MIT",
   "sideEffects": false,
@@ -8,7 +8,6 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "react-server": "./lib/index.js",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
@@ -21,14 +20,17 @@
     "dist"
   ],
   "scripts": {
-    "build": "pkg build --strict --check --clean",
-    "clean": "rimraf dist"
-  },
-  "devDependencies": {
-    "@types/react": "^19.0.3",
-    "react": "^19.0.0"
+    "build": "pkg build --strict --check --clean"
   },
   "peerDependencies": {
-    "react": "^18.2.0 || ^19.0.0"
+    "react": "^18 || ^19"
+  },
+  "dependencies": {
+    "react-compiler-runtime": "beta"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "babel-plugin-react-compiler": "beta",
+    "react": "^18.3.1"
   }
 }
