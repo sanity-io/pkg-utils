@@ -1,11 +1,6 @@
 import {z} from 'zod'
 
-import type {PkgImportCondition} from '../config/types'
 import type {PackageJSON} from './types'
-
-const recursiveImportConditions: z.ZodType<PkgImportCondition> = z.lazy(() =>
-  z.record(z.string(), z.union([z.string(), recursiveImportConditions])),
-)
 
 const pkgSchema = z.object({
   type: z.optional(z.enum(['commonjs', 'module'])),
@@ -24,7 +19,7 @@ const pkgSchema = z.object({
   imports: z.optional(
     z.record(
       z.custom<`#${string}`>((val) => typeof val === 'string' && val.startsWith('#')),
-      recursiveImportConditions,
+      z.union([z.record(z.string()), z.string()]),
     ),
   ),
   exports: z.optional(
@@ -46,11 +41,14 @@ const pkgSchema = z.object({
             ]),
           ),
           node: z.optional(
-            z.object({
-              source: z.optional(z.string()),
-              import: z.optional(z.string()),
-              require: z.optional(z.string()),
-            }),
+            z.union([
+              z.object({
+                source: z.optional(z.string()),
+                import: z.optional(z.string()),
+                require: z.optional(z.string()),
+              }),
+              z.string(),
+            ]),
           ),
           import: z.optional(z.string()),
           require: z.optional(z.string()),

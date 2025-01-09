@@ -38,16 +38,6 @@ export interface PkgExport {
   default: string
 }
 
-export interface PkgImportCondition {
-  [key: string]: string | PkgImportCondition | undefined
-}
-
-/**
- * Represents conditional package.json imports
- * @internal
- */
-export type PkgImports = Record<`#${string}`, PkgImportCondition | undefined>
-
 /** @public */
 export type PkgConfigPropertyResolver<T> = (prev: T) => T
 
