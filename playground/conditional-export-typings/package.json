@@ -1,0 +1,66 @@
+{
+  "name": "conditional-export-typings",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "imports": {
+    "#env": {
+      "browser": "./src/env.browser.ts",
+      "node": "./src/env.node.ts",
+      "default": "./src/env.default.ts"
+    },
+    "#url": {
+      "browser": "./src/middleware/url.browser.ts",
+      "node": "./src/middleware/url.node.ts",
+      "default": "./src/middleware/url.default.ts"
+    }
+  },
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "browser": {
+        "import": "./dist/index.browser.js",
+        "require": "./dist/index.browser.cjs"
+      },
+      "node": {
+        "import": "./dist/index.node.js",
+        "require": "./dist/index.node.cjs"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./middleware": {
+      "source": "./src/middleware/index.ts",
+      "browser": {
+        "import": "./dist/middleware.browser.js",
+        "require": "./dist/middleware.browser.cjs"
+      },
+      "node": {
+        "import": "./dist/middleware.node.js",
+        "require": "./dist/middleware.node.cjs"
+      },
+      "import": "./dist/middleware/index.js",
+      "require": "./dist/middleware/index.cjs",
+      "default": "./dist/middleware/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "middleware": [
+        "./dist/middleware.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean"
+  }
+}
