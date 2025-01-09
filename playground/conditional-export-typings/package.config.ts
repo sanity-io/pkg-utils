@@ -5,14 +5,14 @@ export default defineConfig({
   bundles: [
     {
       source: './src/index.ts',
-      require: './dist/index.browser.cjs',
-      import: './dist/index.browser.js',
-      runtime: 'browser',
-    },
-    {
-      source: './src/index.ts',
       require: './dist/index.node.cjs',
       import: './dist/index.node.js',
+      runtime: 'node',
+    },
+    {
+      source: './src/middleware/index.ts',
+      require: './dist/middleware/index.node.cjs',
+      import: './dist/middleware/index.node.js',
       runtime: 'node',
     },
   ],

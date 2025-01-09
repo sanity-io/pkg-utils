@@ -3,6 +3,8 @@ import path from 'node:path'
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import ts from 'typescript'
 
+import type {PkgRuntime} from '../../../node/core'
+
 export function createApiExtractorConfig(options: {
   bundledPackages?: string[]
   distPath: string
@@ -13,6 +15,7 @@ export function createApiExtractorConfig(options: {
   mainEntryPointFilePath: string
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
+  runtime: PkgRuntime
 }): IConfigFile {
   const {
     bundledPackages,
@@ -24,6 +27,7 @@ export function createApiExtractorConfig(options: {
     mainEntryPointFilePath,
     tsconfig,
     tsconfigPath,
+    runtime,
   } = options
 
   return {
@@ -33,18 +37,24 @@ export function createApiExtractorConfig(options: {
     },
     bundledPackages,
 
-    // If `paths` are used for self-referencing imports (e.g. the module is named `sanity`, and the `sanity/structure` export is also importing from `sanity/router`),
-    compiler: tsconfig.options.paths
-      ? {
-          overrideTsconfig: {
-            extends: tsconfigPath,
-            compilerOptions: {
-              // An empty object replaces whatever is in the original tsconfig file
-              paths: {},
-            },
-          },
-        }
-      : {tsconfigFilePath: tsconfigPath},
+    compiler: {
+      overrideTsconfig: {
+        extends: tsconfigPath,
+        compilerOptions: {
+          // If `paths` are used for self-referencing imports (e.g. the module is named `sanity`, and the `sanity/structure` export is also importing from `sanity/router`),
+          // An empty object replaces whatever is in the original tsconfig file
+          paths: tsconfig.options.paths ? {} : undefined,
+          customConditions:
+            runtime === 'browser'
+              ? ['api-extractor', 'browser']
+              : runtime === 'node'
+                ? ['api-extractor', 'node']
+                : [],
+        },
+      },
+    },
+    // @TODO when api-extractor natively supports export conditions we can go back to this config:
+    // compiler: {tsconfigFilePath: tsconfigPath}
 
     docModel: {
       enabled: false,

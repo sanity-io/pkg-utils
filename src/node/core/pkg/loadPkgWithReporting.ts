@@ -53,14 +53,19 @@ export async function loadPkgWithReporting(options: {
         }
 
         if (exp.node) {
-          if (exp.import && exp.node.import && !assertOrder('node', 'import', keys)) {
+          if (
+            exp.import &&
+            typeof exp.node !== 'string' &&
+            exp.node.import &&
+            !assertOrder('node', 'import', keys)
+          ) {
             shouldError = true
             logger.error(
               `exports["${expPath}"]: the \`node\` property should come before the \`import\` property`,
             )
           }
 
-          if (exp.node.module) {
+          if (typeof exp.node !== 'string' && exp.node.module) {
             shouldError = true
             logger.error(
               `exports["${expPath}"]: the \`node.module\` condition shouldn't be used as it's not well supported in all bundlers. A better strategy is to refactor the codebase to no longer be vulnerable to the "dual package hazard"`,
@@ -68,6 +73,7 @@ export async function loadPkgWithReporting(options: {
           }
 
           if (
+            typeof exp.node !== 'string' &&
             !exp.node.source &&
             exp.node.import &&
             (exp.node.require || exp.require) &&
@@ -79,12 +85,22 @@ export async function loadPkgWithReporting(options: {
             )
           }
 
-          if (exp.require && exp.node.require && exp.require === exp.node.require) {
+          if (
+            typeof exp.node !== 'string' &&
+            exp.require &&
+            exp.node.require &&
+            exp.require === exp.node.require
+          ) {
             shouldError = true
             logger.error(
               `exports["${expPath}"]: the \`node.require\` property isn't necessary as it's identical to \`require\``,
             )
-          } else if (exp.require && exp.node.require && !assertOrder('node', 'require', keys)) {
+          } else if (
+            typeof exp.node !== 'string' &&
+            exp.require &&
+            exp.node.require &&
+            !assertOrder('node', 'require', keys)
+          ) {
             shouldError = true
             logger.error(
               `exports["${expPath}"]: the \`node\` property should come before the \`require\` property`,

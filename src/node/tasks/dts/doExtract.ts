@@ -1,9 +1,10 @@
 import path from 'node:path'
 
 import type {ExtractorMessage} from '@microsoft/api-extractor'
-import rimraf from 'rimraf'
 
+// import rimraf from 'rimraf'
 import type {BuildContext} from '../../core'
+// import {buildTemporaryImportsPackageJson} from './buildTemporaryImportsPackageJson'
 import {buildTypes} from './buildTypes'
 import {DtsError} from './DtsError'
 import {extractTypes} from './extractTypes'
@@ -33,6 +34,12 @@ export async function doExtract(
   const tmpPath = path.resolve(outDir, '__tmp__')
 
   await buildTypes({cwd, logger, outDir: tmpPath, strict, tsconfig: ts.config})
+
+  // Support conditional imports when extracting types
+  // if (pkg.imports) {
+  //   await buildTemporaryImportsPackageJson({pkg}, tmpPath)
+  // }
+
   const messages: ExtractorMessage[] = []
 
   const results: {sourcePath: string; filePaths: string[]}[] = []
@@ -61,6 +68,7 @@ export async function doExtract(
       tsconfig: ts.config,
       tmpPath,
       tsconfigPath: path.resolve(cwd, ts.configPath || 'tsconfig.json'),
+      runtime: entry.runtime,
     })
 
     messages.push(...result.messages)
@@ -74,7 +82,7 @@ export async function doExtract(
     results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePaths: targetPaths})
   }
 
-  await rimraf(tmpPath)
+  // await rimraf(tmpPath)
 
   return {type: 'dts', messages, results}
 }

@@ -90,6 +90,7 @@ export function resolveRollupConfig(
     }),
     nodeResolve({
       browser: runtime === 'browser',
+      exportConditions: runtime === 'browser' ? ['browser'] : runtime === 'node' ? ['node'] : [],
       extensions: ['.cjs', '.mjs', '.js', '.jsx', '.json', '.node'],
       preferBuiltins: true,
     }),

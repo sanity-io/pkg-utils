@@ -7,11 +7,21 @@
   "type": "module",
   "imports": {
     "#env": {
+      "api-extractor": {
+        "browser": "./dist/__tmp__/src/env.browser.ts",
+        "node": "./dist/__tmp__/src/env.node.ts",
+        "default": "./dist/__tmp__/src/env.default.ts"
+      },
       "browser": "./src/env.browser.ts",
       "node": "./src/env.node.ts",
       "default": "./src/env.default.ts"
     },
     "#url": {
+      "api-extractor": {
+        "browser": "./dist/__tmp__/src/middleware/url.browser.ts",
+        "node": "./dist/__tmp__/src/middleware/url.node.ts",
+        "default": "./dist/__tmp__/src/middleware/url.default.ts"
+      },
       "browser": "./src/middleware/url.browser.ts",
       "node": "./src/middleware/url.node.ts",
       "default": "./src/middleware/url.default.ts"
@@ -21,6 +31,7 @@
     ".": {
       "source": "./src/index.ts",
       "browser": {
+        "source": "./src/index.ts",
         "import": "./dist/index.browser.js",
         "require": "./dist/index.browser.cjs"
       },
@@ -35,12 +46,13 @@
     "./middleware": {
       "source": "./src/middleware/index.ts",
       "browser": {
-        "import": "./dist/middleware.browser.js",
-        "require": "./dist/middleware.browser.cjs"
+        "source": "./src/middleware/index.ts",
+        "import": "./dist/middleware/index.browser.js",
+        "require": "./dist/middleware/index.browser.cjs"
       },
       "node": {
-        "import": "./dist/middleware.node.js",
-        "require": "./dist/middleware.node.cjs"
+        "import": "./dist/middleware/index.node.js",
+        "require": "./dist/middleware/index.node.cjs"
       },
       "import": "./dist/middleware/index.js",
       "require": "./dist/middleware/index.cjs",

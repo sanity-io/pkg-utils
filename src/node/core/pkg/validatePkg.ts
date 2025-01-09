@@ -19,7 +19,7 @@ const pkgSchema = z.object({
   imports: z.optional(
     z.record(
       z.custom<`#${string}`>((val) => typeof val === 'string' && val.startsWith('#')),
-      z.union([z.record(z.string()), z.string()]),
+      z.record(z.union([z.record(z.string()), z.string()])),
     ),
   ),
   exports: z.optional(
@@ -33,7 +33,7 @@ const pkgSchema = z.object({
           browser: z.optional(
             z.union([
               z.object({
-                source: z.string(),
+                source: z.optional(z.string()),
                 import: z.optional(z.string()),
                 require: z.optional(z.string()),
               }),

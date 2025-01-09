@@ -1,2 +1,2 @@
-export {env} from '#env'
+export {env} from '../env'
 export {parse} from '#url'

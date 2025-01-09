@@ -11,7 +11,9 @@ export interface PackageJSON {
   dependencies?: Record<string, string | undefined>
   devDependencies?: Record<string, string | undefined>
   peerDependencies?: Record<string, string | undefined>
-  imports?: Partial<Record<`#${string}`, string | Record<string, string>>> | undefined
+  imports?:
+    | Partial<Record<`#${string}`, string | Record<string, string | Record<string, string>>>>
+    | undefined
   exports?: Record<
     string,
     | `./${string}.json`

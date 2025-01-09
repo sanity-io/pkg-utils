@@ -8,10 +8,10 @@ import {
   type ExtractorResult,
 } from '@microsoft/api-extractor'
 import {mkdirp} from 'mkdirp'
-import prettier from 'prettier'
+// import prettier from 'prettier'
 import type ts from 'typescript'
 
-import type {BuildFile, PkgConfigOptions} from '../../core'
+import type {BuildFile, PkgConfigOptions, PkgRuntime} from '../../core'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
 import {createTSDocConfig} from './createTSDocConfig'
 import {extractModuleBlocksFromTypes} from './extractModuleBlocks'
@@ -31,6 +31,7 @@ export async function extractTypes(options: {
   tmpPath: string
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
+  runtime: PkgRuntime
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
   const {
     bundledPackages,
@@ -45,6 +46,7 @@ export async function extractTypes(options: {
     tmpPath,
     tsconfig,
     tsconfigPath,
+    runtime,
   } = options
 
   const tsdocConfigFile = await createTSDocConfig({
@@ -65,6 +67,7 @@ export async function extractTypes(options: {
       mainEntryPointFilePath: sourceTypesPath,
       tsconfig,
       tsconfigPath,
+      runtime,
     }),
     configObjectFullPath: undefined,
     tsdocConfigFile,
@@ -88,7 +91,7 @@ export async function extractTypes(options: {
 
   const typesPath = path.resolve(distPath, filePath)
   const typesBuf = await fs.readFile(typesPath)
-  const prettierConfig = await prettier.resolveConfig(typesPath)
+  // const prettierConfig = await prettier.resolveConfig(typesPath)
 
   await mkdirp(path.dirname(typesPath))
 
@@ -98,10 +101,13 @@ export async function extractTypes(options: {
   })
 
   const code = [typesBuf.toString(), ...moduleBlocks].join('\n\n')
+  const prettyCode = code
+  /*
   const prettyCode = await prettier.format(code, {
     ...prettierConfig,
     filepath: typesPath,
   })
+  // */
 
   for (const expFilePath of filePaths) {
     const expTypesPath = path.resolve(distPath, expFilePath)
