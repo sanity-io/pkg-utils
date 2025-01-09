@@ -54,3 +54,35 @@ exports[`'typesversions' is not a valid key, did you mean 'typesVersions'? 1`] =
 [TypeError: 
 - package.json: "typesversions" is not a valid key. Did you mean "typesVersions"?]
 `;
+
+exports[`conditional imports must be prefixed with # 1`] = `
+[ZodError: [
+  {
+    "code": "custom",
+    "fatal": true,
+    "path": [
+      "imports",
+      "env"
+    ],
+    "message": "Invalid input"
+  }
+]]
+`;
+
+exports[`conditional imports must be prefixed with # 2`] = `
+{
+  "exports": {
+    "./package.json": "./package.json",
+  },
+  "imports": {
+    "#env": {
+      "browser": "./src/index.browser.ts",
+      "default": "./src/index.ts",
+    },
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "type": "module",
+  "version": "0.0.0",
+}
+`;

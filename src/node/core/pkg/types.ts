@@ -1,3 +1,5 @@
+import type {PkgImports} from '../config'
+
 /** @internal */
 export interface PackageJSON {
   type?: 'commonjs' | 'module'
@@ -11,6 +13,7 @@ export interface PackageJSON {
   dependencies?: Record<string, string | undefined>
   devDependencies?: Record<string, string | undefined>
   peerDependencies?: Record<string, string | undefined>
+  imports?: PkgImports | undefined
   exports?: Record<
     string,
     | `./${string}.json`
