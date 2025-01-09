@@ -297,8 +297,8 @@ importers:
   playground/multi-export:
     devDependencies:
       '@sanity/visual-editing':
-        specifier: ^2.11.5
-        version: 2.11.5(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)
+        specifier: ^2.11.7
+        version: 2.11.7(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)
       '@sveltejs/adapter-auto':
         specifier: ^3.3.1
         version: 3.3.1(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))
@@ -1629,17 +1629,17 @@ packages:
     peerDependencies:
       prettier: ^3.2.5
 
-  '@sanity/preview-url-secret@2.0.5':
-    resolution: {integrity: sha512-YWExuJ/Z0CW37vYdiouE9A/NAN3QEewZL6qu6IohXqVY6wDDT0b9ubetTR4Op1kzmK6WbPGj79aiHrPubrM70A==}
+  '@sanity/preview-url-secret@2.0.6':
+    resolution: {integrity: sha512-6HHO0+grjJ9atqXMxHSZSwPgZGLMVN+om2DZLdghKmM5/PCAT3osmV++Buutxj+qOZF97awzJDAghpNZ3O8iDg==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@sanity/client': ^6.23.0
+      '@sanity/client': ^6.24.1
 
   '@sanity/uuid@3.0.2':
     resolution: {integrity: sha512-vzdhqOrX7JGbMyK40KuIwwyXHm7GMLOGuYgn3xlC09e4ZVNofUO5mgezQqnRv0JAMthIRhofqs9f6ufUjMKOvw==}
 
-  '@sanity/visual-editing@2.11.5':
-    resolution: {integrity: sha512-9rBp20dW5VxYB+5k/BPoJKS7yWV4vM8WXA1hG0MR7B1e4eRxhpZGbUWTV9Zqym3u4FcH8AUh+lnEf1yPJc35jw==}
+  '@sanity/visual-editing@2.11.7':
+    resolution: {integrity: sha512-bsyaySU7ELmFl/1j1CJKSzPPh2RU8W7vkmOQuBa95/5uVyZWP0C1FhEGbY9KCXGilhhpblb8vGSiRAKolP0EqA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
@@ -6969,7 +6969,7 @@ snapshots:
       prettier: 3.4.2
       prettier-plugin-packagejson: 2.5.6(prettier@3.4.2)
 
-  '@sanity/preview-url-secret@2.0.5(@sanity/client@6.24.2)':
+  '@sanity/preview-url-secret@2.0.6(@sanity/client@6.24.2)':
     dependencies:
       '@sanity/client': 6.24.2
       '@sanity/uuid': 3.0.2
@@ -6979,11 +6979,11 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing@2.11.5(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)':
+  '@sanity/visual-editing@2.11.7(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)':
     dependencies:
       '@sanity/comlink': 2.0.4
       '@sanity/mutate': 0.11.0-canary.4(xstate@5.19.1)
-      '@sanity/preview-url-secret': 2.0.5(@sanity/client@6.24.2)
+      '@sanity/preview-url-secret': 2.0.6(@sanity/client@6.24.2)
       '@vercel/stega': 0.1.2
       get-random-values-esm: 1.0.2
       react: 19.0.0
