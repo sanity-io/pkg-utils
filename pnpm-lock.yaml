@@ -297,8 +297,8 @@ importers:
   playground/multi-export:
     devDependencies:
       '@sanity/visual-editing':
-        specifier: ^2.11.7
-        version: 2.11.7(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)
+        specifier: ^2.12.0
+        version: 2.12.0(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)
       '@sveltejs/adapter-auto':
         specifier: ^3.3.1
         version: 3.3.1(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))
@@ -1604,8 +1604,8 @@ packages:
     resolution: {integrity: sha512-0PnU2AkdOgPPziz1pzuXG09mHH5jBOSA/YaNAk14cu/Y0Nx48SpMjHvBrUk10Vg+cd4yXX+g7THKcuqk+909CQ==}
     engines: {node: '>=14.18'}
 
-  '@sanity/comlink@2.0.4':
-    resolution: {integrity: sha512-ODjmZZJ4a4hiSK4TaQk2ysppIweIj6UNZ7o+fAkh7hotwcLxh+qTo8Rpb5yW2UfqGSAWTQDMcta9/4HAMWGfUA==}
+  '@sanity/comlink@3.0.0':
+    resolution: {integrity: sha512-R6oUq5GrLIldCCHFpVZbZt4Zuw9QWUeA1A1YhRJxifarTj+RDETIfDGenioKGvUAZeeVhADMooG33xzyQor45w==}
     engines: {node: '>=18'}
 
   '@sanity/diff-match-patch@3.1.2':
@@ -1629,8 +1629,8 @@ packages:
     peerDependencies:
       prettier: ^3.2.5
 
-  '@sanity/preview-url-secret@2.0.6':
-    resolution: {integrity: sha512-6HHO0+grjJ9atqXMxHSZSwPgZGLMVN+om2DZLdghKmM5/PCAT3osmV++Buutxj+qOZF97awzJDAghpNZ3O8iDg==}
+  '@sanity/preview-url-secret@2.1.0':
+    resolution: {integrity: sha512-tnRnbPAhEgUp0mESCRJmScbvEC8r+UwJXDN0mwAv1das6FBUMP5VvvvPa+E/OhEDs8QLTFs0q+G9JpbgvK3DSw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@sanity/client': ^6.24.1
@@ -1638,8 +1638,8 @@ packages:
   '@sanity/uuid@3.0.2':
     resolution: {integrity: sha512-vzdhqOrX7JGbMyK40KuIwwyXHm7GMLOGuYgn3xlC09e4ZVNofUO5mgezQqnRv0JAMthIRhofqs9f6ufUjMKOvw==}
 
-  '@sanity/visual-editing@2.11.7':
-    resolution: {integrity: sha512-bsyaySU7ELmFl/1j1CJKSzPPh2RU8W7vkmOQuBa95/5uVyZWP0C1FhEGbY9KCXGilhhpblb8vGSiRAKolP0EqA==}
+  '@sanity/visual-editing@2.12.0':
+    resolution: {integrity: sha512-cfboVokNtU9ANFOiPJHlbJ6SR/JzS3zXgasFHt5M+F8/w8NKsFVD/NbbAkj4fVZAqbmeMbK1/haFn2dyRhTeOQ==}
     engines: {node: '>=18'}
     peerDependencies:
       '@remix-run/react': '>= 2'
@@ -6935,7 +6935,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sanity/comlink@2.0.4':
+  '@sanity/comlink@3.0.0':
     dependencies:
       rxjs: 7.8.1
       uuid: 11.0.4
@@ -6969,7 +6969,7 @@ snapshots:
       prettier: 3.4.2
       prettier-plugin-packagejson: 2.5.6(prettier@3.4.2)
 
-  '@sanity/preview-url-secret@2.0.6(@sanity/client@6.24.2)':
+  '@sanity/preview-url-secret@2.1.0(@sanity/client@6.24.2)':
     dependencies:
       '@sanity/client': 6.24.2
       '@sanity/uuid': 3.0.2
@@ -6979,11 +6979,11 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing@2.11.7(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)':
+  '@sanity/visual-editing@2.12.0(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(svelte@5.17.1)(vite@5.4.11(@types/node@20.17.12)(terser@5.37.0)))(next@15.1.4(@babel/core@7.26.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)':
     dependencies:
-      '@sanity/comlink': 2.0.4
+      '@sanity/comlink': 3.0.0
       '@sanity/mutate': 0.11.0-canary.4(xstate@5.19.1)
-      '@sanity/preview-url-secret': 2.0.6(@sanity/client@6.24.2)
+      '@sanity/preview-url-secret': 2.1.0(@sanity/client@6.24.2)
       '@vercel/stega': 0.1.2
       get-random-values-esm: 1.0.2
       react: 19.0.0
