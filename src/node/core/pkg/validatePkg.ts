@@ -16,6 +16,12 @@ const pkgSchema = z.object({
   browser: z.optional(z.record(z.string())),
   module: z.optional(z.string()),
   types: z.optional(z.string()),
+  imports: z.optional(
+    z.record(
+      z.custom<`#${string}`>((val) => typeof val === 'string' && val.startsWith('#')),
+      z.record(z.union([z.record(z.string()), z.string()])),
+    ),
+  ),
   exports: z.optional(
     z.record(
       z.union([
@@ -25,18 +31,24 @@ const pkgSchema = z.object({
           types: z.optional(z.string()),
           source: z.optional(z.string()),
           browser: z.optional(
-            z.object({
-              source: z.string(),
-              import: z.optional(z.string()),
-              require: z.optional(z.string()),
-            }),
+            z.union([
+              z.object({
+                source: z.optional(z.string()),
+                import: z.optional(z.string()),
+                require: z.optional(z.string()),
+              }),
+              z.string(),
+            ]),
           ),
           node: z.optional(
-            z.object({
-              source: z.optional(z.string()),
-              import: z.optional(z.string()),
-              require: z.optional(z.string()),
-            }),
+            z.union([
+              z.object({
+                source: z.optional(z.string()),
+                import: z.optional(z.string()),
+                require: z.optional(z.string()),
+              }),
+              z.string(),
+            ]),
           ),
           import: z.optional(z.string()),
           require: z.optional(z.string()),
