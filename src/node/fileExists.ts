@@ -6,7 +6,7 @@ export function fileExists(filePath: string): boolean {
     statSync(filePath)
 
     return true
-  } catch (_) {
+  } catch {
     return false
   }
 }
