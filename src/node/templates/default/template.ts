@@ -33,7 +33,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             gitUrlParse(v)
 
             return true
-          } catch (err) {
+          } catch {
             return 'invalid git url'
           }
         },

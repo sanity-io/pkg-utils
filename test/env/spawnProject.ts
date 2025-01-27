@@ -47,7 +47,7 @@ export function spawnProject(name: string): Promise<{
             return
           }
 
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
           const pkg = require(path.resolve(tmpPath, 'package.json'))
 
           async function runExec(cmd: string) {
@@ -85,6 +85,7 @@ export function spawnProject(name: string): Promise<{
             readFile: (filePath: string) =>
               fs.readFile(path.resolve(tmpPath, filePath)).then((r) => r.toString()),
             remove: tmpRemove,
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             require: (id) => require(path.resolve(tmpPath, id)),
             run: (cmd: string) => runExec(`pnpm run ${cmd}`),
           })
