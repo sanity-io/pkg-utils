@@ -144,6 +144,15 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.6.0
         version: 19.6.0
+      '@eslint/compat':
+        specifier: ^1.2.5
+        version: 1.2.5(eslint@9.19.0(jiti@2.4.2))
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.2.0
+      '@eslint/js':
+        specifier: ^9.19.0
+        version: 9.19.0
       '@sanity/pkg-utils':
         specifier: workspace:*
         version: 'link:'
@@ -216,6 +225,9 @@ importers:
       eslint-plugin-simple-import-sort:
         specifier: ^12.1.1
         version: 12.1.1(eslint@9.19.0(jiti@2.4.2))
+      globals:
+        specifier: ^15.14.0
+        version: 15.14.0
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -298,7 +310,7 @@ importers:
     devDependencies:
       '@sanity/visual-editing':
         specifier: ^2.12.9
-        version: 2.12.9(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(next@15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)
+        version: 2.12.9(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)
       dummy-side-effects:
         specifier: workspace:*
         version: link:../dummy-side-effects
@@ -390,7 +402,7 @@ importers:
         version: link:../dummy-module
       next:
         specifier: ^15.1.6
-        version: 15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1018,6 +1030,15 @@ packages:
   '@eslint-community/regexpp@4.12.1':
     resolution: {integrity: sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+
+  '@eslint/compat@1.2.5':
+    resolution: {integrity: sha512-5iuG/StT+7OfvhoBHPlmxkPA9om6aDUFgmD4+mWKAGsYt4vCe8rypneG03AuseyRHBmcCLXQtIH5S26tIoggLg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^9.10.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 
   '@eslint/config-array@0.19.1':
     resolution: {integrity: sha512-fo6Mtm5mWyKjA/Chy1BYTdn5mGJoDNjC7C64ug20ADsRDGrA85bN3uK3MaKbeRkRuuIEAR5N33Jr1pbm411/PA==}
@@ -3148,6 +3169,10 @@ packages:
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
+    engines: {node: '>=18'}
+
+  globals@15.14.0:
+    resolution: {integrity: sha512-OkToC372DtlQeje9/zHIo5CT8lRP/FUgEOKBEhU4e0abL7J7CD24fD9ohiLN5hagG/kWCYj4K5oaxxtj2Z0Dig==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -6189,6 +6214,10 @@ snapshots:
 
   '@eslint-community/regexpp@4.12.1': {}
 
+  '@eslint/compat@1.2.5(eslint@9.19.0(jiti@2.4.2))':
+    optionalDependencies:
+      eslint: 9.19.0(jiti@2.4.2)
+
   '@eslint/config-array@0.19.1':
     dependencies:
       '@eslint/object-schema': 2.1.5
@@ -6675,7 +6704,7 @@ snapshots:
     dependencies:
       '@sanity/client': 6.24.2
 
-  '@sanity/visual-editing@2.12.9(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(next@15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)':
+  '@sanity/visual-editing@2.12.9(@sanity/client@6.24.2)(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(svelte@5.17.1)':
     dependencies:
       '@sanity/comlink': 3.0.1
       '@sanity/mutate': 0.11.0-canary.4(xstate@5.19.2)
@@ -6694,7 +6723,7 @@ snapshots:
     optionalDependencies:
       '@sanity/client': 6.24.2
       '@sveltejs/kit': 2.15.2(@sveltejs/vite-plugin-svelte@3.1.2(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1)))(svelte@5.17.1)(vite@6.0.11(@types/node@20.17.12)(jiti@2.4.2)(terser@5.37.0)(yaml@2.6.1))
-      next: 15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next: 15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       svelte: 5.17.1
     transitivePeerDependencies:
       - '@sanity/types'
@@ -8634,6 +8663,8 @@ snapshots:
 
   globals@14.0.0: {}
 
+  globals@15.14.0: {}
+
   globalthis@1.0.4:
     dependencies:
       define-properties: 1.2.1
@@ -9780,7 +9811,7 @@ snapshots:
 
   neotraverse@0.6.18: {}
 
-  next@15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@next/env': 15.1.6
       '@swc/counter': 0.1.3
@@ -9800,7 +9831,6 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.1.6
       '@next/swc-win32-arm64-msvc': 15.1.6
       '@next/swc-win32-x64-msvc': 15.1.6
-      babel-plugin-react-compiler: 19.0.0-beta-27714ef-20250124
       sharp: 0.33.5
     transitivePeerDependencies:
       - '@babel/core'
