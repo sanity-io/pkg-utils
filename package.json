@@ -61,8 +61,8 @@
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
-    "format": "prettier --write --cache --ignore-unknown . && eslint . --ext .cjs,.js,.ts,.tsx --fix --quiet",
-    "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
+    "format": "prettier --write --cache --ignore-unknown . && eslint . --cache --fix --quiet",
+    "lint": "eslint . --cache",
     "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
@@ -79,7 +79,7 @@
   "lint-staged": {
     "*": [
       "prettier --write --cache --ignore-unknown",
-      "eslint --ext .cjs,.js,.ts,.tsx --fix"
+      "eslint --fix"
     ]
   },
   "browserslist": "extends @sanity/browserslist-config",
