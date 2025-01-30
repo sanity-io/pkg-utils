@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.4](https://github.com/sanity-io/pkg-utils/compare/v7.0.3...v7.0.4) (2025-01-30)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.49.2 ([#1359](https://github.com/sanity-io/pkg-utils/issues/1359)) ([a985fcb](https://github.com/sanity-io/pkg-utils/commit/a985fcbf312c24f8381aa2af800e57459368b9cb))
+* **deps:** Update dependency @optimize-lodash/rollup-plugin to v5.0.1 ([#1360](https://github.com/sanity-io/pkg-utils/issues/1360)) ([0020247](https://github.com/sanity-io/pkg-utils/commit/0020247ec89242d12dd553d0644bed75d4fda5aa))
+* **deps:** Update dependency rollup to ^4.32.1 ([#1361](https://github.com/sanity-io/pkg-utils/issues/1361)) ([ab67734](https://github.com/sanity-io/pkg-utils/commit/ab677348a855fcda0f632e1780a7ad2110fc4e24))
+
 ## [7.0.3](https://github.com/sanity-io/pkg-utils/compare/v7.0.2...v7.0.3) (2025-01-27)
 
 
