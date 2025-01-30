@@ -27,8 +27,8 @@ importers:
         specifier: 0.17.1
         version: 0.17.1
       '@optimize-lodash/rollup-plugin':
-        specifier: 5.0.0
-        version: 5.0.0(rollup@4.32.0)
+        specifier: 5.0.1
+        version: 5.0.1(rollup@4.32.0)
       '@rollup/plugin-alias':
         specifier: ^5.1.1
         version: 5.1.1(rollup@4.32.0)
@@ -1107,14 +1107,14 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@optimize-lodash/rollup-plugin@5.0.0':
-    resolution: {integrity: sha512-GJgfYatfqHvi3XAytThuFsq4NzcP9Xc934ouZlL/DsWi6CrnQPfb4l0G4SYV/KAkKHlRLmuu/UxGZqXBbCw7OA==}
+  '@optimize-lodash/rollup-plugin@5.0.1':
+    resolution: {integrity: sha512-zoIrgbT6/kKvHiHeaDiHOzmQ57OVZ98OIZxfre+2vkHlPdGSRhCWGvdo6zNxaRVF0kCZEO1w383mWLSzbEYVLw==}
     engines: {node: '>= 18'}
     peerDependencies:
       rollup: '>= 4.x'
 
-  '@optimize-lodash/transform@3.0.4':
-    resolution: {integrity: sha512-pEzPjvEnWHQCTIv8j/6IYdYBJQUL/Z9Vo0SB2yr5GZNgf0OAznapjilOb7JY9dBEgXtbgtTgSpANZAiipsjhhw==}
+  '@optimize-lodash/transform@3.0.5':
+    resolution: {integrity: sha512-OyMgF4kLRQI7RfMathWTnHxuT7PT9XiHv3ZPQ34EtFbpqSauUR4wdJcQrgkTIApstP8nj9xyW+zXqG9b4xOAeg==}
     engines: {node: '>= 12'}
 
   '@oslojs/encoding@1.1.0':
@@ -6142,13 +6142,13 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.18.0
 
-  '@optimize-lodash/rollup-plugin@5.0.0(rollup@4.32.0)':
+  '@optimize-lodash/rollup-plugin@5.0.1(rollup@4.32.0)':
     dependencies:
-      '@optimize-lodash/transform': 3.0.4
+      '@optimize-lodash/transform': 3.0.5
       '@rollup/pluginutils': 5.1.4(rollup@4.32.0)
       rollup: 4.32.0
 
-  '@optimize-lodash/transform@3.0.4':
+  '@optimize-lodash/transform@3.0.5':
     dependencies:
       estree-walker: 2.0.2
       magic-string: 0.30.17
