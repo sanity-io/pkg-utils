@@ -298,7 +298,7 @@ importers:
     devDependencies:
       '@sanity/visual-editing':
         specifier: ^2.12.10
-        version: 2.12.10(@sanity/client@6.27.2)(next@15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 2.12.10(@sanity/client@6.27.2)(next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       dummy-side-effects:
         specifier: workspace:*
         version: link:../dummy-side-effects
@@ -311,14 +311,14 @@ importers:
     dependencies:
       react-compiler-runtime:
         specifier: beta
-        version: 19.0.0-beta-27714ef-20250124(react@18.3.1)
+        version: 19.0.0-beta-e1e972c-20250221(react@18.3.1)
     devDependencies:
       '@types/react':
         specifier: ^19.0.8
         version: 19.0.8
       babel-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-27714ef-20250124
+        version: 19.0.0-beta-e1e972c-20250221
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -330,7 +330,7 @@ importers:
         version: 19.0.8
       babel-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-27714ef-20250124
+        version: 19.0.0-beta-e1e972c-20250221
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -390,7 +390,7 @@ importers:
         version: link:../dummy-module
       next:
         specifier: ^15.1.6
-        version: 15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -441,7 +441,7 @@ importers:
         version: 19.0.8
       babel-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-27714ef-20250124
+        version: 19.0.0-beta-e1e972c-20250221
       babel-plugin-styled-components:
         specifier: ^2.1.4
         version: 2.1.4(@babel/core@7.26.7)(styled-components@6.1.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
@@ -1398,6 +1398,7 @@ packages:
   '@sanity/visual-editing@2.12.10':
     resolution: {integrity: sha512-mrq0xjVXcWifiaJA7b3lLl1VqmxAHtSQ05Xmp4ffneGnwllx3k6j5y9Yn2LWfIwNN+7W4ofWj6TIATkExLFklg==}
     engines: {node: '>=18'}
+    deprecated: Please upgrade to version 2.12.13 or later for important fixes preventing over-fetching in presentation tool
     peerDependencies:
       '@remix-run/react': '>= 2'
       '@sanity/client': ^6.27.2
@@ -1857,6 +1858,9 @@ packages:
 
   babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124:
     resolution: {integrity: sha512-1AnF/dlvbIJzAjw5jEbDx7csHx772VP9AtrEg2CgUUD6MIu24j5ShxmBZ0tpfdb2pZtLVwcsoGylfZTzUoCr9w==}
+
+  babel-plugin-react-compiler@19.0.0-beta-e1e972c-20250221:
+    resolution: {integrity: sha512-m3Y8KdwBwKj9l6bf1XPO2xm0WWzv/cYJPurkwP5j8SADGor6l9CdQVksrcOGzU/4Rylfa+tXW6+xaR3vAKs7Hg==}
 
   babel-plugin-styled-components@2.1.4:
     resolution: {integrity: sha512-Xgp9g+A/cG47sUyRwwYxGM4bR/jDRg5N6it/8+HxCnbT5XNKSKDT9xm4oag/osgqjC2It/vH0yXsomOG6k558g==}
@@ -4276,8 +4280,8 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  react-compiler-runtime@19.0.0-beta-27714ef-20250124:
-    resolution: {integrity: sha512-JBIN+boDGWfTIZfiH/zGGGP32doyDdRqLJWyrRBrrCPhw2jaTJfAejUUCfheByq2v49d9Lb7r87O5GpWN1aYXA==}
+  react-compiler-runtime@19.0.0-beta-e1e972c-20250221:
+    resolution: {integrity: sha512-6nONLW+4zbfAt6mLG6SV73tKlZLJqmezqX0EF9ZKzab84Pje/4CMVs8QVw4OeRS+FFtPcfWU4fOK28nq7lM4Hg==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
 
@@ -6302,7 +6306,7 @@ snapshots:
     dependencies:
       '@sanity/client': 6.27.2
 
-  '@sanity/visual-editing@2.12.10(@sanity/client@6.27.2)(next@15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@sanity/visual-editing@2.12.10(@sanity/client@6.27.2)(next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@sanity/comlink': 3.0.1
       '@sanity/mutate': 0.11.0-canary.4(xstate@5.19.2)
@@ -6320,7 +6324,7 @@ snapshots:
       xstate: 5.19.2
     optionalDependencies:
       '@sanity/client': 6.27.2
-      next: 15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next: 15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     transitivePeerDependencies:
       - '@sanity/types'
       - debug
@@ -6901,6 +6905,10 @@ snapshots:
   axobject-query@4.1.0: {}
 
   babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124:
+    dependencies:
+      '@babel/types': 7.26.7
+
+  babel-plugin-react-compiler@19.0.0-beta-e1e972c-20250221:
     dependencies:
       '@babel/types': 7.26.7
 
@@ -9303,7 +9311,7 @@ snapshots:
 
   neotraverse@0.6.18: {}
 
-  next@15.1.6(@babel/core@7.26.7)(babel-plugin-react-compiler@19.0.0-beta-27714ef-20250124)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  next@15.1.6(@babel/core@7.26.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@next/env': 15.1.6
       '@swc/counter': 0.1.3
@@ -9323,7 +9331,6 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.1.6
       '@next/swc-win32-arm64-msvc': 15.1.6
       '@next/swc-win32-x64-msvc': 15.1.6
-      babel-plugin-react-compiler: 19.0.0-beta-27714ef-20250124
       sharp: 0.33.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -9710,7 +9717,7 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-compiler-runtime@19.0.0-beta-27714ef-20250124(react@18.3.1):
+  react-compiler-runtime@19.0.0-beta-e1e972c-20250221(react@18.3.1):
     dependencies:
       react: 18.3.1
 
