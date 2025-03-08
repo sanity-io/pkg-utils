@@ -11,6 +11,9 @@ export interface PackageJSON {
   dependencies?: Record<string, string | undefined>
   devDependencies?: Record<string, string | undefined>
   peerDependencies?: Record<string, string | undefined>
+  imports?:
+    | Partial<Record<`#${string}`, string | Record<string, string | Record<string, string>>>>
+    | undefined
   exports?: Record<
     string,
     | `./${string}.json`
@@ -18,17 +21,21 @@ export interface PackageJSON {
     | {
         source?: string
         types?: string
-        browser?: {
-          source: string
-          import?: string
-          require?: string
-        }
-        node?: {
-          source?: string
-          module?: string
-          import?: string
-          require?: string
-        }
+        browser?:
+          | {
+              source?: string
+              import?: string
+              require?: string
+            }
+          | string
+        node?:
+          | {
+              source?: string
+              module?: string
+              import?: string
+              require?: string
+            }
+          | string
         module?: string
         import?: string
         require?: string

@@ -50,6 +50,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         exportPath: exp._path,
         sourcePath: exp.source,
         targetPaths: getTargetPaths(pkg.type, exp),
+        runtime: '*',
       })
     }
 
@@ -59,6 +60,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         exportPath: exp._path,
         sourcePath: exp.browser.source,
         targetPaths: getTargetPaths(pkg.type, exp.browser),
+        runtime: 'browser',
       })
     }
 
@@ -68,6 +70,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         exportPath: exp._path,
         sourcePath: exp.node.source,
         targetPaths: getTargetPaths(pkg.type, exp.node),
+        runtime: 'node',
       })
     }
   }
@@ -86,6 +89,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
         exportPath,
         sourcePath: bundle.source,
         targetPaths: getTargetPaths(pkg.type, bundle),
+        runtime: bundle.runtime || '*',
       })
     }
   }
