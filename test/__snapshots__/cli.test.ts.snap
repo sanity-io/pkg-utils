@@ -271,7 +271,7 @@ export {}
 `;
 
 exports[`should build \`react-18\` package 2`] = `
-"import { jsx, jsxs, Fragment } from "react/jsx-runtime";
+"import { jsxs, Fragment, jsx } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
 import { forwardRef, useId, useRef, useImperativeHandle, useState, useEffect, useDeferredValue, Suspense } from "react";
 const Input = forwardRef(function(props, forwardedRef) {
@@ -473,7 +473,7 @@ export {}
 `;
 
 exports[`should build \`react-19\` package 2`] = `
-"import { jsx, jsxs, Fragment } from "react/jsx-runtime";
+"import { jsxs, Fragment, jsx } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
 import { useId, useRef, useImperativeHandle, useState, useEffect, use, useDeferredValue, Suspense } from "react";
 function Input(props) {
