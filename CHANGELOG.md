@@ -5,6 +5,27 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.0](https://github.com/sanity-io/pkg-utils/compare/v7.0.4...v7.1.0) (2025-03-12)
+
+
+### Features
+
+* upgrade typescript to 5.8.2 ([#1373](https://github.com/sanity-io/pkg-utils/issues/1373)) ([1a4b00a](https://github.com/sanity-io/pkg-utils/commit/1a4b00adbc5907680d79fff4da206c5ce7956446))
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.26.10 ([#1386](https://github.com/sanity-io/pkg-utils/issues/1386)) ([222d3ce](https://github.com/sanity-io/pkg-utils/commit/222d3cee7870ac8524fe69345593577b50534061))
+* **deps:** Update dependency @optimize-lodash/rollup-plugin to v5.0.2 ([#1387](https://github.com/sanity-io/pkg-utils/issues/1387)) ([821ef0f](https://github.com/sanity-io/pkg-utils/commit/821ef0f77fa8977781b89f5fb8507a10544d791e))
+* **deps:** update dependency esbuild to ^0.25.0 ([#1369](https://github.com/sanity-io/pkg-utils/issues/1369)) ([0eb9782](https://github.com/sanity-io/pkg-utils/commit/0eb9782fe73e8ff5840f72b6e6f0aef136f32eb7))
+* **deps:** Update dependency esbuild to ^0.25.1 ([#1388](https://github.com/sanity-io/pkg-utils/issues/1388)) ([405dc16](https://github.com/sanity-io/pkg-utils/commit/405dc16d8311bf4cd232ac375d31a53e7ce94c2e))
+* **deps:** Update dependency git-url-parse to ^16.0.1 ([#1389](https://github.com/sanity-io/pkg-utils/issues/1389)) ([37ab5b0](https://github.com/sanity-io/pkg-utils/commit/37ab5b00383f85bd5f31ae7f978cf0025c708163))
+* **deps:** Update dependency recast to v0.23.11 ([#1390](https://github.com/sanity-io/pkg-utils/issues/1390)) ([7378828](https://github.com/sanity-io/pkg-utils/commit/73788285549cead24bebb8c7933249dd4424f837))
+* **deps:** Update dependency rxjs to ^7.8.2 ([#1391](https://github.com/sanity-io/pkg-utils/issues/1391)) ([dd948ad](https://github.com/sanity-io/pkg-utils/commit/dd948ad2b1a0d4d9a289c86eafa8d3519225e1c6))
+* **deps:** Update dependency uuid to ^11.1.0 ([#1392](https://github.com/sanity-io/pkg-utils/issues/1392)) ([c773cd8](https://github.com/sanity-io/pkg-utils/commit/c773cd8c01ff5b14f4230d95e4ccc82aefeddb77))
+* **deps:** Update dependency zod to v3.24.2 ([#1393](https://github.com/sanity-io/pkg-utils/issues/1393)) ([89a8cb4](https://github.com/sanity-io/pkg-utils/commit/89a8cb4681e964a67c9feacde6c7c63e93a38aca))
+* **deps:** Update rollup packages ([#1394](https://github.com/sanity-io/pkg-utils/issues/1394)) ([de492ff](https://github.com/sanity-io/pkg-utils/commit/de492ff7c43197519e0c33fc880bd88c4c013408))
+
 ## [7.0.4](https://github.com/sanity-io/pkg-utils/compare/v7.0.3...v7.0.4) (2025-01-30)
 
 
