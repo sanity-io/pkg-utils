@@ -244,7 +244,7 @@ importers:
   playground/babel-plugin:
     devDependencies:
       '@babel/core':
-        specifier: ^7.26.7
+        specifier: ^7.26.10
         version: 7.26.10
       '@babel/plugin-transform-object-rest-spread':
         specifier: ^7.25.9
@@ -314,7 +314,7 @@ importers:
         version: 19.0.0-beta-bafa41b-20250307(react@18.3.1)
     devDependencies:
       '@types/react':
-        specifier: ^19.0.8
+        specifier: ^19.0.10
         version: 19.0.10
       babel-plugin-react-compiler:
         specifier: beta
@@ -326,7 +326,7 @@ importers:
   playground/react-19:
     devDependencies:
       '@types/react':
-        specifier: ^19.0.8
+        specifier: ^19.0.10
         version: 19.0.10
       babel-plugin-react-compiler:
         specifier: beta
@@ -371,7 +371,7 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^5.2.0
+        specifier: ^5.4.3
         version: 5.4.3(@types/node@20.17.24)(jiti@2.4.2)(rollup@4.35.0)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
       dummy-commonjs:
         specifier: workspace:*
@@ -383,13 +383,13 @@ importers:
   playground/runtime-next-js:
     devDependencies:
       '@types/react':
-        specifier: ^19.0.8
+        specifier: ^19.0.10
         version: 19.0.10
       dummy-module:
         specifier: workspace:*
         version: link:../dummy-module
       next:
-        specifier: ^15.1.6
+        specifier: ^15.2.2
         version: 15.2.2(@babel/core@7.26.10)(babel-plugin-react-compiler@19.0.0-beta-bafa41b-20250307)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
@@ -437,7 +437,7 @@ importers:
   playground/sanity:
     devDependencies:
       '@types/react':
-        specifier: ^19.0.8
+        specifier: ^19.0.10
         version: 19.0.10
       babel-plugin-react-compiler:
         specifier: beta
@@ -464,7 +464,7 @@ importers:
   playground/use-client-directive:
     devDependencies:
       '@types/react':
-        specifier: ^19.0.8
+        specifier: ^19.0.10
         version: 19.0.10
       react:
         specifier: ^19.0.0
