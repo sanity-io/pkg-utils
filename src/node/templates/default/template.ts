@@ -1,10 +1,10 @@
+import {execSync} from 'node:child_process'
 import {resolve} from 'node:path'
 
 import prettierConfig from '@sanity/prettier-config'
 import getLatestVersion from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
-import parseGitConfig from 'parse-git-config'
 import prettier, {type Config as PrettierConfig} from 'prettier'
 
 import {
@@ -18,7 +18,7 @@ import {
 const RE_NAME = /^(?:@(?:[a-z0-9-*~][a-z0-9-*._~]*)\/)?[a-z0-9-~][a-z0-9-._~]*$/i
 
 export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) => {
-  const gitConfig = await parseGitConfig({cwd, type: 'global'})
+  const gitConfig = getGitUserConfig(cwd)
 
   return {
     options: [
@@ -86,13 +86,13 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         name: 'authorName',
         type: 'string',
         description: 'package author name',
-        initial: gitConfig?.['user']?.name,
+        initial: gitConfig.user,
       }),
       defineTemplateOption({
         name: 'authorEmail',
         type: 'string',
         description: 'package author email',
-        initial: gitConfig?.['user']?.email,
+        initial: gitConfig.email,
       }),
       defineTemplateOption({
         name: 'license',
@@ -533,4 +533,18 @@ async function resolveLatestDeps(deps: Record<string, string | undefined>) {
   }
 
   return latestDeps
+}
+
+function getGitUserConfig(cwd: string): {user?: string; email?: string} {
+  let user: string | undefined
+  let email: string | undefined
+
+  try {
+    user = execSync('git config user.name', {encoding: 'utf8', cwd}).trim() || undefined
+    email = execSync('git config user.email', {encoding: 'utf8', cwd}).trim() || undefined
+  } catch {
+    /* ignore */
+  }
+
+  return {user, email}
 }
