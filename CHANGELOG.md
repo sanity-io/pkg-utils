@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.1](https://github.com/sanity-io/pkg-utils/compare/v7.1.0...v7.1.1) (2025-03-17)
+
+
+### Bug Fixes
+
+* **deps:** remove parse-git-config dependency ([#1402](https://github.com/sanity-io/pkg-utils/issues/1402)) ([351192e](https://github.com/sanity-io/pkg-utils/commit/351192e5dc9e9ca4aab017959015c4fac177a038))
+* **deps:** Update dependency rollup to ^4.36.0 ([#1401](https://github.com/sanity-io/pkg-utils/issues/1401)) ([0889515](https://github.com/sanity-io/pkg-utils/commit/0889515799b3582e035dc213ac291c0703d4b52e))
+
 ## [7.1.0](https://github.com/sanity-io/pkg-utils/compare/v7.0.4...v7.1.0) (2025-03-12)
 
 
