@@ -5,6 +5,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.0](https://github.com/sanity-io/pkg-utils/compare/v7.1.1...v7.2.0) (2025-03-25)
+
+
+### Features
+
+* **tsconfig:** set `erasableSyntaxOnly` ([d2eb40a](https://github.com/sanity-io/pkg-utils/commit/d2eb40a399763acabc6f11ff4d7f98c36651e98d)), closes [#1356](https://github.com/sanity-io/pkg-utils/issues/1356)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.27.0 ([#1407](https://github.com/sanity-io/pkg-utils/issues/1407)) ([284ec3c](https://github.com/sanity-io/pkg-utils/commit/284ec3c7fc16e952df2323bab2f704baa9681fad))
+* **deps:** Update dependency rollup to ^4.37.0 ([#1408](https://github.com/sanity-io/pkg-utils/issues/1408)) ([7b44b9e](https://github.com/sanity-io/pkg-utils/commit/7b44b9e8f8bb14476f0855a46e4ecdb6ab5df760))
+
 ## [7.1.1](https://github.com/sanity-io/pkg-utils/compare/v7.1.0...v7.1.1) (2025-03-17)
 
 
