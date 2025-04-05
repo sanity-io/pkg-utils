@@ -1,5 +1,7 @@
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 
+import type {PkgRuntime} from '../../core'
+
 /** @internal */
 export interface DtsWatchTask {
   type: 'watch:dts'
@@ -8,6 +10,7 @@ export interface DtsWatchTask {
     importId: string
     sourcePath: string
     targetPaths: string[]
+    runtime: PkgRuntime
   }[]
 }
 
@@ -19,6 +22,7 @@ export interface DtsTask {
     importId: string
     sourcePath: string
     targetPaths: string[]
+    runtime: PkgRuntime
   }[]
 }
 
