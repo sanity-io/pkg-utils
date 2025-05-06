@@ -42,3 +42,28 @@ test.each([
   expect(() => validatePkg(pkg)).toThrowErrorMatchingSnapshot()
   expect(() => validatePkg({...template, [expected as string]: value})).not.toThrow()
 })
+
+test('conditional imports must be prefixed with #', () => {
+  expect(() =>
+    validatePkg({
+      ...template,
+      imports: {
+        env: {
+          browser: './src/index.browser.ts',
+          default: './src/index.ts',
+        },
+      },
+    }),
+  ).toThrowErrorMatchingSnapshot()
+  expect(
+    validatePkg({
+      ...template,
+      imports: {
+        '#env': {
+          browser: './src/index.browser.ts',
+          default: './src/index.ts',
+        },
+      },
+    }),
+  ).toMatchSnapshot()
+})
