@@ -5,6 +5,21 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.3](https://github.com/sanity-io/pkg-utils/compare/v7.2.2...v7.2.3) (2025-05-28)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo ([#1451](https://github.com/sanity-io/pkg-utils/issues/1451)) ([9adc16f](https://github.com/sanity-io/pkg-utils/commit/9adc16fd332a4d28fef090c546ea044134593c2c))
+* **deps:** Update dependency @microsoft/api-extractor to v7.52.3 ([#1427](https://github.com/sanity-io/pkg-utils/issues/1427)) ([eb6a641](https://github.com/sanity-io/pkg-utils/commit/eb6a64177c5fee1d00550c38a9d85ee99e049b1c))
+* **deps:** Update dependency @microsoft/api-extractor to v7.52.8 ([#1439](https://github.com/sanity-io/pkg-utils/issues/1439)) ([191b238](https://github.com/sanity-io/pkg-utils/commit/191b238da2af909051e3e4f656fd0b9df12d5cb4))
+* **deps:** Update dependency browserslist to ^4.24.5 ([#1449](https://github.com/sanity-io/pkg-utils/issues/1449)) ([60acce2](https://github.com/sanity-io/pkg-utils/commit/60acce221fdb28a626517e342bf5c760ce7dae72))
+* **deps:** Update dependency esbuild to ^0.25.5 ([#1440](https://github.com/sanity-io/pkg-utils/issues/1440)) ([c334772](https://github.com/sanity-io/pkg-utils/commit/c3347721bb0eca173c452f5984ceb8ddd702d0bd))
+* **deps:** Update dependency rollup to ^4.41.1 ([#1430](https://github.com/sanity-io/pkg-utils/issues/1430)) ([26f1de3](https://github.com/sanity-io/pkg-utils/commit/26f1de33323ab245c9a087ee0a71267461f54f0b))
+* **deps:** update dependency typescript to v5.8.3 ([#1428](https://github.com/sanity-io/pkg-utils/issues/1428)) ([e8cfd46](https://github.com/sanity-io/pkg-utils/commit/e8cfd46b279f7eb545a8b311d9e168a76f619ec4))
+* **deps:** Update dependency zod to v3.25.32 ([#1441](https://github.com/sanity-io/pkg-utils/issues/1441)) ([1c05079](https://github.com/sanity-io/pkg-utils/commit/1c050791b963be1177bfc2adc24af430fdd32719))
+* **deps:** Update dependency zod-validation-error to v3.4.1 ([#1450](https://github.com/sanity-io/pkg-utils/issues/1450)) ([bfd5088](https://github.com/sanity-io/pkg-utils/commit/bfd508894d6c4389a18c8f51051a91a71352b1bb))
+
 ## [7.2.2](https://github.com/sanity-io/pkg-utils/compare/v7.2.1...v7.2.2) (2025-03-31)
 
 
