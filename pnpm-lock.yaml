@@ -129,11 +129,11 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0
       zod:
-        specifier: 3.25.32
-        version: 3.25.32
+        specifier: 3.25.57
+        version: 3.25.57
       zod-validation-error:
         specifier: 3.4.1
-        version: 3.4.1(zod@3.25.32)
+        version: 3.4.1(zod@3.25.57)
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.8.1
@@ -5663,8 +5663,8 @@ packages:
     peerDependencies:
       zod: ^3.24.4
 
-  zod@3.25.32:
-    resolution: {integrity: sha512-OSm2xTIRfW8CV5/QKgngwmQW/8aPfGdaQFlrGoErlgg/Epm7cjb6K6VEyExfe65a3VybUOnu381edLb0dfJl0g==}
+  zod@3.25.57:
+    resolution: {integrity: sha512-6tgzLuwVST5oLUxXTmBqoinKMd3JeesgbgseXeFasKKj8Q1FCZrHnbqJOyiEvr4cVAlbug+CgIsmJ8cl/pU5FA==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7342,9 +7342,9 @@ snapshots:
       xxhash-wasm: 1.1.0
       yargs-parser: 21.1.1
       yocto-spinner: 0.2.3
-      zod: 3.25.32
-      zod-to-json-schema: 3.24.5(zod@3.25.32)
-      zod-to-ts: 1.2.0(typescript@5.8.3)(zod@3.25.32)
+      zod: 3.25.57
+      zod-to-json-schema: 3.24.5(zod@3.25.57)
+      zod-to-ts: 1.2.0(typescript@5.8.3)(zod@3.25.57)
     optionalDependencies:
       sharp: 0.33.5
     transitivePeerDependencies:
@@ -11510,19 +11510,19 @@ snapshots:
 
   yoctocolors@2.1.1: {}
 
-  zod-to-json-schema@3.24.5(zod@3.25.32):
+  zod-to-json-schema@3.24.5(zod@3.25.57):
     dependencies:
-      zod: 3.25.32
+      zod: 3.25.57
 
-  zod-to-ts@1.2.0(typescript@5.8.3)(zod@3.25.32):
+  zod-to-ts@1.2.0(typescript@5.8.3)(zod@3.25.57):
     dependencies:
       typescript: 5.8.3
-      zod: 3.25.32
+      zod: 3.25.57
 
-  zod-validation-error@3.4.1(zod@3.25.32):
+  zod-validation-error@3.4.1(zod@3.25.57):
     dependencies:
-      zod: 3.25.32
+      zod: 3.25.57
 
-  zod@3.25.32: {}
+  zod@3.25.57: {}
 
   zwitch@2.0.4: {}
