@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.6](https://github.com/sanity-io/pkg-utils/compare/v7.2.5...v7.2.6) (2025-06-16)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @rollup/plugin-commonjs to ^28.0.5 ([#1474](https://github.com/sanity-io/pkg-utils/issues/1474)) ([385c623](https://github.com/sanity-io/pkg-utils/commit/385c62372186893f859ede54d7747b01ad68b210))
+
 ## [7.2.5](https://github.com/sanity-io/pkg-utils/compare/v7.2.4...v7.2.5) (2025-06-13)
 
 
