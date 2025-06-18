@@ -1,4 +1,5 @@
-import type {PackageJSON, PkgBundle, PkgExport} from '../../core'
+import type { PackageJSON } from '../../core/pkg/types'
+import type { PkgBundle, PkgExport } from '../../core/config/types'
 
 /** @internal */
 export const fileEnding = /\.[mc]?js$/

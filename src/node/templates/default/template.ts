@@ -5,13 +5,10 @@ import getLatestVersion from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
 import {format, type Config as PrettierConfig} from 'prettier'
-import {
-  defineTemplateOption,
-  isRecord,
-  type PackageJSON,
-  type PkgTemplate,
-  type PkgTemplateFile,
-} from '../../core'
+import { defineTemplateOption } from '../../core/template/define'
+import { isRecord } from '../../core/isRecord'
+import type { PackageJSON } from '../../core/pkg/types'
+import { type PkgTemplate, type PkgTemplateFile } from '../../core/template/types'
 
 const RE_NAME = /^(?:@(?:[a-z0-9-*~][a-z0-9-*._~]*)\/)?[a-z0-9-~][a-z0-9-._~]*$/i
 

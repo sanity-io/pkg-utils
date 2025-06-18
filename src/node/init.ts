@@ -1,11 +1,13 @@
 import {lstat} from 'node:fs/promises'
 import {resolve} from 'node:path'
+
 import {mkdirp} from 'mkdirp'
-import {createFromTemplate} from './core/template'
+
+import { createFromTemplate } from './core/template'
 import {fileExists} from './fileExists'
 import {isEmptyDirectory} from './isEmptyDirectory'
 import {createLogger} from './logger'
-import {defaultTemplate} from './templates'
+import { defaultTemplate } from './templates/default/template'
 
 /** @public */
 export async function init(options: {cwd: string; path: string}): Promise<void> {

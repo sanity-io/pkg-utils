@@ -1,5 +1,6 @@
 import path from 'path'
-import {watch} from '../src/node'
+
+import { watch } from '../src/node'
 
 global.__DEV__ = true
 

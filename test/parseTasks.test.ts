@@ -1,11 +1,10 @@
 import {expect, test, vi} from 'vitest'
-import {
-  createLogger,
-  parseExports,
-  resolveBuildTasks,
-  type BuildContext,
-  type PackageJSON,
-} from '../src/node'
+
+import type { BuildContext } from '../src/node/core/contexts/buildContext'
+import { createLogger } from '../src/node/logger'
+import type { PackageJSON } from '../src/node/core/pkg/types'
+import { parseExports } from '../src/node/core/pkg/parseExports'
+import { resolveBuildTasks } from '../src/node/resolveBuildTasks'
 import {parseStrictOptions} from '../src/node/strict'
 
 const strictOptions = parseStrictOptions({})

@@ -1,6 +1,9 @@
 import path from 'node:path'
-import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
-import type {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
+
+import type { BuildContext } from './core/contexts/buildContext'
+import type { PkgExport, PkgFormat, PkgRuntime } from './core/config/types'
+import type { BuildTask, RollupTask, RollupTaskEntry } from './tasks/types'
+import type { DtsTask } from './tasks/dts/types'
 import {getTargetPaths} from './tasks/dts/getTargetPaths'
 
 /** @internal */
