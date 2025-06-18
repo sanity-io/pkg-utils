@@ -1,14 +1,15 @@
 import {lstat} from 'node:fs/promises'
 import {resolve} from 'node:path'
-import {mkdirp} from 'mkdirp'
-import {createFromTemplate} from './core/template'
 import {fileExists} from './fileExists'
 import {isEmptyDirectory} from './isEmptyDirectory'
 import {createLogger} from './logger'
-import {defaultTemplate} from './templates/default/template'
 
 /** @public */
 export async function init(options: {cwd: string; path: string}): Promise<void> {
+  const [{createFromTemplate}, {defaultTemplate}] = await Promise.all([
+    import('./core/template'),
+    import('./templates/default/template'),
+  ])
   if (!options.cwd) {
     throw new Error('Missing required option: cwd')
   }
@@ -32,6 +33,7 @@ export async function init(options: {cwd: string; path: string}): Promise<void> 
 }
 
 async function ensurePackagePath(packagePath: string): Promise<void> {
+  const {mkdirp} = await import('mkdirp')
   const exists = fileExists(packagePath)
 
   if (!exists) {

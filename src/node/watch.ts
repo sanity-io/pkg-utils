@@ -3,11 +3,7 @@ import {switchMap} from 'rxjs'
 import {loadConfig} from './core/config/loadConfig'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
 import {createLogger} from './logger'
-import {resolveBuildContext} from './resolveBuildContext'
-import {resolveWatchTasks} from './resolveWatchTasks'
-import {watchTaskHandlers} from './tasks'
-import {type TaskHandler, type WatchTask} from './tasks/types'
-import {watchConfigFiles} from './watchConfigFiles'
+import type {TaskHandler, WatchTask} from './tasks/types'
 
 /** @public */
 export async function watch(options: {
@@ -15,6 +11,13 @@ export async function watch(options: {
   strict?: boolean
   tsconfig?: string
 }): Promise<void> {
+  const [{resolveBuildContext}, {resolveWatchTasks}, {watchTaskHandlers}, {watchConfigFiles}] =
+    await Promise.all([
+      import('./resolveBuildContext'),
+      import('./resolveWatchTasks'),
+      import('./tasks'),
+      import('./watchConfigFiles'),
+    ])
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
 
   const logger = createLogger()
