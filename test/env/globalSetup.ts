@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import path from 'node:path'
 
 import {mkdirp} from 'mkdirp'

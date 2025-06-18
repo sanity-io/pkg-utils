@@ -3,7 +3,6 @@ export * from './module2.js'
 /**
  * @internal
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface _Dummy {
   field: string
 }

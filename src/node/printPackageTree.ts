@@ -22,7 +22,6 @@ export function printPackageTree(ctx: BuildContext): void {
 
   logger.log(`${chalk.blue(pkg.name)}@${chalk.green(pkg.version)}`)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tree: Record<string, unknown> = {}
 
   if (pkg.type) {
@@ -93,6 +92,5 @@ export function printPackageTree(ctx: BuildContext): void {
       }),
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   logger.log(treeify.asTree(tree as Record<string, any>, true, true))
 }

@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 export interface ConsoleSpyMsg {
   type: 'log' | 'warn' | 'error'
   code?: string

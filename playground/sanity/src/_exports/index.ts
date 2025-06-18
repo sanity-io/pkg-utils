@@ -19,10 +19,7 @@ export type Plugin<TOptions = void> = (options: TOptions) => PluginOptions
  *
  * @public
  */
-export interface Tool<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Options = any,
-> {
+export interface Tool<Options = any> {
   /**
    * The name of the tool, used as part of the URL.
    */

@@ -1,6 +1,5 @@
 'use strict'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {defineConfig} = require('@sanity/pkg-utils')
 
 /** @type import('@sanity/pkg-utils').PkgConfigOptions */

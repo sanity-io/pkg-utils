@@ -40,7 +40,6 @@ export async function resolveBuildContext(options: {
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
   const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
 
-  /* eslint-disable padding-line-between-statements */
   let browserslist = pkg.browserslist
   if (!browserslist) {
     if (strict && strictOptions.noImplicitBrowsersList !== 'off') {
@@ -58,7 +57,6 @@ export async function resolveBuildContext(options: {
     browserslist = DEFAULT_BROWSERSLIST_QUERY
   }
   const targetVersions = browserslistToEsbuild(browserslist)
-  /* eslint-enable padding-line-between-statements */
 
   if (
     strict &&

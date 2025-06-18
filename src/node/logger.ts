@@ -12,7 +12,6 @@ export interface Logger {
 /** @internal */
 export function createLogger(): Logger {
   return {
-    /* eslint-disable no-console */
     log: (...args) => {
       console.log(...args)
     },
@@ -28,6 +27,5 @@ export function createLogger(): Logger {
     success: (...args) => {
       console.log(chalk.green('[success]'), ...args)
     },
-    /* eslint-enable no-console */
   }
 }

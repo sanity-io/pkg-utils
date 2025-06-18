@@ -11,7 +11,6 @@ init({
   cwd: path.resolve(__dirname, '..'),
   path: args[0],
 }).catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err.stack)
   process.exit(1)
 })

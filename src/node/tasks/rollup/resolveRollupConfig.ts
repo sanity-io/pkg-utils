@@ -68,7 +68,6 @@ export function resolveRollupConfig(
                 const entry = entries.find((e) => e.source === sourcePath)
 
                 if (!entry) {
-                  // eslint-disable-next-line no-console
                   console.error(`could not find source entry: ${sourcePath}`)
 
                   return 'null'
