@@ -1,5 +1,5 @@
 import path from 'path'
-import { check } from '../src/node'
+import {check} from '../src/node'
 
 global.__DEV__ = true
 
