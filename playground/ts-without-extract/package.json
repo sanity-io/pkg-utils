@@ -14,7 +14,6 @@
     },
     "./package.json": "./package.json"
   },
-  "browserslist": "extends @sanity/browserslist-config",
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
@@ -24,5 +23,6 @@
     "build": "pkg build --strict --check --clean",
     "check:types": "tsc",
     "clean": "rimraf dist"
-  }
+  },
+  "browserslist": "extends @sanity/browserslist-config"
 }
