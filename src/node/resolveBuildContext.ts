@@ -180,6 +180,7 @@ export async function resolveBuildContext(options: {
       config: tsconfig,
       configPath: tsconfigPath,
     },
+    dts: config?.dts === 'rolldown' ? 'rolldown' : 'api-extractor',
   }
 
   return ctx

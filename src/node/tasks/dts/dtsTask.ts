@@ -8,9 +8,9 @@ import type {DtsResult, DtsTask} from './types'
 
 /** @internal */
 export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
-  name: (_ctx, task) =>
+  name: (ctx, task) =>
     [
-      'Build type definitions...',
+      `Build type definitions with ${chalk.bold(ctx.dts)}...`,
       '  entries:',
       ...task.entries.map((entry) => {
         return entry.targetPaths
