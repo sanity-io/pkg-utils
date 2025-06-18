@@ -1,6 +1,7 @@
 import chalk from 'chalk'
-import {Observable} from 'rxjs'
+import {from, Observable} from 'rxjs'
 import {printExtractMessages} from '../../printExtractMessages'
+import {resolveRollupConfig} from '../rollup/resolveRollupConfig'
 import type {TaskHandler} from '../types'
 import {doExtract} from './doExtract'
 import {DtsError} from './DtsError'
@@ -24,6 +25,25 @@ export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
       }),
     ].join('\n'),
   exec: (ctx, task) => {
+    if (ctx.dts === 'rolldown') {
+      /**
+       * Based on the `tsdown` implementation:
+       * https://github.com/rolldown/tsdown/blob/0978c68bd505c76d7e3097572cd652f81c23f97e/src/index.ts#L138-L141
+       */
+      const doRolldownExtract = async (): Promise<DtsResult> => {
+        const [{build: rolldownBuild}, {dts: dtsPlugin}] = await Promise.all([
+          import('rolldown'),
+          import('rolldown-plugin-dts'),
+        ])
+
+        const {inputOptions, outputOptions} = resolveRollupConfig(ctx, {
+          type: 'build:js',
+          buildId: 'dts',
+        })
+        // const {output} = await rolldownBuild(buildOptions)
+      }
+      return from(doRolldownExtract())
+    }
     return new Observable((observer) => {
       doExtract(ctx, task)
         .then((result) => {

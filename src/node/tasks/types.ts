@@ -22,6 +22,16 @@ export interface RollupTask {
 }
 
 /** @internal */
+export interface RolldownDtsTask {
+  type: 'rolldown:dts'
+  buildId: string
+  entries: RollupTaskEntry[]
+  runtime: PkgRuntime
+  format: 'commonjs' | 'esm'
+  target: string[]
+}
+
+/** @internal */
 export interface RollupWatchTask {
   type: 'watch:js'
   buildId: string
@@ -32,7 +42,7 @@ export interface RollupWatchTask {
 }
 
 /** @internal */
-export type BuildTask = DtsTask | RollupTask
+export type BuildTask = DtsTask | RollupTask | RolldownDtsTask
 
 /** @internal */
 export type WatchTask = DtsWatchTask | RollupWatchTask
