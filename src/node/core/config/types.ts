@@ -155,6 +155,8 @@ export type ReactCompilerLogger = {
   logEvent: (filename: string | null, event: ReactCompilerLoggerEvent) => void
 }
 
+export type DtsType = 'api-extractor' | 'rolldown'
+
 /** @public */
 export interface PkgConfigOptions {
   /** @alpha */
@@ -170,7 +172,7 @@ export interface PkgConfigOptions {
           displayName?: boolean
           /**
            * @defaultValue []
-           * @example ["@xstyled/styled-components", "@xstyled/styled-components/*"]
+           * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
            */
           topLevelImportPaths?: string[]
           /** @defaultValue true */
@@ -203,7 +205,16 @@ export interface PkgConfigOptions {
    */
   dist?: string
   exports?: PkgConfigProperty<PkgExports>
+  /**
+   * Runs `@microsoft/api-extractor` to check that TSDoc tags are valid, and release tags are correct.
+   * This is useful for packages that need to be consumed by TSDoc-based tooling.
+   * It's enabled by default, it can be disabled by setting `extract: {enabled: false}`
+   */
   extract?: {
+    /**
+     * @defaultValue true
+     */
+    enabled?: boolean
     /**
      * Packages in `devDependencies` that are not in `external` are automatically added to the `bundledPackages` config.
      * You can exclude a package from being bundled by using a callback:
@@ -295,4 +306,10 @@ export interface PkgConfigOptions {
    * Configure what checks are made when running `--strict` builds and checks
    */
   strictOptions?: StrictOptions
+  /**
+   * .d.ts files can be generated either by using `@microsoft/api-extractor` or `rolldown`.
+   * `rolldown` is the faster option, but is not yet stable.
+   * @defaultValue 'api-extractor'
+   */
+  dts?: DtsType
 }

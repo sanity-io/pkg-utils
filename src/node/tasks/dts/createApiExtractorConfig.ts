@@ -12,6 +12,7 @@ export function createApiExtractorConfig(options: {
   mainEntryPointFilePath: string
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
+  dtsRollupEnabled: boolean
 }): IConfigFile {
   const {
     bundledPackages,
@@ -23,6 +24,7 @@ export function createApiExtractorConfig(options: {
     mainEntryPointFilePath,
     tsconfig,
     tsconfigPath,
+    dtsRollupEnabled,
   } = options
 
   return {
@@ -50,7 +52,7 @@ export function createApiExtractorConfig(options: {
       apiJsonFilePath: path.resolve(distPath, `${exportPath}.api.json`),
     },
     dtsRollup: {
-      enabled: true,
+      enabled: dtsRollupEnabled,
       untrimmedFilePath: path.resolve(distPath, filePath),
       // betaTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-beta.d.ts')),
       // publicTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-public.d.ts')),

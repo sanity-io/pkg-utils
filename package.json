@@ -1,6 +1,6 @@
 {
   "name": "@sanity/pkg-utils",
-  "version": "7.2.9",
+  "version": "7.2.10-canary.4",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -49,14 +49,12 @@
     "bin",
     "dist",
     "tsconfig",
-    "!dist/stats.html",
-    "src",
-    "!src/**/*.test.ts"
+    "!dist/stats.html"
   ],
   "scripts": {
     "build": "run-s clean build:pkg check:pkg",
-    "build:pkg": "node -r esbuild-register scripts/build",
-    "check:pkg": "node -r esbuild-register scripts/check",
+    "build:pkg": "tsx scripts/build",
+    "check:pkg": "tsx scripts/check",
     "check:types": "tsc --build",
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
@@ -69,7 +67,7 @@
     "pretest": "run-s playground:clean",
     "test": "vitest run",
     "test:update-snapshots": "pnpm test run -- --update",
-    "watch": "node -r esbuild-register scripts/watch"
+    "watch": "tsx scripts/watch"
   },
   "commitlint": {
     "extends": [
@@ -120,6 +118,8 @@
     "prompts": "^2.4.2",
     "recast": "0.23.11",
     "rimraf": "^4.4.1",
+    "rolldown": "1.0.0-beta.17",
+    "rolldown-plugin-dts": "0.13.11",
     "rollup": "^4.43.0",
     "rollup-plugin-esbuild": "^6.2.1",
     "rxjs": "^7.8.2",
@@ -138,7 +138,7 @@
     "@types/cpx": "^1.5.5",
     "@types/find-config": "^1.0.4",
     "@types/git-url-parse": "^16.0.2",
-    "@types/node": "^20.8.7",
+    "@types/node": "^24.0.3",
     "@types/prompts": "^2.4.9",
     "@types/rimraf": "^3.0.2",
     "@types/semver": "^7.5.8",
@@ -156,7 +156,8 @@
     "rollup-plugin-visualizer": "^6.0.3",
     "semver": "^7.6.0",
     "ts-node": "^10.9.2",
-    "typescript": "5.8.3",
+    "tsx": "^4.20.3",
+    "typescript": "catalog:",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {

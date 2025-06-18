@@ -29,6 +29,7 @@ jobs:
       - run: pnpm install
       - run: pnpm lint --deny-warnings --format github
       - run: pnpm build
+      - run: pnpm tsc --noEmit
       - uses: actions/upload-artifact@v4
         name: Cache build output
         with:
