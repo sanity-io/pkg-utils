@@ -27,7 +27,7 @@ jobs:
           cache: pnpm
           node-version: lts/*
       - run: pnpm install
-      - run: pnpm lint
+      - run: pnpm lint --format github
       - run: pnpm build
       - uses: actions/upload-artifact@v4
         name: Cache build output
