@@ -32,6 +32,12 @@
   },
   "overrides": [
     {
+      "files": ["bin/**"],
+      "rules": {
+        "no-unassigned-import": "off"
+      }
+    },
+    {
       "files": ["playground/**", "test/**"],
       "rules": {
         "eslint/no-console": "off",

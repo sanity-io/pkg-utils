@@ -94,9 +94,10 @@ export async function resolveBuildContext(options: {
     strict,
     strictOptions,
     logger,
-  }).reduce<PkgExports>((acc, {_path: exportPath, ...exportEntry}) => {
-    return Object.assign(acc, {[exportPath]: exportEntry})
-  }, {})
+  }).reduce<PkgExports>(
+    (acc, {_path: exportPath, ...exportEntry}) => Object.assign(acc, {[exportPath]: exportEntry}),
+    {},
+  )
 
   const exports = resolveConfigProperty(config?.exports, parsedExports)
 
