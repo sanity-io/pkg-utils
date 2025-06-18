@@ -43,7 +43,7 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
       : []
 
     return [
-      `Build javascript files...`,
+      `Build type definitions with ${chalk.bold('rolldown')}...`,
       `  format: ${chalk.yellow(task.format)}`,
       ...targetLines,
       ...bundlesLines,
