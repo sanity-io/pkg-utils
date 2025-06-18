@@ -9,6 +9,7 @@ export default defineConfig({
     },
   ],
   extract: {
+
     rules: {
       'ae-incompatible-release-tags': 'error',
       'ae-internal-missing-underscore': 'off',
@@ -25,5 +26,5 @@ export default defineConfig({
   },
   runtime: 'node',
   tsconfig: 'tsconfig.dist.json',
-  // dts: 'rolldown',
+  dts: 'rolldown',
 })

@@ -1,4 +1,7 @@
 {
   "extends": "./tsconfig.settings",
-  "include": ["./src"]
+  "include": ["./src"],
+  "compilerOptions": {
+    "isolatedDeclarations": true
+  }
 }
