@@ -1,12 +1,15 @@
 import path from 'node:path'
-import esbuild, {type BuildFailure, type Message} from 'esbuild'
+import type {ExtractorMessage} from '@microsoft/api-extractor'
+import type {BuildFailure, Message} from 'esbuild'
 import {createConsoleSpy} from './consoleSpy'
 import {loadConfig} from './core/config/loadConfig'
+import type {BuildContext} from './core/contexts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
 import {fileExists} from './fileExists'
 import {createLogger, type Logger} from './logger'
 import {printPackageTree} from './printPackageTree'
 import {resolveBuildContext} from './resolveBuildContext'
+import {createSpinner} from './spinner'
 
 /** @public */
 export async function check(options: {
@@ -16,69 +19,88 @@ export async function check(options: {
 }): Promise<void> {
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
   const logger = createLogger()
+  const spinner = createSpinner('')
+  try {
+    const config = await loadConfig({cwd})
+    const pkg = await loadPkgWithReporting({cwd, logger, strict})
+    const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
+    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})
 
-  const config = await loadConfig({cwd})
-  const pkg = await loadPkgWithReporting({cwd, logger, strict})
-  const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
-  const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})
+    printPackageTree(ctx)
 
-  printPackageTree(ctx)
+    if (strict) {
+      const missingFiles: string[] = []
 
-  if (strict) {
-    const missingFiles: string[] = []
+      // Check if there are missing files
+      for (const [, exp] of Object.entries(ctx.exports || {})) {
+        if (exp.source && !fileExists(path.resolve(cwd, exp.source))) {
+          missingFiles.push(exp.source)
+        }
 
-    // Check if there are missing files
-    for (const [, exp] of Object.entries(ctx.exports || {})) {
-      if (exp.source && !fileExists(path.resolve(cwd, exp.source))) {
-        missingFiles.push(exp.source)
+        if (exp.require && !fileExists(path.resolve(cwd, exp.require))) {
+          missingFiles.push(exp.require)
+        }
+
+        if (exp.import && !fileExists(path.resolve(cwd, exp.import))) {
+          missingFiles.push(exp.import)
+        }
       }
 
-      if (exp.require && !fileExists(path.resolve(cwd, exp.require))) {
-        missingFiles.push(exp.require)
+      if (ctx.pkg.types && !fileExists(path.resolve(cwd, ctx.pkg.types))) {
+        missingFiles.push(ctx.pkg.types)
       }
 
-      if (exp.import && !fileExists(path.resolve(cwd, exp.import))) {
-        missingFiles.push(exp.import)
+      if (missingFiles.length) {
+        logger.error(`missing files: ${missingFiles.join(', ')}`)
+        process.exit(1)
       }
+
+      // Check if the files are resolved
+      const exportPaths: {require: string[]; import: string[]} = {
+        require: [],
+        import: [],
+      }
+
+      for (const exp of Object.values(ctx.exports || {})) {
+        if (!exp._exported) continue
+        if (exp.require) exportPaths.require.push(exp.require)
+        if (exp.import) exportPaths.import.push(exp.import)
+      }
+
+      const external = [
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.devDependencies || {}),
+      ]
+
+      const consoleSpy = createConsoleSpy()
+
+      if (exportPaths.import.length) {
+        checkExports(exportPaths.import, {cwd, external, format: 'esm', logger})
+      }
+
+      if (exportPaths.require.length) {
+        checkExports(exportPaths.require, {cwd, external, format: 'cjs', logger})
+      }
+
+      consoleSpy.restore()
     }
 
-    if (ctx.pkg.types && !fileExists(path.resolve(cwd, ctx.pkg.types))) {
-      missingFiles.push(ctx.pkg.types)
+    if (ctx.dts === 'rolldown' && ctx.config?.extract?.enabled !== false) {
+      await checkApiExtractorReleaseTags(ctx)
     }
 
-    if (missingFiles.length) {
-      logger.error(`missing files: ${missingFiles.join(', ')}`)
-      process.exit(1)
+    spinner.complete()
+  } catch (err) {
+    spinner.error()
+
+    if (err instanceof Error) {
+      const RE_CWD = new RegExp(`${cwd}`, 'g')
+
+      logger.error(err.message.replace(RE_CWD, '.'))
+      logger.log()
     }
 
-    // Check if the files are resolved
-    const exportPaths: {require: string[]; import: string[]} = {
-      require: [],
-      import: [],
-    }
-
-    for (const exp of Object.values(ctx.exports || {})) {
-      if (!exp._exported) continue
-      if (exp.require) exportPaths.require.push(exp.require)
-      if (exp.import) exportPaths.import.push(exp.import)
-    }
-
-    const external = [
-      ...Object.keys(pkg.dependencies || {}),
-      ...Object.keys(pkg.devDependencies || {}),
-    ]
-
-    const consoleSpy = createConsoleSpy()
-
-    if (exportPaths.import.length) {
-      checkExports(exportPaths.import, {cwd, external, format: 'esm', logger})
-    }
-
-    if (exportPaths.require.length) {
-      checkExports(exportPaths.require, {cwd, external, format: 'cjs', logger})
-    }
-
-    consoleSpy.restore()
+    process.exit(1)
   }
 }
 
@@ -86,6 +108,7 @@ async function checkExports(
   exportPaths: string[],
   options: {cwd: string; external: string[]; format: 'esm' | 'cjs'; logger: Logger},
 ) {
+  const {build} = await import('esbuild')
   const {cwd, external, format, logger} = options
 
   const code = exportPaths
@@ -93,7 +116,7 @@ async function checkExports(
     .join('\n')
 
   try {
-    const esbuildResult = await esbuild.build({
+    const esbuildResult = await build({
       bundle: true,
       external,
       format,
@@ -150,7 +173,7 @@ async function checkExports(
   }
 }
 
-function printEsbuildMessage(log: (...args: unknown[]) => void, msg: esbuild.Message) {
+function printEsbuildMessage(log: (...args: unknown[]) => void, msg: Message) {
   if (msg.location) {
     log(
       [
@@ -185,4 +208,72 @@ function isEsbuildMessage(msg: unknown): msg is Message {
     'location' in msg &&
     (msg.location === null || typeof msg.location === 'object')
   )
+}
+
+async function checkApiExtractorReleaseTags(ctx: BuildContext) {
+  const [
+    {Extractor, ExtractorConfig},
+    {createApiExtractorConfig},
+    {createTSDocConfig},
+    {getExtractMessagesConfig},
+    {printExtractMessages},
+  ] = await Promise.all([
+    import('@microsoft/api-extractor'),
+    import('./tasks/dts/createApiExtractorConfig'),
+    import('./tasks/dts/createTSDocConfig'),
+    import('./tasks/dts/getExtractMessagesConfig'),
+    import('./printExtractMessages'),
+  ])
+
+  const customTags = ctx.config?.extract?.customTags || []
+  const bundledPackages = ctx.bundledPackages
+  const distPath = ctx.distPath
+  const outDir = ctx.ts.config?.options.outDir
+  const rules = ctx.config?.extract?.rules || {}
+
+  if (!outDir) {
+    throw new Error('tsconfig.json is missing `compilerOptions.outDir`')
+  }
+
+  for (const exp of Object.values(ctx.exports || {})) {
+    if (!exp._exported || !exp.default.endsWith('.js')) continue
+    const dtsPath = exp.default.replace(/\.js$/, '.d.ts')
+    const exportPath = path.resolve(ctx.cwd, dtsPath)
+
+    const tsdocConfigFile = await createTSDocConfig({
+      customTags,
+    })
+    const extractorConfig = ExtractorConfig.prepare({
+      configObject: createApiExtractorConfig({
+        bundledPackages,
+        distPath,
+        exportPath,
+        filePath: path.relative(outDir, dtsPath),
+        messages: getExtractMessagesConfig({rules}),
+        projectFolder: ctx.cwd,
+        mainEntryPointFilePath: exportPath,
+        tsconfig: ctx.ts.config!,
+        tsconfigPath: path.resolve(ctx.cwd, ctx.ts.configPath || 'tsconfig.json'),
+        dtsRollupEnabled: false,
+      }),
+      configObjectFullPath: undefined,
+      tsdocConfigFile,
+      packageJsonFullPath: path.resolve(ctx.cwd, 'package.json'),
+    })
+    const messages: ExtractorMessage[] = []
+    // Invoke API Extractor
+    Extractor.invoke(extractorConfig, {
+      // Equivalent to the "--local" command-line parameter
+      localBuild: true,
+      // Equivalent to the "--verbose" command-line parameter
+      showVerboseMessages: true,
+      // handle messages
+      messageCallback(message: ExtractorMessage) {
+        messages.push(message)
+        message.handled = true
+      },
+    })
+
+    printExtractMessages(ctx, messages)
+  }
 }

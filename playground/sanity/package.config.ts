@@ -14,4 +14,5 @@ export default defineConfig({
       'ae-missing-release-tag': 'error',
     },
   },
+  dts: 'rolldown',
 })
