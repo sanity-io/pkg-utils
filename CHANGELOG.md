@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.7](https://github.com/sanity-io/pkg-utils/compare/v7.2.6...v7.2.7) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @rollup/plugin-commonjs to ^28.0.6 ([#1487](https://github.com/sanity-io/pkg-utils/issues/1487)) ([698c2dd](https://github.com/sanity-io/pkg-utils/commit/698c2dd832f1b53cdfd1a947b623d945c42de79d))
+* **deps:** Update dependency zod to v3.25.65 ([#1479](https://github.com/sanity-io/pkg-utils/issues/1479)) ([de81dd4](https://github.com/sanity-io/pkg-utils/commit/de81dd4469fa33b481a1e0346d4add6b293159a9))
+* **deps:** Update dependency zod to v3.25.67 ([#1488](https://github.com/sanity-io/pkg-utils/issues/1488)) ([482debd](https://github.com/sanity-io/pkg-utils/commit/482debd028ad8e1206e7c23aff429d891f6105e2))
+* **deps:** Update dependency zod-validation-error to v3.5.2 ([#1480](https://github.com/sanity-io/pkg-utils/issues/1480)) ([79ed6c8](https://github.com/sanity-io/pkg-utils/commit/79ed6c8ddbcfcd8737872fea946a55fd2aa9ae2a))
+
 ## [7.2.6](https://github.com/sanity-io/pkg-utils/compare/v7.2.5...v7.2.6) (2025-06-16)
 
 
