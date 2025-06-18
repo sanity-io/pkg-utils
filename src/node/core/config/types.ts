@@ -172,7 +172,7 @@ export interface PkgConfigOptions {
           displayName?: boolean
           /**
            * @defaultValue []
-           * @example ["@xstyled/styled-components", "@xstyled/styled-components/*"]
+           * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
            */
           topLevelImportPaths?: string[]
           /** @defaultValue true */
