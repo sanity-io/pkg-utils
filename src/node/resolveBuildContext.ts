@@ -1,17 +1,13 @@
 import path from 'node:path'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
-import {
-  DEFAULT_BROWSERSLIST_QUERY,
-  loadTSConfig,
-  parseExports,
-  resolveConfigProperty,
-  type BuildContext,
-  type PackageJSON,
-  type PkgConfigOptions,
-  type PkgExports,
-  type PkgRuntime,
-} from './core'
+import {resolveConfigProperty} from './core/config/resolveConfigProperty'
+import {type PkgConfigOptions, type PkgExports, type PkgRuntime} from './core/config/types'
+import type {BuildContext} from './core/contexts/buildContext'
+import {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults'
 import {findCommonDirPath, pathContains} from './core/findCommonPath'
+import {parseExports} from './core/pkg/parseExports'
+import type {PackageJSON} from './core/pkg/types'
+import {loadTSConfig} from './core/ts/loadTSConfig'
 import type {Logger} from './logger'
 import {resolveBrowserTarget} from './resolveBrowserTarget'
 import {resolveNodeTarget} from './resolveNodeTarget'

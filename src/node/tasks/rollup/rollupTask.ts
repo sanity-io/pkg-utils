@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import {rollup} from 'rollup'
 import {Observable} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy'
-import type {BuildContext} from '../../core'
+import type {BuildContext} from '../../core/contexts/buildContext'
 import type {RollupTask, TaskHandler} from '../types'
 import {resolveRollupConfig} from './resolveRollupConfig'
 

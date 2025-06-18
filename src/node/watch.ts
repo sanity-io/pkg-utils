@@ -1,10 +1,12 @@
 import path from 'node:path'
 import {switchMap} from 'rxjs'
-import {loadConfig, loadPkgWithReporting} from './core'
+import {loadConfig} from './core/config/loadConfig'
+import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveWatchTasks} from './resolveWatchTasks'
-import {watchTaskHandlers, type TaskHandler, type WatchTask} from './tasks'
+import {watchTaskHandlers} from './tasks'
+import {type TaskHandler, type WatchTask} from './tasks/types'
 import {watchConfigFiles} from './watchConfigFiles'
 
 /** @public */

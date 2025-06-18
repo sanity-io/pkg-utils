@@ -1,7 +1,0 @@
-export * from './config'
-export * from './contexts'
-export * from './defaults'
-export * from './isRecord'
-export * from './pkg'
-export * from './template'
-export * from './ts'

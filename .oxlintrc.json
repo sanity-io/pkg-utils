@@ -13,6 +13,8 @@
     "perf": "error"
   },
   "rules": {
+    "import/no-cycle": "error",
+    "oxc/no-barrel-file": "error",
     "eslint/no-console": ["warn", {"allow": ["warn", "error"]}],
     "react-in-jsx-scope": "off",
     "eslint/no-await-in-loop": "off"

@@ -1,4 +1,4 @@
-import type {PkgExport} from '../config'
+import type {PkgExport} from '../config/types'
 import {pkgExtMap as extMap} from './pkgExt'
 import type {PackageJSON} from './types'
 
