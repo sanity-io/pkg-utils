@@ -739,10 +739,8 @@ exports.VERSION = VERSION;
 
 exports[`should build \`ts-rolldown\` package 2`] = `
 "/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-"
+declare const VERSION = "1.0.0";
+export { VERSION };"
 `;
 
 exports[`should build \`ts-rolldown\` package 3`] = `
@@ -756,10 +754,8 @@ export {
 
 exports[`should build \`ts-rolldown\` package 4`] = `
 "/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-"
+declare const VERSION = "1.0.0";
+export { VERSION };"
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package 1`] = `
@@ -772,10 +768,8 @@ exports.VERSION = VERSION;
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package 2`] = `
-"export declare const VERSION = '1.0.0'
-
-export {}
-"
+"declare const VERSION = "1.0.0";
+export { VERSION };"
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package 3`] = `
@@ -788,10 +782,8 @@ export {
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package 4`] = `
-"export declare const VERSION = '1.0.0'
-
-export {}
-"
+"declare const VERSION = "1.0.0";
+export { VERSION };"
 `;
 
 exports[`should build \`ts-without-extract\` package 1`] = `
