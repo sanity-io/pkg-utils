@@ -60,6 +60,7 @@ export async function doExtract(
       tmpPath,
       tsconfigPath: path.resolve(cwd, ts.configPath || 'tsconfig.json'),
       dts: ctx.dts,
+      extractorDisabled: config?.extract?.enabled === false,
     })
 
     messages.push(...result.messages)

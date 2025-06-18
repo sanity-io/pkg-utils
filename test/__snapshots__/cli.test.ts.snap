@@ -699,6 +699,13 @@ declare module './module2' {
 "
 `;
 
+exports[`should build \`ts-without-extract\` package 1`] = `
+"export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
 exports[`should build \`ts-node16\` package 1`] = `
 "/**
  * @internal

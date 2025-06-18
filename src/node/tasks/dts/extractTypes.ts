@@ -31,6 +31,10 @@ export async function extractTypes(options: {
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
   dts: DtsType
+  /**
+   * If the extractor is disabled then it means API Extractor is only used to bundle dts, and not check tsdoc release tags.
+   */
+  extractorDisabled: boolean
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
   const {
     bundledPackages,
@@ -46,6 +50,7 @@ export async function extractTypes(options: {
     tsconfig,
     tsconfigPath,
     dts,
+    extractorDisabled,
   } = options
 
   const tsdocConfigFile = await createTSDocConfig({
@@ -61,7 +66,7 @@ export async function extractTypes(options: {
       distPath,
       exportPath,
       filePath,
-      messages: getExtractMessagesConfig({rules}),
+      messages: getExtractMessagesConfig({rules, disabled: extractorDisabled}),
       projectFolder: projectPath,
       mainEntryPointFilePath: sourceTypesPath,
       tsconfig,
