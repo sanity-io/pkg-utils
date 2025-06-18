@@ -66,10 +66,6 @@ export function resolveRolldownConfig(
     commonjs(),
     json(),
     esbuild({
-      // jsx: config?.jsx ?? 'automatic',
-      // jsxFactory: config?.jsxFactory ?? 'createElement',
-      // jsxFragment: config?.jsxFragment ?? 'Fragment',
-      // jsxImportSource: config?.jsxImportSource ?? 'react',
       target,
       tsconfig: ctx.ts.configPath || 'tsconfig.json',
       treeShaking: true,
@@ -189,8 +185,8 @@ export function resolveRolldownConfig(
     dir: outDir,
     entryFileNames,
     esModule: true,
-    format,
-    sourcemap: config?.sourcemap ?? true,
+    format: buildTask.type === 'rolldown:dts' ? 'es' : format,
+    sourcemap: buildTask.type === 'rolldown:dts' ? false : (config?.sourcemap ?? true),
     hoistTransitiveImports: false,
   } satisfies OutputOptions
 
