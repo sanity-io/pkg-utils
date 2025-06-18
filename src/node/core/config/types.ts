@@ -3,9 +3,6 @@ import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict'
 
-// re-export
-export type {RollupPlugin, StrictOptions}
-
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'
 
