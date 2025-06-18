@@ -1,6 +1,5 @@
 import {definePlugin} from 'sanity'
 import {route} from 'sanity/router'
-
 import {type VisionToolConfig} from './types'
 
 export const visionTool = definePlugin<VisionToolConfig | void>((options) => {

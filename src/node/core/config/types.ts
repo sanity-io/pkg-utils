@@ -1,7 +1,6 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
-
 import type {StrictOptions} from '../../strict'
 
 // re-export

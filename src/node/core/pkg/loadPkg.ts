@@ -1,7 +1,5 @@
 import fs from 'node:fs/promises'
-
 import pkgUp from 'pkg-up'
-
 import type {PackageJSON} from './types'
 import {validatePkg} from './validatePkg'
 

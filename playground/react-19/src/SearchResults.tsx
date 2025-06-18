@@ -1,5 +1,4 @@
 import {use} from 'react'
-
 import {fetchSearchResults} from './data'
 
 export function SearchResults({query}: {query: string}) {

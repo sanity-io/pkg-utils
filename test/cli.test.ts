@@ -1,7 +1,5 @@
 import path from 'node:path'
-
 import {describe, expect, test} from 'vitest'
-
 import {spawnProject} from './env'
 
 // @TODO make these test suites work on Windows

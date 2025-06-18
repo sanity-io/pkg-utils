@@ -1,11 +1,10 @@
 import {expect, test, vi} from 'vitest'
-
 import {
-  type BuildContext,
   createLogger,
-  type PackageJSON,
   parseExports,
   resolveBuildTasks,
+  type BuildContext,
+  type PackageJSON,
 } from '../src/node'
 import {parseStrictOptions} from '../src/node/strict'
 

@@ -1,5 +1,4 @@
 import {statSync} from 'node:fs'
-
 import prettyBytes from 'pretty-bytes'
 
 export function getFilesize(file: string): string {

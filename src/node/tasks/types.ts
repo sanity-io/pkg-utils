@@ -1,6 +1,5 @@
 import type {RollupWatcherEvent} from 'rollup'
 import type {Observable} from 'rxjs'
-
 import type {BuildContext, PkgRuntime} from '../core'
 import type {DtsResult, DtsTask, DtsWatchTask} from './dts'
 

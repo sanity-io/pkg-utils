@@ -1,6 +1,5 @@
 import {describe, expect, test} from 'vitest'
-
-import {createLogger, type PackageJSON, parseExports} from '../src/node'
+import {createLogger, parseExports, type PackageJSON} from '../src/node'
 import {parseStrictOptions} from '../src/node/strict'
 
 const name = 'test'

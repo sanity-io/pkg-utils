@@ -1,5 +1,4 @@
 import {expect, test} from 'vitest'
-
 import {spawnProject} from './env'
 
 const isWindows = process.platform === 'win32'

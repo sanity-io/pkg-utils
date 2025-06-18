@@ -1,5 +1,4 @@
 import type ts from 'typescript'
-
 import type {Logger} from '../../logger'
 import type {PkgConfigOptions, PkgExports, PkgRuntime} from '../config'
 import type {PackageJSON} from '../pkg'

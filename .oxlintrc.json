@@ -5,21 +5,8 @@
     "es6": true,
     "node": true
   },
-  "plugins": [
-    "typescript",
-    "unicorn",
-    "react",
-    "oxc",
-    "import",
-    "node",
-    "promise"
-  ],
-  "ignorePatterns": [
-    "**/dist/*",
-    "**/.next/*",
-    "**/lib/*",
-    "**/test/env/__tmp__/*"
-  ],
+  "plugins": ["typescript", "unicorn", "react", "oxc", "import", "node", "promise"],
+  "ignorePatterns": ["**/dist/*", "**/.next/*", "**/lib/*", "**/test/env/__tmp__/*"],
   "categories": {
     "correctness": "error",
     "suspicious": "error",

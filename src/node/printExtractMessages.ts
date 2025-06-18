@@ -1,8 +1,6 @@
 import path from 'node:path'
-
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 import chalk from 'chalk'
-
 import type {BuildContext} from './core'
 
 export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessage[]): void {
