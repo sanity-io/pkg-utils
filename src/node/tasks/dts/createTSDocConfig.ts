@@ -1,6 +1,9 @@
 import {readFile} from 'node:fs/promises'
+import {createRequire} from 'node:module'
 import {TSDocConfigFile} from '@microsoft/tsdoc-config'
 import {parse} from 'jsonc-parser'
+
+const require = createRequire(import.meta.url)
 
 /** @public */
 export interface TSDocCustomTag {
