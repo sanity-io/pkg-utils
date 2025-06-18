@@ -9,7 +9,7 @@ import {
 import {mkdirp} from 'mkdirp'
 import * as prettier from 'prettier'
 import type ts from 'typescript'
-import type {PkgConfigOptions} from '../../core/config/types'
+import type {DtsType, PkgConfigOptions} from '../../core/config/types'
 import type {BuildFile} from '../../core/contexts/buildContext'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
 import {createTSDocConfig} from './createTSDocConfig'
@@ -30,6 +30,7 @@ export async function extractTypes(options: {
   tmpPath: string
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
+  dts: DtsType
 }): Promise<{extractorResult: ExtractorResult; messages: ExtractorMessage[]}> {
   const {
     bundledPackages,
@@ -44,6 +45,7 @@ export async function extractTypes(options: {
     tmpPath,
     tsconfig,
     tsconfigPath,
+    dts,
   } = options
 
   const tsdocConfigFile = await createTSDocConfig({
@@ -64,6 +66,7 @@ export async function extractTypes(options: {
       mainEntryPointFilePath: sourceTypesPath,
       tsconfig,
       tsconfigPath,
+      dts,
     }),
     configObjectFullPath: undefined,
     tsdocConfigFile,

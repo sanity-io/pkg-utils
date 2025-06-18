@@ -25,5 +25,5 @@ export default defineConfig({
   },
   runtime: 'node',
   tsconfig: 'tsconfig.dist.json',
-  dts: 'rolldown',
+  // dts: 'rolldown',
 })

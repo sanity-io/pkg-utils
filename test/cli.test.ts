@@ -131,6 +131,20 @@ test.skipIf(isWindows)('should build `ts` package', async () => {
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `ts-without-extract` package', async () => {
+  const project = await spawnProject('ts-without-extract')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
+
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 test.skipIf(isWindows)('should build `ts-node16` package', async () => {
   const project = await spawnProject('ts-node16')
 

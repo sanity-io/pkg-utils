@@ -111,6 +111,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
               tsconfig: tsContext.config!,
               tmpPath,
               tsconfigPath: path.resolve(cwd, tsContext.configPath || 'tsconfig.json'),
+              dts: ctx.dts,
             })
 
             messages.push(...result.messages)
