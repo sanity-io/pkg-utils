@@ -4,7 +4,7 @@ import pkgUp from 'pkg-up'
 import {findConfigFile} from './findConfigFile'
 import type {PkgConfigOptions} from './types'
 
-/** @internal */
+/** @alpha */
 export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptions | undefined> {
   const {cwd} = options
 

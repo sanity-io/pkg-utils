@@ -1,7 +1,7 @@
 // oxlint-disable no-console
 import chalk from 'chalk'
 
-/** @internal */
+/** @alpha */
 export interface Logger {
   log: (...args: unknown[]) => void
   info: (...args: unknown[]) => void
@@ -10,7 +10,7 @@ export interface Logger {
   success: (...args: unknown[]) => void
 }
 
-/** @internal */
+/** @alpha */
 export function createLogger(): Logger {
   return {
     log: (...args) => {

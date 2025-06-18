@@ -1,4 +1,4 @@
-/** @internal */
+/** @alpha */
 export interface PackageJSON {
   type?: 'commonjs' | 'module'
   version: string

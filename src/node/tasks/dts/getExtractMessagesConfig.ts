@@ -8,7 +8,7 @@ const LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
   warn: 'warning' as ExtractorLogLevel.Warning,
 }
 
-/** @internal */
+/** @alpha */
 export function getExtractMessagesConfig(options: {
   rules: NonNullable<PkgConfigOptions['extract']>['rules']
 }): IExtractorMessagesConfig {

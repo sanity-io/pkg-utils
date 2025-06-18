@@ -78,7 +78,7 @@ export interface StrictOptions {
   alwaysPackageJsonFiles?: ToggleType
 }
 
-/** @internal */
+/** @alpha */
 export function parseStrictOptions(input: unknown): InferredStrictOptions {
   return validationSchema.parse({strictOptions: input}, {errorMap}).strictOptions
 }
