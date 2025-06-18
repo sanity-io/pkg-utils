@@ -1,5 +1,4 @@
 import ts from 'typescript'
-
 import type {Logger} from '../../logger'
 import {printDiagnostic} from './printDiagnostic'
 

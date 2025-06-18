@@ -1,5 +1,4 @@
 import {expect, test} from 'vitest'
-
 import {validatePkg} from '../src/node/core/pkg/validatePkg'
 
 const template = {

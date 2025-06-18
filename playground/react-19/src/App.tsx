@@ -1,5 +1,4 @@
 import {Suspense, useDeferredValue, useState} from 'react'
-
 import {Input} from './Input'
 import {SearchResults} from './SearchResults'
 

@@ -1,5 +1,4 @@
 import path from 'node:path'
-
 import type {BuildContext, PkgExport, PkgFormat, PkgRuntime} from './core'
 import type {BuildTask, DtsTask, RollupTask, RollupTaskEntry} from './tasks'
 import {getTargetPaths} from './tasks/dts/getTargetPaths'

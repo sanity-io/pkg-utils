@@ -1,5 +1,4 @@
 import child_process from 'node:child_process'
-
 import {ExecError} from './ExecError'
 
 export function exec(

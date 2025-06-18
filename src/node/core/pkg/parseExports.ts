@@ -1,6 +1,5 @@
 import {existsSync} from 'node:fs'
 import {resolve as resolvePath} from 'node:path'
-
 import type {Logger} from '../../logger'
 import type {InferredStrictOptions} from '../../strict'
 import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths'

@@ -1,7 +1,5 @@
 import path from 'node:path'
-
 import esbuild, {type BuildFailure, type Message} from 'esbuild'
-
 import {createConsoleSpy} from './consoleSpy'
 import {loadConfig, loadPkgWithReporting} from './core'
 import {fileExists} from './fileExists'

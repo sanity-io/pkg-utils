@@ -1,5 +1,4 @@
 import type {ExtractorLogLevel, IExtractorMessagesConfig} from '@microsoft/api-extractor'
-
 import type {PkgConfigOptions, PkgRuleLevel} from '../../core'
 
 const LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
