@@ -132,8 +132,8 @@ importers:
         specifier: 3.25.65
         version: 3.25.65
       zod-validation-error:
-        specifier: 3.5.0
-        version: 3.5.0(zod@3.25.65)
+        specifier: 3.5.2
+        version: 3.5.2(zod@3.25.65)
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.8.1
@@ -5670,8 +5670,8 @@ packages:
       typescript: ^4.9.4 || ^5.0.2
       zod: ^3
 
-  zod-validation-error@3.5.0:
-    resolution: {integrity: sha512-IWK6O51sRkq0YsnYD2oLDuK2BNsIjYUlR0+1YSd4JyBzm6/892IWroUnLc7oW4FU+b0f6948BHi6H8MDcqpOGw==}
+  zod-validation-error@3.5.2:
+    resolution: {integrity: sha512-mdi7YOLtram5dzJ5aDtm1AG9+mxRma1iaMrZdYIpFO7epdKBUwLHIxTF8CPDeCQ828zAXYtizrKlEJAtzgfgrw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       zod: ^3.25.0
@@ -11549,7 +11549,7 @@ snapshots:
       typescript: 5.8.3
       zod: 3.25.65
 
-  zod-validation-error@3.5.0(zod@3.25.65):
+  zod-validation-error@3.5.2(zod@3.25.65):
     dependencies:
       zod: 3.25.65
 
