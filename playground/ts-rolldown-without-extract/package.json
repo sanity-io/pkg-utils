@@ -1,0 +1,28 @@
+{
+  "name": "ts-rolldown-without-extract",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "check:types": "tsc",
+    "clean": "rimraf dist"
+  }
+}

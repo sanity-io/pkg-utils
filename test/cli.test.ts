@@ -145,6 +145,40 @@ test.skipIf(isWindows)('should build `ts-without-extract` package', async () => 
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `ts-rolldown-without-extract` package', async () => {
+  const project = await spawnProject('ts-rolldown-without-extract')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('with api-extractor')
+
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
+test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
+  const project = await spawnProject('ts-rolldown')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('with api-extractor')
+
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 test.skipIf(isWindows)('should build `ts-node16` package', async () => {
   const project = await spawnProject('ts-node16')
 

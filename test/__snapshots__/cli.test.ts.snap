@@ -699,13 +699,6 @@ declare module './module2' {
 "
 `;
 
-exports[`should build \`ts-without-extract\` package 1`] = `
-"export declare const VERSION = '1.0.0'
-
-export {}
-"
-`;
-
 exports[`should build \`ts-node16\` package 1`] = `
 "/**
  * @internal
@@ -732,5 +725,78 @@ declare module './module2.js' {
   }
 }
 //# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const VERSION = "1.0.0";
+exports.VERSION = VERSION;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 2`] = `
+"/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 3`] = `
+"const VERSION = "1.0.0";
+export {
+  VERSION
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 4`] = `
+"/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
+exports[`should build \`ts-rolldown-without-extract\` package 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const VERSION = "1.0.0";
+exports.VERSION = VERSION;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown-without-extract\` package 2`] = `
+"export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
+exports[`should build \`ts-rolldown-without-extract\` package 3`] = `
+"const VERSION = "1.0.0";
+export {
+  VERSION
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown-without-extract\` package 4`] = `
+"export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
+exports[`should build \`ts-without-extract\` package 1`] = `
+"export declare const VERSION = '1.0.0'
+
+export {}
 "
 `;
