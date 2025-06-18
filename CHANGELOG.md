@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.9](https://github.com/sanity-io/pkg-utils/compare/v7.2.8...v7.2.9) (2025-06-18)
+
+
+### Bug Fixes
+
+* remove internal exports ([#1498](https://github.com/sanity-io/pkg-utils/issues/1498)) ([7936c07](https://github.com/sanity-io/pkg-utils/commit/7936c07ca37f936b2ce01b07f15a9dacfa31ddd1))
+
 ## [7.2.8](https://github.com/sanity-io/pkg-utils/compare/v7.2.7...v7.2.8) (2025-06-18)
 
 
