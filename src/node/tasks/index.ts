@@ -1,7 +1,7 @@
-import { dtsTask } from './dts/dtsTask'
-import { dtsWatchTask } from './dts/dtsWatchTask'
-import { rollupTask } from './rollup/rollupTask'
-import { rollupWatchTask } from './rollup/rollupWatchTask'
+import {dtsTask} from './dts/dtsTask'
+import {dtsWatchTask} from './dts/dtsWatchTask'
+import {rollupTask} from './rollup/rollupTask'
+import {rollupWatchTask} from './rollup/rollupWatchTask'
 import type {BuildTaskHandlers, WatchTaskHandlers} from './types'
 
 export * from './dts'

@@ -1,8 +1,6 @@
 import path from 'node:path'
-
 import {describe, expect, test} from 'vitest'
-
-import { spawnProject } from './env/spawnProject'
+import {spawnProject} from './env/spawnProject'
 
 // @TODO make these test suites work on Windows
 const isWindows = process.platform === 'win32'

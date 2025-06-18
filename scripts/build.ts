@@ -1,6 +1,5 @@
 import path from 'path'
-
-import { build } from '../src/node'
+import {build} from '../src/node'
 
 global.__DEV__ = true
 

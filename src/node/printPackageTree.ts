@@ -1,10 +1,8 @@
 import path from 'node:path'
-
 import chalk from 'chalk'
 import treeify from 'treeify'
-
-import type { BuildContext } from './core/contexts/buildContext'
-import type { PkgExport } from './core/config/types'
+import type {PkgExport} from './core/config/types'
+import type {BuildContext} from './core/contexts/buildContext'
 import {fileExists} from './fileExists'
 import {getFilesize} from './getFilesize'
 

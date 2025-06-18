@@ -11,9 +11,9 @@ import terser from '@rollup/plugin-terser'
 import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
-import { resolveConfigProperty } from '../../core/config/resolveConfigProperty'
-import type { BuildContext } from '../../core/contexts/buildContext'
-import type { PackageJSON } from '../../core/pkg/types'
+import {resolveConfigProperty} from '../../core/config/resolveConfigProperty'
+import type {BuildContext} from '../../core/contexts/buildContext'
+import type {PackageJSON} from '../../core/pkg/types'
 import type {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
