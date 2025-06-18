@@ -59,6 +59,7 @@ export type TaskHandler<Task, Result = void> = {
 export interface BuildTaskHandlers {
   'build:dts': TaskHandler<DtsTask, DtsResult>
   'build:js': TaskHandler<RollupTask>
+  'rolldown:dts': TaskHandler<RolldownDtsTask>
 }
 
 /** @internal */

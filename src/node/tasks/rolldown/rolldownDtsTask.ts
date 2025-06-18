@@ -4,8 +4,8 @@ import {rolldown} from 'rolldown'
 import {from} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy'
 import type {BuildContext} from '../../core/contexts/buildContext'
-import {resolveRollupConfig} from '../rollup/resolveRollupConfig'
 import type {RolldownDtsTask, TaskHandler} from '../types'
+import {resolveRolldownConfig} from './resolveRolldownConfig'
 
 /** @internal */
 export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
@@ -106,17 +106,12 @@ async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
     },
   })
 
-  const {dts: dtsPlugin} = await import('rolldown-plugin-dts')
-
   try {
-    const {inputOptions: _inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
-    const {treeshake: _treeshake, plugins: _plugins, ...inputOptions} = _inputOptions
+    const {inputOptions, outputOptions} = resolveRolldownConfig(ctx, task)
 
     // Create bundle
-    // @ts-expect-error - TODO: fix this
     const bundle = await rolldown({
       ...inputOptions,
-      plugins: [dtsPlugin({emitDtsOnly: true, tsconfig: ctx.ts.configPath || 'tsconfig.json'})],
       onwarn(warning) {
         consoleSpy.messages.push({
           type: 'warn',
@@ -128,10 +123,7 @@ async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
 
     // generate output specific code in-memory
     // you can call this function multiple times on the same bundle object
-    const {output} = await bundle.generate(
-      // @ts-expect-error - TODO: fix this
-      outputOptions,
-    )
+    const {output} = await bundle.generate(outputOptions)
 
     for (const chunkOrAsset of output) {
       if (chunkOrAsset.type === 'asset') {
@@ -148,10 +140,7 @@ async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
     }
 
     // or write the bundle to disk
-    await bundle.write(
-      // @ts-expect-error - TODO: fix this
-      outputOptions,
-    )
+    await bundle.write(outputOptions)
 
     // closes the bundle
     await bundle.close()
