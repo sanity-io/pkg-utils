@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.0](https://github.com/sanity-io/pkg-utils/compare/v7.2.9...v7.3.0) (2025-06-18)
+
+
+### Features
+
+* add rolldown powered dts bundling ([#1500](https://github.com/sanity-io/pkg-utils/issues/1500)) ([e0fd165](https://github.com/sanity-io/pkg-utils/commit/e0fd16565337a206e1ded7497e3c6ea48c3bf3d0))
+
 ## [7.2.9](https://github.com/sanity-io/pkg-utils/compare/v7.2.8...v7.2.9) (2025-06-18)
 
 
