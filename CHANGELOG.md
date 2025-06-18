@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.0](https://github.com/sanity-io/pkg-utils/compare/v7.3.0...v7.4.0) (2025-06-18)
+
+
+### Features
+
+* run CLI on native ESM ([#1504](https://github.com/sanity-io/pkg-utils/issues/1504)) ([2b9744d](https://github.com/sanity-io/pkg-utils/commit/2b9744d573e4e37e6c4809ecfd5c4642aacfbe95))
+
 ## [7.3.0](https://github.com/sanity-io/pkg-utils/compare/v7.2.9...v7.3.0) (2025-06-18)
 
 
