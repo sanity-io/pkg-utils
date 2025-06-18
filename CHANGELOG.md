@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.5.0](https://github.com/sanity-io/pkg-utils/compare/v7.4.0...v7.5.0) (2025-06-18)
+
+
+### Features
+
+* option for disabling API extractor checks ([#1513](https://github.com/sanity-io/pkg-utils/issues/1513)) ([b15e61f](https://github.com/sanity-io/pkg-utils/commit/b15e61f3e6bf2b3a771a99cbe3c5d92d22db5ad0))
+
 ## [7.4.0](https://github.com/sanity-io/pkg-utils/compare/v7.3.0...v7.4.0) (2025-06-18)
 
 
