@@ -1,10 +1,6 @@
 import path from 'node:path'
 import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
-import alias from '@rollup/plugin-alias'
 import {getBabelOutputPlugin} from '@rollup/plugin-babel'
-import commonjs from '@rollup/plugin-commonjs'
-import json from '@rollup/plugin-json'
-import {nodeResolve} from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import type {InputOptions, OutputOptions, Plugin} from 'rolldown'
 import {dts as dtsPlugin} from 'rolldown-plugin-dts'
@@ -55,16 +51,6 @@ export function resolveRolldownConfig(
 
   // @ts-expect-error - TODO: fix this
   const _defaultPlugins = [
-    alias({
-      entries: {...pathAliases},
-    }),
-    nodeResolve({
-      browser: runtime === 'browser',
-      extensions: ['.cjs', '.mjs', '.js', '.jsx', '.json', '.node'],
-      preferBuiltins: true,
-    }),
-    commonjs(),
-    json(),
     esbuild({
       target,
       tsconfig: ctx.ts.configPath || 'tsconfig.json',
@@ -137,6 +123,26 @@ export function resolveRolldownConfig(
             'process.env.PKG_VERSION': JSON.stringify(process.env['PKG_VERSION'] || pkg.version),
             ...replacements,
           },
+
+    platform:
+      buildTask.type === 'rolldown:dts'
+        ? 'node'
+        : runtime === 'node'
+          ? 'node'
+          : runtime === 'browser'
+            ? 'browser'
+            : 'neutral',
+
+    resolve: {
+      alias: pathAliases,
+      tsconfigFilename: ctx.ts.configPath || 'tsconfig.json',
+    },
+    transform: {
+      target,
+    },
+    experimental: {
+      attachDebugInfo: 'none',
+    },
 
     external: (id, importer) => {
       // Check if the id is a self-referencing import

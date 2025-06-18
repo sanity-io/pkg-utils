@@ -1,11 +1,9 @@
 import path from 'node:path'
 import chalk from 'chalk'
-import {rolldown} from 'rolldown'
 import {from} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy'
 import type {BuildContext} from '../../core/contexts/buildContext'
 import type {RolldownDtsTask, TaskHandler} from '../types'
-import {resolveRolldownConfig} from './resolveRolldownConfig'
 
 /** @internal */
 export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
@@ -52,14 +50,6 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
   },
   exec: (ctx, task) => {
     return from(execPromise(ctx, task))
-    // return new Observable((observer) => {
-    //   execPromise(ctx, task)
-    //     .then((result) => {
-    //       observer.next(result)
-    //       observer.complete()
-    //     })
-    //     .catch((err) => observer.error(err))
-    // })
   },
   complete: () => {
     //
@@ -70,6 +60,10 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
 }
 
 async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
+  const [{rolldown}, {resolveRolldownConfig}] = await Promise.all([
+    import('rolldown'),
+    import('./resolveRolldownConfig'),
+  ])
   const {distPath, files, logger} = ctx
   const outDir = path.relative(ctx.cwd, distPath)
 

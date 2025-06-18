@@ -1,6 +1,6 @@
 {
   "name": "@sanity/pkg-utils",
-  "version": "7.2.10-canary.0",
+  "version": "7.2.10-canary.1",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -49,14 +49,12 @@
     "bin",
     "dist",
     "tsconfig",
-    "!dist/stats.html",
-    "src",
-    "!src/**/*.test.ts"
+    "!dist/stats.html"
   ],
   "scripts": {
     "build": "run-s clean build:pkg check:pkg",
-    "build:pkg": "node -r esbuild-register scripts/build",
-    "check:pkg": "node -r esbuild-register scripts/check",
+    "build:pkg": "tsx scripts/build",
+    "check:pkg": "tsx scripts/check",
     "check:types": "tsc --build",
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
@@ -69,7 +67,7 @@
     "pretest": "run-s playground:clean",
     "test": "vitest run",
     "test:update-snapshots": "pnpm test run -- --update",
-    "watch": "node -r esbuild-register scripts/watch"
+    "watch": "tsx scripts/watch"
   },
   "commitlint": {
     "extends": [
@@ -158,6 +156,7 @@
     "rollup-plugin-visualizer": "^6.0.3",
     "semver": "^7.6.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "catalog:",
     "vitest": "^3.2.4"
   },
