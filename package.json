@@ -61,7 +61,7 @@
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
-    "format": "prettier --write --cache --ignore-unknown . && eslint . --ext .cjs,.js,.ts,.tsx --fix --quiet",
+    "format": "prettier --write --cache --ignore-unknown . && oxlint --fix --quiet",
     "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
     "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
@@ -77,9 +77,12 @@
     ]
   },
   "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "prettier --cache --write",
+      "oxlint --fix --quiet"
+    ],
     "*": [
-      "prettier --write --cache --ignore-unknown",
-      "eslint --ext .cjs,.js,.ts,.tsx --fix"
+      "prettier --write --cache --ignore-unknown"
     ]
   },
   "browserslist": "extends @sanity/browserslist-config",
@@ -156,6 +159,7 @@
     "lint-staged": "^15.0.2",
     "npm-run-all2": "^8.0.4",
     "outdent": "^0.8.0",
+    "oxlint": "^1.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
     "semver": "^7.6.0",
     "ts-node": "^10.9.2",

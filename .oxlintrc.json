@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "react",
+    "oxc"
+  ],
+  "ignorePatterns": [
+    "**/dist/*",
+    "**/.next/*",
+    "**/lib/*",
+    "**/test/env/__tmp__/*"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "rules": {
+    "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
+    "react-in-jsx-scope": "off"
+  }
+}
