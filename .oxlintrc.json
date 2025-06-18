@@ -23,7 +23,7 @@
     "perf": "error"
   },
   "rules": {
-    "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
+    "eslint/no-console": ["warn", {"allow": ["warn", "error"]}],
     "react-in-jsx-scope": "off",
     "eslint/no-await-in-loop": "off"
   },

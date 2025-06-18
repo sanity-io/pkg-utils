@@ -1,17 +1,15 @@
 import path from 'node:path'
-
 import browserslistToEsbuild from 'browserslist-to-esbuild'
-
 import {
-  type BuildContext,
   DEFAULT_BROWSERSLIST_QUERY,
   loadTSConfig,
-  type PackageJSON,
   parseExports,
+  resolveConfigProperty,
+  type BuildContext,
+  type PackageJSON,
   type PkgConfigOptions,
   type PkgExports,
   type PkgRuntime,
-  resolveConfigProperty,
 } from './core'
 import {findCommonDirPath, pathContains} from './core/findCommonPath'
 import type {Logger} from './logger'
@@ -96,10 +94,8 @@ export async function resolveBuildContext(options: {
     strict,
     strictOptions,
     logger,
-  }).reduce<PkgExports>((acc, x) => {
-    const {_path: exportPath, ...exportEntry} = x
-
-    return {...acc, [exportPath]: exportEntry}
+  }).reduce<PkgExports>((acc, {_path: exportPath, ...exportEntry}) => {
+    return Object.assign(acc, {[exportPath]: exportEntry})
   }, {})
 
   const exports = resolveConfigProperty(config?.exports, parsedExports)
@@ -116,9 +112,7 @@ export async function resolveBuildContext(options: {
       : resolveConfigProperty(config?.external, parsedExternal)
   // Merge bundledPackages with dev deps, replace if it's a function
   const externalWithTypes = new Set([pkg.name, ...external, ...external.map(transformPackageName)])
-  const bundledDependencies = [
-    ...(pkg.devDependencies ? Object.keys(pkg.devDependencies) : []),
-  ].filter(
+  const bundledDependencies = (pkg.devDependencies ? Object.keys(pkg.devDependencies) : []).filter(
     // Do not bundle anything that is marked as external
     (_) => !externalWithTypes.has(_),
   )
