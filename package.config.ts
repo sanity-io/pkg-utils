@@ -9,7 +9,6 @@ export default defineConfig({
     },
   ],
   extract: {
-
     rules: {
       'ae-incompatible-release-tags': 'error',
       'ae-internal-missing-underscore': 'off',
