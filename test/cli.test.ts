@@ -152,7 +152,8 @@ test.skipIf(isWindows)('should build `ts-rolldown-without-extract` package', asy
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('with api-extractor')
+  expect(stdout).toContain('with rolldown')
+  expect(stdout).not.toContain('Check tsdoc release tags')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
@@ -169,7 +170,8 @@ test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
 
   const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('with api-extractor')
+  expect(stdout).toContain('with rolldown')
+  expect(stdout).not.toContain('Check tsdoc release tags')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()

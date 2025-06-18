@@ -6,5 +6,5 @@ export default defineConfig({
     // This package fails to build with extract enabled
     enabled: false,
   },
-  // dts: 'rolldown',
+  dts: 'rolldown',
 })
