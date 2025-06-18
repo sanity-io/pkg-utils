@@ -21,7 +21,7 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
           ...bundleEntries.map((e) =>
             [
               `    - `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(replaceFileEnding(e.output))}`,
             ].join(''),
           ),
         ]
@@ -34,7 +34,7 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
             [
               `    - `,
               `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(replaceFileEnding(e.output))}`,
             ].join(''),
           ),
         ]
@@ -145,5 +145,16 @@ async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
     // Restore console
     consoleSpy.restore()
     throw err
+  }
+}
+
+function replaceFileEnding(path: string) {
+  switch (true) {
+    case path.endsWith('.mjs'):
+      return path.replace(/\.mjs$/, '.d.mts')
+    case path.endsWith('.cjs'):
+      return path.replace(/\.cjs$/, '.d.cts')
+    default:
+      return path.replace(/\.js$/, '.d.ts')
   }
 }

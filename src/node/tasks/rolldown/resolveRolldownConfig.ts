@@ -1,13 +1,8 @@
 import path from 'node:path'
-import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
-import {getBabelOutputPlugin} from '@rollup/plugin-babel'
-import terser from '@rollup/plugin-terser'
-import type {InputOptions, OutputOptions, Plugin} from 'rolldown'
+import type {InputOptions, OutputOptions} from 'rolldown'
 import {dts as dtsPlugin} from 'rolldown-plugin-dts'
-import esbuild from 'rollup-plugin-esbuild'
 import type {BuildContext} from '../../core/contexts/buildContext'
 import {pkgExtMap as extMap} from '../../core/pkg/pkgExt'
-import type {PackageJSON} from '../../core/pkg/types'
 import type {RolldownDtsTask} from '../types'
 
 export interface RolldownConfig {
@@ -22,7 +17,6 @@ export function resolveRolldownConfig(
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
   const outputExt = extMap[pkg.type || 'commonjs'][format]
-  const minify = config?.minify ?? false
   const outDir = path.relative(cwd, distPath)
 
   const pathAliases = Object.fromEntries(
@@ -46,53 +40,6 @@ export function resolveRolldownConfig(
   const replacements = Object.fromEntries(
     Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)]),
   )
-
-  const {optimizeLodash: enableOptimizeLodash = hasDependency(pkg, 'lodash')} = config?.rollup || {}
-
-  // @ts-expect-error - TODO: fix this
-  const _defaultPlugins = [
-    esbuild({
-      target,
-      tsconfig: ctx.ts.configPath || 'tsconfig.json',
-      treeShaking: true,
-      minifySyntax: config?.minify !== false,
-      supported: {
-        'template-literal': true,
-      },
-    }),
-    Array.isArray(config?.babel?.plugins) &&
-      getBabelOutputPlugin({
-        babelrc: false,
-        plugins: config.babel.plugins,
-      }),
-    enableOptimizeLodash &&
-      optimizeLodashImports({
-        useLodashEs: format === 'esm' && hasDependency(pkg, 'lodash-es') ? true : undefined,
-        ...(typeof config?.rollup?.optimizeLodash === 'boolean'
-          ? {}
-          : config?.rollup?.optimizeLodash),
-      }),
-    minify &&
-      terser({
-        compress: {directives: false, passes: 10},
-        ecma: 2020,
-        output: {
-          comments: (_node, comment) => {
-            const text = comment.value
-            const cType = comment.type
-
-            // Check if this is a multiline comment
-            if (cType === 'comment2') {
-              // Keep licensing comments
-              return /@preserve|@license|@cc_on/i.test(text)
-            }
-
-            return false
-          },
-          preserve_annotations: true,
-        },
-      }),
-  ].filter(Boolean) as Plugin[]
 
   const hashChunkFileNames = config?.rollup?.hashChunkFileNames ?? false
   const chunksFolder = hashChunkFileNames ? '_chunks' : '_chunks-[format]'
@@ -182,7 +129,15 @@ export function resolveRolldownConfig(
       {},
     ),
 
-    plugins: [dtsPlugin({emitDtsOnly: true, tsconfig: ctx.ts.configPath || 'tsconfig.json'})],
+    plugins: [
+      dtsPlugin({
+        emitDtsOnly: true,
+        tsconfig: ctx.ts.configPath || 'tsconfig.json',
+        tsgo:
+          typeof pkg.devDependencies === 'object' &&
+          '@typescript/native-preview' in pkg.devDependencies,
+      }),
+    ],
 
     treeshake: true,
   } satisfies InputOptions
@@ -197,12 +152,4 @@ export function resolveRolldownConfig(
   } satisfies OutputOptions
 
   return {inputOptions, outputOptions}
-}
-
-function hasDependency(pkg: PackageJSON, packageName: string): boolean {
-  return pkg.dependencies
-    ? packageName in pkg.dependencies
-    : pkg.peerDependencies
-      ? packageName in pkg.peerDependencies
-      : false
 }
