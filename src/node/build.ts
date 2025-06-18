@@ -1,13 +1,11 @@
 import path from 'node:path'
-
-import rimraf from 'rimraf'
-
+import {rimraf} from 'rimraf'
 import {loadConfig, loadPkgWithReporting} from './core'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveBuildTasks} from './resolveBuildTasks'
 import {createSpinner} from './spinner'
-import {type BuildTask, buildTaskHandlers, type TaskHandler} from './tasks'
+import {buildTaskHandlers, type BuildTask, type TaskHandler} from './tasks'
 
 /**
  * Build the distribution files of a npm package.

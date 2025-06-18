@@ -1,11 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-
 import cpx from 'cpx'
 import {mkdirp} from 'mkdirp'
-import rimraf from 'rimraf'
+import {rimraf} from 'rimraf'
 import {v4 as uuid} from 'uuid'
-
 import {exec} from './exec'
 import {ExecError} from './ExecError'
 import {stripColor} from './stripColor'

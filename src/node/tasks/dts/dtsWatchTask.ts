@@ -1,7 +1,7 @@
 import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 import chalk from 'chalk'
-import rimraf from 'rimraf'
+import * as rimraf from 'rimraf'
 import {Observable} from 'rxjs'
 import ts from 'typescript'
 import {printExtractMessages} from '../../printExtractMessages'

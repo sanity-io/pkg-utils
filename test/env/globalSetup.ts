@@ -1,8 +1,6 @@
 import path from 'node:path'
-
 import {mkdirp} from 'mkdirp'
-import rimraf from 'rimraf'
-
+import {rimraf} from 'rimraf'
 import {exec} from './exec'
 import {ExecError} from './ExecError'
 import {stripColor} from './stripColor'

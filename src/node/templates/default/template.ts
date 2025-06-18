@@ -1,12 +1,10 @@
 import {execSync} from 'node:child_process'
 import {resolve} from 'node:path'
-
 import prettierConfig from '@sanity/prettier-config'
 import getLatestVersion from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
-import prettier, {type Config as PrettierConfig} from 'prettier'
-
+import {format, type Config as PrettierConfig} from 'prettier'
 import {
   defineTemplateOption,
   isRecord,
@@ -354,7 +352,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         files.push({
           name: '.eslintrc.cjs',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, '.eslintrc.cjs'),
             outdent`
             'use strict'
@@ -370,7 +368,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       if (features['typescript']) {
         files.push({
           name: 'tsconfig.settings.json',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'tsconfig.settings.json'),
             outdent`
             {
@@ -387,7 +385,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         files.push({
           name: 'tsconfig.dist.json',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'tsconfig.dist.json'),
             outdent`
             {
@@ -402,7 +400,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         files.push({
           name: 'tsconfig.json',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'tsconfig.json'),
             outdent`
             {
@@ -420,7 +418,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       if (features['typescript']) {
         files.push({
           name: 'package.config.ts',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'package.config.ts'),
             outdent`
             import {defineConfig} from '@sanity/pkg-utils'
@@ -437,7 +435,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         files.push({
           name: 'src/index.ts',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'src/index.ts'),
             outdent`
             /** @public */
@@ -451,7 +449,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
       } else {
         files.push({
           name: 'package.config.js',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'package.config.js'),
             outdent`
             import {defineConfig} from '@sanity/pkg-utils'
@@ -471,7 +469,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
         files.push({
           name: 'src/index.js',
-          contents: await format(
+          contents: await prettierFormat(
             resolve(packagePath, 'src/index.js'),
             outdent`
             /** @public */
@@ -500,7 +498,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
 
       files.push({
         name: 'package.json',
-        contents: await format(
+        contents: await prettierFormat(
           resolve(packagePath, 'package.json'),
           JSON.stringify(pkgJson, null, 2),
           prettierConfig,
@@ -512,8 +510,12 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
   }
 }
 
-function format(filepath: string, input: string, prettierOptions: PrettierConfig | undefined) {
-  return prettier.format(input, {...prettierOptions, plugins: [], filepath})
+function prettierFormat(
+  filepath: string,
+  input: string,
+  prettierOptions: PrettierConfig | undefined,
+) {
+  return format(input, {...prettierOptions, plugins: [], filepath})
 }
 
 async function resolveLatestDeps(deps: Record<string, string | undefined>) {

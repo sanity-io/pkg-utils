@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-
 import {
   Extractor,
   ExtractorConfig,
@@ -8,9 +7,8 @@ import {
   type ExtractorResult,
 } from '@microsoft/api-extractor'
 import {mkdirp} from 'mkdirp'
-import prettier from 'prettier'
+import * as prettier from 'prettier'
 import type ts from 'typescript'
-
 import type {BuildFile, PkgConfigOptions} from '../../core'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
 import {createTSDocConfig} from './createTSDocConfig'

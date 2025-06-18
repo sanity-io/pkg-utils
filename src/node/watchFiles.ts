@@ -1,4 +1,4 @@
-import chokidar from 'chokidar'
+import * as chokidar from 'chokidar'
 import type {EventName} from 'chokidar/handler.js'
 import {Observable} from 'rxjs'
 
