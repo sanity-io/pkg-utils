@@ -9,7 +9,7 @@ import {pkgExtMap} from './pkgExt'
 import type {PackageJSON} from './types'
 import {validateExports} from './validateExports'
 
-/** @internal */
+/** @alpha */
 export function parseExports(options: {
   cwd: string
   pkg: PackageJSON

@@ -5,7 +5,7 @@ import {assertLast, assertOrder} from './helpers'
 import {loadPkg} from './loadPkg'
 import type {PackageJSON} from './types'
 
-/** @internal */
+/** @alpha */
 export async function loadPkgWithReporting(options: {
   cwd: string
   logger: Logger
