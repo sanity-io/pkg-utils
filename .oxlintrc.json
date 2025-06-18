@@ -24,6 +24,16 @@
   },
   "rules": {
     "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
-    "react-in-jsx-scope": "off"
-  }
+    "react-in-jsx-scope": "off",
+    "eslint/no-await-in-loop": "off"
+  },
+  "overrides": [
+    {
+      "files": ["playground/**", "test/**"],
+      "rules": {
+        "eslint/no-console": "off",
+        "eslint/no-unused-vars": "off"
+      }
+    }
+  ]
 }
