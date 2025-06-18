@@ -4,10 +4,6 @@ import {rollupTask} from './rollup/rollupTask'
 import {rollupWatchTask} from './rollup/rollupWatchTask'
 import type {BuildTaskHandlers, WatchTaskHandlers} from './types'
 
-export * from './dts'
-export * from './rollup'
-export * from './types'
-
 /** @internal */
 export const buildTaskHandlers: BuildTaskHandlers = {
   'build:dts': dtsTask,

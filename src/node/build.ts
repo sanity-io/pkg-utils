@@ -1,6 +1,7 @@
 import path from 'node:path'
 import {rimraf} from 'rimraf'
-import {loadConfig, loadPkgWithReporting} from './core'
+import {loadConfig} from './core/config/loadConfig'
+import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
 import {createLogger} from './logger'
 import {resolveBuildContext} from './resolveBuildContext'
 import {resolveBuildTasks} from './resolveBuildTasks'

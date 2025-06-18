@@ -1,4 +1,4 @@
-import type {RollupWatcherEvent} from 'rollup'
+import type { RollupWatcherEvent } from 'rollup'
 import type {Observable} from 'rxjs'
 import type {PkgRuntime} from '../core/config/types'
 import type {BuildContext} from '../core/contexts/buildContext'
