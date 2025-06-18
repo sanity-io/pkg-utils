@@ -1,10 +1,12 @@
 import fs from 'node:fs/promises'
-import pkgUp from 'pkg-up'
 import type {PackageJSON} from './types'
-import {validatePkg} from './validatePkg'
 
 /** @internal */
 export async function loadPkg(options: {cwd: string}): Promise<PackageJSON> {
+  const [{default: pkgUp}, {validatePkg}] = await Promise.all([
+    import('pkg-up'),
+    import('./validatePkg'),
+  ])
   const {cwd} = options
 
   const pkgPath = await pkgUp({cwd})

@@ -1,12 +1,10 @@
 import path from 'node:path'
-import esbuild, {type BuildFailure, type Message} from 'esbuild'
+import type {BuildFailure, Message} from 'esbuild'
 import {createConsoleSpy} from './consoleSpy'
 import {loadConfig} from './core/config/loadConfig'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
 import {fileExists} from './fileExists'
 import {createLogger, type Logger} from './logger'
-import {printPackageTree} from './printPackageTree'
-import {resolveBuildContext} from './resolveBuildContext'
 
 /** @public */
 export async function check(options: {
@@ -14,6 +12,11 @@ export async function check(options: {
   strict?: boolean
   tsconfig?: string
 }): Promise<void> {
+  const [{resolveBuildContext}, {printPackageTree}] = await Promise.all([
+    import('./resolveBuildContext'),
+    import('./printPackageTree'),
+  ])
+
   const {cwd, strict = false, tsconfig: tsconfigOption} = options
   const logger = createLogger()
 
@@ -86,6 +89,7 @@ async function checkExports(
   exportPaths: string[],
   options: {cwd: string; external: string[]; format: 'esm' | 'cjs'; logger: Logger},
 ) {
+  const {build} = await import('esbuild')
   const {cwd, external, format, logger} = options
 
   const code = exportPaths
@@ -93,7 +97,7 @@ async function checkExports(
     .join('\n')
 
   try {
-    const esbuildResult = await esbuild.build({
+    const esbuildResult = await build({
       bundle: true,
       external,
       format,
@@ -150,7 +154,7 @@ async function checkExports(
   }
 }
 
-function printEsbuildMessage(log: (...args: unknown[]) => void, msg: esbuild.Message) {
+function printEsbuildMessage(log: (...args: unknown[]) => void, msg: Message) {
   if (msg.location) {
     log(
       [

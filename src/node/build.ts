@@ -3,11 +3,8 @@ import {rimraf} from 'rimraf'
 import {loadConfig} from './core/config/loadConfig'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
 import {createLogger} from './logger'
-import {resolveBuildContext} from './resolveBuildContext'
-import {resolveBuildTasks} from './resolveBuildTasks'
 import {createSpinner} from './spinner'
-import {buildTaskHandlers} from './tasks'
-import {type BuildTask, type TaskHandler} from './tasks/types'
+import type {BuildTask, TaskHandler} from './tasks/types'
 
 /**
  * Build the distribution files of a npm package.
@@ -35,6 +32,11 @@ export async function build(options: {
   tsconfig?: string
   clean?: boolean
 }): Promise<void> {
+  const [{resolveBuildContext}, {resolveBuildTasks}, {buildTaskHandlers}] = await Promise.all([
+    import('./resolveBuildContext'),
+    import('./resolveBuildTasks'),
+    import('./tasks'),
+  ])
   const {
     cwd,
     emitDeclarationOnly,
