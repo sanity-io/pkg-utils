@@ -1,5 +1,4 @@
 import path from 'node:path'
-
 import type {PluginItem} from '@babel/core'
 import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
 import alias from '@rollup/plugin-alias'
@@ -11,9 +10,8 @@ import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
-
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
-import {type BuildContext, type PackageJSON, resolveConfigProperty} from '../../core'
+import {resolveConfigProperty, type BuildContext, type PackageJSON} from '../../core'
 import type {RollupTask, RollupWatchTask} from '../types'
 
 export interface RollupConfig {
@@ -59,8 +57,8 @@ export function resolveRollupConfig(
   const defaultPlugins = [
     replace({
       preventAssignment: true,
-      values: {
-        ...(pkg.name === '@sanity/pkg-utils'
+      values:
+        pkg.name === '@sanity/pkg-utils'
           ? {...replacements}
           : {
               'process.env.PKG_FILE_PATH': (arg) => {
@@ -68,7 +66,6 @@ export function resolveRollupConfig(
                 const entry = entries.find((e) => e.source === sourcePath)
 
                 if (!entry) {
-                  // eslint-disable-next-line no-console
                   console.error(`could not find source entry: ${sourcePath}`)
 
                   return 'null'
@@ -82,8 +79,7 @@ export function resolveRollupConfig(
               'process.env.PKG_RUNTIME': JSON.stringify(runtime),
               'process.env.PKG_VERSION': JSON.stringify(process.env['PKG_VERSION'] || pkg.version),
               ...replacements,
-            }),
-      },
+            },
     }),
     alias({
       entries: {...pathAliases},
@@ -220,9 +216,10 @@ export function resolveRollupConfig(
         return false
       },
 
-      input: entries.reduce<{[entryAlias: string]: string}>((acc, entry) => {
-        return {...acc, [entry.name]: entry.source}
-      }, {}),
+      input: entries.reduce<{[entryAlias: string]: string}>(
+        (acc, entry) => Object.assign(acc, {[entry.name]: entry.source}),
+        {},
+      ),
 
       watch: {
         chokidar: {

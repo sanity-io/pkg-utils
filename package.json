@@ -61,8 +61,8 @@
     "clean": "rimraf dist test/env/__tmp__",
     "commit": "cz",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
-    "format": "prettier --write --cache --ignore-unknown . && eslint . --ext .cjs,.js,.ts,.tsx --fix --quiet",
-    "lint": "eslint . --ext .cjs,.js,.ts,.tsx",
+    "format": "prettier --write --cache --ignore-unknown . && oxlint --fix --quiet",
+    "lint": "oxlint",
     "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "prepublishOnly": "pnpm run build",
@@ -77,13 +77,15 @@
     ]
   },
   "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "prettier --cache --write",
+      "oxlint --fix --quiet"
+    ],
     "*": [
-      "prettier --write --cache --ignore-unknown",
-      "eslint --ext .cjs,.js,.ts,.tsx --fix"
+      "prettier --write --cache --ignore-unknown"
     ]
   },
   "browserslist": "extends @sanity/browserslist-config",
-  "prettier": "@sanity/prettier-config",
   "dependencies": {
     "@babel/core": "^7.27.4",
     "@babel/preset-typescript": "^7.27.1",
@@ -129,6 +131,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
     "@sanity/pkg-utils": "workspace:*",
     "@sanity/prettier-config": "^1.0.4",
     "@types/babel__core": "^7.20.5",
@@ -141,21 +144,15 @@
     "@types/semver": "^7.5.8",
     "@types/treeify": "^1.0.3",
     "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.34.1",
-    "@typescript-eslint/parser": "^8.34.1",
     "browserslist-to-esbuild": "2.1.1",
     "commitizen": "^4.3.1",
     "cpx": "^1.5.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.5.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "npm-run-all2": "^8.0.4",
     "outdent": "^0.8.0",
+    "oxlint": "^1.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
     "semver": "^7.6.0",
     "ts-node": "^10.9.2",

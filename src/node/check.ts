@@ -120,7 +120,6 @@ async function checkExports(
     }
 
     const esbuildWarnings = esbuildResult.warnings.filter((msg) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       !(msg.detail || msg.text).includes(`does not affect esbuild's own target setting`)
     })
 

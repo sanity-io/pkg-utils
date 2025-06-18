@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 //@ts-expect-error unused
 import {IncludedModuleDummy} from './module2.js'
 

@@ -169,19 +169,15 @@ export const route: RouteObject = {
  * @param options - Route node options
  */
 export function _createNode(options: RouteNodeOptions): Router {
-  // eslint-disable-next-line no-console
   console.log({options})
 
   return {
     _isRoute: true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     children: null as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     route: null as any,
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeArgs(...args: any[]): RouteNodeOptions
 function normalizeArgs(
   path: string | RouteNodeOptions,
@@ -207,7 +203,6 @@ function normalizeArgs(
   return {path, ...childrenOrOpts}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeChildren(children: any): RouteChildren {
   if (Array.isArray(children) || typeof children === 'function') {
     return children
@@ -236,7 +231,6 @@ export interface RouteNodeOptions {
    * The transforms to apply to the route node. See {@link RouteTransform}
    */
   transform?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: RouteTransform<any>
   }
   /**

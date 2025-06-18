@@ -31,7 +31,6 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
 
   const {unregister} = globalThis.__DEV__ ? {unregister: () => undefined} : register(esbuildOptions)
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
   const mod = require(configFile)
 
   unregister()

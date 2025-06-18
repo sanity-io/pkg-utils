@@ -13,5 +13,5 @@ export const useResult = () => useContext(Context)
 export const useMemoResult = () => {
   const result = useContext(Context)
 
-  return useMemo(() => result, [])
+  return useMemo(() => result, [result])
 }

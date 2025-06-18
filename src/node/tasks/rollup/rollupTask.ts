@@ -66,7 +66,6 @@ export const rollupTask: TaskHandler<RollupTask> = {
     //
   },
   error: (_ctx, _task, err) => {
-    // eslint-disable-next-line no-console
     console.error(err)
   },
 }

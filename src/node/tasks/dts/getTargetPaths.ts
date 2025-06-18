@@ -66,7 +66,6 @@ export function getTargetPaths(
   return Array.from(set)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isPkgExport(exp: any): exp is PkgExport {
   return exp?.browser || exp?.node || exp?.default
 }

@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import {build} from '@sanity/pkg-utils'
 
 build({
