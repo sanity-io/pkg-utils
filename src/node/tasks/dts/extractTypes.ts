@@ -9,7 +9,7 @@ import {
 import {mkdirp} from 'mkdirp'
 import * as prettier from 'prettier'
 import type ts from 'typescript'
-import type {DtsType, PkgConfigOptions} from '../../core/config/types'
+import type {PkgConfigOptions} from '../../core/config/types'
 import type {BuildFile} from '../../core/contexts/buildContext'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
 import {createTSDocConfig} from './createTSDocConfig'
@@ -30,7 +30,6 @@ export async function extractTypes(options: {
   tmpPath: string
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
-  dts: DtsType
   /**
    * If the extractor is disabled then it means API Extractor is only used to bundle dts, and not check tsdoc release tags.
    */
@@ -49,7 +48,6 @@ export async function extractTypes(options: {
     tmpPath,
     tsconfig,
     tsconfigPath,
-    dts,
     extractorDisabled,
   } = options
 
@@ -71,7 +69,7 @@ export async function extractTypes(options: {
       mainEntryPointFilePath: sourceTypesPath,
       tsconfig,
       tsconfigPath,
-      dts,
+      dtsRollupEnabled: true,
     }),
     configObjectFullPath: undefined,
     tsdocConfigFile,

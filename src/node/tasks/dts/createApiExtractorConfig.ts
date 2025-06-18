@@ -1,7 +1,6 @@
 import path from 'node:path'
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import ts from 'typescript'
-import type {DtsType} from '../../core/config'
 
 export function createApiExtractorConfig(options: {
   bundledPackages?: string[]
@@ -13,7 +12,7 @@ export function createApiExtractorConfig(options: {
   mainEntryPointFilePath: string
   tsconfig: ts.ParsedCommandLine
   tsconfigPath: string
-  dts: DtsType
+  dtsRollupEnabled: boolean
 }): IConfigFile {
   const {
     bundledPackages,
@@ -25,7 +24,7 @@ export function createApiExtractorConfig(options: {
     mainEntryPointFilePath,
     tsconfig,
     tsconfigPath,
-    dts,
+    dtsRollupEnabled,
   } = options
 
   return {
@@ -53,7 +52,7 @@ export function createApiExtractorConfig(options: {
       apiJsonFilePath: path.resolve(distPath, `${exportPath}.api.json`),
     },
     dtsRollup: {
-      enabled: dts === 'api-extractor',
+      enabled: dtsRollupEnabled,
       untrimmedFilePath: path.resolve(distPath, filePath),
       // betaTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-beta.d.ts')),
       // publicTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-public.d.ts')),
