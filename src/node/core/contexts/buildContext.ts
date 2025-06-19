@@ -11,7 +11,7 @@ export interface BuildFile {
 
 /** @internal */
 export interface BuildContext {
-  config?: PkgConfigOptions
+  config?: PkgConfigOptions | undefined
   cwd: string
   distPath: string
   emitDeclarationOnly: boolean
@@ -25,8 +25,8 @@ export interface BuildContext {
   strict: boolean
   target: Record<PkgRuntime, string[]>
   ts: {
-    config?: ts.ParsedCommandLine
-    configPath?: string
+    config?: ts.ParsedCommandLine | undefined
+    configPath?: string | undefined
   }
   dts: DtsType
 }

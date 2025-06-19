@@ -532,7 +532,7 @@ async function resolveLatestDeps(deps: Record<string, string | undefined>) {
   return latestDeps
 }
 
-function getGitUserConfig(cwd: string): {user?: string; email?: string} {
+function getGitUserConfig(cwd: string): {user: string | undefined; email: string | undefined} {
   let user: string | undefined
   let email: string | undefined
 

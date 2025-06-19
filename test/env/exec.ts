@@ -10,7 +10,7 @@ export function exec(
       if (err) {
         const execErr = new ExecError(err.message, stdout, stderr)
 
-        execErr.stack = err.stack
+        execErr.stack = err.stack!
         reject(execErr)
 
         return

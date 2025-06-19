@@ -55,7 +55,7 @@ export async function extractTypes(options: {
     customTags: customTags || [],
   })
 
-  const filePath = filePaths[0].replace(/\.d\.[mc]ts$/, '.d.ts')
+  const filePath = filePaths[0]!.replace(/\.d\.[mc]ts$/, '.d.ts')
   // If there are package.config.ts `bundles` we might not have something that should leave behind a `.d.ts` file and need to handle that
   const shouldCleanUpDts = !filePaths.includes(filePath)
   const extractorConfig: ExtractorConfig = ExtractorConfig.prepare({

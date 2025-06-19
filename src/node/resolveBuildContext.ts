@@ -14,7 +14,7 @@ import {resolveNodeTarget} from './resolveNodeTarget'
 import {parseStrictOptions} from './strict'
 
 export async function resolveBuildContext(options: {
-  config?: PkgConfigOptions
+  config?: PkgConfigOptions | undefined
   cwd: string
   emitDeclarationOnly?: boolean
   logger: Logger
@@ -194,7 +194,7 @@ function transformPackageName(packageName: string): string {
     // Handle scoped packages
     const [scope, name] = packageName.split('/')
 
-    return `@types/${scope.slice(1)}__${name}`
+    return `@types/${scope?.slice(1)}__${name}`
   } else {
     // Handle regular packages
     return `@types/${packageName}`

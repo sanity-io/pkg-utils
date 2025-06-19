@@ -1,6 +1,6 @@
 /** @alpha */
 export interface PackageJSON {
-  type?: 'commonjs' | 'module'
+  type?: 'commonjs' | 'module' | undefined
   version: string
   private?: boolean
   author?: string | {name: string; email?: string; url?: string}
