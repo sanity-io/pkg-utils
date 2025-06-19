@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.0](https://github.com/sanity-io/pkg-utils/compare/v7.6.2...v7.7.0) (2025-06-19)
+
+
+### Features
+
+* add `isolated-declarations.json` preset ([65c22b3](https://github.com/sanity-io/pkg-utils/commit/65c22b3b7ab10333a761926afdb8a7d78b78b894))
+
 ## [7.6.2](https://github.com/sanity-io/pkg-utils/compare/v7.6.1...v7.6.2) (2025-06-19)
 
 
