@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.0](https://github.com/sanity-io/pkg-utils/compare/v7.7.1...v7.8.0) (2025-06-19)
+
+
+### Features
+
+* recommend using `noCheck` to speedup dts gen ([#1537](https://github.com/sanity-io/pkg-utils/issues/1537)) ([98e55e6](https://github.com/sanity-io/pkg-utils/commit/98e55e6f8964f6d219f12ab1cbd377ffa69dcfe6))
+
 ## [7.7.1](https://github.com/sanity-io/pkg-utils/compare/v7.7.0...v7.7.1) (2025-06-19)
 
 
