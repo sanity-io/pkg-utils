@@ -171,7 +171,24 @@ test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
   const {stdout} = await project.run('build')
 
   expect(stdout).toContain('with rolldown')
-  expect(stdout).not.toContain('Check tsdoc release tags')
+
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
+test.skipIf(isWindows)('should build `tsgo` package', async () => {
+  const project = await spawnProject('tsgo')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('with rolldown')
+  expect(stdout).toContain('The `tsgo` option is experimental')
 
   expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
   expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
