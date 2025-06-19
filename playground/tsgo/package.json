@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
-    "check:types": "tsc",
+    "typecheck": "tsc",
     "clean": "rimraf dist"
   },
   "browserslist": "extends @sanity/browserslist-config",

@@ -29,7 +29,7 @@ jobs:
       - run: pnpm install
       - run: pnpm lint --deny-warnings --format github
       - run: pnpm build
-      - run: pnpm tsc --noEmit
+      - run: pnpm typecheck
       - uses: actions/upload-artifact@v4
         name: Cache build output
         with:
@@ -54,6 +54,7 @@ jobs:
         name: Restore build output
         with:
           name: build-output
+      - run: pnpm playground:typecheck
       - run: pnpm playground:build
         env:
           NODE_OPTIONS: --max_old_space_size=8192
