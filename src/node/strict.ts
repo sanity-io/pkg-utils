@@ -1,20 +1,11 @@
 import {z} from 'zod'
 import {errorMap} from 'zod-validation-error'
 
-/**
- * @public
- */
-export const toggle = z.union([z.literal('error'), z.literal('warn'), z.literal('off')])
+const toggle = z.union([z.literal('error'), z.literal('warn'), z.literal('off')])
 
-/**
- * @public
- */
-export type ToggleType = z.infer<typeof toggle>
+type ToggleType = 'error' | 'warn' | 'off'
 
-/**
- * @public
- */
-export const strictOptions = z
+const strictOptions = z
   .object({
     noPackageJsonTypings: toggle.default('error'),
     noImplicitSideEffects: toggle.default('warn'),
@@ -22,6 +13,7 @@ export const strictOptions = z
     alwaysPackageJsonTypes: toggle.default('error'),
     alwaysPackageJsonMain: toggle.default('error'),
     alwaysPackageJsonFiles: toggle.default('error'),
+    noCheckTypes: toggle.default('warn'),
   })
   .strict()
 
@@ -36,22 +28,17 @@ const validationSchema = z.object({
 /**
  * @public
  */
-export type InferredStrictOptions = z.infer<typeof strictOptions>
-
-/**
- * @public
- */
 export interface StrictOptions {
   /**
    * Disallows a top level `typings` field in `package.json` if it is equal to `exports['.'].source`.
    * @defaultValue 'error'
    */
-  noPackageJsonTypings?: ToggleType
+  noPackageJsonTypings: ToggleType
   /**
    * Requires specifying `sideEffects` in `package.json`.
    * @defaultValue 'warn'
    */
-  noImplicitSideEffects?: ToggleType
+  noImplicitSideEffects: ToggleType
   /**
    * Requires specifying `browserslist` in `package.json`, instead of relying on it implicitly being:
    * @example
@@ -60,25 +47,30 @@ export interface StrictOptions {
    * ```
    * @defaultValue 'warn'
    */
-  noImplicitBrowsersList?: ToggleType
+  noImplicitBrowsersList: ToggleType
   /**
    * If typescript is used then `types` in `package.json` should be specified for npm listings to show the TS icon.
    * @defaultValue 'error'
    */
-  alwaysPackageJsonTypes?: ToggleType
+  alwaysPackageJsonTypes: ToggleType
   /**
    * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it
    * @defaultValue 'error'
    */
-  alwaysPackageJsonMain?: ToggleType
+  alwaysPackageJsonMain: ToggleType
   /**
    * Using `.npmignore` is error prone, it's best practice to always declare `files` instead
    * @defaultValue 'error'
    */
-  alwaysPackageJsonFiles?: ToggleType
+  alwaysPackageJsonFiles: ToggleType
+  /**
+   * It's slow to perform type checking while generating dts files, so it's best practice to disable it with a `"noCheck": true` in the tsconfig.json file used by `package.config.ts`
+   * @defaultValue 'warn'
+   */
+  noCheckTypes: ToggleType
 }
 
 /** @alpha */
-export function parseStrictOptions(input: unknown): InferredStrictOptions {
+export function parseStrictOptions(input: unknown): StrictOptions {
   return validationSchema.parse({strictOptions: input}, {errorMap}).strictOptions
 }

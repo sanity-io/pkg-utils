@@ -305,7 +305,7 @@ export interface PkgConfigOptions {
   /**
    * Configure what checks are made when running `--strict` builds and checks
    */
-  strictOptions?: StrictOptions
+  strictOptions?: Partial<StrictOptions>
   /**
    * .d.ts files can be generated either by using `@microsoft/api-extractor` or `rolldown`.
    * `rolldown` is the faster option, but is not yet stable.

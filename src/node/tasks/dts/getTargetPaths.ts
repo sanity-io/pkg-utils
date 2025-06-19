@@ -2,7 +2,7 @@ import type {PkgBundle, PkgExport} from '../../core/config/types'
 import type {PackageJSON} from '../../core/pkg/types'
 
 /** @internal */
-export const fileEnding = /\.[mc]?js$/
+export const fileEnding: RegExp = /\.[mc]?js$/
 /** @internal */
 export const dtsEnding = '.d.ts' as const
 /** @internal */

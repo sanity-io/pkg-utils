@@ -1,7 +1,7 @@
 import {existsSync} from 'node:fs'
 import {resolve as resolvePath} from 'node:path'
 import type {Logger} from '../../logger'
-import type {InferredStrictOptions} from '../../strict'
+import type {StrictOptions} from '../../strict'
 import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths'
 import type {PkgExport} from '../config/types'
 import {isRecord} from '../isRecord'
@@ -14,7 +14,7 @@ export function parseExports(options: {
   cwd: string
   pkg: PackageJSON
   strict: boolean
-  strictOptions: InferredStrictOptions
+  strictOptions: StrictOptions
   logger: Logger
 }): (PkgExport & {_path: string})[] {
   const {cwd, pkg, strict, strictOptions, logger} = options

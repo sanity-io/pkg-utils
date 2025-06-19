@@ -34,6 +34,20 @@ export async function resolveBuildContext(options: {
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
   const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
 
+  if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options && config?.dts !== 'rolldown') {
+    if (tsconfig.options.noCheck !== false && !tsconfig.options.noCheck) {
+      if (strictOptions.noCheckTypes === 'error') {
+        throw new Error(
+          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it.',
+        )
+      } else {
+        logger.warn(
+          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it.',
+        )
+      }
+    }
+  }
+
   let browserslist = pkg.browserslist
   if (!browserslist) {
     if (strict && strictOptions.noImplicitBrowsersList !== 'off') {
