@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.1](https://github.com/sanity-io/pkg-utils/compare/v7.7.0...v7.7.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* add `noUncheckedSideEffectImports` to strictest.json ([#1530](https://github.com/sanity-io/pkg-utils/issues/1530)) ([3cef3a6](https://github.com/sanity-io/pkg-utils/commit/3cef3a6e36da101fde67fa94bd0fb31677940aad))
+* add TS 5.9 changes to `--init` to tsconfig presets ([#1534](https://github.com/sanity-io/pkg-utils/issues/1534)) ([93d5341](https://github.com/sanity-io/pkg-utils/commit/93d53416f454c3bdd846ffd68f2bbb8460831904))
+
 ## [7.7.0](https://github.com/sanity-io/pkg-utils/compare/v7.6.2...v7.7.0) (2025-06-19)
 
 
