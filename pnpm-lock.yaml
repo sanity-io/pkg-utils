@@ -174,9 +174,6 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
-      '@types/git-url-parse':
-        specifier: ^16.0.2
-        version: 16.0.2
       '@types/node':
         specifier: ^24.0.3
         version: 24.0.3
@@ -1806,10 +1803,6 @@ packages:
 
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
-
-  '@types/git-url-parse@16.0.2':
-    resolution: {integrity: sha512-STa+QaJtPbqwtioDIncRyft1xXrsTIYW0KkS6RS6l++NiDaQxqgsIkNp2Jf9nJ1KnCGPOvWaR1iO+B7LkM8+ew==}
-    deprecated: This is a stub types definition. git-url-parse provides its own type definitions, so you do not need this installed.
 
   '@types/hast@2.3.10':
     resolution: {integrity: sha512-McWspRw8xx8J9HurkVBfYj0xKoE25tOFlHGdx4MJ5xORQrMGZNqJhVQWaIbm6Oyla5kYOXtDiopzKRJzEOkwJw==}
@@ -5993,10 +5986,6 @@ snapshots:
     dependencies:
       '@types/jsonfile': 6.1.4
       '@types/node': 24.0.3
-
-  '@types/git-url-parse@16.0.2':
-    dependencies:
-      git-url-parse: 16.1.0
 
   '@types/hast@2.3.10':
     dependencies:
