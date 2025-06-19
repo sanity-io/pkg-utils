@@ -792,3 +792,33 @@ exports[`should build \`ts-without-extract\` package 1`] = `
 export {}
 "
 `;
+
+exports[`should build \`tsgo\` package 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const VERSION = "1.0.0";
+exports.VERSION = VERSION;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`tsgo\` package 2`] = `
+"/** @public */
+declare const VERSION = "1.0.0";
+export { VERSION };"
+`;
+
+exports[`should build \`tsgo\` package 3`] = `
+"const VERSION = "1.0.0";
+export {
+  VERSION
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`tsgo\` package 4`] = `
+"/** @public */
+declare const VERSION = "1.0.0";
+export { VERSION };"
+`;
