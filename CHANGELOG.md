@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.0](https://github.com/sanity-io/pkg-utils/compare/v7.5.0...v7.6.0) (2025-06-19)
+
+
+### Features
+
+* add `tsgo` support ([#1516](https://github.com/sanity-io/pkg-utils/issues/1516)) ([009d67c](https://github.com/sanity-io/pkg-utils/commit/009d67c2361219920a786c386c3d41897a6e9e8f))
+
 ## [7.5.0](https://github.com/sanity-io/pkg-utils/compare/v7.4.0...v7.5.0) (2025-06-18)
 
 
