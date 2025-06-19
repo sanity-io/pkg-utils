@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import path from 'node:path'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {resolveConfigProperty} from './core/config/resolveConfigProperty'
@@ -49,6 +50,30 @@ export async function resolveBuildContext(options: {
       }
     }
     browserslist = DEFAULT_BROWSERSLIST_QUERY
+  } else if (
+    browserslist === 'extends @sanity/browserslist-config' &&
+    strictOptions.noImplicitBrowsersList !== 'off'
+  ) {
+    try {
+      const {findPackageJSON} = await import('node:module')
+      const browsersListPath = findPackageJSON(
+        '@sanity/browserslist-config',
+        path.resolve(cwd, 'package.json'),
+      )
+      assert.ok(browsersListPath, 'browserslist-config is not installed')
+    } catch (error) {
+      if (strictOptions.noImplicitBrowsersList === 'error') {
+        throw new Error(
+          '\n- ' +
+            `package.json: "browserslist" references "@sanity/browserslist-config" but it's not installed. Run \`pnpm add -D @sanity/browserslist-config\` to install it.`,
+          {cause: error},
+        )
+      } else {
+        logger.warn(
+          'package.json: "browserslist" references "@sanity/browserslist-config" but it\'s not installed. Run `pnpm add -D @sanity/browserslist-config` to install it.',
+        )
+      }
+    }
   }
   const targetVersions = browserslistToEsbuild(browserslist)
 
