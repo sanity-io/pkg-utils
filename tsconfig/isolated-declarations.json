@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "description": "Sets the right settings for isolated declarations when also extending from presets such as strictest.json.",
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false,
+    "isolatedDeclarations": true
+  }
+}
