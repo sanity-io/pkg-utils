@@ -21,7 +21,7 @@ export function resolveRolldownConfig(
 
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
-      return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0])]
+      return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0]!)]
     }),
   )
 
@@ -112,7 +112,7 @@ export function resolveRolldownConfig(
 
       const idParts = id.split('/')
 
-      const name = idParts[0].startsWith('@') ? `${idParts[0]}/${idParts[1]}` : idParts[0]
+      const name = idParts[0]!.startsWith('@') ? `${idParts[0]}/${idParts[1]}` : idParts[0]
 
       if (name && external.includes(name)) {
         return true

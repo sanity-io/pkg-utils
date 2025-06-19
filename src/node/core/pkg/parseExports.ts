@@ -64,17 +64,17 @@ export function parseExports(options: {
 
         if (pkg.module && pkg.browser?.[pkg.module]) {
           browserConditions.push(
-            `      "import": ${JSON.stringify(pkg.browser[pkg.module].replace(fileEnding, extMap.esm))}`,
+            `      "import": ${JSON.stringify(pkg.browser[pkg.module]!.replace(fileEnding, extMap.esm))}`,
           )
         } else if (pkg.browser?.[pkg.main]) {
           browserConditions.push(
-            `      "import": ${JSON.stringify(pkg.browser?.[pkg.main].replace(fileEnding, extMap.esm))}`,
+            `      "import": ${JSON.stringify(pkg.browser[pkg.main]!.replace(fileEnding, extMap.esm))}`,
           )
         }
 
         if (pkg.browser?.[pkg.main]) {
           browserConditions.push(
-            `      "require": ${JSON.stringify(pkg.browser[pkg.main].replace(fileEnding, extMap.commonjs))}`,
+            `      "require": ${JSON.stringify(pkg.browser[pkg.main]!.replace(fileEnding, extMap.commonjs))}`,
           )
         }
 
