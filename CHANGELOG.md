@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.1](https://github.com/sanity-io/pkg-utils/compare/v7.6.0...v7.6.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* **rolldown:** don't hoist `.d.ts` files into chunks ([67eceac](https://github.com/sanity-io/pkg-utils/commit/67eceacee7ed545ed0b33ebd0809e1b1bc20d967))
+
 ## [7.6.0](https://github.com/sanity-io/pkg-utils/compare/v7.5.0...v7.6.0) (2025-06-19)
 
 
