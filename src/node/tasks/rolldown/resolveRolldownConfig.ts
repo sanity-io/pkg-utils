@@ -41,9 +41,6 @@ export function resolveRolldownConfig(
     Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)]),
   )
 
-  const hashChunkFileNames = config?.rollup?.hashChunkFileNames ?? false
-  const chunksFolder = hashChunkFileNames ? '_chunks' : '_chunks-[format]'
-  const chunkFileNames = `${chunksFolder}/${hashChunkFileNames ? '[name]-[hash]' : '[name]'}${outputExt}`
   const entryFileNames = `[name]${outputExt}`
 
   const inputOptions = {
@@ -142,7 +139,6 @@ export function resolveRolldownConfig(
     treeshake: true,
   } satisfies InputOptions
   const outputOptions = {
-    chunkFileNames,
     dir: outDir,
     entryFileNames,
     esModule: true,
