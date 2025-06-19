@@ -1,4 +1,4 @@
 import config from '@sanity/browserslist-config'
 
 /** @public */
-export const DEFAULT_BROWSERSLIST_QUERY = config
+export const DEFAULT_BROWSERSLIST_QUERY: string[] = config

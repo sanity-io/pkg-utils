@@ -1,7 +1,4 @@
 {
-  "extends": "./tsconfig.settings",
-  "include": ["./src"],
-  "compilerOptions": {
-    "isolatedDeclarations": true
-  }
+  "extends": ["./tsconfig.settings", "@sanity/pkg-utils/tsconfig/isolated-declarations.json"],
+  "include": ["./src"]
 }

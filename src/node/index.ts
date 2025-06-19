@@ -34,14 +34,7 @@ export {
 
 export {init} from './init'
 export {createLogger} from './logger'
-export {
-  type StrictOptions,
-  type InferredStrictOptions,
-  parseStrictOptions,
-  strictOptions,
-  toggle,
-  type ToggleType,
-} from './strict'
+export {parseStrictOptions} from './strict'
 export {getExtractMessagesConfig} from './tasks/dts/getExtractMessagesConfig'
 export {watch} from './watch'
 

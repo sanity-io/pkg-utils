@@ -7,7 +7,7 @@ export interface PkgExtMap {
 }
 
 /** @internal */
-export const pkgExtMap = {
+export const pkgExtMap: PkgExtMap = {
   // pkg.type: "commonjs"
   commonjs: {
     commonjs: defaultEnding,
@@ -19,4 +19,4 @@ export const pkgExtMap = {
     commonjs: cjsEnding,
     esm: defaultEnding,
   },
-} satisfies PkgExtMap
+}
