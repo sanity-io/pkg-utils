@@ -133,7 +133,6 @@ export function resolveRolldownConfig(
         tsgo:
           typeof pkg.devDependencies === 'object' &&
           '@typescript/native-preview' in pkg.devDependencies,
-        resolve: ctx.bundledPackages,
       }),
     ],
 
