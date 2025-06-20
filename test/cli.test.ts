@@ -31,8 +31,8 @@ test.skipIf(isWindows)('should build `browser-bundle` package', async () => {
   expect(stdout).toContain('./src/browser.js → ./dist/browser.js')
   expect(stdout).toContain('./src/browser.js → ./dist/browser.cjs')
 
-  expect(await project.readFile('./dist/browser.js')).toMatchSnapshot()
-  expect(await project.readFile('./dist/browser.cjs')).toMatchSnapshot()
+  expect(await project.readFile('./dist/browser.js')).toMatchSnapshot('./dist/browser.js')
+  expect(await project.readFile('./dist/browser.cjs')).toMatchSnapshot('./dist/browser.cjs')
 
   await project.remove()
 })
@@ -60,15 +60,15 @@ test.skipIf(isWindows)('should build `dummy-module` package', async () => {
   expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.js')
   expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.browser.js')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.browser.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
+  expect(await project.readFile('dist/index.browser.js')).toMatchSnapshot('./dist/index.browser.js')
 
-  expect(await project.readFile('dist/extra.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/extra.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/extra.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/extra.browser.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/extra.d.ts')).toMatchSnapshot('./dist/extra.d.ts')
+  expect(await project.readFile('dist/extra.cjs')).toMatchSnapshot('./dist/extra.cjs')
+  expect(await project.readFile('dist/extra.js')).toMatchSnapshot('./dist/extra.js')
+  expect(await project.readFile('dist/extra.browser.js')).toMatchSnapshot('./dist/extra.browser.js')
 
   await project.remove()
 })
@@ -84,9 +84,9 @@ test.skipIf(isWindows)('should build `custom-dist` package', async () => {
   expect(stdout).toContain('./src/index.ts → ./lib/index.js')
   expect(stdout).toContain('./src/index.ts → ./lib/index.d.ts')
 
-  expect(await project.readFile('lib/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('lib/index.js')).toMatchSnapshot()
-  expect(await project.readFile('lib/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('lib/index.cjs')).toMatchSnapshot('./lib/index.cjs')
+  expect(await project.readFile('lib/index.js')).toMatchSnapshot('./lib/index.js')
+  expect(await project.readFile('lib/index.d.ts')).toMatchSnapshot('./lib/index.d.ts')
 
   await project.remove()
 })
@@ -106,13 +106,13 @@ test.skipIf(isWindows)('should build `multi-export` package', async () => {
   expect(stdout).toContain('./src/plugin.ts → ./dist/plugin.js')
   expect(stdout).toContain('./src/plugin.ts → ./dist/plugin.d.ts')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
-  expect(await project.readFile('dist/plugin.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/plugin.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/plugin.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/plugin.cjs')).toMatchSnapshot('./dist/plugin.cjs')
+  expect(await project.readFile('dist/plugin.js')).toMatchSnapshot('./dist/plugin.js')
+  expect(await project.readFile('dist/plugin.d.ts')).toMatchSnapshot('./dist/plugin.d.ts')
 
   await project.remove()
 })
@@ -126,7 +126,7 @@ test.skipIf(isWindows)('should build `ts` package', async () => {
 
   expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -140,7 +140,7 @@ test.skipIf(isWindows)('should build `ts-without-extract` package', async () => 
 
   expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -155,10 +155,10 @@ test.skipIf(isWindows)('should build `ts-rolldown-without-extract` package', asy
   expect(stdout).toContain('with rolldown')
   expect(stdout).not.toContain('Check tsdoc release tags')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -172,10 +172,18 @@ test.skipIf(isWindows)('should build `ts-rolldown-bundle-dev-dependency` package
 
   expect(stdout).toContain('with rolldown')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+    project.readFile('dist/index.cjs'),
+    project.readFile('dist/index.d.cts'),
+    project.readFile('dist/index.js'),
+    project.readFile('dist/index.d.ts'),
+  ])
+
+  // Snapshot the contents for easier debugging
+  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -189,10 +197,18 @@ test.skipIf(isWindows)('should build `ts-rolldown-bundle-peer-dependency` packag
 
   expect(stdout).toContain('with rolldown')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+    project.readFile('dist/index.cjs'),
+    project.readFile('dist/index.d.cts'),
+    project.readFile('dist/index.js'),
+    project.readFile('dist/index.d.ts'),
+  ])
+
+  // Snapshot the contents for easier debugging
+  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -206,10 +222,18 @@ test.skipIf(isWindows)('should build `ts-rolldown-bundle-prod-dependency` packag
 
   expect(stdout).toContain('with rolldown')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+    project.readFile('dist/index.cjs'),
+    project.readFile('dist/index.d.cts'),
+    project.readFile('dist/index.js'),
+    project.readFile('dist/index.d.ts'),
+  ])
+
+  // Snapshot the contents for easier debugging
+  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -223,22 +247,28 @@ test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
 
   expect(stdout).toContain('with rolldown')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/a.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/a.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/a.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/a.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/b.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/b.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/b.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/b.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/_chunks-cjs/c.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/_chunks-es/c.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/_chunks-dts/c.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/_chunks-dts/c.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+  expect(await project.readFile('dist/a.cjs')).toMatchSnapshot('./dist/a.cjs')
+  expect(await project.readFile('dist/a.d.cts')).toMatchSnapshot('./dist/a.d.cts')
+  expect(await project.readFile('dist/a.js')).toMatchSnapshot('./dist/a.js')
+  expect(await project.readFile('dist/a.d.ts')).toMatchSnapshot('./dist/a.d.ts')
+  expect(await project.readFile('dist/b.cjs')).toMatchSnapshot('./dist/b.cjs')
+  expect(await project.readFile('dist/b.d.cts')).toMatchSnapshot('./dist/b.d.cts')
+  expect(await project.readFile('dist/b.js')).toMatchSnapshot('./dist/b.js')
+  expect(await project.readFile('dist/b.d.ts')).toMatchSnapshot('./dist/b.d.ts')
+  expect(await project.readFile('dist/_chunks-cjs/c.cjs')).toMatchSnapshot(
+    './dist/_chunks-cjs/c.cjs',
+  )
+  expect(await project.readFile('dist/_chunks-es/c.js')).toMatchSnapshot('./dist/_chunks-es/c.js')
+  expect(await project.readFile('dist/_chunks-dts/c.d.cts')).toMatchSnapshot(
+    './dist/_chunks-dts/c.d.cts',
+  )
+  expect(await project.readFile('dist/_chunks-dts/c.d.ts')).toMatchSnapshot(
+    './dist/_chunks-dts/c.d.ts',
+  )
 
   await project.remove()
 })
@@ -253,10 +283,10 @@ test.skipIf(isWindows)('should build `tsgo` package', async () => {
   expect(stdout).toContain('with rolldown')
   expect(stdout).toContain('The `tsgo` option is experimental')
 
-  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -270,7 +300,7 @@ test.skipIf(isWindows)('should build `ts-node16` package', async () => {
 
   expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -284,7 +314,7 @@ test.skipIf(isWindows)('should build `ts-bundler` package', async () => {
 
   expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
   await project.remove()
 })
@@ -299,8 +329,8 @@ test.skipIf(isWindows)('should build `react-18` package', async () => {
   expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
   expect(stdout).toContain('./src/index.ts → ./dist/index.js')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
 
   await project.remove()
 })
@@ -315,8 +345,8 @@ test.skipIf(isWindows)('should build `react-19` package', async () => {
   expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
   expect(stdout).toContain('./src/index.ts → ./dist/index.js')
 
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
-  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
 
   await project.remove()
 })
