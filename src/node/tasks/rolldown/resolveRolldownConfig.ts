@@ -89,6 +89,15 @@ export function resolveRolldownConfig(
     },
 
     external: (id, importer) => {
+      if (
+        buildTask.type === 'rolldown:dts' &&
+        ctx.bundledPackages.length > 0 &&
+        !id.startsWith('.') &&
+        (id.includes('/node_modules/') || id.split('/').length < 3)
+      ) {
+        return ctx.bundledPackages.some((name) => name === id || id.includes(`/${name}/`)) === false
+      }
+
       // Check if the id is a self-referencing import
       if (exportIds?.includes(id)) {
         return true
@@ -110,15 +119,7 @@ export function resolveRolldownConfig(
         }
       }
 
-      const idParts = id.split('/')
-
-      const name = idParts[0]!.startsWith('@') ? `${idParts[0]}/${idParts[1]}` : idParts[0]
-
-      if (name && external.includes(name)) {
-        return true
-      }
-
-      return false
+      return external.some((name) => name === id || id.includes(`/${name}/`))
     },
 
     input: entries.reduce<{[entryAlias: string]: string}>(
@@ -133,10 +134,18 @@ export function resolveRolldownConfig(
         tsgo:
           typeof pkg.devDependencies === 'object' &&
           '@typescript/native-preview' in pkg.devDependencies,
+        // Enable the resolver by giving an allow list of packages to dig through node_modules.
+        // If there are none that should be resolved, then this process is skipped and our build is faster.
+        // If there's a match then it'll call the resolver function defined on `inputOptions.external`
+        resolve: ctx.bundledPackages,
       }),
     ],
 
-    treeshake: true,
+    treeshake: {
+      moduleSideEffects: 'no-external',
+      unknownGlobalSideEffects: false,
+      annotations: true,
+    },
   } satisfies InputOptions
   const outputOptions = {
     dir: outDir,

@@ -163,6 +163,57 @@ test.skipIf(isWindows)('should build `ts-rolldown-without-extract` package', asy
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
+  const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('with rolldown')
+
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
+test.skipIf(isWindows)('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
+  const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('with rolldown')
+
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
+test.skipIf(isWindows)('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
+  const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
+
+  await project.install()
+
+  const {stdout} = await project.run('build')
+
+  expect(stdout).toContain('with rolldown')
+
+  expect(await project.readFile('dist/index.cjs')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.js')).toMatchSnapshot()
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot()
+
+  await project.remove()
+})
+
 test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
   const project = await spawnProject('ts-rolldown')
 
