@@ -26,9 +26,14 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "devDependencies": {
-    "@sanity/client": "catalog:"
+    "@sanity/client": "catalog:",
+    "@sanity/icons": "catalog:",
+    "@sanity/logos": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/client": "catalog:"
+    "@sanity/client": "catalog:",
+    "@sanity/icons": "catalog:",
+    "@sanity/logos": "catalog:",
+    "react": "*"
   }
 }
