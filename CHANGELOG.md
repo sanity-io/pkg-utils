@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.1](https://github.com/sanity-io/pkg-utils/compare/v7.8.0...v7.8.1) (2025-06-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @typescript/native-preview to v7.0.0-dev.20250620.1 ([#1539](https://github.com/sanity-io/pkg-utils/issues/1539)) ([fa3f6b8](https://github.com/sanity-io/pkg-utils/commit/fa3f6b8cd5f36d4603015a5046cf6ea443944e9b))
+
 ## [7.8.0](https://github.com/sanity-io/pkg-utils/compare/v7.7.1...v7.8.0) (2025-06-19)
 
 
