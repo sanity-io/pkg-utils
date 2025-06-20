@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.3](https://github.com/sanity-io/pkg-utils/compare/v7.8.2...v7.8.3) (2025-06-20)
+
+
+### Bug Fixes
+
+* **rolldown:** temporarily disable `resolve` option using `ctx.bundledPackages` ([3904a31](https://github.com/sanity-io/pkg-utils/commit/3904a31f89582154d18e946dc2e98049c912925d))
+
 ## [7.8.2](https://github.com/sanity-io/pkg-utils/compare/v7.8.1...v7.8.2) (2025-06-20)
 
 
