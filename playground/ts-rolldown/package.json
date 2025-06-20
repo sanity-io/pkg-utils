@@ -12,6 +12,18 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
+    "./a": {
+      "source": "./src/a.ts",
+      "import": "./dist/a.js",
+      "require": "./dist/a.cjs",
+      "default": "./dist/a.js"
+    },
+    "./b": {
+      "source": "./src/b.ts",
+      "import": "./dist/b.js",
+      "require": "./dist/b.cjs",
+      "default": "./dist/b.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",

@@ -758,6 +758,107 @@ declare const VERSION = "1.0.0";
 export { VERSION };"
 `;
 
+exports[`should build \`ts-rolldown\` package 5`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var c = require("./_chunks-cjs/c.cjs");
+const a = "a";
+exports.c = c.c;
+exports.a = a;
+//# sourceMappingURL=a.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 6`] = `
+"import { c } from "./_chunks-dts/c.cjs";
+/** @public */
+declare const a = "a";
+export { a, c };"
+`;
+
+exports[`should build \`ts-rolldown\` package 7`] = `
+"import { c } from "./_chunks-es/c.js";
+const a = "a";
+export {
+  a,
+  c
+};
+//# sourceMappingURL=a.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 8`] = `
+"import { c } from "./_chunks-dts/c.js";
+/** @public */
+declare const a = "a";
+export { a, c };"
+`;
+
+exports[`should build \`ts-rolldown\` package 9`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var c = require("./_chunks-cjs/c.cjs");
+const b = "b";
+exports.c = c.c;
+exports.b = b;
+//# sourceMappingURL=b.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 10`] = `
+"import { c } from "./_chunks-dts/c.cjs";
+/** @public */
+declare const b = "b";
+export { b, c };"
+`;
+
+exports[`should build \`ts-rolldown\` package 11`] = `
+"import { c } from "./_chunks-es/c.js";
+const b = "b";
+export {
+  b,
+  c
+};
+//# sourceMappingURL=b.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 12`] = `
+"import { c } from "./_chunks-dts/c.js";
+/** @public */
+declare const b = "b";
+export { b, c };"
+`;
+
+exports[`should build \`ts-rolldown\` package 13`] = `
+""use strict";
+const c = "c";
+exports.c = c;
+//# sourceMappingURL=c.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 14`] = `
+"const c = "c";
+export {
+  c
+};
+//# sourceMappingURL=c.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown\` package 15`] = `
+"/** @public */
+declare const c = "c";
+export { c };"
+`;
+
+exports[`should build \`ts-rolldown\` package 16`] = `
+"/** @public */
+declare const c = "c";
+export { c };"
+`;
+
 exports[`should build \`ts-rolldown-without-extract\` package 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
