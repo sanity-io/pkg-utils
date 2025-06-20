@@ -133,6 +133,7 @@ export function resolveRolldownConfig(
         tsgo:
           typeof pkg.devDependencies === 'object' &&
           '@typescript/native-preview' in pkg.devDependencies,
+        resolve: ctx.bundledPackages,
       }),
     ],
 
@@ -141,10 +142,42 @@ export function resolveRolldownConfig(
   const outputOptions = {
     dir: outDir,
     entryFileNames,
+    chunkFileNames:
+      buildTask.type === 'rolldown:dts' ? `_chunks-dts/[name]${outputExt}` : undefined,
     esModule: true,
     format: buildTask.type === 'rolldown:dts' ? 'es' : format,
     sourcemap: buildTask.type === 'rolldown:dts' ? false : (config?.sourcemap ?? true),
     hoistTransitiveImports: false,
+    /**
+     * rolldown doesn't permit disabling chunks, we can only choose between automatic chunking (the default)
+     * and manual chunking (using advancedChunks).
+     * This matters for how we generate dts files.
+     * While we use rolldown for dts generation, and rollup for the rest, we want to reduce the amount of dts files emitted as chunks,
+     * and to make them predictable in how they're generated.
+     */
+    // @TODO the following breaks the dts generation, report bug to rolldown
+    // advancedChunks:
+    //   buildTask.type === 'rolldown:dts'
+    //     ? {
+    //         groups: [
+    //           {
+    //             /**
+    //              * Groups all inlined typings specified by bundledPackages in extract.bundledPackages to its own chunk.
+    //              */
+    //             name: 'bundled-packages',
+    //             test: (id) => ctx.bundledPackages.includes(id),
+    //             priority: 1,
+    //           },
+    //           {
+    //             /**
+    //              * Put all other shared chunks into a single chunk.
+    //              */
+    //             name: 'shared',
+    //             minShareCount: 1,
+    //           },
+    //         ],
+    //       }
+    //     : {},
   } satisfies OutputOptions
 
   return {inputOptions, outputOptions}
