@@ -859,6 +859,156 @@ declare const c = "c";
 export { c };"
 `;
 
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package 1`] = `
+""use strict";
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package 2`] = `
+"/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+
+/** @public */
+
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+
+/** @public */
+export { ClientPerspective };"
+`;
+
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package 3`] = `
+"
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package 4`] = `
+"/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+
+/** @public */
+
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+
+/** @public */
+export { ClientPerspective };"
+`;
+
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package 1`] = `
+""use strict";
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package 2`] = `
+"import { ClientPerspective } from "@sanity/client";
+export { ClientPerspective };"
+`;
+
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package 3`] = `
+"
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package 4`] = `
+"import { ClientPerspective } from "@sanity/client";
+export { ClientPerspective };"
+`;
+
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package 1`] = `
+""use strict";
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package 2`] = `
+"/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+
+/** @public */
+
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+
+/** @public */
+export { ClientPerspective };"
+`;
+
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package 3`] = `
+"
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package 4`] = `
+"/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+
+/** @public */
+
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+
+/** @public */
+export { ClientPerspective };"
+`;
+
 exports[`should build \`ts-rolldown-without-extract\` package 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });

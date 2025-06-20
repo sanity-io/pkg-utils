@@ -1,0 +1,34 @@
+{
+  "name": "ts-rolldown-bundle-peer-dependency",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist",
+    "typecheck": "tsc"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "devDependencies": {
+    "@sanity/client": "catalog:"
+  },
+  "peerDependencies": {
+    "@sanity/client": "catalog:"
+  }
+}

@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@sanity/client':
+      specifier: ^7.6.0
+      version: 7.6.0
     '@typescript/native-preview':
       specifier: 7.0.0-dev.20250620.1
       version: 7.0.0-dev.20250620.1
@@ -456,6 +459,24 @@ importers:
   playground/ts-node16: {}
 
   playground/ts-rolldown: {}
+
+  playground/ts-rolldown-bundle-dev-dependency:
+    devDependencies:
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 7.6.0
+
+  playground/ts-rolldown-bundle-peer-dependency:
+    devDependencies:
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 7.6.0
+
+  playground/ts-rolldown-bundle-prod-dependency:
+    dependencies:
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 7.6.0
 
   playground/ts-rolldown-without-extract: {}
 
