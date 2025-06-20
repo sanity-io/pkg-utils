@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.4](https://github.com/sanity-io/pkg-utils/compare/v7.8.3...v7.8.4) (2025-06-20)
+
+
+### Bug Fixes
+
+* **rolldown:** handle `bundledPackages` same way as `api-extractor` ([#1544](https://github.com/sanity-io/pkg-utils/issues/1544)) ([9b4b1f8](https://github.com/sanity-io/pkg-utils/commit/9b4b1f8b788b92b39842887b1e29c55bc9708c0c))
+
 ## [7.8.3](https://github.com/sanity-io/pkg-utils/compare/v7.8.2...v7.8.3) (2025-06-20)
 
 
