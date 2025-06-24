@@ -172,8 +172,8 @@ importers:
         specifier: workspace:*
         version: 'link:'
       '@sanity/prettier-config':
-        specifier: ^1.0.5
-        version: 1.0.5(prettier@3.6.0)
+        specifier: ^1.0.6
+        version: 1.0.6(prettier@3.6.0)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -1714,10 +1714,10 @@ packages:
     peerDependencies:
       '@sanity/client': ^7.1.0
 
-  '@sanity/prettier-config@1.0.5':
-    resolution: {integrity: sha512-8pDONAlOwwV/qRYn3oRLXvHUE7h56zBR+6pXyCfxeU198tTPT06X2Jj32QygliycElnyeGY7X8h8NJG3jP5CuA==}
+  '@sanity/prettier-config@1.0.6':
+    resolution: {integrity: sha512-pbkaHa33gJjRhhDr7be5WJ+c2PNEUCcrNNsgAA0W3a/pAkdrNujC09Gzvi/JkydgjliP/T2KLeuPCBlzftuzKw==}
     peerDependencies:
-      prettier: ^3.5.3
+      prettier: ^3.6.0
 
   '@sanity/preview-url-secret@2.1.11':
     resolution: {integrity: sha512-kMxOvXARbDZ8g8vWPjCBJ+QYaPXoOYXlsHfh727mzl/Ibmvlh9F9fLuyAwxSvq4J2VWXZegb8kmKlEakgld0dg==}
@@ -5869,7 +5869,7 @@ snapshots:
     transitivePeerDependencies:
       - '@sanity/types'
 
-  '@sanity/prettier-config@1.0.5(prettier@3.6.0)':
+  '@sanity/prettier-config@1.0.6(prettier@3.6.0)':
     dependencies:
       prettier: 3.6.0
       prettier-plugin-packagejson: 2.5.15(prettier@3.6.0)
