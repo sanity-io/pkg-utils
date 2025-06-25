@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.6](https://github.com/sanity-io/pkg-utils/compare/v7.8.5...v7.8.6) (2025-06-25)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency browserslist to ^4.25.1 ([#1569](https://github.com/sanity-io/pkg-utils/issues/1569)) ([027c4a0](https://github.com/sanity-io/pkg-utils/commit/027c4a0b48d43dcfe828c8bfed7a040eb7957385))
+* **deps:** Update dependency prettier to ^3.6.1 ([#1570](https://github.com/sanity-io/pkg-utils/issues/1570)) ([7526447](https://github.com/sanity-io/pkg-utils/commit/7526447954c7d3a32af8dd84407e966392b2107f))
+
 ## [7.8.5](https://github.com/sanity-io/pkg-utils/compare/v7.8.4...v7.8.5) (2025-06-23)
 
 
