@@ -117,8 +117,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       prettier:
-        specifier: ^3.6.0
-        version: 3.6.0
+        specifier: ^3.6.1
+        version: 3.6.1
       pretty-bytes:
         specifier: ^5.6.0
         version: 5.6.0
@@ -167,13 +167,13 @@ importers:
         version: 19.8.1
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.4.2
-        version: 4.4.2(prettier@3.6.0)
+        version: 4.4.2(prettier@3.6.1)
       '@sanity/pkg-utils':
         specifier: workspace:*
         version: 'link:'
       '@sanity/prettier-config':
         specifier: ^1.0.6
-        version: 1.0.6(prettier@3.6.0)
+        version: 1.0.6(prettier@3.6.1)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -3761,8 +3761,8 @@ packages:
       prettier:
         optional: true
 
-  prettier@3.6.0:
-    resolution: {integrity: sha512-ujSB9uXHJKzM/2GBuE0hBOUgC77CN3Bnpqa+g80bkv3T3A93wL/xlzDATHhnhkzifz/UE2SNOvmbTz5hSkDlHw==}
+  prettier@3.6.1:
+    resolution: {integrity: sha512-5xGWRa90Sp2+x1dQtNpIpeOQpTDBs9cZDmA/qs2vDNN2i18PdapqY7CmBeyLlMuGqXJRIOPaCaVZTLNQRWUH/A==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5297,13 +5297,13 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.4.2(prettier@3.6.0)':
+  '@ianvs/prettier-plugin-sort-imports@4.4.2(prettier@3.6.1)':
     dependencies:
       '@babel/generator': 7.27.5
       '@babel/parser': 7.27.5
       '@babel/traverse': 7.27.4
       '@babel/types': 7.27.6
-      prettier: 3.6.0
+      prettier: 3.6.1
       semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
@@ -5909,10 +5909,10 @@ snapshots:
     transitivePeerDependencies:
       - '@sanity/types'
 
-  '@sanity/prettier-config@1.0.6(prettier@3.6.0)':
+  '@sanity/prettier-config@1.0.6(prettier@3.6.1)':
     dependencies:
-      prettier: 3.6.0
-      prettier-plugin-packagejson: 2.5.15(prettier@3.6.0)
+      prettier: 3.6.1
+      prettier-plugin-packagejson: 2.5.15(prettier@3.6.1)
 
   '@sanity/preview-url-secret@2.1.11(@sanity/client@7.6.0)':
     dependencies:
@@ -8238,14 +8238,14 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prettier-plugin-packagejson@2.5.15(prettier@3.6.0):
+  prettier-plugin-packagejson@2.5.15(prettier@3.6.1):
     dependencies:
       sort-package-json: 3.2.1
       synckit: 0.11.8
     optionalDependencies:
-      prettier: 3.6.0
+      prettier: 3.6.1
 
-  prettier@3.6.0: {}
+  prettier@3.6.1: {}
 
   pretty-bytes@5.6.0: {}
 
