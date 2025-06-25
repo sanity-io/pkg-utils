@@ -12,6 +12,12 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
+    "./inline-inference": {
+      "source": "./src/inline-inference.ts",
+      "import": "./dist/inline-inference.js",
+      "require": "./dist/inline-inference.cjs",
+      "default": "./dist/inline-inference.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",

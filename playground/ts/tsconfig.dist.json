@@ -1,4 +1,8 @@
 {
-  "extends": ["./tsconfig.settings", "@sanity/pkg-utils/tsconfig/isolated-declarations.json"],
-  "include": ["./src"]
+  "extends": ["./tsconfig.settings"],
+  "include": ["./src"],
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": false
+  }
 }
