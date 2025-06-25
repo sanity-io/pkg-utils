@@ -833,6 +833,14 @@ exports[`should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "0.0.0-development";
+var Direction = /* @__PURE__ */ ((Direction2) => (Direction2[Direction2.Up = 0] = "Up", Direction2[Direction2.Down = 1] = "Down", Direction2[Direction2.Left = 2] = "Left", Direction2[Direction2.Right = 3] = "Right", Direction2))(Direction || {});
+class Point {
+  constructor(x, y, z, perspective) {
+    this.x = x, this.y = y, this.z = z, this.perspective = perspective;
+  }
+}
+exports.Direction = Direction;
+exports.Point = Point;
 exports.VERSION = VERSION;
 //# sourceMappingURL=index.cjs.map
 "
@@ -841,18 +849,56 @@ exports.VERSION = VERSION;
 exports[`should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION: string;
-export { VERSION };"
+/** @public */
+declare enum Direction {
+  Up = 0,
+  Down = 1,
+  Left = 2,
+  Right = 3,
+}
+/** @public */
+declare class Point {
+  x: number;
+  y: number;
+  protected z: number;
+  private perspective;
+  constructor(x: number, y: number, z: number, perspective: number);
+}
+export { Direction, Point, VERSION };"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION: string;
-export { VERSION };"
+/** @public */
+declare enum Direction {
+  Up = 0,
+  Down = 1,
+  Left = 2,
+  Right = 3,
+}
+/** @public */
+declare class Point {
+  x: number;
+  y: number;
+  protected z: number;
+  private perspective;
+  constructor(x: number, y: number, z: number, perspective: number);
+}
+export { Direction, Point, VERSION };"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
 "const VERSION = "0.0.0-development";
+var Direction = /* @__PURE__ */ ((Direction2) => (Direction2[Direction2.Up = 0] = "Up", Direction2[Direction2.Down = 1] = "Down", Direction2[Direction2.Left = 2] = "Left", Direction2[Direction2.Right = 3] = "Right", Direction2))(Direction || {});
+class Point {
+  constructor(x, y, z, perspective) {
+    this.x = x, this.y = y, this.z = z, this.perspective = perspective;
+  }
+}
 export {
+  Direction,
+  Point,
   VERSION
 };
 //# sourceMappingURL=index.js.map
