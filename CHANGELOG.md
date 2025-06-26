@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.9](https://github.com/sanity-io/pkg-utils/compare/v7.8.8...v7.8.9) (2025-06-26)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.27.7 ([#1583](https://github.com/sanity-io/pkg-utils/issues/1583)) ([aae02c6](https://github.com/sanity-io/pkg-utils/commit/aae02c6d208cd5c9b159cfac50915cef4bcf6d58))
+
 ## [7.8.8](https://github.com/sanity-io/pkg-utils/compare/v7.8.7...v7.8.8) (2025-06-26)
 
 
