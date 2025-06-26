@@ -247,11 +247,11 @@ importers:
   playground/babel-plugin:
     devDependencies:
       '@babel/core':
-        specifier: ^7.27.4
+        specifier: ^7.27.7
         version: 7.27.7
       '@babel/plugin-transform-object-rest-spread':
-        specifier: ^7.27.3
-        version: 7.27.3(@babel/core@7.27.7)
+        specifier: ^7.27.7
+        version: 7.27.7(@babel/core@7.27.7)
 
   playground/browser-bundle: {}
 
@@ -671,8 +671,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-destructuring@7.27.3':
-    resolution: {integrity: sha512-s4Jrok82JpiaIprtY2nHsYmrThKvvwgHwjgd7UMiYhZaN0asdXNLr0y+NjTfkA7SyQE5i2Fb7eawUOZmLvyqOA==}
+  '@babel/plugin-transform-destructuring@7.27.7':
+    resolution: {integrity: sha512-pg3ZLdIKWCP0CrJm0O4jYjVthyBeioVfvz9nwt6o5paUxsgJ/8GucSMAIaj6M7xA4WY+SrvtGu2LijzkdyecWQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -683,14 +683,14 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-object-rest-spread@7.27.3':
-    resolution: {integrity: sha512-7ZZtznF9g4l2JCImCo5LNKFHB5eXnN39lLtLY5Tg+VkR0jwOt7TBciMckuiQIOIW7L5tkQOCh3bVGYeXgMx52Q==}
+  '@babel/plugin-transform-object-rest-spread@7.27.7':
+    resolution: {integrity: sha512-201B1kFTWhckclcXpWHc8uUpYziDX/Pl4rxl0ZX0DiCZ3jknwfSUALL3QCYeeXXB37yWxJbo+g+Vfq8pAaHi3w==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-parameters@7.27.1':
-    resolution: {integrity: sha512-018KRk76HWKeZ5l4oTj2zPpSh+NbGdt0st5S6x0pga6HgrjBOJb24mMDHorFopOOd6YHkLgOZ+zaCjZGPO4aKg==}
+  '@babel/plugin-transform-parameters@7.27.7':
+    resolution: {integrity: sha512-qBkYTYCb76RRxUM6CcZA5KRu8K4SM8ajzVeUgVdMVO9NN9uI/GaVmBg/WKJJGnNokV9SY8FxNOVWGXzqzUidBg==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -4991,10 +4991,13 @@ snapshots:
       '@babel/core': 7.27.7
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-destructuring@7.27.3(@babel/core@7.27.7)':
+  '@babel/plugin-transform-destructuring@7.27.7(@babel/core@7.27.7)':
     dependencies:
       '@babel/core': 7.27.7
       '@babel/helper-plugin-utils': 7.27.1
+      '@babel/traverse': 7.27.7
+    transitivePeerDependencies:
+      - supports-color
 
   '@babel/plugin-transform-modules-commonjs@7.27.1(@babel/core@7.27.7)':
     dependencies:
@@ -5004,15 +5007,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/plugin-transform-object-rest-spread@7.27.3(@babel/core@7.27.7)':
+  '@babel/plugin-transform-object-rest-spread@7.27.7(@babel/core@7.27.7)':
     dependencies:
       '@babel/core': 7.27.7
       '@babel/helper-compilation-targets': 7.27.2
       '@babel/helper-plugin-utils': 7.27.1
-      '@babel/plugin-transform-destructuring': 7.27.3(@babel/core@7.27.7)
-      '@babel/plugin-transform-parameters': 7.27.1(@babel/core@7.27.7)
+      '@babel/plugin-transform-destructuring': 7.27.7(@babel/core@7.27.7)
+      '@babel/plugin-transform-parameters': 7.27.7(@babel/core@7.27.7)
+      '@babel/traverse': 7.27.7
+    transitivePeerDependencies:
+      - supports-color
 
-  '@babel/plugin-transform-parameters@7.27.1(@babel/core@7.27.7)':
+  '@babel/plugin-transform-parameters@7.27.7(@babel/core@7.27.7)':
     dependencies:
       '@babel/core': 7.27.7
       '@babel/helper-plugin-utils': 7.27.1
