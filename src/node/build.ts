@@ -34,6 +34,7 @@ export async function build(options: {
   strict?: boolean
   tsconfig?: string
   clean?: boolean
+  quiet?: boolean
 }): Promise<void> {
   const {
     cwd,
@@ -41,8 +42,9 @@ export async function build(options: {
     strict = false,
     tsconfig: tsconfigOption,
     clean = false,
+    quiet = false,
   } = options
-  const logger = createLogger()
+  const logger = createLogger(quiet)
 
   const config = await loadConfig({cwd})
 
@@ -61,9 +63,11 @@ export async function build(options: {
   })
 
   if (clean) {
-    logger.log(
-      `Deleting the \`dist\` folder: './${path.relative(cwd, ctx.distPath)}' before building...`,
-    )
+    if (!quiet) {
+      logger.log(
+        `Deleting the \`dist\` folder: './${path.relative(cwd, ctx.distPath)}' before building...`,
+      )
+    }
     await rimraf(ctx.distPath)
   }
 
@@ -73,7 +77,7 @@ export async function build(options: {
     const handler = buildTaskHandlers[task.type] as TaskHandler<BuildTask>
     const taskName = handler.name(ctx, task)
 
-    const spinner = createSpinner(taskName)
+    const spinner = createSpinner(taskName, quiet)
 
     try {
       const result = await handler.exec(ctx, task).toPromise()
