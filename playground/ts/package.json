@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
+    "build:quiet": "pkg build --strict --check --clean --quiet",
     "clean": "rimraf dist",
     "typecheck": "tsc"
   }

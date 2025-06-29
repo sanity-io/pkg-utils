@@ -539,3 +539,23 @@ describe.skip('runtime: next.js', () => {
     await exportsDummy.remove()
   })
 })
+
+test.skipIf(isWindows)('should build with `--quiet` flag suppressing output', async () => {
+  const project = await spawnProject('ts')
+
+  await project.install()
+
+  const {stdout} = await project.run('build:quiet')
+
+  // Should not contain build progress messages
+  expect(stdout).not.toContain('Build type definitions')
+  expect(stdout).not.toContain('- ts: ./src/index.ts → ./dist/index.d.ts')
+
+  expect(stdout).not.toContain('Build javascript files')
+  expect(stdout).not.toContain('- ts: ./src/index.ts → ./dist/index.cjs')
+
+  // But should still produce the expected dist files
+  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+
+  await project.remove()
+})

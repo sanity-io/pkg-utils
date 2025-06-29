@@ -6,6 +6,7 @@ export async function buildAction(options: {
   strict?: boolean
   tsconfig?: string
   clean?: boolean
+  quiet?: boolean
 }): Promise<void> {
   try {
     await build({
@@ -14,6 +15,7 @@ export async function buildAction(options: {
       strict: options.strict,
       tsconfig: options.tsconfig,
       clean: options.clean,
+      quiet: options.quiet,
     })
   } catch (err) {
     handleError(err)
