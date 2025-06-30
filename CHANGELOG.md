@@ -5,6 +5,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.0](https://github.com/sanity-io/pkg-utils/compare/v7.8.10...v7.9.0) (2025-06-30)
+
+
+### Features
+
+* add --quiet flag to build command ([#1591](https://github.com/sanity-io/pkg-utils/issues/1591)) ([f1f3daf](https://github.com/sanity-io/pkg-utils/commit/f1f3daf3f30df43cd4c3cef317675b309c29a541))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency rolldown to v1.0.0-beta.22 ([#1596](https://github.com/sanity-io/pkg-utils/issues/1596)) ([3d71b1a](https://github.com/sanity-io/pkg-utils/commit/3d71b1aa1c8a9b785a81a7fe5d30d8f39fcb730c))
+* **deps:** Update dependency rolldown-plugin-dts to v0.13.13 ([#1593](https://github.com/sanity-io/pkg-utils/issues/1593)) ([c1bb939](https://github.com/sanity-io/pkg-utils/commit/c1bb939adf1ed1ecf78aaff0c2715874b667541f))
+
 ## [7.8.10](https://github.com/sanity-io/pkg-utils/compare/v7.8.9...v7.8.10) (2025-06-27)
 
 
