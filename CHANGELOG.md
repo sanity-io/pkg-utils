@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.1](https://github.com/sanity-io/pkg-utils/compare/v7.9.0...v7.9.1) (2025-07-07)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.28.0 ([#1608](https://github.com/sanity-io/pkg-utils/issues/1608)) ([7606cd8](https://github.com/sanity-io/pkg-utils/commit/7606cd87e8ef587d0e00fe73bea9631a4e6a69fb))
+* **deps:** Update dependency rolldown to v1.0.0-beta.24 ([#1603](https://github.com/sanity-io/pkg-utils/issues/1603)) ([2796b3d](https://github.com/sanity-io/pkg-utils/commit/2796b3d2a70964a6b5c23085be16baefe51c1947))
+* **deps:** Update dependency rollup to ^4.44.2 ([#1604](https://github.com/sanity-io/pkg-utils/issues/1604)) ([70e8411](https://github.com/sanity-io/pkg-utils/commit/70e841111d758272631851e52b5dea077a89d2bd))
+* **deps:** Update dependency zod to v3.25.75 ([#1605](https://github.com/sanity-io/pkg-utils/issues/1605)) ([ff07ecf](https://github.com/sanity-io/pkg-utils/commit/ff07ecf934dc86ec16f31d1f7704de57d146a37a))
+
 ## [7.9.0](https://github.com/sanity-io/pkg-utils/compare/v7.8.10...v7.9.0) (2025-06-30)
 
 
