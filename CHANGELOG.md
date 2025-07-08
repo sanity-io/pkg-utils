@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.2](https://github.com/sanity-io/pkg-utils/compare/v7.9.1...v7.9.2) (2025-07-08)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency esbuild to ^0.25.6 ([#1612](https://github.com/sanity-io/pkg-utils/issues/1612)) ([2a6d22f](https://github.com/sanity-io/pkg-utils/commit/2a6d22fbafec59d5f420c2d289e11bc8ef810613))
+
 ## [7.9.1](https://github.com/sanity-io/pkg-utils/compare/v7.9.0...v7.9.1) (2025-07-07)
 
 
