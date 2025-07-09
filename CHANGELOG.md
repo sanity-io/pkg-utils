@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.3](https://github.com/sanity-io/pkg-utils/compare/v7.9.2...v7.9.3) (2025-07-09)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency zod to v3.25.76 ([#1617](https://github.com/sanity-io/pkg-utils/issues/1617)) ([f9c8e6d](https://github.com/sanity-io/pkg-utils/commit/f9c8e6d45a2d7d17c2109445b9d99cc994d0b9ec))
+
 ## [7.9.2](https://github.com/sanity-io/pkg-utils/compare/v7.9.1...v7.9.2) (2025-07-08)
 
 
