@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.5](https://github.com/sanity-io/pkg-utils/compare/v7.9.4...v7.9.5) (2025-07-14)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @babel/types to ^7.28.1 ([#1632](https://github.com/sanity-io/pkg-utils/issues/1632)) ([47323b5](https://github.com/sanity-io/pkg-utils/commit/47323b59768e2e1ef8f4055d722c88c57fa7fffc))
+* **deps:** Update dependency rolldown to v1.0.0-beta.27 ([#1633](https://github.com/sanity-io/pkg-utils/issues/1633)) ([a9598fc](https://github.com/sanity-io/pkg-utils/commit/a9598fc58748626eec5926e1923a77557ea162b4))
+* **deps:** Update dependency rollup to ^4.45.0 ([#1635](https://github.com/sanity-io/pkg-utils/issues/1635)) ([05a4d1a](https://github.com/sanity-io/pkg-utils/commit/05a4d1af938dbf1773d6a0fb9f5ba453a240734f))
+* **deps:** Update dependency zod-validation-error to v3.5.3 ([#1634](https://github.com/sanity-io/pkg-utils/issues/1634)) ([ef840ad](https://github.com/sanity-io/pkg-utils/commit/ef840adb44c8e1880a1d8f34a87dbd2e228cdc8c))
+
 ## [7.9.4](https://github.com/sanity-io/pkg-utils/compare/v7.9.3...v7.9.4) (2025-07-11)
 
 
