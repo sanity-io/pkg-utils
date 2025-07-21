@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.8](https://github.com/sanity-io/pkg-utils/compare/v7.9.7...v7.9.8) (2025-07-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency esbuild to ^0.25.8 ([7601a4c](https://github.com/sanity-io/pkg-utils/commit/7601a4c721cff87520fcf74cf6f532e936ae7d5e))
+* **deps:** Update dependency rolldown-plugin-dts to v0.14.1 ([#1644](https://github.com/sanity-io/pkg-utils/issues/1644)) ([40a3eca](https://github.com/sanity-io/pkg-utils/commit/40a3eca2bbdf065c4a639fe66a9368bcc1961aa9))
+
 ## [7.9.7](https://github.com/sanity-io/pkg-utils/compare/v7.9.6...v7.9.7) (2025-07-17)
 
 
