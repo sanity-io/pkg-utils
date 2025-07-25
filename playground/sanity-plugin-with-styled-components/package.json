@@ -1,0 +1,49 @@
+{
+  "name": "sanity-plugin-with-styled-components",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist",
+    "typecheck": "tsc"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "dependencies": {
+    "@sanity/ui": "^3.0.5",
+    "react-compiler-runtime": "19.1.0-rc.2"
+  },
+  "devDependencies": {
+    "@sanity/types": "^4.2.0",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "babel-plugin-react-compiler": "rc",
+    "babel-plugin-styled-components": "^2.1.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^4.2.0",
+    "styled-components": "^6.1.19"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19",
+    "sanity": "^4",
+    "styled-components": "^6.1"
+  }
+}
