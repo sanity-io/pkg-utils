@@ -12,3 +12,5 @@ interface ColorOptions {
 export const colorInput: Plugin<ColorOptions> = definePlugin<ColorOptions>({
   name: '@sanity/color-input',
 })
+
+export {ColorInput} from './LazyColorInput'
