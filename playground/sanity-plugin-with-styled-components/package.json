@@ -9,7 +9,6 @@
     ".": {
       "source": "./src/index.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -26,7 +25,7 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "dependencies": {
-    "@sanity/ui": "^3.0.1",
+    "@sanity/ui": "^3.0.2",
     "react-compiler-runtime": "19.1.0-rc.2"
   },
   "devDependencies": {

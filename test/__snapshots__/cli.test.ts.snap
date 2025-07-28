@@ -642,6 +642,59 @@ export {
 "
 `;
 
+exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
+"import { jsx } from "react/jsx-runtime";
+import { c } from "react-compiler-runtime";
+import { TextInput } from "@sanity/ui";
+import { styled } from "styled-components";
+const CustomTextInput = styled(TextInput).withConfig({
+  displayName: "CustomTextInput",
+  componentId: "sc-11pprad-0"
+})\`border:none;\`;
+function ColorInput(props) {
+  const $ = c(2);
+  let t0;
+  return $[0] !== props.elementProps ? (t0 = /* @__PURE__ */ jsx(CustomTextInput, { ...props.elementProps, type: "color" }), $[0] = props.elementProps, $[1] = t0) : t0 = $[1], t0;
+}
+export {
+  ColorInput as default
+};
+//# sourceMappingURL=ColorInput.js.map
+"
+`;
+
+exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
+"import { Plugin, StringInputProps } from "sanity";
+/** @public */
+interface ColorInputProps extends StringInputProps {}
+/** @public */
+declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
+interface ColorOptions {
+  /**
+  * @defaultValue 'hex'
+  */
+  format?: "hex" | "rgb" | "hsl" | "hsv";
+  alpha?: boolean;
+}
+/** @public */
+declare const colorInput: Plugin<ColorOptions>;
+export { ColorInput, colorInput };"
+`;
+
+exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
+"import { definePlugin } from "sanity";
+import { lazy } from "react";
+const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorInput = definePlugin({
+  name: "@sanity/color-input"
+});
+export {
+  ColorInput,
+  colorInput
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
 exports[`should build \`ts\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @internal
