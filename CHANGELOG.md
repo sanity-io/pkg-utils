@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.14](https://github.com/sanity-io/pkg-utils/compare/v7.9.13...v7.9.14) (2025-07-29)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency rollup to ^4.46.1 ([#1681](https://github.com/sanity-io/pkg-utils/issues/1681)) ([5537ce8](https://github.com/sanity-io/pkg-utils/commit/5537ce86ee321c4b5ca4a7ce58306a558fb9d701))
+* un-pin rollup ([4c7263b](https://github.com/sanity-io/pkg-utils/commit/4c7263b1d14a18a86a416e3ca67e9371df758451))
+
 ## [7.9.13](https://github.com/sanity-io/pkg-utils/compare/v7.9.12...v7.9.13) (2025-07-29)
 
 
