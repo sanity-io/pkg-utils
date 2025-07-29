@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.13](https://github.com/sanity-io/pkg-utils/compare/v7.9.12...v7.9.13) (2025-07-29)
+
+
+### Bug Fixes
+
+* **deps:** pin rollup to v4.45.3 ([#1679](https://github.com/sanity-io/pkg-utils/issues/1679)) ([37493ae](https://github.com/sanity-io/pkg-utils/commit/37493ae4e2d069d65fc53baee65967b8c677828d))
+
 ## [7.9.12](https://github.com/sanity-io/pkg-utils/compare/v7.9.11...v7.9.12) (2025-07-28)
 
 
