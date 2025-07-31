@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.19](https://github.com/sanity-io/pkg-utils/compare/v7.9.18...v7.9.19) (2025-07-31)
+
+
+### Bug Fixes
+
+* **deps:** expand typescript peer to allow v5.9.2 ([#1702](https://github.com/sanity-io/pkg-utils/issues/1702)) ([68f100f](https://github.com/sanity-io/pkg-utils/commit/68f100fdac752833cee54918c16bf7fe0a119cb9))
+
 ## [7.9.18](https://github.com/sanity-io/pkg-utils/compare/v7.9.17...v7.9.18) (2025-07-31)
 
 
