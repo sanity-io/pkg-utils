@@ -49,11 +49,9 @@ export default function ColorInput(props: ColorInputProps): React.JSX.Element {
         colorspace={props.schemaType.options?.colorspace ?? 'limited-srgb'}
         alpha={props.schemaType.options?.alpha ? 'true' : undefined}
       />
-      <output htmlFor={props.elementProps.id}>
-        <Text muted size={0}>
-          {props.value}
-        </Text>
-      </output>
+      <Text as="output" muted size={0} htmlFor={props.elementProps.id}>
+        {props.value}
+      </Text>
     </Stack>
   )
 }
