@@ -734,14 +734,21 @@ export {
 `;
 
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
+"import { jsxs, jsx } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
-import { TextInput } from "@sanity/ui";
+import { Stack, Text } from "@sanity/ui";
 var input = "styles_input__1n31tph0";
 function ColorInput(props) {
-  const $ = c(2);
-  let t0;
-  return $[0] !== props.elementProps ? (t0 = /* @__PURE__ */ jsx(TextInput, { ...props.elementProps, type: "color", className: input }), $[0] = props.elementProps, $[1] = t0) : t0 = $[1], t0;
+  const $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
+  let t2;
+  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", { ...props.elementProps, type: "color", className: input, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
+  let t3;
+  $[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { as: "output", muted: !0, size: 0, htmlFor: props.elementProps.id, children: props.value }), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
+  let t4;
+  return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
+    t2,
+    t3
+  ] }), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
 }
 export {
   ColorInput as default
@@ -751,28 +758,50 @@ export {
 `;
 
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringInputProps } from "sanity";
-/** @public */
-interface ColorInputProps extends StringInputProps {}
+"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
+interface ColorOptions {
+  alpha?: boolean;
+  colorspace?: 'limited-srgb' | 'display-p3';
+}
+interface ColorSchemaType extends StringSchemaType {
+  options?: StringSchemaType['options'] & ColorOptions;
+}
+type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
 declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-interface ColorOptions {
-  /**
-   * @defaultValue 'hex'
-   */
-  format?: 'hex' | 'rgb' | 'hsl' | 'hsv';
-  alpha?: boolean;
+declare const colorTypeName: "color";
+/**
+ * @public
+ */
+interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
+  type: typeof colorTypeName;
+  options?: ColorOptions;
+}
+declare module '@sanity/types' {
+  interface IntrinsicDefinitions {
+    color: ColorDefinition;
+  }
 }
 /** @public */
-declare const colorInput: Plugin<ColorOptions>;
-export { ColorInput, colorInput };"
+declare const colorInput: Plugin<void>;
+export { type ColorDefinition, ColorInput, colorInput };"
 `;
 
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
-"import { definePlugin } from "sanity";
+"import { defineType, definePlugin } from "sanity";
 import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorInput = definePlugin({
-  name: "@sanity/color-input"
+const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
+  name: colorTypeName,
+  type: "string",
+  title: "Color",
+  components: {
+    input: ColorInput
+  }
+}), colorInput = definePlugin({
+  name: "@sanity/color-input",
+  schema: {
+    types: [colorType]
+  }
 });
 export {
   ColorInput,
