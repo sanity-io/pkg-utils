@@ -21,6 +21,7 @@ export default defineConfig({
         extract: {
           name: 'style.css',
         },
+        identifiers: 'short',
       }),
     ],
   },
