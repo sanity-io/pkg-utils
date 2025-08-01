@@ -739,16 +739,18 @@ import { c } from "react/compiler-runtime";
 import { Stack, Text } from "@sanity/ui";
 var input = "styles_input__1n31tph0";
 function ColorInput(props) {
-  const $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
+  const $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
   let t2;
   $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", { ...props.elementProps, type: "color", className: input, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
   let t3;
-  $[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { as: "output", muted: !0, size: 0, htmlFor: props.elementProps.id, children: props.value }), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
+  $[4] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { muted: !0, size: 0, children: props.value }), $[4] = props.value, $[5] = t3) : t3 = $[5];
   let t4;
-  return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
+  $[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", { htmlFor: props.elementProps.id, children: t3 }), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
+  let t5;
+  return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
     t2,
-    t3
-  ] }), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
+    t4
+  ] }), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
 }
 export {
   ColorInput as default
