@@ -7,7 +7,15 @@ export default defineConfig({
   babel: {reactCompiler: true},
   reactCompilerOptions: {target: '19'},
   rollup: {
-    output: {assetFileNames: '[name][extname]'},
+    output: {
+      assetFileNames: '[name][extname]',
+      // banner: (chunkInfo) => {
+      //   if (!chunkInfo.isEntry) {
+      //     return ''
+      //   }
+      //   return `import './style.css'`
+      // },
+    },
     plugins: [
       vanillaExtractPlugin({
         extract: {
