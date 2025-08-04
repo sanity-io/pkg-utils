@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.24](https://github.com/sanity-io/pkg-utils/compare/v7.9.23...v7.9.24) (2025-08-04)
+
+
+### Bug Fixes
+
+* **rollup:** colocate css and image assets by default ([1902db2](https://github.com/sanity-io/pkg-utils/commit/1902db257b15489be8e05b7314cf6b6acf69a6b8))
+
 ## [7.9.23](https://github.com/sanity-io/pkg-utils/compare/v7.9.22...v7.9.23) (2025-08-04)
 
 
