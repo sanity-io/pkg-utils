@@ -8,6 +8,7 @@ import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
+import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
 import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
@@ -93,6 +94,12 @@ export function resolveRollupConfig(
     }),
     commonjs(),
     json(),
+    config?.rollup?.vanillaExtract &&
+      vanillaExtractPlugin(
+        config?.rollup?.vanillaExtract === true
+          ? {extract: {name: 'style.css', sourcemap: true}, identifiers: 'short'}
+          : config?.rollup?.vanillaExtract,
+      ),
     (config?.babel?.reactCompiler || config?.babel?.styledComponents) &&
       babel({
         babelrc: false,
