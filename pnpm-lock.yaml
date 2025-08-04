@@ -135,8 +135,8 @@ importers:
         specifier: 1.0.0-beta.30
         version: 1.0.0-beta.30
       rolldown-plugin-dts:
-        specifier: 0.14.3
-        version: 0.14.3(@typescript/native-preview@7.0.0-dev.20250804.1)(rolldown@1.0.0-beta.30)(typescript@5.9.2)
+        specifier: 0.15.1
+        version: 0.15.1(@typescript/native-preview@7.0.0-dev.20250804.1)(rolldown@1.0.0-beta.30)(typescript@5.9.2)
       rollup:
         specifier: ^4.46.2
         version: 4.46.2
@@ -3975,8 +3975,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  rolldown-plugin-dts@0.14.3:
-    resolution: {integrity: sha512-LsUPsPV2XpACe5wikxQzYBD0qg4nyxwUkLos5oF8v8qVO9jPpH6GRg2S5ZUELFry04Ab58C9Tibbi7dEbVLp2w==}
+  rolldown-plugin-dts@0.15.1:
+    resolution: {integrity: sha512-X/oIfoqsEWb46aWXvdgKSN/TcF3Z50Mikk30KZcceVBgypEl9Tscvt3+o6pZzyJxZV3m+Kc+ftlHBBVQUGpXtw==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
       '@typescript/native-preview': '>=7.0.0-dev.20250601.1'
@@ -8475,7 +8475,7 @@ snapshots:
     dependencies:
       glob: 9.3.5
 
-  rolldown-plugin-dts@0.14.3(@typescript/native-preview@7.0.0-dev.20250804.1)(rolldown@1.0.0-beta.30)(typescript@5.9.2):
+  rolldown-plugin-dts@0.15.1(@typescript/native-preview@7.0.0-dev.20250804.1)(rolldown@1.0.0-beta.30)(typescript@5.9.2):
     dependencies:
       '@babel/generator': 7.28.0
       '@babel/parser': 7.28.0
