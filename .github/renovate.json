@@ -25,7 +25,10 @@
       "semanticCommitType": "fix"
     },
     {
-      "matchFileNames": ["playground/react-18/package.json", "playground/sanity-plugin-with-styled-components/package.json"],
+      "matchFileNames": [
+        "playground/react-18/package.json",
+        "playground/sanity-plugin-with-styled-components/package.json"
+      ],
       "matchPackageNames": ["@types/react", "@types/react-dom", "react", "react-dom"],
       "allowedVersions": "<=18"
     }
