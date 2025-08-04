@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.23](https://github.com/sanity-io/pkg-utils/compare/v7.9.22...v7.9.23) (2025-08-04)
+
+
+### Bug Fixes
+
+* **check:** allow js that imports css files ([49a9e7e](https://github.com/sanity-io/pkg-utils/commit/49a9e7ed652e9d9a53c1de2a74fbd064e386707b))
+* **rolldown:** `options.jsx` and `options.transform.jsx` warning ([6357375](https://github.com/sanity-io/pkg-utils/commit/6357375239c275fedda7e57f5cbbbc10777501ff))
+* **rollup:** don't treeshake external css imports ([e5649f8](https://github.com/sanity-io/pkg-utils/commit/e5649f89086d237cd431ed6825fc57b036e27a38))
+
 ## [7.9.22](https://github.com/sanity-io/pkg-utils/compare/v7.9.21...v7.9.22) (2025-08-04)
 
 
