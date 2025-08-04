@@ -14,7 +14,7 @@ export function resolveRolldownConfig(
   ctx: BuildContext,
   buildTask: RolldownDtsTask,
 ): RolldownConfig {
-  const {format, runtime, target} = buildTask
+  const {format, runtime} = buildTask
   const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
   const outputExt = extMap[pkg.type || 'commonjs'][format]
   const outDir = path.relative(cwd, distPath)
@@ -80,9 +80,6 @@ export function resolveRolldownConfig(
     resolve: {
       alias: pathAliases,
       tsconfigFilename: ctx.ts.configPath || 'tsconfig.json',
-    },
-    transform: {
-      target,
     },
     experimental: {
       attachDebugInfo: 'none',
