@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.0](https://github.com/sanity-io/pkg-utils/compare/v7.9.26...v7.10.0) (2025-08-04)
+
+
+### Features
+
+* add vanilla-extract support ([#1728](https://github.com/sanity-io/pkg-utils/issues/1728)) ([84d1731](https://github.com/sanity-io/pkg-utils/commit/84d1731effaa675500d925dd36df81c482ebfa0a))
+
 ## [7.9.26](https://github.com/sanity-io/pkg-utils/compare/v7.9.25...v7.9.26) (2025-08-04)
 
 
