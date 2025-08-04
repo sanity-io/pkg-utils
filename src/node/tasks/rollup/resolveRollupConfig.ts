@@ -253,6 +253,7 @@ export function resolveRollupConfig(
       sourcemap: config?.sourcemap ?? true,
       hoistTransitiveImports: false,
       minifyInternalExports: minify,
+      assetFileNames: '[name][extname]',
       ...config?.rollup?.output,
     },
   }
