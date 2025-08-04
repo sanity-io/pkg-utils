@@ -19,9 +19,9 @@
     "dist"
   ],
   "scripts": {
-    "dev": "sanity dev",
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist",
+    "dev": "sanity dev",
     "typecheck": "tsc"
   },
   "browserslist": "extends @sanity/browserslist-config",
