@@ -1,5 +1,6 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
+import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict'
 
@@ -291,6 +292,11 @@ export interface PkgConfigOptions {
      * @alpha
      */
     optimizeLodash?: boolean | OptimizeLodashOptions
+    /**
+     * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
+     * @alpha
+     */
+    vanillaExtract?: boolean | VanillaExtractOptions
   }
   /**
    * Default runtime of package exports
