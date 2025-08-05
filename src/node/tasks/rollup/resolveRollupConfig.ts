@@ -14,8 +14,10 @@ import esbuild from 'rollup-plugin-esbuild'
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
 import {resolveConfigProperty} from '../../core/config/resolveConfigProperty'
 import type {BuildContext} from '../../core/contexts/buildContext'
+import {DEFAULT_BROWSERSLIST_QUERY} from '../../core/defaults'
 import type {PackageJSON} from '../../core/pkg/types'
 import type {RollupTask, RollupWatchTask} from '../types'
+import {optimizeCss} from './optimizeCss'
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -99,6 +101,19 @@ export function resolveRollupConfig(
         config?.rollup?.vanillaExtract === true
           ? {extract: {name: 'style.css', sourcemap: true}, identifiers: 'short'}
           : config?.rollup?.vanillaExtract,
+      ),
+    config?.rollup?.vanillaExtract &&
+      optimizeCss(
+        config?.rollup?.vanillaExtract === true
+          ? {extractFileName: 'style.css', browserslist: DEFAULT_BROWSERSLIST_QUERY}
+          : {
+              extractFileName:
+                typeof config.rollup.vanillaExtract.extract === 'object' &&
+                config.rollup.vanillaExtract.extract.name
+                  ? config.rollup.vanillaExtract.extract.name
+                  : 'bundle.css',
+              browserslist: config.rollup.vanillaExtract.browserslist || DEFAULT_BROWSERSLIST_QUERY,
+            },
       ),
     (config?.babel?.reactCompiler || config?.babel?.styledComponents) &&
       babel({
