@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.1](https://github.com/sanity-io/pkg-utils/compare/v7.10.0...v7.10.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @vanilla-extract/rollup-plugin to ^1.4.1 ([#1731](https://github.com/sanity-io/pkg-utils/issues/1731)) ([4dc6d44](https://github.com/sanity-io/pkg-utils/commit/4dc6d4473057caf1a4d78f45640e5c0ba2345f5f))
+
 ## [7.10.0](https://github.com/sanity-io/pkg-utils/compare/v7.9.26...v7.10.0) (2025-08-04)
 
 
