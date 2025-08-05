@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.0](https://github.com/sanity-io/pkg-utils/compare/v7.10.1...v7.11.0) (2025-08-05)
+
+
+### Features
+
+* **css:** minify vanilla extract output ([#1733](https://github.com/sanity-io/pkg-utils/issues/1733)) ([399accf](https://github.com/sanity-io/pkg-utils/commit/399accfeae968669a42d9d30898f8a04c90a7aca))
+
 ## [7.10.1](https://github.com/sanity-io/pkg-utils/compare/v7.10.0...v7.10.1) (2025-08-05)
 
 
