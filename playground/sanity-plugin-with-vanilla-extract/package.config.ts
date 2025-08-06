@@ -11,7 +11,7 @@ export default defineConfig({
         if (!chunkInfo.isEntry) {
           return ''
         }
-        return `import './style.css'`
+        return `import './bundle.css'`
       },
     },
     vanillaExtract: true,

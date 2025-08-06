@@ -762,6 +762,12 @@ export {
 "
 `;
 
+exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
+"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24t);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26s)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25w);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25w);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25w)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25w)r g b/20%)}}
+/*# sourceMappingURL=bundle.css.map*/
+"
+`;
+
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
 "import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
@@ -793,7 +799,7 @@ export { type ColorDefinition, ColorInput, colorInput };"
 `;
 
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
-"import "./style.css";
+"import "./bundle.css";
 import "@sanity/ui/css/index.css";
 import { defineType, definePlugin } from "sanity";
 import { lazy } from "react";
@@ -815,12 +821,6 @@ export {
   colorInput
 };
 //# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/style.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24t);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26s)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25w);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25w);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25w)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25w)r g b/20%)}}
-/*# sourceMappingURL=style.css.map*/
 "
 `;
 

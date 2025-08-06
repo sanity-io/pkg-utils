@@ -99,19 +99,42 @@ export function resolveRollupConfig(
     config?.rollup?.vanillaExtract &&
       vanillaExtractPlugin(
         config?.rollup?.vanillaExtract === true
-          ? {extract: {name: 'style.css', sourcemap: true}, identifiers: 'short'}
+          ? {
+              extract: {
+                name:
+                  runtime === 'node'
+                    ? 'bundle.node.css'
+                    : runtime === 'browser'
+                      ? 'bundle.browser.css'
+                      : 'bundle.css',
+                sourcemap: true,
+              },
+              identifiers: 'short',
+            }
           : config?.rollup?.vanillaExtract,
       ),
     config?.rollup?.vanillaExtract &&
       optimizeCss(
         config?.rollup?.vanillaExtract === true
-          ? {extractFileName: 'style.css', browserslist: DEFAULT_BROWSERSLIST_QUERY}
+          ? {
+              extractFileName:
+                runtime === 'node'
+                  ? 'bundle.node.css'
+                  : runtime === 'browser'
+                    ? 'bundle.browser.css'
+                    : 'bundle.css',
+              browserslist: DEFAULT_BROWSERSLIST_QUERY,
+            }
           : {
               extractFileName:
                 typeof config.rollup.vanillaExtract.extract === 'object' &&
                 config.rollup.vanillaExtract.extract.name
                   ? config.rollup.vanillaExtract.extract.name
-                  : 'bundle.css',
+                  : runtime === 'node'
+                    ? 'bundle.node.css'
+                    : runtime === 'browser'
+                      ? 'bundle.browser.css'
+                      : 'bundle.css',
               browserslist: config.rollup.vanillaExtract.browserslist || DEFAULT_BROWSERSLIST_QUERY,
             },
       ),

@@ -548,19 +548,19 @@ test.skipIf(isWindows)('should build `sanity-plugin-with-vanilla-extract` packag
 
   await project.run('build')
 
-  const [distChunksColorInput, distIndexJs, distIndexDts, distStyleCss] = await Promise.all([
+  const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss] = await Promise.all([
     project.readFile('dist/_chunks-es/ColorInput.js'),
     project.readFile('dist/index.js'),
     project.readFile('dist/index.d.ts'),
-    project.readFile('dist/style.css'),
+    project.readFile('dist/bundle.css'),
   ])
 
   // The inline CSS should be extracted to a separate file
   expect(distChunksColorInput).not.toContain('border:')
-  expect(distStyleCss).toContain('border:')
+  expect(distBundleCss).toContain('border:')
   // The CSS side effectful imports should remain
   expect(distIndexJs).toContain(`import "@sanity/ui/css/index.css"`)
-  expect(distIndexJs).toContain(`import "./style.css"`)
+  expect(distIndexJs).toContain(`import "./bundle.css"`)
   // React Compiler adds a `c` function call
   expect(distChunksColorInput).toContain('const $ = c(')
   // The index has a lazy loaded import to the chunk
@@ -571,7 +571,7 @@ test.skipIf(isWindows)('should build `sanity-plugin-with-vanilla-extract` packag
   expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
   expect(distIndexJs).toMatchSnapshot('./dist/index.js')
   expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-  expect(distStyleCss).toMatchSnapshot('./dist/style.css')
+  expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
 
   await project.remove()
 })
