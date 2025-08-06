@@ -92,9 +92,7 @@ export function resolveRolldownConfig(
         !id.startsWith('.') &&
         (id.includes('/node_modules/') || id.split('/').length < 3)
       ) {
-        return (
-          ctx.bundledPackages.some((name) => name === id || id.includes(`/${name}/`)) === false
-        )
+        return ctx.bundledPackages.some((name) => name === id || id.includes(`/${name}/`)) === false
       }
 
       // Check if the id is a self-referencing import
