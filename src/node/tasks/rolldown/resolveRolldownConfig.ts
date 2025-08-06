@@ -82,41 +82,48 @@ export function resolveRolldownConfig(
       tsconfigFilename: ctx.ts.configPath || 'tsconfig.json',
     },
     experimental: {
-      attachDebugInfo: 'none',
+      attachDebugInfo: 'full',
     },
 
     external: (id, importer) => {
-      if (
-        buildTask.type === 'rolldown:dts' &&
-        ctx.bundledPackages.length > 0 &&
-        !id.startsWith('.') &&
-        (id.includes('/node_modules/') || id.split('/').length < 3)
-      ) {
-        return ctx.bundledPackages.some((name) => name === id || id.includes(`/${name}/`)) === false
-      }
-
-      // Check if the id is a self-referencing import
-      if (exportIds?.includes(id)) {
-        return true
-      }
-
-      // Check if the id is a file path that points to an exported source file
-      if (importer && (id.startsWith('.') || id.startsWith('/'))) {
-        const idPath = path.resolve(path.dirname(importer), id)
-
-        if (sourcePaths?.includes(idPath)) {
-          logger.warn(
-            `detected self-referencing import – treating as external: ${path.relative(
-              cwd,
-              idPath,
-            )}`,
+      function scope() {
+        if (
+          buildTask.type === 'rolldown:dts' &&
+          ctx.bundledPackages.length > 0 &&
+          !id.startsWith('.') &&
+          (id.includes('/node_modules/') || id.split('/').length < 3)
+        ) {
+          return (
+            ctx.bundledPackages.some((name) => name === id || id.includes(`/${name}/`)) === false
           )
+        }
 
+        // Check if the id is a self-referencing import
+        if (exportIds?.includes(id)) {
           return true
         }
-      }
 
-      return external.some((name) => name === id || id.includes(`/${name}/`))
+        // Check if the id is a file path that points to an exported source file
+        if (importer && (id.startsWith('.') || id.startsWith('/'))) {
+          const idPath = path.resolve(path.dirname(importer), id)
+
+          if (sourcePaths?.includes(idPath)) {
+            logger.warn(
+              `detected self-referencing import – treating as external: ${path.relative(
+                cwd,
+                idPath,
+              )}`,
+            )
+
+            return true
+          }
+        }
+
+        return external.some((name) => name === id || id.includes(`/node_modules/${name}/`))
+      }
+      const result = scope()
+      logger.info(`external: (id: ${id}, importer: ${importer}) -> ${result}`)
+      return result
     },
 
     input: entries.reduce<{[entryAlias: string]: string}>(
