@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.3](https://github.com/sanity-io/pkg-utils/compare/v7.11.2...v7.11.3) (2025-08-06)
+
+
+### Bug Fixes
+
+* **rolldown:** dts resolver should only external node_modules ([#1751](https://github.com/sanity-io/pkg-utils/issues/1751)) ([624b0ce](https://github.com/sanity-io/pkg-utils/commit/624b0ce20fd90d2136cfeac84bf458e657c47f9c))
+
 ## [7.11.2](https://github.com/sanity-io/pkg-utils/compare/v7.11.1...v7.11.2) (2025-08-06)
 
 
