@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.1](https://github.com/sanity-io/pkg-utils/compare/v7.11.0...v7.11.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* **vanilla-extract:** support bundles and browser targets ([fb1a638](https://github.com/sanity-io/pkg-utils/commit/fb1a638d63024d14e3579816e2d17956bf3bd58f))
+
 ## [7.11.0](https://github.com/sanity-io/pkg-utils/compare/v7.10.1...v7.11.0) (2025-08-05)
 
 
