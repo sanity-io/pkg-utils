@@ -14,7 +14,7 @@ catalogs:
       version: 3.7.4
     '@sanity/logos':
       specifier: ^2.2.1
-      version: 2.2.1
+      version: 2.2.2
     '@typescript/native-preview':
       specifier: 7.0.0-dev.20250806.1
       version: 7.0.0-dev.20250806.1
@@ -560,7 +560,7 @@ importers:
         version: 3.7.4(react@19.1.1)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.1(@sanity/color@3.0.6)(react@19.1.1)
+        version: 2.2.2(react@19.1.1)
 
   playground/ts-rolldown-bundle-peer-dependency:
     dependencies:
@@ -576,7 +576,7 @@ importers:
         version: 3.7.4(react@19.1.1)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.1(@sanity/color@3.0.6)(react@19.1.1)
+        version: 2.2.2(react@19.1.1)
 
   playground/ts-rolldown-bundle-prod-dependency:
     dependencies:
@@ -588,7 +588,7 @@ importers:
         version: 3.7.4(react@19.1.1)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.1(@sanity/color@3.0.6)(react@19.1.1)
+        version: 2.2.2(react@19.1.1)
       react:
         specifier: '*'
         version: 19.1.1
@@ -603,7 +603,7 @@ importers:
         version: 3.7.4(react@19.1.1)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.1(@sanity/color@3.0.6)(react@19.1.1)
+        version: 2.2.2(react@19.1.1)
       react:
         specifier: '*'
         version: 19.1.1
@@ -2668,11 +2668,10 @@ packages:
     resolution: {integrity: sha512-skhIX8gT/hLritEBkjfc7+TBlJNu/NLisyA8noKceCk28OatFK0wX7dIuFawkt3pfhTYVomVPykAYFcIm2OqJg==}
     engines: {node: '>=18.2'}
 
-  '@sanity/logos@2.2.1':
-    resolution: {integrity: sha512-jz7bvoSrwTAEFw4wlgGsPDquQsBG+k//XEEJIzlLK9bBp2q3Ln6xZiUAjhhScqUa+ThrUfxjfbf7UUecOeLzEQ==}
+  '@sanity/logos@2.2.2':
+    resolution: {integrity: sha512-KIWFL7nYEOINXIzaTF9aVhd481hFF/ak+SRnpgksYuJXlo2hbY/UoEJBz6KhsEP5dfO/NwqG82QrkwzLvd6izA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      '@sanity/color': ^2.0 || ^3.0 || ^3.0.0-beta
       react: ^18.3 || ^19.0.0-0
 
   '@sanity/media-library-types@1.0.0':
@@ -10161,12 +10160,12 @@ snapshots:
 
   '@sanity/json-match@1.0.5': {}
 
-  '@sanity/logos@2.2.1(@sanity/color@3.0.6)(react@18.3.1)':
+  '@sanity/logos@2.2.2(react@18.3.1)':
     dependencies:
       '@sanity/color': 3.0.6
       react: 18.3.1
 
-  '@sanity/logos@2.2.1(@sanity/color@3.0.6)(react@19.1.1)':
+  '@sanity/logos@2.2.2(react@19.1.1)':
     dependencies:
       '@sanity/color': 3.0.6
       react: 19.1.1
@@ -14945,7 +14944,7 @@ snapshots:
       '@sanity/image-url': 1.1.0
       '@sanity/import': 3.38.3(@types/react@18.3.23)
       '@sanity/insert-menu': 2.0.1(@emotion/is-prop-valid@1.2.2)(@sanity/types@4.3.0(@types/react@18.3.23))(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@sanity/logos': 2.2.1(@sanity/color@3.0.6)(react@18.3.1)
+      '@sanity/logos': 2.2.2(react@18.3.1)
       '@sanity/media-library-types': 1.0.0
       '@sanity/message-protocol': 0.15.1
       '@sanity/migrate': 4.3.0(@types/react@18.3.23)
@@ -15113,7 +15112,7 @@ snapshots:
       '@sanity/image-url': 1.1.0
       '@sanity/import': 3.38.3(@types/react@19.1.9)
       '@sanity/insert-menu': 2.0.1(@emotion/is-prop-valid@1.2.2)(@sanity/types@4.3.0(@types/react@19.1.9))(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
-      '@sanity/logos': 2.2.1(@sanity/color@3.0.6)(react@19.1.1)
+      '@sanity/logos': 2.2.2(react@19.1.1)
       '@sanity/media-library-types': 1.0.0
       '@sanity/message-protocol': 0.15.1
       '@sanity/migrate': 4.3.0(@types/react@19.1.9)
