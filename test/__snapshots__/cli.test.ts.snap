@@ -702,7 +702,7 @@ interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'p
   type: typeof colorTypeName;
   options?: ColorOptions;
 }
-declare module '@sanity/types' {
+declare module 'sanity' {
   interface IntrinsicDefinitions {
     color: ColorDefinition;
   }
@@ -788,7 +788,7 @@ interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'p
   type: typeof colorTypeName;
   options?: ColorOptions;
 }
-declare module '@sanity/types' {
+declare module 'sanity' {
   interface IntrinsicDefinitions {
     color: ColorDefinition;
   }
