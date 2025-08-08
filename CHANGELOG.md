@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.11.5](https://github.com/sanity-io/pkg-utils/compare/v7.11.4...v7.11.5) (2025-08-08)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency rolldown-plugin-dts to v0.15.6 ([#1765](https://github.com/sanity-io/pkg-utils/issues/1765)) ([705c932](https://github.com/sanity-io/pkg-utils/commit/705c932f28fffe6974be27fcb3be76c036612a96))
+
 ## [7.11.4](https://github.com/sanity-io/pkg-utils/compare/v7.11.3...v7.11.4) (2025-08-07)
 
 
