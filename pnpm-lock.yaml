@@ -498,8 +498,8 @@ importers:
   playground/sanity-plugin-with-vanilla-extract:
     dependencies:
       '@sanity/ui':
-        specifier: 4.0.0-static.18
-        version: 4.0.0-static.18(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)
+        specifier: 4.0.0-static.19
+        version: 4.0.0-static.19(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)
     devDependencies:
       '@types/react':
         specifier: ^19.1.9
@@ -2787,9 +2787,9 @@ packages:
       react-is: ^18 || >=19.0.0-0
       styled-components: ^5.2 || ^6
 
-  '@sanity/ui@4.0.0-static.18':
-    resolution: {integrity: sha512-y7pH6T1UvrBWTokNqTZ6wq6faRbhglWQ4Wb77kLqucETc4moYC4d6d3dW9vJOu3q0aIxIF63/c1alxV0g+zbGg==}
-    engines: {node: '>=20.19'}
+  '@sanity/ui@4.0.0-static.19':
+    resolution: {integrity: sha512-JmbEvJC1rZXf5uGyvYxrMQ8uh8LifPq0JNZ4yhi/0zRU/2NJtFqyA4wQR7l8fcZhnWvOOFJ1C1LDO2/EWQnsMg==}
+    engines: {node: '>=20.19 >=22.12.0'}
     peerDependencies:
       react: ^19
       react-dom: ^19
@@ -10560,7 +10560,7 @@ snapshots:
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
 
-  '@sanity/ui@4.0.0-static.18(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)':
+  '@sanity/ui@4.0.0-static.19(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)':
     dependencies:
       '@floating-ui/react-dom': 2.1.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@juggle/resize-observer': 3.4.0
