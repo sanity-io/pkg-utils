@@ -1,6 +1,9 @@
 import path from 'path'
 import {argv} from 'process'
+import {fileURLToPath} from 'url'
 import {init} from '../src/node'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 global.__DEV__ = true
 
