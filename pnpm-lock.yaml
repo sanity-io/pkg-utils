@@ -377,8 +377,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^5.12.8
-        version: 5.12.8(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1)
+        specifier: ^5.12.9
+        version: 5.12.9(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -3342,8 +3342,8 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
-  astro@5.12.8:
-    resolution: {integrity: sha512-KkJ7FR+c2SyZYlpakm48XBiuQcRsrVtdjG5LN5an0givI/tLik+ePJ4/g3qrAVhYMjJOxBA2YgFQxANPiWB+Mw==}
+  astro@5.12.9:
+    resolution: {integrity: sha512-cZ7kZ61jyE5nwSrFKSRyf5Gds+uJELqQxJFqMkcgiWQvhWZJUSShn8Uz3yc9WLyLw5Kim5P5un9SkJSGogfEZQ==}
     engines: {node: 18.20.8 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -11269,7 +11269,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  astro@5.12.8(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1):
+  astro@5.12.9(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1):
     dependencies:
       '@astrojs/compiler': 2.12.2
       '@astrojs/internal-helpers': 0.7.1
