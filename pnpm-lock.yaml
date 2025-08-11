@@ -377,8 +377,8 @@ importers:
   playground/runtime-astro:
     devDependencies:
       astro:
-        specifier: ^5.12.8
-        version: 5.12.8(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1)
+        specifier: ^5.12.9
+        version: 5.12.9(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1)
       dummy-commonjs:
         specifier: workspace:*
         version: link:../dummy-commonjs
@@ -2189,28 +2189,28 @@ packages:
   '@oxc-project/types@0.80.0':
     resolution: {integrity: sha512-xxHQm8wfCv2e8EmtaDwpMeAHOWqgQDAYg+BJouLXSQt5oTKu9TIXrgNMGSrM2fLvKmECsRd9uUFAAD+hPyootA==}
 
-  '@oxlint-tsgolint/darwin-arm64@0.0.0-10':
-    resolution: {integrity: sha512-SVLPAn3WumEm2iep3ZblSsOOWRVb1o8ro1GLKKvFE3ruI7RcF7wup0EDEBRTSBg2PA5HEZJt+bi27MgfdT7vRQ==}
+  '@oxlint-tsgolint/darwin-arm64@0.0.1':
+    resolution: {integrity: sha512-DhPovgw2MVvQhU4uyrrgBUqRkmh6V66zItbpWu352B0f9LW0tFm2cXcTDR1QkDo1m9B6YV7qR9IPI2/q7gLDeA==}
     os: [darwin]
 
-  '@oxlint-tsgolint/darwin-x64@0.0.0-10':
-    resolution: {integrity: sha512-hoVePQzo1xgtLx3DcT/SY+xq0etypzMaHJl57PVrxITRf1g+PRpc0ulIIDl2dtaksz+/k00vfj/iT3YslLzpNw==}
+  '@oxlint-tsgolint/darwin-x64@0.0.1':
+    resolution: {integrity: sha512-/T+STn40ebdHM7Cz6bVITynBHNWnRGKyz8CcbUDdiehhD0CTlwwNeKCKA4beQ1t/Dvc3JG6pV8dwv/2cmd+DYg==}
     os: [darwin]
 
-  '@oxlint-tsgolint/linux-arm64@0.0.0-10':
-    resolution: {integrity: sha512-ynvuWqeeZrFPbugSYpzGUfXD0Yhm+ah3EUqM9IFDLvKzZCalNDQHfjWntI3ChJepl9KbLftfx2mfIDXoKjJYog==}
+  '@oxlint-tsgolint/linux-arm64@0.0.1':
+    resolution: {integrity: sha512-xp8KdgxyqLB31ISPep0LDJgyE3ucxcLc8LdlqjO+Z9k2RR0MkFs1bgpXROn5KX1eZGO5OYRdbgVX+s43TI7Dhw==}
     os: [linux]
 
-  '@oxlint-tsgolint/linux-x64@0.0.0-10':
-    resolution: {integrity: sha512-/T2ptT2eaTF2XnetDcEGOfDOxci2rhEJQ0Qz0bcWcfSMpXfseu1sWYdKEUnN5itaNodw9RXlZXOeZkEOss/EgA==}
+  '@oxlint-tsgolint/linux-x64@0.0.1':
+    resolution: {integrity: sha512-6OG1DFbg1xP5UmuWynUnVkay5WbH44aiwDhIAIR8+V50Ijzzyx87CGxKbn1k0YsfaQIji5SgZi0WMiJQ5LTR2A==}
     os: [linux]
 
-  '@oxlint-tsgolint/win32-arm64@0.0.0-10':
-    resolution: {integrity: sha512-q/IN3GMAI+w8DFouqTtuHXEW8QBLbVYj+PnBM/2TkNCZWiInCLvYAk+r6X+28Rb429frR2LEQ4w89PmAJ/LiOA==}
+  '@oxlint-tsgolint/win32-arm64@0.0.1':
+    resolution: {integrity: sha512-szngA1G3b9DyO6NZ7qUBl8EXBt+9F6cLQ4/kdiIUwk+5LELCjFbpg2s7eGPYZaCJjf30Vo9GlTqe5HFjddvrXg==}
     os: [win32]
 
-  '@oxlint-tsgolint/win32-x64@0.0.0-10':
-    resolution: {integrity: sha512-MZ2rf+kvQ0WM3FS6bL0XnVUnFEfEwWaWatzZ79xt9HRvVhEgC8Z1tET7GMYXj2anAGbLSfqeWFe5VQyeZEZquQ==}
+  '@oxlint-tsgolint/win32-x64@0.0.1':
+    resolution: {integrity: sha512-anzDRE1w3Vl/aSBLiOwnwzz17GJaXJr+X3OTWwwV9cHg+TWEhLpUDo+d2pAoulCHoZTjN/k8A9wHg0IGuqnOfA==}
     os: [win32]
 
   '@oxlint/darwin-arm64@1.11.0':
@@ -3342,8 +3342,8 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
-  astro@5.12.8:
-    resolution: {integrity: sha512-KkJ7FR+c2SyZYlpakm48XBiuQcRsrVtdjG5LN5an0givI/tLik+ePJ4/g3qrAVhYMjJOxBA2YgFQxANPiWB+Mw==}
+  astro@5.12.9:
+    resolution: {integrity: sha512-cZ7kZ61jyE5nwSrFKSRyf5Gds+uJELqQxJFqMkcgiWQvhWZJUSShn8Uz3yc9WLyLw5Kim5P5un9SkJSGogfEZQ==}
     engines: {node: 18.20.8 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -5817,8 +5817,8 @@ packages:
   outdent@0.8.0:
     resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
 
-  oxlint-tsgolint@0.0.0-10:
-    resolution: {integrity: sha512-+CwFlkUhVgAAyf9YhLfYrcwIuP2kRUZ1b3fdH+DYUbO9y1KD9hxpUSmCwuxdR1dyGOadbFCyPB7N4bU+ER3Xwg==}
+  oxlint-tsgolint@0.0.1:
+    resolution: {integrity: sha512-gH6EpIr2oBVperOONVzTTNYmOu6pYPipVyzWB+CfYO13vH+6O9kINUyG4rr3RXDaKdTx8UvxgRORXdSGH1iydA==}
     hasBin: true
 
   oxlint@1.11.0:
@@ -9530,22 +9530,22 @@ snapshots:
 
   '@oxc-project/types@0.80.0': {}
 
-  '@oxlint-tsgolint/darwin-arm64@0.0.0-10':
+  '@oxlint-tsgolint/darwin-arm64@0.0.1':
     optional: true
 
-  '@oxlint-tsgolint/darwin-x64@0.0.0-10':
+  '@oxlint-tsgolint/darwin-x64@0.0.1':
     optional: true
 
-  '@oxlint-tsgolint/linux-arm64@0.0.0-10':
+  '@oxlint-tsgolint/linux-arm64@0.0.1':
     optional: true
 
-  '@oxlint-tsgolint/linux-x64@0.0.0-10':
+  '@oxlint-tsgolint/linux-x64@0.0.1':
     optional: true
 
-  '@oxlint-tsgolint/win32-arm64@0.0.0-10':
+  '@oxlint-tsgolint/win32-arm64@0.0.1':
     optional: true
 
-  '@oxlint-tsgolint/win32-x64@0.0.0-10':
+  '@oxlint-tsgolint/win32-x64@0.0.1':
     optional: true
 
   '@oxlint/darwin-arm64@1.11.0':
@@ -11269,7 +11269,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  astro@5.12.8(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1):
+  astro@5.12.9(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.9.2)(yaml@2.8.1):
     dependencies:
       '@astrojs/compiler': 2.12.2
       '@astrojs/internal-helpers': 0.7.1
@@ -14112,14 +14112,14 @@ snapshots:
 
   outdent@0.8.0: {}
 
-  oxlint-tsgolint@0.0.0-10:
+  oxlint-tsgolint@0.0.1:
     optionalDependencies:
-      '@oxlint-tsgolint/darwin-arm64': 0.0.0-10
-      '@oxlint-tsgolint/darwin-x64': 0.0.0-10
-      '@oxlint-tsgolint/linux-arm64': 0.0.0-10
-      '@oxlint-tsgolint/linux-x64': 0.0.0-10
-      '@oxlint-tsgolint/win32-arm64': 0.0.0-10
-      '@oxlint-tsgolint/win32-x64': 0.0.0-10
+      '@oxlint-tsgolint/darwin-arm64': 0.0.1
+      '@oxlint-tsgolint/darwin-x64': 0.0.1
+      '@oxlint-tsgolint/linux-arm64': 0.0.1
+      '@oxlint-tsgolint/linux-x64': 0.0.1
+      '@oxlint-tsgolint/win32-arm64': 0.0.1
+      '@oxlint-tsgolint/win32-x64': 0.0.1
     optional: true
 
   oxlint@1.11.0:
@@ -14132,7 +14132,7 @@ snapshots:
       '@oxlint/linux-x64-musl': 1.11.0
       '@oxlint/win32-arm64': 1.11.0
       '@oxlint/win32-x64': 1.11.0
-      oxlint-tsgolint: 0.0.0-10
+      oxlint-tsgolint: 0.0.1
 
   p-finally@2.0.1: {}
 
