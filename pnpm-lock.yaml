@@ -126,8 +126,8 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
       pretty-bytes:
-        specifier: ^5.6.0
-        version: 5.6.0
+        specifier: ^7.0.1
+        version: 7.0.1
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -6267,9 +6267,9 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  pretty-bytes@5.6.0:
-    resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
-    engines: {node: '>=6'}
+  pretty-bytes@7.0.1:
+    resolution: {integrity: sha512-285/jRCYIbMGDciDdrw0KPNC4LKEEwz/bwErcYNxSJOi4CpGUuLpb9gQpg3XJP0XYj9ldSRluXxih4lX2YN8Xw==}
+    engines: {node: '>=20'}
 
   pretty-ms@7.0.1:
     resolution: {integrity: sha512-973driJZvxiGOQ5ONsFhOF/DtzPMOMtgC11kCpUrPGMTgqp2q/1gwzCquocrN33is0VZ5GFHXZYMM9l6h67v2Q==}
@@ -14677,7 +14677,7 @@ snapshots:
 
   prettier@3.6.2: {}
 
-  pretty-bytes@5.6.0: {}
+  pretty-bytes@7.0.1: {}
 
   pretty-ms@7.0.1:
     dependencies:
