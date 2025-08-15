@@ -7,8 +7,11 @@ export function exec(
 ): Promise<{stdout: string; stderr: string}> {
   return new Promise((resolve, reject) => {
     child_process.exec(command, options, (err, stdout, stderr) => {
+      const stdoutStr = stdout.toString()
+      const stderrStr = stderr.toString()
+
       if (err) {
-        const execErr = new ExecError(err.message, stdout, stderr)
+        const execErr = new ExecError(err.message, stdoutStr, stderrStr)
 
         execErr.stack = err.stack!
         reject(execErr)
@@ -16,7 +19,7 @@ export function exec(
         return
       }
 
-      resolve({stdout, stderr})
+      resolve({stdout: stdoutStr, stderr: stderrStr})
     })
   })
 }
