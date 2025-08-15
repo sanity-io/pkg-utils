@@ -396,7 +396,7 @@ importers:
         version: link:../dummy-module
       next:
         specifier: ^15.4.6
-        version: 15.4.6(@babel/core@7.28.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 15.4.6(@babel/core@7.28.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -14272,7 +14272,7 @@ snapshots:
 
   neotraverse@0.6.18: {}
 
-  next@15.4.6(@babel/core@7.28.0)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  next@15.4.6(@babel/core@7.28.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       '@next/env': 15.4.6
       '@swc/helpers': 0.5.15
@@ -14290,7 +14290,6 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.4.6
       '@next/swc-win32-arm64-msvc': 15.4.6
       '@next/swc-win32-x64-msvc': 15.4.6
-      babel-plugin-react-compiler: 19.1.0-rc.2
       sharp: 0.34.3
     transitivePeerDependencies:
       - '@babel/core'
