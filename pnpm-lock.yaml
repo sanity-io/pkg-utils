@@ -162,8 +162,8 @@ importers:
         specifier: 4.0.17
         version: 4.0.17
       zod-validation-error:
-        specifier: 3.5.3
-        version: 3.5.3(zod@4.0.17)
+        specifier: 4.0.1
+        version: 4.0.1(zod@4.0.17)
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.8.1
@@ -7683,8 +7683,8 @@ packages:
       typescript: ^4.9.4 || ^5.0.2
       zod: ^3
 
-  zod-validation-error@3.5.3:
-    resolution: {integrity: sha512-OT5Y8lbUadqVZCsnyFaTQ4/O2mys4tj7PqhdbBCp7McPwvIEKfPtdA6QfPeFQK2/Rz5LgwmAXRJTugBNBi0btw==}
+  zod-validation-error@4.0.1:
+    resolution: {integrity: sha512-F3rdaCOHs5ViJ5YTz5zzRtfkQdMdIeKudJAoxy7yB/2ZMEHw73lmCAcQw11r7++20MyGl4WV59EVh7A9rNAyog==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
@@ -10331,19 +10331,19 @@ snapshots:
       - '@types/react'
       - supports-color
 
+  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))':
+    dependencies:
+      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/comlink': 3.0.9
+      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))
+    transitivePeerDependencies:
+      - '@sanity/types'
+
   '@sanity/presentation-comlink@1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@19.1.10))':
     dependencies:
       '@sanity/client': 7.8.2(debug@4.4.1)
       '@sanity/comlink': 3.0.9
       '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@19.1.10))
-    transitivePeerDependencies:
-      - '@sanity/types'
-
-  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.8.2)(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))':
-    dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
-      '@sanity/comlink': 3.0.9
-      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.8.2)(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))
     transitivePeerDependencies:
       - '@sanity/types'
 
@@ -10612,17 +10612,17 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
+  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))':
+    dependencies:
+      '@sanity/client': 7.8.2(debug@4.4.1)
+    optionalDependencies:
+      '@sanity/types': 4.4.1(@types/react@18.3.23)(debug@4.4.1)
+
   '@sanity/visual-editing-types@1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@19.1.10))':
     dependencies:
       '@sanity/client': 7.8.2(debug@4.4.1)
     optionalDependencies:
       '@sanity/types': 4.4.1(@types/react@19.1.10)(debug@4.4.1)
-
-  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.8.2)(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))':
-    dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
-    optionalDependencies:
-      '@sanity/types': 4.4.1(@types/react@18.3.23)(debug@4.4.1)
 
   '@sentry-internal/browser-utils@8.55.0':
     dependencies:
@@ -14954,7 +14954,7 @@ snapshots:
       '@sanity/message-protocol': 0.17.1
       '@sanity/migrate': 4.4.1(@types/react@18.3.23)
       '@sanity/mutator': 4.4.1(@types/react@18.3.23)
-      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.8.2)(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))
+      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.4.1(@types/react@18.3.23)(debug@4.4.1))
       '@sanity/preview-url-secret': 2.1.14(@sanity/client@7.8.2(debug@4.4.1))
       '@sanity/schema': 4.4.1(@types/react@18.3.23)(debug@4.4.1)
       '@sanity/sdk': 2.1.2(@types/react@18.3.23)(debug@4.4.1)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
@@ -16429,7 +16429,7 @@ snapshots:
       typescript: 5.9.2
       zod: 3.25.76
 
-  zod-validation-error@3.5.3(zod@4.0.17):
+  zod-validation-error@4.0.1(zod@4.0.17):
     dependencies:
       zod: 4.0.17
 
