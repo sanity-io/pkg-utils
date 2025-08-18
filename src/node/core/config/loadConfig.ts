@@ -32,9 +32,11 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
 
   const {unregister} = globalThis.__DEV__ ? {unregister: () => undefined} : register(esbuildOptions)
 
+  // oxlint-disable-next-line no-unsafe-assignment
   const mod = require(configFile)
 
   unregister()
 
+  // oxlint-disable-next-line no-unsafe-return
   return mod?.default || mod || undefined
 }
