@@ -283,6 +283,14 @@ export function resolveRollupConfig(
         // this option used to be `moduleSideEffects: 'no-external'`, and thus if it's not CSS it uses `!external`, which is equivalent to `'no-external'`
         moduleSideEffects: (id, external) => (id.endsWith('.css') ? true : !external),
         annotations: true,
+        manualPureFunctions: [
+          'memo',
+          'forwardRef',
+          'lazy',
+          'createContext',
+          'styled',
+          'createGlobalStyle',
+        ],
         ...config?.rollup?.treeshake,
       },
       experimentalLogSideEffects: config?.rollup?.experimentalLogSideEffects,
