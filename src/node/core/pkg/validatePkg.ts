@@ -65,11 +65,14 @@ for (const key of pkgSchema.keyof()._def.values) {
 export function validatePkg(input: unknown): PackageJSON {
   const pkg = pkgSchema.parse(input)
 
-  const invalidKey = Object.keys(input as PackageJSON).find((key) => {
-    const needle = key.toUpperCase()
+  const invalidKey =
+    typeof input === 'object' && input !== null
+      ? Object.keys(input).find((key) => {
+          const needle = key.toUpperCase()
 
-    return typoMap.has(needle) ? typoMap.get(needle) !== key : false
-  })
+          return typoMap.has(needle) ? typoMap.get(needle) !== key : false
+        })
+      : undefined
 
   if (invalidKey) {
     throw new TypeError(
