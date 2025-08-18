@@ -1,4 +1,4 @@
-import {errorMap} from 'zod-validation-error'
+import {errorMap} from 'zod-validation-error/v3'
 import {z} from 'zod/v3'
 
 const toggle = z.union([z.literal('error'), z.literal('warn'), z.literal('off')])
