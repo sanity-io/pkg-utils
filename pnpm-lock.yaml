@@ -159,11 +159,11 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.0.17
+        version: 4.0.17
       zod-validation-error:
         specifier: 3.5.3
-        version: 3.5.3(zod@3.25.76)
+        version: 3.5.3(zod@4.0.17)
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.8.1
@@ -7714,6 +7714,9 @@ packages:
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.0.17:
+    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
 
   zustand@5.0.7:
     resolution: {integrity: sha512-Ot6uqHDW/O2VdYsKLLU8GQu8sCOM1LcoE8RwvLv9uuRT9s6SOHCKs0ZEOhxg+I1Ld+A1Q5lwx+UlKXXUoCZITg==}
@@ -16466,11 +16469,13 @@ snapshots:
       typescript: 5.9.2
       zod: 3.25.76
 
-  zod-validation-error@3.5.3(zod@3.25.76):
+  zod-validation-error@3.5.3(zod@4.0.17):
     dependencies:
-      zod: 3.25.76
+      zod: 4.0.17
 
   zod@3.25.76: {}
+
+  zod@4.0.17: {}
 
   zustand@5.0.7(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1)):
     optionalDependencies:
