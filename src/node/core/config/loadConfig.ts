@@ -1,7 +1,7 @@
 import {createRequire} from 'node:module'
 import path from 'node:path'
-import {register} from 'esbuild-register/dist/node'
 import {packageUp} from 'package-up'
+import {register} from 'tsx/cjs/api'
 import {findConfigFile} from './findConfigFile'
 import type {PkgConfigOptions} from './types'
 
@@ -28,9 +28,7 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  const esbuildOptions = {extensions: ['.js', '.mjs', '.ts']}
-
-  const {unregister} = globalThis.__DEV__ ? {unregister: () => undefined} : register(esbuildOptions)
+  const unregister = globalThis.__DEV__ ? () => undefined : register()
 
   const mod = require(configFile)
 

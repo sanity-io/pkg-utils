@@ -26,8 +26,6 @@
   "exports": {
     ".": {
       "source": "./src/node/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./tsconfig/recommended.json": "./tsconfig/recommended.json",
@@ -39,8 +37,7 @@
     "./tsconfig": "./tsconfig/strictest.json",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "pkg": "./bin/pkg-utils.js",
@@ -107,7 +104,6 @@
     "chalk": "^5.6.0",
     "chokidar": "^4.0.3",
     "esbuild": "^0.25.9",
-    "esbuild-register": "^3.6.0",
     "find-config": "^1.0.0",
     "get-latest-version": "^5.1.0",
     "git-url-parse": "^16.1.0",
@@ -128,6 +124,7 @@
     "rollup-plugin-esbuild": "^6.2.1",
     "rxjs": "^7.8.2",
     "treeify": "^1.1.0",
+    "tsx": "^4.20.4",
     "uuid": "^11.1.0",
     "zod": "3.25.76",
     "zod-validation-error": "3.5.3"
@@ -159,7 +156,6 @@
     "rollup-plugin-visualizer": "^6.0.3",
     "semver": "^7.7.2",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.4",
     "typescript": "catalog:",
     "vitest": "^3.2.4"
   },

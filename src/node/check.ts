@@ -96,7 +96,7 @@ export async function check(options: {
     if (err instanceof Error) {
       const RE_CWD = new RegExp(`${cwd}`, 'g')
 
-      logger.error(err.message.replace(RE_CWD, '.'))
+      logger.error((err.stack || err.message).replace(RE_CWD, '.'))
       logger.log()
     }
 

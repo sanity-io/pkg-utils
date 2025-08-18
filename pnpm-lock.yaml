@@ -92,9 +92,6 @@ importers:
       esbuild:
         specifier: ^0.25.9
         version: 0.25.9
-      esbuild-register:
-        specifier: ^3.6.0
-        version: 3.6.0(esbuild@0.25.9)
       find-config:
         specifier: ^1.0.0
         version: 1.0.0
@@ -155,6 +152,9 @@ importers:
       treeify:
         specifier: ^1.1.0
         version: 1.1.0
+      tsx:
+        specifier: ^4.20.4
+        version: 4.20.4
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -240,9 +240,6 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@24.3.0)(typescript@5.9.2)
-      tsx:
-        specifier: ^4.20.4
-        version: 4.20.4
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
