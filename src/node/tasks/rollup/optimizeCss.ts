@@ -10,14 +10,14 @@ export function optimizeCss(options: {
   return {
     name: 'optimize-css',
 
-    async generateBundle(_outputOptions, bundle, _isWrite) {
+    generateBundle(_outputOptions, bundle, _isWrite) {
       for (const [fileName, assetOrChunk] of Object.entries(bundle)) {
         // find CSS assets
         if (assetOrChunk.type === 'asset') {
           const asset = assetOrChunk
           if (asset.originalFileNames.includes(options.extractFileName)) {
             const sourceMapFileName = `${fileName}.map`
-            await transformCss(
+            transformCss(
               asset,
               bundle[sourceMapFileName]?.type === 'asset' ? bundle[sourceMapFileName] : undefined,
               options.browserslist,
@@ -29,7 +29,7 @@ export function optimizeCss(options: {
   }
 }
 
-async function transformCss(
+function transformCss(
   asset: OutputAsset,
   sourceMapAsset: OutputAsset | undefined,
   browserslistConfig: string | string[],

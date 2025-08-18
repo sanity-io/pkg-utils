@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 global.___DEV___ = true
 
-build({cwd: path.resolve(__dirname, '..'), strict: true}).catch((err) => {
-  console.error(err.stack)
+build({cwd: path.resolve(__dirname, '..'), strict: true}).catch((err: unknown) => {
+  console.error(err instanceof Error ? err.stack : err)
   process.exit(1)
 })

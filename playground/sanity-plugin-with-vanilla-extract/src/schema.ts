@@ -2,7 +2,7 @@ import {defineType, type StringDefinition} from 'sanity'
 import {ColorInput} from './LazyColorInput'
 import type {ColorOptions} from './types'
 
-const colorTypeName = 'color' as const
+const colorTypeName = 'color'
 
 /**
  * @public

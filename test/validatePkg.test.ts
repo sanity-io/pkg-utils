@@ -39,5 +39,5 @@ test.each([
 
   expect(() => validatePkg(pkg)).toThrowError(/is not a valid key/)
   expect(() => validatePkg(pkg)).toThrowErrorMatchingSnapshot()
-  expect(() => validatePkg({...template, [expected as string]: value})).not.toThrow()
+  expect(() => validatePkg({...template, [expected!]: value})).not.toThrow()
 })

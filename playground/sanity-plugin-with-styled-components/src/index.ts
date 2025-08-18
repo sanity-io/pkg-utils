@@ -2,7 +2,7 @@ import {definePlugin, type Plugin} from 'sanity'
 import {colorType} from './schema'
 
 /** @public */
-export const colorInput: Plugin<void> = definePlugin({
+export const colorInput: Plugin = definePlugin({
   name: '@sanity/color-input',
   schema: {types: [colorType]},
 })

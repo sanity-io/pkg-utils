@@ -12,7 +12,7 @@ const args = argv.slice(2)
 init({
   cwd: path.resolve(__dirname, '..'),
   path: args[0]!,
-}).catch((err) => {
-  console.error(err.stack)
+}).catch((err: unknown) => {
+  console.error(err instanceof Error ? err.stack : err)
   process.exit(1)
 })

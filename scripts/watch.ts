@@ -9,7 +9,7 @@ global.___DEV___ = true
 watch({
   cwd: path.resolve(__dirname, '..'),
   strict: true,
-}).catch((err) => {
-  console.error(err.stack)
+}).catch((err: unknown) => {
+  console.error(err instanceof Error ? err.stack : err)
   process.exit(1)
 })
