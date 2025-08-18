@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import {ZodError} from 'zod'
+import {ZodError} from 'zod/v3'
 import type {Logger} from '../../logger'
 import {assertLast, assertOrder} from './helpers'
 import {loadPkg} from './loadPkg'
