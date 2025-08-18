@@ -5,6 +5,33 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.0](https://github.com/sanity-io/pkg-utils/compare/v7.11.9...v8.0.0) (2025-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* require node v20.19 and 22.12 or newer
+
+### Features
+
+* replace esbuild-register with tsx ([84cc3e0](https://github.com/sanity-io/pkg-utils/commit/84cc3e0f35bee2ba82fc2c9cffd7a8279f4dc24b))
+* **rollup:** improve treeshake for react and styled components ([#1548](https://github.com/sanity-io/pkg-utils/issues/1548)) ([ffef336](https://github.com/sanity-io/pkg-utils/commit/ffef336a6b6944623f682941472944fe40378e43))
+
+
+### Bug Fixes
+
+* **deps:** replace pkg-up with package-up ([#1816](https://github.com/sanity-io/pkg-utils/issues/1816)) ([2cd477b](https://github.com/sanity-io/pkg-utils/commit/2cd477b6845cc76acd399b0fb03174a325f7cc0f))
+* **deps:** Update dependency chalk to v5 ([#1507](https://github.com/sanity-io/pkg-utils/issues/1507)) ([08f5d80](https://github.com/sanity-io/pkg-utils/commit/08f5d80ba010cd07c9ec2854bc772aa089045e49))
+* **deps:** update dependency globby to v12 ([#1817](https://github.com/sanity-io/pkg-utils/issues/1817)) ([2a2b190](https://github.com/sanity-io/pkg-utils/commit/2a2b1902504ca2ff225c67ea04bc5b87d2e53e5d))
+* **deps:** Update dependency globby to v13 ([#1813](https://github.com/sanity-io/pkg-utils/issues/1813)) ([93c50b5](https://github.com/sanity-io/pkg-utils/commit/93c50b59c91191e39fd1bad0bf8dfabce83b647b))
+* **deps:** Update dependency pretty-bytes to v7 ([#1509](https://github.com/sanity-io/pkg-utils/issues/1509)) ([8989c30](https://github.com/sanity-io/pkg-utils/commit/8989c3007009df3b0f43bb3fb96d16d224eac8a6))
+* **deps:** Update dependency rimraf to v6 ([#1510](https://github.com/sanity-io/pkg-utils/issues/1510)) ([68ae1b1](https://github.com/sanity-io/pkg-utils/commit/68ae1b19c7c1e047c10903575af10e19ee9f431f))
+* **deps:** Update dependency rolldown to v1.0.0-beta.33 ([#1808](https://github.com/sanity-io/pkg-utils/issues/1808)) ([eaf26b6](https://github.com/sanity-io/pkg-utils/commit/eaf26b6329f1a7a90fd16f81bf627285cb1e1195))
+* **deps:** Update dependency rollup to ^4.46.3 ([#1809](https://github.com/sanity-io/pkg-utils/issues/1809)) ([49ca87a](https://github.com/sanity-io/pkg-utils/commit/49ca87a9e02cb9c5ea916ef24a8de0b2caa72ff3))
+* **deps:** Update dependency zod to v4 ([#1628](https://github.com/sanity-io/pkg-utils/issues/1628)) ([4479242](https://github.com/sanity-io/pkg-utils/commit/44792422bd9a28eef8d94383e7b752513eeecc44))
+* **deps:** Update dependency zod-validation-error to v4 ([#1663](https://github.com/sanity-io/pkg-utils/issues/1663)) ([4922154](https://github.com/sanity-io/pkg-utils/commit/4922154f0c6e4762ddc4f3b943e3ae04b8bfbc93))
+* require node v20.19 and 22.12 or newer ([d033ae4](https://github.com/sanity-io/pkg-utils/commit/d033ae42b96c734e21488dbf27431462b41d43ad))
+
 ## [7.11.9](https://github.com/sanity-io/pkg-utils/compare/v7.11.8...v7.11.9) (2025-08-15)
 
 
