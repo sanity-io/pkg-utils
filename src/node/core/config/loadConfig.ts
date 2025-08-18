@@ -1,7 +1,7 @@
 import {createRequire} from 'node:module'
 import path from 'node:path'
 import {register} from 'esbuild-register/dist/node'
-import pkgUp from 'pkg-up'
+import {packageUp} from 'package-up'
 import {findConfigFile} from './findConfigFile'
 import type {PkgConfigOptions} from './types'
 
@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url)
 export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptions | undefined> {
   const {cwd} = options
 
-  const pkgPath = await pkgUp({cwd})
+  const pkgPath = await packageUp({cwd})
 
   if (!pkgPath) return undefined
 
