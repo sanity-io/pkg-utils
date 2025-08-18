@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {copy} from 'fs-extra'
-import globby from 'globby'
+import {globby} from 'globby'
 import {mkdirp} from 'mkdirp'
 import {rimraf} from 'rimraf'
 import {v4 as uuid} from 'uuid'

@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint & Build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -43,14 +43,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Playground builds
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           cache: pnpm
           node-version: lts/*
       - run: pnpm install
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         name: Restore build output
         with:
           name: build-output
@@ -90,14 +90,14 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           cache: pnpm
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         name: Restore build output
         with:
           name: build-output

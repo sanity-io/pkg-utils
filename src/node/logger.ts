@@ -11,13 +11,13 @@ export interface Logger {
 }
 
 /** @alpha */
-export function createLogger(): Logger {
+export function createLogger(quiet = false): Logger {
   return {
     log: (...args) => {
-      console.log(...args)
+      if (!quiet) console.log(...args)
     },
     info: (...args) => {
-      console.log(chalk.blue('[info]'), ...args)
+      if (!quiet) console.log(chalk.blue('[info]'), ...args)
     },
     warn: (...args) => {
       console.log(chalk.yellow('[warning]'), ...args)
@@ -26,7 +26,7 @@ export function createLogger(): Logger {
       console.log(chalk.red('[error]'), ...args)
     },
     success: (...args) => {
-      console.log(chalk.green('[success]'), ...args)
+      if (!quiet) console.log(chalk.green('[success]'), ...args)
     },
   }
 }

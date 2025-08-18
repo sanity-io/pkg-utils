@@ -1,5 +1,5 @@
-import apiExtractorJson from '@microsoft/api-extractor/package.json' assert {type: 'json'}
-import pkgUtilsJson from '@sanity/pkg-utils/package.json' assert {type: 'json'}
+import apiExtractorJson from '@microsoft/api-extractor/package.json' with {type: 'json'}
+import pkgUtilsJson from '@sanity/pkg-utils/package.json' with {type: 'json'}
 import {satisfies} from 'semver'
 import {expect, test} from 'vitest'
 

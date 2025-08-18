@@ -16,6 +16,8 @@ export async function watchConfigFiles(options: {
     path.resolve(cwd, 'package.config.cjs'),
     path.resolve(cwd, 'package.config.js'),
     path.resolve(cwd, 'package.config.ts'),
+    path.resolve(cwd, 'package.config.mjs'),
+    path.resolve(cwd, 'package.config.mts'),
   ])
 
   const fileEvent$ = watchFiles([
@@ -23,6 +25,8 @@ export async function watchConfigFiles(options: {
     path.resolve(cwd, 'package.config.cjs'),
     path.resolve(cwd, 'package.config.js'),
     path.resolve(cwd, 'package.config.ts'),
+    path.resolve(cwd, 'package.config.mjs'),
+    path.resolve(cwd, 'package.config.mts'),
   ])
 
   return fileEvent$.pipe(

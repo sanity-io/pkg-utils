@@ -6,6 +6,7 @@ const CONFIG_FILE_NAMES = [
   'package.config.ts',
   'package.config.js',
   'package.config.cjs',
+  'package.config.mts',
   'package.config.mjs',
 ]
 

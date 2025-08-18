@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import pkgUp from 'pkg-up'
+import {packageUp} from 'package-up'
 import type {PackageJSON} from './types'
 import {validatePkg} from './validatePkg'
 
@@ -7,7 +7,7 @@ import {validatePkg} from './validatePkg'
 export async function loadPkg(options: {cwd: string}): Promise<PackageJSON> {
   const {cwd} = options
 
-  const pkgPath = await pkgUp({cwd})
+  const pkgPath = await packageUp({cwd})
 
   if (!pkgPath) throw new Error('no package.json found')
 

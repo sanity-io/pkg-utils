@@ -31,7 +31,7 @@ Run `pkg-utils -h` for more information on CLI usage.
 ## Configuration
 
 `@sanity/pkg-utils` reads most of its configuration from `package.json`. But sometimes you need more
-control. You may then add a configuration file named `package.config.ts` (or `.js`, `.cjs`, or
+control. You may then add a configuration file named `package.config.ts` (or `.mts`, `.js`, or
 `.mjs`).
 
 ```ts

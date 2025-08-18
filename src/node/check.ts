@@ -96,7 +96,7 @@ export async function check(options: {
     if (err instanceof Error) {
       const RE_CWD = new RegExp(`${cwd}`, 'g')
 
-      logger.error(err.message.replace(RE_CWD, '.'))
+      logger.error((err.stack || err.message).replace(RE_CWD, '.'))
       logger.log()
     }
 
@@ -124,6 +124,8 @@ async function checkExports(
       // otherwise output maps to stdout as we're using stdin
       outfile: '/dev/null',
       platform: 'node',
+      // We're not interested in CSS files that might be imported as a side effect, so we'll treat them as empty
+      loader: {'.css': 'empty'},
       stdin: {
         contents: code,
         loader: 'js',

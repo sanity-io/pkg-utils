@@ -14,7 +14,7 @@ export function resolveRolldownConfig(
   ctx: BuildContext,
   buildTask: RolldownDtsTask,
 ): RolldownConfig {
-  const {format, runtime, target} = buildTask
+  const {format, runtime} = buildTask
   const {config, cwd, exports: _exports, external, distPath, logger, pkg, ts} = ctx
   const outputExt = extMap[pkg.type || 'commonjs'][format]
   const outDir = path.relative(cwd, distPath)
@@ -81,9 +81,6 @@ export function resolveRolldownConfig(
       alias: pathAliases,
       tsconfigFilename: ctx.ts.configPath || 'tsconfig.json',
     },
-    transform: {
-      target,
-    },
     experimental: {
       attachDebugInfo: 'none',
     },
@@ -119,7 +116,7 @@ export function resolveRolldownConfig(
         }
       }
 
-      return external.some((name) => name === id || id.includes(`/${name}/`))
+      return external.some((name) => name === id || id.includes(`/node_modules/${name}/`))
     },
 
     input: entries.reduce<{[entryAlias: string]: string}>(
@@ -138,6 +135,8 @@ export function resolveRolldownConfig(
         // If there are none that should be resolved, then this process is skipped and our build is faster.
         // If there's a match then it'll call the resolver function defined on `inputOptions.external`
         resolve: ctx.bundledPackages,
+        // Always create dts from scratch, don't reuse contexts from previous builds
+        newContext: true,
       }),
     ],
 

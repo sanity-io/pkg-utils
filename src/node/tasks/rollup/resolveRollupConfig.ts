@@ -8,13 +8,16 @@ import json from '@rollup/plugin-json'
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
+import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
 import type {InputOptions, OutputOptions, Plugin} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt'
 import {resolveConfigProperty} from '../../core/config/resolveConfigProperty'
 import type {BuildContext} from '../../core/contexts/buildContext'
+import {DEFAULT_BROWSERSLIST_QUERY} from '../../core/defaults'
 import type {PackageJSON} from '../../core/pkg/types'
 import type {RollupTask, RollupWatchTask} from '../types'
+import {optimizeCss} from './optimizeCss'
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -93,6 +96,48 @@ export function resolveRollupConfig(
     }),
     commonjs(),
     json(),
+    config?.rollup?.vanillaExtract &&
+      vanillaExtractPlugin(
+        config?.rollup?.vanillaExtract === true
+          ? {
+              extract: {
+                name:
+                  runtime === 'node'
+                    ? 'bundle.node.css'
+                    : runtime === 'browser'
+                      ? 'bundle.browser.css'
+                      : 'bundle.css',
+                sourcemap: true,
+              },
+              identifiers: 'short',
+            }
+          : config?.rollup?.vanillaExtract,
+      ),
+    config?.rollup?.vanillaExtract &&
+      optimizeCss(
+        config?.rollup?.vanillaExtract === true
+          ? {
+              extractFileName:
+                runtime === 'node'
+                  ? 'bundle.node.css'
+                  : runtime === 'browser'
+                    ? 'bundle.browser.css'
+                    : 'bundle.css',
+              browserslist: DEFAULT_BROWSERSLIST_QUERY,
+            }
+          : {
+              extractFileName:
+                typeof config.rollup.vanillaExtract.extract === 'object' &&
+                config.rollup.vanillaExtract.extract.name
+                  ? config.rollup.vanillaExtract.extract.name
+                  : runtime === 'node'
+                    ? 'bundle.node.css'
+                    : runtime === 'browser'
+                      ? 'bundle.browser.css'
+                      : 'bundle.css',
+              browserslist: config.rollup.vanillaExtract.browserslist || DEFAULT_BROWSERSLIST_QUERY,
+            },
+      ),
     (config?.babel?.reactCompiler || config?.babel?.styledComponents) &&
       babel({
         babelrc: false,
@@ -234,7 +279,10 @@ export function resolveRollupConfig(
       treeshake: {
         preset: 'recommended',
         propertyReadSideEffects: false,
-        moduleSideEffects: 'no-external',
+        // If the module ends with `.css` it is considered to be a side effect, even if the module is marked as no side effect,
+        // this option used to be `moduleSideEffects: 'no-external'`, and thus if it's not CSS it uses `!external`, which is equivalent to `'no-external'`
+        moduleSideEffects: (id, external) => (id.endsWith('.css') ? true : !external),
+        annotations: true,
         manualPureFunctions: [
           'memo',
           'forwardRef',
@@ -258,6 +306,7 @@ export function resolveRollupConfig(
       sourcemap: config?.sourcemap ?? true,
       hoistTransitiveImports: false,
       minifyInternalExports: minify,
+      assetFileNames: '[name][extname]',
       ...config?.rollup?.output,
     },
   }
