@@ -231,6 +231,9 @@ importers:
       oxlint:
         specifier: ^1.12.0
         version: 1.12.0
+      oxlint-tsgolint:
+        specifier: ^0.0.4
+        version: 0.0.4
       rollup-plugin-visualizer:
         specifier: ^6.0.3
         version: 6.0.3(rolldown@1.0.0-beta.33)(rollup@4.46.3)
@@ -393,7 +396,7 @@ importers:
         version: link:../dummy-module
       next:
         specifier: ^15.4.6
-        version: 15.4.6(@babel/core@7.28.3)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 15.4.6(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -2195,33 +2198,33 @@ packages:
   '@oxc-project/types@0.82.2':
     resolution: {integrity: sha512-WMGSwd9FsNBs/WfqIOH0h3k1LBdjZJQGYjGnC+vla/fh6HUsu5HzGPerRljiq1hgMQ6gs031YJR12VyP57b/hQ==}
 
-  '@oxlint-tsgolint/darwin-arm64@0.0.2':
-    resolution: {integrity: sha512-LH6tDgvQkF7ui+lNuRjJeaJTdYCfxMXI0j8YTbbLVSHz42EI5DTJDtngsCd2dSlUfKAJqaehECKccqcJ3yueHQ==}
+  '@oxlint-tsgolint/darwin-arm64@0.0.4':
+    resolution: {integrity: sha512-qL0zqIYdYrXl6ghTIHnhJkvyYy1eKz0P8YIEp59MjY3/zNiyk/gtyp8LkwZdqb9ezbcX9UDQhSuSO1wURJsq8g==}
     cpu: [arm64]
     os: [darwin]
 
-  '@oxlint-tsgolint/darwin-x64@0.0.2':
-    resolution: {integrity: sha512-VEUXK5h4ZyCM3O++dK7A+IcqwqWv8zfRKyM1vgcIrnQXtwvbs9KFyK6I0BSnMBCV9be67b9Gl7TDeSS8jBchpw==}
+  '@oxlint-tsgolint/darwin-x64@0.0.4':
+    resolution: {integrity: sha512-c3nSjqmDSKzemChAEUv/zy2e9cwgkkO/7rz4Y447+8pSbeZNHi3RrNpVHdrKL/Qep4pt6nFZE+6PoczZxHNQjg==}
     cpu: [x64]
     os: [darwin]
 
-  '@oxlint-tsgolint/linux-arm64@0.0.2':
-    resolution: {integrity: sha512-A/NtWuq+u+Y6oAo7p6D18rmkckHL/nx0GrqlZvfHAWOJYXXLanLX0QozPPDoSH8zRwHc7W7t95JU8awS7Krp4Q==}
+  '@oxlint-tsgolint/linux-arm64@0.0.4':
+    resolution: {integrity: sha512-P2BA54c/Ej5AGkChH1/7zMd6PwZfa+jnw8juB/JWops+BX+lbhbbBHz0cYduDBgWYjRo4e3OVJOTskqcpuMfNw==}
     cpu: [arm64]
     os: [linux]
 
-  '@oxlint-tsgolint/linux-x64@0.0.2':
-    resolution: {integrity: sha512-p42pKfILRhm/cE8Y5BgXlQpM22Q+Olhy9A60VvOW0epu/Vr/FtUa/MbZJ2wGRuAKSm8oW9JhgjIj5laSWAX8vg==}
+  '@oxlint-tsgolint/linux-x64@0.0.4':
+    resolution: {integrity: sha512-hbgLpnDNicPrbHOAQ9nNfLOSrUrdWANP/umR7P/cwCc1sv66eEs7bm4G3mrhRU8aXFBJmbhdNqiDSUkYYvHWJQ==}
     cpu: [x64]
     os: [linux]
 
-  '@oxlint-tsgolint/win32-arm64@0.0.2':
-    resolution: {integrity: sha512-LTKCeeKZRd4vT+C3y7d0KEYqAzIiLvf/189H6ispKtfyKeQKxOGU+XG9xRP4GovPvZOYL6fIsVxe09BUaNuDnA==}
+  '@oxlint-tsgolint/win32-arm64@0.0.4':
+    resolution: {integrity: sha512-ozKEppmwZhC5LMedClBEat6cXgBGUvxGOgsKK2ZZNE6zSScX7QbvJAOt3nWMGs8GQshHy/6ndMB33+uRloglQA==}
     cpu: [arm64]
     os: [win32]
 
-  '@oxlint-tsgolint/win32-x64@0.0.2':
-    resolution: {integrity: sha512-SdrPYSkBHd43WY5h78ICLVS851/379pzIjUVM1LDltZuAgv209H8f1/g5cdX4gY46RDvV86guLh+PbfMHHugog==}
+  '@oxlint-tsgolint/win32-x64@0.0.4':
+    resolution: {integrity: sha512-gLfx+qogW21QcaRKFg6ARgra7tSPqyn+Ems3FgTUyxV4OpJYn7KsQroygxOWElqv6JUobtvHBrxdB6YhlvERbQ==}
     cpu: [x64]
     os: [win32]
 
@@ -5804,8 +5807,8 @@ packages:
   outdent@0.8.0:
     resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
 
-  oxlint-tsgolint@0.0.2:
-    resolution: {integrity: sha512-afl7YXlHyiLb7YxL6ixAQ/1JLBy52vzk07+fTT53tPdyUZPpbkJz1CJMGNLteaX1t+vDq6wXdCj4xTO2jcViGQ==}
+  oxlint-tsgolint@0.0.4:
+    resolution: {integrity: sha512-KFWVP+VU3ymgK/Dtuf6iRkqjo+aN42lS1YThY6JWlNi1GQqm7wtio/kAwssqDhm8kP+CVXbgZAtu1wgsK4XeTg==}
     hasBin: true
 
   oxlint@1.12.0:
@@ -9515,22 +9518,22 @@ snapshots:
 
   '@oxc-project/types@0.82.2': {}
 
-  '@oxlint-tsgolint/darwin-arm64@0.0.2':
+  '@oxlint-tsgolint/darwin-arm64@0.0.4':
     optional: true
 
-  '@oxlint-tsgolint/darwin-x64@0.0.2':
+  '@oxlint-tsgolint/darwin-x64@0.0.4':
     optional: true
 
-  '@oxlint-tsgolint/linux-arm64@0.0.2':
+  '@oxlint-tsgolint/linux-arm64@0.0.4':
     optional: true
 
-  '@oxlint-tsgolint/linux-x64@0.0.2':
+  '@oxlint-tsgolint/linux-x64@0.0.4':
     optional: true
 
-  '@oxlint-tsgolint/win32-arm64@0.0.2':
+  '@oxlint-tsgolint/win32-arm64@0.0.4':
     optional: true
 
-  '@oxlint-tsgolint/win32-x64@0.0.2':
+  '@oxlint-tsgolint/win32-x64@0.0.4':
     optional: true
 
   '@oxlint/darwin-arm64@1.12.0':
@@ -13907,7 +13910,7 @@ snapshots:
 
   neotraverse@0.6.18: {}
 
-  next@15.4.6(@babel/core@7.28.3)(babel-plugin-react-compiler@19.1.0-rc.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  next@15.4.6(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       '@next/env': 15.4.6
       '@swc/helpers': 0.5.15
@@ -13925,7 +13928,6 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.4.6
       '@next/swc-win32-arm64-msvc': 15.4.6
       '@next/swc-win32-x64-msvc': 15.4.6
-      babel-plugin-react-compiler: 19.1.0-rc.2
       sharp: 0.34.3
     transitivePeerDependencies:
       - '@babel/core'
@@ -14063,15 +14065,14 @@ snapshots:
 
   outdent@0.8.0: {}
 
-  oxlint-tsgolint@0.0.2:
+  oxlint-tsgolint@0.0.4:
     optionalDependencies:
-      '@oxlint-tsgolint/darwin-arm64': 0.0.2
-      '@oxlint-tsgolint/darwin-x64': 0.0.2
-      '@oxlint-tsgolint/linux-arm64': 0.0.2
-      '@oxlint-tsgolint/linux-x64': 0.0.2
-      '@oxlint-tsgolint/win32-arm64': 0.0.2
-      '@oxlint-tsgolint/win32-x64': 0.0.2
-    optional: true
+      '@oxlint-tsgolint/darwin-arm64': 0.0.4
+      '@oxlint-tsgolint/darwin-x64': 0.0.4
+      '@oxlint-tsgolint/linux-arm64': 0.0.4
+      '@oxlint-tsgolint/linux-x64': 0.0.4
+      '@oxlint-tsgolint/win32-arm64': 0.0.4
+      '@oxlint-tsgolint/win32-x64': 0.0.4
 
   oxlint@1.12.0:
     optionalDependencies:
@@ -14083,7 +14084,7 @@ snapshots:
       '@oxlint/linux-x64-musl': 1.12.0
       '@oxlint/win32-arm64': 1.12.0
       '@oxlint/win32-x64': 1.12.0
-      oxlint-tsgolint: 0.0.2
+      oxlint-tsgolint: 0.0.4
 
   p-finally@2.0.1: {}
 
