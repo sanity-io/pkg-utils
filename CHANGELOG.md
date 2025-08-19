@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.3](https://github.com/sanity-io/pkg-utils/compare/v8.0.2...v8.0.3) (2025-08-19)
+
+
+### Bug Fixes
+
+* lazy load recast ([c203d21](https://github.com/sanity-io/pkg-utils/commit/c203d2116bd1a1ddd1299acc9894264f7605e315))
+
 ## [8.0.2](https://github.com/sanity-io/pkg-utils/compare/v8.0.1...v8.0.2) (2025-08-19)
 
 
