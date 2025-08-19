@@ -13,7 +13,6 @@ import type {PkgConfigOptions} from '../../core/config/types'
 import type {BuildFile} from '../../core/contexts/buildContext'
 import {createApiExtractorConfig} from './createApiExtractorConfig'
 import {createTSDocConfig} from './createTSDocConfig'
-import {extractModuleBlocksFromTypes} from './extractModuleBlocks'
 import {getExtractMessagesConfig} from './getExtractMessagesConfig'
 
 export async function extractTypes(options: {
@@ -97,6 +96,7 @@ export async function extractTypes(options: {
 
   await mkdirp(path.dirname(typesPath))
 
+  const {extractModuleBlocksFromTypes} = await import('./extractModuleBlocks')
   const moduleBlocks = await extractModuleBlocksFromTypes({
     extractResult: extractorResult,
     tsOutDir: tmpPath,
