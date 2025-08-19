@@ -78,8 +78,8 @@ importers:
         specifier: '*'
         version: 19.1.0-rc.2
       browserslist:
-        specifier: ^4.25.2
-        version: 4.25.2
+        specifier: ^4.25.3
+        version: 4.25.3
       cac:
         specifier: ^6.7.14
         version: 6.7.14
@@ -209,7 +209,7 @@ importers:
         version: 7.0.0-dev.20250818.1
       browserslist-to-esbuild:
         specifier: 2.1.1
-        version: 2.1.1(browserslist@4.25.2)
+        version: 2.1.1(browserslist@4.25.3)
       commitizen:
         specifier: ^4.3.1
         version: 4.3.1(@types/node@24.3.0)(typescript@5.9.2)
@@ -3478,8 +3478,8 @@ packages:
     peerDependencies:
       browserslist: '*'
 
-  browserslist@4.25.2:
-    resolution: {integrity: sha512-0si2SJK3ooGzIawRu61ZdPCO1IncZwS8IzuX73sPZsXW6EQ/w/DAfPyKI8l1ETTCr2MnvqWitmlCUxgdul45jA==}
+  browserslist@4.25.3:
+    resolution: {integrity: sha512-cDGv1kkDI4/0e5yON9yM5G/0A5u8sf5TnmdX5C9qHzI9PPu++sQ9zjm1k9NiOrf3riY4OkK0zSGqfvJyJsgCBQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -7896,7 +7896,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.28.0
       '@babel/helper-validator-option': 7.27.1
-      browserslist: 4.25.2
+      browserslist: 4.25.3
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -11488,17 +11488,17 @@ snapshots:
     dependencies:
       pako: 0.2.9
 
-  browserslist-to-esbuild@2.1.1(browserslist@4.25.2):
+  browserslist-to-esbuild@2.1.1(browserslist@4.25.3):
     dependencies:
-      browserslist: 4.25.2
+      browserslist: 4.25.3
       meow: 13.2.0
 
-  browserslist@4.25.2:
+  browserslist@4.25.3:
     dependencies:
       caniuse-lite: 1.0.30001735
       electron-to-chromium: 1.5.204
       node-releases: 2.0.19
-      update-browserslist-db: 1.1.3(browserslist@4.25.2)
+      update-browserslist-db: 1.1.3(browserslist@4.25.3)
 
   buffer-alloc-unsafe@1.1.0: {}
 
@@ -11818,7 +11818,7 @@ snapshots:
 
   core-js-compat@3.45.0:
     dependencies:
-      browserslist: 4.25.2
+      browserslist: 4.25.3
 
   core-util-is@1.0.3: {}
 
@@ -15994,9 +15994,9 @@ snapshots:
       ofetch: 1.4.1
       ufo: 1.6.1
 
-  update-browserslist-db@1.1.3(browserslist@4.25.2):
+  update-browserslist-db@1.1.3(browserslist@4.25.3):
     dependencies:
-      browserslist: 4.25.2
+      browserslist: 4.25.3
       escalade: 3.2.0
       picocolors: 1.1.1
 
