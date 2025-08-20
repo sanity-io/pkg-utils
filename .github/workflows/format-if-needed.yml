@@ -24,7 +24,7 @@ jobs:
         with:
           cache: pnpm
           node-version: lts/*
-      - run: pnpm install --fix-lockfile --no-frozen-lockfile
+      - run: pnpm install
       - run: pnpm format
       - run: git restore .github/workflows CHANGELOG.md
       - uses: actions/create-github-app-token@v2
