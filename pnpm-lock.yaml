@@ -8,7 +8,7 @@ catalogs:
   default:
     '@sanity/client':
       specifier: ^7.8.0
-      version: 7.8.2
+      version: 7.9.0
     '@sanity/icons':
       specifier: ^3.7.4
       version: 3.7.4
@@ -548,7 +548,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.8.2(debug@4.4.1)
+        version: 7.9.0(debug@4.4.1)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.1.1)
@@ -564,7 +564,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.8.2(debug@4.4.1)
+        version: 7.9.0(debug@4.4.1)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.1.1)
@@ -576,7 +576,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.8.2(debug@4.4.1)
+        version: 7.9.0(debug@4.4.1)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.1.1)
@@ -591,7 +591,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.8.2(debug@4.4.1)
+        version: 7.9.0(debug@4.4.1)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.1.1)
@@ -2636,8 +2636,8 @@ packages:
     resolution: {integrity: sha512-BQRCMeDlBxwnMbFtB61HUxFf9aSb4HNVrpfrC7IFVqFf4cwcc3o5H8/nlrL9U3cDFedbe4W0AXt1mQzwbY/ljw==}
     engines: {node: '>=14.18'}
 
-  '@sanity/client@7.8.2':
-    resolution: {integrity: sha512-Me3/eh71VFdbSHghuea80rcDQZir/NgtwANKug/mPbbwwENYASJSEHpAy2VZwn4FyHHIR9d2pNRIyXMzGab+dQ==}
+  '@sanity/client@7.9.0':
+    resolution: {integrity: sha512-CTkelmFDylaIXw8M76GkkfJyYd/f9NFcsLwhuLU0NOqNcnwqlTqUWyy6MY7h5IJC9IJbDttZeRhMwnc/WGcLXg==}
     engines: {node: '>=20'}
 
   '@sanity/codegen@4.5.0':
@@ -9934,7 +9934,7 @@ snapshots:
   '@sanity/cli@4.5.0(@types/node@24.3.0)(@types/react@18.3.23)(lightningcss@1.30.1)(react@18.3.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)':
     dependencies:
       '@babel/traverse': 7.28.3
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/codegen': 4.5.0
       '@sanity/runtime-cli': 10.1.4(@types/node@24.3.0)(debug@4.4.1)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)
       '@sanity/telemetry': 0.8.1(react@18.3.1)
@@ -9972,7 +9972,7 @@ snapshots:
   '@sanity/cli@4.5.0(@types/node@24.3.0)(@types/react@19.1.10)(lightningcss@1.30.1)(react@19.1.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)':
     dependencies:
       '@babel/traverse': 7.28.3
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/codegen': 4.5.0
       '@sanity/runtime-cli': 10.1.4(@types/node@24.3.0)(debug@4.4.1)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)
       '@sanity/telemetry': 0.8.1(react@19.1.1)
@@ -10015,7 +10015,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sanity/client@7.8.2(debug@4.4.1)':
+  '@sanity/client@7.9.0(debug@4.4.1)':
     dependencies:
       '@sanity/eventsource': 5.0.2
       get-it: 8.6.10(debug@4.4.1)
@@ -10085,7 +10085,7 @@ snapshots:
 
   '@sanity/export@4.0.1(@types/react@18.3.23)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/util': 4.5.0(@types/react@18.3.23)(debug@4.4.1)
       archiver: 7.0.1
       debug: 4.4.1(supports-color@8.1.1)
@@ -10104,7 +10104,7 @@ snapshots:
 
   '@sanity/export@4.0.1(@types/react@19.1.10)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/util': 4.5.0(@types/react@19.1.10)(debug@4.4.1)
       archiver: 7.0.1
       debug: 4.4.1(supports-color@8.1.1)
@@ -10245,7 +10245,7 @@ snapshots:
 
   '@sanity/migrate@4.5.0(@types/react@18.3.23)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/mutate': 0.12.4(debug@4.4.1)
       '@sanity/types': 4.5.0(@types/react@18.3.23)(debug@4.4.1)
       '@sanity/util': 4.5.0(@types/react@18.3.23)(debug@4.4.1)
@@ -10260,7 +10260,7 @@ snapshots:
 
   '@sanity/migrate@4.5.0(@types/react@19.1.10)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/mutate': 0.12.4(debug@4.4.1)
       '@sanity/types': 4.5.0(@types/react@19.1.10)(debug@4.4.1)
       '@sanity/util': 4.5.0(@types/react@19.1.10)(debug@4.4.1)
@@ -10330,19 +10330,19 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))':
+  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/comlink': 3.0.9
-      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))
+      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))
     transitivePeerDependencies:
       - '@sanity/types'
 
-  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))':
+  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/comlink': 3.0.9
-      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))
+      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))
     transitivePeerDependencies:
       - '@sanity/types'
 
@@ -10351,9 +10351,9 @@ snapshots:
       prettier: 3.6.2
       prettier-plugin-packagejson: 2.5.19(prettier@3.6.2)
 
-  '@sanity/preview-url-secret@2.1.14(@sanity/client@7.8.2(debug@4.4.1))':
+  '@sanity/preview-url-secret@2.1.14(@sanity/client@7.9.0(debug@4.4.1))':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/uuid': 3.0.2
 
   '@sanity/runtime-cli@10.1.4(@types/node@24.3.0)(debug@4.4.1)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)':
@@ -10362,7 +10362,7 @@ snapshots:
       '@architect/inventory': 4.0.9
       '@oclif/core': 4.5.2
       '@oclif/plugin-help': 6.2.32
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       adm-zip: 0.5.16
       array-treeify: 0.1.5
       cardinal: 2.1.1
@@ -10432,7 +10432,7 @@ snapshots:
   '@sanity/sdk@2.1.2(@types/react@18.3.23)(debug@4.4.1)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))':
     dependencies:
       '@sanity/bifur-client': 0.4.1
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/comlink': 3.0.9
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 6.0.0
@@ -10455,7 +10455,7 @@ snapshots:
   '@sanity/sdk@2.1.2(@types/react@19.1.10)(debug@4.4.1)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))':
     dependencies:
       '@sanity/bifur-client': 0.4.1
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/comlink': 3.0.9
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 6.0.0
@@ -10497,7 +10497,7 @@ snapshots:
 
   '@sanity/types@3.99.0(@types/react@18.3.23)(debug@4.4.1)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/media-library-types': 1.0.0
       '@types/react': 18.3.23
     transitivePeerDependencies:
@@ -10505,7 +10505,7 @@ snapshots:
 
   '@sanity/types@3.99.0(@types/react@19.1.10)(debug@4.4.1)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/media-library-types': 1.0.0
       '@types/react': 19.1.10
     transitivePeerDependencies:
@@ -10513,7 +10513,7 @@ snapshots:
 
   '@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/media-library-types': 1.0.0
       '@types/react': 18.3.23
     transitivePeerDependencies:
@@ -10521,7 +10521,7 @@ snapshots:
 
   '@sanity/types@4.5.0(@types/react@19.1.10)(debug@4.4.1)':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/media-library-types': 1.0.0
       '@types/react': 19.1.10
     transitivePeerDependencies:
@@ -10584,7 +10584,7 @@ snapshots:
     dependencies:
       '@date-fns/tz': 1.4.1
       '@date-fns/utc': 2.1.1
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/types': 4.5.0(@types/react@18.3.23)(debug@4.4.1)
       date-fns: 4.1.0
       get-random-values-esm: 1.0.2
@@ -10597,7 +10597,7 @@ snapshots:
     dependencies:
       '@date-fns/tz': 1.4.1
       '@date-fns/utc': 2.1.1
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/types': 4.5.0(@types/react@19.1.10)(debug@4.4.1)
       date-fns: 4.1.0
       get-random-values-esm: 1.0.2
@@ -10611,15 +10611,15 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))':
+  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
     optionalDependencies:
       '@sanity/types': 4.5.0(@types/react@18.3.23)(debug@4.4.1)
 
-  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))':
+  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))':
     dependencies:
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
     optionalDependencies:
       '@sanity/types': 4.5.0(@types/react@19.1.10)(debug@4.4.1)
 
@@ -14932,7 +14932,7 @@ snapshots:
       '@sanity/asset-utils': 2.2.1
       '@sanity/bifur-client': 0.4.1
       '@sanity/cli': 4.5.0(@types/node@24.3.0)(@types/react@18.3.23)(lightningcss@1.30.1)(react@18.3.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/color': 3.0.6
       '@sanity/comlink': 3.0.9
       '@sanity/diff': 4.5.0
@@ -14950,8 +14950,8 @@ snapshots:
       '@sanity/message-protocol': 0.17.1
       '@sanity/migrate': 4.5.0(@types/react@18.3.23)
       '@sanity/mutator': 4.5.0(@types/react@18.3.23)
-      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))
-      '@sanity/preview-url-secret': 2.1.14(@sanity/client@7.8.2(debug@4.4.1))
+      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.23)(debug@4.4.1))
+      '@sanity/preview-url-secret': 2.1.14(@sanity/client@7.9.0(debug@4.4.1))
       '@sanity/schema': 4.5.0(@types/react@18.3.23)(debug@4.4.1)
       '@sanity/sdk': 2.1.2(@types/react@18.3.23)(debug@4.4.1)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
       '@sanity/telemetry': 0.8.1(react@18.3.1)
@@ -15101,7 +15101,7 @@ snapshots:
       '@sanity/asset-utils': 2.2.1
       '@sanity/bifur-client': 0.4.1
       '@sanity/cli': 4.5.0(@types/node@24.3.0)(@types/react@19.1.10)(lightningcss@1.30.1)(react@19.1.1)(terser@5.43.1)(tsx@4.20.4)(typescript@5.9.2)(yaml@2.8.1)
-      '@sanity/client': 7.8.2(debug@4.4.1)
+      '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/color': 3.0.6
       '@sanity/comlink': 3.0.9
       '@sanity/diff': 4.5.0
@@ -15119,8 +15119,8 @@ snapshots:
       '@sanity/message-protocol': 0.17.1
       '@sanity/migrate': 4.5.0(@types/react@19.1.10)
       '@sanity/mutator': 4.5.0(@types/react@19.1.10)
-      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.8.2(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))
-      '@sanity/preview-url-secret': 2.1.14(@sanity/client@7.8.2(debug@4.4.1))
+      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.10))
+      '@sanity/preview-url-secret': 2.1.14(@sanity/client@7.9.0(debug@4.4.1))
       '@sanity/schema': 4.5.0(@types/react@19.1.10)(debug@4.4.1)
       '@sanity/sdk': 2.1.2(@types/react@19.1.10)(debug@4.4.1)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
       '@sanity/telemetry': 0.8.1(react@19.1.1)
