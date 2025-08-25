@@ -79,8 +79,8 @@ export function resolveRolldownConfig(
 
     resolve: {
       alias: pathAliases,
-      tsconfigFilename: ctx.ts.configPath || 'tsconfig.json',
     },
+    tsconfig: ctx.ts.configPath || 'tsconfig.json',
     experimental: {
       attachDebugInfo: 'none',
     },
