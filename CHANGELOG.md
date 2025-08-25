@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.7](https://github.com/sanity-io/pkg-utils/compare/v8.0.6...v8.0.7) (2025-08-25)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency globby to v14 ([#1806](https://github.com/sanity-io/pkg-utils/issues/1806)) ([5bafa8e](https://github.com/sanity-io/pkg-utils/commit/5bafa8e12707e9d872de9e1bb268de00e65d29e8))
+
 ## [8.0.6](https://github.com/sanity-io/pkg-utils/compare/v8.0.5...v8.0.6) (2025-08-25)
 
 
