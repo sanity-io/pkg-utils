@@ -7,7 +7,6 @@ import {resolveBuildContext} from './resolveBuildContext'
 import {resolveWatchTasks} from './resolveWatchTasks'
 import {watchTaskHandlers} from './tasks'
 import {type TaskHandler, type WatchTask} from './tasks/types'
-import {watchConfigFiles} from './watchConfigFiles'
 
 /** @public */
 export async function watch(options: {
@@ -19,6 +18,7 @@ export async function watch(options: {
 
   const logger = createLogger()
 
+  const {watchConfigFiles} = await import('./watchConfigFiles')
   const configFiles$ = await watchConfigFiles({cwd, logger})
 
   const ctx$ = configFiles$.pipe(
