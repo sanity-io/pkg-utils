@@ -234,6 +234,9 @@ importers:
       oxlint:
         specifier: ^1.13.0
         version: 1.13.0(oxlint-tsgolint@0.0.4)
+      oxlint-tsgolint:
+        specifier: ^0.0.4
+        version: 0.0.4
       rollup-plugin-visualizer:
         specifier: ^6.0.3
         version: 6.0.3(rolldown@1.0.0-beta.34)(rollup@4.48.1)
@@ -14096,7 +14099,6 @@ snapshots:
       '@oxlint-tsgolint/linux-x64': 0.0.4
       '@oxlint-tsgolint/win32-arm64': 0.0.4
       '@oxlint-tsgolint/win32-x64': 0.0.4
-    optional: true
 
   oxlint@1.13.0(oxlint-tsgolint@0.0.4):
     optionalDependencies:
