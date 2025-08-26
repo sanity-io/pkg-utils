@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.0](https://github.com/sanity-io/pkg-utils/compare/v8.0.7...v8.1.0) (2025-08-26)
+
+
+### Features
+
+* use typings from babel-plugin-react-compiler ([#1853](https://github.com/sanity-io/pkg-utils/issues/1853)) ([87cc6de](https://github.com/sanity-io/pkg-utils/commit/87cc6de204b70edb3c9222f5db91db94493fbd2d))
+
+
+### Bug Fixes
+
+* **deps:** Update dependency zod to v4.1.3 ([#1851](https://github.com/sanity-io/pkg-utils/issues/1851)) ([1606c10](https://github.com/sanity-io/pkg-utils/commit/1606c10f503239b07038d18ef37e3e64495ec9ae))
+
 ## [8.0.7](https://github.com/sanity-io/pkg-utils/compare/v8.0.6...v8.0.7) (2025-08-25)
 
 
