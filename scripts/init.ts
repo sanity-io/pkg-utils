@@ -5,7 +5,7 @@ import {init} from '../src/node'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-global.__DEV__ = true
+global.___DEV___ = true
 
 const args = argv.slice(2)
 

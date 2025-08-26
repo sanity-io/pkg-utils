@@ -77,9 +77,6 @@ importers:
       '@vanilla-extract/rollup-plugin':
         specifier: ^1.4.1
         version: 1.4.1(rollup@4.48.1)
-      babel-plugin-react-compiler:
-        specifier: '*'
-        version: 19.1.0-rc.2
       browserslist:
         specifier: ^4.25.3
         version: 4.25.3
@@ -210,6 +207,9 @@ importers:
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20250825.1
+      babel-plugin-react-compiler:
+        specifier: 19.1.0-rc.2
+        version: 19.1.0-rc.2
       browserslist-to-esbuild:
         specifier: 2.1.1
         version: 2.1.1(browserslist@4.25.3)

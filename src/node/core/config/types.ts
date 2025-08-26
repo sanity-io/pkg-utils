@@ -1,6 +1,7 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
+import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict'
 
@@ -64,98 +65,6 @@ export interface TSDocCustomTag {
   allowMultiple?: boolean
 }
 
-/**
- * Until these types are on npm: https://github.com/facebook/react/blob/0bc30748730063e561d87a24a4617526fdd38349/compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Options.ts#L39-L122
- * @alpha
- */
-export interface ReactCompilerOptions {
-  logger?: ReactCompilerLogger | null
-
-  panicThreshold?: 'ALL_ERRORS' | 'CRITICAL_ERRORS' | 'NONE'
-
-  compilationMode?: 'infer' | 'syntax' | 'annotation' | 'all'
-
-  /*
-   * If enabled, Forget will import `useMemoCache` from the given module
-   * instead of `react/compiler-runtime`.
-   *
-   * ```
-   * // If set to "react-compiler-runtime"
-   * import {c as useMemoCache} from 'react-compiler-runtime';
-   * ```
-   */
-  runtimeModule?: string | null | undefined
-
-  /**
-   * By default React Compiler will skip compilation of code that suppresses the default
-   * React ESLint rules, since this is a strong indication that the code may be breaking React rules
-   * in some way.
-   *
-   * Use eslintSuppressionRules to pass a custom set of rule names: any code which suppresses the
-   * provided rules will skip compilation. To disable this feature (never bailout of compilation
-   * even if the default ESLint is suppressed), pass an empty array.
-   */
-  eslintSuppressionRules?: Array<string> | null | undefined
-
-  sources?: Array<string> | ((filename: string) => boolean) | null
-
-  /**
-   * The minimum major version of React that the compiler should emit code for. If the target is 19
-   * or higher, the compiler emits direct imports of React runtime APIs needed by the compiler. On
-   * versions prior to 19, an extra runtime package react-compiler-runtime is necessary to provide
-   * a userspace approximation of runtime APIs.
-   */
-  target: '17' | '18' | '19'
-}
-
-/**
- * @alpha
- * Represents 'events' that may occur during compilation. Events are only
- * recorded when a logger is set (through the config).
- * These are the different types of events:
- * CompileError:
- *   Forget skipped compilation of a function / file due to a known todo,
- *   invalid input, or compiler invariant being broken.
- * CompileSuccess:
- *   Forget successfully compiled a function.
- * PipelineError:
- *   Unexpected errors that occurred during compilation (e.g. failures in
- *   babel or other unhandled exceptions).
- */
-export type ReactCompilerLoggerEvent =
-  | {
-      kind: 'CompileError'
-      fnLoc: unknown
-      detail: unknown
-    }
-  | {
-      kind: 'CompileDiagnostic'
-      fnLoc: unknown
-      detail: unknown
-    }
-  | {
-      kind: 'CompileSuccess'
-      fnLoc: unknown
-      fnName: string | null
-      memoSlots: number
-      memoBlocks: number
-      memoValues: number
-      prunedMemoBlocks: number
-      prunedMemoValues: number
-    }
-  | {
-      kind: 'PipelineError'
-      fnLoc: unknown
-      data: string
-    }
-
-/**
- * @alpha
- */
-export type ReactCompilerLogger = {
-  logEvent: (filename: string | null, event: ReactCompilerLoggerEvent) => void
-}
-
 export type DtsType = 'api-extractor' | 'rolldown'
 
 /** @public */
@@ -193,11 +102,9 @@ export interface PkgConfigOptions {
   }
   /**
    * Configure the React Compiler.
-   * To enable it, either:
-   * - set `babel.reactCompiler` to `true`
-   * - add a `react-compiler` export condition,  before any `browser`, `require` or `import` conditions. After any `react-server` and `node` conditions
-   * @alpha */
-  reactCompilerOptions?: ReactCompilerOptions
+   * To enable it set `babel.reactCompiler` to `true`
+   * @beta */
+  reactCompilerOptions?: Partial<ReactCompilerOptions>
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>

@@ -4,7 +4,7 @@ import {build} from '../src/node'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-global.__DEV__ = true
+global.___DEV___ = true
 
 build({cwd: path.resolve(__dirname, '..'), strict: true}).catch((err) => {
   console.error(err.stack)
