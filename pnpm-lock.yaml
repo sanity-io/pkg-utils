@@ -233,7 +233,7 @@ importers:
         version: 8.0.4
       oxlint:
         specifier: ^1.13.0
-        version: 1.13.0(oxlint-tsgolint@0.0.4)
+        version: 1.13.0
       rollup-plugin-visualizer:
         specifier: ^6.0.3
         version: 6.0.3(rolldown@1.0.0-beta.34)(rollup@4.48.1)
@@ -2197,36 +2197,6 @@ packages:
 
   '@oxc-project/types@0.82.3':
     resolution: {integrity: sha512-6nCUxBnGX0c6qfZW5MaF6/fmu5dHJDMiMPaioKHKs5mi5+8/FHQ7WGjgQIz1zxpmceMYfdIXkOaLYE+ejbuOtA==}
-
-  '@oxlint-tsgolint/darwin-arm64@0.0.4':
-    resolution: {integrity: sha512-qL0zqIYdYrXl6ghTIHnhJkvyYy1eKz0P8YIEp59MjY3/zNiyk/gtyp8LkwZdqb9ezbcX9UDQhSuSO1wURJsq8g==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@oxlint-tsgolint/darwin-x64@0.0.4':
-    resolution: {integrity: sha512-c3nSjqmDSKzemChAEUv/zy2e9cwgkkO/7rz4Y447+8pSbeZNHi3RrNpVHdrKL/Qep4pt6nFZE+6PoczZxHNQjg==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@oxlint-tsgolint/linux-arm64@0.0.4':
-    resolution: {integrity: sha512-P2BA54c/Ej5AGkChH1/7zMd6PwZfa+jnw8juB/JWops+BX+lbhbbBHz0cYduDBgWYjRo4e3OVJOTskqcpuMfNw==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@oxlint-tsgolint/linux-x64@0.0.4':
-    resolution: {integrity: sha512-hbgLpnDNicPrbHOAQ9nNfLOSrUrdWANP/umR7P/cwCc1sv66eEs7bm4G3mrhRU8aXFBJmbhdNqiDSUkYYvHWJQ==}
-    cpu: [x64]
-    os: [linux]
-
-  '@oxlint-tsgolint/win32-arm64@0.0.4':
-    resolution: {integrity: sha512-ozKEppmwZhC5LMedClBEat6cXgBGUvxGOgsKK2ZZNE6zSScX7QbvJAOt3nWMGs8GQshHy/6ndMB33+uRloglQA==}
-    cpu: [arm64]
-    os: [win32]
-
-  '@oxlint-tsgolint/win32-x64@0.0.4':
-    resolution: {integrity: sha512-gLfx+qogW21QcaRKFg6ARgra7tSPqyn+Ems3FgTUyxV4OpJYn7KsQroygxOWElqv6JUobtvHBrxdB6YhlvERbQ==}
-    cpu: [x64]
-    os: [win32]
 
   '@oxlint/darwin-arm64@1.13.0':
     resolution: {integrity: sha512-evpsj1aaWNEd2VRGTbptiMwC8vYSDadAYtq92Ks3UIe0VoMtY9n5bLeD9Ctw/OHIM7Eh7/EQlNDLOOP/b2GBKA==}
@@ -5810,10 +5780,6 @@ packages:
 
   outdent@0.8.0:
     resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
-
-  oxlint-tsgolint@0.0.4:
-    resolution: {integrity: sha512-KFWVP+VU3ymgK/Dtuf6iRkqjo+aN42lS1YThY6JWlNi1GQqm7wtio/kAwssqDhm8kP+CVXbgZAtu1wgsK4XeTg==}
-    hasBin: true
 
   oxlint@1.13.0:
     resolution: {integrity: sha512-wEoHG0WCbxSfpXqrJPbB6q7j16xoiUJD2WHJffpR9CCPB1ZYgOwf/qRSzH9KGW/Uda7oxm/1Ebx4q4hGALJmeQ==}
@@ -9541,24 +9507,6 @@ snapshots:
 
   '@oxc-project/types@0.82.3': {}
 
-  '@oxlint-tsgolint/darwin-arm64@0.0.4':
-    optional: true
-
-  '@oxlint-tsgolint/darwin-x64@0.0.4':
-    optional: true
-
-  '@oxlint-tsgolint/linux-arm64@0.0.4':
-    optional: true
-
-  '@oxlint-tsgolint/linux-x64@0.0.4':
-    optional: true
-
-  '@oxlint-tsgolint/win32-arm64@0.0.4':
-    optional: true
-
-  '@oxlint-tsgolint/win32-x64@0.0.4':
-    optional: true
-
   '@oxlint/darwin-arm64@1.13.0':
     optional: true
 
@@ -10350,19 +10298,19 @@ snapshots:
       - '@types/react'
       - supports-color
 
+  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))':
+    dependencies:
+      '@sanity/client': 7.9.0(debug@4.4.1)
+      '@sanity/comlink': 3.0.9
+      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))
+    transitivePeerDependencies:
+      - '@sanity/types'
+
   '@sanity/presentation-comlink@1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.11))':
     dependencies:
       '@sanity/client': 7.9.0(debug@4.4.1)
       '@sanity/comlink': 3.0.9
       '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.11))
-    transitivePeerDependencies:
-      - '@sanity/types'
-
-  '@sanity/presentation-comlink@1.0.28(@sanity/client@7.9.0)(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))':
-    dependencies:
-      '@sanity/client': 7.9.0(debug@4.4.1)
-      '@sanity/comlink': 3.0.9
-      '@sanity/visual-editing-types': 1.1.5(@sanity/client@7.9.0)(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))
     transitivePeerDependencies:
       - '@sanity/types'
 
@@ -10631,17 +10579,17 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
+  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))':
+    dependencies:
+      '@sanity/client': 7.9.0(debug@4.4.1)
+    optionalDependencies:
+      '@sanity/types': 4.5.0(@types/react@18.3.24)(debug@4.4.1)
+
   '@sanity/visual-editing-types@1.1.5(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@19.1.11))':
     dependencies:
       '@sanity/client': 7.9.0(debug@4.4.1)
     optionalDependencies:
       '@sanity/types': 4.5.0(@types/react@19.1.11)(debug@4.4.1)
-
-  '@sanity/visual-editing-types@1.1.5(@sanity/client@7.9.0)(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))':
-    dependencies:
-      '@sanity/client': 7.9.0(debug@4.4.1)
-    optionalDependencies:
-      '@sanity/types': 4.5.0(@types/react@18.3.24)(debug@4.4.1)
 
   '@sentry-internal/browser-utils@8.55.0':
     dependencies:
@@ -14088,17 +14036,7 @@ snapshots:
 
   outdent@0.8.0: {}
 
-  oxlint-tsgolint@0.0.4:
-    optionalDependencies:
-      '@oxlint-tsgolint/darwin-arm64': 0.0.4
-      '@oxlint-tsgolint/darwin-x64': 0.0.4
-      '@oxlint-tsgolint/linux-arm64': 0.0.4
-      '@oxlint-tsgolint/linux-x64': 0.0.4
-      '@oxlint-tsgolint/win32-arm64': 0.0.4
-      '@oxlint-tsgolint/win32-x64': 0.0.4
-    optional: true
-
-  oxlint@1.13.0(oxlint-tsgolint@0.0.4):
+  oxlint@1.13.0:
     optionalDependencies:
       '@oxlint/darwin-arm64': 1.13.0
       '@oxlint/darwin-x64': 1.13.0
@@ -14108,7 +14046,6 @@ snapshots:
       '@oxlint/linux-x64-musl': 1.13.0
       '@oxlint/win32-arm64': 1.13.0
       '@oxlint/win32-x64': 1.13.0
-      oxlint-tsgolint: 0.0.4
 
   p-finally@2.0.1: {}
 
@@ -14978,7 +14915,7 @@ snapshots:
       '@sanity/message-protocol': 0.17.2
       '@sanity/migrate': 4.5.0(@types/react@18.3.24)
       '@sanity/mutator': 4.5.0(@types/react@18.3.24)
-      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.9.0)(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))
+      '@sanity/presentation-comlink': 1.0.28(@sanity/client@7.9.0(debug@4.4.1))(@sanity/types@4.5.0(@types/react@18.3.24)(debug@4.4.1))
       '@sanity/preview-url-secret': 2.1.14(@sanity/client@7.9.0(debug@4.4.1))
       '@sanity/schema': 4.5.0(@types/react@18.3.24)(debug@4.4.1)
       '@sanity/sdk': 2.1.2(@types/react@18.3.24)(debug@4.4.1)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
