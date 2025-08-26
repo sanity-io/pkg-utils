@@ -83,6 +83,7 @@ export function fetchSearchResults(query: string): typeof allAlbums {
     throw promises.get(query)!
   }
 
+  // oxlint-disable-next-line always-return
   const promise = getSearchResults(query.trim().toLowerCase()).then((result) => {
     cache.set(query, result)
   })

@@ -1,7 +1,7 @@
 import path from 'node:path'
 import chalk from 'chalk'
 import {rollup} from 'rollup'
-import {Observable} from 'rxjs'
+import {from} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy'
 import type {BuildContext} from '../../core/contexts/buildContext'
 import type {RollupTask, TaskHandler} from '../types'
@@ -51,14 +51,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
     ].join('\n')
   },
   exec: (ctx, task) => {
-    return new Observable((observer) => {
-      execPromise(ctx, task)
-        .then((result) => {
-          observer.next(result)
-          observer.complete()
-        })
-        .catch((err) => observer.error(err))
-    })
+    return from(execPromise(ctx, task))
   },
   complete: () => {
     //

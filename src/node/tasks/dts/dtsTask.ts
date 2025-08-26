@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import {Observable} from 'rxjs'
+import {from} from 'rxjs'
 import {printExtractMessages} from '../../printExtractMessages'
 import type {TaskHandler} from '../types'
 import {doExtract} from './doExtract'
@@ -24,16 +24,7 @@ export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
       }),
     ].join('\n'),
   exec: (ctx, task) => {
-    return new Observable((observer) => {
-      doExtract(ctx, task)
-        .then((result) => {
-          observer.next(result)
-          observer.complete()
-        })
-        .catch((err) => {
-          observer.error(err)
-        })
-    })
+    return from(doExtract(ctx, task))
   },
   complete: (ctx, _task, result) => {
     printExtractMessages(ctx, result.messages)

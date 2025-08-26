@@ -1,12 +1,11 @@
 import {build} from '@sanity/pkg-utils'
 
-build({
-  cwd: process.cwd(),
-})
-  .then(() => {
-    console.log('successfully built')
+try {
+  await build({
+    cwd: process.cwd(),
   })
-  .catch((err) => {
-    console.error(`build error: ${err.message}`)
-    process.exit(1)
-  })
+  console.log('successfully built')
+} catch (err) {
+  console.error(`build error: ${err.message}`)
+  process.exit(1)
+}
