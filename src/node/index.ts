@@ -12,9 +12,6 @@ export type {
   PkgExports,
   PkgRuleLevel,
   TSDocCustomTag,
-  ReactCompilerOptions,
-  ReactCompilerLoggerEvent,
-  ReactCompilerLogger,
   PkgConfigOptions,
 } from './core/config/types'
 export {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults'

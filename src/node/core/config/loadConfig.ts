@@ -7,6 +7,10 @@ import type {PkgConfigOptions} from './types'
 
 const require = createRequire(import.meta.url)
 
+declare global {
+  var ___DEV___: boolean
+}
+
 /** @alpha */
 export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptions | undefined> {
   const {cwd} = options
@@ -28,7 +32,7 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  const unregister = globalThis.__DEV__ ? () => undefined : register()
+  const unregister = globalThis.___DEV___ ? () => undefined : register()
 
   const mod = require(configFile)
 
