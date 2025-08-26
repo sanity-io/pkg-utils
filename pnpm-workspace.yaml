@@ -8,3 +8,10 @@ catalog:
   '@sanity/logos': ^2.2.1
   '@typescript/native-preview': 7.0.0-dev.20250826.1
   typescript: 5.9.2
+
+overrides:
+  '@sanity/pkg-utils': workspace:*
+
+# This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
+publicHoistPattern:
+  - '*prettier*'
