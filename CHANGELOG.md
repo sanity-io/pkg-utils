@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.6](https://github.com/sanity-io/pkg-utils/compare/v8.1.5...v8.1.6) (2025-09-08)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.28.4 ([#1906](https://github.com/sanity-io/pkg-utils/issues/1906)) ([c89eb17](https://github.com/sanity-io/pkg-utils/commit/c89eb17701653fa4108dd53319f10390c92678b0))
+* **deps:** Update dependency rolldown to v1.0.0-beta.35 ([#1901](https://github.com/sanity-io/pkg-utils/issues/1901)) ([3d5741f](https://github.com/sanity-io/pkg-utils/commit/3d5741fe2416e153255e38f954efa00bbd848978))
+* **deps:** Update dependency rolldown-plugin-dts to v0.16.1 ([#1909](https://github.com/sanity-io/pkg-utils/issues/1909)) ([632df77](https://github.com/sanity-io/pkg-utils/commit/632df77a42552ccfe9a65d82c4c6238ad1d95521))
+* **deps:** Update dependency rollup to ^4.50.1 ([#1910](https://github.com/sanity-io/pkg-utils/issues/1910)) ([e142cc5](https://github.com/sanity-io/pkg-utils/commit/e142cc54238ac14f0824d86be229b0e5c3061ef5))
+* **deps:** Update dependency uuid to v12 ([#1907](https://github.com/sanity-io/pkg-utils/issues/1907)) ([6cc263e](https://github.com/sanity-io/pkg-utils/commit/6cc263ecaf9c59a5d6733b015aa9e4d02453d5f1))
+
 ## [8.1.5](https://github.com/sanity-io/pkg-utils/compare/v8.1.4...v8.1.5) (2025-09-04)
 
 
