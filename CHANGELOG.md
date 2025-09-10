@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.13.5](https://github.com/sanity-io/pkg-utils/compare/v6.13.4...v6.13.5) (2025-09-10)
+
+
+### Bug Fixes
+
+* **deps:** add `@babel/parser` as required by `recast` ([79b1328](https://github.com/sanity-io/pkg-utils/commit/79b132870bbda1ee4288095d4c48922c772161d2))
+
 ## [6.13.4](https://github.com/sanity-io/pkg-utils/compare/v6.13.3...v6.13.4) (2025-01-08)
 
 
