@@ -38,11 +38,7 @@ export function getExtractMessagesConfig(options: {
       },
 
       'ae-forgotten-export': {
-        /**
-         * This is hardcoded to `none` as it's no longer needed since TypeScript 5.5 https://github.com/microsoft/TypeScript/issues/42873
-         * It's hardcoded to `none` since supported by API Extractor when using `module: 'Preserve'` doesn't support it well since `@microsoft/api-extractor` v7.49.0, which upgraded from TS 5.4 to 5.7 internally
-         */
-        logLevel: 'none' as ExtractorLogLevel,
+        logLevel: ruleToLogLevel('ae-forgotten-export', 'none' as ExtractorLogLevel),
         addToApiReportFile: false,
       },
 
