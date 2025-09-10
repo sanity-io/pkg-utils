@@ -1,0 +1,35 @@
+{
+  "name": "next-sanity-repro",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./hooks": {
+      "source": "./src/hooks/index.ts",
+      "default": "./dist/hooks.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist",
+    "typecheck": "tsc"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "dependencies": {
+    "@sanity/client": "catalog:",
+    "@sanity/next-loader": "latest",
+    "@sanity/visual-editing": "latest"
+  }
+}
