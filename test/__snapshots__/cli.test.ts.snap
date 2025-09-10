@@ -247,6 +247,27 @@ export {
 "
 `;
 
+exports[`should build \`next-sanity-repro\` package > ./dist/hooks.js 1`] = `
+"export * from "@sanity/next-loader/hooks";
+import { useOptimistic } from "@sanity/visual-editing/react";
+export {
+  useOptimistic
+};
+//# sourceMappingURL=hooks.js.map
+"
+`;
+
+exports[`should build \`next-sanity-repro\` package > ./dist/index.js 1`] = `
+"import { createClient, unstable__adapter, unstable__environment } from "@sanity/client";
+export {
+  createClient,
+  unstable__adapter,
+  unstable__environment
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
 exports[`should build \`react-18\` package > ./dist/index.d.ts 1`] = `
 "import {ForwardRefExoticComponent, HTMLProps, RefAttributes} from 'react'
 

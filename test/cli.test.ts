@@ -576,6 +576,35 @@ test.skipIf(isWindows)('should build `sanity-plugin-with-vanilla-extract` packag
   await project.remove()
 })
 
+test.skipIf(isWindows)('should build `next-sanity-repro` package', async () => {
+  const project = await spawnProject('next-sanity-repro')
+
+  await project.install()
+
+  await project.run('build')
+
+  const [distHooksJs, distIndexJs] = await Promise.all([
+    project.readFile('dist/hooks.js'),
+    project.readFile('dist/index.js'),
+  ])
+
+  // The dist/index.js should import from `@sanity/client`
+  expect(distIndexJs).toContain(`from "@sanity/client"`)
+
+  // The dist/hooks.js should import from `@sanity/next-loader/hooks` and `@sanity/visual-editing/react`
+  expect(distHooksJs).toContain(`from "@sanity/next-loader/hooks"`)
+  expect(distHooksJs).toContain(`from "@sanity/visual-editing/react"`)
+
+  // The dist/index.js should not contain any references to imports from /hooks
+  expect(distIndexJs).not.toContain(`import "@sanity/next-loader/hooks"`)
+  expect(distIndexJs).not.toContain(`import "@sanity/visual-editing/react"`)
+
+  expect(distHooksJs).toMatchSnapshot('./dist/hooks.js')
+  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+
+  await project.remove()
+})
+
 describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from package', async () => {
     const exportsDummy = await spawnProject('dummy-module')
