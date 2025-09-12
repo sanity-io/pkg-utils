@@ -248,10 +248,15 @@ export {
 `;
 
 exports[`should build \`next-sanity-repro\` package > ./dist/hooks.js 1`] = `
-"export * from "@sanity/next-loader/hooks";
+"import { useDraftModeEnvironment, useDraftModePerspective, useIsLivePreview, useIsPresentationTool, usePresentationQuery } from "@sanity/next-loader/hooks";
 import { useOptimistic } from "@sanity/visual-editing/react";
 export {
-  useOptimistic
+  useDraftModeEnvironment,
+  useDraftModePerspective,
+  useIsLivePreview,
+  useIsPresentationTool,
+  useOptimistic,
+  usePresentationQuery
 };
 //# sourceMappingURL=hooks.js.map
 "
