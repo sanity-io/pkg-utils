@@ -138,8 +138,8 @@ importers:
         specifier: 1.0.0-beta.37
         version: 1.0.0-beta.37
       rolldown-plugin-dts:
-        specifier: 0.16.2
-        version: 0.16.2(@typescript/native-preview@7.0.0-dev.20250911.1)(rolldown@1.0.0-beta.37)(typescript@5.9.2)
+        specifier: 0.16.4
+        version: 0.16.4(@typescript/native-preview@7.0.0-dev.20250911.1)(rolldown@1.0.0-beta.37)(typescript@5.9.2)
       rollup:
         specifier: ^4.50.1
         version: 4.50.1
@@ -6223,15 +6223,18 @@ packages:
     engines: {node: 20 || >=22}
     hasBin: true
 
-  rolldown-plugin-dts@0.16.2:
-    resolution: {integrity: sha512-WV1J5OqhWL8O8Nd5VAVQghmNcjyQvcGI5w51VszjO9k73avbXpz9X86KLYcKTWXXH6L0f+93JzZxiiSrcYhDLw==}
+  rolldown-plugin-dts@0.16.4:
+    resolution: {integrity: sha512-kA8AehhXE1HHd+PoZzWOjXffN1BIudAPU0VZnEMBck0pApcF9VBjcyfze3z0uGAbueFXXkEp1NdBz2QHehR1rw==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
+      '@ts-macro/tsc': ^0.3.6
       '@typescript/native-preview': '>=7.0.0-dev.20250601.1'
       rolldown: ^1.0.0-beta.9
       typescript: ^5.0.0
       vue-tsc: ~3.0.3
     peerDependenciesMeta:
+      '@ts-macro/tsc':
+        optional: true
       '@typescript/native-preview':
         optional: true
       typescript:
@@ -14381,7 +14384,7 @@ snapshots:
       glob: 11.0.3
       package-json-from-dist: 1.0.1
 
-  rolldown-plugin-dts@0.16.2(@typescript/native-preview@7.0.0-dev.20250911.1)(rolldown@1.0.0-beta.37)(typescript@5.9.2):
+  rolldown-plugin-dts@0.16.4(@typescript/native-preview@7.0.0-dev.20250911.1)(rolldown@1.0.0-beta.37)(typescript@5.9.2):
     dependencies:
       '@babel/generator': 7.28.3
       '@babel/parser': 7.28.4

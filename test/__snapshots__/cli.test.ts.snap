@@ -1091,9 +1091,6 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-
-/** @public */
-
 /**
  * @deprecated use 'drafts' instead
  */
@@ -1109,15 +1106,10 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
 
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-
-/** @public */
-
 /**
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-
-/** @public */
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
@@ -1134,9 +1126,6 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-
-/** @public */
-
 /**
  * @deprecated use 'drafts' instead
  */
@@ -1152,15 +1141,10 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
 
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-
-/** @public */
-
 /**
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-
-/** @public */
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
@@ -1439,9 +1423,6 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-
-/** @public */
-
 /**
  * @deprecated use 'drafts' instead
  */
@@ -1457,15 +1438,10 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
 
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-
-/** @public */
-
 /**
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-
-/** @public */
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
@@ -1482,9 +1458,6 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-
-/** @public */
-
 /**
  * @deprecated use 'drafts' instead
  */
@@ -1500,15 +1473,10 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
 
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-
-/** @public */
-
 /**
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-
-/** @public */
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
