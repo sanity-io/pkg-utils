@@ -5,6 +5,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.10](https://github.com/sanity-io/pkg-utils/compare/v8.1.9...v8.1.10) (2025-09-15)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.52.13 ([#1938](https://github.com/sanity-io/pkg-utils/issues/1938)) ([c821312](https://github.com/sanity-io/pkg-utils/commit/c82131284ae638c05b2d35a372cd83ce54b269be))
+* **deps:** Update dependency browserslist to ^4.26.0 ([#1940](https://github.com/sanity-io/pkg-utils/issues/1940)) ([dd1f3c8](https://github.com/sanity-io/pkg-utils/commit/dd1f3c8cb06adf200f2413f263c471abc3c51b06))
+* **deps:** Update dependency rolldown-plugin-dts to v0.16.4 ([#1930](https://github.com/sanity-io/pkg-utils/issues/1930)) ([f5e3d30](https://github.com/sanity-io/pkg-utils/commit/f5e3d3086dbcd88a6f7e078af7ace8af420eed29))
+* **deps:** Update dependency rolldown-plugin-dts to v0.16.5 ([#1941](https://github.com/sanity-io/pkg-utils/issues/1941)) ([6f0294c](https://github.com/sanity-io/pkg-utils/commit/6f0294cff46f91aeb492bab844a41fad3687200c))
+* **deps:** Update dependency rollup to ^4.50.2 ([#1942](https://github.com/sanity-io/pkg-utils/issues/1942)) ([f115b38](https://github.com/sanity-io/pkg-utils/commit/f115b380fa9eaacdd8bd71baae0c2283d64cf7b5))
+* **deps:** Update dependency zod to v4.1.8 ([#1931](https://github.com/sanity-io/pkg-utils/issues/1931)) ([0dae9bd](https://github.com/sanity-io/pkg-utils/commit/0dae9bd4fa1750670c15b01d9859243a579c0ea6))
+
 ## [8.1.9](https://github.com/sanity-io/pkg-utils/compare/v8.1.8...v8.1.9) (2025-09-11)
 
 
