@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.12](https://github.com/sanity-io/pkg-utils/compare/v8.1.11...v8.1.12) (2025-09-16)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency browserslist to ^4.26.2 ([#1949](https://github.com/sanity-io/pkg-utils/issues/1949)) ([d7ea069](https://github.com/sanity-io/pkg-utils/commit/d7ea0695251711540e00877d17407e4a46a24aed))
+
 ## [8.1.11](https://github.com/sanity-io/pkg-utils/compare/v8.1.10...v8.1.11) (2025-09-15)
 
 
