@@ -78,8 +78,8 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1(rollup@4.50.2)
       browserslist:
-        specifier: ^4.26.0
-        version: 4.26.0
+        specifier: ^4.26.2
+        version: 4.26.2
       cac:
         specifier: ^6.7.14
         version: 6.7.14
@@ -212,7 +212,7 @@ importers:
         version: 19.1.0-rc.3
       browserslist-to-esbuild:
         specifier: 2.1.1
-        version: 2.1.1(browserslist@4.26.0)
+        version: 2.1.1(browserslist@4.26.2)
       commitizen:
         specifier: ^4.3.1
         version: 4.3.1(@types/node@24.5.0)(typescript@5.9.2)
@@ -3314,8 +3314,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.8.2:
-    resolution: {integrity: sha512-NvcIedLxrs9llVpX7wI+Jz4Hn9vJQkCPKrTaHIE0sW/Rj1iq6Fzby4NbyTZjQJNoypBXNaG7tEHkTgONZpwgxQ==}
+  baseline-browser-mapping@2.8.4:
+    resolution: {integrity: sha512-L+YvJwGAgwJBV1p6ffpSTa2KRc69EeeYGYjRVWKs0GKrK+LON0GC0gV+rKSNtALEDvMDqkvCFq9r1r94/Gjwxw==}
     hasBin: true
 
   before-after-hook@2.2.3:
@@ -3367,8 +3367,8 @@ packages:
     peerDependencies:
       browserslist: '*'
 
-  browserslist@4.26.0:
-    resolution: {integrity: sha512-P9go2WrP9FiPwLv3zqRD/Uoxo0RSHjzFCiQz7d4vbmwNqQFo9T9WCeP/Qn5EbcKQY6DBbkxEXNcpJOmncNrb7A==}
+  browserslist@4.26.2:
+    resolution: {integrity: sha512-ECFzp6uFOSB+dcZ5BK/IBaGWssbSYBHvuMeMt3MMFyhI0Z8SqGgEkBLARgpRH3hutIgPVsALcMwbDrJqPxQ65A==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -7652,7 +7652,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.28.0
       '@babel/helper-validator-option': 7.27.1
-      browserslist: 4.26.0
+      browserslist: 4.26.2
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -11120,7 +11120,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.8.2: {}
+  baseline-browser-mapping@2.8.4: {}
 
   before-after-hook@2.2.3: {}
 
@@ -11174,18 +11174,18 @@ snapshots:
     dependencies:
       pako: 0.2.9
 
-  browserslist-to-esbuild@2.1.1(browserslist@4.26.0):
+  browserslist-to-esbuild@2.1.1(browserslist@4.26.2):
     dependencies:
-      browserslist: 4.26.0
+      browserslist: 4.26.2
       meow: 13.2.0
 
-  browserslist@4.26.0:
+  browserslist@4.26.2:
     dependencies:
-      baseline-browser-mapping: 2.8.2
+      baseline-browser-mapping: 2.8.4
       caniuse-lite: 1.0.30001741
       electron-to-chromium: 1.5.218
       node-releases: 2.0.21
-      update-browserslist-db: 1.1.3(browserslist@4.26.0)
+      update-browserslist-db: 1.1.3(browserslist@4.26.2)
 
   buffer-crc32@1.0.0: {}
 
@@ -11480,7 +11480,7 @@ snapshots:
 
   core-js-compat@3.45.1:
     dependencies:
-      browserslist: 4.26.0
+      browserslist: 4.26.2
 
   core-util-is@1.0.3: {}
 
@@ -15683,9 +15683,9 @@ snapshots:
       ofetch: 1.4.1
       ufo: 1.6.1
 
-  update-browserslist-db@1.1.3(browserslist@4.26.0):
+  update-browserslist-db@1.1.3(browserslist@4.26.2):
     dependencies:
-      browserslist: 4.26.0
+      browserslist: 4.26.2
       escalade: 3.2.0
       picocolors: 1.1.1
 
