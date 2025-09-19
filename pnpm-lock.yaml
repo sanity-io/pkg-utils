@@ -464,8 +464,8 @@ importers:
   playground/sanity-plugin-with-styled-components:
     dependencies:
       '@sanity/ui':
-        specifier: ^3.1.0
-        version: 3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: ^3.1.3
+        version: 3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       react-compiler-runtime:
         specifier: 19.1.0-rc.3
         version: 19.1.0-rc.3(react@18.3.1)
@@ -2711,8 +2711,8 @@ packages:
     peerDependencies:
       '@types/react': 18 || 19
 
-  '@sanity/ui@3.1.0':
-    resolution: {integrity: sha512-RH/gr+XKqk2xdvIpDfwuFwrmmeeCJUoFT2/Unbg8bfgQz+KbHIsIDyn3SzbOoL2oAo648H2h6gm7aXQP1BjvXg==}
+  '@sanity/ui@3.1.3':
+    resolution: {integrity: sha512-52sAya3/l6jYFTa8QE1G6Zn+q8lyX9V8Yh9F8NcH7TmQRmo/NUG+xnLyqmJlZquyvluejBOmoPjGx/3BQf0aEA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       react: ^18 || >=19.0.0-0
@@ -9915,7 +9915,7 @@ snapshots:
     dependencies:
       '@sanity/icons': 3.7.4(react@18.3.1)
       '@sanity/types': 4.9.0(@types/react@18.3.24)(debug@4.4.3)
-      '@sanity/ui': 3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@sanity/ui': 3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       lodash: 4.17.21
       react: 18.3.1
       react-compiler-runtime: 19.1.0-rc.3(react@18.3.1)
@@ -9929,7 +9929,7 @@ snapshots:
     dependencies:
       '@sanity/icons': 3.7.4(react@19.1.1)
       '@sanity/types': 4.9.0(@types/react@19.1.13)(debug@4.4.3)
-      '@sanity/ui': 3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
+      '@sanity/ui': 3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       lodash: 4.17.21
       react: 19.1.1
       react-compiler-runtime: 19.1.0-rc.3(react@19.1.1)
@@ -10279,7 +10279,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sanity/ui@3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@sanity/ui@3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@floating-ui/react-dom': 2.1.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@juggle/resize-observer': 3.4.0
@@ -10297,7 +10297,7 @@ snapshots:
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
 
-  '@sanity/ui@3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))':
+  '@sanity/ui@3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))':
     dependencies:
       '@floating-ui/react-dom': 2.1.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@juggle/resize-observer': 3.4.0
@@ -14620,7 +14620,7 @@ snapshots:
       '@sanity/sdk': 2.1.2(@types/react@18.3.24)(debug@4.4.3)(immer@10.1.3)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
       '@sanity/telemetry': 0.8.1(react@18.3.1)
       '@sanity/types': 4.9.0(@types/react@18.3.24)(debug@4.4.3)
-      '@sanity/ui': 3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@sanity/ui': 3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react-is@19.1.1)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@sanity/util': 4.9.0(@types/react@18.3.24)(debug@4.4.3)
       '@sanity/uuid': 3.0.2
       '@sentry/react': 8.55.0(react@18.3.1)
@@ -14792,7 +14792,7 @@ snapshots:
       '@sanity/sdk': 2.1.2(@types/react@19.1.13)(debug@4.4.3)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
       '@sanity/telemetry': 0.8.1(react@19.1.1)
       '@sanity/types': 4.9.0(@types/react@19.1.13)(debug@4.4.3)
-      '@sanity/ui': 3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
+      '@sanity/ui': 3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       '@sanity/util': 4.9.0(@types/react@19.1.13)(debug@4.4.3)
       '@sanity/uuid': 3.0.2
       '@sentry/react': 8.55.0(react@19.1.1)
@@ -14964,7 +14964,7 @@ snapshots:
       '@sanity/sdk': 2.1.2(@types/react@19.1.13)(debug@4.4.3)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
       '@sanity/telemetry': 0.8.1(react@19.1.1)
       '@sanity/types': 4.9.0(@types/react@19.1.13)(debug@4.4.3)
-      '@sanity/ui': 3.1.0(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
+      '@sanity/ui': 3.1.3(@emotion/is-prop-valid@1.2.2)(react-dom@19.1.1(react@19.1.1))(react-is@19.1.1)(react@19.1.1)(styled-components@6.1.19(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       '@sanity/util': 4.9.0(@types/react@19.1.13)(debug@4.4.3)
       '@sanity/uuid': 3.0.2
       '@sentry/react': 8.55.0(react@19.1.1)
