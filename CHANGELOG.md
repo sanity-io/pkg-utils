@@ -5,6 +5,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.13](https://github.com/sanity-io/pkg-utils/compare/v8.1.12...v8.1.13) (2025-09-19)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency esbuild to ^0.25.10 ([#1959](https://github.com/sanity-io/pkg-utils/issues/1959)) ([581d729](https://github.com/sanity-io/pkg-utils/commit/581d729afd2d1a8181766d9cc2b39e5b8b23f696))
+* **deps:** Update dependency rolldown-plugin-dts to v0.16.6 ([#1960](https://github.com/sanity-io/pkg-utils/issues/1960)) ([b74ce8d](https://github.com/sanity-io/pkg-utils/commit/b74ce8d95e6fcf471009f20777e211bab2850154))
+* **deps:** Update dependency rollup to ^4.51.0 ([#1968](https://github.com/sanity-io/pkg-utils/issues/1968)) ([89c5916](https://github.com/sanity-io/pkg-utils/commit/89c5916fac380d0c9861ceddcb8032fd5f1f0577))
+* **deps:** Update dependency zod to v4.1.9 ([#1961](https://github.com/sanity-io/pkg-utils/issues/1961)) ([20ff977](https://github.com/sanity-io/pkg-utils/commit/20ff9771dcdb3d56537069a8b6082696cbd6ed98))
+* **deps:** Update dependency zod-validation-error to v4.0.2 ([#1967](https://github.com/sanity-io/pkg-utils/issues/1967)) ([bc58148](https://github.com/sanity-io/pkg-utils/commit/bc581481d91104d03ed1701ac455d29ca896be72))
+
 ## [8.1.12](https://github.com/sanity-io/pkg-utils/compare/v8.1.11...v8.1.12) (2025-09-16)
 
 
