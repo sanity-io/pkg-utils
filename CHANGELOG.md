@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.14](https://github.com/sanity-io/pkg-utils/compare/v8.1.13...v8.1.14) (2025-09-22)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency pretty-bytes to ^7.1.0 ([#1978](https://github.com/sanity-io/pkg-utils/issues/1978)) ([365fe68](https://github.com/sanity-io/pkg-utils/commit/365fe680fa1bf67f56f5305b1f80cb5137e5dd5d))
+* **deps:** Update dependency rolldown to v1.0.0-beta.39 ([#1974](https://github.com/sanity-io/pkg-utils/issues/1974)) ([aac1658](https://github.com/sanity-io/pkg-utils/commit/aac16588803133bb7a5a34007ea782aeb4368786))
+* **deps:** Update dependency rollup to ^4.52.0 ([#1979](https://github.com/sanity-io/pkg-utils/issues/1979)) ([1e5d973](https://github.com/sanity-io/pkg-utils/commit/1e5d97324d1e68925a01d4c9edefbb421ec720e7))
+* **deps:** Update dependency zod to v4.1.11 ([#1976](https://github.com/sanity-io/pkg-utils/issues/1976)) ([b65bf2b](https://github.com/sanity-io/pkg-utils/commit/b65bf2bcd8d4551f01652db1f8cddbca88771dee))
+
 ## [8.1.13](https://github.com/sanity-io/pkg-utils/compare/v8.1.12...v8.1.13) (2025-09-19)
 
 
