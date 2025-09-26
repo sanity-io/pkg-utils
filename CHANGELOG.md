@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.18](https://github.com/sanity-io/pkg-utils/compare/v8.1.17...v8.1.18) (2025-09-26)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency tsx to ^4.20.6 ([#2008](https://github.com/sanity-io/pkg-utils/issues/2008)) ([472fa29](https://github.com/sanity-io/pkg-utils/commit/472fa2917967897388f486106a14c5ae5ff33f6e))
+
 ## [8.1.17](https://github.com/sanity-io/pkg-utils/compare/v8.1.16...v8.1.17) (2025-09-25)
 
 
