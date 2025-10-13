@@ -5,6 +5,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.19](https://github.com/sanity-io/pkg-utils/compare/v8.1.18...v8.1.19) (2025-10-13)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.53.1 ([#2032](https://github.com/sanity-io/pkg-utils/issues/2032)) ([0aea23d](https://github.com/sanity-io/pkg-utils/commit/0aea23da9ef6386d534ee2f512ed22556b583a89))
+* **deps:** Update dependency browserslist to ^4.26.3 ([#2022](https://github.com/sanity-io/pkg-utils/issues/2022)) ([906a774](https://github.com/sanity-io/pkg-utils/commit/906a774adcb85d53a28d354eccae893e2929834c))
+* **deps:** Update dependency globby to v15 ([#2033](https://github.com/sanity-io/pkg-utils/issues/2033)) ([e7c5079](https://github.com/sanity-io/pkg-utils/commit/e7c507998651302be0bba866f6c4448388630a83))
+* **deps:** Update dependency lightningcss to ^1.30.2 ([#2023](https://github.com/sanity-io/pkg-utils/issues/2023)) ([465c377](https://github.com/sanity-io/pkg-utils/commit/465c37754c0fac1f82ec8e10c90edf8f2827be1d))
+* **deps:** Update dependency rolldown to v1.0.0-beta.43 ([#2024](https://github.com/sanity-io/pkg-utils/issues/2024)) ([9145af1](https://github.com/sanity-io/pkg-utils/commit/9145af1629b9f959bf3cbd400012c11565b68137))
+* **deps:** Update dependency rolldown-plugin-dts to v0.16.11 ([#2013](https://github.com/sanity-io/pkg-utils/issues/2013)) ([e4f3789](https://github.com/sanity-io/pkg-utils/commit/e4f3789a1c1132edbd1056d51e6e9dea92e5ccfe))
+* **deps:** Update dependency zod to v4.1.12 ([#2025](https://github.com/sanity-io/pkg-utils/issues/2025)) ([e488724](https://github.com/sanity-io/pkg-utils/commit/e488724a956d1ddb877a2dc3b97fa145c24fff88))
+
 ## [8.1.18](https://github.com/sanity-io/pkg-utils/compare/v8.1.17...v8.1.18) (2025-09-26)
 
 
