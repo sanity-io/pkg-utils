@@ -144,7 +144,7 @@ async function checkExports(
     }
 
     const esbuildWarnings = esbuildResult.warnings.filter((msg) => {
-      !(msg.detail || msg.text).includes(`does not affect esbuild's own target setting`)
+      return !(msg.detail || msg.text).includes(`does not affect esbuild's own target setting`)
     })
 
     for (const msg of esbuildWarnings) {
