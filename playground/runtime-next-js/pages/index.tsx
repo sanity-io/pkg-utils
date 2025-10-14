@@ -12,7 +12,9 @@ export const getStaticProps: GetStaticProps<Props> = () => {
   return {props: JSON.parse(JSON.stringify({index: _index, extra: _extra}))}
 }
 
-export default function IndexPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function IndexPage(
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+): React.JSX.Element {
   // Because we use conditional exports, the values of `index` and `extra` are
   // different on the server and client. This is a problem for React, because
   // it expects the values to be the same on the server and client.

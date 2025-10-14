@@ -4,7 +4,7 @@
 // leafs can be in an RSC tree, and how little the impact of using `React.createContext` can be
 import {useResult} from 'use-client-directive'
 
-export default function Leaf() {
+export default function Leaf(): React.JSX.Element {
   const result = useResult()
 
   return <div>useContext={result}</div>

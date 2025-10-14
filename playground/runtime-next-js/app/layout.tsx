@@ -1,6 +1,6 @@
 import {Provider} from 'use-client-directive'
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({children}: {children: React.ReactNode}): React.JSX.Element {
   return (
     <html lang="en">
       <head />
