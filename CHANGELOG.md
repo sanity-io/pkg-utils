@@ -5,6 +5,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.21](https://github.com/sanity-io/pkg-utils/compare/v8.1.20...v8.1.21) (2025-10-14)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @rollup/plugin-node-resolve to ^16.0.2 ([#2041](https://github.com/sanity-io/pkg-utils/issues/2041)) ([1eba687](https://github.com/sanity-io/pkg-utils/commit/1eba687551fc163790294f273a2e46e2b4878467))
+* **deps:** Update dependency rolldown to v1.0.0-beta.42 ([#2044](https://github.com/sanity-io/pkg-utils/issues/2044)) ([e041976](https://github.com/sanity-io/pkg-utils/commit/e041976f12a77d13f98eba36079d8d15c629f567))
+
 ## [8.1.20](https://github.com/sanity-io/pkg-utils/compare/v8.1.19...v8.1.20) (2025-10-14)
 
 
