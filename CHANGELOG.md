@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.20](https://github.com/sanity-io/pkg-utils/compare/v8.1.19...v8.1.20) (2025-10-14)
+
+
+### Bug Fixes
+
+* add minimumReleaseAge 3 days policy ([f71fa0c](https://github.com/sanity-io/pkg-utils/commit/f71fa0c66afed62ab08f65d33b4ae4ac5fed6f89))
+
 ## [8.1.19](https://github.com/sanity-io/pkg-utils/compare/v8.1.18...v8.1.19) (2025-10-13)
 
 
