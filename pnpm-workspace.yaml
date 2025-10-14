@@ -6,8 +6,10 @@ catalog:
   '@sanity/client': ^7.8.0
   '@sanity/icons': ^3.7.4
   '@sanity/logos': ^2.2.1
-  '@typescript/native-preview': 7.0.0-dev.20251013.1
+  '@typescript/native-preview': 7.0.0-dev.20251011.1
   typescript: 5.9.3
+
+minimumReleaseAge: 4320
 
 overrides:
   '@sanity/pkg-utils': workspace:*
@@ -15,5 +17,3 @@ overrides:
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
   - '*prettier*'
-
-minimumReleaseAge: 4320
