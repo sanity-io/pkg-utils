@@ -10,6 +10,10 @@ catalog:
   typescript: 5.9.3
 
 minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - '@portabletext/*'
+  - '@sanity/*'
+  - 'sanity'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
