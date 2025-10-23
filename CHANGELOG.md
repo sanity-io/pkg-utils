@@ -5,6 +5,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.25](https://github.com/sanity-io/pkg-utils/compare/v8.1.24...v8.1.25) (2025-10-23)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency rolldown to v1.0.0-beta.44 ([#2082](https://github.com/sanity-io/pkg-utils/issues/2082)) ([55337d8](https://github.com/sanity-io/pkg-utils/commit/55337d89f5327a3fbe85e3a738f1c8f3698af13e))
+
 ## [8.1.24](https://github.com/sanity-io/pkg-utils/compare/v8.1.23...v8.1.24) (2025-10-21)
 
 
