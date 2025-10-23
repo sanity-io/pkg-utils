@@ -45,28 +45,26 @@ export function resolveRolldownConfig(
 
   const inputOptions = {
     cwd,
-    jsx: {
-      mode:
-        config?.jsx === 'automatic'
-          ? 'automatic'
-          : config?.jsx === 'preserve'
-            ? 'preserve'
-            : config?.jsx === 'transform'
-              ? 'classic'
-              : 'automatic',
-      factory: config?.jsxFactory,
-      fragment: config?.jsxFragment,
-      importSource: config?.jsxImportSource,
+    transform: {
+      jsx:
+        config?.jsx === 'preserve'
+          ? 'preserve'
+          : {
+              runtime: config?.jsx === 'automatic' ? 'automatic' : 'classic',
+              importSource: config?.jsxImportSource,
+              pragma: config?.jsxFactory,
+              pragmaFrag: config?.jsxFragment,
+            },
+      define:
+        pkg.name === '@sanity/pkg-utils'
+          ? {...replacements}
+          : {
+              'process.env.PKG_FORMAT': JSON.stringify(format),
+              'process.env.PKG_RUNTIME': JSON.stringify(runtime),
+              'process.env.PKG_VERSION': JSON.stringify(process.env['PKG_VERSION'] || pkg.version),
+              ...replacements,
+            },
     },
-    define:
-      pkg.name === '@sanity/pkg-utils'
-        ? {...replacements}
-        : {
-            'process.env.PKG_FORMAT': JSON.stringify(format),
-            'process.env.PKG_RUNTIME': JSON.stringify(runtime),
-            'process.env.PKG_VERSION': JSON.stringify(process.env['PKG_VERSION'] || pkg.version),
-            ...replacements,
-          },
 
     platform:
       buildTask.type === 'rolldown:dts'
