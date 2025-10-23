@@ -920,13 +920,13 @@ exports.c = "c";
 exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
 "/** @public */
 declare const c = "c";
-export { c };"
+export { c as t };"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
 "/** @public */
 declare const c = "c";
-export { c };"
+export { c as t };"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
@@ -950,14 +950,14 @@ exports.a = a;
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
-"import { c } from "./_chunks-dts/c.cjs";
+"import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
 declare const a = "a";
 export { a, c };"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
-"import { c } from "./_chunks-dts/c.js";
+"import { t as c } from "./_chunks-dts/c.js";
 /** @public */
 declare const a = "a";
 export { a, c };"
@@ -986,14 +986,14 @@ exports.b = b;
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
-"import { c } from "./_chunks-dts/c.cjs";
+"import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
 declare const b = "b";
 export { b, c };"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
-"import { c } from "./_chunks-dts/c.js";
+"import { t as c } from "./_chunks-dts/c.js";
 /** @public */
 declare const b = "b";
 export { b, c };"
