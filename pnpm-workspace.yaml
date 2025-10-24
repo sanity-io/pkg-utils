@@ -11,9 +11,17 @@ catalog:
 
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
+  - '@next/*'
+  - '@oxlint/*'
   - '@portabletext/*'
   - '@sanity/*'
+  - '@vite/*'
+  - '@vitest/*'
+  - 'next'
+  - 'oxlint'
   - 'sanity'
+  - 'vite'
+  - 'vitest'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
