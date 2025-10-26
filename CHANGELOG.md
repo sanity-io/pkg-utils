@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.26](https://github.com/sanity-io/pkg-utils/compare/v8.1.25...v8.1.26) (2025-10-26)
+
+
+### Bug Fixes
+
+* **deps:** Update babel monorepo to ^7.28.5 ([#2105](https://github.com/sanity-io/pkg-utils/issues/2105)) ([b9d977f](https://github.com/sanity-io/pkg-utils/commit/b9d977f1a6881ea43679aea9b02cbba3198de9fc))
+* **deps:** Update dependency @microsoft/api-extractor to v7.53.2 ([#2098](https://github.com/sanity-io/pkg-utils/issues/2098)) ([3d226ca](https://github.com/sanity-io/pkg-utils/commit/3d226ca53270a9374923bddd9e242c2fd2693260))
+* **deps:** Update dependency browserslist to ^4.27.0 ([#2099](https://github.com/sanity-io/pkg-utils/issues/2099)) ([7f8f07b](https://github.com/sanity-io/pkg-utils/commit/7f8f07ba0fe0eb874e053ec865b952c660f1267c))
+* **deps:** Update dependency rolldown-plugin-dts to v0.17.0 ([#2106](https://github.com/sanity-io/pkg-utils/issues/2106)) ([0c0f07e](https://github.com/sanity-io/pkg-utils/commit/0c0f07e0c54f04ba17e65a18292628ec5076a32b))
+
 ## [8.1.25](https://github.com/sanity-io/pkg-utils/compare/v8.1.24...v8.1.25) (2025-10-23)
 
 
