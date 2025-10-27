@@ -29,7 +29,7 @@ jobs:
       - run: pnpm lint --deny-warnings --format github
       - run: pnpm build
       - run: pnpm typecheck
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         name: Cache build output
         with:
           name: build-output
@@ -57,7 +57,7 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=8192
       - name: Archive build outputs of runtime tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: runtime-dist
           path: |
