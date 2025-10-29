@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.27](https://github.com/sanity-io/pkg-utils/compare/v8.1.26...v8.1.27) (2025-10-29)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to v7.53.3 ([#2111](https://github.com/sanity-io/pkg-utils/issues/2111)) ([c5387eb](https://github.com/sanity-io/pkg-utils/commit/c5387ebeae41a7cad4fee62bd7942a440ae70c49))
+* **deps:** Update dependency @rollup/plugin-commonjs to ^28.0.9 ([#2112](https://github.com/sanity-io/pkg-utils/issues/2112)) ([7207534](https://github.com/sanity-io/pkg-utils/commit/720753409c47801257e3b3b3a208c93cbd7fab1b))
+* **deps:** Update dependency rolldown-plugin-dts to v0.17.1 ([#2113](https://github.com/sanity-io/pkg-utils/issues/2113)) ([a54a40d](https://github.com/sanity-io/pkg-utils/commit/a54a40d760e5c70d8f522ecdd0c48f863d0fe69d))
+
 ## [8.1.26](https://github.com/sanity-io/pkg-utils/compare/v8.1.25...v8.1.26) (2025-10-26)
 
 
