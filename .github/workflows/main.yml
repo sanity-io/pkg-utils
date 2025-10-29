@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: lts/*
       - run: pnpm install
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         name: Restore build output
         with:
           name: build-output
@@ -94,7 +94,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         name: Restore build output
         with:
           name: build-output
