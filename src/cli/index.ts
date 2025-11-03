@@ -1,5 +1,5 @@
 import {cac} from 'cac'
-import {version} from '../../package.json' with { type: 'json' }
+import {version} from '../../package.json' with {type: 'json'}
 
 const cli = cac()
 
