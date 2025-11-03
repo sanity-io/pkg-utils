@@ -4,8 +4,6 @@ import {watch} from '../src/node/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-global.___DEV___ = true
-
 watch({
   cwd: path.resolve(__dirname, '..'),
   strict: true,
