@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import {packageUp} from 'package-up'
-import type {PackageJSON} from './types'
-import {validatePkg} from './validatePkg'
+import type {PackageJSON} from './types.ts'
+import {validatePkg} from './validatePkg.ts'
 
 /** @internal */
 export async function loadPkg(options: {cwd: string}): Promise<PackageJSON> {

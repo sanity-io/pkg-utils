@@ -1,9 +1,9 @@
 import path from 'node:path'
 import chalk from 'chalk'
 import {from} from 'rxjs'
-import {createConsoleSpy} from '../../consoleSpy'
-import type {BuildContext} from '../../core/contexts/buildContext'
-import type {RolldownDtsTask, TaskHandler} from '../types'
+import {createConsoleSpy} from '../../consoleSpy.ts'
+import type {BuildContext} from '../../core/contexts/buildContext.ts'
+import type {RolldownDtsTask, TaskHandler} from '../types.ts'
 
 /** @internal */
 export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
@@ -62,7 +62,7 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
 async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
   const [{rolldown}, {resolveRolldownConfig}] = await Promise.all([
     import('rolldown'),
-    import('./resolveRolldownConfig'),
+    import('./resolveRolldownConfig.ts'),
   ])
   const {distPath, files, logger} = ctx
   const outDir = path.relative(ctx.cwd, distPath)

@@ -1,7 +1,7 @@
 import path from 'node:path'
 import chalk from 'chalk'
 import ts from 'typescript'
-import type {Logger} from '../../logger'
+import type {Logger} from '../../logger.ts'
 
 export function printDiagnostic(options: {
   cwd: string

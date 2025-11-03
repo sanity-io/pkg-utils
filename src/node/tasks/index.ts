@@ -1,9 +1,9 @@
-import {dtsTask} from './dts/dtsTask'
-import {dtsWatchTask} from './dts/dtsWatchTask'
-import {rolldownDtsTask} from './rolldown/rolldownDtsTask'
-import {rollupTask} from './rollup/rollupTask'
-import {rollupWatchTask} from './rollup/rollupWatchTask'
-import type {BuildTaskHandlers, WatchTaskHandlers} from './types'
+import {dtsTask} from './dts/dtsTask.ts'
+import {dtsWatchTask} from './dts/dtsWatchTask.ts'
+import {rolldownDtsTask} from './rolldown/rolldownDtsTask.ts'
+import {rollupTask} from './rollup/rollupTask.ts'
+import {rollupWatchTask} from './rollup/rollupWatchTask.ts'
+import type {BuildTaskHandlers, WatchTaskHandlers} from './types.ts'
 
 /** @internal */
 export const buildTaskHandlers: BuildTaskHandlers = {

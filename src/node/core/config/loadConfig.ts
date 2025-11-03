@@ -2,8 +2,8 @@ import {createRequire} from 'node:module'
 import path from 'node:path'
 import {packageUp} from 'package-up'
 import {register} from 'tsx/cjs/api'
-import {findConfigFile} from './findConfigFile'
-import type {PkgConfigOptions} from './types'
+import {findConfigFile} from './findConfigFile.ts'
+import type {PkgConfigOptions} from './types.ts'
 
 const require = createRequire(import.meta.url)
 

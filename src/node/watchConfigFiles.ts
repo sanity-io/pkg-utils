@@ -1,9 +1,9 @@
 import path from 'node:path'
 import type {Observable} from 'rxjs'
 import {distinctUntilChanged, scan, startWith} from 'rxjs/operators'
-import {globFiles} from './globFiles'
-import type {Logger} from './logger'
-import {watchFiles} from './watchFiles'
+import {globFiles} from './globFiles.ts'
+import type {Logger} from './logger.ts'
+import {watchFiles} from './watchFiles.ts'
 
 export async function watchConfigFiles(options: {
   cwd: string

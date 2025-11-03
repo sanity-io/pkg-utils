@@ -2,8 +2,8 @@ import path from 'node:path'
 import chalk from 'chalk'
 import {watch as rollupWatch, type RollupWatcherEvent, type RollupWatchOptions} from 'rollup'
 import {Observable} from 'rxjs'
-import type {RollupWatchTask, TaskHandler} from '../types'
-import {resolveRollupConfig} from './resolveRollupConfig'
+import type {RollupWatchTask, TaskHandler} from '../types.ts'
+import {resolveRollupConfig} from './resolveRollupConfig.ts'
 
 /** @internal */
 export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> = {

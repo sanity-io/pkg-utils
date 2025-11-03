@@ -1,6 +1,6 @@
 import ts from 'typescript'
-import type {Logger} from '../../logger'
-import {printDiagnostic} from './printDiagnostic'
+import type {Logger} from '../../logger.ts'
+import {printDiagnostic} from './printDiagnostic.ts'
 
 /** @internal */
 export async function buildTypes(options: {

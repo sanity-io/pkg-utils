@@ -1,5 +1,5 @@
 import {z} from 'zod/v3'
-import type {PackageJSON} from './types'
+import type {PackageJSON} from './types.ts'
 
 const pkgSchema = z.object({
   type: z.optional(z.enum(['commonjs', 'module'])),

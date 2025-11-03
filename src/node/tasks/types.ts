@@ -1,8 +1,8 @@
 import type {RollupWatcherEvent} from 'rollup'
 import type {Observable} from 'rxjs'
-import type {PkgRuntime} from '../core/config/types'
-import type {BuildContext} from '../core/contexts/buildContext'
-import type {DtsResult, DtsTask, DtsWatchTask} from './dts/types'
+import type {PkgRuntime} from '../core/config/types.ts'
+import type {BuildContext} from '../core/contexts/buildContext.ts'
+import type {DtsResult, DtsTask, DtsWatchTask} from './dts/types.ts'
 
 /** @internal */
 export interface RollupTaskEntry {

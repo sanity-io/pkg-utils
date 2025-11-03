@@ -1,4 +1,4 @@
-import {cjsEnding, defaultEnding, mjsEnding} from '../../tasks/dts/getTargetPaths'
+import {cjsEnding, defaultEnding, mjsEnding} from '../../tasks/dts/getTargetPaths.ts'
 
 /** @internal */
 export interface PkgExtMap {

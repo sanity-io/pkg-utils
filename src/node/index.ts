@@ -1,7 +1,7 @@
-export {build} from './build'
-export {check} from './check'
-export {defineConfig} from './core/config/defineConfig'
-export {loadConfig} from './core/config/loadConfig'
+export {build} from './build.ts'
+export {check} from './check.ts'
+export {defineConfig} from './core/config/defineConfig.ts'
+export {loadConfig} from './core/config/loadConfig.ts'
 export type {
   PkgFormat,
   PkgRuntime,
@@ -13,13 +13,13 @@ export type {
   PkgRuleLevel,
   TSDocCustomTag,
   PkgConfigOptions,
-} from './core/config/types'
-export {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults'
-export {loadPkg} from './core/pkg/loadPkg'
-export {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
-export {parseExports} from './core/pkg/parseExports'
-export * from './core/pkg/types'
-export {defineTemplateOption} from './core/template/define'
+} from './core/config/types.ts'
+export {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults.ts'
+export {loadPkg} from './core/pkg/loadPkg.ts'
+export {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
+export {parseExports} from './core/pkg/parseExports.ts'
+export * from './core/pkg/types.ts'
+export {defineTemplateOption} from './core/template/define.ts'
 export {
   type PkgTemplateFile,
   type PkgTemplateStringOption,
@@ -27,12 +27,12 @@ export {
   type PkgTemplateDefinition,
   type PkgTemplateResolver,
   type PkgTemplate,
-} from './core/template/types'
+} from './core/template/types.ts'
 
-export {init} from './init'
-export {createLogger} from './logger'
-export {parseStrictOptions} from './strict'
-export {getExtractMessagesConfig} from './tasks/dts/getExtractMessagesConfig'
-export {watch} from './watch'
+export {init} from './init.ts'
+export {createLogger} from './logger.ts'
+export {parseStrictOptions} from './strict.ts'
+export {getExtractMessagesConfig} from './tasks/dts/getExtractMessagesConfig.ts'
+export {watch} from './watch.ts'
 
 export type {Plugin as RollupPlugin} from 'rollup'

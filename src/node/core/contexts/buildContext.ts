@@ -1,7 +1,7 @@
 import type ts from 'typescript'
-import type {Logger} from '../../logger'
-import type {DtsType, PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types'
-import type {PackageJSON} from '../pkg/types'
+import type {Logger} from '../../logger.ts'
+import type {DtsType, PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types.ts'
+import type {PackageJSON} from '../pkg/types.ts'
 
 /** @internal */
 export interface BuildFile {

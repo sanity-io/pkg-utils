@@ -1,4 +1,4 @@
-import type {PkgConfigProperty, PkgConfigPropertyResolver} from './types'
+import type {PkgConfigProperty, PkgConfigPropertyResolver} from './types.ts'
 
 /** @internal */
 export function resolveConfigProperty<T>(

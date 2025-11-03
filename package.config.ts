@@ -1,5 +1,5 @@
-import {defineConfig} from '@sanity/pkg-utils'
 import {visualizer} from 'rollup-plugin-visualizer'
+import {defineConfig} from './src/node/index.ts'
 
 export default defineConfig({
   bundles: [

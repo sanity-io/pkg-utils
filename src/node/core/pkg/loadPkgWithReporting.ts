@@ -1,9 +1,9 @@
 import chalk from 'chalk'
 import {ZodError} from 'zod/v3'
-import type {Logger} from '../../logger'
-import {assertLast, assertOrder} from './helpers'
-import {loadPkg} from './loadPkg'
-import type {PackageJSON} from './types'
+import type {Logger} from '../../logger.ts'
+import {assertLast, assertOrder} from './helpers.ts'
+import {loadPkg} from './loadPkg.ts'
+import type {PackageJSON} from './types.ts'
 
 /** @alpha */
 export async function loadPkgWithReporting(options: {

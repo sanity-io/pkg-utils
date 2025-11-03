@@ -1,15 +1,15 @@
 import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 import type {BuildFailure, Message} from 'esbuild'
-import {createConsoleSpy} from './consoleSpy'
-import {loadConfig} from './core/config/loadConfig'
-import type {BuildContext} from './core/contexts'
-import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
-import {fileExists} from './fileExists'
-import {createLogger, type Logger} from './logger'
-import {printPackageTree} from './printPackageTree'
-import {resolveBuildContext} from './resolveBuildContext'
-import {createSpinner} from './spinner'
+import {createConsoleSpy} from './consoleSpy.ts'
+import {loadConfig} from './core/config/loadConfig.ts'
+import type {BuildContext} from './core/contexts/index.ts'
+import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
+import {fileExists} from './fileExists.ts'
+import {createLogger, type Logger} from './logger.ts'
+import {printPackageTree} from './printPackageTree.ts'
+import {resolveBuildContext} from './resolveBuildContext.ts'
+import {createSpinner} from './spinner.ts'
 
 /** @public */
 export async function check(options: {
@@ -221,10 +221,10 @@ async function checkApiExtractorReleaseTags(ctx: BuildContext) {
     {printExtractMessages},
   ] = await Promise.all([
     import('@microsoft/api-extractor'),
-    import('./tasks/dts/createApiExtractorConfig'),
-    import('./tasks/dts/createTSDocConfig'),
-    import('./tasks/dts/getExtractMessagesConfig'),
-    import('./printExtractMessages'),
+    import('./tasks/dts/createApiExtractorConfig.ts'),
+    import('./tasks/dts/createTSDocConfig.ts'),
+    import('./tasks/dts/getExtractMessagesConfig.ts'),
+    import('./printExtractMessages.ts'),
   ])
 
   const customTags = ctx.config?.extract?.customTags || []

@@ -3,7 +3,7 @@ import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
-import type {StrictOptions} from '../../strict'
+import type {StrictOptions} from '../../strict.ts'
 
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'

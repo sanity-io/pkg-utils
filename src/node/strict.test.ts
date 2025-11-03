@@ -1,5 +1,5 @@
 import {expect, test} from 'vitest'
-import {parseStrictOptions} from './strict'
+import {parseStrictOptions} from './strict.ts'
 
 test.each([
   {key: 'noPackageJsonTypings', value: 'error', fails: false},

@@ -1,12 +1,12 @@
 import path from 'node:path'
 import {switchMap} from 'rxjs'
-import {loadConfig} from './core/config/loadConfig'
-import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting'
-import {createLogger} from './logger'
-import {resolveBuildContext} from './resolveBuildContext'
-import {resolveWatchTasks} from './resolveWatchTasks'
-import {watchTaskHandlers} from './tasks'
-import {type TaskHandler, type WatchTask} from './tasks/types'
+import {loadConfig} from './core/config/loadConfig.ts'
+import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
+import {createLogger} from './logger.ts'
+import {resolveBuildContext} from './resolveBuildContext.ts'
+import {resolveWatchTasks} from './resolveWatchTasks.ts'
+import {watchTaskHandlers} from './tasks/index.ts'
+import {type TaskHandler, type WatchTask} from './tasks/types.ts'
 
 /** @public */
 export async function watch(options: {
@@ -18,7 +18,7 @@ export async function watch(options: {
 
   const logger = createLogger()
 
-  const {watchConfigFiles} = await import('./watchConfigFiles')
+  const {watchConfigFiles} = await import('./watchConfigFiles.ts')
   const configFiles$ = await watchConfigFiles({cwd, logger})
 
   const ctx$ = configFiles$.pipe(

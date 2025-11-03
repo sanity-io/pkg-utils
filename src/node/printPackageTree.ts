@@ -1,10 +1,10 @@
 import path from 'node:path'
 import chalk from 'chalk'
 import treeify from 'treeify'
-import type {PkgExport} from './core/config/types'
-import type {BuildContext} from './core/contexts/buildContext'
-import {fileExists} from './fileExists'
-import {getFilesize} from './getFilesize'
+import type {PkgExport} from './core/config/types.ts'
+import type {BuildContext} from './core/contexts/buildContext.ts'
+import {fileExists} from './fileExists.ts'
+import {getFilesize} from './getFilesize.ts'
 
 function getFileInfo(cwd: string, filePath: string) {
   const p = path.resolve(cwd, filePath)

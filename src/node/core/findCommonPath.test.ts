@@ -1,5 +1,5 @@
 import {expect, test} from 'vitest'
-import {findCommonDirPath} from './findCommonPath'
+import {findCommonDirPath} from './findCommonPath.ts'
 
 test('should find common parent directory of paths', () => {
   expect(findCommonDirPath(['test/a', 'test/b/a'])).toBe('test')

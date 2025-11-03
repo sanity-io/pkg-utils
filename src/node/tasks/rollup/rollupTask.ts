@@ -2,10 +2,10 @@ import path from 'node:path'
 import chalk from 'chalk'
 import {rollup} from 'rollup'
 import {from} from 'rxjs'
-import {createConsoleSpy} from '../../consoleSpy'
-import type {BuildContext} from '../../core/contexts/buildContext'
-import type {RollupTask, TaskHandler} from '../types'
-import {resolveRollupConfig} from './resolveRollupConfig'
+import {createConsoleSpy} from '../../consoleSpy.ts'
+import type {BuildContext} from '../../core/contexts/buildContext.ts'
+import type {RollupTask, TaskHandler} from '../types.ts'
+import {resolveRollupConfig} from './resolveRollupConfig.ts'
 
 /** @internal */
 export const rollupTask: TaskHandler<RollupTask> = {
