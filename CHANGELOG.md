@@ -5,6 +5,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.29](https://github.com/sanity-io/pkg-utils/compare/v8.1.28...v8.1.29) (2025-11-03)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @rollup/plugin-commonjs to v29 ([#2133](https://github.com/sanity-io/pkg-utils/issues/2133)) ([2b3bc4f](https://github.com/sanity-io/pkg-utils/commit/2b3bc4f21564f4892ea18cd16cde78253194adce))
+* **deps:** Update dependency @rollup/plugin-replace to ^6.0.3 ([#2128](https://github.com/sanity-io/pkg-utils/issues/2128)) ([eab05db](https://github.com/sanity-io/pkg-utils/commit/eab05dbe5b83a221d0bdc452485bc309fb21ca7f))
+* **deps:** Update dependency rimraf to ^6.1.0 ([#2131](https://github.com/sanity-io/pkg-utils/issues/2131)) ([a098c3b](https://github.com/sanity-io/pkg-utils/commit/a098c3b01b72b666b90d8fa82a1becb81453e4c4))
+* **deps:** Update dependency rolldown-plugin-dts to v0.17.3 ([#2129](https://github.com/sanity-io/pkg-utils/issues/2129)) ([3cbabcb](https://github.com/sanity-io/pkg-utils/commit/3cbabcb70e1f1554ffca46879be88dd63a008c90))
+
 ## [8.1.28](https://github.com/sanity-io/pkg-utils/compare/v8.1.27...v8.1.28) (2025-10-31)
 
 
