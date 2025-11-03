@@ -1,15 +1,8 @@
-import {createRequire} from 'node:module'
 import path from 'node:path'
 import {packageUp} from 'package-up'
-import {register} from 'tsx/cjs/api'
+import {tsImport} from 'tsx/esm/api'
 import {findConfigFile} from './findConfigFile.ts'
 import type {PkgConfigOptions} from './types.ts'
-
-const require = createRequire(import.meta.url)
-
-declare global {
-  var ___DEV___: boolean
-}
 
 /** @alpha */
 export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptions | undefined> {
@@ -32,11 +25,7 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  const unregister = globalThis.___DEV___ ? () => undefined : register()
-
-  const mod = require(configFile)
-
-  unregister()
+  const mod = await tsImport(configFile, import.meta.url)
 
   return mod?.default || mod || undefined
 }
