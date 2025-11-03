@@ -1,3 +1,3 @@
-export * from './createFromTemplate'
-export * from './define'
-export * from './types'
+export * from './createFromTemplate.ts'
+export * from './define.ts'
+export * from './types.ts'

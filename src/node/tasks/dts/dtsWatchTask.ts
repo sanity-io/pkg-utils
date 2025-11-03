@@ -4,12 +4,12 @@ import chalk from 'chalk'
 import * as rimraf from 'rimraf'
 import {Observable} from 'rxjs'
 import ts from 'typescript'
-import {printExtractMessages} from '../../printExtractMessages'
-import type {TaskHandler} from '../types'
-import {buildTypes} from './buildTypes'
-import {DtsError} from './DtsError'
-import {extractTypes} from './extractTypes'
-import type {DtsResult, DtsWatchTask} from './types'
+import {printExtractMessages} from '../../printExtractMessages.ts'
+import type {TaskHandler} from '../types.ts'
+import {buildTypes} from './buildTypes.ts'
+import {DtsError} from './DtsError.ts'
+import {extractTypes} from './extractTypes.ts'
+import type {DtsResult, DtsWatchTask} from './types.ts'
 
 /** @internal */
 export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {

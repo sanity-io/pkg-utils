@@ -1,9 +1,9 @@
 import path from 'node:path'
-import type {PkgExport, PkgFormat, PkgRuntime} from './core/config/types'
-import type {BuildContext} from './core/contexts/buildContext'
-import {getTargetPaths} from './tasks/dts/getTargetPaths'
-import type {DtsTask} from './tasks/dts/types'
-import type {BuildTask, RolldownDtsTask, RollupTask, RollupTaskEntry} from './tasks/types'
+import type {PkgExport, PkgFormat, PkgRuntime} from './core/config/types.ts'
+import type {BuildContext} from './core/contexts/buildContext.ts'
+import {getTargetPaths} from './tasks/dts/getTargetPaths.ts'
+import type {DtsTask} from './tasks/dts/types.ts'
+import type {BuildTask, RolldownDtsTask, RollupTask, RollupTaskEntry} from './tasks/types.ts'
 
 /** @internal */
 export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {

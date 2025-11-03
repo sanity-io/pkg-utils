@@ -1,6 +1,6 @@
 import path from 'node:path'
 import findConfig from 'find-config'
-import {fileExists} from '../../fileExists'
+import {fileExists} from '../../fileExists.ts'
 
 const CONFIG_FILE_NAMES = [
   'package.config.ts',

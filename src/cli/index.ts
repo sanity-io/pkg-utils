@@ -1,5 +1,5 @@
 import {cac} from 'cac'
-import {version} from '../../package.json'
+import {version} from '../../package.json' with { type: 'json' }
 
 const cli = cac()
 
@@ -9,7 +9,7 @@ cli
   .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
-    const {checkAction} = await import('./checkAction')
+    const {checkAction} = await import('./checkAction.ts')
 
     return checkAction(options)
   })
@@ -24,12 +24,12 @@ cli
   .option('--quiet', 'Suppress all output except errors, warnings, and checks')
   .action(async (options) => {
     const {check = false, ...buildOptions} = options
-    const {buildAction} = await import('./buildAction')
+    const {buildAction} = await import('./buildAction.ts')
 
     await buildAction(buildOptions)
 
     if (check) {
-      const {checkAction} = await import('./checkAction')
+      const {checkAction} = await import('./checkAction.ts')
 
       await checkAction({
         strict: options.strict,
@@ -39,7 +39,7 @@ cli
   })
 
 cli.command('init [path]', 'Initialize package').action(async (p) => {
-  const {initAction} = await import('./initAction')
+  const {initAction} = await import('./initAction.ts')
 
   return initAction({
     path: p,
@@ -51,7 +51,7 @@ cli
   .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .action(async (options) => {
-    const {watchAction} = await import('./watchAction')
+    const {watchAction} = await import('./watchAction.ts')
 
     return watchAction(options)
   })

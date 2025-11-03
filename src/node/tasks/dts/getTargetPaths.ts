@@ -1,5 +1,5 @@
-import type {PkgBundle, PkgExport} from '../../core/config/types'
-import type {PackageJSON} from '../../core/pkg/types'
+import type {PkgBundle, PkgExport} from '../../core/config/types.ts'
+import type {PackageJSON} from '../../core/pkg/types.ts'
 
 /** @internal */
 export const fileEnding: RegExp = /\.[mc]?js$/

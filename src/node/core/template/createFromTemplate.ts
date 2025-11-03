@@ -2,8 +2,8 @@ import {writeFile} from 'node:fs/promises'
 import {dirname, relative, resolve} from 'node:path'
 import {mkdirp} from 'mkdirp'
 import prompts from 'prompts'
-import type {Logger} from '../../logger'
-import type {PkgTemplate} from './types'
+import type {Logger} from '../../logger.ts'
+import type {PkgTemplate} from './types.ts'
 
 const promptsTypes = {
   string: 'text' as const,

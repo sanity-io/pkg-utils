@@ -1,5 +1,5 @@
-import {build} from '../node/build'
-import {handleError} from './handleError'
+import {build} from '../node/build.ts'
+import {handleError} from './handleError.ts'
 
 export async function buildAction(options: {
   emitDeclarationOnly?: boolean

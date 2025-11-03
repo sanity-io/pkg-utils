@@ -9,11 +9,11 @@ import {
 import {mkdirp} from 'mkdirp'
 import * as prettier from 'prettier'
 import type ts from 'typescript'
-import type {PkgConfigOptions} from '../../core/config/types'
-import type {BuildFile} from '../../core/contexts/buildContext'
-import {createApiExtractorConfig} from './createApiExtractorConfig'
-import {createTSDocConfig} from './createTSDocConfig'
-import {getExtractMessagesConfig} from './getExtractMessagesConfig'
+import type {PkgConfigOptions} from '../../core/config/types.ts'
+import type {BuildFile} from '../../core/contexts/buildContext.ts'
+import {createApiExtractorConfig} from './createApiExtractorConfig.ts'
+import {createTSDocConfig} from './createTSDocConfig.ts'
+import {getExtractMessagesConfig} from './getExtractMessagesConfig.ts'
 
 export async function extractTypes(options: {
   bundledPackages?: string[]
@@ -96,7 +96,7 @@ export async function extractTypes(options: {
 
   await mkdirp(path.dirname(typesPath))
 
-  const {extractModuleBlocksFromTypes} = await import('./extractModuleBlocks')
+  const {extractModuleBlocksFromTypes} = await import('./extractModuleBlocks.ts')
   const moduleBlocks = await extractModuleBlocksFromTypes({
     extractResult: extractorResult,
     tsOutDir: tmpPath,

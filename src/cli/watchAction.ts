@@ -1,5 +1,5 @@
-import {watch} from '../node/watch'
-import {handleError} from './handleError'
+import {watch} from '../node/watch.ts'
+import {handleError} from './handleError.ts'
 
 export async function watchAction(options: {strict?: boolean; tsconfig?: string}): Promise<void> {
   try {

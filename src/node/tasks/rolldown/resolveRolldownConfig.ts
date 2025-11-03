@@ -1,9 +1,9 @@
 import path from 'node:path'
 import type {InputOptions, OutputOptions} from 'rolldown'
 import {dts as dtsPlugin} from 'rolldown-plugin-dts'
-import type {BuildContext} from '../../core/contexts/buildContext'
-import {pkgExtMap as extMap} from '../../core/pkg/pkgExt'
-import type {RolldownDtsTask} from '../types'
+import type {BuildContext} from '../../core/contexts/buildContext.ts'
+import {pkgExtMap as extMap} from '../../core/pkg/pkgExt.ts'
+import type {RolldownDtsTask} from '../types.ts'
 
 export interface RolldownConfig {
   inputOptions: InputOptions

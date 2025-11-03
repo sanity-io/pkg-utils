@@ -1,11 +1,11 @@
 import {lstat} from 'node:fs/promises'
 import {resolve} from 'node:path'
 import {mkdirp} from 'mkdirp'
-import {createFromTemplate} from './core/template'
-import {fileExists} from './fileExists'
-import {isEmptyDirectory} from './isEmptyDirectory'
-import {createLogger} from './logger'
-import {defaultTemplate} from './templates/default/template'
+import {createFromTemplate} from './core/template/index.ts'
+import {fileExists} from './fileExists.ts'
+import {isEmptyDirectory} from './isEmptyDirectory.ts'
+import {createLogger} from './logger.ts'
+import {defaultTemplate} from './templates/default/template.ts'
 
 /** @public */
 export async function init(options: {cwd: string; path: string}): Promise<void> {

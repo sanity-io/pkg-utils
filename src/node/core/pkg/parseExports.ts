@@ -1,13 +1,13 @@
 import {existsSync} from 'node:fs'
 import {resolve as resolvePath} from 'node:path'
-import type {Logger} from '../../logger'
-import type {StrictOptions} from '../../strict'
-import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths'
-import type {PkgExport} from '../config/types'
-import {isRecord} from '../isRecord'
-import {pkgExtMap} from './pkgExt'
-import type {PackageJSON} from './types'
-import {validateExports} from './validateExports'
+import type {Logger} from '../../logger.ts'
+import type {StrictOptions} from '../../strict.ts'
+import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths.ts'
+import type {PkgExport} from '../config/types.ts'
+import {isRecord} from '../isRecord.ts'
+import {pkgExtMap} from './pkgExt.ts'
+import type {PackageJSON} from './types.ts'
+import {validateExports} from './validateExports.ts'
 
 /** @alpha */
 export function parseExports(options: {

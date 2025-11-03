@@ -1,5 +1,5 @@
-import {check} from '../node/check'
-import {handleError} from './handleError'
+import {check} from '../node/check.ts'
+import {handleError} from './handleError.ts'
 
 export async function checkAction(options: {strict?: boolean; tsconfig?: string}): Promise<void> {
   try {

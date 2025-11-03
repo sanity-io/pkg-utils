@@ -1,10 +1,10 @@
 import chalk from 'chalk'
 import {from} from 'rxjs'
-import {printExtractMessages} from '../../printExtractMessages'
-import type {TaskHandler} from '../types'
-import {doExtract} from './doExtract'
-import {DtsError} from './DtsError'
-import type {DtsResult, DtsTask} from './types'
+import {printExtractMessages} from '../../printExtractMessages.ts'
+import type {TaskHandler} from '../types.ts'
+import {doExtract} from './doExtract.ts'
+import {DtsError} from './DtsError.ts'
+import type {DtsResult, DtsTask} from './types.ts'
 
 /** @internal */
 export const dtsTask: TaskHandler<DtsTask, DtsResult> = {

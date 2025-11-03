@@ -1,5 +1,5 @@
-import {init} from '../node/init'
-import {handleError} from './handleError'
+import {init} from '../node/init.ts'
+import {handleError} from './handleError.ts'
 
 export async function initAction(options: {path: string}): Promise<void> {
   try {
