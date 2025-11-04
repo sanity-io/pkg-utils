@@ -48,7 +48,7 @@ export async function spawnProject(name: string): Promise<{
       try {
         const env = {
           ...process.env,
-          PATH: `${process.env['PATH']}:${path.resolve(__dirname, '../../bin')}`,
+          PATH: `${process.env['PATH']}${path.delimiter}${path.resolve(__dirname, '../../bin')}`,
         }
 
         return exec(cmd, {cwd: tmpPath, env})
