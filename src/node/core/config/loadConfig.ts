@@ -28,15 +28,6 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
 
   // Windows does not support import() absolute paths, they must be converted to URLs
   const configFileUrl = pathToFileURL(configFile).toString()
-  try {
-    const mod = await tsImport(configFileUrl, import.meta.url)
-    return mod?.default || mod || undefined
-  } catch (error) {
-    console.error('tsx import error', error, {
-      configFile,
-      configFileUrl,
-      'import.meta.url': import.meta.url,
-    })
-    throw error
-  }
+  const mod = await tsImport(configFileUrl, import.meta.url)
+  return mod?.default || mod || undefined
 }
