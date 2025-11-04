@@ -25,6 +25,8 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
+  // oxlint-disable-next-line no-console
+  console.log('tsImport', configFile, import.meta.url)
   const mod = await tsImport(configFile, import.meta.url)
 
   return mod?.default || mod || undefined
