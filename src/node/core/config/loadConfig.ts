@@ -1,4 +1,5 @@
 import path from 'node:path'
+import {pathToFileURL} from 'node:url'
 import {packageUp} from 'package-up'
 import {tsImport} from 'tsx/esm/api'
 import {findConfigFile} from './findConfigFile.ts'
@@ -25,13 +26,16 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  // oxlint-disable-next-line no-console
-  console.log('tsImport', configFile, import.meta.url)
   try {
     const mod = await tsImport(configFile, import.meta.url)
     return mod?.default || mod || undefined
   } catch (error) {
-    console.error('tsx import error', error, {configFile, 'import.meta.url': import.meta.url})
+    console.error(
+      'tsx import error',
+      error,
+      {configFile, 'import.meta.url': import.meta.url},
+      pathToFileURL(configFile),
+    )
     throw error
   }
 }
