@@ -4,6 +4,7 @@ import {rollup} from 'rollup'
 import {from} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
+import {normalizePath} from '../../normalizePath.ts'
 import type {RollupTask, TaskHandler} from '../types.ts'
 import {resolveRollupConfig} from './resolveRollupConfig.ts'
 
@@ -23,7 +24,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
           ...bundleEntries.map((e) =>
             [
               `    - `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+              `${chalk.yellow(normalizePath(e.source))} ${chalk.gray('→')} ${chalk.yellow(normalizePath(e.output))}`,
             ].join(''),
           ),
         ]
@@ -35,8 +36,8 @@ export const rollupTask: TaskHandler<RollupTask> = {
           ...entries.map((e) =>
             [
               `    - `,
-              `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(e.output)}`,
+              `${chalk.cyan(normalizePath(path.join(ctx.pkg.name, e.path)))}: `,
+              `${chalk.yellow(normalizePath(e.source))} ${chalk.gray('→')} ${chalk.yellow(normalizePath(e.output))}`,
             ].join(''),
           ),
         ]
