@@ -27,7 +27,11 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
 
   // oxlint-disable-next-line no-console
   console.log('tsImport', configFile, import.meta.url)
-  const mod = await tsImport(configFile, import.meta.url)
-
-  return mod?.default || mod || undefined
+  try {
+    const mod = await tsImport(configFile, import.meta.url)
+    return mod?.default || mod || undefined
+  } catch (error) {
+    console.error('tsx import error', error, {configFile, 'import.meta.url': import.meta.url})
+    throw error
+  }
 }
