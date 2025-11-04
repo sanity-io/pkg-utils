@@ -5,6 +5,22 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.0](https://github.com/sanity-io/pkg-utils/compare/v8.1.29...v9.0.0) (2025-11-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* resolve `package.config.ts` as ESM when supported. This means that if the `package.json` has `"type": "commonjs"` then the `package.config.ts` can no longer use `import/export` keywords. If you're unable to start using `"type": "module"` you'll either have to rename to `package.config.mts`, or use `require/module.exports` instead.
+
+### Bug Fixes
+
+* **deps:** Update dependency @rollup/plugin-alias to v6 ([#2132](https://github.com/sanity-io/pkg-utils/issues/2132)) ([34a3786](https://github.com/sanity-io/pkg-utils/commit/34a3786449dc39f40390b43899d00ae6eb180db3))
+
+
+### Code Refactoring
+
+* resolve `package.config.ts` as ESM when supported. This means that if the `package.json` has `"type": "commonjs"` then the `package.config.ts` can no longer use `import/export` keywords. If you're unable to start using `"type": "module"` you'll either have to rename to `package.config.mts`, or use `require/module.exports` instead. ([2c65e63](https://github.com/sanity-io/pkg-utils/commit/2c65e6375823325327bbf6a69ed712d12256246c))
+
 ## [8.1.29](https://github.com/sanity-io/pkg-utils/compare/v8.1.28...v8.1.29) (2025-11-03)
 
 
