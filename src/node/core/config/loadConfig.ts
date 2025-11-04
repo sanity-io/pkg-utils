@@ -1,4 +1,5 @@
 import path from 'node:path'
+import {pathToFileURL} from 'node:url'
 import {packageUp} from 'package-up'
 import {tsImport} from 'tsx/esm/api'
 import {findConfigFile} from './findConfigFile.ts'
@@ -25,7 +26,17 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  const mod = await tsImport(configFile, import.meta.url)
-
-  return mod?.default || mod || undefined
+  // Windows does not support import() absolute paths, they must be converted to URLs
+  const configFileUrl = pathToFileURL(configFile).toString()
+  try {
+    const mod = await tsImport(configFileUrl, import.meta.url)
+    return mod?.default || mod || undefined
+  } catch (error) {
+    console.error('tsx import error', error, {
+      configFile,
+      configFileUrl,
+      'import.meta.url': import.meta.url,
+    })
+    throw error
+  }
 }

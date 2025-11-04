@@ -1,9 +1,7 @@
 import {expect, test} from 'vitest'
 import {spawnProject} from './env/spawnProject'
 
-const isWindows = process.platform === 'win32'
-
-test.skipIf(isWindows)('should build `node-api` package', async () => {
+test('should build `node-api` package', async () => {
   const project = await spawnProject('node-api')
 
   await project.install()
