@@ -1,4 +1,5 @@
 import path from 'node:path'
+import {pathToFileURL} from 'node:url'
 import {packageUp} from 'package-up'
 import {tsImport} from 'tsx/esm/api'
 import {findConfigFile} from './findConfigFile.ts'
@@ -25,7 +26,7 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
     return undefined
   }
 
-  const mod = await tsImport(configFile, import.meta.url)
+  const mod = await tsImport(pathToFileURL(configFile).toString(), import.meta.url)
 
   return mod?.default || mod || undefined
 }
