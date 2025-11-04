@@ -70,7 +70,7 @@ jobs:
             !playground/runtime-*/.next/cache
 
   test:
-    needs: playground
+    needs: build
     runs-on: ${{ matrix.platform }}
     name: Node.js ${{ matrix.node-version }} / ${{ matrix.platform }}
     strategy:
