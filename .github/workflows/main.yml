@@ -39,8 +39,12 @@ jobs:
 
   playground:
     needs: build
-    runs-on: ubuntu-latest
-    name: Playground builds
+    runs-on: ${{ matrix.platform }}
+    name: Playground builds on ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
