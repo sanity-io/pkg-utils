@@ -2,6 +2,12 @@ import path from 'node:path'
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import ts from 'typescript'
 
+// Normalize path to use forward slashes for consistency, especially on Windows
+// API Extractor can have issues with Windows-style backslash paths
+function normalizePath(filePath: string): string {
+  return filePath.replace(/\\/g, '/')
+}
+
 export function createApiExtractorConfig(options: {
   bundledPackages?: string[]
   distPath: string
@@ -27,6 +33,14 @@ export function createApiExtractorConfig(options: {
     dtsRollupEnabled,
   } = options
 
+  // Normalize all paths to use forward slashes to avoid Windows path issues
+  const normalizedMainEntryPointFilePath = normalizePath(mainEntryPointFilePath)
+  const normalizedProjectFolder = normalizePath(projectFolder)
+  const normalizedTsconfigPath = normalizePath(tsconfigPath)
+  const normalizedDistPath = normalizePath(distPath)
+  const normalizedFilePath = normalizePath(filePath)
+  const normalizedExportPath = normalizePath(exportPath)
+
   return {
     apiReport: {
       enabled: false,
@@ -38,22 +52,22 @@ export function createApiExtractorConfig(options: {
     compiler: tsconfig.options.paths
       ? {
           overrideTsconfig: {
-            extends: tsconfigPath,
+            extends: normalizedTsconfigPath,
             compilerOptions: {
               // An empty object replaces whatever is in the original tsconfig file
               paths: {},
             },
           },
         }
-      : {tsconfigFilePath: tsconfigPath},
+      : {tsconfigFilePath: normalizedTsconfigPath},
 
     docModel: {
       enabled: false,
-      apiJsonFilePath: path.resolve(distPath, `${exportPath}.api.json`),
+      apiJsonFilePath: `${normalizedDistPath}/${normalizedExportPath}.api.json`,
     },
     dtsRollup: {
       enabled: dtsRollupEnabled,
-      untrimmedFilePath: path.resolve(distPath, filePath),
+      untrimmedFilePath: `${normalizedDistPath}/${normalizedFilePath}`,
       // betaTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-beta.d.ts')),
       // publicTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-public.d.ts')),
     },
@@ -61,7 +75,7 @@ export function createApiExtractorConfig(options: {
       enabled: false,
     },
     messages,
-    mainEntryPointFilePath,
-    projectFolder,
+    mainEntryPointFilePath: normalizedMainEntryPointFilePath,
+    projectFolder: normalizedProjectFolder,
   }
 }
