@@ -2,6 +2,7 @@ import path from 'node:path'
 import chalk from 'chalk'
 import {watch as rollupWatch, type RollupWatcherEvent, type RollupWatchOptions} from 'rollup'
 import {Observable} from 'rxjs'
+import {normalizePath} from '../../normalizePath.ts'
 import type {RollupWatchTask, TaskHandler} from '../types.ts'
 import {resolveRollupConfig} from './resolveRollupConfig.ts'
 
@@ -11,7 +12,7 @@ export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> =
     `build javascript files (target ${task.target.join(' + ')}, format ${
       task.format
     })\n       ${task.entries
-      .map((e) => `${chalk.blue(path.join(ctx.pkg.name, e.path))}: ${e.source} -> ${e.output}`)
+      .map((e) => `${chalk.blue(normalizePath(path.join(ctx.pkg.name, e.path)))}: ${normalizePath(e.source)} -> ${normalizePath(e.output)}`)
       .join('\n       ')}`,
   exec: (ctx, task) => {
     const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
@@ -41,7 +42,7 @@ export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> =
         `build javascript files (target ${task.target.join(' + ')}, format ${
           task.format
         })\n       ${task.entries
-          .map((e) => `${chalk.blue(path.join(ctx.pkg.name, e.path))}: ${e.source} -> ${e.output}`)
+          .map((e) => `${chalk.blue(normalizePath(path.join(ctx.pkg.name, e.path)))}: ${normalizePath(e.source)} -> ${normalizePath(e.output)}`)
           .join('\n       ')}`,
       )
       logger.log('')

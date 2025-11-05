@@ -3,6 +3,7 @@ import type {InputOptions, OutputOptions} from 'rolldown'
 import {dts as dtsPlugin} from 'rolldown-plugin-dts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {pkgExtMap as extMap} from '../../core/pkg/pkgExt.ts'
+import {normalizePath} from '../../normalizePath.ts'
 import type {RolldownDtsTask} from '../types.ts'
 
 export interface RolldownConfig {
@@ -21,7 +22,7 @@ export function resolveRolldownConfig(
 
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
-      return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0]!)]
+      return [key, normalizePath(path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0]!))]
     }),
   )
 
@@ -29,13 +30,14 @@ export function resolveRolldownConfig(
     return {
       ...entry,
       name: path.relative(outDir, entry.output).replace(/\.[^/.]+$/, ''),
+      source: normalizePath(entry.source),
     }
   }, {})
 
   const exportIds =
     _exports && Object.keys(_exports).map((exportPath) => path.join(pkg.name, exportPath))
 
-  const sourcePaths = _exports && Object.values(_exports).map((e) => path.resolve(cwd, e.source))
+  const sourcePaths = _exports && Object.values(_exports).map((e) => normalizePath(path.resolve(cwd, e.source)))
 
   const replacements = Object.fromEntries(
     Object.entries(config?.define || {}).map(([key, val]) => [key, JSON.stringify(val)]),
@@ -78,7 +80,7 @@ export function resolveRolldownConfig(
     resolve: {
       alias: pathAliases,
     },
-    tsconfig: ctx.ts.configPath || 'tsconfig.json',
+    tsconfig: normalizePath(ctx.ts.configPath || 'tsconfig.json'),
     experimental: {
       attachDebugInfo: 'none',
     },
@@ -100,7 +102,7 @@ export function resolveRolldownConfig(
 
       // Check if the id is a file path that points to an exported source file
       if (importer && (id.startsWith('.') || id.startsWith('/'))) {
-        const idPath = path.resolve(path.dirname(importer), id)
+        const idPath = normalizePath(path.resolve(path.dirname(importer), id))
 
         if (sourcePaths?.includes(idPath)) {
           logger.warn(
@@ -125,7 +127,7 @@ export function resolveRolldownConfig(
     plugins: [
       dtsPlugin({
         emitDtsOnly: true,
-        tsconfig: ctx.ts.configPath || 'tsconfig.json',
+        tsconfig: normalizePath(ctx.ts.configPath || 'tsconfig.json'),
         tsgo:
           typeof pkg.devDependencies === 'object' &&
           '@typescript/native-preview' in pkg.devDependencies,

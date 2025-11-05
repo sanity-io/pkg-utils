@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import {from} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
+import {normalizePath} from '../../normalizePath.ts'
 import type {RolldownDtsTask, TaskHandler} from '../types.ts'
 
 /** @internal */
@@ -21,7 +22,7 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
           ...bundleEntries.map((e) =>
             [
               `    - `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(replaceFileEnding(e.output))}`,
+              `${chalk.yellow(normalizePath(e.source))} ${chalk.gray('→')} ${chalk.yellow(normalizePath(replaceFileEnding(e.output)))}`,
             ].join(''),
           ),
         ]
@@ -33,8 +34,8 @@ export const rolldownDtsTask: TaskHandler<RolldownDtsTask> = {
           ...entries.map((e) =>
             [
               `    - `,
-              `${chalk.cyan(path.join(ctx.pkg.name, e.path))}: `,
-              `${chalk.yellow(e.source)} ${chalk.gray('→')} ${chalk.yellow(replaceFileEnding(e.output))}`,
+              `${chalk.cyan(normalizePath(path.join(ctx.pkg.name, e.path)))}: `,
+              `${chalk.yellow(normalizePath(e.source))} ${chalk.gray('→')} ${chalk.yellow(normalizePath(replaceFileEnding(e.output)))}`,
             ].join(''),
           ),
         ]

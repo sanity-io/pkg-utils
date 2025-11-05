@@ -4,6 +4,7 @@ import chalk from 'chalk'
 import * as rimraf from 'rimraf'
 import {Observable} from 'rxjs'
 import ts from 'typescript'
+import {normalizePath} from '../../normalizePath.ts'
 import {printExtractMessages} from '../../printExtractMessages.ts'
 import type {TaskHandler} from '../types.ts'
 import {buildTypes} from './buildTypes.ts'
@@ -20,7 +21,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
         return entry.targetPaths.map((targetPath) => {
           return [
             `    - ${chalk.cyan(entry.importId)}: `,
-            `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(targetPath)}`,
+            `${chalk.yellow(normalizePath(entry.sourcePath))} ${chalk.gray('→')} ${chalk.yellow(normalizePath(targetPath))}`,
           ].join('')
         })
       }),
@@ -147,7 +148,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
       `build type definitions\n       ${task.entries
         .map(
           (entry) =>
-            `    - ${chalk.cyan(entry.importId)}: ${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(entry.targetPaths.join(', '))}`,
+            `    - ${chalk.cyan(entry.importId)}: ${chalk.yellow(normalizePath(entry.sourcePath))} ${chalk.gray('→')} ${chalk.yellow(entry.targetPaths.map(normalizePath).join(', '))}`,
         )
         .join('\n       ')}`,
     )

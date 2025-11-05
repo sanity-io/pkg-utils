@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import {from} from 'rxjs'
+import {normalizePath} from '../../normalizePath.ts'
 import {printExtractMessages} from '../../printExtractMessages.ts'
 import type {TaskHandler} from '../types.ts'
 import {doExtract} from './doExtract.ts'
@@ -17,7 +18,7 @@ export const dtsTask: TaskHandler<DtsTask, DtsResult> = {
           .map((targetPath) => {
             return [
               `    - ${chalk.cyan(entry.importId)}: `,
-              `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(targetPath)}`,
+              `${chalk.yellow(normalizePath(entry.sourcePath))} ${chalk.gray('→')} ${chalk.yellow(normalizePath(targetPath))}`,
             ].join('')
           })
           .join('\n')

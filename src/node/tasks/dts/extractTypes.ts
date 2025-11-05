@@ -11,6 +11,7 @@ import * as prettier from 'prettier'
 import type ts from 'typescript'
 import type {PkgConfigOptions} from '../../core/config/types.ts'
 import type {BuildFile} from '../../core/contexts/buildContext.ts'
+import {normalizePath} from '../../normalizePath.ts'
 import {createApiExtractorConfig} from './createApiExtractorConfig.ts'
 import {createTSDocConfig} from './createTSDocConfig.ts'
 import {getExtractMessagesConfig} from './getExtractMessagesConfig.ts'
@@ -72,7 +73,7 @@ export async function extractTypes(options: {
     }),
     configObjectFullPath: undefined,
     tsdocConfigFile,
-    packageJsonFullPath: path.resolve(projectPath, 'package.json'),
+    packageJsonFullPath: normalizePath(path.resolve(projectPath, 'package.json')),
   })
 
   const messages: ExtractorMessage[] = []
