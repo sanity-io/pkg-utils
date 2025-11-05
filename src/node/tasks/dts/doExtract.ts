@@ -2,6 +2,7 @@ import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 import {rimraf} from 'rimraf'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
+import {normalizePath} from '../../normalizePath.ts'
 import {buildTypes} from './buildTypes.ts'
 import {DtsError} from './DtsError.ts'
 import {extractTypes} from './extractTypes.ts'
@@ -38,10 +39,10 @@ export async function doExtract(
   for (const entry of task.entries) {
     const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
 
-    const sourceTypesPath = path.resolve(
+    const sourceTypesPath = normalizePath(path.resolve(
       tmpPath,
       path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
-    )
+    ))
 
     const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
     const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
@@ -58,7 +59,7 @@ export async function doExtract(
       sourceTypesPath: sourceTypesPath,
       tsconfig: ts.config,
       tmpPath,
-      tsconfigPath: path.resolve(cwd, ts.configPath || 'tsconfig.json'),
+      tsconfigPath: normalizePath(path.resolve(cwd, ts.configPath || 'tsconfig.json')),
       extractorDisabled: config?.extract?.enabled === false,
     })
 
