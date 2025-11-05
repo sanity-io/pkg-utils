@@ -1,4 +1,3 @@
-import path from 'node:path'
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import ts from 'typescript'
 
