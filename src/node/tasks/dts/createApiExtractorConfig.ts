@@ -1,3 +1,4 @@
+import path from 'node:path'
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import ts from 'typescript'
 
@@ -36,9 +37,6 @@ export function createApiExtractorConfig(options: {
   const normalizedMainEntryPointFilePath = normalizePath(mainEntryPointFilePath)
   const normalizedProjectFolder = normalizePath(projectFolder)
   const normalizedTsconfigPath = normalizePath(tsconfigPath)
-  const normalizedDistPath = normalizePath(distPath)
-  const normalizedFilePath = normalizePath(filePath)
-  const normalizedExportPath = normalizePath(exportPath)
 
   return {
     apiReport: {
@@ -62,11 +60,11 @@ export function createApiExtractorConfig(options: {
 
     docModel: {
       enabled: false,
-      apiJsonFilePath: `${normalizedDistPath}/${normalizedExportPath}.api.json`,
+      apiJsonFilePath: normalizePath(path.resolve(distPath, `${exportPath}.api.json`)),
     },
     dtsRollup: {
       enabled: dtsRollupEnabled,
-      untrimmedFilePath: `${normalizedDistPath}/${normalizedFilePath}`,
+      untrimmedFilePath: normalizePath(path.resolve(distPath, filePath)),
       // betaTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-beta.d.ts')),
       // publicTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-public.d.ts')),
     },
