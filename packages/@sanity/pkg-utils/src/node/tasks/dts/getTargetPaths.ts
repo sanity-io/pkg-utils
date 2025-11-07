@@ -4,15 +4,15 @@ import type {PackageJSON} from '../../core/pkg/types.ts'
 /** @internal */
 export const fileEnding: RegExp = /\.[mc]?js$/
 /** @internal */
-export const dtsEnding = '.d.ts' as const
+export const dtsEnding = '.d.ts'
 /** @internal */
-export const defaultEnding = '.js' as const
+export const defaultEnding = '.js'
 /** @internal */
-export const mjsEnding = '.mjs' as const
+export const mjsEnding = '.mjs'
 /** @internal */
-export const cjsEnding = '.cjs' as const
-const mtsEnding = '.d.mts' as const
-const ctsEnding = '.d.cts' as const
+export const cjsEnding = '.cjs'
+const mtsEnding = '.d.mts'
+const ctsEnding = '.d.cts'
 
 /** @internal */
 export function getTargetPaths(

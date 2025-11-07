@@ -9,6 +9,11 @@ import {pkgExtMap} from './pkgExt.ts'
 import type {PackageJSON} from './types.ts'
 import {validateExports} from './validateExports.ts'
 
+// Type guard to filter out falsy values
+function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
+  return Boolean(value)
+}
+
 /** @alpha */
 export function parseExports(options: {
   cwd: string
@@ -89,7 +94,7 @@ export function parseExports(options: {
       }
 
       errors.push(
-        ...([
+        ...[
           'package.json: `exports` are missing, it should be:',
           `"exports": {`,
           `  ".": {`,
@@ -102,7 +107,7 @@ export function parseExports(options: {
           `  },`,
           `  "./package.json": "./package.json"`,
           `}`,
-        ].filter(Boolean) as string[]),
+        ].filter(isTruthy),
       )
     }
   }

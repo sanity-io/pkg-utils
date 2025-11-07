@@ -1,11 +1,11 @@
-import type {ExtractorLogLevel, IExtractorMessagesConfig} from '@microsoft/api-extractor'
+import {ExtractorLogLevel, type IExtractorMessagesConfig} from '@microsoft/api-extractor'
 import type {PkgConfigOptions, PkgRuleLevel} from '../../core/config/types.ts'
 
 const LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
-  error: 'error' as ExtractorLogLevel.Error,
-  info: 'info' as ExtractorLogLevel.Info,
-  off: 'none' as ExtractorLogLevel.None,
-  warn: 'warning' as ExtractorLogLevel.Warning,
+  error: ExtractorLogLevel.Error,
+  info: ExtractorLogLevel.Info,
+  off: ExtractorLogLevel.None,
+  warn: ExtractorLogLevel.Warning,
 }
 
 /** @alpha */
@@ -21,26 +21,26 @@ export function getExtractMessagesConfig(options: {
   ) {
     const r = rules?.[key]
 
-    return (r ? LOG_LEVELS[r] : defaultLevel || 'warning') as ExtractorLogLevel
+    return r ? LOG_LEVELS[r] : defaultLevel || ExtractorLogLevel.Warning
   }
 
   return {
     compilerMessageReporting: {
       default: {
-        logLevel: (disabled ? 'none' : 'warning') as ExtractorLogLevel,
+        logLevel: disabled ? ExtractorLogLevel.None : ExtractorLogLevel.Warning,
       },
     },
 
     extractorMessageReporting: disabled
       ? {
           default: {
-            logLevel: 'none' as ExtractorLogLevel,
+            logLevel: ExtractorLogLevel.None,
             addToApiReportFile: false,
           },
         }
       : {
           'default': {
-            logLevel: 'warning' as ExtractorLogLevel,
+            logLevel: ExtractorLogLevel.Warning,
             addToApiReportFile: false,
           },
 
@@ -49,12 +49,12 @@ export function getExtractMessagesConfig(options: {
              * This is hardcoded to `none` as it's no longer needed since TypeScript 5.5 https://github.com/microsoft/TypeScript/issues/42873
              * It's hardcoded to `none` since supported by API Extractor when using `module: 'Preserve'` doesn't support it well since `@microsoft/api-extractor` v7.49.0, which upgraded from TS 5.4 to 5.7 internally
              */
-            logLevel: 'none' as ExtractorLogLevel,
+            logLevel: ExtractorLogLevel.None,
             addToApiReportFile: false,
           },
 
           'ae-incompatible-release-tags': {
-            logLevel: ruleToLogLevel('ae-incompatible-release-tags', 'error' as ExtractorLogLevel),
+            logLevel: ruleToLogLevel('ae-incompatible-release-tags', ExtractorLogLevel.Error),
             addToApiReportFile: false,
           },
 
@@ -64,12 +64,12 @@ export function getExtractMessagesConfig(options: {
           },
 
           'ae-missing-release-tag': {
-            logLevel: ruleToLogLevel('ae-missing-release-tag', 'error' as ExtractorLogLevel),
+            logLevel: ruleToLogLevel('ae-missing-release-tag', ExtractorLogLevel.Error),
             addToApiReportFile: false,
           },
 
           'ae-wrong-input-file-type': {
-            logLevel: 'none' as ExtractorLogLevel,
+            logLevel: ExtractorLogLevel.None,
             addToApiReportFile: false,
           },
         },
@@ -77,31 +77,28 @@ export function getExtractMessagesConfig(options: {
     tsdocMessageReporting: disabled
       ? {
           default: {
-            logLevel: 'none' as ExtractorLogLevel,
+            logLevel: ExtractorLogLevel.None,
             addToApiReportFile: false,
           },
         }
       : {
           'default': {
-            logLevel: 'warning' as ExtractorLogLevel,
+            logLevel: ExtractorLogLevel.Warning,
             addToApiReportFile: false,
           },
 
           'tsdoc-link-tag-unescaped-text': {
-            logLevel: ruleToLogLevel(
-              'tsdoc-link-tag-unescaped-text',
-              'warning' as ExtractorLogLevel,
-            ),
+            logLevel: ruleToLogLevel('tsdoc-link-tag-unescaped-text', ExtractorLogLevel.Warning),
             addToApiReportFile: false,
           },
 
           'tsdoc-undefined-tag': {
-            logLevel: ruleToLogLevel('tsdoc-undefined-tag', 'error' as ExtractorLogLevel),
+            logLevel: ruleToLogLevel('tsdoc-undefined-tag', ExtractorLogLevel.Error),
             addToApiReportFile: false,
           },
 
           'tsdoc-unsupported-tag': {
-            logLevel: ruleToLogLevel('tsdoc-unsupported-tag', 'none' as ExtractorLogLevel),
+            logLevel: ruleToLogLevel('tsdoc-unsupported-tag', ExtractorLogLevel.None),
             addToApiReportFile: false,
           },
         },

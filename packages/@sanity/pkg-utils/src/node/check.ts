@@ -74,13 +74,16 @@ export async function check(options: {
 
       const consoleSpy = createConsoleSpy()
 
+      const checks = []
       if (exportPaths.import.length) {
-        checkExports(exportPaths.import, {cwd, external, format: 'esm', logger})
+        checks.push(checkExports(exportPaths.import, {cwd, external, format: 'esm', logger}))
       }
 
       if (exportPaths.require.length) {
-        checkExports(exportPaths.require, {cwd, external, format: 'cjs', logger})
+        checks.push(checkExports(exportPaths.require, {cwd, external, format: 'cjs', logger}))
       }
+
+      await Promise.all(checks)
 
       consoleSpy.restore()
     }
@@ -94,7 +97,7 @@ export async function check(options: {
     spinner.error()
 
     if (err instanceof Error) {
-      const RE_CWD = new RegExp(`${cwd}`, 'g')
+      const RE_CWD = new RegExp(cwd, 'g')
 
       logger.error((err.stack || err.message).replace(RE_CWD, '.'))
       logger.log()
@@ -166,7 +169,7 @@ async function checkExports(
 
       logger.log()
     } else {
-      logger.error(`${err}`)
+      logger.error(String(err))
 
       logger.log()
     }

@@ -25,7 +25,7 @@ export function watchFiles(patterns: string[]): Observable<FileEvent> {
 
     return () => {
       watcher.off('all', handleFileEvent)
-      watcher.close()
+      void watcher.close()
     }
   })
 }

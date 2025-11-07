@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type {ExtractorMessage} from '@microsoft/api-extractor'
+import {ExtractorLogLevel, type ExtractorMessage} from '@microsoft/api-extractor'
 import {rimraf} from 'rimraf'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {buildTypes} from './buildTypes.ts'
@@ -64,7 +64,7 @@ export async function doExtract(
 
     messages.push(...result.messages)
 
-    const errors = result.messages.filter((msg) => msg.logLevel === 'error')
+    const errors = result.messages.filter((msg) => msg.logLevel === ExtractorLogLevel.Error)
 
     if (errors.length > 0) {
       await rimraf(tmpPath)

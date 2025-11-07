@@ -1,5 +1,4 @@
 import path from 'node:path'
-import type {PluginItem} from '@babel/core'
 import {optimizeLodashImports} from '@optimize-lodash/rollup-plugin'
 import alias from '@rollup/plugin-alias'
 import {babel, getBabelOutputPlugin} from '@rollup/plugin-babel'
@@ -9,7 +8,7 @@ import {nodeResolve} from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
-import type {InputOptions, OutputOptions, Plugin} from 'rollup'
+import type {InputOptions, OutputOptions} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt.ts'
 import {resolveConfigProperty} from '../../core/config/resolveConfigProperty.ts'
@@ -18,6 +17,11 @@ import {DEFAULT_BROWSERSLIST_QUERY} from '../../core/defaults.ts'
 import type {PackageJSON} from '../../core/pkg/types.ts'
 import type {RollupTask, RollupWatchTask} from '../types.ts'
 import {optimizeCss} from './optimizeCss.ts'
+
+// Type guard to filter out falsy values
+function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
+  return Boolean(value)
+}
 
 export interface RollupConfig {
   inputOptions: InputOptions
@@ -166,7 +170,7 @@ export function resolveRollupConfig(
             'babel-plugin-react-compiler',
             config?.reactCompilerOptions || {},
           ],
-        ].filter(Boolean) as PluginItem[],
+        ].filter(isTruthy),
       }),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
@@ -213,7 +217,7 @@ export function resolveRollupConfig(
           preserve_annotations: true,
         },
       }),
-  ].filter(Boolean) as Plugin[]
+  ].filter(isTruthy)
 
   const userPlugins = config?.rollup?.plugins
 

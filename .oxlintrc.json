@@ -27,11 +27,30 @@
       }
     },
     {
-      "files": ["playground/**", "test/**", "packages/**/test/**"],
+      "files": [
+        "playground/**",
+        "test/**",
+        "packages/**/test/**",
+        "**/*.test.ts",
+        "**/*.test.js",
+        "**/*.test.tsx",
+        "**/*.test.jsx",
+        "**/test.cjs"
+      ],
       "rules": {
         "eslint/no-console": "off",
         "eslint/no-unused-vars": "off",
-        "triple-slash-reference": "off"
+        "triple-slash-reference": "off",
+        "await-thenable": "off",
+        "no-floating-promises": "off",
+        "no-unnecessary-boolean-literal-compare": "off",
+        "no-unnecessary-template-expression": "off",
+        "no-unnecessary-type-arguments": "off",
+        "no-unnecessary-type-assertion": "off",
+        "no-unsafe-enum-comparison": "off",
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "unbound-method": "off"
       }
     }
   ]

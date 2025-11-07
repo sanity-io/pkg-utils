@@ -15,6 +15,7 @@ export async function extractModuleBlocksFromTypes({
   tsOutDir: string
   extractResult: ExtractorResult
 }): Promise<string[]> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- ExtractorResult type from @microsoft/api-extractor is complex
   const program = extractResult.compilerState.program as Program
   const moduleBlocks: string[] = []
 
@@ -35,6 +36,7 @@ export async function extractModuleBlocksFromTypes({
 
 /** @internal */
 export function extractModuleBlocks(fileContent: string): string[] {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Babel parser returns any, but we know it's a File
   const ast = parse(fileContent, {
     parser: typeScriptParser,
   }) as File

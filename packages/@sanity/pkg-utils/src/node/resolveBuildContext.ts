@@ -13,6 +13,11 @@ import {resolveBrowserTarget} from './resolveBrowserTarget.ts'
 import {resolveNodeTarget} from './resolveNodeTarget.ts'
 import {parseStrictOptions} from './strict.ts'
 
+// Type guard to filter out falsy values
+function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
+  return Boolean(value)
+}
+
 export async function resolveBuildContext(options: {
   config?: PkgConfigOptions | undefined
   cwd: string
@@ -141,7 +146,7 @@ export async function resolveBuildContext(options: {
         exportEntry.browser?.require,
         exportEntry.node?.source && exportEntry.node.import,
         exportEntry.node?.source && exportEntry.node.require,
-      ].filter(Boolean) as string[]
+      ].filter(isTruthy)
     })
     .map((p) => path.resolve(cwd, p))
 
