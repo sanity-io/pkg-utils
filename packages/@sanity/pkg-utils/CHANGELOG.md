@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 9.0.5
+
+### Patch Changes
+
+- [#2175](https://github.com/sanity-io/pkg-utils/pull/2175) [`35db628`](https://github.com/sanity-io/pkg-utils/commit/35db6284f7554a7b68e987a63a9cda9e90dbfa1b) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix issues uncovered by type-aware linting with oxlint
+
 ## [9.0.4](https://github.com/sanity-io/pkg-utils/compare/v9.0.3...v9.0.4) (2025-11-07)
 
 ### Bug Fixes
