@@ -22,5 +22,8 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "workspace:*"
   }
 }

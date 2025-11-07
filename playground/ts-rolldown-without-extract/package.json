@@ -24,5 +24,8 @@
     "clean": "rimraf dist",
     "typecheck": "tsc"
   },
-  "browserslist": "extends @sanity/browserslist-config"
+  "browserslist": "extends @sanity/browserslist-config",
+  "devDependencies": {
+    "@sanity/pkg-utils": "workspace:*"
+  }
 }
