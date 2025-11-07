@@ -2,10 +2,7 @@ import path from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {spawnProject} from './env/spawnProject'
 
-// @TODO make these test suites work on Windows
-const isWindows = process.platform === 'win32'
-
-test.skipIf(isWindows)('should build `js` package', async () => {
+test('should build `js` package', async () => {
   const project = await spawnProject('js')
 
   await project.install()
@@ -18,7 +15,7 @@ test.skipIf(isWindows)('should build `js` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `browser-bundle` package', async () => {
+test('should build `browser-bundle` package', async () => {
   const project = await spawnProject('browser-bundle')
 
   await project.install()
@@ -37,7 +34,7 @@ test.skipIf(isWindows)('should build `browser-bundle` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `dummy-module` package', async () => {
+test('should build `dummy-module` package', async () => {
   const project = await spawnProject('dummy-module')
 
   await project.install()
@@ -73,7 +70,7 @@ test.skipIf(isWindows)('should build `dummy-module` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `custom-dist` package', async () => {
+test('should build `custom-dist` package', async () => {
   const project = await spawnProject('custom-dist')
 
   await project.install()
@@ -91,7 +88,7 @@ test.skipIf(isWindows)('should build `custom-dist` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `multi-export` package', async () => {
+test('should build `multi-export` package', async () => {
   const project = await spawnProject('multi-export')
 
   await project.install()
@@ -117,7 +114,7 @@ test.skipIf(isWindows)('should build `multi-export` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts` package', async () => {
+test('should build `ts` package', async () => {
   const project = await spawnProject('ts')
 
   await project.install()
@@ -131,7 +128,7 @@ test.skipIf(isWindows)('should build `ts` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-without-extract` package', async () => {
+test('should build `ts-without-extract` package', async () => {
   const project = await spawnProject('ts-without-extract')
 
   await project.install()
@@ -145,7 +142,7 @@ test.skipIf(isWindows)('should build `ts-without-extract` package', async () => 
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-rolldown-without-extract` package', async () => {
+test('should build `ts-rolldown-without-extract` package', async () => {
   const project = await spawnProject('ts-rolldown-without-extract')
 
   await project.install()
@@ -163,7 +160,7 @@ test.skipIf(isWindows)('should build `ts-rolldown-without-extract` package', asy
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
+test('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
   const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
 
   await project.install()
@@ -218,7 +215,7 @@ test.skipIf(isWindows)('should build `ts-rolldown-bundle-dev-dependency` package
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
+test('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
   const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
 
   await project.install()
@@ -273,7 +270,7 @@ test.skipIf(isWindows)('should build `ts-rolldown-bundle-peer-dependency` packag
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
+test('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
   const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
 
   await project.install()
@@ -329,7 +326,7 @@ test.skipIf(isWindows)('should build `ts-rolldown-bundle-prod-dependency` packag
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-rolldown-inline-types-external-js` package', async () => {
+test('should build `ts-rolldown-inline-types-external-js` package', async () => {
   const project = await spawnProject('ts-rolldown-inline-types-external-js')
 
   await project.install()
@@ -386,7 +383,7 @@ test.skipIf(isWindows)('should build `ts-rolldown-inline-types-external-js` pack
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
+test('should build `ts-rolldown` package', async () => {
   const project = await spawnProject('ts-rolldown')
 
   await project.install()
@@ -421,7 +418,7 @@ test.skipIf(isWindows)('should build `ts-rolldown` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `tsgo` package', async () => {
+test('should build `tsgo` package', async () => {
   const project = await spawnProject('tsgo')
 
   await project.install()
@@ -439,7 +436,7 @@ test.skipIf(isWindows)('should build `tsgo` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-node16` package', async () => {
+test('should build `ts-node16` package', async () => {
   const project = await spawnProject('ts-node16')
 
   await project.install()
@@ -453,7 +450,7 @@ test.skipIf(isWindows)('should build `ts-node16` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `ts-bundler` package', async () => {
+test('should build `ts-bundler` package', async () => {
   const project = await spawnProject('ts-bundler')
 
   await project.install()
@@ -467,7 +464,7 @@ test.skipIf(isWindows)('should build `ts-bundler` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `react-18` package', async () => {
+test('should build `react-18` package', async () => {
   const project = await spawnProject('react-18')
 
   await project.install()
@@ -483,7 +480,7 @@ test.skipIf(isWindows)('should build `react-18` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `react-19` package', async () => {
+test('should build `react-19` package', async () => {
   const project = await spawnProject('react-19')
 
   await project.install()
@@ -499,7 +496,7 @@ test.skipIf(isWindows)('should build `react-19` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `css-export` package', async () => {
+test('should build `css-export` package', async () => {
   const project = await spawnProject('css-export')
 
   await project.install()
@@ -512,7 +509,7 @@ test.skipIf(isWindows)('should build `css-export` package', async () => {
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `sanity-plugin-with-styled-components` package', async () => {
+test('should build `sanity-plugin-with-styled-components` package', async () => {
   const project = await spawnProject('sanity-plugin-with-styled-components')
 
   await project.install()
@@ -541,7 +538,7 @@ test.skipIf(isWindows)('should build `sanity-plugin-with-styled-components` pack
   await project.remove()
 })
 
-test.skipIf(isWindows)('should build `sanity-plugin-with-vanilla-extract` package', async () => {
+test('should build `sanity-plugin-with-vanilla-extract` package', async () => {
   const project = await spawnProject('sanity-plugin-with-vanilla-extract')
 
   await project.install()
@@ -604,7 +601,7 @@ describe.skip('runtime: next.js', () => {
   })
 })
 
-test.skipIf(isWindows)('should build with `--quiet` flag suppressing output', async () => {
+test('should build with `--quiet` flag suppressing output', async () => {
   const project = await spawnProject('ts')
 
   await project.install()
