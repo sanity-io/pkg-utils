@@ -24,8 +24,5 @@
     "build:quiet": "pkg build --strict --check --clean --quiet",
     "clean": "rimraf dist",
     "typecheck": "tsc"
-  },
-  "devDependencies": {
-    "@sanity/pkg-utils": "workspace:*"
   }
 }

@@ -38,6 +38,9 @@ importers:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.7.0
         version: 4.7.0(prettier@3.6.2)
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:packages/@sanity/pkg-utils
       '@sanity/prettier-config':
         specifier: ^1.0.6
         version: 1.0.6(prettier@3.6.2)
@@ -258,39 +261,16 @@ importers:
       '@babel/plugin-transform-object-rest-spread':
         specifier: ^7.28.4
         version: 7.28.4(@babel/core@7.28.5)
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
 
-  playground/browser-bundle:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/browser-bundle: {}
 
-  playground/css-export:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/css-export: {}
 
-  playground/custom-dist:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/custom-dist: {}
 
-  playground/default-export:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/default-export: {}
 
-  playground/dummy-commonjs:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/dummy-commonjs: {}
 
   playground/dummy-lodash:
     dependencies:
@@ -298,9 +278,6 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
@@ -314,9 +291,6 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
@@ -324,46 +298,23 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
 
-  playground/dummy-module:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/dummy-module: {}
 
   playground/dummy-side-effects: {}
 
-  playground/extra-bundles:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/extra-bundles: {}
 
-  playground/js:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/js: {}
 
   playground/multi-export:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       dummy-side-effects:
         specifier: workspace:*
         version: link:../dummy-side-effects
 
-  playground/multi-exports-commonjs:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/multi-exports-commonjs: {}
 
-  playground/node-api:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/node-api: {}
 
   playground/react-18:
     dependencies:
@@ -371,9 +322,6 @@ importers:
         specifier: rc
         version: 19.1.0-rc.3(react@18.3.1)
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^19.1.9
         version: 19.2.2
@@ -386,9 +334,6 @@ importers:
 
   playground/react-19:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -425,9 +370,6 @@ importers:
 
   playground/reference-esm-only:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@tsconfig/node-lts':
         specifier: 22.0.2
         version: 22.0.2
@@ -503,9 +445,6 @@ importers:
 
   playground/sanity:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -534,9 +473,6 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(react@18.3.1)
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^18.3.26
         version: 18.3.26
@@ -568,9 +504,6 @@ importers:
         specifier: 4.0.0-static.42
         version: 4.0.0-static.42(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.1.1)(react@19.2.0)
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -602,29 +535,13 @@ importers:
         specifier: ^7.1.12
         version: 7.1.12(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
-  playground/ts:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/ts: {}
 
-  playground/ts-bundler:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/ts-bundler: {}
 
-  playground/ts-node16:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/ts-node16: {}
 
-  playground/ts-rolldown:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/ts-rolldown: {}
 
   playground/ts-rolldown-bundle-dev-dependency:
     dependencies:
@@ -641,9 +558,6 @@ importers:
       '@sanity/logos':
         specifier: 'catalog:'
         version: 2.2.2(react@19.2.0)
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
 
   playground/ts-rolldown-bundle-peer-dependency:
     dependencies:
@@ -660,9 +574,6 @@ importers:
       '@sanity/logos':
         specifier: 'catalog:'
         version: 2.2.2(react@19.2.0)
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
 
   playground/ts-rolldown-bundle-prod-dependency:
     dependencies:
@@ -678,10 +589,6 @@ importers:
       react:
         specifier: '*'
         version: 19.2.0
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
 
   playground/ts-rolldown-inline-types-external-js:
     dependencies:
@@ -697,37 +604,19 @@ importers:
       react:
         specifier: '*'
         version: 19.2.0
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
 
-  playground/ts-rolldown-without-extract:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/ts-rolldown-without-extract: {}
 
-  playground/ts-without-extract:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
+  playground/ts-without-extract: {}
 
   playground/tsgo:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251104.1
 
   playground/use-client-directive:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -737,9 +626,6 @@ importers:
 
   playground/vision:
     devDependencies:
-      '@sanity/pkg-utils':
-        specifier: workspace:*
-        version: link:../../packages/@sanity/pkg-utils
       sanity:
         specifier: ^4.14.1
         version: 4.14.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.2.0(@sanity/schema@4.14.1(@types/react@19.2.2))(@sanity/types@4.14.1(@types/react@19.2.2)))(@types/node@24.10.0)(@types/react@19.2.2)(babel-plugin-react-compiler@1.0.0)(immer@10.2.0)(jiti@2.6.1)(lightningcss@1.30.2)(postcss@8.5.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.1)
