@@ -19,6 +19,11 @@ import type {PackageJSON} from '../../core/pkg/types.ts'
 import type {RollupTask, RollupWatchTask} from '../types.ts'
 import {optimizeCss} from './optimizeCss.ts'
 
+// Type guard to filter out falsy values
+function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
+  return Boolean(value)
+}
+
 export interface RollupConfig {
   inputOptions: InputOptions
   outputOptions: OutputOptions
@@ -166,7 +171,7 @@ export function resolveRollupConfig(
             'babel-plugin-react-compiler',
             config?.reactCompilerOptions || {},
           ],
-        ].filter(Boolean) as PluginItem[],
+        ].filter(isTruthy),
       }),
     esbuild({
       jsx: config?.jsx ?? 'automatic',
@@ -213,7 +218,7 @@ export function resolveRollupConfig(
           preserve_annotations: true,
         },
       }),
-  ].filter(Boolean) as Plugin[]
+  ].filter(isTruthy)
 
   const userPlugins = config?.rollup?.plugins
 
