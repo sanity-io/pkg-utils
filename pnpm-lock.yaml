@@ -41,18 +41,27 @@ importers:
       '@sanity/prettier-config':
         specifier: ^1.0.6
         version: 1.0.6(prettier@3.6.2)
+      '@types/node':
+        specifier: ^24.10.0
+        version: 24.10.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7
       lint-staged:
         specifier: ^16.2.6
         version: 16.2.6
+      npm-run-all2:
+        specifier: ^8.0.4
+        version: 8.0.4
       oxlint:
         specifier: ^1.26.0
         version: 1.26.0
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      rimraf:
+        specifier: ^6.1.0
+        version: 6.1.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -231,9 +240,6 @@ importers:
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
-      npm-run-all2:
-        specifier: ^8.0.4
-        version: 8.0.4
       rollup-plugin-visualizer:
         specifier: ^6.0.5
         version: 6.0.5(rolldown@1.0.0-beta.46)(rollup@4.52.5)
@@ -356,7 +362,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/@sanity/pkg-utils
 
-  playground/node-api: {}
+  playground/node-api:
+    devDependencies:
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/pkg-utils
 
   playground/react-18:
     dependencies:
@@ -496,6 +506,9 @@ importers:
 
   playground/sanity:
     devDependencies:
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/pkg-utils
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -727,6 +740,9 @@ importers:
 
   playground/vision:
     devDependencies:
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/pkg-utils
       sanity:
         specifier: ^4.14.1
         version: 4.14.1(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.2.0(@sanity/schema@4.14.1(@types/react@19.2.2))(@sanity/types@4.14.1(@types/react@19.2.2)))(@types/node@24.10.0)(@types/react@19.2.2)(babel-plugin-react-compiler@1.0.0)(immer@10.2.0)(jiti@2.6.1)(lightningcss@1.30.2)(postcss@8.5.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.1)
