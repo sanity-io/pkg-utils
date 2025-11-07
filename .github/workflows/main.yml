@@ -34,8 +34,7 @@ jobs:
         with:
           name: build-output
           path: |
-            bin/
-            dist/
+            packages/@sanity/pkg-utils/dist/
 
   playground:
     needs: build
@@ -52,6 +51,7 @@ jobs:
         name: Restore build output
         with:
           name: build-output
+          path: packages/@sanity/pkg-utils
       - run: pnpm playground:typecheck
       - run: pnpm playground:build
         env:
@@ -98,4 +98,5 @@ jobs:
         name: Restore build output
         with:
           name: build-output
+          path: packages/@sanity/pkg-utils
       - run: pnpm test
