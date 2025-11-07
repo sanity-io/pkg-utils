@@ -4,9 +4,8 @@
   "exclude": ["./test/env/__tmp__"],
   "compilerOptions": {
     "composite": true,
-    "baseUrl": "./src",
     "paths": {
-      "@sanity/pkg-utils": ["./node"]
+      "@sanity/pkg-utils": ["./src/node"]
     }
   }
 }
