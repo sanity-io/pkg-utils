@@ -94,7 +94,7 @@ export async function check(options: {
     spinner.error()
 
     if (err instanceof Error) {
-      const RE_CWD = new RegExp(`${cwd}`, 'g')
+      const RE_CWD = new RegExp(cwd, 'g')
 
       logger.error((err.stack || err.message).replace(RE_CWD, '.'))
       logger.log()

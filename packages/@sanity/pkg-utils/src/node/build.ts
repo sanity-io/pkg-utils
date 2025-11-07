@@ -90,7 +90,7 @@ export async function build(options: {
       spinner.error()
 
       if (err instanceof Error) {
-        const RE_CWD = new RegExp(`${cwd}`, 'g')
+        const RE_CWD = new RegExp(cwd, 'g')
 
         ctx.logger.error(err.message.replace(RE_CWD, '.'))
         ctx.logger.log()

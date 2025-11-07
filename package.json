@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "pnpm --filter '@sanity/pkg-utils' build",
-    "format": "prettier --write --cache --ignore-unknown . && oxlint --fix --quiet",
-    "lint": "oxlint",
+    "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
+    "lint": "oxlint --type-aware",
     "playground:build": "pnpm --filter './playground/**' build",
     "playground:clean": "pnpm --filter './playground/**' --silent clean",
     "playground:typecheck": "pnpm --filter './playground/**' typecheck",
@@ -19,7 +19,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
       "prettier --cache --write",
-      "oxlint --fix --quiet"
+      "oxlint --type-aware --fix --quiet"
     ],
     "*": [
       "prettier --write --cache --ignore-unknown"
@@ -36,6 +36,7 @@
     "lint-staged": "^16.2.6",
     "npm-run-all2": "^8.0.4",
     "oxlint": "^1.26.0",
+    "oxlint-tsgolint": "^0.5.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.1.0",
     "typescript": "catalog:"

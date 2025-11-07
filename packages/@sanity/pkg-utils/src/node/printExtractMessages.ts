@@ -24,7 +24,7 @@ export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessa
 
     logger.log(
       [
-        `${chalk.cyan(sourceFilePath || '?')}`,
+        chalk.cyan(sourceFilePath || '?'),
         `:${chalk.yellow(msg.sourceFileLine)}:${chalk.yellow(msg.sourceFileColumn)}`,
         ` - ${chalk.yellow('warning')} ${chalk.gray(msg.messageId)}\n`,
         msg.text,
@@ -44,7 +44,7 @@ export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessa
 
     logger.log(
       [
-        `${chalk.cyan(sourceFilePath || '?')}`,
+        chalk.cyan(sourceFilePath || '?'),
         `:${chalk.yellow(msg.sourceFileLine)}:${chalk.yellow(msg.sourceFileColumn)}`,
         ` - ${chalk.red('error')} ${chalk.gray(msg.messageId)}\n`,
         msg.text,
