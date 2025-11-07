@@ -38,6 +38,9 @@ importers:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.7.0
         version: 4.7.0(prettier@3.6.2)
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:packages/@sanity/pkg-utils
       '@sanity/prettier-config':
         specifier: ^1.0.6
         version: 1.0.6(prettier@3.6.2)

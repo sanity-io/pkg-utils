@@ -21,13 +21,13 @@
   },
   "overrides": [
     {
-      "files": ["bin/**"],
+      "files": ["bin/**", "packages/**/bin/**"],
       "rules": {
         "import/no-unassigned-import": "off"
       }
     },
     {
-      "files": ["playground/**", "test/**"],
+      "files": ["playground/**", "test/**", "packages/**/test/**"],
       "rules": {
         "eslint/no-console": "off",
         "eslint/no-unused-vars": "off",
