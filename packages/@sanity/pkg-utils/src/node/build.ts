@@ -74,6 +74,7 @@ export async function build(options: {
   const buildTasks = resolveBuildTasks(ctx)
 
   for (const task of buildTasks) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript can't infer the correct handler type from discriminated union
     const handler = buildTaskHandlers[task.type] as TaskHandler<BuildTask>
     const taskName = handler.name(ctx, task)
 

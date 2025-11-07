@@ -65,7 +65,8 @@ for (const key of pkgSchema.keyof()._def.values) {
 export function validatePkg(input: unknown): PackageJSON {
   const pkg = pkgSchema.parse(input)
 
-  const invalidKey = Object.keys(pkg).find((key) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Need to check raw input for typos
+  const invalidKey = Object.keys(input as PackageJSON).find((key) => {
     const needle = key.toUpperCase()
 
     return typoMap.has(needle) ? typoMap.get(needle) !== key : false

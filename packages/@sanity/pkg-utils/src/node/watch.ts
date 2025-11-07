@@ -43,6 +43,7 @@ export async function watch(options: {
     const watchTasks = resolveWatchTasks(ctx)
 
     for (const task of watchTasks) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript can't infer the correct handler type from discriminated union
       const handler = watchTaskHandlers[task.type] as TaskHandler<WatchTask, unknown>
       const result$ = handler.exec(ctx, task)
 
