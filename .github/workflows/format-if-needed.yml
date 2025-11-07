@@ -1,42 +1,15 @@
----
 name: Auto format
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   contents: read # for checkout
 
 jobs:
-  run:
-    name: Can the code be formatted? 🤔
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v6
-        with:
-          node-version: lts/*
-      - run: pnpm install
-      - run: pnpm format
-      - run: git restore .github/workflows CHANGELOG.md
-      - uses: actions/create-github-app-token@v2
-        id: app-token
-        with:
-          app-id: ${{ secrets.ECOSPARK_APP_ID }}
-          private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
-      - uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
-        with:
-          body: I ran `pnpm format` 🧑‍💻
-          branch: actions/format
-          commit-message: "chore(format): 🤖 ✨"
-          labels: 🤖 bot
-          sign-commits: true
-          title: "chore(format): 🤖 ✨"
-          token: ${{ steps.app-token.outputs.token }}
+  if-needed:
+    uses: sanity-io/.github/.github/workflows/format.yml@main
+    secrets: inherit
