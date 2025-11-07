@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     watch: {
       // Don't rerun test watcher when generated files change, or it'll infinitely loop
-      ignored: ['**/node_modules/**', '**/dist/**', 'test/env/__tmp__/**'],
+      ignored: ['**/node_modules/**', '**/dist/**', '**/test/env/__tmp__/**'],
     },
   },
 })

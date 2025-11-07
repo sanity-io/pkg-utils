@@ -34,7 +34,7 @@ export async function spawnProject(name: string): Promise<{
   const {path: tmpPath, remove: tmpRemove} = await tmpWorkspace()
 
   {
-    const packagePath = path.resolve(__dirname, '../../playground', name)
+    const packagePath = path.resolve(__dirname, '../../../../../playground', name)
     const files = await globby('**/*', {
       cwd: packagePath,
     })

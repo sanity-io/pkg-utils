@@ -1,0 +1,146 @@
+{
+  "name": "@sanity/pkg-utils",
+  "version": "9.0.4",
+  "description": "Simple utilities for modern npm packages.",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "npm",
+    "package",
+    "utilities",
+    "build",
+    "bundling"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/pkg-utils"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/node/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./tsconfig/recommended.json": "./tsconfig/recommended.json",
+    "./tsconfig/recommended": "./tsconfig/recommended.json",
+    "./tsconfig/strict.json": "./tsconfig/strict.json",
+    "./tsconfig/strict": "./tsconfig/strict.json",
+    "./tsconfig/strictest.json": "./tsconfig/strictest.json",
+    "./tsconfig/isolated-declarations.json": "./tsconfig/isolated-declarations.json",
+    "./tsconfig": "./tsconfig/strictest.json",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "pkg": "./bin/pkg-utils.js",
+    "pkg-utils": "./bin/pkg-utils.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "tsconfig",
+    "!dist/stats.html"
+  ],
+  "scripts": {
+    "build": "run-s clean build:pkg check:pkg",
+    "build:pkg": "tsx scripts/build.ts",
+    "check:pkg": "tsx scripts/check.ts",
+    "clean": "rimraf dist test/env/__tmp__",
+    "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
+    "prepublishOnly": "pnpm run build",
+    "pretest": "pnpm run clean && pnpm run build",
+    "test": "vitest run",
+    "test:update-snapshots": "pnpm test run -- --update",
+    "typecheck": "tsc --build",
+    "watch": "tsx scripts/watch.ts"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "dependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/parser": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@babel/types": "^7.28.5",
+    "@microsoft/api-extractor": "^7.54.0",
+    "@microsoft/tsdoc-config": "^0.17.1",
+    "@optimize-lodash/rollup-plugin": "^5.0.2",
+    "@rollup/plugin-alias": "^6.0.0",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@sanity/browserslist-config": "^1.0.5",
+    "@vanilla-extract/rollup-plugin": "^1.4.1",
+    "browserslist": "^4.27.0",
+    "cac": "^6.7.14",
+    "chalk": "^5.6.2",
+    "chokidar": "^4.0.3",
+    "esbuild": "^0.25.12",
+    "find-config": "^1.0.0",
+    "get-latest-version": "^5.1.0",
+    "git-url-parse": "^16.1.0",
+    "globby": "^15.0.0",
+    "jsonc-parser": "^3.3.1",
+    "lightningcss": "^1.30.2",
+    "mkdirp": "^3.0.1",
+    "outdent": "^0.8.0",
+    "package-up": "^5.0.0",
+    "prettier": "^3.6.2",
+    "pretty-bytes": "^7.1.0",
+    "prompts": "^2.4.2",
+    "recast": "^0.23.11",
+    "rimraf": "^6.1.0",
+    "rolldown": "1.0.0-beta.46",
+    "rolldown-plugin-dts": "0.17.3",
+    "rollup": "^4.52.5",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "rxjs": "^7.8.2",
+    "treeify": "^1.1.0",
+    "tsx": "^4.20.6",
+    "uuid": "^13.0.0",
+    "zod": "^4.1.12",
+    "zod-validation-error": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/find-config": "^1.0.4",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.10.0",
+    "@types/prompts": "^2.4.9",
+    "@types/semver": "^7.7.1",
+    "@types/treeify": "^1.0.3",
+    "@typescript/native-preview": "catalog:",
+    "babel-plugin-react-compiler": "1.0.0",
+    "browserslist-to-esbuild": "2.1.1",
+    "fs-extra": "^11.3.2",
+    "rollup-plugin-visualizer": "^6.0.5",
+    "semver": "^7.7.3",
+    "typescript": "catalog:",
+    "vitest": "^4.0.7"
+  },
+  "peerDependencies": {
+    "babel-plugin-react-compiler": "*",
+    "typescript": "5.8.x || 5.9.x"
+  },
+  "peerDependenciesMeta": {
+    "babel-plugin-react-compiler": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

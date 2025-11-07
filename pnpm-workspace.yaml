@@ -1,6 +1,7 @@
 packages:
-  - playground/**
-  - test/env/__tmp__/**
+  - packages/@sanity/*
+  - playground/*
+  - packages/@sanity/pkg-utils/test/env/__tmp__/**
 
 catalog:
   '@sanity/client': ^7.8.0

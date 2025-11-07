@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.settings",
+  "include": ["./*.cjs", "./*.ts", "./bin", "./package.json", "./scripts", "./src", "./test"],
+  "exclude": ["./test/env/__tmp__"],
+  "compilerOptions": {
+    "composite": true,
+    "paths": {
+      "@sanity/pkg-utils": ["./src/node"]
+    }
+  }
+}
