@@ -2,17 +2,6 @@
   "name": "monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "Simple utilities for modern npm packages.",
-  "homepage": "https://github.com/sanity-io/pkg-utils#readme",
-  "bugs": {
-    "url": "https://github.com/sanity-io/pkg-utils/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git"
-  },
-  "license": "MIT",
-  "author": "Sanity.io <hello@sanity.io>",
   "type": "module",
   "scripts": {
     "build": "pnpm --filter '@sanity/pkg-utils' build",
@@ -40,20 +29,12 @@
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.12",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
-    "@sanity/pkg-utils": "workspace:*",
     "@sanity/prettier-config": "^1.0.6",
-    "@types/fs-extra": "^11.0.4",
-    "@types/semver": "^7.7.1",
-    "fs-extra": "^11.3.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
     "oxlint": "^1.26.0",
     "prettier": "^3.6.2",
-    "semver": "^7.7.3",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@10.20.0",
-  "engines": {
-    "node": ">=20.19 <22 || >=22.12"
-  }
+  "packageManager": "pnpm@10.20.0"
 }
