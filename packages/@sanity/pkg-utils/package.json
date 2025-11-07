@@ -57,7 +57,7 @@
     "clean": "rimraf dist test/env/__tmp__",
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "prepublishOnly": "pnpm run build",
-    "pretest": "pnpm run clean",
+    "pretest": "pnpm run clean && pnpm run build",
     "test": "vitest run",
     "test:update-snapshots": "pnpm test run -- --update",
     "typecheck": "tsc --build",
