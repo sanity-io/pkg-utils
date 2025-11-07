@@ -1,12 +1,12 @@
 import path from 'node:path'
-import type {ExtractorMessage} from '@microsoft/api-extractor'
+import {ExtractorLogLevel, type ExtractorMessage} from '@microsoft/api-extractor'
 import chalk from 'chalk'
 import type {BuildContext} from './core/contexts/buildContext.ts'
 
 export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessage[]): void {
   const {cwd, logger} = ctx
 
-  const warnings = messages.filter((msg) => msg.logLevel === 'warning')
+  const warnings = messages.filter((msg) => msg.logLevel === ExtractorLogLevel.Warning)
 
   if (warnings.length) {
     logger.log()
@@ -33,7 +33,7 @@ export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessa
     )
   }
 
-  const errors: ExtractorMessage[] = messages.filter((msg) => msg.logLevel === 'error')
+  const errors: ExtractorMessage[] = messages.filter((msg) => msg.logLevel === ExtractorLogLevel.Error)
 
   if (!warnings.length && errors.length) {
     logger.log('')

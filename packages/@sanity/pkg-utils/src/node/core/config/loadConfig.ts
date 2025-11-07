@@ -15,7 +15,7 @@ export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptio
 
   const root = path.dirname(pkgPath)
 
-  const configFile = await findConfigFile(root)
+  const configFile = findConfigFile(root)
 
   if (!configFile) {
     return undefined

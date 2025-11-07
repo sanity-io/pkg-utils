@@ -29,7 +29,7 @@ export const rollupWatchTask: TaskHandler<RollupWatchTask, RollupWatcherEvent> =
       })
 
       return () => {
-        watcher.close()
+        void watcher.close()
       }
     })
   },

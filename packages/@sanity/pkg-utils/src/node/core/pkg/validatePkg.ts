@@ -18,8 +18,8 @@ const pkgSchema = z.object({
   exports: z.optional(
     z.record(
       z.union([
-        z.custom<`./${string}.json`>((val) => /^\.\/.*\.json$/.test(val as string)),
-        z.custom<`./${string}.css`>((val) => /^\.\/.*\.css$/.test(val as string)),
+        z.custom<`./${string}.json`>((val) => typeof val === 'string' && /^\.\/.*\.json$/.test(val)),
+        z.custom<`./${string}.css`>((val) => typeof val === 'string' && /^\.\/.*\.css$/.test(val)),
         z.object({
           types: z.optional(z.string()),
           source: z.optional(z.string()),
@@ -65,7 +65,7 @@ for (const key of pkgSchema.keyof()._def.values) {
 export function validatePkg(input: unknown): PackageJSON {
   const pkg = pkgSchema.parse(input)
 
-  const invalidKey = Object.keys(input as PackageJSON).find((key) => {
+  const invalidKey = Object.keys(pkg).find((key) => {
     const needle = key.toUpperCase()
 
     return typoMap.has(needle) ? typoMap.get(needle) !== key : false
