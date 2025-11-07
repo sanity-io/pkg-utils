@@ -33,7 +33,9 @@ export function printExtractMessages(ctx: BuildContext, messages: ExtractorMessa
     )
   }
 
-  const errors: ExtractorMessage[] = messages.filter((msg) => msg.logLevel === ExtractorLogLevel.Error)
+  const errors: ExtractorMessage[] = messages.filter(
+    (msg) => msg.logLevel === ExtractorLogLevel.Error,
+  )
 
   if (!warnings.length && errors.length) {
     logger.log('')

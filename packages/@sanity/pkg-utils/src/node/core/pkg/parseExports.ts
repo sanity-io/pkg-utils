@@ -94,7 +94,7 @@ export function parseExports(options: {
       }
 
       errors.push(
-        ...([
+        ...[
           'package.json: `exports` are missing, it should be:',
           `"exports": {`,
           `  ".": {`,
@@ -107,7 +107,7 @@ export function parseExports(options: {
           `  },`,
           `  "./package.json": "./package.json"`,
           `}`,
-        ].filter(isTruthy)),
+        ].filter(isTruthy),
       )
     }
   }

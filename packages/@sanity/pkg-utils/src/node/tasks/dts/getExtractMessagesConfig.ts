@@ -88,10 +88,7 @@ export function getExtractMessagesConfig(options: {
           },
 
           'tsdoc-link-tag-unescaped-text': {
-            logLevel: ruleToLogLevel(
-              'tsdoc-link-tag-unescaped-text',
-              ExtractorLogLevel.Warning,
-            ),
+            logLevel: ruleToLogLevel('tsdoc-link-tag-unescaped-text', ExtractorLogLevel.Warning),
             addToApiReportFile: false,
           },
 

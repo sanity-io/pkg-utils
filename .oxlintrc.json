@@ -27,7 +27,16 @@
       }
     },
     {
-      "files": ["playground/**", "test/**", "packages/**/test/**", "**/*.test.ts", "**/*.test.js", "**/*.test.tsx", "**/*.test.jsx", "**/test.cjs"],
+      "files": [
+        "playground/**",
+        "test/**",
+        "packages/**/test/**",
+        "**/*.test.ts",
+        "**/*.test.js",
+        "**/*.test.tsx",
+        "**/*.test.jsx",
+        "**/test.cjs"
+      ],
       "rules": {
         "eslint/no-console": "off",
         "eslint/no-unused-vars": "off",

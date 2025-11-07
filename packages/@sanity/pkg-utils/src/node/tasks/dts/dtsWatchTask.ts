@@ -78,7 +78,8 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
       )
 
       const origPostProgramCreate = host.afterProgramCreate
-        ? (program: ts.EmitAndSemanticDiagnosticsBuilderProgram) => host.afterProgramCreate?.(program)
+        ? (program: ts.EmitAndSemanticDiagnosticsBuilderProgram) =>
+            host.afterProgramCreate?.(program)
         : undefined
 
       host.afterProgramCreate = async (program) => {
