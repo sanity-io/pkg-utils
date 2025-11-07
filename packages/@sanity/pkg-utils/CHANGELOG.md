@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/pkg-utils
 
 ## [9.0.4](https://github.com/sanity-io/pkg-utils/compare/v9.0.3...v9.0.4) (2025-11-07)
 
