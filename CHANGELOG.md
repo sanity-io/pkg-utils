@@ -5,6 +5,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.4](https://github.com/sanity-io/pkg-utils/compare/v9.0.3...v9.0.4) (2025-11-07)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency @microsoft/api-extractor to ^7.54.0 ([#2161](https://github.com/sanity-io/pkg-utils/issues/2161)) ([b0bbbc1](https://github.com/sanity-io/pkg-utils/commit/b0bbbc1b6617f91063d7ed27693f6091f05259b8))
+* **deps:** Update dependency zod-validation-error to v5 ([#2157](https://github.com/sanity-io/pkg-utils/issues/2157)) ([fd43704](https://github.com/sanity-io/pkg-utils/commit/fd43704beb05e615d96e57a0bab3284efd780684))
+* **deps:** use consistent `^` ranges on deps ([31a2658](https://github.com/sanity-io/pkg-utils/commit/31a2658a47e3d0b50cf63d91548b8f242fd3fb75))
+
 ## [9.0.3](https://github.com/sanity-io/pkg-utils/compare/v9.0.2...v9.0.3) (2025-11-06)
 
 
