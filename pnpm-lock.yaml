@@ -253,11 +253,21 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
-  packages/@sanity/pkg-utils/test/env/__tmp__/1e67eb4b-88e1-46ff-8fe5-9d7e5e7d546f:
+  packages/@sanity/pkg-utils/test/env/__tmp__/874fb943-7e7a-443d-bd42-bc5530a9280d:
+    dependencies:
+      react-compiler-runtime:
+        specifier: rc
+        version: 19.1.0-rc.3(react@18.3.1)
     devDependencies:
-      dummy-side-effects:
-        specifier: workspace:*
-        version: link:../../../../../../../playground/dummy-side-effects
+      '@types/react':
+        specifier: ^19.1.9
+        version: 19.2.2
+      babel-plugin-react-compiler:
+        specifier: 1.0.0
+        version: 1.0.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
 
   playground/babel-plugin:
     devDependencies:

@@ -9,7 +9,7 @@ async function runExec(cmd: string) {
   try {
     const env = {
       ...process.env,
-      PATH: `${process.env['PATH']}:${path.resolve(__dirname, '../../bin')}`,
+      PATH: `${process.env['PATH']}${path.delimiter}${path.resolve(__dirname, '../../bin')}`,
     }
     const tmpPath = path.resolve(__dirname, '../..')
 
