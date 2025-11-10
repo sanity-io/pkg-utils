@@ -14,7 +14,9 @@ minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@next/*'
   - '@oxlint/*'
+  - '@oxlint-tsgolint/*'
   - '@portabletext/*'
+  - '@rollup/*'
   - '@sanity/*'
   - '@types/*'
   - '@vite/*'
@@ -22,6 +24,8 @@ minimumReleaseAgeExclude:
   - 'groq'
   - 'next'
   - 'oxlint'
+  - 'oxlint-tsgolint'
+  - 'rollup'
   - 'sanity'
   - 'vite'
   - 'vitest'
