@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 9.0.6
+
+### Patch Changes
+
+- [#2180](https://github.com/sanity-io/pkg-utils/pull/2180) [`75b4d92`](https://github.com/sanity-io/pkg-utils/commit/75b4d9247b894d9b8030c63018aa394fa768ef70) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.53.2
+
+- [#2184](https://github.com/sanity-io/pkg-utils/pull/2184) [`ad075d3`](https://github.com/sanity-io/pkg-utils/commit/ad075d3bc57443a084d328f45d46b05559c5d391) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.47
+
 ## 9.0.5
 
 ### Patch Changes
