@@ -11,13 +11,13 @@ const strictOptions = z
     noImplicitSideEffects: toggle.default('warn'),
     noImplicitBrowsersList: toggle.default('warn'),
     alwaysPackageJsonTypes: toggle.default('error'),
-    alwaysPackageJsonMain: toggle.default('error'),
+    alwaysPackageJsonMain: toggle.default('off'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
-    noRootLevelMain: toggle.default('error'),
-    noRootLevelModule: toggle.default('error'),
-    noRootLevelBrowser: toggle.default('error'),
-    noRootLevelTypesVersions: toggle.default('error'),
+    noRootLevelMain: toggle.default('warn'),
+    noRootLevelModule: toggle.default('warn'),
+    noRootLevelBrowser: toggle.default('warn'),
+    noRootLevelTypesVersions: toggle.default('warn'),
     preferModuleType: toggle.default('warn'),
   })
   .strict()
@@ -59,8 +59,9 @@ export interface StrictOptions {
    */
   alwaysPackageJsonTypes: ToggleType
   /**
-   * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it
-   * @defaultValue 'error'
+   * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it.
+   * Note: This is now off by default as modern tooling supports `exports`. Use `noRootLevelMain` to enforce removal of the `main` field.
+   * @defaultValue 'off'
    */
   alwaysPackageJsonMain: ToggleType
   /**
@@ -75,22 +76,22 @@ export interface StrictOptions {
   noCheckTypes: ToggleType
   /**
    * Disallows the root-level `main` field in `package.json` as all modern tools support the `exports` field.
-   * @defaultValue 'error'
+   * @defaultValue 'warn'
    */
   noRootLevelMain: ToggleType
   /**
    * Disallows the root-level `module` field in `package.json` as all modern tools support the `exports` field.
-   * @defaultValue 'error'
+   * @defaultValue 'warn'
    */
   noRootLevelModule: ToggleType
   /**
    * Disallows the root-level `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
-   * @defaultValue 'error'
+   * @defaultValue 'warn'
    */
   noRootLevelBrowser: ToggleType
   /**
    * Disallows the `typesVersions` field in `package.json` as TypeScript has long supported conditional exports and the `types` condition.
-   * @defaultValue 'error'
+   * @defaultValue 'warn'
    */
   noRootLevelTypesVersions: ToggleType
   /**

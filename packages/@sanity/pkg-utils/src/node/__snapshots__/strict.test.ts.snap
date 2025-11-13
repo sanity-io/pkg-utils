@@ -3,16 +3,16 @@
 exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -20,16 +20,16 @@ exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
 exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "off",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -37,16 +37,16 @@ exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
 exports[`{'noPackageJsonTypings': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "warn",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -174,92 +174,7 @@ exports[`{'noPackageJsonTypings': true}} 1`] = `
 exports[`{'noRootLevelBrowser': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelBrowser': 'off'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "off",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelBrowser': 'warn'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': 'error'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': 'off'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "off",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': 'warn'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
@@ -267,8 +182,93 @@ exports[`{'noRootLevelMain': 'warn'}} 1`] = `
   "noPackageJsonTypings": "error",
   "noRootLevelBrowser": "error",
   "noRootLevelMain": "warn",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelBrowser': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "off",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "off",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelBrowser': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "off",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "off",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "off",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "off",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "off",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -336,16 +336,16 @@ exports[`{'noRootLevelMain': true}} 1`] = `
 exports[`{'noRootLevelModule': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
   "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -353,16 +353,16 @@ exports[`{'noRootLevelModule': 'error'}} 1`] = `
 exports[`{'noRootLevelModule': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
   "noRootLevelModule": "off",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -370,16 +370,16 @@ exports[`{'noRootLevelModule': 'off'}} 1`] = `
 exports[`{'noRootLevelModule': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
   "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -387,15 +387,15 @@ exports[`{'noRootLevelModule': 'warn'}} 1`] = `
 exports[`{'noRootLevelTypesVersions': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
   "noRootLevelTypesVersions": "error",
   "preferModuleType": "warn",
 }
@@ -404,15 +404,15 @@ exports[`{'noRootLevelTypesVersions': 'error'}} 1`] = `
 exports[`{'noRootLevelTypesVersions': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
   "noRootLevelTypesVersions": "off",
   "preferModuleType": "warn",
 }
@@ -421,15 +421,15 @@ exports[`{'noRootLevelTypesVersions': 'off'}} 1`] = `
 exports[`{'noRootLevelTypesVersions': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
   "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
@@ -438,16 +438,16 @@ exports[`{'noRootLevelTypesVersions': 'warn'}} 1`] = `
 exports[`{'preferModuleType': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "error",
 }
 `;
@@ -455,16 +455,16 @@ exports[`{'preferModuleType': 'error'}} 1`] = `
 exports[`{'preferModuleType': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "off",
 }
 `;
@@ -472,16 +472,16 @@ exports[`{'preferModuleType': 'off'}} 1`] = `
 exports[`{'preferModuleType': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonMain": "off",
   "alwaysPackageJsonTypes": "error",
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
