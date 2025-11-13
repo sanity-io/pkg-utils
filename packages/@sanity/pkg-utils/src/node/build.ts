@@ -48,7 +48,9 @@ export async function build(options: {
 
   const config = await loadConfig({cwd})
 
-  const pkg = await loadPkgWithReporting({cwd, logger, strict})
+  const {parseStrictOptions} = await import('./strict.ts')
+  const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
+  const pkg = await loadPkgWithReporting({cwd, logger, strict, strictOptions})
 
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 

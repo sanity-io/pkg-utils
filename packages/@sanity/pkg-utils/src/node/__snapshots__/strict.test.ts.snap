@@ -9,6 +9,11 @@ exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
 }
 `;
 
@@ -21,6 +26,11 @@ exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "off",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
 }
 `;
 
@@ -33,6 +43,11 @@ exports[`{'noPackageJsonTypings': 'warn'}} 1`] = `
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
   "noPackageJsonTypings": "warn",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
 }
 `;
 
@@ -154,4 +169,319 @@ exports[`{'noPackageJsonTypings': true}} 1`] = `
     "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
   }
 ]]
+`;
+
+exports[`{'noRootLevelBrowser': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelBrowser': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "off",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelBrowser': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "warn",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "off",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "warn",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelMain': true}} 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union",
+    "unionErrors": [
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "error",
+            "path": [
+              "strictOptions",
+              "noRootLevelMain"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noRootLevelMain\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "warn",
+            "path": [
+              "strictOptions",
+              "noRootLevelMain"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noRootLevelMain\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "off",
+            "path": [
+              "strictOptions",
+              "noRootLevelMain"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noRootLevelMain\\""
+          }
+        ],
+        "name": "ZodError"
+      }
+    ],
+    "path": [
+      "strictOptions",
+      "noRootLevelMain"
+    ],
+    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noRootLevelMain\\" at \\"strictOptions.noRootLevelMain\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noRootLevelMain\\" at \\"strictOptions.noRootLevelMain\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noRootLevelMain\\" at \\"strictOptions.noRootLevelMain\\""
+  }
+]]
+`;
+
+exports[`{'noRootLevelModule': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelModule': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "off",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelModule': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "warn",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelTypesVersions': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelTypesVersions': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "off",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noRootLevelTypesVersions': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'preferModuleType': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "error",
+}
+`;
+
+exports[`{'preferModuleType': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "off",
+}
+`;
+
+exports[`{'preferModuleType': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonMain": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonTypings": "error",
+  "noRootLevelBrowser": "error",
+  "noRootLevelMain": "error",
+  "noRootLevelModule": "error",
+  "noRootLevelTypesVersions": "error",
+  "preferModuleType": "warn",
+}
 `;

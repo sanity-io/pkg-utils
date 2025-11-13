@@ -14,6 +14,11 @@ const strictOptions = z
     alwaysPackageJsonMain: toggle.default('error'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
+    noRootLevelMain: toggle.default('error'),
+    noRootLevelModule: toggle.default('error'),
+    noRootLevelBrowser: toggle.default('error'),
+    noRootLevelTypesVersions: toggle.default('error'),
+    preferModuleType: toggle.default('warn'),
   })
   .strict()
 
@@ -68,6 +73,31 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   noCheckTypes: ToggleType
+  /**
+   * Disallows the root-level `main` field in `package.json` as all modern tools support the `exports` field.
+   * @defaultValue 'error'
+   */
+  noRootLevelMain: ToggleType
+  /**
+   * Disallows the root-level `module` field in `package.json` as all modern tools support the `exports` field.
+   * @defaultValue 'error'
+   */
+  noRootLevelModule: ToggleType
+  /**
+   * Disallows the root-level `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
+   * @defaultValue 'error'
+   */
+  noRootLevelBrowser: ToggleType
+  /**
+   * Disallows the `typesVersions` field in `package.json` as TypeScript has long supported conditional exports and the `types` condition.
+   * @defaultValue 'error'
+   */
+  noRootLevelTypesVersions: ToggleType
+  /**
+   * Warns if `type` field is missing or set to `commonjs`. Future versions will require `"type": "module"`.
+   * @defaultValue 'warn'
+   */
+  preferModuleType: ToggleType
 }
 
 /** @alpha */

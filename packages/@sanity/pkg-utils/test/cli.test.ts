@@ -620,3 +620,19 @@ test('should build with `--quiet` flag suppressing output', async () => {
 
   await project.remove()
 })
+
+test('should fail with --strict when legacy fields are present', async () => {
+  const project = await spawnProject('strict-legacy-fields')
+
+  await project.install()
+
+  const result = await project.run('build')
+
+  // Should error on main, module, browser, and typesVersions fields
+  expect(result.stderr).toContain('the `main` field is no longer needed')
+  expect(result.stderr).toContain('the `module` field is no longer needed')
+  expect(result.stderr).toContain('the `browser` field is no longer needed')
+  expect(result.stderr).toContain('the `typesVersions` field is no longer needed')
+
+  await project.remove()
+})
