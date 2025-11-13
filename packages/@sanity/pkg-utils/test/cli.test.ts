@@ -626,13 +626,23 @@ test('should fail with --strict when legacy fields are present', async () => {
 
   await project.install()
 
-  const result = await project.run('build')
+  // The build should fail, so we catch the error
+  let result
+  try {
+    result = await project.run('build')
+  } catch (err: any) {
+    // The error contains stdout and stderr
+    result = {stdout: err.stdout || '', stderr: err.stderr || ''}
+  }
+
+  // Errors can be in either stderr or stdout depending on how they're caught
+  const output = result.stderr + result.stdout
 
   // Should error on main, module, browser, and typesVersions fields
-  expect(result.stderr).toContain('the `main` field is no longer needed')
-  expect(result.stderr).toContain('the `module` field is no longer needed')
-  expect(result.stderr).toContain('the `browser` field is no longer needed')
-  expect(result.stderr).toContain('the `typesVersions` field is no longer needed')
+  expect(output).toContain('the `main` field is no longer needed')
+  expect(output).toContain('the `module` field is no longer needed')
+  expect(output).toContain('the `browser` field is no longer needed')
+  expect(output).toContain('the `typesVersions` field is no longer needed')
 
   await project.remove()
 })
