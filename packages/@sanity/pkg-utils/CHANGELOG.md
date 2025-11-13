@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 9.0.7
+
+### Patch Changes
+
+- [#2195](https://github.com/sanity-io/pkg-utils/pull/2195) [`1f04d9a`](https://github.com/sanity-io/pkg-utils/commit/1f04d9a03babbacdadda5d40e3348ae7a4579075) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.17.4
+
+- [#2196](https://github.com/sanity-io/pkg-utils/pull/2196) [`bfe910b`](https://github.com/sanity-io/pkg-utils/commit/bfe910bb018a874eefb2ec77f38fb0de99a3e2a2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.26.0
+
 ## 9.0.6
 
 ### Patch Changes
