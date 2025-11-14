@@ -11,7 +11,6 @@ const strictOptions = z
     noImplicitSideEffects: toggle.default('warn'),
     noImplicitBrowsersList: toggle.default('warn'),
     alwaysPackageJsonTypes: toggle.default('error'),
-    alwaysPackageJsonMain: toggle.default('off'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
     noRootLevelMain: toggle.default('warn'),
@@ -58,12 +57,6 @@ export interface StrictOptions {
    * @defaultValue 'error'
    */
   alwaysPackageJsonTypes: ToggleType
-  /**
-   * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it.
-   * Note: This is now off by default as modern tooling supports `exports`. Use `noRootLevelMain` to enforce removal of the `main` field.
-   * @defaultValue 'off'
-   */
-  alwaysPackageJsonMain: ToggleType
   /**
    * Using `.npmignore` is error prone, it's best practice to always declare `files` instead
    * @defaultValue 'error'
