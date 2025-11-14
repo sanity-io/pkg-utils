@@ -538,6 +538,12 @@ importers:
         specifier: ^7.2.2
         version: 7.2.2(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
+  playground/strict-legacy-fields:
+    devDependencies:
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/pkg-utils
+
   playground/ts: {}
 
   playground/ts-bundler: {}

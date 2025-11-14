@@ -11,9 +11,13 @@ const strictOptions = z
     noImplicitSideEffects: toggle.default('warn'),
     noImplicitBrowsersList: toggle.default('warn'),
     alwaysPackageJsonTypes: toggle.default('error'),
-    alwaysPackageJsonMain: toggle.default('error'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
+    noRootLevelMain: toggle.default('warn'),
+    noRootLevelModule: toggle.default('warn'),
+    noRootLevelBrowser: toggle.default('warn'),
+    noRootLevelTypesVersions: toggle.default('warn'),
+    preferModuleType: toggle.default('warn'),
   })
   .strict()
 
@@ -54,11 +58,6 @@ export interface StrictOptions {
    */
   alwaysPackageJsonTypes: ToggleType
   /**
-   * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it
-   * @defaultValue 'error'
-   */
-  alwaysPackageJsonMain: ToggleType
-  /**
    * Using `.npmignore` is error prone, it's best practice to always declare `files` instead
    * @defaultValue 'error'
    */
@@ -68,6 +67,31 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   noCheckTypes: ToggleType
+  /**
+   * Disallows the root-level `main` field in `package.json` as all modern tools support the `exports` field.
+   * @defaultValue 'warn'
+   */
+  noRootLevelMain: ToggleType
+  /**
+   * Disallows the root-level `module` field in `package.json` as all modern tools support the `exports` field.
+   * @defaultValue 'warn'
+   */
+  noRootLevelModule: ToggleType
+  /**
+   * Disallows the root-level `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
+   * @defaultValue 'warn'
+   */
+  noRootLevelBrowser: ToggleType
+  /**
+   * Disallows the `typesVersions` field in `package.json` as TypeScript has long supported conditional exports and the `types` condition.
+   * @defaultValue 'warn'
+   */
+  noRootLevelTypesVersions: ToggleType
+  /**
+   * Warns if `type` field is missing or set to `commonjs`. Future versions will require `"type": "module"`.
+   * @defaultValue 'warn'
+   */
+  preferModuleType: ToggleType
 }
 
 /** @alpha */
