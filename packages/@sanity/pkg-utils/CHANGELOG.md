@@ -1,5 +1,34 @@
 # @sanity/pkg-utils
 
+## 9.1.0
+
+### Minor Changes
+
+- [#2202](https://github.com/sanity-io/pkg-utils/pull/2202) [`207f489`](https://github.com/sanity-io/pkg-utils/commit/207f48988dddf181cf5b623a0cb9cb42ec843202) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - feat: Add configurable strict checks for legacy package.json fields
+
+  Added new strict options to warn about deprecated package.json fields that are no longer needed with modern Node.js and bundlers:
+  - `noPackageJsonMain` - Warns when `main` field is present (use `exports` instead)
+  - `noPackageJsonModule` - Warns when `module` field is present (use `exports` instead)
+  - `noPackageJsonBrowser` - Warns when `browser` field is present (use `browser` condition in `exports`)
+  - `noPackageJsonTypesVersions` - Warns when `typesVersions` field is present (TypeScript supports `types` condition in `exports`)
+  - `preferModuleType` - Warns when `type` field is missing or set to `commonjs` (future versions will require `"type": "module"`)
+
+  All new checks default to `warn` level and are configurable via `strictOptions` in `package.config.ts`.
+
+  **BREAKING CHANGES**:
+  - Removed `alwaysPackageJsonMain` strict option (conflicted with the new `noPackageJsonMain` option)
+  - The top-level `types` field is still required for npm package listings to show TypeScript support
+
+- [#2221](https://github.com/sanity-io/pkg-utils/pull/2221) [`107c8a6`](https://github.com/sanity-io/pkg-utils/commit/107c8a6a134bdfbf31cce04083cdae2b93bb7d24) Thanks [@stipsan](https://github.com/stipsan)! - Update `@microsoft/api-extractor` to ^7.55.0 and `@microsoft/tsdoc-config` to ^0.18.0
+
+### Patch Changes
+
+- [#2216](https://github.com/sanity-io/pkg-utils/pull/2216) [`e5c2ef8`](https://github.com/sanity-io/pkg-utils/commit/e5c2ef857d3e738df6103c432036803215a39c96) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.50
+
+- [#2217](https://github.com/sanity-io/pkg-utils/pull/2217) [`a61103a`](https://github.com/sanity-io/pkg-utils/commit/a61103a44b37a84f12cd51443fbd3f8c1047136b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.17.7
+
+- [#2223](https://github.com/sanity-io/pkg-utils/pull/2223) [`e01b6ca`](https://github.com/sanity-io/pkg-utils/commit/e01b6ca92721a8e3298b5d2c88f4678636ac7210) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.4.2
+
 ## 9.0.9
 
 ### Patch Changes
