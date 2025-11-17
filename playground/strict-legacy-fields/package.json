@@ -1,23 +1,10 @@
 {
   "name": "strict-legacy-fields",
   "version": "0.0.0",
-  "description": "Test package for strict legacy field checks",
   "private": true,
+  "description": "Test package for strict legacy field checks",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "browser": {
-    "./dist/index.js": "./dist/browser.js"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/index.d.ts"
-      ]
-    }
-  },
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
@@ -27,6 +14,19 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "browser": {
+    "./dist/index.js": "./dist/browser.js"
+  },
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
@@ -34,8 +34,8 @@
     "build": "pkg build --strict",
     "clean": "rimraf dist"
   },
+  "browserslist": "extends @sanity/browserslist-config",
   "devDependencies": {
     "@sanity/pkg-utils": "workspace:*"
-  },
-  "browserslist": "extends @sanity/browserslist-config"
+  }
 }
