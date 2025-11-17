@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import {ZodError} from 'zod/v3'
 import type {Logger} from '../../logger.ts'
+import type {StrictOptions} from '../../strict.ts'
 import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
 import type {PackageJSON} from './types.ts'
@@ -10,19 +11,81 @@ export async function loadPkgWithReporting(options: {
   cwd: string
   logger: Logger
   strict: boolean
+  strictOptions: StrictOptions
 }): Promise<PackageJSON> {
-  const {cwd, logger, strict} = options
+  const {cwd, logger, strict, strictOptions} = options
 
   try {
     const pkg = await loadPkg({cwd})
     let shouldError = false
 
     if (strict) {
-      if (!pkg.type) {
-        shouldError = true
-        logger.error(
-          `the \`type\` field in \`./package.json\` must be either "module" or "commonjs")`,
-        )
+      // Check for missing or commonjs type field
+      if (strictOptions.preferModuleType !== 'off') {
+        if (!pkg.type) {
+          const msg =
+            'package.json: `type` field is missing. Future versions of pkg-utils will require `"type": "module"`. Consider adding `"type": "module"` to prepare for this change.'
+          if (strictOptions.preferModuleType === 'error') {
+            shouldError = true
+            logger.error(msg)
+          } else {
+            logger.warn(msg)
+          }
+        } else if (pkg.type === 'commonjs') {
+          const msg =
+            'package.json: `type` is set to "commonjs". Future versions of pkg-utils will require `"type": "module"`. Consider migrating to ES modules to prepare for this change.'
+          if (strictOptions.preferModuleType === 'error') {
+            shouldError = true
+            logger.error(msg)
+          } else {
+            logger.warn(msg)
+          }
+        }
+      }
+
+      // Check for banned root-level fields
+      if (strictOptions.noPackageJsonMain !== 'off' && pkg.main) {
+        const msg =
+          'package.json: the `main` field is no longer needed. All modern versions of Node.js and bundlers support the `exports` field. Remove the `main` field and use `exports` instead.'
+        if (strictOptions.noPackageJsonMain === 'error') {
+          shouldError = true
+          logger.error(msg)
+        } else {
+          logger.warn(msg)
+        }
+      }
+
+      if (strictOptions.noPackageJsonModule !== 'off' && pkg.module) {
+        const msg =
+          'package.json: the `module` field is no longer needed. All modern versions of Node.js and bundlers support the `exports` field. Remove the `module` field and use `exports` instead.'
+        if (strictOptions.noPackageJsonModule === 'error') {
+          shouldError = true
+          logger.error(msg)
+        } else {
+          logger.warn(msg)
+        }
+      }
+
+      if (strictOptions.noPackageJsonBrowser !== 'off' && pkg.browser) {
+        const msg =
+          'package.json: the `browser` field is no longer needed. Use the `browser` condition in `exports` instead for better support across modern bundlers.'
+        if (strictOptions.noPackageJsonBrowser === 'error') {
+          shouldError = true
+          logger.error(msg)
+        } else {
+          logger.warn(msg)
+        }
+      }
+
+      if (strictOptions.noPackageJsonTypesVersions !== 'off' && pkg.typesVersions) {
+        const msg =
+          'package.json: the `typesVersions` field is no longer needed. TypeScript has long supported conditional exports and the `types` condition. Remove the `typesVersions` field and use the `types` condition in `exports` instead.'
+        if (strictOptions.noPackageJsonTypesVersions === 'error') {
+          shouldError = true
+          logger.error(msg)
+        } else {
+          logger.warn(msg)
+        }
       }
     }
 

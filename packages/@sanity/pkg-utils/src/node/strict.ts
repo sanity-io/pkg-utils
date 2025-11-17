@@ -11,9 +11,13 @@ const strictOptions = z
     noImplicitSideEffects: toggle.default('warn'),
     noImplicitBrowsersList: toggle.default('warn'),
     alwaysPackageJsonTypes: toggle.default('error'),
-    alwaysPackageJsonMain: toggle.default('error'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
+    noPackageJsonMain: toggle.default('warn'),
+    noPackageJsonModule: toggle.default('warn'),
+    noPackageJsonBrowser: toggle.default('warn'),
+    noPackageJsonTypesVersions: toggle.default('warn'),
+    preferModuleType: toggle.default('warn'),
   })
   .strict()
 
@@ -54,11 +58,6 @@ export interface StrictOptions {
    */
   alwaysPackageJsonTypes: ToggleType
   /**
-   * A lot of analysis tooling requiers the `main` field to work (like bundlephobia) and so it's best practice to always include it
-   * @defaultValue 'error'
-   */
-  alwaysPackageJsonMain: ToggleType
-  /**
    * Using `.npmignore` is error prone, it's best practice to always declare `files` instead
    * @defaultValue 'error'
    */
@@ -68,6 +67,31 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   noCheckTypes: ToggleType
+  /**
+   * Disallows the `main` field in `package.json` as all modern tools support the `exports` field.
+   * @defaultValue 'warn'
+   */
+  noPackageJsonMain: ToggleType
+  /**
+   * Disallows the `module` field in `package.json` as all modern tools support the `exports` field.
+   * @defaultValue 'warn'
+   */
+  noPackageJsonModule: ToggleType
+  /**
+   * Disallows the `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
+   * @defaultValue 'warn'
+   */
+  noPackageJsonBrowser: ToggleType
+  /**
+   * Disallows the `typesVersions` field in `package.json` as TypeScript has long supported conditional exports and the `types` condition.
+   * @defaultValue 'warn'
+   */
+  noPackageJsonTypesVersions: ToggleType
+  /**
+   * Warns if `type` field is missing or set to `commonjs`. Future versions will require `"type": "module"`.
+   * @defaultValue 'warn'
+   */
+  preferModuleType: ToggleType
 }
 
 /** @alpha */

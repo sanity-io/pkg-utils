@@ -26,4 +26,8 @@ export default defineConfig({
   runtime: 'node',
   tsconfig: 'tsconfig.dist.json',
   dts: 'rolldown',
+  strictOptions: {
+    // Keep the main field for backward compatibility with older tooling
+    noPackageJsonMain: 'off',
+  },
 })

@@ -34,10 +34,6 @@ export function parseExports(options: {
     }
   }
 
-  if (!pkg.main && strict && strictOptions.alwaysPackageJsonMain !== 'off') {
-    report(strictOptions.alwaysPackageJsonMain, 'package.json: `main` must be declared')
-  }
-
   if (!Array.isArray(pkg.files) && strict && strictOptions.alwaysPackageJsonFiles !== 'off') {
     report(
       strictOptions.alwaysPackageJsonFiles,

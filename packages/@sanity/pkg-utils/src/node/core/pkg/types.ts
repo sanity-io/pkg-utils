@@ -45,6 +45,7 @@ export interface PackageJSON {
   source?: string
   module?: string
   types?: string
+  typesVersions?: Record<string, Record<string, string[]>>
   files?: string[]
   scripts?: Record<string, string | undefined>
   browserslist?: string | string[]
