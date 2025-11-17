@@ -13,10 +13,10 @@ const strictOptions = z
     alwaysPackageJsonTypes: toggle.default('error'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
-    noRootLevelMain: toggle.default('warn'),
-    noRootLevelModule: toggle.default('warn'),
-    noRootLevelBrowser: toggle.default('warn'),
-    noRootLevelTypesVersions: toggle.default('warn'),
+    noPackageJsonMain: toggle.default('warn'),
+    noPackageJsonModule: toggle.default('warn'),
+    noPackageJsonBrowser: toggle.default('warn'),
+    noPackageJsonTypesVersions: toggle.default('warn'),
     preferModuleType: toggle.default('warn'),
   })
   .strict()
@@ -68,25 +68,25 @@ export interface StrictOptions {
    */
   noCheckTypes: ToggleType
   /**
-   * Disallows the root-level `main` field in `package.json` as all modern tools support the `exports` field.
+   * Disallows the `main` field in `package.json` as all modern tools support the `exports` field.
    * @defaultValue 'warn'
    */
-  noRootLevelMain: ToggleType
+  noPackageJsonMain: ToggleType
   /**
-   * Disallows the root-level `module` field in `package.json` as all modern tools support the `exports` field.
+   * Disallows the `module` field in `package.json` as all modern tools support the `exports` field.
    * @defaultValue 'warn'
    */
-  noRootLevelModule: ToggleType
+  noPackageJsonModule: ToggleType
   /**
-   * Disallows the root-level `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
+   * Disallows the `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
    * @defaultValue 'warn'
    */
-  noRootLevelBrowser: ToggleType
+  noPackageJsonBrowser: ToggleType
   /**
    * Disallows the `typesVersions` field in `package.json` as TypeScript has long supported conditional exports and the `types` condition.
    * @defaultValue 'warn'
    */
-  noRootLevelTypesVersions: ToggleType
+  noPackageJsonTypesVersions: ToggleType
   /**
    * Warns if `type` field is missing or set to `commonjs`. Future versions will require `"type": "module"`.
    * @defaultValue 'warn'

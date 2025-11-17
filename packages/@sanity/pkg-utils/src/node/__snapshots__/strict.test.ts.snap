@@ -1,5 +1,257 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`{'noPackageJsonBrowser': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "error",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonBrowser': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "off",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonBrowser': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonMain': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "error",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonMain': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "off",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonMain': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonMain': true}} 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union",
+    "unionErrors": [
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "error",
+            "path": [
+              "strictOptions",
+              "noPackageJsonMain"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonMain\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "warn",
+            "path": [
+              "strictOptions",
+              "noPackageJsonMain"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonMain\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "off",
+            "path": [
+              "strictOptions",
+              "noPackageJsonMain"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonMain\\""
+          }
+        ],
+        "name": "ZodError"
+      }
+    ],
+    "path": [
+      "strictOptions",
+      "noPackageJsonMain"
+    ],
+    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonMain\\" at \\"strictOptions.noPackageJsonMain\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonMain\\" at \\"strictOptions.noPackageJsonMain\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonMain\\" at \\"strictOptions.noPackageJsonMain\\""
+  }
+]]
+`;
+
+exports[`{'noPackageJsonModule': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "error",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonModule': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "off",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonModule': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypesVersions': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "error",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypesVersions': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "off",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypesVersions': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
 exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
@@ -7,11 +259,11 @@ exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -23,11 +275,11 @@ exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "off",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -39,11 +291,11 @@ exports[`{'noPackageJsonTypings': 'warn'}} 1`] = `
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "warn",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;
@@ -168,258 +420,6 @@ exports[`{'noPackageJsonTypings': true}} 1`] = `
 ]]
 `;
 
-exports[`{'noRootLevelBrowser': 'error'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "error",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelBrowser': 'off'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "off",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelBrowser': 'warn'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': 'error'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "error",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': 'off'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "off",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': 'warn'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelMain': true}} 1`] = `
-[ZodError: [
-  {
-    "code": "invalid_union",
-    "unionErrors": [
-      {
-        "issues": [
-          {
-            "received": true,
-            "code": "invalid_literal",
-            "expected": "error",
-            "path": [
-              "strictOptions",
-              "noRootLevelMain"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noRootLevelMain\\""
-          }
-        ],
-        "name": "ZodError"
-      },
-      {
-        "issues": [
-          {
-            "received": true,
-            "code": "invalid_literal",
-            "expected": "warn",
-            "path": [
-              "strictOptions",
-              "noRootLevelMain"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noRootLevelMain\\""
-          }
-        ],
-        "name": "ZodError"
-      },
-      {
-        "issues": [
-          {
-            "received": true,
-            "code": "invalid_literal",
-            "expected": "off",
-            "path": [
-              "strictOptions",
-              "noRootLevelMain"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noRootLevelMain\\""
-          }
-        ],
-        "name": "ZodError"
-      }
-    ],
-    "path": [
-      "strictOptions",
-      "noRootLevelMain"
-    ],
-    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noRootLevelMain\\" at \\"strictOptions.noRootLevelMain\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noRootLevelMain\\" at \\"strictOptions.noRootLevelMain\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noRootLevelMain\\" at \\"strictOptions.noRootLevelMain\\""
-  }
-]]
-`;
-
-exports[`{'noRootLevelModule': 'error'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "error",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelModule': 'off'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "off",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelModule': 'warn'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelTypesVersions': 'error'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "error",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelTypesVersions': 'off'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "off",
-  "preferModuleType": "warn",
-}
-`;
-
-exports[`{'noRootLevelTypesVersions': 'warn'}} 1`] = `
-{
-  "alwaysPackageJsonFiles": "error",
-  "alwaysPackageJsonTypes": "error",
-  "noCheckTypes": "warn",
-  "noImplicitBrowsersList": "warn",
-  "noImplicitSideEffects": "warn",
-  "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
-  "preferModuleType": "warn",
-}
-`;
-
 exports[`{'preferModuleType': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
@@ -427,11 +427,11 @@ exports[`{'preferModuleType': 'error'}} 1`] = `
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "error",
 }
 `;
@@ -443,11 +443,11 @@ exports[`{'preferModuleType': 'off'}} 1`] = `
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "off",
 }
 `;
@@ -459,11 +459,11 @@ exports[`{'preferModuleType': 'warn'}} 1`] = `
   "noCheckTypes": "warn",
   "noImplicitBrowsersList": "warn",
   "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonMain": "warn",
+  "noPackageJsonModule": "warn",
+  "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
-  "noRootLevelBrowser": "warn",
-  "noRootLevelMain": "warn",
-  "noRootLevelModule": "warn",
-  "noRootLevelTypesVersions": "warn",
   "preferModuleType": "warn",
 }
 `;

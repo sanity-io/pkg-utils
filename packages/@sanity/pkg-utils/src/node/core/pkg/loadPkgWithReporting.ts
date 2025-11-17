@@ -44,10 +44,10 @@ export async function loadPkgWithReporting(options: {
       }
 
       // Check for banned root-level fields
-      if (strictOptions.noRootLevelMain !== 'off' && pkg.main) {
+      if (strictOptions.noPackageJsonMain !== 'off' && pkg.main) {
         const msg =
           'package.json: the `main` field is no longer needed. All modern versions of Node.js and bundlers support the `exports` field. Remove the `main` field and use `exports` instead.'
-        if (strictOptions.noRootLevelMain === 'error') {
+        if (strictOptions.noPackageJsonMain === 'error') {
           shouldError = true
           logger.error(msg)
         } else {
@@ -55,10 +55,10 @@ export async function loadPkgWithReporting(options: {
         }
       }
 
-      if (strictOptions.noRootLevelModule !== 'off' && pkg.module) {
+      if (strictOptions.noPackageJsonModule !== 'off' && pkg.module) {
         const msg =
           'package.json: the `module` field is no longer needed. All modern versions of Node.js and bundlers support the `exports` field. Remove the `module` field and use `exports` instead.'
-        if (strictOptions.noRootLevelModule === 'error') {
+        if (strictOptions.noPackageJsonModule === 'error') {
           shouldError = true
           logger.error(msg)
         } else {
@@ -66,10 +66,10 @@ export async function loadPkgWithReporting(options: {
         }
       }
 
-      if (strictOptions.noRootLevelBrowser !== 'off' && pkg.browser) {
+      if (strictOptions.noPackageJsonBrowser !== 'off' && pkg.browser) {
         const msg =
           'package.json: the `browser` field is no longer needed. Use the `browser` condition in `exports` instead for better support across modern bundlers.'
-        if (strictOptions.noRootLevelBrowser === 'error') {
+        if (strictOptions.noPackageJsonBrowser === 'error') {
           shouldError = true
           logger.error(msg)
         } else {
@@ -77,10 +77,10 @@ export async function loadPkgWithReporting(options: {
         }
       }
 
-      if (strictOptions.noRootLevelTypesVersions !== 'off' && pkg.typesVersions) {
+      if (strictOptions.noPackageJsonTypesVersions !== 'off' && pkg.typesVersions) {
         const msg =
           'package.json: the `typesVersions` field is no longer needed. TypeScript has long supported conditional exports and the `types` condition. Remove the `typesVersions` field and use the `types` condition in `exports` instead.'
-        if (strictOptions.noRootLevelTypesVersions === 'error') {
+        if (strictOptions.noPackageJsonTypesVersions === 'error') {
           shouldError = true
           logger.error(msg)
         } else {

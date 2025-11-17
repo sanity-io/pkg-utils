@@ -28,6 +28,6 @@ export default defineConfig({
   dts: 'rolldown',
   strictOptions: {
     // Keep the main field for backward compatibility with older tooling
-    noRootLevelMain: 'off',
+    noPackageJsonMain: 'off',
   },
 })
