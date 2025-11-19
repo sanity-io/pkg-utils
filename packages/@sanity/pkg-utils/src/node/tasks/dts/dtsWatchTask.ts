@@ -17,12 +17,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
     [
       'build type definitions',
       ...task.entries.map((entry) => {
-        return entry.targetPaths.map((targetPath) => {
-          return [
-            `    - ${chalk.cyan(entry.importId)}: `,
-            `${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(targetPath)}`,
-          ].join('')
-        })
+        return `    - ${chalk.cyan(entry.importId)}: ${chalk.yellow(entry.sourcePath)} ${chalk.gray('→')} ${chalk.yellow(entry.targetPaths.join(', '))}`
       }),
     ].join('\n'),
   exec: (ctx, task) => {
@@ -80,55 +75,60 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
       // oxlint-disable-next-line unbound-method
       const origPostProgramCreate = host.afterProgramCreate
 
-      host.afterProgramCreate = async (program) => {
+      host.afterProgramCreate = (program) => {
         origPostProgramCreate?.(program)
 
-        const messages: ExtractorMessage[] = []
-        const results: {sourcePath: string; filePaths: string[]}[] = []
+        // Handle async operations without making the callback async
+        ;(async () => {
+          const messages: ExtractorMessage[] = []
+          const results: {sourcePath: string; filePaths: string[]}[] = []
 
-        for (const entry of task.entries) {
-          const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
+          for (const entry of task.entries) {
+            const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
 
-          const sourceTypesPath = path.resolve(
-            tmpPath,
-            path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
-          )
-
-          const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
-          const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
-
-          try {
-            const result = await extractTypes({
-              bundledPackages: bundledPackages || [],
-              customTags: config?.extract?.customTags,
-              cwd,
-              distPath: outDir,
-              exportPath,
-              files,
-              filePaths,
-              projectPath: cwd,
-              rules: config?.extract?.rules,
-              sourceTypesPath: sourceTypesPath,
-              tsconfig: tsContext.config!,
+            const sourceTypesPath = path.resolve(
               tmpPath,
-              tsconfigPath: path.resolve(cwd, tsContext.configPath || 'tsconfig.json'),
-              extractorDisabled: config?.extract?.enabled === false,
-            })
+              path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
+            )
 
-            messages.push(...result.messages)
-            results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePaths: targetPaths})
-          } catch (err) {
-            if (err instanceof DtsError) {
-              messages.push(...err.messages)
-            } else {
-              observer.error(err)
+            const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
+            const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
 
-              return
+            try {
+              const result = await extractTypes({
+                bundledPackages: bundledPackages || [],
+                customTags: config?.extract?.customTags,
+                cwd,
+                distPath: outDir,
+                exportPath,
+                files,
+                filePaths,
+                projectPath: cwd,
+                rules: config?.extract?.rules,
+                sourceTypesPath: sourceTypesPath,
+                tsconfig: tsContext.config!,
+                tmpPath,
+                tsconfigPath: path.resolve(cwd, tsContext.configPath || 'tsconfig.json'),
+                extractorDisabled: config?.extract?.enabled === false,
+              })
+
+              messages.push(...result.messages)
+              results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePaths: targetPaths})
+            } catch (err) {
+              if (err instanceof DtsError) {
+                messages.push(...err.messages)
+              } else {
+                observer.error(err)
+
+                return
+              }
             }
           }
-        }
 
-        observer.next({type: 'dts', messages, results})
+          observer.next({type: 'dts', messages, results})
+        })().catch((err) => {
+          observer.error(err)
+        })
       }
 
       const watchProgram = ts.createWatchProgram(host)
