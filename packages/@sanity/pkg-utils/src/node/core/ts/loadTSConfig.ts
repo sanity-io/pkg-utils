@@ -7,13 +7,15 @@ export async function loadTSConfig(options: {
 }): Promise<ts.ParsedCommandLine | undefined> {
   const {cwd, tsconfigPath} = options
 
-  const configPath = ts.findConfigFile(cwd, (fileName) => ts.sys.fileExists(fileName), tsconfigPath)
+  // oxlint-disable-next-line unbound-method
+  const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, tsconfigPath)
 
   if (!configPath) {
     return undefined
   }
 
-  const configFile = ts.readConfigFile(configPath, (path) => ts.sys.readFile(path))
+  // oxlint-disable-next-line unbound-method
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
 
   return ts.parseJsonConfigFileContent(configFile.config, ts.sys, cwd)
 }
