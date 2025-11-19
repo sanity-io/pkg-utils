@@ -41,11 +41,14 @@ describe('watch functionality', () => {
 
         // Check structure of DTS entries
         const entry = dtsTask.entries[0]
+        expect(entry).toBeDefined()
         expect(entry).toHaveProperty('exportPath')
         expect(entry).toHaveProperty('importId')
         expect(entry).toHaveProperty('sourcePath')
         expect(entry).toHaveProperty('targetPaths')
-        expect(Array.isArray(entry.targetPaths)).toBe(true)
+        if (entry) {
+          expect(Array.isArray(entry.targetPaths)).toBe(true)
+        }
       }
 
       if (jsTask && jsTask.type === 'watch:js') {
@@ -168,7 +171,7 @@ describe('watch functionality', () => {
 
       // This test verifies that watch() can be called and initialized
       // We don't let it run indefinitely, just verify it starts without error
-      const watchPromise = watch({
+      void watch({
         cwd: project.cwd,
         strict: false,
       })
