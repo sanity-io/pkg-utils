@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 9.1.1
+
+### Patch Changes
+
+- [#2233](https://github.com/sanity-io/pkg-utils/pull/2233) [`152b799`](https://github.com/sanity-io/pkg-utils/commit/152b7998b40e1c185d0c7ba9b662af67a0f456c7) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency globby to v16
+
+- [#2238](https://github.com/sanity-io/pkg-utils/pull/2238) [`36f609c`](https://github.com/sanity-io/pkg-utils/commit/36f609c25f2a00e33426071e31b78fe51ca3a815) Thanks [@stipsan](https://github.com/stipsan)! - Fixes a regression introduced by #2175 leading to a max call stack size exceeded error when running `pkg-utils watch`
+
 ## 9.1.0
 
 ### Minor Changes
