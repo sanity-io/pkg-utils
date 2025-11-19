@@ -1,10 +1,10 @@
 import {describe, expect, test} from 'vitest'
-import {watch} from '../src/node/watch'
-import {resolveWatchTasks} from '../src/node/resolveWatchTasks'
 import {loadConfig} from '../src/node/core/config/loadConfig'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
-import {resolveBuildContext} from '../src/node/resolveBuildContext'
 import {createLogger} from '../src/node/logger'
+import {resolveBuildContext} from '../src/node/resolveBuildContext'
+import {resolveWatchTasks} from '../src/node/resolveWatchTasks'
+import {watch} from '../src/node/watch'
 import {spawnProject} from './env/spawnProject'
 
 describe('watch functionality', () => {
