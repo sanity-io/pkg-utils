@@ -74,6 +74,8 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
 
       // oxlint-disable-next-line unbound-method
       const origPostProgramCreate = host.afterProgramCreate
+        ? host.afterProgramCreate.bind(host)
+        : undefined
 
       host.afterProgramCreate = (program) => {
         origPostProgramCreate?.(program)
