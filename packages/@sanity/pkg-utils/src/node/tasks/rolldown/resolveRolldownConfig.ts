@@ -46,15 +46,19 @@ export function resolveRolldownConfig(
   const inputOptions = {
     cwd,
     transform: {
-      jsx:
-        config?.jsx === 'preserve'
-          ? 'preserve'
-          : {
-              runtime: config?.jsx === 'automatic' ? 'automatic' : 'classic',
-              importSource: config?.jsxImportSource,
-              pragma: config?.jsxFactory,
-              pragmaFrag: config?.jsxFragment,
-            },
+      // Only set jsx transform for non-DTS builds to avoid conflicts with tsconfig.json
+      // For DTS builds, the rolldown-plugin-dts uses tsconfig.json settings directly
+      ...(buildTask.type !== 'rolldown:dts' && {
+        jsx:
+          config?.jsx === 'preserve'
+            ? 'preserve'
+            : {
+                runtime: config?.jsx === 'automatic' ? 'automatic' : 'classic',
+                importSource: config?.jsxImportSource,
+                pragma: config?.jsxFactory,
+                pragmaFrag: config?.jsxFragment,
+              },
+      }),
       define:
         pkg.name === '@sanity/pkg-utils'
           ? {...replacements}
