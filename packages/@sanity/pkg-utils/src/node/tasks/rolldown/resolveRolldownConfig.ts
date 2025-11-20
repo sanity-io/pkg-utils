@@ -46,15 +46,6 @@ export function resolveRolldownConfig(
   const inputOptions = {
     cwd,
     transform: {
-      jsx:
-        config?.jsx === 'preserve'
-          ? 'preserve'
-          : {
-              runtime: config?.jsx === 'automatic' ? 'automatic' : 'classic',
-              importSource: config?.jsxImportSource,
-              pragma: config?.jsxFactory,
-              pragmaFrag: config?.jsxFragment,
-            },
       define:
         pkg.name === '@sanity/pkg-utils'
           ? {...replacements}
