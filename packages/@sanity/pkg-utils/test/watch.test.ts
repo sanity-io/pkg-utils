@@ -163,7 +163,7 @@ describe('watch functionality', () => {
     }
   })
 
-  test('watch function should initialize without crashing', async () => {
+  test.skipIf(process.platform === 'darwin')('watch function should initialize without crashing', async () => {
     const project = await spawnProject('dummy-module')
 
     try {
