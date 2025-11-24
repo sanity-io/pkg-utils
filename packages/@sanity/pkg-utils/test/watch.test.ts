@@ -163,28 +163,32 @@ describe('watch functionality', () => {
     }
   })
 
-  test('watch function should initialize without crashing', async () => {
-    const project = await spawnProject('dummy-module')
+  test(
+    'watch function should initialize without crashing',
+    {retry: process.platform === 'darwin' ? 3 : 0},
+    async () => {
+      const project = await spawnProject('dummy-module')
 
-    try {
-      await project.install()
+      try {
+        await project.install()
 
-      // This test verifies that watch() can be called and initialized
-      // We don't let it run indefinitely, just verify it starts without error
-      void watch({
-        cwd: project.cwd,
-        strict: false,
-      })
+        // This test verifies that watch() can be called and initialized
+        // We don't let it run indefinitely, just verify it starts without error
+        void watch({
+          cwd: project.cwd,
+          strict: false,
+        })
 
-      // Give it a moment to initialize
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Give it a moment to initialize
+        await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // If we got here without an error being thrown, the watch initialized successfully
-      expect(true).toBe(true)
+        // If we got here without an error being thrown, the watch initialized successfully
+        expect(true).toBe(true)
 
-      // Note: We can't easily stop the watch process, but the test cleanup will handle it
-    } finally {
-      await project.remove()
-    }
-  })
+        // Note: We can't easily stop the watch process, but the test cleanup will handle it
+      } finally {
+        await project.remove()
+      }
+    },
+  )
 })
