@@ -504,8 +504,8 @@ importers:
   playground/sanity-plugin-with-vanilla-extract:
     dependencies:
       '@sanity/ui':
-        specifier: 4.0.0-static.43
-        version: 4.0.0-static.43(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)
+        specifier: 4.0.0-static.45
+        version: 4.0.0-static.45(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)
     devDependencies:
       '@types/react':
         specifier: ^19.2.6
@@ -3020,13 +3020,13 @@ packages:
       react-is: ^18 || >=19.0.0-0
       styled-components: ^5.2 || ^6
 
-  '@sanity/ui@4.0.0-static.43':
-    resolution: {integrity: sha512-Py50a6aRLxCywr/v5u/NfjbBb8YS0C2qSKk/WlW97sE3FyfTmSRju7dy21rUxup+d5whq/4iRp65AXze0fIInA==}
+  '@sanity/ui@4.0.0-static.45':
+    resolution: {integrity: sha512-R0s7HJ6MWLQKh6kZqii44TatX7JssrQo8MjOymPayxM6zPZwAt3v3Itxr3a6+5y/7iQaBAjsrvjjzIF61MgC+g==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
-      react: ^19
-      react-dom: ^19
-      react-is: ^19
+      react: ^19.2
+      react-dom: ^19.2
+      react-is: ^19.2
 
   '@sanity/util@4.17.0':
     resolution: {integrity: sha512-p9ukuOnghCc7p6lbXotTFdkIvCkSlmIG841CyfRRKna4VyJCOOLIGf5WZrgWDTT1sQnhjmO7R3p/qekKsDYEfw==}
@@ -10638,7 +10638,7 @@ snapshots:
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
 
-  '@sanity/ui@4.0.0-static.43(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)':
+  '@sanity/ui@4.0.0-static.45(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)':
     dependencies:
       '@floating-ui/react-dom': 2.1.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@juggle/resize-observer': 3.4.0
@@ -10651,7 +10651,6 @@ snapshots:
       react-dom: 19.2.0(react@19.2.0)
       react-is: 19.2.0
       react-refractor: 4.0.0(react@19.2.0)
-      use-effect-event: 2.0.3(react@19.2.0)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
 
