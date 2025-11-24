@@ -350,8 +350,8 @@ importers:
   playground/reference-cjs:
     devDependencies:
       '@tsconfig/node-lts':
-        specifier: 22.0.4
-        version: 22.0.4
+        specifier: 24.0.0
+        version: 24.0.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -363,8 +363,8 @@ importers:
   playground/reference-esm:
     devDependencies:
       '@tsconfig/node-lts':
-        specifier: 22.0.4
-        version: 22.0.4
+        specifier: 24.0.0
+        version: 24.0.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -374,8 +374,8 @@ importers:
   playground/reference-esm-only:
     devDependencies:
       '@tsconfig/node-lts':
-        specifier: 22.0.4
-        version: 22.0.4
+        specifier: 24.0.0
+        version: 24.0.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -3129,8 +3129,8 @@ packages:
   '@tanstack/virtual-core@3.13.12':
     resolution: {integrity: sha512-1YBOJfRHV4sXUmWsFSf5rQor4Ss82G8dQWLRbnk3GA4jeP8hQt1hxXh0tmflpC0dz3VgEv/1+qwPyLeWkQuPFA==}
 
-  '@tsconfig/node-lts@22.0.4':
-    resolution: {integrity: sha512-5eAeCX6l/EYe6H2UAw5nBgjfAgdlsR+lSp8YNNGwz+ixoi7JfJ5bOQvsiEhxGm5bOZFVF+cJSIj4tanpCCRMIw==}
+  '@tsconfig/node-lts@24.0.0':
+    resolution: {integrity: sha512-8mSTqWwCd6aQpvxSrpQlMoA9RiUZSs7bYhL5qsLXIIaN9HQaINeoydrRu/Y7/fws4bvfuyhs0BRnW9/NI8tySg==}
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -10813,7 +10813,7 @@ snapshots:
 
   '@tanstack/virtual-core@3.13.12': {}
 
-  '@tsconfig/node-lts@22.0.4': {}
+  '@tsconfig/node-lts@24.0.0': {}
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
