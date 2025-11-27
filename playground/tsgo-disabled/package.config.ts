@@ -3,6 +3,6 @@ import {defineConfig} from '@sanity/pkg-utils'
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   dts: 'rolldown',
-  // Explicitly enable tsgo (though it would be enabled by default due to @typescript/native-preview)
-  tsgo: true,
+  // Explicitly disable tsgo even though @typescript/native-preview is in devDependencies
+  tsgo: false,
 })
