@@ -227,4 +227,11 @@ export interface PkgConfigOptions {
    * @defaultValue 'api-extractor'
    */
   dts?: DtsType
+  /**
+   * When using `dts: 'rolldown'`, enables the use of `@typescript/native-preview` for type generation.
+   * By default, `tsgo` is automatically enabled if `@typescript/native-preview` is found in `devDependencies`.
+   * Set to `true` to explicitly enable or `false` to explicitly disable.
+   * @alpha
+   */
+  tsgo?: boolean
 }
