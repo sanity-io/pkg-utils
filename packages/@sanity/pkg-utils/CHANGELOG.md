@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 9.2.0
+
+### Minor Changes
+
+- [#2297](https://github.com/sanity-io/pkg-utils/pull/2297) [`b09c849`](https://github.com/sanity-io/pkg-utils/commit/b09c849768c70323262186f97ef71c1864e44868) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add explicit tsgo config option to override implicit detection
+
 ## 9.1.5
 
 ### Patch Changes
