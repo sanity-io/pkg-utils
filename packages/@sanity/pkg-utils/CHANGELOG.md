@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 9.1.5
+
+### Patch Changes
+
+- [#2287](https://github.com/sanity-io/pkg-utils/pull/2287) [`16661ce`](https://github.com/sanity-io/pkg-utils/commit/16661ce579adb2b3a0a2e1a3c7c34015d4598073) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.1.13
+
+- [#2290](https://github.com/sanity-io/pkg-utils/pull/2290) [`216c466`](https://github.com/sanity-io/pkg-utils/commit/216c4668cae28eb58bac6a6a13290f9182e93ec6) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.4.3
+
 ## 9.1.4
 
 ### Patch Changes
