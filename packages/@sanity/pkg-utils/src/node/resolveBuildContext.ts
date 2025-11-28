@@ -1,5 +1,4 @@
 import path from 'node:path'
-import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {resolveConfigProperty} from './core/config/resolveConfigProperty.ts'
 import {type PkgConfigOptions, type PkgExports, type PkgRuntime} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
@@ -39,7 +38,7 @@ export async function resolveBuildContext(options: {
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
   const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
 
-  if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options && config?.dts !== 'rolldown') {
+  if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options) {
     if (tsconfig.options.noCheck !== false && !tsconfig.options.noCheck) {
       if (strictOptions.noCheckTypes === 'error') {
         throw new Error(
@@ -69,7 +68,7 @@ export async function resolveBuildContext(options: {
     }
     browserslist = DEFAULT_BROWSERSLIST_QUERY
   }
-  const targetVersions = browserslistToEsbuild(browserslist)
+  const targetVersions = await resolveBrowserslistTargets(browserslist)
 
   if (
     strict &&
@@ -199,10 +198,52 @@ export async function resolveBuildContext(options: {
       config: tsconfig,
       configPath: tsconfigPath,
     },
-    dts: config?.dts === 'rolldown' ? 'rolldown' : 'api-extractor',
+    dts: 'tsdown',
   }
 
   return ctx
+}
+
+async function resolveBrowserslistTargets(query: string | string[]): Promise<string[]> {
+  const browserslist = await import('browserslist')
+  const browsers = browserslist.default(query)
+  
+  const targets = new Set<string>()
+  
+  for (const browser of browsers) {
+    const [name, version] = browser.split(' ')
+    if (!name || !version) continue
+    
+    const versionNum = version.split('-')[0] // Handle version ranges like "10.0-10.2"
+    
+    // Map browserslist names to esbuild target names
+    switch (name.toLowerCase()) {
+      case 'chrome':
+      case 'and_chr':
+        targets.add(`chrome${versionNum}`)
+        break
+      case 'edge':
+        targets.add(`edge${versionNum}`)
+        break
+      case 'firefox':
+      case 'and_ff':
+        targets.add(`firefox${versionNum}`)
+        break
+      case 'safari':
+      case 'ios_saf':
+        targets.add(`safari${versionNum}`)
+        break
+      case 'opera':
+      case 'op_mob':
+        targets.add(`opera${versionNum}`)
+        break
+      case 'node':
+        targets.add(`node${versionNum}`)
+        break
+    }
+  }
+  
+  return Array.from(targets).sort()
 }
 
 function transformPackageName(packageName: string): string {

@@ -1,8 +1,5 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
-import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
-import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
-import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict.ts'
 
 /** @public */
@@ -65,7 +62,7 @@ export interface TSDocCustomTag {
   allowMultiple?: boolean
 }
 
-export type DtsType = 'api-extractor' | 'rolldown'
+
 
 /** @public */
 export interface PkgConfigOptions {
@@ -174,39 +171,6 @@ export interface PkgConfigOptions {
    */
   legacyExports?: never
   minify?: boolean
-  /** @alpha */
-  rollup?: {
-    plugins?: PkgConfigProperty<RollupPlugin[]>
-    output?: Partial<NormalizedOutputOptions>
-    /**
-     * Default options are `preset: 'recommended'` and `propertyReadSideEffects: false`
-     * @alpha
-     */
-    treeshake?: TreeshakingOptions
-    /** @alpha */
-    experimentalLogSideEffects?: boolean
-    /**
-     * Adds [hash] to chunk filenames, generally only useful if `@sanity/pkg-utils` is used to deploy a package directly to a CDN.
-     * It's not needed when publishing to npm for consumption by other libraries, bundlers and frameworks.
-     * @defaultValue false
-     */
-    hashChunkFileNames?: boolean
-    /**
-     * Optimizes lodash imports using `@optimize-lodash/rollup-plugin` when set to `true`.
-     * It's enabled if `lodash` is found in `dependencies` or `peerDependencies`.
-     * It will use `lodash-es` for ESM targets if found in `dependencies` or `peerDependencies`.
-     * @defaultValue true
-     * @alpha
-     */
-    optimizeLodash?: boolean | OptimizeLodashOptions
-    /**
-     * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
-     * @alpha
-     */
-    vanillaExtract?:
-      | boolean
-      | (VanillaExtractOptions & {minify?: boolean; browserslist?: string | string[]})
-  }
   /**
    * Default runtime of package exports
    */
@@ -221,17 +185,4 @@ export interface PkgConfigOptions {
    * Configure what checks are made when running `--strict` builds and checks
    */
   strictOptions?: Partial<StrictOptions>
-  /**
-   * .d.ts files can be generated either by using `@microsoft/api-extractor` or `rolldown`.
-   * `rolldown` is the faster option, but is not yet stable.
-   * @defaultValue 'api-extractor'
-   */
-  dts?: DtsType
-  /**
-   * When using `dts: 'rolldown'`, enables the use of `@typescript/native-preview` for type generation.
-   * By default, `tsgo` is automatically enabled if `@typescript/native-preview` is found in `devDependencies`.
-   * Set to `true` to explicitly enable or `false` to explicitly disable.
-   * @alpha
-   */
-  tsgo?: boolean
 }
