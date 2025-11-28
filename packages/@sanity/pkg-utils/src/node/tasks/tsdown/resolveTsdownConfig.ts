@@ -71,6 +71,7 @@ export async function resolveTsdownConfig(
       typeof config.reactCompiler === 'object' ? config.reactCompiler : {}
     
     // Use @rollup/plugin-babel for React Compiler as recommended by tsdown
+    // @babel/preset-react transforms JSX before babel-plugin-react-compiler processes it
     const {babel} = await import('@rollup/plugin-babel')
     plugins.push(
       babel({
