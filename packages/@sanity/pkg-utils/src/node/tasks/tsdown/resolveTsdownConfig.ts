@@ -64,32 +64,21 @@ export async function resolveTsdownConfig(
 
   // Configure Babel plugin for React Compiler if enabled
   const plugins: any[] = []
-  
+
   if (config?.reactCompiler) {
     // Use the provided options or default to empty object
     const reactCompilerOptions =
       typeof config.reactCompiler === 'object' ? config.reactCompiler : {}
-    
+
     // Use @rollup/plugin-babel for React Compiler as recommended by tsdown
     // @babel/preset-react transforms JSX before babel-plugin-react-compiler processes it
     const {babel} = await import('@rollup/plugin-babel')
     plugins.push(
       babel({
         babelHelpers: 'bundled',
-        presets: [
-          ['@babel/preset-react', {runtime: 'automatic'}],
-          '@babel/preset-typescript',
-        ],
-        parserOpts: {
-          sourceType: 'module',
-          plugins: ['jsx', 'typescript'],
-        },
-        plugins: [
-          [
-            'babel-plugin-react-compiler',
-            reactCompilerOptions,
-          ],
-        ],
+        presets: [['@babel/preset-react', {runtime: 'automatic'}], '@babel/preset-typescript'],
+        parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
+        plugins: [['babel-plugin-react-compiler', reactCompilerOptions]],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       }),
     )
@@ -110,6 +99,9 @@ export async function resolveTsdownConfig(
   }
 
   const tsdownOptions: TsdownOptions = {
+    // Don't try to resolve `tsdown.config.ts` files,
+    config: false,
+
     entry,
     outDir,
     format: format === 'commonjs' ? 'cjs' : format,
@@ -161,32 +153,24 @@ export async function resolveTsdownConfig(
     plugins: plugins.length > 0 ? plugins : undefined,
     // Configure rolldown's built-in styled-components support via inputOptions
     inputOptions: config?.styledComponents
-      ? (options) => {
-          const styledComponentsConfig =
-            typeof config.styledComponents === 'object' ? config.styledComponents : {}
-
-          return {
-            ...options,
-            transform: {
-              ...options.transform,
-              plugins: {
-                ...options.transform?.plugins,
-                styledComponents: {
-                  displayName: styledComponentsConfig.displayName ?? true,
-                  fileName: styledComponentsConfig.fileName ?? false,
-                  ssr: styledComponentsConfig.ssr ?? true,
-                  transpileTemplateLiterals:
-                    styledComponentsConfig.transpileTemplateLiterals ?? false,
-                  minify: styledComponentsConfig.minify ?? true,
-                  pure: styledComponentsConfig.pure ?? true,
-                  namespace: styledComponentsConfig.namespace,
-                  // topLevelImportPaths is not supported by rolldown's styledComponents
-                  // meaninglessFileNames is not supported by rolldown's styledComponents
-                },
+      ? (options) => ({
+          ...options,
+          transform: {
+            ...options.transform,
+            plugins: {
+              ...options.transform?.plugins,
+              styledComponents: {
+                displayName: true,
+                fileName: false,
+                ssr: true,
+                transpileTemplateLiterals: false,
+                minify: true,
+                pure: true,
+                ...(config.styledComponents === true ? {} : config.styledComponents),
               },
             },
-          }
-        }
+          },
+        })
       : undefined,
   }
 
