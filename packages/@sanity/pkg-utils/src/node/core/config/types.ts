@@ -69,31 +69,6 @@ export interface PkgConfigOptions {
   /** @alpha */
   babel?: {
     plugins?: BabelPluginItem[] | null | undefined
-    /** @alpha */
-    styledComponents?:
-      | boolean
-      | {
-          /** @defaultValue true */
-          displayName?: boolean
-          /**
-           * @defaultValue []
-           * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
-           */
-          topLevelImportPaths?: string[]
-          /** @defaultValue true */
-          ssr?: boolean
-          /** @defaultValue fale */
-          fileName?: boolean
-          /** @defaultValue ["index"] */
-          meaninglessFileNames?: string[]
-          /** @defaultValue true */
-          minify?: boolean
-          /** @defaultValue false */
-          transpileTemplateLiterals?: boolean
-          namespace?: string
-          /** @defaultValue true */
-          pure?: boolean
-        }
   }
   /**
    * Enable React Compiler for automatic React optimizations.
@@ -101,6 +76,35 @@ export interface PkgConfigOptions {
    * @alpha
    */
   reactCompiler?: boolean | Partial<ReactCompilerOptions>
+  /**
+   * Configure styled-components transformation using rolldown's built-in support.
+   * Set to `true` to enable with defaults, or provide styled-components options.
+   * @alpha
+   */
+  styledComponents?:
+    | boolean
+    | {
+        /** @defaultValue true */
+        displayName?: boolean
+        /**
+         * @defaultValue []
+         * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
+         */
+        topLevelImportPaths?: string[]
+        /** @defaultValue true */
+        ssr?: boolean
+        /** @defaultValue false */
+        fileName?: boolean
+        /** @defaultValue ["index"] */
+        meaninglessFileNames?: string[]
+        /** @defaultValue true */
+        minify?: boolean
+        /** @defaultValue false */
+        transpileTemplateLiterals?: boolean
+        namespace?: string
+        /** @defaultValue true */
+        pure?: boolean
+      }
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>

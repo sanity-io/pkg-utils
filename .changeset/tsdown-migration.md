@@ -9,16 +9,19 @@ Migrate from rollup/rolldown to tsdown for bundling
 - Removes `dts: 'api-extractor'` and `dts: 'rolldown'` config options - tsdown handles DTS automatically
 - Removes `rollup` configuration object from config types  
 - Moves `babel.reactCompiler` to top-level `reactCompiler` option
+- Moves `babel.styledComponents` to top-level `styledComponents` option
 - Moves `tsgo` option to `tsdown.tsgo`
 
 ## Features
 
 - Added `reactCompiler: boolean | Partial<ReactCompilerOptions>` config option for React Compiler support with full plugin options
+- Added `styledComponents` top-level config option using rolldown's built-in styled-components support
 - Added `tsdown.tsgo` option for native TypeScript preview via `@typescript/native-preview`
 - Implemented React Compiler using `@rollup/plugin-babel` as recommended by tsdown
 - Replaced esbuild-based export validation with publint
 - Consolidated JS and DTS generation under tsdown
 - Retained api-extractor for TSDoc validation
+- Warns when `babel-plugin-styled-components` is installed while using built-in support (in strict mode)
 
 ## Performance
 

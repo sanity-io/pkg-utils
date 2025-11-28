@@ -44,6 +44,24 @@ export async function resolveTsdownConfig(
   // Determine platform based on runtime
   const platform = runtime === 'browser' ? 'browser' : runtime === 'node' ? 'node' : 'neutral'
 
+  // Warn if babel-plugin-styled-components exists when using built-in styled-components support
+  if (config?.styledComponents && ctx.strict) {
+    try {
+      // Check if babel-plugin-styled-components is in dependencies
+      const hasBabelPlugin =
+        pkg.dependencies?.['babel-plugin-styled-components'] ||
+        pkg.devDependencies?.['babel-plugin-styled-components']
+
+      if (hasBabelPlugin) {
+        ctx.logger.warn(
+          'babel-plugin-styled-components is installed but styled-components support is now built into rolldown/tsdown. Consider removing babel-plugin-styled-components from your dependencies.',
+        )
+      }
+    } catch {
+      // Ignore errors when checking for babel plugin
+    }
+  }
+
   // Configure Babel plugin for React Compiler if enabled
   const plugins: any[] = []
   
@@ -126,6 +144,35 @@ export async function resolveTsdownConfig(
     fixedExtension: false,
     // Add babel plugin for React Compiler if configured
     plugins: plugins.length > 0 ? plugins : undefined,
+    // Configure rolldown's built-in styled-components support via inputOptions
+    inputOptions: config?.styledComponents
+      ? (options) => {
+          const styledComponentsConfig =
+            typeof config.styledComponents === 'object' ? config.styledComponents : {}
+
+          return {
+            ...options,
+            transform: {
+              ...options.transform,
+              plugins: {
+                ...options.transform?.plugins,
+                styledComponents: {
+                  displayName: styledComponentsConfig.displayName ?? true,
+                  fileName: styledComponentsConfig.fileName ?? false,
+                  ssr: styledComponentsConfig.ssr ?? true,
+                  transpileTemplateLiterals:
+                    styledComponentsConfig.transpileTemplateLiterals ?? false,
+                  minify: styledComponentsConfig.minify ?? true,
+                  pure: styledComponentsConfig.pure ?? true,
+                  namespace: styledComponentsConfig.namespace,
+                  // topLevelImportPaths is not supported by rolldown's styledComponents
+                  // meaninglessFileNames is not supported by rolldown's styledComponents
+                },
+              },
+            },
+          }
+        }
+      : undefined,
   }
 
   return tsdownOptions
