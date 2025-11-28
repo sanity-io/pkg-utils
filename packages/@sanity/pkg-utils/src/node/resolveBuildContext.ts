@@ -214,31 +214,32 @@ async function resolveBrowserslistTargets(query: string | string[]): Promise<str
     const [name, version] = browser.split(' ')
     if (!name || !version) continue
     
-    const versionNum = version.split('-')[0] // Handle version ranges like "10.0-10.2"
+    // Get the major version number only (e.g., "22.21.0" -> "22")
+    const majorVersion = version.split('.')[0]!.split('-')[0]! // Handle ranges like "10-12"
     
     // Map browserslist names to esbuild target names
     switch (name.toLowerCase()) {
       case 'chrome':
       case 'and_chr':
-        targets.add(`chrome${versionNum}`)
+        targets.add(`chrome${majorVersion}`)
         break
       case 'edge':
-        targets.add(`edge${versionNum}`)
+        targets.add(`edge${majorVersion}`)
         break
       case 'firefox':
       case 'and_ff':
-        targets.add(`firefox${versionNum}`)
+        targets.add(`firefox${majorVersion}`)
         break
       case 'safari':
       case 'ios_saf':
-        targets.add(`safari${versionNum}`)
+        targets.add(`safari${majorVersion}`)
         break
       case 'opera':
       case 'op_mob':
-        targets.add(`opera${versionNum}`)
+        targets.add(`opera${majorVersion}`)
         break
       case 'node':
-        targets.add(`node${versionNum}`)
+        targets.add(`node${majorVersion}`)
         break
     }
   }

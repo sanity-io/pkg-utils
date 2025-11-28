@@ -62,7 +62,8 @@ export function resolveTsdownConfig(
     outDir,
     format: format === 'commonjs' ? 'cjs' : format,
     platform,
-    target: target.length > 0 ? target : undefined,
+    // Use only the first/lowest target to avoid issues with duplicates
+    target: target.length > 0 ? [target[0]!] : undefined,
     tsconfig: ctx.ts.configPath || 'tsconfig.json',
     external: (id, importer) => {
       // Check if the id is a self-referencing import
@@ -101,8 +102,8 @@ export function resolveTsdownConfig(
     clean: false, // We handle cleaning ourselves
     cwd,
     silent: true, // We handle logging ourselves
-    // Configure fixed extensions based on package type and format
-    fixedExtension: true, // Use .mjs/.cjs extensions
+    // Don't use fixed extensions - let tsdown use package type to determine extension
+    fixedExtension: false,
   }
 
   return tsdownOptions
