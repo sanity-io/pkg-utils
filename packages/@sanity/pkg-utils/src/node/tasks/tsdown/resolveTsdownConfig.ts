@@ -62,7 +62,8 @@ export function resolveTsdownConfig(
     outDir,
     format: format === 'commonjs' ? 'cjs' : format,
     platform,
-    // Use only the first/lowest target to avoid issues with duplicates
+    // Use only the first target to avoid rolldown issues with duplicate targets
+    // The targets array is sorted, so this generally provides the lowest/oldest version
     target: target.length > 0 ? [target[0]!] : undefined,
     tsconfig: ctx.ts.configPath || 'tsconfig.json',
     external: (id, importer) => {
