@@ -13,7 +13,7 @@ Migrate from rollup/rolldown to tsdown for bundling
 
 ## Features
 
-- Added `reactCompiler: boolean | {target: '18' | '19'}` config option for React Compiler support
+- Added `reactCompiler: boolean | Partial<ReactCompilerOptions>` config option for React Compiler support with full plugin options
 - Added `tsdown.tsgo` option for native TypeScript preview via `@typescript/native-preview`
 - Implemented React Compiler using `@rollup/plugin-babel` as recommended by tsdown
 - Replaced esbuild-based export validation with publint

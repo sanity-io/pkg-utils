@@ -48,8 +48,9 @@ export async function resolveTsdownConfig(
   const plugins: any[] = []
   
   if (config?.reactCompiler) {
-    const reactCompilerTarget =
-      typeof config.reactCompiler === 'object' ? config.reactCompiler.target || '19' : '19'
+    // Use the provided options or default to empty object
+    const reactCompilerOptions =
+      typeof config.reactCompiler === 'object' ? config.reactCompiler : {}
     
     // Use @rollup/plugin-babel for React Compiler as recommended by tsdown
     const {babel} = await import('@rollup/plugin-babel')
@@ -67,9 +68,7 @@ export async function resolveTsdownConfig(
         plugins: [
           [
             'babel-plugin-react-compiler',
-            {
-              target: reactCompilerTarget,
-            },
+            reactCompilerOptions,
           ],
         ],
         extensions: ['.js', '.jsx', '.ts', '.tsx'],

@@ -1,4 +1,5 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
+import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
 import type {StrictOptions} from '../../strict.ts'
 
 /** @public */
@@ -96,18 +97,10 @@ export interface PkgConfigOptions {
   }
   /**
    * Enable React Compiler for automatic React optimizations.
-   * Set to `true` to enable with defaults, or specify a target React version.
+   * Set to `true` to enable with defaults, or provide React Compiler options.
    * @alpha
    */
-  reactCompiler?:
-    | boolean
-    | {
-        /**
-         * Target React version for the compiler
-         * @defaultValue '19'
-         */
-        target?: '18' | '19'
-      }
+  reactCompiler?: boolean | Partial<ReactCompilerOptions>
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>
