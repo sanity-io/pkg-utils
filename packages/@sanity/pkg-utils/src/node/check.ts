@@ -90,7 +90,10 @@ export async function check(options: {
       consoleSpy.restore()
     }
 
-    if (ctx.dts === 'rolldown' && ctx.config?.extract?.enabled !== false) {
+    // Now use publint to check the package
+    await checkWithPublint(cwd, logger)
+
+    if (ctx.config?.extract?.enabled !== false) {
       await checkApiExtractorReleaseTags(ctx)
     }
 
@@ -215,6 +218,34 @@ function isEsbuildMessage(msg: unknown): msg is Message {
     'location' in msg &&
     (msg.location === null || typeof msg.location === 'object')
   )
+}
+
+async function checkWithPublint(cwd: string, logger: Logger) {
+  const {publint} = await import('publint')
+  const {formatMessage} = await import('publint/utils')
+
+  const {messages} = await publint({pkgDir: cwd})
+
+  if (messages.length > 0) {
+    for (const message of messages) {
+      const formatted = formatMessage(message, 'node_terminal')
+      
+      if (message.type === 'error') {
+        logger.error(formatted)
+      } else if (message.type === 'warning') {
+        logger.warn(formatted)
+      } else {
+        logger.info(formatted)
+      }
+
+      logger.log()
+    }
+
+    const hasErrors = messages.some((m) => m.type === 'error')
+    if (hasErrors) {
+      process.exit(1)
+    }
+  }
 }
 
 async function checkApiExtractorReleaseTags(ctx: BuildContext) {

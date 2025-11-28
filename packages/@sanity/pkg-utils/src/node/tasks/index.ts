@@ -1,19 +1,13 @@
-import {dtsTask} from './dts/dtsTask.ts'
-import {dtsWatchTask} from './dts/dtsWatchTask.ts'
-import {rolldownDtsTask} from './rolldown/rolldownDtsTask.ts'
-import {rollupTask} from './rollup/rollupTask.ts'
-import {rollupWatchTask} from './rollup/rollupWatchTask.ts'
+import {tsdownTask} from './tsdown/tsdownTask.ts'
+import {tsdownWatchTask} from './tsdown/tsdownWatchTask.ts'
 import type {BuildTaskHandlers, WatchTaskHandlers} from './types.ts'
 
 /** @internal */
 export const buildTaskHandlers: BuildTaskHandlers = {
-  'build:dts': dtsTask,
-  'build:js': rollupTask,
-  'rolldown:dts': rolldownDtsTask,
+  'build:tsdown': tsdownTask,
 }
 
 /** @internal */
 export const watchTaskHandlers: WatchTaskHandlers = {
-  'watch:dts': dtsWatchTask,
-  'watch:js': rollupWatchTask,
+  'watch:tsdown': tsdownWatchTask,
 }
