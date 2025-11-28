@@ -1,6 +1,6 @@
 import type ts from 'typescript'
 import type {Logger} from '../../logger.ts'
-import type {DtsType, PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types.ts'
+import type {PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types.ts'
 import type {PackageJSON} from '../pkg/types.ts'
 
 /** @internal */
@@ -28,5 +28,5 @@ export interface BuildContext {
     config?: ts.ParsedCommandLine | undefined
     configPath?: string | undefined
   }
-  dts: DtsType
+  dts: 'tsdown'
 }

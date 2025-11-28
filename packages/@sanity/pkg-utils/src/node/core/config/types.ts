@@ -1,8 +1,5 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
-import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
-import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
-import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict.ts'
 
 /** @public */
@@ -65,46 +62,47 @@ export interface TSDocCustomTag {
   allowMultiple?: boolean
 }
 
-export type DtsType = 'api-extractor' | 'rolldown'
-
 /** @public */
 export interface PkgConfigOptions {
   /** @alpha */
   babel?: {
     plugins?: BabelPluginItem[] | null | undefined
-    /** @alpha */
-    reactCompiler?: boolean
-    /** @alpha */
-    styledComponents?:
-      | boolean
-      | {
-          /** @defaultValue true */
-          displayName?: boolean
-          /**
-           * @defaultValue []
-           * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
-           */
-          topLevelImportPaths?: string[]
-          /** @defaultValue true */
-          ssr?: boolean
-          /** @defaultValue fale */
-          fileName?: boolean
-          /** @defaultValue ["index"] */
-          meaninglessFileNames?: string[]
-          /** @defaultValue true */
-          minify?: boolean
-          /** @defaultValue false */
-          transpileTemplateLiterals?: boolean
-          namespace?: string
-          /** @defaultValue true */
-          pure?: boolean
-        }
   }
   /**
-   * Configure the React Compiler.
-   * To enable it set `babel.reactCompiler` to `true`
-   * @beta */
-  reactCompilerOptions?: Partial<ReactCompilerOptions>
+   * Enable React Compiler for automatic React optimizations.
+   * Set to `true` to enable with defaults, or provide React Compiler options.
+   * @alpha
+   */
+  reactCompiler?: boolean | Partial<ReactCompilerOptions>
+  /**
+   * Configure styled-components transformation using rolldown's built-in support.
+   * Set to `true` to enable with defaults, or provide styled-components options.
+   * @alpha
+   */
+  styledComponents?:
+    | boolean
+    | {
+        /** @defaultValue true */
+        displayName?: boolean
+        /**
+         * @defaultValue []
+         * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
+         */
+        topLevelImportPaths?: string[]
+        /** @defaultValue true */
+        ssr?: boolean
+        /** @defaultValue false */
+        fileName?: boolean
+        /** @defaultValue ["index"] */
+        meaninglessFileNames?: string[]
+        /** @defaultValue true */
+        minify?: boolean
+        /** @defaultValue false */
+        transpileTemplateLiterals?: boolean
+        namespace?: string
+        /** @defaultValue true */
+        pure?: boolean
+      }
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>
@@ -174,39 +172,6 @@ export interface PkgConfigOptions {
    */
   legacyExports?: never
   minify?: boolean
-  /** @alpha */
-  rollup?: {
-    plugins?: PkgConfigProperty<RollupPlugin[]>
-    output?: Partial<NormalizedOutputOptions>
-    /**
-     * Default options are `preset: 'recommended'` and `propertyReadSideEffects: false`
-     * @alpha
-     */
-    treeshake?: TreeshakingOptions
-    /** @alpha */
-    experimentalLogSideEffects?: boolean
-    /**
-     * Adds [hash] to chunk filenames, generally only useful if `@sanity/pkg-utils` is used to deploy a package directly to a CDN.
-     * It's not needed when publishing to npm for consumption by other libraries, bundlers and frameworks.
-     * @defaultValue false
-     */
-    hashChunkFileNames?: boolean
-    /**
-     * Optimizes lodash imports using `@optimize-lodash/rollup-plugin` when set to `true`.
-     * It's enabled if `lodash` is found in `dependencies` or `peerDependencies`.
-     * It will use `lodash-es` for ESM targets if found in `dependencies` or `peerDependencies`.
-     * @defaultValue true
-     * @alpha
-     */
-    optimizeLodash?: boolean | OptimizeLodashOptions
-    /**
-     * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
-     * @alpha
-     */
-    vanillaExtract?:
-      | boolean
-      | (VanillaExtractOptions & {minify?: boolean; browserslist?: string | string[]})
-  }
   /**
    * Default runtime of package exports
    */
@@ -222,16 +187,36 @@ export interface PkgConfigOptions {
    */
   strictOptions?: Partial<StrictOptions>
   /**
-   * .d.ts files can be generated either by using `@microsoft/api-extractor` or `rolldown`.
-   * `rolldown` is the faster option, but is not yet stable.
-   * @defaultValue 'api-extractor'
-   */
-  dts?: DtsType
-  /**
-   * When using `dts: 'rolldown'`, enables the use of `@typescript/native-preview` for type generation.
-   * By default, `tsgo` is automatically enabled if `@typescript/native-preview` is found in `devDependencies`.
-   * Set to `true` to explicitly enable or `false` to explicitly disable.
+   * Configure tsdown-specific options
    * @alpha
    */
-  tsgo?: boolean
+  tsdown?: {
+    /**
+     * Enable experimental tsgo for faster type generation using `@typescript/native-preview`
+     * @alpha
+     */
+    tsgo?: boolean
+  }
+  /**
+   * Enable vanilla-extract CSS-in-JS support using `@vanilla-extract/rollup-plugin`.
+   * Set to `true` to enable with defaults, or provide vanilla-extract plugin options.
+   * @alpha
+   */
+  vanillaExtract?:
+    | boolean
+    | {
+        /**
+         * Current working directory. Should be set to the directory containing the package.json for the package.
+         */
+        cwd?: string
+        /**
+         * @deprecated Use `emitCssInSsr` instead
+         */
+        esbuildOptions?: any
+        /**
+         * Whether to emit CSS imports in SSR builds
+         * @defaultValue false
+         */
+        emitCssInSsr?: boolean
+      }
 }
