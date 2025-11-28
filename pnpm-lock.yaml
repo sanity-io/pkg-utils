@@ -120,8 +120,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5
       '@vanilla-extract/rollup-plugin':
-        specifier: ^1.4.3
-        version: 1.4.3(rollup@4.53.3)
+        specifier: ^1.5.0
+        version: 1.5.0(rollup@4.53.3)
       browserslist:
         specifier: ^4.28.0
         version: 4.28.0
@@ -3350,8 +3350,8 @@ packages:
   '@vanilla-extract/private@1.0.9':
     resolution: {integrity: sha512-gT2jbfZuaaCLrAxwXbRgIhGhcXbRZCG3v4TTUnjw0EJ7ArdBRxkq4msNJkbuRkCgfIK5ATmprB5t9ljvLeFDEA==}
 
-  '@vanilla-extract/rollup-plugin@1.4.3':
-    resolution: {integrity: sha512-AFF5M4JalYvhdxDxESawWg4CxcyOKQKDyBLZvH8B2Cvo7KZGjO/mastP5qPYTq+LHIUEINKjLnYEYzY0xi0U2w==}
+  '@vanilla-extract/rollup-plugin@1.5.0':
+    resolution: {integrity: sha512-42jOErEl2yaALW/KZg97BncNoIEDXCkSkkZ0uMakF7RHgNqfSniwefSItbHOnoc6ZPtMzv/Qd7PXLYIEmtaVWA==}
     peerDependencies:
       rollup: ^2.0.0 || ^3.0.0 || ^4.0.0
 
@@ -11094,7 +11094,7 @@ snapshots:
 
   '@vanilla-extract/private@1.0.9': {}
 
-  '@vanilla-extract/rollup-plugin@1.4.3(rollup@4.53.3)':
+  '@vanilla-extract/rollup-plugin@1.5.0(rollup@4.53.3)':
     dependencies:
       '@vanilla-extract/integration': 8.0.6
       magic-string: 0.30.21
