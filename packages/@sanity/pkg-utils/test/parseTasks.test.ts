@@ -71,7 +71,7 @@ test('should parse tasks (type: module)', () => {
     },
     strict: true,
     ts: {},
-    dts: 'api-extractor',
+    dts: 'tsdown',
   }
 
   const tasks = resolveBuildTasks(ctx)

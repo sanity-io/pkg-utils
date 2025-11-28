@@ -1,15 +1,7 @@
 import path from 'node:path'
 import type {Options as TsdownOptions} from 'tsdown'
-import {resolveConfigProperty} from '../../core/config/resolveConfigProperty.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
-import type {PackageJSON} from '../../core/pkg/types.ts'
 import type {TsdownTask, TsdownWatchTask} from '../types.ts'
-import {pkgExtMap as extMap} from '../../core/pkg/pkgExt.ts'
-
-// Type guard to filter out falsy values
-function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
-  return Boolean(value)
-}
 
 /** @internal */
 export function resolveTsdownConfig(
@@ -18,7 +10,6 @@ export function resolveTsdownConfig(
 ): TsdownOptions {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, distPath, pkg, ts} = ctx
-  const outputExt = extMap[pkg.type || 'commonjs'][format]
   const minify = config?.minify ?? false
   const outDir = path.relative(cwd, distPath)
 
@@ -53,29 +44,17 @@ export function resolveTsdownConfig(
   // Determine platform based on runtime
   const platform = runtime === 'browser' ? 'browser' : runtime === 'node' ? 'node' : 'neutral'
 
-  // Configure Babel for React Compiler if needed
-  const babelPlugins: Array<[string, any] | string> = []
-  
-  if (config?.babel?.styledComponents) {
-    babelPlugins.push([
-      'babel-plugin-styled-components',
-      {
-        fileName: false,
-        transpileTemplateLiterals: false,
-        pure: true,
-        cssProp: false,
-        ...(typeof config.babel.styledComponents === 'object'
-          ? config.babel.styledComponents
-          : {}),
-      },
-    ])
+  // Warn if React Compiler or Styled Components are enabled - not yet supported with tsdown
+  if (config?.babel?.reactCompiler) {
+    ctx.logger.warn(
+      'React Compiler is enabled but not yet fully supported with tsdown. Consider using @rollup/plugin-babel separately.',
+    )
   }
 
-  if (config?.babel?.reactCompiler) {
-    babelPlugins.push([
-      'babel-plugin-react-compiler',
-      config?.reactCompilerOptions || {},
-    ])
+  if (config?.babel?.styledComponents) {
+    ctx.logger.warn(
+      'Styled Components is enabled but not yet fully supported with tsdown. Consider using babel-plugin-styled-components separately.',
+    )
   }
 
   const tsdownOptions: TsdownOptions = {
@@ -126,50 +105,5 @@ export function resolveTsdownConfig(
     fixedExtension: true, // Use .mjs/.cjs extensions
   }
 
-  // Add Babel configuration if plugins are present
-  if (babelPlugins.length > 0) {
-    // tsdown uses rolldown which supports babel plugins
-    // We need to use inputOptions to pass babel configuration
-    tsdownOptions.inputOptions = (options) => {
-      return {
-        ...options,
-        plugins: [
-          ...(options.plugins || []),
-          // Add babel plugin using @rollup/plugin-babel
-          {
-            name: 'babel-react-compiler',
-            async transform(code: string, id: string) {
-              if (!/\.[jt]sx?$/.test(id)) return null
-
-              const {transformAsync} = await import('@babel/core')
-              const result = await transformAsync(code, {
-                filename: id,
-                babelrc: false,
-                presets: ['@babel/preset-typescript'],
-                plugins: babelPlugins,
-                babelHelpers: 'bundled',
-              })
-
-              if (!result || !result.code) return null
-
-              return {
-                code: result.code,
-                map: result.map,
-              }
-            },
-          },
-        ],
-      }
-    }
-  }
-
   return tsdownOptions
-}
-
-function hasDependency(pkg: PackageJSON, packageName: string): boolean {
-  return pkg.dependencies
-    ? packageName in pkg.dependencies
-    : pkg.peerDependencies
-      ? packageName in pkg.peerDependencies
-      : false
 }

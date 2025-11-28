@@ -1,11 +1,10 @@
-import path from 'node:path'
 import type {PkgExport, PkgFormat, PkgRuntime} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
 import type {TsdownTaskEntry, TsdownWatchTask, WatchTask} from './tasks/types.ts'
 
 /** @internal */
 export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
-  const {pkg, target} = ctx
+  const {target} = ctx
   const tasks: WatchTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(

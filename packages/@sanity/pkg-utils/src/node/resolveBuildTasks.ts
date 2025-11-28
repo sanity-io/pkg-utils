@@ -1,11 +1,10 @@
-import path from 'node:path'
 import type {PkgExport, PkgFormat, PkgRuntime} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
 import type {BuildTask, TsdownTask, TsdownTaskEntry} from './tasks/types.ts'
 
 /** @internal */
 export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
-  const {config, pkg, target} = ctx
+  const {config, target} = ctx
 
   const bundles = config?.bundles || []
 
