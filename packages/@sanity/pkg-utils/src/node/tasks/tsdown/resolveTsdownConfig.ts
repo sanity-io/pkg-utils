@@ -99,7 +99,7 @@ export function resolveTsdownConfig(
     },
     dts: true, // Always generate DTS files with tsdown
     sourcemap: config?.sourcemap ?? true,
-    minify: minify ? true : false,
+    minify,
     clean: false, // We handle cleaning ourselves
     cwd,
     silent: true, // We handle logging ourselves

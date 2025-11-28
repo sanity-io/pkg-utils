@@ -257,7 +257,7 @@ async function resolveBrowserslistTargets(query: string | string[]): Promise<str
     }
   }
   
-  return Array.from(targets).sort()
+  return Array.from(targets).toSorted()
 }
 
 function transformPackageName(packageName: string): string {
