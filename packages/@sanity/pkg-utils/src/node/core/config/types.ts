@@ -1,8 +1,6 @@
-import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
-import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict.ts'
 
 /** @public */
@@ -65,46 +63,98 @@ export interface TSDocCustomTag {
   allowMultiple?: boolean
 }
 
-export type DtsType = 'api-extractor' | 'rolldown'
-
 /** @public */
 export interface PkgConfigOptions {
-  /** @alpha */
-  babel?: {
-    plugins?: BabelPluginItem[] | null | undefined
-    /** @alpha */
-    reactCompiler?: boolean
-    /** @alpha */
-    styledComponents?:
-      | boolean
-      | {
-          /** @defaultValue true */
-          displayName?: boolean
-          /**
-           * @defaultValue []
-           * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
-           */
-          topLevelImportPaths?: string[]
-          /** @defaultValue true */
-          ssr?: boolean
-          /** @defaultValue fale */
-          fileName?: boolean
-          /** @defaultValue ["index"] */
-          meaninglessFileNames?: string[]
-          /** @defaultValue true */
-          minify?: boolean
-          /** @defaultValue false */
-          transpileTemplateLiterals?: boolean
-          namespace?: string
-          /** @defaultValue true */
-          pure?: boolean
-        }
-  }
   /**
-   * Configure the React Compiler.
-   * To enable it set `babel.reactCompiler` to `true`
-   * @beta */
-  reactCompilerOptions?: Partial<ReactCompilerOptions>
+   * Enable React Compiler for automatic React optimizations.
+   * Set to `true` to enable with defaults, or provide React Compiler options.
+   * @alpha
+   */
+  reactCompiler?: boolean | Partial<ReactCompilerOptions>
+  /**
+   * Configure styled-components transformation using rolldown's built-in support.
+   * Set to `true` to enable with defaults, or provide styled-components options.
+   * @alpha
+   */
+  styledComponents?:
+    | boolean
+    // Based on types from https://github.com/rolldown/rolldown/blob/0b2b1f9fa4a4008a9b0c2e07afb132df427c3838/packages/rolldown/src/binding.d.cts#L1061-L1133
+    | {
+        /**
+         * Enhances the attached CSS class name on each component with richer output to help
+         * identify your components in the DOM without React DevTools.
+         *
+         * @defaultValue true
+         */
+        displayName?: boolean
+        /**
+         * Controls whether the `displayName` of a component will be prefixed with the filename
+         * to make the component name as unique as possible.
+         *
+         * @defaultValue false
+         */
+        fileName?: boolean
+        /**
+         * Adds a unique identifier to every styled component to avoid checksum mismatches
+         * due to different class generation on the client and server during server-side rendering.
+         *
+         * @defaultValue true
+         */
+        ssr?: boolean
+        /**
+         * Transpiles styled-components tagged template literals to a smaller representation
+         * than what Babel normally creates, helping to reduce bundle size.
+         *
+         * @defaultValue false
+         */
+        transpileTemplateLiterals?: boolean
+        /**
+         * Minifies CSS content by removing all whitespace and comments from your CSS,
+         * keeping valuable bytes out of your bundles.
+         *
+         * @defaultValue true
+         */
+        minify?: boolean
+        /**
+         * Enables transformation of JSX `css` prop when using styled-components.
+         *
+         * **Note: This feature is not yet implemented in oxc.**
+         *
+         * @defaultValue true
+         */
+        cssProp?: never
+        /**
+         * Enables "pure annotation" to aid dead code elimination by bundlers.
+         *
+         * @defaultValue true
+         */
+        pure?: boolean
+        /**
+         * Adds a namespace prefix to component identifiers to ensure class names are unique.
+         *
+         * Example: With `namespace: "my-app"`, generates `componentId: "my-app__sc-3rfj0a-1"`
+         */
+        namespace?: string
+        /**
+         * List of file names that are considered meaningless for component naming purposes.
+         *
+         * When the `fileName` option is enabled and a component is in a file with a name
+         * from this list, the directory name will be used instead of the file name for
+         * the component's display name.
+         *
+         * @defaultValue `["index"]`
+         */
+        meaninglessFileNames?: string[]
+        /**
+         * Import paths to be considered as styled-components imports at the top level.
+         *
+         * **Note: This feature is not yet implemented in oxc.**
+         *
+         * @defaultValue []
+         * @example ["\@xstyled/styled-components", "\@xstyled/styled-components/*"]
+         */
+        topLevelImportPaths?: never
+      }
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>
@@ -174,39 +224,6 @@ export interface PkgConfigOptions {
    */
   legacyExports?: never
   minify?: boolean
-  /** @alpha */
-  rollup?: {
-    plugins?: PkgConfigProperty<RollupPlugin[]>
-    output?: Partial<NormalizedOutputOptions>
-    /**
-     * Default options are `preset: 'recommended'` and `propertyReadSideEffects: false`
-     * @alpha
-     */
-    treeshake?: TreeshakingOptions
-    /** @alpha */
-    experimentalLogSideEffects?: boolean
-    /**
-     * Adds [hash] to chunk filenames, generally only useful if `@sanity/pkg-utils` is used to deploy a package directly to a CDN.
-     * It's not needed when publishing to npm for consumption by other libraries, bundlers and frameworks.
-     * @defaultValue false
-     */
-    hashChunkFileNames?: boolean
-    /**
-     * Optimizes lodash imports using `@optimize-lodash/rollup-plugin` when set to `true`.
-     * It's enabled if `lodash` is found in `dependencies` or `peerDependencies`.
-     * It will use `lodash-es` for ESM targets if found in `dependencies` or `peerDependencies`.
-     * @defaultValue true
-     * @alpha
-     */
-    optimizeLodash?: boolean | OptimizeLodashOptions
-    /**
-     * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
-     * @alpha
-     */
-    vanillaExtract?:
-      | boolean
-      | (VanillaExtractOptions & {minify?: boolean; browserslist?: string | string[]})
-  }
   /**
    * Default runtime of package exports
    */
@@ -222,16 +239,23 @@ export interface PkgConfigOptions {
    */
   strictOptions?: Partial<StrictOptions>
   /**
-   * .d.ts files can be generated either by using `@microsoft/api-extractor` or `rolldown`.
-   * `rolldown` is the faster option, but is not yet stable.
-   * @defaultValue 'api-extractor'
-   */
-  dts?: DtsType
-  /**
-   * When using `dts: 'rolldown'`, enables the use of `@typescript/native-preview` for type generation.
-   * By default, `tsgo` is automatically enabled if `@typescript/native-preview` is found in `devDependencies`.
-   * Set to `true` to explicitly enable or `false` to explicitly disable.
+   * Enable experimental tsgo for faster type generation using `@typescript/native-preview`
    * @alpha
    */
   tsgo?: boolean
+  /**
+   * Optimizes lodash imports using `@optimize-lodash/rollup-plugin` when set to `true`.
+   * It's enabled if `lodash` is found in `dependencies` or `peerDependencies`.
+   * It will use `lodash-es` for ESM targets if found in `dependencies` or `peerDependencies`.
+   * @defaultValue true
+   * @alpha
+   */
+  optimizeLodash?: boolean | OptimizeLodashOptions
+  /**
+   * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
+   * @alpha
+   */
+  vanillaExtract?:
+    | boolean
+    | (VanillaExtractOptions & {minify?: boolean;})
 }

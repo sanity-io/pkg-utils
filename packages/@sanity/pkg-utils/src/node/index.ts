@@ -34,5 +34,3 @@ export {createLogger} from './logger.ts'
 export {parseStrictOptions} from './strict.ts'
 export {getExtractMessagesConfig} from './tasks/dts/getExtractMessagesConfig.ts'
 export {watch} from './watch.ts'
-
-export type {Plugin as RollupPlugin} from 'rollup'

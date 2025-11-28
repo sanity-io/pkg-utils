@@ -71,31 +71,14 @@ test('should parse tasks (type: module)', () => {
     },
     strict: true,
     ts: {},
-    dts: 'api-extractor',
+    dts: 'tsdown',
   }
 
   const tasks = resolveBuildTasks(ctx)
 
   expect(tasks).toEqual([
     {
-      entries: [
-        {
-          exportPath: '.',
-          importId: 'test',
-          sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.d.ts', './dist/index.d.cts'],
-        },
-        {
-          exportPath: '.',
-          importId: 'test',
-          sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.browser.d.ts', './dist/index.browser.d.cts'],
-        },
-      ],
-      type: 'build:dts',
-    },
-    {
-      type: 'build:js',
+      type: 'build:tsdown',
       buildId: 'commonjs:*',
       entries: [
         {
@@ -109,7 +92,7 @@ test('should parse tasks (type: module)', () => {
       target: ['chrome102', 'node14'],
     },
     {
-      type: 'build:js',
+      type: 'build:tsdown',
       buildId: 'esm:*',
       entries: [
         {
@@ -123,7 +106,7 @@ test('should parse tasks (type: module)', () => {
       target: ['chrome102', 'node14'],
     },
     {
-      type: 'build:js',
+      type: 'build:tsdown',
       buildId: 'commonjs:browser',
       entries: [
         {
@@ -137,7 +120,7 @@ test('should parse tasks (type: module)', () => {
       target: ['chrome102'],
     },
     {
-      type: 'build:js',
+      type: 'build:tsdown',
       buildId: 'esm:browser',
       entries: [
         {

@@ -1,4 +1,3 @@
-import {visualizer} from 'rollup-plugin-visualizer'
 import {defineConfig} from './src/node'
 
 export default defineConfig({
@@ -15,17 +14,8 @@ export default defineConfig({
       'ae-missing-release-tag': 'error',
     },
   },
-  rollup: {
-    plugins: [
-      visualizer({
-        emitFile: true,
-        filename: 'stats.html',
-      }),
-    ],
-  },
   runtime: 'node',
   tsconfig: 'tsconfig.dist.json',
-  dts: 'rolldown',
   strictOptions: {
     // Keep the main field for backward compatibility with older tooling
     noPackageJsonMain: 'off',
