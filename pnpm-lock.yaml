@@ -101,6 +101,9 @@ importers:
       '@sanity/browserslist-config':
         specifier: ^1.0.5
         version: 1.0.5
+      '@vanilla-extract/rollup-plugin':
+        specifier: '*'
+        version: 1.5.0(rollup@4.53.3)
       browserslist:
         specifier: ^4.28.0
         version: 4.28.0
@@ -3250,6 +3253,11 @@ packages:
 
   '@vanilla-extract/private@1.0.9':
     resolution: {integrity: sha512-gT2jbfZuaaCLrAxwXbRgIhGhcXbRZCG3v4TTUnjw0EJ7ArdBRxkq4msNJkbuRkCgfIK5ATmprB5t9ljvLeFDEA==}
+
+  '@vanilla-extract/rollup-plugin@1.5.0':
+    resolution: {integrity: sha512-42jOErEl2yaALW/KZg97BncNoIEDXCkSkkZ0uMakF7RHgNqfSniwefSItbHOnoc6ZPtMzv/Qd7PXLYIEmtaVWA==}
+    peerDependencies:
+      rollup: ^2.0.0 || ^3.0.0 || ^4.0.0
 
   '@vanilla-extract/vite-plugin@5.1.3':
     resolution: {integrity: sha512-QKojhn+O4NIjPQsjfF3Lz+DCC9VaGE/P6eNXcZGoWhdCuGXbMOdSX0xogCX9O6ewzwJOiJJ++3NvuSlh7oVkcw==}
@@ -10937,6 +10945,15 @@ snapshots:
       - supports-color
 
   '@vanilla-extract/private@1.0.9': {}
+
+  '@vanilla-extract/rollup-plugin@1.5.0(rollup@4.53.3)':
+    dependencies:
+      '@vanilla-extract/integration': 8.0.6
+      magic-string: 0.30.21
+      rollup: 4.53.3
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
 
   '@vanilla-extract/vite-plugin@5.1.3(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(vite@7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)':
     dependencies:

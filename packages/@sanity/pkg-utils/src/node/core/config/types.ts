@@ -199,4 +199,26 @@ export interface PkgConfigOptions {
      */
     tsgo?: boolean
   }
+  /**
+   * Enable vanilla-extract CSS-in-JS support using `@vanilla-extract/rollup-plugin`.
+   * Set to `true` to enable with defaults, or provide vanilla-extract plugin options.
+   * @alpha
+   */
+  vanillaExtract?:
+    | boolean
+    | {
+        /**
+         * Current working directory. Should be set to the directory containing the package.json for the package.
+         */
+        cwd?: string
+        /**
+         * @deprecated Use `emitCssInSsr` instead
+         */
+        esbuildOptions?: any
+        /**
+         * Whether to emit CSS imports in SSR builds
+         * @defaultValue false
+         */
+        emitCssInSsr?: boolean
+      }
 }

@@ -94,6 +94,20 @@ export async function resolveTsdownConfig(
     )
   }
 
+  // Configure vanilla-extract plugin if enabled
+  if (config?.vanillaExtract) {
+    const vanillaExtractOptions =
+      typeof config.vanillaExtract === 'object'
+        ? {
+            cwd: config.vanillaExtract.cwd || cwd,
+            emitCssInSsr: config.vanillaExtract.emitCssInSsr,
+          }
+        : {cwd}
+
+    const {vanillaExtractPlugin} = await import('@vanilla-extract/rollup-plugin')
+    plugins.push(vanillaExtractPlugin(vanillaExtractOptions))
+  }
+
   const tsdownOptions: TsdownOptions = {
     entry,
     outDir,

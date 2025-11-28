@@ -117,10 +117,14 @@
   },
   "peerDependencies": {
     "babel-plugin-react-compiler": "*",
-    "typescript": "5.8.x || 5.9.x"
+    "typescript": "5.8.x || 5.9.x",
+    "@vanilla-extract/rollup-plugin": "*"
   },
   "peerDependenciesMeta": {
     "babel-plugin-react-compiler": {
+      "optional": true
+    },
+    "@vanilla-extract/rollup-plugin": {
       "optional": true
     }
   },
