@@ -24,6 +24,7 @@ Migrate from rollup/rolldown to tsdown for bundling
 - Consolidated JS and DTS generation under tsdown
 - Retained api-extractor for TSDoc validation
 - Warns when `babel-plugin-styled-components` is installed while using built-in support (in strict mode)
+- Maintains backward-compatible chunk naming: chunks are emitted to `_chunks/` folder with stable names (no hashes by default)
 
 ## Performance
 

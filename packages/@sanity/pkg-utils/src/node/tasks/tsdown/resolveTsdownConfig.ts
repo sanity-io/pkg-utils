@@ -98,6 +98,12 @@ export async function resolveTsdownConfig(
     plugins.push(vanillaExtractPlugin(vanillaExtractOptions))
   }
 
+  // Determine chunk file naming - maintain compatibility with old rollup config
+  // Default is _chunks folder with stable [name] naming (no hash)
+  const chunksFolder = '_chunks'
+  const outputExt = format === 'commonjs' ? '.cjs' : '.js'
+  const chunkFileNames = `${chunksFolder}/[name]${outputExt}`
+
   const tsdownOptions: TsdownOptions = {
     // Don't try to resolve `tsdown.config.ts` files,
     config: false,
@@ -172,6 +178,11 @@ export async function resolveTsdownConfig(
           },
         })
       : undefined,
+    // Configure chunk output naming to maintain backward compatibility
+    outputOptions: (options) => ({
+      ...options,
+      chunkFileNames,
+    }),
   }
 
   return tsdownOptions
