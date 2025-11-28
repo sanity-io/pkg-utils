@@ -206,30 +206,30 @@ export async function resolveBuildContext(options: {
 
 /**
  * Converts browserslist query results to esbuild/rolldown target format.
- * 
+ *
  * Transforms browser/node version strings (e.g., "chrome 120.0.1", "node 22.21.0")
  * into esbuild-compatible target strings (e.g., "chrome120", "node22").
- * 
+ *
  * Only extracts major version numbers and maps browserslist browser names
  * to their esbuild equivalents. For version ranges, only the lower bound is used.
- * 
+ *
  * @param query - Browserslist query string or array
  * @returns Array of target strings sorted alphabetically (e.g., ["chrome120", "node20"])
  */
 async function resolveBrowserslistTargets(query: string | string[]): Promise<string[]> {
   const browserslist = await import('browserslist')
   const browsers = browserslist.default(query)
-  
+
   const targets = new Set<string>()
-  
+
   for (const browser of browsers) {
     const [name, version] = browser.split(' ')
     if (!name || !version) continue
-    
+
     // Extract major version number (e.g., "22.21.0" -> "22", "10-12" -> "10")
     // Note: For version ranges, we only use the lower bound
     const majorVersion = version.split('.')[0]!.split('-')[0]!
-    
+
     // Map browserslist names to esbuild/rolldown target names
     switch (name.toLowerCase()) {
       case 'chrome':
@@ -256,7 +256,7 @@ async function resolveBrowserslistTargets(query: string | string[]): Promise<str
         break
     }
   }
-  
+
   return Array.from(targets).toSorted()
 }
 

@@ -52,7 +52,7 @@ export const tsdownWatchTask: TaskHandler<TsdownWatchTask> = {
   exec: (ctx, task) => {
     return new Observable((subscriber) => {
       void execWatch(ctx, task, subscriber)
-      
+
       // Clean up function
       return () => {
         // tsdown will handle cleanup
@@ -125,7 +125,7 @@ async function execWatch(
 
     // Keep the observable alive
     // tsdown will continue to watch and rebuild
-    
+
     // Restore console
     consoleSpy.restore()
   } catch (err) {

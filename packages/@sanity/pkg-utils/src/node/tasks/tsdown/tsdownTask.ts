@@ -108,7 +108,7 @@ async function execPromise(ctx: BuildContext, task: TsdownTask) {
     // tsdown generates files based on the entry configuration
     for (const entry of task.entries) {
       const outputPath = path.resolve(outDir, entry.output)
-      
+
       // Add JS file
       files.push({
         type: 'chunk',
@@ -116,7 +116,10 @@ async function execPromise(ctx: BuildContext, task: TsdownTask) {
       })
 
       // Add DTS file (tsdown generates both JS and DTS)
-      const dtsPath = outputPath.replace(/\.m?js$/, '.d.ts').replace(/\.cjs$/, '.d.cts').replace(/\.mjs$/, '.d.mts')
+      const dtsPath = outputPath
+        .replace(/\.m?js$/, '.d.ts')
+        .replace(/\.cjs$/, '.d.cts')
+        .replace(/\.mjs$/, '.d.mts')
       files.push({
         type: 'types',
         path: dtsPath,

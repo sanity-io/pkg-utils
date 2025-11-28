@@ -62,8 +62,6 @@ export interface TSDocCustomTag {
   allowMultiple?: boolean
 }
 
-
-
 /** @public */
 export interface PkgConfigOptions {
   /** @alpha */

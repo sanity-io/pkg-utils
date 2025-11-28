@@ -78,7 +78,6 @@ export async function check(options: {
   }
 }
 
-
 async function checkWithPublint(cwd: string, logger: Logger) {
   const {publint} = await import('publint')
   const {formatMessage} = await import('publint/utils')
@@ -92,7 +91,7 @@ async function checkWithPublint(cwd: string, logger: Logger) {
   if (messages.length > 0) {
     for (const message of messages) {
       const formatted = formatMessage(message, pkg)
-      
+
       if (!formatted) continue
 
       if (message.type === 'error') {
