@@ -109,7 +109,7 @@ async function execWatch(
   })
 
   try {
-    const options = resolveTsdownConfig(ctx, task)
+    const options = await resolveTsdownConfig(ctx, task)
 
     // Enable watch mode
     const watchOptions = {

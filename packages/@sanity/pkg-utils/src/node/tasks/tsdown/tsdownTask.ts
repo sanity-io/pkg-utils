@@ -99,7 +99,7 @@ async function execPromise(ctx: BuildContext, task: TsdownTask) {
   })
 
   try {
-    const options = resolveTsdownConfig(ctx, task)
+    const options = await resolveTsdownConfig(ctx, task)
 
     // Build with tsdown
     await build(options)

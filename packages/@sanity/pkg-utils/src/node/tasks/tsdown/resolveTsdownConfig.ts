@@ -4,10 +4,10 @@ import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import type {TsdownTask, TsdownWatchTask} from '../types.ts'
 
 /** @internal */
-export function resolveTsdownConfig(
+export async function resolveTsdownConfig(
   ctx: BuildContext,
   buildTask: TsdownTask | TsdownWatchTask,
-): TsdownOptions {
+): Promise<TsdownOptions> {
   const {format, runtime, target} = buildTask
   const {config, cwd, exports: _exports, external, distPath, pkg, ts} = ctx
   const minify = config?.minify ?? false
@@ -44,16 +44,36 @@ export function resolveTsdownConfig(
   // Determine platform based on runtime
   const platform = runtime === 'browser' ? 'browser' : runtime === 'node' ? 'node' : 'neutral'
 
-  // Warn if React Compiler or Styled Components are enabled - not yet supported with tsdown
-  if (config?.babel?.reactCompiler) {
-    ctx.logger.warn(
-      'React Compiler is enabled but not yet fully supported with tsdown. Consider using @rollup/plugin-babel separately.',
-    )
-  }
-
-  if (config?.babel?.styledComponents) {
-    ctx.logger.warn(
-      'Styled Components is enabled but not yet fully supported with tsdown. Consider using babel-plugin-styled-components separately.',
+  // Configure Babel plugin for React Compiler if enabled
+  const plugins: any[] = []
+  
+  if (config?.reactCompiler) {
+    const reactCompilerTarget =
+      typeof config.reactCompiler === 'object' ? config.reactCompiler.target || '19' : '19'
+    
+    // Use @rollup/plugin-babel for React Compiler as recommended by tsdown
+    const {babel} = await import('@rollup/plugin-babel')
+    plugins.push(
+      babel({
+        babelHelpers: 'bundled',
+        presets: [
+          ['@babel/preset-react', {runtime: 'automatic'}],
+          '@babel/preset-typescript',
+        ],
+        parserOpts: {
+          sourceType: 'module',
+          plugins: ['jsx', 'typescript'],
+        },
+        plugins: [
+          [
+            'babel-plugin-react-compiler',
+            {
+              target: reactCompilerTarget,
+            },
+          ],
+        ],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      }),
     )
   }
 
@@ -105,6 +125,8 @@ export function resolveTsdownConfig(
     silent: true, // We handle logging ourselves
     // Don't use fixed extensions - let tsdown use package type to determine extension
     fixedExtension: false,
+    // Add babel plugin for React Compiler if configured
+    plugins: plugins.length > 0 ? plugins : undefined,
   }
 
   return tsdownOptions

@@ -1,5 +1,4 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
-import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
 import type {StrictOptions} from '../../strict.ts'
 
 /** @public */
@@ -70,8 +69,6 @@ export interface PkgConfigOptions {
   babel?: {
     plugins?: BabelPluginItem[] | null | undefined
     /** @alpha */
-    reactCompiler?: boolean
-    /** @alpha */
     styledComponents?:
       | boolean
       | {
@@ -98,10 +95,19 @@ export interface PkgConfigOptions {
         }
   }
   /**
-   * Configure the React Compiler.
-   * To enable it set `babel.reactCompiler` to `true`
-   * @beta */
-  reactCompilerOptions?: Partial<ReactCompilerOptions>
+   * Enable React Compiler for automatic React optimizations.
+   * Set to `true` to enable with defaults, or specify a target React version.
+   * @alpha
+   */
+  reactCompiler?:
+    | boolean
+    | {
+        /**
+         * Target React version for the compiler
+         * @defaultValue '19'
+         */
+        target?: '18' | '19'
+      }
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>
@@ -185,4 +191,15 @@ export interface PkgConfigOptions {
    * Configure what checks are made when running `--strict` builds and checks
    */
   strictOptions?: Partial<StrictOptions>
+  /**
+   * Configure tsdown-specific options
+   * @alpha
+   */
+  tsdown?: {
+    /**
+     * Enable experimental tsgo for faster type generation using `@typescript/native-preview`
+     * @alpha
+     */
+    tsgo?: boolean
+  }
 }
