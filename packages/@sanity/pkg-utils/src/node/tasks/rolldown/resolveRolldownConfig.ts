@@ -46,15 +46,6 @@ export function resolveRolldownConfig(
   const inputOptions = {
     cwd,
     transform: {
-      jsx:
-        config?.jsx === 'preserve'
-          ? 'preserve'
-          : {
-              runtime: config?.jsx === 'automatic' ? 'automatic' : 'classic',
-              importSource: config?.jsxImportSource,
-              pragma: config?.jsxFactory,
-              pragmaFrag: config?.jsxFragment,
-            },
       define:
         pkg.name === '@sanity/pkg-utils'
           ? {...replacements}
@@ -127,8 +118,10 @@ export function resolveRolldownConfig(
         emitDtsOnly: true,
         tsconfig: ctx.ts.configPath || 'tsconfig.json',
         tsgo:
-          typeof pkg.devDependencies === 'object' &&
-          '@typescript/native-preview' in pkg.devDependencies,
+          config?.tsgo !== undefined
+            ? config.tsgo
+            : typeof pkg.devDependencies === 'object' &&
+              '@typescript/native-preview' in pkg.devDependencies,
         // Enable the resolver by giving an allow list of packages to dig through node_modules.
         // If there are none that should be resolved, then this process is skipped and our build is faster.
         // If there's a match then it'll call the resolver function defined on `inputOptions.external`

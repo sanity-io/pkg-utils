@@ -1,5 +1,47 @@
 # @sanity/pkg-utils
 
+## 9.2.1
+
+### Patch Changes
+
+- [#2262](https://github.com/sanity-io/pkg-utils/pull/2262) [`b0eaeb1`](https://github.com/sanity-io/pkg-utils/commit/b0eaeb1b87960c3ca95072b71c1e16e71ef75960) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.52
+
+- [#2269](https://github.com/sanity-io/pkg-utils/pull/2269) [`26a6fe7`](https://github.com/sanity-io/pkg-utils/commit/26a6fe7f01054bb2afaf6af407f2966863a45b28) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.18.1
+
+- [#2300](https://github.com/sanity-io/pkg-utils/pull/2300) [`715b9e6`](https://github.com/sanity-io/pkg-utils/commit/715b9e64e4ceaab2f43b58528bb01417648bc821) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.5.0
+
+- [#2307](https://github.com/sanity-io/pkg-utils/pull/2307) [`d2b026b`](https://github.com/sanity-io/pkg-utils/commit/d2b026b55e5270ba3fc1240a94ab84a6fa08557e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency chokidar to v5
+
+- [#2313](https://github.com/sanity-io/pkg-utils/pull/2313) [`09f46f8`](https://github.com/sanity-io/pkg-utils/commit/09f46f8934756689d1cfaee6129f0ae1fa5a0785) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @optimize-lodash/rollup-plugin to ^5.1.0
+
+## 9.2.0
+
+### Minor Changes
+
+- [#2297](https://github.com/sanity-io/pkg-utils/pull/2297) [`b09c849`](https://github.com/sanity-io/pkg-utils/commit/b09c849768c70323262186f97ef71c1864e44868) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add explicit tsgo config option to override implicit detection
+
+## 9.1.5
+
+### Patch Changes
+
+- [#2287](https://github.com/sanity-io/pkg-utils/pull/2287) [`16661ce`](https://github.com/sanity-io/pkg-utils/commit/16661ce579adb2b3a0a2e1a3c7c34015d4598073) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.1.13
+
+- [#2290](https://github.com/sanity-io/pkg-utils/pull/2290) [`216c466`](https://github.com/sanity-io/pkg-utils/commit/216c4668cae28eb58bac6a6a13290f9182e93ec6) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.4.3
+
+## 9.1.4
+
+### Patch Changes
+
+- [#2277](https://github.com/sanity-io/pkg-utils/pull/2277) [`da5e965`](https://github.com/sanity-io/pkg-utils/commit/da5e965fb8242f2722be2205fefaeae33ac7a93b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.55.1
+
+## 9.1.3
+
+### Patch Changes
+
+- [#2263](https://github.com/sanity-io/pkg-utils/pull/2263) [`692ff21`](https://github.com/sanity-io/pkg-utils/commit/692ff212efb35541d3ef875075ffc778a068da79) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.53.3
+
+- [#2271](https://github.com/sanity-io/pkg-utils/pull/2271) [`80f2dca`](https://github.com/sanity-io/pkg-utils/commit/80f2dca1ed3645b43d15a4ed73bbafe4c954ce6d) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): upgrade rolldown to `beta.51`
+
 ## 9.1.2
 
 ### Patch Changes
