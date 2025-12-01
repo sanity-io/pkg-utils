@@ -1,5 +1,19 @@
 # @sanity/pkg-utils
 
+## 9.2.1
+
+### Patch Changes
+
+- [#2262](https://github.com/sanity-io/pkg-utils/pull/2262) [`b0eaeb1`](https://github.com/sanity-io/pkg-utils/commit/b0eaeb1b87960c3ca95072b71c1e16e71ef75960) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.52
+
+- [#2269](https://github.com/sanity-io/pkg-utils/pull/2269) [`26a6fe7`](https://github.com/sanity-io/pkg-utils/commit/26a6fe7f01054bb2afaf6af407f2966863a45b28) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.18.1
+
+- [#2300](https://github.com/sanity-io/pkg-utils/pull/2300) [`715b9e6`](https://github.com/sanity-io/pkg-utils/commit/715b9e64e4ceaab2f43b58528bb01417648bc821) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.5.0
+
+- [#2307](https://github.com/sanity-io/pkg-utils/pull/2307) [`d2b026b`](https://github.com/sanity-io/pkg-utils/commit/d2b026b55e5270ba3fc1240a94ab84a6fa08557e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency chokidar to v5
+
+- [#2313](https://github.com/sanity-io/pkg-utils/pull/2313) [`09f46f8`](https://github.com/sanity-io/pkg-utils/commit/09f46f8934756689d1cfaee6129f0ae1fa5a0785) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @optimize-lodash/rollup-plugin to ^5.1.0
+
 ## 9.2.0
 
 ### Minor Changes
