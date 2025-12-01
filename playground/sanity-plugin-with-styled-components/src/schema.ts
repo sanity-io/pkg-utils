@@ -7,8 +7,10 @@ const colorTypeName = 'color' as const
 /**
  * @public
  */
-export interface ColorDefinition
-  extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
+export interface ColorDefinition extends Omit<
+  StringDefinition,
+  'type' | 'options' | 'placeholder'
+> {
   type: typeof colorTypeName
   options?: ColorOptions
 }
