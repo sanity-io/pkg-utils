@@ -265,8 +265,6 @@ importers:
         specifier: 'catalog:'
         version: 4.0.14(@types/node@24.10.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
 
-  packages/@sanity/pkg-utils/test/env/__tmp__/7befdb45-f9d4-47d7-b183-82b9fe05cbf6: {}
-
   packages/@sanity/tsconfig: {}
 
   packages/@sanity/tsdown-config:
@@ -2918,8 +2916,8 @@ packages:
     resolution: {integrity: sha512-vdGOd6sxNjqTo2H3Q3L2/Gepy+cDBiQ1mr9ck7c/A9o4NnmBLoDliifsNHIwgNwBUz37oH4+EIz/lIjNy8hSew==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/descriptors@1.3.0':
-    resolution: {integrity: sha512-S2KYYGRUVZy+FDjPp3meoyczbCjobSQvZcgNayo3oYlYS9Qz0E+6RezGxi/KOb6iF52Oir3LEXp9SVfIgEwNjg==}
+  '@sanity/descriptors@1.2.1':
+    resolution: {integrity: sha512-QrniEsAHdKhiaEs+67ukCTZcWRBE4VqF+z/ATn27vBYcQAJ3LvlZUBXloAhaEcmgqRkT1G+RnuakpjWNnELm1A==}
     engines: {node: '>=18.0.0'}
 
   '@sanity/diff-match-patch@3.2.0':
@@ -10264,7 +10262,7 @@ snapshots:
       uuid: 13.0.0
       xstate: 5.24.0
 
-  '@sanity/descriptors@1.3.0':
+  '@sanity/descriptors@1.2.1':
     dependencies:
       sha256-uint8array: 0.10.7
 
@@ -10646,7 +10644,7 @@ snapshots:
 
   '@sanity/schema@4.20.0(@types/react@18.3.27)(debug@4.4.3)':
     dependencies:
-      '@sanity/descriptors': 1.3.0
+      '@sanity/descriptors': 1.2.1
       '@sanity/generate-help-url': 3.0.0
       '@sanity/types': 4.20.0(@types/react@18.3.27)(debug@4.4.3)
       arrify: 2.0.1
@@ -10662,7 +10660,7 @@ snapshots:
 
   '@sanity/schema@4.20.0(@types/react@19.2.7)(debug@4.4.3)':
     dependencies:
-      '@sanity/descriptors': 1.3.0
+      '@sanity/descriptors': 1.2.1
       '@sanity/generate-help-url': 3.0.0
       '@sanity/types': 4.20.0(@types/react@19.2.7)(debug@4.4.3)
       arrify: 2.0.1

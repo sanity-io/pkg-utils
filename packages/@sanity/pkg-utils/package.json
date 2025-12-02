@@ -59,7 +59,6 @@
     "prepublishOnly": "pnpm run build",
     "pretest": "pnpm run clean && pnpm run build",
     "test": "vitest run",
-    "test:update-snapshots": "pnpm test run -- --update",
     "typecheck": "tsc --build",
     "watch": "tsx scripts/watch.ts"
   },

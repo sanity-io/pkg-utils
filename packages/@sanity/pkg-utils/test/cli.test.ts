@@ -2,6 +2,8 @@ import path from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {spawnProject} from './env/spawnProject'
 
+describe('cli', () => {
+
 test('should build `js` package', async () => {
   const project = await spawnProject('js')
 
@@ -639,4 +641,6 @@ test('should warn with --strict when legacy fields are present', async () => {
   expect(output).toContain('the `typesVersions` field is no longer needed')
 
   await project.remove()
+})
+
 })

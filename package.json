@@ -13,7 +13,7 @@
     "release": "changeset publish",
     "pretest": "pnpm --filter '@sanity/pkg-utils' pretest && pnpm run playground:clean",
     "test": "vitest run",
-    "test:update-snapshots": "vitest run -u",
+    "test:update-snapshots": "vitest run --update",
     "test:watch": "vitest",
     "typecheck": "tsc --build"
   },
