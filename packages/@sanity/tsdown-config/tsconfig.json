@@ -3,6 +3,7 @@
   "exclude": ["**/dist/**"],
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "dist"
+    "outDir": "dist",
+    "customConditions": ["source"]
   }
 }
