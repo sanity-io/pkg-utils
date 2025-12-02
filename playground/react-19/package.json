@@ -20,7 +20,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pkg build --strict --check --clean"
+    "build": "pkg build --strict --check --clean",
+    "typecheck": "tsc"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",

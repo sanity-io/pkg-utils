@@ -47,6 +47,9 @@ importers:
       '@sanity/prettier-config':
         specifier: ^1.0.6
         version: 1.0.6(prettier@3.7.2)
+      '@sanity/tsconfig':
+        specifier: workspace:*
+        version: link:packages/@sanity/tsconfig
       '@types/node':
         specifier: ^24.10.1
         version: 24.10.1
