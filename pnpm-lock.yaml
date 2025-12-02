@@ -18,6 +18,9 @@ catalogs:
     '@typescript/native-preview':
       specifier: 7.0.0-dev.20251129.1
       version: 7.0.0-dev.20251129.1
+    tsdown:
+      specifier: ^0.16.8
+      version: 0.16.8
     typescript:
       specifier: 5.9.3
       version: 5.9.3
@@ -77,6 +80,9 @@ importers:
       setup-npm-trusted-publish:
         specifier: ^1.0.3
         version: 1.0.3
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.16.8(@typescript/native-preview@7.0.0-dev.20251129.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -289,7 +295,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20251129.1
       tsdown:
-        specifier: ^0.16.8
+        specifier: 'catalog:'
         version: 0.16.8(@typescript/native-preview@7.0.0-dev.20251129.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'

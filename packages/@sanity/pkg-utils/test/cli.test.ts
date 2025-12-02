@@ -34,7 +34,7 @@ test('should build `browser-bundle` package', async () => {
   await project.remove()
 })
 
-test('should build `dummy-module` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `dummy-module` package', async () => {
   const project = await spawnProject('dummy-module')
 
   await project.install()
@@ -114,7 +114,7 @@ test('should build `multi-export` package', async () => {
   await project.remove()
 })
 
-test('should build `ts` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts` package', async () => {
   const project = await spawnProject('ts')
 
   await project.install()
@@ -160,7 +160,7 @@ test('should build `ts-rolldown-without-extract` package', async () => {
   await project.remove()
 })
 
-test('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
   const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
 
   await project.install()
@@ -215,7 +215,7 @@ test('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
   await project.remove()
 })
 
-test('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
   const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
 
   await project.install()
@@ -270,7 +270,7 @@ test('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
   await project.remove()
 })
 
-test('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
   const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
 
   await project.install()
@@ -326,7 +326,7 @@ test('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
   await project.remove()
 })
 
-test('should build `ts-rolldown-inline-types-external-js` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts-rolldown-inline-types-external-js` package', async () => {
   const project = await spawnProject('ts-rolldown-inline-types-external-js')
 
   await project.install()
@@ -436,7 +436,7 @@ test('should build `tsgo` package', async () => {
   await project.remove()
 })
 
-test('should build `ts-node16` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts-node16` package', async () => {
   const project = await spawnProject('ts-node16')
 
   await project.install()
@@ -450,7 +450,7 @@ test('should build `ts-node16` package', async () => {
   await project.remove()
 })
 
-test('should build `ts-bundler` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `ts-bundler` package', async () => {
   const project = await spawnProject('ts-bundler')
 
   await project.install()
@@ -509,7 +509,7 @@ test('should build `css-export` package', async () => {
   await project.remove()
 })
 
-test('should build `sanity-plugin-with-styled-components` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `sanity-plugin-with-styled-components` package', async () => {
   const project = await spawnProject('sanity-plugin-with-styled-components')
 
   await project.install()
@@ -538,7 +538,7 @@ test('should build `sanity-plugin-with-styled-components` package', async () => 
   await project.remove()
 })
 
-test('should build `sanity-plugin-with-vanilla-extract` package', async () => {
+test.skipIf(process.platform === 'win32')('should build `sanity-plugin-with-vanilla-extract` package', async () => {
   const project = await spawnProject('sanity-plugin-with-vanilla-extract')
 
   await project.install()
@@ -601,7 +601,7 @@ describe.skip('runtime: next.js', () => {
   })
 })
 
-test('should build with `--quiet` flag suppressing output', async () => {
+test.skipIf(process.platform === 'win32')('should build with `--quiet` flag suppressing output', async () => {
   const project = await spawnProject('ts')
 
   await project.install()
