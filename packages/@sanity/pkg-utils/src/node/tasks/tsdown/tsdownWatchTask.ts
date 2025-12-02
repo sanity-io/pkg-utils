@@ -1,14 +1,13 @@
 import path from 'node:path'
 import chalk from 'chalk'
-import {rollup} from 'rollup'
-import {from} from 'rxjs'
+import {Observable} from 'rxjs'
 import {createConsoleSpy} from '../../consoleSpy.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
-import type {RollupTask, TaskHandler} from '../types.ts'
-import {resolveRollupConfig} from './resolveRollupConfig.ts'
+import type {TaskHandler, TsdownWatchTask} from '../types.ts'
+import {resolveTsdownConfig} from './resolveTsdownConfig.ts'
 
 /** @internal */
-export const rollupTask: TaskHandler<RollupTask> = {
+export const tsdownWatchTask: TaskHandler<TsdownWatchTask> = {
   name: (ctx, task) => {
     const bundleEntries = task.entries.filter((e) => e.path.includes('__$$bundle_'))
     const entries = task.entries.filter((e) => !e.path.includes('__$$bundle_'))
@@ -43,7 +42,7 @@ export const rollupTask: TaskHandler<RollupTask> = {
       : []
 
     return [
-      `Build javascript files...`,
+      `Watch with ${chalk.bold('tsdown')}...`,
       `  format: ${chalk.yellow(task.format)}`,
       ...targetLines,
       ...bundlesLines,
@@ -51,7 +50,14 @@ export const rollupTask: TaskHandler<RollupTask> = {
     ].join('\n')
   },
   exec: (ctx, task) => {
-    return from(execPromise(ctx, task))
+    return new Observable((subscriber) => {
+      void execWatch(ctx, task, subscriber)
+
+      // Clean up function
+      return () => {
+        // tsdown will handle cleanup
+      }
+    })
   },
   complete: () => {
     //
@@ -61,11 +67,15 @@ export const rollupTask: TaskHandler<RollupTask> = {
   },
 }
 
-async function execPromise(ctx: BuildContext, task: RollupTask) {
-  const {distPath, files, logger} = ctx
-  const outDir = path.relative(ctx.cwd, distPath)
+async function execWatch(
+  ctx: BuildContext,
+  task: TsdownWatchTask,
+  subscriber: {next: (value: any) => void; error: (err: any) => void},
+) {
+  const {build} = await import('tsdown')
+  const {logger} = ctx
 
-  // Prevent rollup from printing directly to the console
+  // Prevent tsdown from printing directly to the console
   const consoleSpy = createConsoleSpy({
     onRestored: (messages) => {
       for (const msg of messages) {
@@ -99,49 +109,28 @@ async function execPromise(ctx: BuildContext, task: RollupTask) {
   })
 
   try {
-    const {inputOptions, outputOptions} = resolveRollupConfig(ctx, task)
+    const options = await resolveTsdownConfig(ctx, task)
 
-    // Create bundle
-    const bundle = await rollup({
-      ...inputOptions,
-      onwarn(warning) {
-        consoleSpy.messages.push({
-          type: 'warn',
-          code: warning.code,
-          args: [warning.message],
-        })
-      },
-    })
-
-    // generate output specific code in-memory
-    // you can call this function multiple times on the same bundle object
-    const {output} = await bundle.generate(outputOptions)
-
-    for (const chunkOrAsset of output) {
-      if (chunkOrAsset.type === 'asset') {
-        files.push({
-          type: 'asset',
-          path: path.resolve(outDir, chunkOrAsset.fileName),
-        })
-      } else {
-        files.push({
-          type: 'chunk',
-          path: path.resolve(outDir, chunkOrAsset.fileName),
-        })
-      }
+    // Enable watch mode
+    const watchOptions = {
+      ...options,
+      watch: true,
     }
 
-    // or write the bundle to disk
-    await bundle.write(outputOptions)
+    // Build with tsdown in watch mode
+    await build(watchOptions)
 
-    // closes the bundle
-    await bundle.close()
+    // Notify subscriber that watch is set up
+    subscriber.next({event: 'START'})
+
+    // Keep the observable alive
+    // tsdown will continue to watch and rebuild
 
     // Restore console
     consoleSpy.restore()
   } catch (err) {
     // Restore console
     consoleSpy.restore()
-    throw err
+    subscriber.error(err)
   }
 }

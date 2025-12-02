@@ -34,9 +34,9 @@
   "module": "./dist/index.js",
   "browser": {
     "./dist/index.cjs": "./dist/index.browser.cjs",
-    "./dist/index.js": "./dist/index.browser.esm.js",
+    "./dist/index.js": "./dist/index.browser.js",
     "./dist/extra.cjs": "./dist/extra.browser.cjs",
-    "./dist/extra.js": "./dist/extra.browser.esm.js"
+    "./dist/extra.js": "./dist/extra.browser.js"
   },
   "types": "./dist/index.d.ts",
   "typesVersions": {

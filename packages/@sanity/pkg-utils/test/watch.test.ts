@@ -25,39 +25,21 @@ describe('watch functionality', () => {
       const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
       const watchTasks = resolveWatchTasks(ctx)
 
-      // Should have at least a DTS watch task and a JS watch task for TS projects
+      // Should have tsdown watch tasks for TS projects
       expect(watchTasks.length).toBeGreaterThan(0)
 
-      const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
-      const jsTask = watchTasks.find((task) => task.type === 'watch:js')
+      const tsdownTask = watchTasks.find((task) => task.type === 'watch:tsdown')
 
-      expect(dtsTask).toBeDefined()
-      expect(jsTask).toBeDefined()
+      expect(tsdownTask).toBeDefined()
 
-      if (dtsTask && dtsTask.type === 'watch:dts') {
-        expect(dtsTask.entries).toBeDefined()
-        expect(Array.isArray(dtsTask.entries)).toBe(true)
-        expect(dtsTask.entries.length).toBeGreaterThan(0)
+      if (tsdownTask && tsdownTask.type === 'watch:tsdown') {
+        expect(tsdownTask.entries).toBeDefined()
+        expect(Array.isArray(tsdownTask.entries)).toBe(true)
+        expect(tsdownTask.entries.length).toBeGreaterThan(0)
 
-        // Check structure of DTS entries
-        const entry = dtsTask.entries[0]
+        // Check structure of tsdown entries
+        const entry = tsdownTask.entries[0]
         expect(entry).toBeDefined()
-        expect(entry).toHaveProperty('exportPath')
-        expect(entry).toHaveProperty('importId')
-        expect(entry).toHaveProperty('sourcePath')
-        expect(entry).toHaveProperty('targetPaths')
-        if (entry) {
-          expect(Array.isArray(entry.targetPaths)).toBe(true)
-        }
-      }
-
-      if (jsTask && jsTask.type === 'watch:js') {
-        expect(jsTask.entries).toBeDefined()
-        expect(Array.isArray(jsTask.entries)).toBe(true)
-        expect(jsTask.entries.length).toBeGreaterThan(0)
-
-        // Check structure of JS entries
-        const entry = jsTask.entries[0]
         expect(entry).toHaveProperty('path')
         expect(entry).toHaveProperty('source')
         expect(entry).toHaveProperty('output')
@@ -84,15 +66,11 @@ describe('watch functionality', () => {
       const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
       const watchTasks = resolveWatchTasks(ctx)
 
-      // JS projects should have watch:js tasks but no watch:dts tasks
+      // JS projects should have tsdown watch tasks
       expect(watchTasks.length).toBeGreaterThan(0)
 
-      const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-      expect(jsTask).toBeDefined()
-
-      // Should not have DTS tasks for pure JS projects
-      const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
-      expect(dtsTask).toBeUndefined()
+      const tsdownTask = watchTasks.find((task) => task.type === 'watch:tsdown')
+      expect(tsdownTask).toBeDefined()
     } finally {
       await project.remove()
     }
@@ -117,15 +95,15 @@ describe('watch functionality', () => {
 
       expect(watchTasks.length).toBeGreaterThan(0)
 
-      const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-      expect(jsTask).toBeDefined()
+      const tsdownTask = watchTasks.find((task) => task.type === 'watch:tsdown')
+      expect(tsdownTask).toBeDefined()
 
-      if (jsTask && jsTask.type === 'watch:js') {
+      if (tsdownTask && tsdownTask.type === 'watch:tsdown') {
         // Multi-export projects should have multiple entries
-        expect(jsTask.entries.length).toBeGreaterThan(1)
+        expect(tsdownTask.entries.length).toBeGreaterThan(1)
 
         // Each entry should have correct structure
-        jsTask.entries.forEach((entry) => {
+        tsdownTask.entries.forEach((entry) => {
           expect(entry).toHaveProperty('path')
           expect(entry).toHaveProperty('source')
           expect(entry).toHaveProperty('output')
@@ -156,8 +134,8 @@ describe('watch functionality', () => {
       expect(watchTasks.length).toBeGreaterThan(0)
 
       // Should have watch tasks
-      const jsTasks = watchTasks.filter((task) => task.type === 'watch:js')
-      expect(jsTasks.length).toBeGreaterThan(0)
+      const tsdownTasks = watchTasks.filter((task) => task.type === 'watch:tsdown')
+      expect(tsdownTasks.length).toBeGreaterThan(0)
     } finally {
       await project.remove()
     }

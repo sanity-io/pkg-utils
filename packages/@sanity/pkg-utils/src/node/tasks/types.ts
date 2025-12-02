@@ -1,51 +1,39 @@
-import type {RollupWatcherEvent} from 'rollup'
 import type {Observable} from 'rxjs'
 import type {PkgRuntime} from '../core/config/types.ts'
 import type {BuildContext} from '../core/contexts/buildContext.ts'
-import type {DtsResult, DtsTask, DtsWatchTask} from './dts/types.ts'
 
 /** @internal */
-export interface RollupTaskEntry {
+export interface TsdownTaskEntry {
   path: string
   source: string
   output: string
 }
 
 /** @internal */
-export interface RollupTask {
-  type: 'build:js'
+export interface TsdownTask {
+  type: 'build:tsdown'
   buildId: string
-  entries: RollupTaskEntry[]
+  entries: TsdownTaskEntry[]
   runtime: PkgRuntime
   format: 'commonjs' | 'esm'
   target: string[]
 }
 
 /** @internal */
-export interface RolldownDtsTask {
-  type: 'rolldown:dts'
+export interface TsdownWatchTask {
+  type: 'watch:tsdown'
   buildId: string
-  entries: RollupTaskEntry[]
+  entries: TsdownTaskEntry[]
   runtime: PkgRuntime
   format: 'commonjs' | 'esm'
   target: string[]
 }
 
 /** @internal */
-export interface RollupWatchTask {
-  type: 'watch:js'
-  buildId: string
-  entries: RollupTaskEntry[]
-  runtime: PkgRuntime
-  format: 'commonjs' | 'esm'
-  target: string[]
-}
+export type BuildTask = TsdownTask
 
 /** @internal */
-export type BuildTask = DtsTask | RollupTask | RolldownDtsTask
-
-/** @internal */
-export type WatchTask = DtsWatchTask | RollupWatchTask
+export type WatchTask = TsdownWatchTask
 
 /** @internal */
 export type TaskHandler<Task, Result = void> = {
@@ -57,13 +45,10 @@ export type TaskHandler<Task, Result = void> = {
 
 /** @internal */
 export interface BuildTaskHandlers {
-  'build:dts': TaskHandler<DtsTask, DtsResult>
-  'build:js': TaskHandler<RollupTask>
-  'rolldown:dts': TaskHandler<RolldownDtsTask>
+  'build:tsdown': TaskHandler<TsdownTask>
 }
 
 /** @internal */
 export interface WatchTaskHandlers {
-  'watch:dts': TaskHandler<DtsWatchTask, DtsResult>
-  'watch:js': TaskHandler<RollupWatchTask, RollupWatcherEvent>
+  'watch:tsdown': TaskHandler<TsdownWatchTask>
 }
