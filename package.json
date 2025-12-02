@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter '@sanity/pkg-utils' build",
+    "build": "pnpm --filter './packages/@sanity/*' build",
     "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
     "lint": "oxlint --type-aware",
     "playground:build": "pnpm --filter './playground/**' build",
