@@ -1,7 +1,7 @@
 import path from 'path'
 import {argv} from 'process'
 import {fileURLToPath} from 'url'
-import {init} from '../src/node'
+import {init} from '../src/node/init.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
