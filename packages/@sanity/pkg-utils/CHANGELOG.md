@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 9.2.2
+
+### Patch Changes
+
+- [#2315](https://github.com/sanity-io/pkg-utils/pull/2315) [`f68c680`](https://github.com/sanity-io/pkg-utils/commit/f68c6809dab0b4566648eca313637450bb3b462f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @optimize-lodash/rollup-plugin to v6
+
 ## 9.2.1
 
 ### Patch Changes
