@@ -66,11 +66,6 @@ export interface StrictOptions {
    */
   noCheckTypes: ToggleType
   /**
-   * Disallows the `module` field in `package.json` as all modern tools support the `exports` field.
-   * @defaultValue 'warn'
-   */
-  noPackageJsonModule: ToggleType
-  /**
    * Disallows the `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
    * @defaultValue 'warn'
    */
