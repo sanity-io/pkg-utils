@@ -31,16 +31,17 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
+    "./package.json": "./package.json",
     "./tsconfig/recommended.json": "./tsconfig/recommended.json",
     "./tsconfig/recommended": "./tsconfig/recommended.json",
     "./tsconfig/strict.json": "./tsconfig/strict.json",
     "./tsconfig/strict": "./tsconfig/strict.json",
     "./tsconfig/strictest.json": "./tsconfig/strictest.json",
     "./tsconfig/isolated-declarations.json": "./tsconfig/isolated-declarations.json",
-    "./tsconfig": "./tsconfig/strictest.json",
-    "./package.json": "./package.json"
+    "./tsconfig": "./tsconfig/strictest.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "pkg": "./bin/pkg-utils.js",
@@ -133,6 +134,22 @@
     "node": ">=20.19 <22 || >=22.12"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./cli": "./dist/cli.js",
+      "./package.json": "./package.json",
+      "./tsconfig/recommended.json": "./tsconfig/recommended.json",
+      "./tsconfig/recommended": "./tsconfig/recommended.json",
+      "./tsconfig/strict.json": "./tsconfig/strict.json",
+      "./tsconfig/strict": "./tsconfig/strict.json",
+      "./tsconfig/strictest.json": "./tsconfig/strictest.json",
+      "./tsconfig/isolated-declarations.json": "./tsconfig/isolated-declarations.json",
+      "./tsconfig": "./tsconfig/strictest.json"
+    }
   }
 }
