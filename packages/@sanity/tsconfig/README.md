@@ -17,6 +17,7 @@ yarn add --dev @sanity/tsconfig
 ## Usage
 
 Choose one of the presets as your base:
+
 - [`@sanity/tsconfig/recommended`]
 - [`@sanity/tsconfig/strict`]
 - [`@sanity/tsconfig/strictest`]
@@ -33,7 +34,6 @@ Add to your `tsconfig.json`:
 }
 ```
 
-
 ### Strict <kbd><a href="./strict.tsconfig.json">tsconfig.json</a></kbd>
 
 Add to your `tsconfig.json`:
@@ -43,7 +43,6 @@ Add to your `tsconfig.json`:
   "extends": "@sanity/tsconfig/strict"
 }
 ```
-
 
 ### Strictest <kbd><a href="./strictest.tsconfig.json">tsconfig.json</a></kbd>
 
@@ -73,7 +72,6 @@ Then change `extends` to an array and `isolated-declarations` to the end:
   "extends": ["@sanity/tsconfig/strict", "@sanity/tsconfig/isolated-declarations"]
 }
 ```
-
 
 [`@sanity/tsconfig/recommended`]: #recommended-tsconfigjson
 [`@sanity/tsconfig/strict`]: #strict
