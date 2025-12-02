@@ -19,6 +19,6 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     exports: {
       enabled: 'local-only',
       devExports: 'source',
-    }
+    },
   })
 }

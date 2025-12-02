@@ -20,8 +20,8 @@
     "dist"
   ],
   "scripts": {
-    "build:pkg-utils": "pkg build --strict --check --clean",
-    "build": "tsdown"
+    "build": "tsdown",
+    "build:pkg-utils": "pkg build --strict --check --clean"
   },
   "browserslist": "extends @sanity/browserslist-config",
   "devDependencies": {

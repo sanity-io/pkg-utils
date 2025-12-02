@@ -160,228 +160,240 @@ test('should build `ts-rolldown-without-extract` package', async () => {
   await project.remove()
 })
 
-test.skipIf(process.platform === 'win32')('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
-  const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
+test.skipIf(process.platform === 'win32')(
+  'should build `ts-rolldown-bundle-dev-dependency` package',
+  async () => {
+    const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
 
-  await project.install()
+    await project.install()
 
-  const {stdout} = await project.run('build')
+    const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('with rolldown')
 
-  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
-    project.readFile('dist/index.cjs'),
-    project.readFile('dist/index.d.cts'),
-    project.readFile('dist/index.js'),
-    project.readFile('dist/index.d.ts'),
-  ])
+    const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+      project.readFile('dist/index.cjs'),
+      project.readFile('dist/index.d.cts'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+    ])
 
-  // The `validateApiPerspective` function is re-exported from `@sanity/client`
-  expect(distIndexCjs).toContain('validateApiPerspective')
-  expect(distIndexJs).toContain('validateApiPerspective')
-  expect(distIndexDcts).toContain('validateApiPerspective')
-  expect(distIndexDts).toContain('validateApiPerspective')
-  // The `@sanity/client` dependency is a devDependency, so it should be inlined
-  expect(distIndexCjs).toContain('Invalid API perspective value')
-  expect(distIndexJs).toContain('Invalid API perspective value')
-  expect(distIndexDcts).toContain('StackablePerspective')
-  expect(distIndexDts).toContain('StackablePerspective')
-  // The `SanityLogo` is re-exported from `@sanity/logos`
-  expect(distIndexCjs).toContain('SanityLogo')
-  expect(distIndexJs).toContain('SanityLogo')
-  expect(distIndexDcts).toContain('SanityLogo')
-  expect(distIndexDts).toContain('SanityLogo')
-  // The `@sanity/logos` dependency is setup to be external even though it's a devDependency
-  expect(distIndexCjs).not.toContain('"sanity-logo"')
-  expect(distIndexJs).not.toContain('"sanity-logo"')
-  expect(distIndexDcts).not.toContain('SanityLogoProps')
-  expect(distIndexDts).not.toContain('SanityLogoProps')
-  // The `RemoveIcon` is re-exported from `@sanity/icons`
-  expect(distIndexCjs).toContain('RemoveIcon')
-  expect(distIndexJs).toContain('RemoveIcon')
-  expect(distIndexDcts).toContain('RemoveIcon')
-  expect(distIndexDts).toContain('RemoveIcon')
-  // The `@sanity/icons` dependency should be inlined
-  expect(distIndexCjs).not.toContain('@sanity/icons')
-  expect(distIndexJs).not.toContain('@sanity/icons')
-  expect(distIndexDcts).not.toContain('@sanity/icons')
-  expect(distIndexDts).not.toContain('@sanity/icons')
-  // Snapshot the contents for easier debugging
-  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
-  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
-  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    // The `validateApiPerspective` function is re-exported from `@sanity/client`
+    expect(distIndexCjs).toContain('validateApiPerspective')
+    expect(distIndexJs).toContain('validateApiPerspective')
+    expect(distIndexDcts).toContain('validateApiPerspective')
+    expect(distIndexDts).toContain('validateApiPerspective')
+    // The `@sanity/client` dependency is a devDependency, so it should be inlined
+    expect(distIndexCjs).toContain('Invalid API perspective value')
+    expect(distIndexJs).toContain('Invalid API perspective value')
+    expect(distIndexDcts).toContain('StackablePerspective')
+    expect(distIndexDts).toContain('StackablePerspective')
+    // The `SanityLogo` is re-exported from `@sanity/logos`
+    expect(distIndexCjs).toContain('SanityLogo')
+    expect(distIndexJs).toContain('SanityLogo')
+    expect(distIndexDcts).toContain('SanityLogo')
+    expect(distIndexDts).toContain('SanityLogo')
+    // The `@sanity/logos` dependency is setup to be external even though it's a devDependency
+    expect(distIndexCjs).not.toContain('"sanity-logo"')
+    expect(distIndexJs).not.toContain('"sanity-logo"')
+    expect(distIndexDcts).not.toContain('SanityLogoProps')
+    expect(distIndexDts).not.toContain('SanityLogoProps')
+    // The `RemoveIcon` is re-exported from `@sanity/icons`
+    expect(distIndexCjs).toContain('RemoveIcon')
+    expect(distIndexJs).toContain('RemoveIcon')
+    expect(distIndexDcts).toContain('RemoveIcon')
+    expect(distIndexDts).toContain('RemoveIcon')
+    // The `@sanity/icons` dependency should be inlined
+    expect(distIndexCjs).not.toContain('@sanity/icons')
+    expect(distIndexJs).not.toContain('@sanity/icons')
+    expect(distIndexDcts).not.toContain('@sanity/icons')
+    expect(distIndexDts).not.toContain('@sanity/icons')
+    // Snapshot the contents for easier debugging
+    expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+    expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
-test.skipIf(process.platform === 'win32')('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
-  const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
+test.skipIf(process.platform === 'win32')(
+  'should build `ts-rolldown-bundle-peer-dependency` package',
+  async () => {
+    const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
 
-  await project.install()
+    await project.install()
 
-  const {stdout} = await project.run('build')
+    const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('with rolldown')
 
-  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
-    project.readFile('dist/index.cjs'),
-    project.readFile('dist/index.d.cts'),
-    project.readFile('dist/index.js'),
-    project.readFile('dist/index.d.ts'),
-  ])
+    const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+      project.readFile('dist/index.cjs'),
+      project.readFile('dist/index.d.cts'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+    ])
 
-  // The `validateApiPerspective` function is re-exported from `@sanity/client`
-  expect(distIndexCjs).toContain('validateApiPerspective')
-  expect(distIndexJs).toContain('validateApiPerspective')
-  expect(distIndexDcts).toContain('validateApiPerspective')
-  expect(distIndexDts).toContain('validateApiPerspective')
-  // The `@sanity/client` dependency is a peerDependency, so it should not be inlined
-  expect(distIndexCjs).not.toContain('Invalid API perspective value')
-  expect(distIndexJs).not.toContain('Invalid API perspective value')
-  expect(distIndexDcts).not.toContain('StackablePerspective')
-  expect(distIndexDts).not.toContain('StackablePerspective')
-  // The `SanityLogo` is re-exported from `@sanity/logos`
-  expect(distIndexCjs).toContain('SanityLogo')
-  expect(distIndexJs).toContain('SanityLogo')
-  expect(distIndexDcts).toContain('SanityLogo')
-  expect(distIndexDts).toContain('SanityLogo')
-  // The `@sanity/logos` dependency is a peerDependency, so it should not be inlined
-  expect(distIndexCjs).not.toContain('"sanity-logo"')
-  expect(distIndexJs).not.toContain('"sanity-logo"')
-  expect(distIndexDcts).not.toContain('SanityLogoProps')
-  expect(distIndexDts).not.toContain('SanityLogoProps')
-  // The `RemoveIcon` is re-exported from `@sanity/icons`
-  expect(distIndexCjs).toContain('RemoveIcon')
-  expect(distIndexJs).toContain('RemoveIcon')
-  expect(distIndexDcts).toContain('RemoveIcon')
-  expect(distIndexDts).toContain('RemoveIcon')
-  // The `@sanity/icons` is inlined even though it being a peer dependency by using the `external` callback option.
-  expect(distIndexCjs).not.toContain('@sanity/icons')
-  expect(distIndexJs).not.toContain('@sanity/icons')
-  expect(distIndexDcts).not.toContain('@sanity/icons')
-  expect(distIndexDts).not.toContain('@sanity/icons')
-  // Snapshot the contents for easier debugging
-  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
-  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
-  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    // The `validateApiPerspective` function is re-exported from `@sanity/client`
+    expect(distIndexCjs).toContain('validateApiPerspective')
+    expect(distIndexJs).toContain('validateApiPerspective')
+    expect(distIndexDcts).toContain('validateApiPerspective')
+    expect(distIndexDts).toContain('validateApiPerspective')
+    // The `@sanity/client` dependency is a peerDependency, so it should not be inlined
+    expect(distIndexCjs).not.toContain('Invalid API perspective value')
+    expect(distIndexJs).not.toContain('Invalid API perspective value')
+    expect(distIndexDcts).not.toContain('StackablePerspective')
+    expect(distIndexDts).not.toContain('StackablePerspective')
+    // The `SanityLogo` is re-exported from `@sanity/logos`
+    expect(distIndexCjs).toContain('SanityLogo')
+    expect(distIndexJs).toContain('SanityLogo')
+    expect(distIndexDcts).toContain('SanityLogo')
+    expect(distIndexDts).toContain('SanityLogo')
+    // The `@sanity/logos` dependency is a peerDependency, so it should not be inlined
+    expect(distIndexCjs).not.toContain('"sanity-logo"')
+    expect(distIndexJs).not.toContain('"sanity-logo"')
+    expect(distIndexDcts).not.toContain('SanityLogoProps')
+    expect(distIndexDts).not.toContain('SanityLogoProps')
+    // The `RemoveIcon` is re-exported from `@sanity/icons`
+    expect(distIndexCjs).toContain('RemoveIcon')
+    expect(distIndexJs).toContain('RemoveIcon')
+    expect(distIndexDcts).toContain('RemoveIcon')
+    expect(distIndexDts).toContain('RemoveIcon')
+    // The `@sanity/icons` is inlined even though it being a peer dependency by using the `external` callback option.
+    expect(distIndexCjs).not.toContain('@sanity/icons')
+    expect(distIndexJs).not.toContain('@sanity/icons')
+    expect(distIndexDcts).not.toContain('@sanity/icons')
+    expect(distIndexDts).not.toContain('@sanity/icons')
+    // Snapshot the contents for easier debugging
+    expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+    expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
-test.skipIf(process.platform === 'win32')('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
-  const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
+test.skipIf(process.platform === 'win32')(
+  'should build `ts-rolldown-bundle-prod-dependency` package',
+  async () => {
+    const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
 
-  await project.install()
+    await project.install()
 
-  const {stdout} = await project.run('build')
+    const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('with rolldown')
 
-  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
-    project.readFile('dist/index.cjs'),
-    project.readFile('dist/index.d.cts'),
-    project.readFile('dist/index.js'),
-    project.readFile('dist/index.d.ts'),
-  ])
+    const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+      project.readFile('dist/index.cjs'),
+      project.readFile('dist/index.d.cts'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+    ])
 
-  // The `validateApiPerspective` function is re-exported from `@sanity/client`
-  expect(distIndexCjs).toContain('validateApiPerspective')
-  expect(distIndexJs).toContain('validateApiPerspective')
-  expect(distIndexDcts).toContain('validateApiPerspective')
-  expect(distIndexDts).toContain('validateApiPerspective')
-  // The `@sanity/client` dependency is a prod dependency, so it should not be inlined
-  expect(distIndexCjs).not.toContain('Invalid API perspective value')
-  expect(distIndexJs).not.toContain('Invalid API perspective value')
-  expect(distIndexDcts).not.toContain('StackablePerspective')
-  expect(distIndexDts).not.toContain('StackablePerspective')
-  // The `SanityLogo` is re-exported from `@sanity/logos`
-  expect(distIndexCjs).toContain('SanityLogo')
-  expect(distIndexJs).toContain('SanityLogo')
-  expect(distIndexDcts).toContain('SanityLogo')
-  expect(distIndexDts).toContain('SanityLogo')
-  // The `@sanity/logos` dependency is a prod dependency, so it should not be inlined
-  expect(distIndexCjs).not.toContain('"sanity-logo"')
-  expect(distIndexJs).not.toContain('"sanity-logo"')
-  expect(distIndexDcts).not.toContain('SanityLogoProps')
-  expect(distIndexDts).not.toContain('SanityLogoProps')
-  // The `RemoveIcon` is re-exported from `@sanity/icons`
-  expect(distIndexCjs).toContain('RemoveIcon')
-  expect(distIndexJs).toContain('RemoveIcon')
-  expect(distIndexDcts).toContain('RemoveIcon')
-  expect(distIndexDts).toContain('RemoveIcon')
-  // The `@sanity/icons` is inlined even though it being a prod dependency by using the `external` callback option to remove it from the default inferred list.
-  expect(distIndexCjs).not.toContain('@sanity/icons')
-  expect(distIndexJs).not.toContain('@sanity/icons')
-  // It's also inlining its types by using the `bundledPackages` option.
-  expect(distIndexDcts).not.toContain('@sanity/icons')
-  expect(distIndexDts).not.toContain('@sanity/icons')
-  // Snapshot the contents for easier debugging
-  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
-  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
-  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    // The `validateApiPerspective` function is re-exported from `@sanity/client`
+    expect(distIndexCjs).toContain('validateApiPerspective')
+    expect(distIndexJs).toContain('validateApiPerspective')
+    expect(distIndexDcts).toContain('validateApiPerspective')
+    expect(distIndexDts).toContain('validateApiPerspective')
+    // The `@sanity/client` dependency is a prod dependency, so it should not be inlined
+    expect(distIndexCjs).not.toContain('Invalid API perspective value')
+    expect(distIndexJs).not.toContain('Invalid API perspective value')
+    expect(distIndexDcts).not.toContain('StackablePerspective')
+    expect(distIndexDts).not.toContain('StackablePerspective')
+    // The `SanityLogo` is re-exported from `@sanity/logos`
+    expect(distIndexCjs).toContain('SanityLogo')
+    expect(distIndexJs).toContain('SanityLogo')
+    expect(distIndexDcts).toContain('SanityLogo')
+    expect(distIndexDts).toContain('SanityLogo')
+    // The `@sanity/logos` dependency is a prod dependency, so it should not be inlined
+    expect(distIndexCjs).not.toContain('"sanity-logo"')
+    expect(distIndexJs).not.toContain('"sanity-logo"')
+    expect(distIndexDcts).not.toContain('SanityLogoProps')
+    expect(distIndexDts).not.toContain('SanityLogoProps')
+    // The `RemoveIcon` is re-exported from `@sanity/icons`
+    expect(distIndexCjs).toContain('RemoveIcon')
+    expect(distIndexJs).toContain('RemoveIcon')
+    expect(distIndexDcts).toContain('RemoveIcon')
+    expect(distIndexDts).toContain('RemoveIcon')
+    // The `@sanity/icons` is inlined even though it being a prod dependency by using the `external` callback option to remove it from the default inferred list.
+    expect(distIndexCjs).not.toContain('@sanity/icons')
+    expect(distIndexJs).not.toContain('@sanity/icons')
+    // It's also inlining its types by using the `bundledPackages` option.
+    expect(distIndexDcts).not.toContain('@sanity/icons')
+    expect(distIndexDts).not.toContain('@sanity/icons')
+    // Snapshot the contents for easier debugging
+    expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+    expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
-test.skipIf(process.platform === 'win32')('should build `ts-rolldown-inline-types-external-js` package', async () => {
-  const project = await spawnProject('ts-rolldown-inline-types-external-js')
+test.skipIf(process.platform === 'win32')(
+  'should build `ts-rolldown-inline-types-external-js` package',
+  async () => {
+    const project = await spawnProject('ts-rolldown-inline-types-external-js')
 
-  await project.install()
+    await project.install()
 
-  const {stdout} = await project.run('build')
+    const {stdout} = await project.run('build')
 
-  expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('with rolldown')
 
-  const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
-    project.readFile('dist/index.cjs'),
-    project.readFile('dist/index.d.cts'),
-    project.readFile('dist/index.js'),
-    project.readFile('dist/index.d.ts'),
-  ])
+    const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
+      project.readFile('dist/index.cjs'),
+      project.readFile('dist/index.d.cts'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+    ])
 
-  // The `validateApiPerspective` function is re-exported from `@sanity/client`
-  expect(distIndexCjs).toContain('validateApiPerspective')
-  expect(distIndexJs).toContain('validateApiPerspective')
-  expect(distIndexDcts).toContain('validateApiPerspective')
-  expect(distIndexDts).toContain('validateApiPerspective')
-  // The `@sanity/client` is a prod dependency, so it should not have inlined JS
-  expect(distIndexCjs).not.toContain('Invalid API perspective value')
-  expect(distIndexJs).not.toContain('Invalid API perspective value')
-  // Though the types for `@sanity/client` should be inlined as `bundledPackages` is used
-  expect(distIndexDcts).toContain('StackablePerspective')
-  expect(distIndexDts).toContain('StackablePerspective')
-  // The `SanityLogo` is re-exported from `@sanity/logos`
-  expect(distIndexCjs).toContain('SanityLogo')
-  expect(distIndexJs).toContain('SanityLogo')
-  expect(distIndexDcts).toContain('SanityLogo')
-  expect(distIndexDts).toContain('SanityLogo')
-  // The `@sanity/logos` dependency is a prod dependency, so it should not be inlined
-  expect(distIndexCjs).not.toContain('"sanity-logo"')
-  expect(distIndexJs).not.toContain('"sanity-logo"')
-  expect(distIndexDcts).not.toContain('SanityLogoProps')
-  expect(distIndexDts).not.toContain('SanityLogoProps')
-  // The `RemoveIcon` is re-exported from `@sanity/icons`
-  expect(distIndexCjs).toContain('RemoveIcon')
-  expect(distIndexJs).toContain('RemoveIcon')
-  expect(distIndexDcts).toContain('RemoveIcon')
-  expect(distIndexDts).toContain('RemoveIcon')
-  // The `@sanity/icons` is inlined even though it being a prod dependency by using the `external` callback option to remove it from the default inferred list.
-  expect(distIndexCjs).not.toContain('@sanity/icons')
-  expect(distIndexJs).not.toContain('@sanity/icons')
-  // It's also inlining its types by using the `bundledPackages` option.
-  expect(distIndexDcts).not.toContain('@sanity/icons')
-  expect(distIndexDts).not.toContain('@sanity/icons')
-  // Snapshot the contents for easier debugging
-  expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
-  expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
-  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    // The `validateApiPerspective` function is re-exported from `@sanity/client`
+    expect(distIndexCjs).toContain('validateApiPerspective')
+    expect(distIndexJs).toContain('validateApiPerspective')
+    expect(distIndexDcts).toContain('validateApiPerspective')
+    expect(distIndexDts).toContain('validateApiPerspective')
+    // The `@sanity/client` is a prod dependency, so it should not have inlined JS
+    expect(distIndexCjs).not.toContain('Invalid API perspective value')
+    expect(distIndexJs).not.toContain('Invalid API perspective value')
+    // Though the types for `@sanity/client` should be inlined as `bundledPackages` is used
+    expect(distIndexDcts).toContain('StackablePerspective')
+    expect(distIndexDts).toContain('StackablePerspective')
+    // The `SanityLogo` is re-exported from `@sanity/logos`
+    expect(distIndexCjs).toContain('SanityLogo')
+    expect(distIndexJs).toContain('SanityLogo')
+    expect(distIndexDcts).toContain('SanityLogo')
+    expect(distIndexDts).toContain('SanityLogo')
+    // The `@sanity/logos` dependency is a prod dependency, so it should not be inlined
+    expect(distIndexCjs).not.toContain('"sanity-logo"')
+    expect(distIndexJs).not.toContain('"sanity-logo"')
+    expect(distIndexDcts).not.toContain('SanityLogoProps')
+    expect(distIndexDts).not.toContain('SanityLogoProps')
+    // The `RemoveIcon` is re-exported from `@sanity/icons`
+    expect(distIndexCjs).toContain('RemoveIcon')
+    expect(distIndexJs).toContain('RemoveIcon')
+    expect(distIndexDcts).toContain('RemoveIcon')
+    expect(distIndexDts).toContain('RemoveIcon')
+    // The `@sanity/icons` is inlined even though it being a prod dependency by using the `external` callback option to remove it from the default inferred list.
+    expect(distIndexCjs).not.toContain('@sanity/icons')
+    expect(distIndexJs).not.toContain('@sanity/icons')
+    // It's also inlining its types by using the `bundledPackages` option.
+    expect(distIndexDcts).not.toContain('@sanity/icons')
+    expect(distIndexDts).not.toContain('@sanity/icons')
+    // Snapshot the contents for easier debugging
+    expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+    expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
 test('should build `ts-rolldown` package', async () => {
   const project = await spawnProject('ts-rolldown')
@@ -509,69 +521,75 @@ test('should build `css-export` package', async () => {
   await project.remove()
 })
 
-test.skipIf(process.platform === 'win32')('should build `sanity-plugin-with-styled-components` package', async () => {
-  const project = await spawnProject('sanity-plugin-with-styled-components')
+test.skipIf(process.platform === 'win32')(
+  'should build `sanity-plugin-with-styled-components` package',
+  async () => {
+    const project = await spawnProject('sanity-plugin-with-styled-components')
 
-  await project.install()
+    await project.install()
 
-  await project.run('build')
+    await project.run('build')
 
-  const [distChunksColorInput, distIndexJs, distIndexDts] = await Promise.all([
-    project.readFile('dist/_chunks-es/ColorInput.js'),
-    project.readFile('dist/index.js'),
-    project.readFile('dist/index.d.ts'),
-  ])
+    const [distChunksColorInput, distIndexJs, distIndexDts] = await Promise.all([
+      project.readFile('dist/_chunks-es/ColorInput.js'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+    ])
 
-  // The ColorInput component should have babel-plugin-styled-components applied, which adds a static `.withConfig` call
-  expect(distChunksColorInput).toContain('.withConfig({')
-  // React Compiler adds a `c` function call
-  expect(distChunksColorInput).toContain('const $ = c(')
-  // The index has a lazy loaded import to the chunk
-  expect(distIndexJs).toContain('lazy(() => import("./_chunks-es/ColorInput.js"))')
-  // The index d.ts inlines props that comes from the lazy loaded chunk
-  expect(distIndexDts).toContain('interface ColorOptions')
+    // The ColorInput component should have babel-plugin-styled-components applied, which adds a static `.withConfig` call
+    expect(distChunksColorInput).toContain('.withConfig({')
+    // React Compiler adds a `c` function call
+    expect(distChunksColorInput).toContain('const $ = c(')
+    // The index has a lazy loaded import to the chunk
+    expect(distIndexJs).toContain('lazy(() => import("./_chunks-es/ColorInput.js"))')
+    // The index d.ts inlines props that comes from the lazy loaded chunk
+    expect(distIndexDts).toContain('interface ColorOptions')
 
-  expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
-  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
-test.skipIf(process.platform === 'win32')('should build `sanity-plugin-with-vanilla-extract` package', async () => {
-  const project = await spawnProject('sanity-plugin-with-vanilla-extract')
+test.skipIf(process.platform === 'win32')(
+  'should build `sanity-plugin-with-vanilla-extract` package',
+  async () => {
+    const project = await spawnProject('sanity-plugin-with-vanilla-extract')
 
-  await project.install()
+    await project.install()
 
-  await project.run('build')
+    await project.run('build')
 
-  const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss] = await Promise.all([
-    project.readFile('dist/_chunks-es/ColorInput.js'),
-    project.readFile('dist/index.js'),
-    project.readFile('dist/index.d.ts'),
-    project.readFile('dist/bundle.css'),
-  ])
+    const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss] = await Promise.all([
+      project.readFile('dist/_chunks-es/ColorInput.js'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+      project.readFile('dist/bundle.css'),
+    ])
 
-  // The inline CSS should be extracted to a separate file
-  expect(distChunksColorInput).not.toContain('border:')
-  expect(distBundleCss).toContain('border:')
-  // The CSS side effectful imports should remain
-  expect(distIndexJs).toContain(`import "@sanity/ui/css/index.css"`)
-  expect(distIndexJs).toContain(`import "./bundle.css"`)
-  // React Compiler adds a `c` function call
-  expect(distChunksColorInput).toContain('const $ = c(')
-  // The index has a lazy loaded import to the chunk
-  expect(distIndexJs).toContain('lazy(() => import("./_chunks-es/ColorInput.js"))')
-  // The index d.ts inlines props that comes from the lazy loaded chunk
-  expect(distIndexDts).toContain('interface ColorOptions')
+    // The inline CSS should be extracted to a separate file
+    expect(distChunksColorInput).not.toContain('border:')
+    expect(distBundleCss).toContain('border:')
+    // The CSS side effectful imports should remain
+    expect(distIndexJs).toContain(`import "@sanity/ui/css/index.css"`)
+    expect(distIndexJs).toContain(`import "./bundle.css"`)
+    // React Compiler adds a `c` function call
+    expect(distChunksColorInput).toContain('const $ = c(')
+    // The index has a lazy loaded import to the chunk
+    expect(distIndexJs).toContain('lazy(() => import("./_chunks-es/ColorInput.js"))')
+    // The index d.ts inlines props that comes from the lazy loaded chunk
+    expect(distIndexDts).toContain('interface ColorOptions')
 
-  expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
-  expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-  expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-  expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
+    expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
 describe.skip('runtime: next.js', () => {
   test('import `dist/*.browser.js` from package', async () => {
@@ -601,25 +619,28 @@ describe.skip('runtime: next.js', () => {
   })
 })
 
-test.skipIf(process.platform === 'win32')('should build with `--quiet` flag suppressing output', async () => {
-  const project = await spawnProject('ts')
+test.skipIf(process.platform === 'win32')(
+  'should build with `--quiet` flag suppressing output',
+  async () => {
+    const project = await spawnProject('ts')
 
-  await project.install()
+    await project.install()
 
-  const {stdout} = await project.run('build:quiet')
+    const {stdout} = await project.run('build:quiet')
 
-  // Should not contain build progress messages
-  expect(stdout).not.toContain('Build type definitions')
-  expect(stdout).not.toContain('- ts: ./src/index.ts → ./dist/index.d.ts')
+    // Should not contain build progress messages
+    expect(stdout).not.toContain('Build type definitions')
+    expect(stdout).not.toContain('- ts: ./src/index.ts → ./dist/index.d.ts')
 
-  expect(stdout).not.toContain('Build javascript files')
-  expect(stdout).not.toContain('- ts: ./src/index.ts → ./dist/index.cjs')
+    expect(stdout).not.toContain('Build javascript files')
+    expect(stdout).not.toContain('- ts: ./src/index.ts → ./dist/index.cjs')
 
-  // But should still produce the expected dist files
-  expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+    // But should still produce the expected dist files
+    expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
 
-  await project.remove()
-})
+    await project.remove()
+  },
+)
 
 test('should warn with --strict when legacy fields are present', async () => {
   const project = await spawnProject('strict-legacy-fields')
