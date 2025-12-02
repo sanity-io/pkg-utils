@@ -53,6 +53,9 @@ importers:
       '@sanity/tsconfig':
         specifier: workspace:*
         version: link:packages/@sanity/tsconfig
+      '@sanity/tsdown-config':
+        specifier: workspace:*
+        version: link:packages/@sanity/tsdown-config
       '@types/node':
         specifier: ^24.10.1
         version: 24.10.1
