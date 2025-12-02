@@ -3,7 +3,7 @@ import {defineConfig as defineTsdownConfig, type UserConfig} from 'tsdown'
 /**
  * @public
  */
-export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry'> {}
+export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 'format'> {}
 
 /**
  * @public
@@ -15,10 +15,8 @@ export function definePackage(options: PackageOptions = {}): UserConfig {
     tsconfig: options.tsconfig ?? 'tsconfig.json',
     platform: 'neutral',
     report: {gzip: false},
-    publint: {
-      enabled: true,
-      strict: true,
-    },
-    format: ['esm', 'cjs'],
+    publint: true,
+    format: options.format ?? 'esm',
+    inputOptions: {experimental: {attachDebugInfo: 'none'}}
   })
 }
