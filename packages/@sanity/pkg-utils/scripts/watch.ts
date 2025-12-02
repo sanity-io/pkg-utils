@@ -1,6 +1,6 @@
 import path from 'path'
 import {fileURLToPath} from 'url'
-import {watch} from '../src/node/index.ts'
+import {watch} from '../src/node/watch.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 

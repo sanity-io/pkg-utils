@@ -1,6 +1,6 @@
 import path from 'path'
 import {fileURLToPath} from 'url'
-import {build} from '../src/node/index.ts'
+import {build} from '../src/node/build.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
