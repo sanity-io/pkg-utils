@@ -87,20 +87,24 @@ export async function resolveTsdownConfig(
   // Configure vanilla-extract plugin if enabled
   if (config?.vanillaExtract) {
     const {vanillaExtractPlugin} = await import('@vanilla-extract/rollup-plugin')
-    plugins.push(vanillaExtractPlugin(config.vanillaExtract === true
-      ? {
-          extract: {
-            name:
-              runtime === 'node'
-                ? 'bundle.node.css'
-                : runtime === 'browser'
-                  ? 'bundle.browser.css'
-                  : 'bundle.css',
-            sourcemap: true,
-          },
-          identifiers: 'short',
-        }
-      : config.vanillaExtract))
+    plugins.push(
+      vanillaExtractPlugin(
+        config.vanillaExtract === true
+          ? {
+              extract: {
+                name:
+                  runtime === 'node'
+                    ? 'bundle.node.css'
+                    : runtime === 'browser'
+                      ? 'bundle.browser.css'
+                      : 'bundle.css',
+                sourcemap: true,
+              },
+              identifiers: 'short',
+            }
+          : config.vanillaExtract,
+      ),
+    )
   }
 
   // Determine chunk file naming - maintain compatibility with old rollup config
@@ -169,8 +173,8 @@ export async function resolveTsdownConfig(
     fixedExtension: false,
     publint: {
       enabled: true,
-      level: "error",
-      strict: true
+      level: 'error',
+      strict: true,
     },
     // Add babel plugin for React Compiler if configured
     plugins: plugins.length > 0 ? plugins : undefined,

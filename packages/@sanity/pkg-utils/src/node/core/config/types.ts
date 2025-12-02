@@ -255,7 +255,5 @@ export interface PkgConfigOptions {
    * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
    * @alpha
    */
-  vanillaExtract?:
-    | boolean
-    | (VanillaExtractOptions & {minify?: boolean;})
+  vanillaExtract?: boolean | (VanillaExtractOptions & {minify?: boolean})
 }

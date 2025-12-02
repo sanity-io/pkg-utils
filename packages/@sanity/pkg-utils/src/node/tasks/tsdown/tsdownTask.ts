@@ -1,7 +1,6 @@
 import path from 'node:path'
 import chalk from 'chalk'
 import {from} from 'rxjs'
-import {createConsoleSpy} from '../../consoleSpy.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import type {TaskHandler, TsdownTask} from '../types.ts'
 import {resolveTsdownConfig} from './resolveTsdownConfig.ts'
@@ -62,75 +61,33 @@ export const tsdownTask: TaskHandler<TsdownTask> = {
 
 async function execPromise(ctx: BuildContext, task: TsdownTask) {
   const {build} = await import('tsdown')
-  const {distPath, files, logger} = ctx
+  const {distPath, files} = ctx
   const outDir = path.relative(ctx.cwd, distPath)
 
-  // Prevent tsdown from printing directly to the console
-  const consoleSpy = createConsoleSpy({
-    onRestored: (messages) => {
-      for (const msg of messages) {
-        const text = String(msg.args[0])
+  const options = await resolveTsdownConfig(ctx, task)
 
-        if (msg.code === 'CIRCULAR_DEPENDENCY') {
-          continue // ignore
-        }
+  // Build with tsdown
+  await build(options)
 
-        if (text.startsWith('Dynamic import can only')) {
-          continue // ignore
-        }
+  // Track the output files
+  // tsdown generates files based on the entry configuration
+  for (const entry of task.entries) {
+    const outputPath = path.resolve(outDir, entry.output)
 
-        if (text.startsWith('Sourcemap is likely to be incorrect')) {
-          continue // ignore
-        }
+    // Add JS file
+    files.push({
+      type: 'chunk',
+      path: outputPath,
+    })
 
-        if (msg.type === 'log') {
-          logger.info(...msg.args)
-        }
-
-        if (msg.type === 'warn') {
-          logger.warn(...msg.args)
-        }
-
-        if (msg.type === 'error') {
-          logger.error(...msg.args)
-        }
-      }
-    },
-  })
-
-  try {
-    const options = await resolveTsdownConfig(ctx, task)
-
-    // Build with tsdown
-    await build(options)
-
-    // Track the output files
-    // tsdown generates files based on the entry configuration
-    for (const entry of task.entries) {
-      const outputPath = path.resolve(outDir, entry.output)
-
-      // Add JS file
-      files.push({
-        type: 'chunk',
-        path: outputPath,
-      })
-
-      // Add DTS file (tsdown generates both JS and DTS)
-      const dtsPath = outputPath
-        .replace(/\.m?js$/, '.d.ts')
-        .replace(/\.cjs$/, '.d.cts')
-        .replace(/\.mjs$/, '.d.mts')
-      files.push({
-        type: 'types',
-        path: dtsPath,
-      })
-    }
-
-    // Restore console
-    consoleSpy.restore()
-  } catch (err) {
-    // Restore console
-    consoleSpy.restore()
-    throw err
+    // Add DTS file (tsdown generates both JS and DTS)
+    const dtsPath = outputPath
+      .replace(/\.m?js$/, '.d.ts')
+      .replace(/\.cjs$/, '.d.cts')
+      .replace(/\.mjs$/, '.d.mts')
+    files.push({
+      type: 'types',
+      path: dtsPath,
+    })
   }
 }

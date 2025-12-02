@@ -12,8 +12,6 @@ import {resolveBrowserTarget} from './resolveBrowserTarget.ts'
 import {resolveNodeTarget} from './resolveNodeTarget.ts'
 import {parseStrictOptions} from './strict.ts'
 
-
-
 // Type guard to filter out falsy values
 function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
   return Boolean(value)
@@ -222,8 +220,8 @@ async function resolveBrowserslistTargets(query: string | string[]): Promise<str
   const browserslist = await import('browserslist')
   const browsers = browserslist.default(query)
 
-
-  const targets = new Set<string>()
+  // Track lowest major version for each target type
+  const lowestVersions = new Map<string, number>()
 
   for (const browser of browsers) {
     const [name, version] = browser.split(' ')
@@ -231,36 +229,47 @@ async function resolveBrowserslistTargets(query: string | string[]): Promise<str
 
     // Extract major version number (e.g., "22.21.0" -> "22", "10-12" -> "10")
     // Note: For version ranges, we only use the lower bound
-    const majorVersion = version.split('.')[0]!.split('-')[0]!
+    const majorVersion = parseInt(version.split('.')[0]!.split('-')[0]!, 10)
+    if (isNaN(majorVersion)) continue
 
     // Map browserslist names to esbuild/rolldown target names
+    let targetName: string | undefined
     switch (name.toLowerCase()) {
       case 'chrome':
       case 'and_chr':
-        targets.add(`chrome${majorVersion}`)
+        targetName = 'chrome'
         break
       case 'edge':
-        targets.add(`edge${majorVersion}`)
+        targetName = 'edge'
         break
       case 'firefox':
       case 'and_ff':
-        targets.add(`firefox${majorVersion}`)
+        targetName = 'firefox'
         break
       case 'safari':
       case 'ios_saf':
-        targets.add(`safari${majorVersion}`)
+        targetName = 'safari'
         break
       case 'opera':
       case 'op_mob':
-        targets.add(`opera${majorVersion}`)
+        targetName = 'opera'
         break
       case 'node':
-        targets.add(`node${majorVersion}`)
+        targetName = 'node'
         break
+    }
+
+    if (targetName) {
+      const existing = lowestVersions.get(targetName)
+      if (existing === undefined || majorVersion < existing) {
+        lowestVersions.set(targetName, majorVersion)
+      }
     }
   }
 
-  return Array.from(targets).toSorted()
+  return Array.from(lowestVersions.entries())
+    .map(([name, version]) => `${name}${version}`)
+    .toSorted()
 }
 
 function transformPackageName(packageName: string): string {
