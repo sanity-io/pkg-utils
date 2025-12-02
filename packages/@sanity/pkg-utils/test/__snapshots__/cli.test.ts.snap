@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`cli > should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
+exports[`should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const runtime = "browser";
@@ -9,7 +9,7 @@ exports.runtime = runtime;
 "
 `;
 
-exports[`cli > should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
+exports[`should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
 "const runtime = "browser";
 export {
   runtime
@@ -18,7 +18,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
+exports[`should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "1.0.0";
@@ -27,7 +27,7 @@ exports.VERSION = VERSION;
 "
 `;
 
-exports[`cli > should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
+exports[`should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
 "/** @public */
 export declare const VERSION = '1.0.0'
 
@@ -35,7 +35,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`custom-dist\` package > ./lib/index.js 1`] = `
+exports[`should build \`custom-dist\` package > ./lib/index.js 1`] = `
 "const VERSION = "1.0.0";
 export {
   VERSION
@@ -44,7 +44,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
 "const format = "esm", runtime = "browser", path = "dist/extra.browser.js";
 export {
   format,
@@ -55,7 +55,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const format = "commonjs", runtime = "*", path = "dist/extra.cjs";
@@ -66,7 +66,7 @@ exports.runtime = runtime;
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -80,7 +80,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.js 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/extra.js 1`] = `
 "const format = "esm", runtime = "*", path = "dist/extra.js";
 export {
   format,
@@ -91,7 +91,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
 "const format = "esm", runtime = "browser", path = "dist/index.browser.js";
 export {
   format,
@@ -102,7 +102,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const format = "commonjs", runtime = "*", path = "dist/index.cjs";
@@ -113,7 +113,7 @@ exports.runtime = runtime;
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -127,7 +127,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`dummy-module\` package > ./dist/index.js 1`] = `
+exports[`should build \`dummy-module\` package > ./dist/index.js 1`] = `
 "const format = "esm", runtime = "*", path = "dist/index.js";
 export {
   format,
@@ -138,7 +138,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`multi-export\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`multi-export\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 function defineConfig(options) {
@@ -153,7 +153,7 @@ exports.definePlugin = definePlugin;
 "
 `;
 
-exports[`cli > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare interface Config extends Plugin_2 {
   plugins?: Plugin_2[]
@@ -183,7 +183,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`multi-export\` package > ./dist/index.js 1`] = `
+exports[`should build \`multi-export\` package > ./dist/index.js 1`] = `
 "function defineConfig(options) {
   return options;
 }
@@ -198,7 +198,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
+exports[`should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var multiExport = require("multi-export");
@@ -212,7 +212,7 @@ exports.plugin = plugin;
 "
 `;
 
-exports[`cli > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
+exports[`should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
 "/** @public */
 export declare function plugin(): Plugin_2
 
@@ -233,7 +233,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`multi-export\` package > ./dist/plugin.js 1`] = `
+exports[`should build \`multi-export\` package > ./dist/plugin.js 1`] = `
 "import { definePlugin } from "multi-export";
 function plugin() {
   return definePlugin({
@@ -247,7 +247,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`react-18\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`react-18\` package > ./dist/index.d.ts 1`] = `
 "import {ForwardRefExoticComponent, HTMLProps, RefAttributes} from 'react'
 
 /** @public */
@@ -268,7 +268,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`react-18\` package > ./dist/index.js 1`] = `
+exports[`should build \`react-18\` package > ./dist/index.js 1`] = `
 "import { jsxs, Fragment, jsx } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
 import { forwardRef, useId, useRef, useImperativeHandle, useState, useEffect, useDeferredValue, Suspense } from "react";
@@ -454,7 +454,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`react-19\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`react-19\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare function App(): React.JSX.Element
 
@@ -470,7 +470,7 @@ export {}
 "
 `;
 
-exports[`cli > should build \`react-19\` package > ./dist/index.js 1`] = `
+exports[`should build \`react-19\` package > ./dist/index.js 1`] = `
 "import { jsxs, Fragment, jsx } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
 import { useId, useRef, useImperativeHandle, useState, useEffect, use, useDeferredValue, Suspense } from "react";
@@ -642,7 +642,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
+exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
 "import { jsxs, jsx } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
 import { Stack, Text } from "@sanity/ui";
@@ -682,7 +682,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
 "import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
   alpha?: boolean;
@@ -712,7 +712,7 @@ declare const colorInput: Plugin<void>;
 export { type ColorDefinition, ColorInput, colorInput };"
 `;
 
-exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
+exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
 "import { defineType, definePlugin } from "sanity";
 import { lazy } from "react";
 const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
@@ -736,7 +736,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
+exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
 "import { jsx, jsxs } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
 import { Root, Stack, Text } from "@sanity/ui";
@@ -762,13 +762,13 @@ export {
 "
 `;
 
-exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
+exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
 "._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}}
 /*# sourceMappingURL=bundle.css.map*/
 "
 `;
 
-exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
 "import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
   alpha?: boolean;
@@ -798,7 +798,7 @@ declare const colorInput: Plugin<void>;
 export { type ColorDefinition, ColorInput, colorInput };"
 `;
 
-exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
+exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
 "import "./bundle.css";
 import "@sanity/ui/css/index.css";
 import { defineType, definePlugin } from "sanity";
@@ -824,7 +824,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @internal
  */
@@ -852,7 +852,7 @@ declare module './module2' {
 "
 `;
 
-exports[`cli > should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @internal
  */
@@ -881,7 +881,7 @@ declare module './module2' {
 "
 `;
 
-exports[`cli > should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @internal
  */
@@ -910,26 +910,26 @@ declare module './module2.js' {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-cjs/c.cjs 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/_chunks-cjs/c.cjs 1`] = `
 ""use strict";
 exports.c = "c";
 //# sourceMappingURL=c.cjs.map
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
 "/** @public */
 declare const c = "c";
 export { c as t };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
 "/** @public */
 declare const c = "c";
 export { c as t };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
 "const c = "c";
 export {
   c
@@ -938,7 +938,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var c = require("./_chunks-cjs/c.cjs");
@@ -949,21 +949,21 @@ exports.a = a;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
 "import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
 declare const a = "a";
 export { a, c };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
 "import { t as c } from "./_chunks-dts/c.js";
 /** @public */
 declare const a = "a";
 export { a, c };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
 "import { c } from "./_chunks-es/c.js";
 const a = "a";
 export {
@@ -974,7 +974,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var c = require("./_chunks-cjs/c.cjs");
@@ -985,21 +985,21 @@ exports.b = b;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
 "import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
 declare const b = "b";
 export { b, c };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
 "import { t as c } from "./_chunks-dts/c.js";
 /** @public */
 declare const b = "b";
 export { b, c };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
 "import { c } from "./_chunks-es/c.js";
 const b = "b";
 export {
@@ -1010,7 +1010,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "0.0.0-development";
@@ -1019,19 +1019,19 @@ exports.VERSION = VERSION;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION: string;
 export { VERSION };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION: string;
 export { VERSION };"
 `;
 
-exports[`cli > should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
+exports[`should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
 "const VERSION = "0.0.0-development";
 export {
   VERSION
@@ -1040,7 +1040,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos");
@@ -1078,7 +1078,7 @@ exports.validateApiPerspective = validateApiPerspective;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 /**
@@ -1113,7 +1113,7 @@ declare function validateApiPerspective(perspective: unknown): asserts perspecti
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 /**
@@ -1148,7 +1148,7 @@ declare function validateApiPerspective(perspective: unknown): asserts perspecti
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
+exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
 import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -1183,7 +1183,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
@@ -1220,7 +1220,7 @@ exports.RemoveIcon = RemoveIcon;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
@@ -1234,7 +1234,7 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
@@ -1248,7 +1248,7 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
+exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
 import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -1278,7 +1278,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
@@ -1315,7 +1315,7 @@ exports.RemoveIcon = RemoveIcon;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
@@ -1329,7 +1329,7 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
@@ -1343,7 +1343,7 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
+exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
 import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -1373,7 +1373,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
@@ -1410,7 +1410,7 @@ exports.RemoveIcon = RemoveIcon;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 /**
@@ -1445,7 +1445,7 @@ declare function validateApiPerspective(perspective: unknown): asserts perspecti
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
 /**
@@ -1480,7 +1480,7 @@ declare function validateApiPerspective(perspective: unknown): asserts perspecti
 export { RemoveIcon, SanityLogo, validateApiPerspective };"
 `;
 
-exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
+exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
 import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -1510,7 +1510,7 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "1.0.0";
@@ -1519,17 +1519,17 @@ exports.VERSION = VERSION;
 "
 `;
 
-exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
 "declare const VERSION = "1.0.0";
 export { VERSION };"
 `;
 
-exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
 "declare const VERSION = "1.0.0";
 export { VERSION };"
 `;
 
-exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
+exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
 "const VERSION = "1.0.0";
 export {
   VERSION
@@ -1538,14 +1538,14 @@ export {
 "
 `;
 
-exports[`cli > should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
 "export declare const VERSION = '1.0.0'
 
 export {}
 "
 `;
 
-exports[`cli > should build \`tsgo\` package > ./dist/index.cjs 1`] = `
+exports[`should build \`tsgo\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "1.0.0";
@@ -1554,19 +1554,19 @@ exports.VERSION = VERSION;
 "
 `;
 
-exports[`cli > should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
+exports[`should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION = "1.0.0";
 export { VERSION };"
 `;
 
-exports[`cli > should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
+exports[`should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION = "1.0.0";
 export { VERSION };"
 `;
 
-exports[`cli > should build \`tsgo\` package > ./dist/index.js 1`] = `
+exports[`should build \`tsgo\` package > ./dist/index.js 1`] = `
 "const VERSION = "1.0.0";
 export {
   VERSION
@@ -1575,7 +1575,7 @@ export {
 "
 `;
 
-exports[`cli > should build with \`--quiet\` flag suppressing output > ./dist/index.d.ts 1`] = `
+exports[`should build with \`--quiet\` flag suppressing output > ./dist/index.d.ts 1`] = `
 "/**
  * @internal
  */
