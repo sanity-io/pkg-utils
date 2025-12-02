@@ -2,12 +2,14 @@ packages:
   - packages/@sanity/*
   - playground/*
   - packages/@sanity/pkg-utils/test/env/__tmp__/**
+  - packages/@sanity/tsdown-config/test/fixtures/**
 
 catalog:
   '@sanity/client': ^7.13.1
   '@sanity/icons': ^3.7.4
   '@sanity/logos': ^2.2.2
   '@typescript/native-preview': 7.0.0-dev.20251129.1
+  tsdown: ^0.16.8
   typescript: 5.9.3
   vitest: ^4.0.14
 

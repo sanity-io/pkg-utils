@@ -13,8 +13,6 @@ const strictOptions = z
     alwaysPackageJsonTypes: toggle.default('error'),
     alwaysPackageJsonFiles: toggle.default('error'),
     noCheckTypes: toggle.default('warn'),
-    noPackageJsonMain: toggle.default('warn'),
-    noPackageJsonModule: toggle.default('warn'),
     noPackageJsonBrowser: toggle.default('warn'),
     noPackageJsonTypesVersions: toggle.default('warn'),
     preferModuleType: toggle.default('warn'),
@@ -67,16 +65,6 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   noCheckTypes: ToggleType
-  /**
-   * Disallows the `main` field in `package.json` as all modern tools support the `exports` field.
-   * @defaultValue 'warn'
-   */
-  noPackageJsonMain: ToggleType
-  /**
-   * Disallows the `module` field in `package.json` as all modern tools support the `exports` field.
-   * @defaultValue 'warn'
-   */
-  noPackageJsonModule: ToggleType
   /**
    * Disallows the `browser` field in `package.json` as the `browser` condition in `exports` is better supported.
    * @defaultValue 'warn'

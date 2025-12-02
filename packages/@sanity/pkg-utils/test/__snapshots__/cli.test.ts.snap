@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
+exports[`cli > should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const runtime = "browser";
@@ -9,7 +9,7 @@ exports.runtime = runtime;
 "
 `;
 
-exports[`should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
+exports[`cli > should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
 "const runtime = "browser";
 export {
   runtime
@@ -18,7 +18,7 @@ export {
 "
 `;
 
-exports[`should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
+exports[`cli > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "1.0.0";
@@ -27,7 +27,7 @@ exports.VERSION = VERSION;
 "
 `;
 
-exports[`should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
+exports[`cli > should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
 "/** @public */
 export declare const VERSION = '1.0.0'
 
@@ -35,7 +35,7 @@ export {}
 "
 `;
 
-exports[`should build \`custom-dist\` package > ./lib/index.js 1`] = `
+exports[`cli > should build \`custom-dist\` package > ./lib/index.js 1`] = `
 "const VERSION = "1.0.0";
 export {
   VERSION
@@ -44,7 +44,7 @@ export {
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
 "const format = "esm", runtime = "browser", path = "dist/extra.browser.js";
 export {
   format,
@@ -55,7 +55,7 @@ export {
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const format = "commonjs", runtime = "*", path = "dist/extra.cjs";
@@ -66,7 +66,7 @@ exports.runtime = runtime;
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -80,7 +80,7 @@ export {}
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/extra.js 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/extra.js 1`] = `
 "const format = "esm", runtime = "*", path = "dist/extra.js";
 export {
   format,
@@ -91,7 +91,7 @@ export {
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
 "const format = "esm", runtime = "browser", path = "dist/index.browser.js";
 export {
   format,
@@ -102,7 +102,7 @@ export {
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const format = "commonjs", runtime = "*", path = "dist/index.cjs";
@@ -113,7 +113,7 @@ exports.runtime = runtime;
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -127,7 +127,7 @@ export {}
 "
 `;
 
-exports[`should build \`dummy-module\` package > ./dist/index.js 1`] = `
+exports[`cli > should build \`dummy-module\` package > ./dist/index.js 1`] = `
 "const format = "esm", runtime = "*", path = "dist/index.js";
 export {
   format,
@@ -138,7 +138,7 @@ export {
 "
 `;
 
-exports[`should build \`multi-export\` package > ./dist/index.cjs 1`] = `
+exports[`cli > should build \`multi-export\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 function defineConfig(options) {
@@ -153,7 +153,7 @@ exports.definePlugin = definePlugin;
 "
 `;
 
-exports[`should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
+exports[`cli > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare interface Config extends Plugin_2 {
   plugins?: Plugin_2[]
@@ -183,7 +183,7 @@ export {}
 "
 `;
 
-exports[`should build \`multi-export\` package > ./dist/index.js 1`] = `
+exports[`cli > should build \`multi-export\` package > ./dist/index.js 1`] = `
 "function defineConfig(options) {
   return options;
 }
@@ -198,7 +198,7 @@ export {
 "
 `;
 
-exports[`should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
+exports[`cli > should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var multiExport = require("multi-export");
@@ -212,7 +212,7 @@ exports.plugin = plugin;
 "
 `;
 
-exports[`should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
+exports[`cli > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
 "/** @public */
 export declare function plugin(): Plugin_2
 
@@ -233,7 +233,7 @@ export {}
 "
 `;
 
-exports[`should build \`multi-export\` package > ./dist/plugin.js 1`] = `
+exports[`cli > should build \`multi-export\` package > ./dist/plugin.js 1`] = `
 "import { definePlugin } from "multi-export";
 function plugin() {
   return definePlugin({
@@ -247,7 +247,7 @@ export {
 "
 `;
 
-exports[`should build \`react-18\` package > ./dist/index.d.ts 1`] = `
+exports[`cli > should build \`react-18\` package > ./dist/index.d.ts 1`] = `
 "import {ForwardRefExoticComponent, HTMLProps, RefAttributes} from 'react'
 
 /** @public */
@@ -268,7 +268,7 @@ export {}
 "
 `;
 
-exports[`should build \`react-18\` package > ./dist/index.js 1`] = `
+exports[`cli > should build \`react-18\` package > ./dist/index.js 1`] = `
 "import { jsxs, Fragment, jsx } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
 import { forwardRef, useId, useRef, useImperativeHandle, useState, useEffect, useDeferredValue, Suspense } from "react";
@@ -454,7 +454,7 @@ export {
 "
 `;
 
-exports[`should build \`react-19\` package > ./dist/index.d.ts 1`] = `
+exports[`cli > should build \`react-19\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare function App(): React.JSX.Element
 
@@ -470,7 +470,7 @@ export {}
 "
 `;
 
-exports[`should build \`react-19\` package > ./dist/index.js 1`] = `
+exports[`cli > should build \`react-19\` package > ./dist/index.js 1`] = `
 "import { jsxs, Fragment, jsx } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
 import { useId, useRef, useImperativeHandle, useState, useEffect, use, useDeferredValue, Suspense } from "react";
@@ -642,6 +642,991 @@ export {
 "
 `;
 
+exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
+"import { jsxs, jsx } from "react/jsx-runtime";
+import { c } from "react-compiler-runtime";
+import { Stack, Text } from "@sanity/ui";
+import { styled } from "styled-components";
+const CustomTextInput = styled.input.attrs({
+  type: "color"
+}).withConfig({
+  displayName: "CustomTextInput",
+  componentId: "sc-11pprad-0"
+})\`cursor:pointer;box-sizing:border-box;background:var(--card-border-color);border:0 solid transparent;border-radius:2px;padding:0;appearance:none;margin:0;height:1.6rem;width:8ch;&:hover{box-shadow:0 0 0 2px \${({
+  theme
+}) => theme.sanity.color.card.hovered.border};}&::-webkit-color-swatch-wrapper{padding:0;}&::-webkit-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({
+  theme
+}) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({
+  theme
+}) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}&::-moz-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({
+  theme
+}) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({
+  theme
+}) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}\`;
+function ColorInput(props) {
+  const $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
+  let t2;
+  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx(CustomTextInput, { ...props.elementProps, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
+  let t3;
+  $[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { as: "output", muted: !0, size: 0, htmlFor: props.elementProps.id, children: props.value }), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
+  let t4;
+  return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, { space: 2, children: [
+    t2,
+    t3
+  ] }), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
+}
+export {
+  ColorInput as default
+};
+//# sourceMappingURL=ColorInput.js.map
+"
+`;
+
+exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
+"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
+interface ColorOptions {
+  alpha?: boolean;
+  colorspace?: 'limited-srgb' | 'display-p3';
+}
+interface ColorSchemaType extends StringSchemaType {
+  options?: StringSchemaType['options'] & ColorOptions;
+}
+type ColorInputProps = StringInputProps<ColorSchemaType>;
+/** @public */
+declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
+declare const colorTypeName: "color";
+/**
+ * @public
+ */
+interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
+  type: typeof colorTypeName;
+  options?: ColorOptions;
+}
+declare module 'sanity' {
+  interface IntrinsicDefinitions {
+    color: ColorDefinition;
+  }
+}
+/** @public */
+declare const colorInput: Plugin<void>;
+export { type ColorDefinition, ColorInput, colorInput };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
+"import { defineType, definePlugin } from "sanity";
+import { lazy } from "react";
+const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
+  name: colorTypeName,
+  type: "string",
+  title: "Color",
+  components: {
+    input: ColorInput
+  }
+}), colorInput = definePlugin({
+  name: "@sanity/color-input",
+  schema: {
+    types: [colorType]
+  }
+});
+export {
+  ColorInput,
+  colorInput
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
+"import { jsx, jsxs } from "react/jsx-runtime";
+import { c } from "react/compiler-runtime";
+import { Root, Stack, Text } from "@sanity/ui";
+var input = "_1n31tph0";
+function ColorInput(props) {
+  const $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
+  let t2;
+  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", { ...props.elementProps, type: "color", className: input, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
+  let t3;
+  $[4] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { muted: !0, size: 0, children: props.value }), $[4] = props.value, $[5] = t3) : t3 = $[5];
+  let t4;
+  $[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", { htmlFor: props.elementProps.id, children: t3 }), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
+  let t5;
+  return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsx(Root, { as: "div", overflow: "visible", children: /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
+    t2,
+    t4
+  ] }) }), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
+}
+export {
+  ColorInput as default
+};
+//# sourceMappingURL=ColorInput.js.map
+"
+`;
+
+exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
+"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}}
+/*# sourceMappingURL=bundle.css.map*/
+"
+`;
+
+exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
+"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
+interface ColorOptions {
+  alpha?: boolean;
+  colorspace?: 'limited-srgb' | 'display-p3';
+}
+interface ColorSchemaType extends StringSchemaType {
+  options?: StringSchemaType['options'] & ColorOptions;
+}
+type ColorInputProps = StringInputProps<ColorSchemaType>;
+/** @public */
+declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
+declare const colorTypeName: "color";
+/**
+ * @public
+ */
+interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
+  type: typeof colorTypeName;
+  options?: ColorOptions;
+}
+declare module 'sanity' {
+  interface IntrinsicDefinitions {
+    color: ColorDefinition;
+  }
+}
+/** @public */
+declare const colorInput: Plugin<void>;
+export { type ColorDefinition, ColorInput, colorInput };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
+"import "./bundle.css";
+import "@sanity/ui/css/index.css";
+import { defineType, definePlugin } from "sanity";
+import { lazy } from "react";
+const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
+  name: colorTypeName,
+  type: "string",
+  title: "Color",
+  components: {
+    input: ColorInput
+  }
+}), colorInput = definePlugin({
+  name: "@sanity/color-input",
+  schema: {
+    types: [colorType]
+  }
+});
+export {
+  ColorInput,
+  colorInput
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts\` package > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+exports[`cli > should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+exports[`cli > should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2.js' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-cjs/c.cjs 1`] = `
+""use strict";
+exports.c = "c";
+//# sourceMappingURL=c.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
+"/** @public */
+declare const c = "c";
+export { c as t };
+//# sourceMappingURL=c.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
+"/** @public */
+declare const c = "c";
+export { c as t };
+//# sourceMappingURL=c.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
+"const c = "c";
+export {
+  c
+};
+//# sourceMappingURL=c.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var c = require("./_chunks-cjs/c.cjs");
+const a = "a";
+exports.c = c.c;
+exports.a = a;
+//# sourceMappingURL=a.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
+"import { t as c } from "./_chunks-dts/c.cjs";
+/** @public */
+declare const a = "a";
+export { a, c };
+//# sourceMappingURL=a.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
+"import { t as c } from "./_chunks-dts/c.js";
+/** @public */
+declare const a = "a";
+export { a, c };
+//# sourceMappingURL=a.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
+"import { c } from "./_chunks-es/c.js";
+const a = "a";
+export {
+  a,
+  c
+};
+//# sourceMappingURL=a.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var c = require("./_chunks-cjs/c.cjs");
+const b = "b";
+exports.c = c.c;
+exports.b = b;
+//# sourceMappingURL=b.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
+"import { t as c } from "./_chunks-dts/c.cjs";
+/** @public */
+declare const b = "b";
+export { b, c };
+//# sourceMappingURL=b.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
+"import { t as c } from "./_chunks-dts/c.js";
+/** @public */
+declare const b = "b";
+export { b, c };
+//# sourceMappingURL=b.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
+"import { c } from "./_chunks-es/c.js";
+const b = "b";
+export {
+  b,
+  c
+};
+//# sourceMappingURL=b.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const VERSION = "0.0.0-development";
+exports.VERSION = VERSION;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
+"/** @public */
+declare const VERSION: string;
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
+"/** @public */
+declare const VERSION: string;
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
+"const VERSION = "0.0.0-development";
+export {
+  VERSION
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos");
+const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+function validateApiPerspective(perspective) {
+  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
+    throw new TypeError(
+      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
+    );
+}
+Object.defineProperty(exports, "SanityLogo", {
+  enumerable: !0,
+  get: function() {
+    return logos.SanityLogo;
+  }
+});
+exports.RemoveIcon = RemoveIcon;
+exports.validateApiPerspective = validateApiPerspective;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+
+/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+/**
+ * @internal - it may have breaking changes in any release
+ */
+declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+
+/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+/**
+ * @internal - it may have breaking changes in any release
+ */
+declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
+"import { jsx } from "react/jsx-runtime";
+import { forwardRef } from "react";
+import { SanityLogo } from "@sanity/logos";
+const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+function validateApiPerspective(perspective) {
+  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
+    throw new TypeError(
+      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
+    );
+}
+export {
+  RemoveIcon,
+  SanityLogo,
+  validateApiPerspective
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
+const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+Object.defineProperty(exports, "SanityLogo", {
+  enumerable: !0,
+  get: function() {
+    return logos.SanityLogo;
+  }
+});
+Object.defineProperty(exports, "validateApiPerspective", {
+  enumerable: !0,
+  get: function() {
+    return client.validateApiPerspective;
+  }
+});
+exports.RemoveIcon = RemoveIcon;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
+"import { jsx } from "react/jsx-runtime";
+import { forwardRef } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+export {
+  RemoveIcon,
+  SanityLogo,
+  validateApiPerspective
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
+const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+Object.defineProperty(exports, "SanityLogo", {
+  enumerable: !0,
+  get: function() {
+    return logos.SanityLogo;
+  }
+});
+Object.defineProperty(exports, "validateApiPerspective", {
+  enumerable: !0,
+  get: function() {
+    return client.validateApiPerspective;
+  }
+});
+exports.RemoveIcon = RemoveIcon;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
+"import { jsx } from "react/jsx-runtime";
+import { forwardRef } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+export {
+  RemoveIcon,
+  SanityLogo,
+  validateApiPerspective
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
+const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+Object.defineProperty(exports, "SanityLogo", {
+  enumerable: !0,
+  get: function() {
+    return logos.SanityLogo;
+  }
+});
+Object.defineProperty(exports, "validateApiPerspective", {
+  enumerable: !0,
+  get: function() {
+    return client.validateApiPerspective;
+  }
+});
+exports.RemoveIcon = RemoveIcon;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+
+/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+/**
+ * @internal - it may have breaking changes in any release
+ */
+declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
+"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+import { SanityLogo } from "@sanity/logos";
+/**
+* @public
+*/
+declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+* @public
+*/
+
+/** @public */
+declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
+/**
+ * @deprecated use 'drafts' instead
+ */
+declare type DeprecatedPreviewDrafts = 'previewDrafts';
+
+/**
+ * Delete the draft version of a document.
+ * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
+ *
+ * @public
+ * @deprecated Use {@link DiscardVersionAction} instead
+ */
+
+/** @public */
+declare type StackablePerspective = ('published' | 'drafts' | string) & {};
+/**
+ * @internal - it may have breaking changes in any release
+ */
+declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
+"import { jsx } from "react/jsx-runtime";
+import { forwardRef } from "react";
+import { SanityLogo } from "@sanity/logos";
+import { validateApiPerspective } from "@sanity/client";
+const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+  return /* @__PURE__ */ jsx(
+    "svg",
+    {
+      "data-sanity-icon": "remove",
+      width: "1em",
+      height: "1em",
+      viewBox: "0 0 25 25",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
+      ref,
+      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
+    }
+  );
+});
+export {
+  RemoveIcon,
+  SanityLogo,
+  validateApiPerspective
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const VERSION = "1.0.0";
+exports.VERSION = VERSION;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
+"declare const VERSION = "1.0.0";
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
+"declare const VERSION = "1.0.0";
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
+"const VERSION = "1.0.0";
+export {
+  VERSION
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
+"export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
+exports[`cli > should build \`tsgo\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const VERSION = "1.0.0";
+exports.VERSION = VERSION;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
+"/** @public */
+declare const VERSION = "1.0.0";
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
+"/** @public */
+declare const VERSION = "1.0.0";
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
+`;
+
+exports[`cli > should build \`tsgo\` package > ./dist/index.js 1`] = `
+"const VERSION = "1.0.0";
+export {
+  VERSION
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build with \`--quiet\` flag suppressing output > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
 exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
 "import { jsxs, jsx } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
@@ -709,7 +1694,8 @@ declare module 'sanity' {
 }
 /** @public */
 declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };"
+export { type ColorDefinition, ColorInput, colorInput };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
@@ -795,7 +1781,8 @@ declare module 'sanity' {
 }
 /** @public */
 declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };"
+export { type ColorDefinition, ColorInput, colorInput };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
@@ -819,222 +1806,6 @@ const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeNa
 export {
   ColorInput,
   colorInput
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts\` package > ./dist/index.d.ts 1`] = `
-"/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
- * @public
- */
-export declare interface IncludedModuleDummy {
-  field: string
-}
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
-declare module './module2' {
-  interface IncludedModuleDummy {
-    addedField: string
-  }
-}
-"
-`;
-
-exports[`should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
-"/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
- * @public
- */
-export declare interface IncludedModuleDummy {
-  field: string
-}
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
-declare module './module2' {
-  interface IncludedModuleDummy {
-    addedField: string
-  }
-}
-//# sourceMappingURL=module1.d.ts.map
-"
-`;
-
-exports[`should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
-"/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
- * @public
- */
-export declare interface IncludedModuleDummy {
-  field: string
-}
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
-declare module './module2.js' {
-  interface IncludedModuleDummy {
-    addedField: string
-  }
-}
-//# sourceMappingURL=module1.d.ts.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/_chunks-cjs/c.cjs 1`] = `
-""use strict";
-exports.c = "c";
-//# sourceMappingURL=c.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
-"/** @public */
-declare const c = "c";
-export { c as t };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
-"/** @public */
-declare const c = "c";
-export { c as t };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
-"const c = "c";
-export {
-  c
-};
-//# sourceMappingURL=c.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var c = require("./_chunks-cjs/c.cjs");
-const a = "a";
-exports.c = c.c;
-exports.a = a;
-//# sourceMappingURL=a.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
-"import { t as c } from "./_chunks-dts/c.cjs";
-/** @public */
-declare const a = "a";
-export { a, c };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
-"import { t as c } from "./_chunks-dts/c.js";
-/** @public */
-declare const a = "a";
-export { a, c };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
-"import { c } from "./_chunks-es/c.js";
-const a = "a";
-export {
-  a,
-  c
-};
-//# sourceMappingURL=a.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var c = require("./_chunks-cjs/c.cjs");
-const b = "b";
-exports.c = c.c;
-exports.b = b;
-//# sourceMappingURL=b.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
-"import { t as c } from "./_chunks-dts/c.cjs";
-/** @public */
-declare const b = "b";
-export { b, c };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
-"import { t as c } from "./_chunks-dts/c.js";
-/** @public */
-declare const b = "b";
-export { b, c };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
-"import { c } from "./_chunks-es/c.js";
-const b = "b";
-export {
-  b,
-  c
-};
-//# sourceMappingURL=b.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "0.0.0-development";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
-"/** @public */
-declare const VERSION: string;
-export { VERSION };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
-"/** @public */
-declare const VERSION: string;
-export { VERSION };"
-`;
-
-exports[`should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
-"const VERSION = "0.0.0-development";
-export {
-  VERSION
 };
 //# sourceMappingURL=index.js.map
 "
@@ -1110,7 +1881,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
@@ -1145,7 +1917,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
@@ -1231,7 +2004,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
@@ -1245,7 +2019,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
@@ -1326,7 +2101,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
@@ -1340,7 +2116,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
@@ -1442,7 +2219,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
@@ -1477,7 +2255,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
@@ -1521,52 +2300,17 @@ exports.VERSION = VERSION;
 
 exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
 "declare const VERSION = "1.0.0";
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
 "declare const VERSION = "1.0.0";
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
-"const VERSION = "1.0.0";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
-"export declare const VERSION = '1.0.0'
-
-export {}
-"
-`;
-
-exports[`should build \`tsgo\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "1.0.0";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
-"/** @public */
-declare const VERSION = "1.0.0";
-export { VERSION };"
-`;
-
-exports[`should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
-"/** @public */
-declare const VERSION = "1.0.0";
-export { VERSION };"
-`;
-
-exports[`should build \`tsgo\` package > ./dist/index.js 1`] = `
 "const VERSION = "1.0.0";
 export {
   VERSION
@@ -1600,5 +2344,6 @@ declare module './module2' {
     addedField: string
   }
 }
+//# sourceMappingURL=module1.d.ts.map
 "
 `;

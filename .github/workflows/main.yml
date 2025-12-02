@@ -29,14 +29,8 @@ jobs:
       - run: pnpm lint --deny-warnings --format github
       - run: pnpm build
       - run: pnpm typecheck
-      - uses: actions/upload-artifact@v5
-        name: Cache build output
-        with:
-          name: build-output
-          path: packages/@sanity/pkg-utils/dist
 
   playground:
-    needs: build
     runs-on: ubuntu-latest
     name: Playground builds
     steps:
@@ -46,26 +40,13 @@ jobs:
         with:
           node-version: lts/*
       - run: pnpm install
-      - uses: actions/download-artifact@v6
-        name: Restore build output
-        with:
-          name: build-output
-          path: packages/@sanity/pkg-utils/dist
+      - run: pnpm build
       - run: pnpm playground:typecheck
       - run: pnpm playground:build
         env:
           NODE_OPTIONS: --max_old_space_size=8192
-      - name: Archive build outputs of runtime tests
-        uses: actions/upload-artifact@v5
-        with:
-          name: runtime-dist
-          path: |
-            playground/runtime-*/dist
-            playground/runtime-*/.next
-            !playground/runtime-*/.next/cache
 
   test:
-    needs: build
     runs-on: ${{ matrix.platform }}
     name: Node.js ${{ matrix.node-version }} / ${{ matrix.platform }}
     strategy:
@@ -93,9 +74,5 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
-      - uses: actions/download-artifact@v6
-        name: Restore build output
-        with:
-          name: build-output
-          path: packages/@sanity/pkg-utils/dist
+      - run: pnpm build
       - run: pnpm test

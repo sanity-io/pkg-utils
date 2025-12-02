@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter '@sanity/pkg-utils' build",
+    "build": "pnpm --filter './packages/@sanity/*' build",
     "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
     "lint": "oxlint --type-aware",
     "playground:build": "pnpm --filter './playground/**' build",
@@ -31,8 +31,9 @@
     "@changesets/cli": "^2.29.8",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@sanity/pkg-utils": "workspace:*",
-    "@sanity/tsconfig": "workspace:*",
     "@sanity/prettier-config": "^1.0.6",
+    "@sanity/tsconfig": "workspace:*",
+    "@sanity/tsdown-config": "workspace:*",
     "@types/node": "^24.10.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
@@ -42,6 +43,7 @@
     "prettier": "^3.7.2",
     "rimraf": "^6.1.2",
     "setup-npm-trusted-publish": "^1.0.3",
+    "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

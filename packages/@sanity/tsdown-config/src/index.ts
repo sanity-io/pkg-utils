@@ -10,13 +10,15 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
  */
 export function defineConfig(options: PackageOptions = {}): UserConfig {
   return defineTsdownConfig({
-    // @TODO add declarationMap: true to tsconfig presets
-    sourcemap: true,
     tsconfig: options.tsconfig ?? 'tsconfig.json',
     platform: 'neutral',
     report: {gzip: false},
     publint: true,
     format: options.format ?? 'esm',
     inputOptions: {experimental: {attachDebugInfo: 'none'}},
+    exports: {
+      enabled: 'local-only',
+      devExports: 'source',
+    },
   })
 }

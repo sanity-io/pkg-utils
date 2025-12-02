@@ -34,6 +34,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -50,7 +51,8 @@
     "@sanity/pkg-utils": "workspace:*",
     "@sanity/tsconfig": "workspace:^",
     "@typescript/native-preview": "catalog:",
-    "tsdown": "^0.16.8",
+    "tinyexec": "^1.0.2",
+    "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

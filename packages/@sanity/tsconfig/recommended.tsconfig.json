@@ -4,7 +4,7 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "preserve",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
@@ -19,6 +19,9 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "isolatedModules": true,
-    "erasableSyntaxOnly": true
+    "erasableSyntaxOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   }
 }
