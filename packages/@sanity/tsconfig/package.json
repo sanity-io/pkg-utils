@@ -1,0 +1,34 @@
+{
+  "name": "@sanity/tsconfig",
+  "version": "0.0.1",
+  "description": "Shared tsconfig.json presets following best practices at Sanity.io",
+  "keywords": [
+    "tsconfig",
+    "recommended",
+    "strict",
+    "strictest",
+    "isolated-declarations"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsconfig#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/tsconfig"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "exports": {
+    "./isolated-declarations": "./isolated-declarations.tsconfig.json",
+    "./recommended": "./recommended.tsconfig.json",
+    "./strict": "./strict.tsconfig.json",
+    "./strictest": "./strictest.tsconfig.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "*.tsconfig.json"
+  ]
+}
