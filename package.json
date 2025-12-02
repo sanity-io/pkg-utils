@@ -12,8 +12,9 @@
     "playground:typecheck": "pnpm --filter './playground/**' typecheck",
     "release": "changeset publish",
     "pretest": "pnpm --filter '@sanity/pkg-utils' pretest && pnpm run playground:clean",
-    "test": "pnpm --filter '@sanity/pkg-utils' test",
-    "test:update-snapshots": "pnpm --filter '@sanity/pkg-utils' test:update-snapshots",
+    "test": "vitest run",
+    "test:update-snapshots": "vitest run -u",
+    "test:watch": "vitest",
     "typecheck": "tsc --build"
   },
   "lint-staged": {
@@ -39,7 +40,8 @@
     "oxlint-tsgolint": "^0.8.3",
     "prettier": "^3.7.2",
     "rimraf": "^6.1.2",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "packageManager": "pnpm@10.24.0"
 }
