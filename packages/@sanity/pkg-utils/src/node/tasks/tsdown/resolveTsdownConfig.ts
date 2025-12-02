@@ -125,6 +125,28 @@ export async function resolveTsdownConfig(
     platform,
     target,
     tsconfig: ctx.ts.configPath || 'tsconfig.json',
+    exports: {
+      customExports(exports, context) {
+        if (!context.pkg.exports) return exports
+        for (const [key, value] of Object.entries(context.pkg.exports)) {
+          if (typeof value === 'string') {
+            exports[key] = value
+          } else if (typeof value === 'object' && 'source' in value) {
+            const {source: _, ...rest} = value
+            exports[key] = context.isPublish ? rest : value
+          }
+        }
+        for (const [key, value] of Object.entries(exports)) {
+          if (typeof value === 'object' && !entries.some((entry) => entry.path === key)) {
+            delete exports[key]
+            continue
+          }
+        }
+
+        return exports
+      },
+      devExports: 'source',
+    },
     external: (id, importer) => {
       // Check if the id is a self-referencing import
       if (exportIds?.includes(id)) {
@@ -221,6 +243,11 @@ export async function resolveTsdownConfig(
       assetFileNames: '[name][extname]',
       chunkFileNames,
     }),
+
+    // hooks(hooks) {
+    //   console.log(hooks)
+
+    // }
   }
 
   return tsdownOptions
