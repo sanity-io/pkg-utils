@@ -27,6 +27,12 @@
       "semanticCommitType": "fix"
     },
     {
+      "matchDepTypes": ["peerDependencies"],
+      "matchPackageNames": ["tsdown"],
+      "rangeStrategy": "bump",
+      "semanticCommitType": "fix"
+    },
+    {
       "matchFileNames": [
         "playground/react-18/package.json",
         "playground/sanity-plugin-with-styled-components/package.json"
