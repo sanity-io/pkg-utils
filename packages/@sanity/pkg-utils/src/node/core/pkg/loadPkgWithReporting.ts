@@ -44,28 +44,6 @@ export async function loadPkgWithReporting(options: {
       }
 
       // Check for banned root-level fields
-      if (strictOptions.noPackageJsonMain !== 'off' && pkg.main) {
-        const msg =
-          'package.json: the `main` field is no longer needed. All modern versions of Node.js and bundlers support the `exports` field. Remove the `main` field and use `exports` instead.'
-        if (strictOptions.noPackageJsonMain === 'error') {
-          shouldError = true
-          logger.error(msg)
-        } else {
-          logger.warn(msg)
-        }
-      }
-
-      if (strictOptions.noPackageJsonModule !== 'off' && pkg.module) {
-        const msg =
-          'package.json: the `module` field is no longer needed. All modern versions of Node.js and bundlers support the `exports` field. Remove the `module` field and use `exports` instead.'
-        if (strictOptions.noPackageJsonModule === 'error') {
-          shouldError = true
-          logger.error(msg)
-        } else {
-          logger.warn(msg)
-        }
-      }
-
       if (strictOptions.noPackageJsonBrowser !== 'off' && pkg.browser) {
         const msg =
           'package.json: the `browser` field is no longer needed. Use the `browser` condition in `exports` instead for better support across modern bundlers.'

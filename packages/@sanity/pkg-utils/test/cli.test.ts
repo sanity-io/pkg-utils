@@ -632,9 +632,7 @@ test('should warn with --strict when legacy fields are present', async () => {
   // Errors can be in either stderr or stdout depending on how they're caught
   const output = result.stderr + result.stdout
 
-  // Should warn on main, module, browser, and typesVersions fields
-  expect(output).toContain('the `main` field is no longer needed')
-  expect(output).toContain('the `module` field is no longer needed')
+  // Should warn on browser, and typesVersions fields
   expect(output).toContain('the `browser` field is no longer needed')
   expect(output).toContain('the `typesVersions` field is no longer needed')
 
