@@ -71,6 +71,9 @@ importers:
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
+      setup-npm-trusted-publish:
+        specifier: ^1.0.3
+        version: 1.0.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -6569,6 +6572,11 @@ packages:
 
   serialize-javascript@6.0.2:
     resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
+
+  setup-npm-trusted-publish@1.0.3:
+    resolution: {integrity: sha512-7uJgpI1sSvPvi0HvxHWjUyjxOuClkJ+WcJyxPWOVtxC7vjqIxP77qZRxWhbgebIpC1Qw2SiNlvHQAN9rTwYxVA==}
+    engines: {node: '>=20.0.0'}
+    hasBin: true
 
   sha256-uint8array@0.10.7:
     resolution: {integrity: sha512-1Q6JQU4tX9NqsDGodej6pkrUVQVNapLZnvkwIhddH/JqzBZF1fSaxSWNY6sziXBE8aEa2twtGkXUrwzGeZCMpQ==}
@@ -15426,6 +15434,8 @@ snapshots:
   serialize-javascript@6.0.2:
     dependencies:
       randombytes: 2.1.0
+
+  setup-npm-trusted-publish@1.0.3: {}
 
   sha256-uint8array@0.10.7: {}
 
