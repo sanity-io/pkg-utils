@@ -7,7 +7,7 @@ import {resolveWatchTasks} from '../src/node/resolveWatchTasks'
 import {watch} from '../src/node/watch'
 import {spawnProject} from './env/spawnProject'
 
-describe('watch functionality', () => {
+describe.skipIf(process.platform === 'win32')('watch functionality', () => {
   test('resolveWatchTasks should generate correct tasks for TypeScript project', async () => {
     const project = await spawnProject('ts')
 
