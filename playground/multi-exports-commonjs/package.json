@@ -36,6 +36,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pkg build --strict --check --clean"
+    "build": "pkg build --strict --check --clean",
+    "typecheck": "tsc"
   }
 }

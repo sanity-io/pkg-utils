@@ -20,7 +20,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pkg build --strict --check --clean"
+    "build": "pkg build --strict --check --clean",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "react-compiler-runtime": "rc"

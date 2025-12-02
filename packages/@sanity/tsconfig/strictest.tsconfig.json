@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "description": "Stricter than strict",
-  "extends": "./strict.json",
+  "extends": "./strict.tsconfig.json",
   "compilerOptions": {
     "strictNullChecks": true,
     "strictFunctionTypes": true,

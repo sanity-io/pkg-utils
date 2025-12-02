@@ -29,13 +29,6 @@
       "source": "./src/node/index.ts",
       "default": "./dist/index.js"
     },
-    "./tsconfig/recommended.json": "./tsconfig/recommended.json",
-    "./tsconfig/recommended": "./tsconfig/recommended.json",
-    "./tsconfig/strict.json": "./tsconfig/strict.json",
-    "./tsconfig/strict": "./tsconfig/strict.json",
-    "./tsconfig/strictest.json": "./tsconfig/strictest.json",
-    "./tsconfig/isolated-declarations.json": "./tsconfig/isolated-declarations.json",
-    "./tsconfig": "./tsconfig/strictest.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
@@ -59,7 +52,6 @@
     "prepublishOnly": "pnpm run build",
     "pretest": "pnpm run clean && pnpm run build",
     "test": "vitest run",
-    "test:update-snapshots": "pnpm test run -- --update",
     "typecheck": "tsc --build",
     "watch": "tsx scripts/watch.ts"
   },
@@ -112,6 +104,7 @@
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
+    "@sanity/tsconfig": "workspace:^",
     "@types/babel__core": "^7.20.5",
     "@types/find-config": "^1.0.4",
     "@types/fs-extra": "^11.0.4",

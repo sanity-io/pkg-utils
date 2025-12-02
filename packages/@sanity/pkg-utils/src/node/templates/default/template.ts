@@ -169,7 +169,8 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         'prettier': features['prettier'] ? '@sanity/prettier-config' : undefined,
         'dependencies': {},
         'devDependencies': {
-          '@sanity/pkg-utils': '^6',
+          '@sanity/tsconfig': features['typescript'] ? '^1' : undefined,
+          '@sanity/pkg-utils': '^9',
           '@sanity/prettier-config': features['prettier'] ? '^1' : undefined,
           '@typescript-eslint/eslint-plugin': undefined,
           '@typescript-eslint/parser': undefined,
@@ -183,7 +184,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           'typescript': undefined,
         },
         'engines': {
-          node: '>=18.0.0',
+          node: '>=20.19 <22 || >=22.12',
         },
       }
 
@@ -252,7 +253,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         const devDependencies = pkgJson.devDependencies
 
         if (isRecord(devDependencies)) {
-          devDependencies['typescript'] = '^5.4'
+          devDependencies['typescript'] = '^5.9'
         }
       }
 
@@ -369,7 +370,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
             resolve(packagePath, 'tsconfig.settings.json'),
             outdent`
             {
-              "extends": "@sanity/pkg-utils/tsconfig/strictest.json",
+              "extends": "@sanity/tsconfig/strictest",
               "compilerOptions": {
                 "rootDir": ".",
                 "outDir": "./dist"

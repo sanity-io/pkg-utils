@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "description": "Extends the recommended preset with stricter settings.",
-  "extends": "./recommended.json",
+  "extends": "./recommended.tsconfig.json",
   "compilerOptions": {
     "checkJs": true,
     "isolatedModules": true,
