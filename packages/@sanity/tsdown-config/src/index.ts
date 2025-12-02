@@ -17,8 +17,8 @@ export function definePackage(options: PackageOptions = {}): UserConfig {
     report: {gzip: false},
     publint: {
       enabled: true,
-      strict: true
+      strict: true,
     },
-    format: ['esm', 'cjs']
+    format: ['esm', 'cjs'],
   })
 }
