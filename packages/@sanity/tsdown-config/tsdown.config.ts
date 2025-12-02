@@ -1,3 +1,3 @@
-import {definePackage} from './src/index.ts'
+import {defineConfig} from './src/index.ts'
 
-export default definePackage({tsconfig: 'tsconfig.dist.json'})
+export default defineConfig({tsconfig: 'tsconfig.dist.json'})

@@ -8,7 +8,7 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
 /**
  * @public
  */
-export function definePackage(options: PackageOptions = {}): UserConfig {
+export function defineConfig(options: PackageOptions = {}): UserConfig {
   return defineTsdownConfig({
     // @TODO add declarationMap: true to tsconfig presets
     sourcemap: true,
