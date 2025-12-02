@@ -1,0 +1,289 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`{'noPackageJsonBrowser': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "error",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonBrowser': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "off",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonBrowser': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypesVersions': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "error",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypesVersions': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "off",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypesVersions': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "off",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypings': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "warn",
+  "preferModuleType": "warn",
+}
+`;
+
+exports[`{'noPackageJsonTypings': false}} 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union",
+    "unionErrors": [
+      {
+        "issues": [
+          {
+            "received": false,
+            "code": "invalid_literal",
+            "expected": "error",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": false,
+            "code": "invalid_literal",
+            "expected": "warn",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": false,
+            "code": "invalid_literal",
+            "expected": "off",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      }
+    ],
+    "path": [
+      "strictOptions",
+      "noPackageJsonTypings"
+    ],
+    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
+  }
+]]
+`;
+
+exports[`{'noPackageJsonTypings': true}} 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union",
+    "unionErrors": [
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "error",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "warn",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "off",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      }
+    ],
+    "path": [
+      "strictOptions",
+      "noPackageJsonTypings"
+    ],
+    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
+  }
+]]
+`;
+
+exports[`{'preferModuleType': 'error'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "error",
+}
+`;
+
+exports[`{'preferModuleType': 'off'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "off",
+}
+`;
+
+exports[`{'preferModuleType': 'warn'}} 1`] = `
+{
+  "alwaysPackageJsonFiles": "error",
+  "alwaysPackageJsonTypes": "error",
+  "noCheckTypes": "warn",
+  "noImplicitBrowsersList": "warn",
+  "noImplicitSideEffects": "warn",
+  "noPackageJsonBrowser": "warn",
+  "noPackageJsonTypesVersions": "warn",
+  "noPackageJsonTypings": "error",
+  "preferModuleType": "warn",
+}
+`;

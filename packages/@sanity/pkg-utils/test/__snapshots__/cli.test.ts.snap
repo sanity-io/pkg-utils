@@ -709,7 +709,8 @@ declare module 'sanity' {
 }
 /** @public */
 declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };"
+export { type ColorDefinition, ColorInput, colorInput };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
@@ -795,7 +796,8 @@ declare module 'sanity' {
 }
 /** @public */
 declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };"
+export { type ColorDefinition, ColorInput, colorInput };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
@@ -849,6 +851,7 @@ declare module './module2' {
     addedField: string
   }
 }
+//# sourceMappingURL=module1.d.ts.map
 "
 `;
 
@@ -920,13 +923,15 @@ exports.c = "c";
 exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
 "/** @public */
 declare const c = "c";
-export { c as t };"
+export { c as t };
+//# sourceMappingURL=c.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
 "/** @public */
 declare const c = "c";
-export { c as t };"
+export { c as t };
+//# sourceMappingURL=c.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
@@ -953,14 +958,16 @@ exports[`should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
 "import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
 declare const a = "a";
-export { a, c };"
+export { a, c };
+//# sourceMappingURL=a.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
 "import { t as c } from "./_chunks-dts/c.js";
 /** @public */
 declare const a = "a";
-export { a, c };"
+export { a, c };
+//# sourceMappingURL=a.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
@@ -989,14 +996,16 @@ exports[`should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
 "import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
 declare const b = "b";
-export { b, c };"
+export { b, c };
+//# sourceMappingURL=b.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
 "import { t as c } from "./_chunks-dts/c.js";
 /** @public */
 declare const b = "b";
-export { b, c };"
+export { b, c };
+//# sourceMappingURL=b.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
@@ -1022,13 +1031,15 @@ exports.VERSION = VERSION;
 exports[`should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION: string;
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION: string;
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
@@ -1110,7 +1121,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
@@ -1145,7 +1157,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
@@ -1231,7 +1244,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
@@ -1245,7 +1259,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
@@ -1326,7 +1341,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
@@ -1340,7 +1356,8 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
@@ -1442,7 +1459,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
@@ -1477,7 +1495,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
@@ -1521,12 +1540,14 @@ exports.VERSION = VERSION;
 
 exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
 "declare const VERSION = "1.0.0";
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
 "declare const VERSION = "1.0.0";
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
@@ -1557,13 +1578,15 @@ exports.VERSION = VERSION;
 exports[`should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION = "1.0.0";
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION = "1.0.0";
-export { VERSION };"
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`should build \`tsgo\` package > ./dist/index.js 1`] = `
@@ -1600,5 +1623,6 @@ declare module './module2' {
     addedField: string
   }
 }
+//# sourceMappingURL=module1.d.ts.map
 "
 `;
