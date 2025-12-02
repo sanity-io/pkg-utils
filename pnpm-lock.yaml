@@ -282,6 +282,9 @@ importers:
       '@sanity/pkg-utils':
         specifier: workspace:*
         version: link:../pkg-utils
+      '@sanity/tsconfig':
+        specifier: workspace:^
+        version: link:../tsconfig
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251129.1
