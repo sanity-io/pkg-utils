@@ -294,6 +294,9 @@ importers:
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251129.1
+      tinyexec:
+        specifier: ^1.0.2
+        version: 1.0.2
       tsdown:
         specifier: 'catalog:'
         version: 0.16.8(@typescript/native-preview@7.0.0-dev.20251129.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
@@ -303,6 +306,15 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.0.14(@types/node@24.10.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
+
+  packages/@sanity/tsdown-config/test/fixtures/react-18-library:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.27
+        version: 18.3.27
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
 
   playground/babel-plugin:
     devDependencies:
