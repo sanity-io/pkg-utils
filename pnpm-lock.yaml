@@ -262,6 +262,9 @@ importers:
         specifier: ^0.3.15
         version: 0.3.15
     devDependencies:
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:../pkg-utils
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251129.1
