@@ -1,5 +1,58 @@
 # @sanity/pkg-utils
 
+## 10.0.0
+
+### Major Changes
+
+- [#2329](https://github.com/sanity-io/pkg-utils/pull/2329) [`c5b81e7`](https://github.com/sanity-io/pkg-utils/commit/c5b81e70c0610df095e68c80c19b62acabc3bc13) Thanks [@stipsan](https://github.com/stipsan)! - The `tsconfig` presets have moved to a new package, `pnpm install --save-dev @sanity/tsconfig` and update your imports in `tsconfig.json` files:
+  - `@sanity/pkg-utils/tsconfig/recommended.json` -> `@sanity/tsconfig/recommended`
+    ```diff
+    {
+    -  "extends": "@sanity/pkg-utils/tsconfig/recommended.json"
+    +  "extends": "@sanity/tsconfig/recommended"
+    }
+    ```
+  - `@sanity/pkg-utils/tsconfig/strict.json` -> `@sanity/tsconfig/strict`
+    ```diff
+    {
+    -  "extends": "@sanity/pkg-utils/tsconfig/strict.json"
+    +  "extends": "@sanity/tsconfig/strict"
+    }
+    ```
+  - `@sanity/pkg-utils/tsconfig/strictest.json` -> `@sanity/tsconfig/strictest`
+    ```diff
+    {
+    -  "extends": "@sanity/pkg-utils/tsconfig/strictest.json"
+    +  "extends": "@sanity/tsconfig/strictest"
+    }
+    ```
+  - `@sanity/pkg-utils/tsconfig/isolated-declarations.json` -> `@sanity/tsconfig/isolated-declarations`
+    ```diff
+    {
+    -  "extends": ["@sanity/pkg-utils/tsconfig/strictest.json", "@sanity/pkg-utils/tsconfig/isolated-declarations.json"]
+    +  "extends": ["@sanity/tsconfig/strictest", "@sanity/tsconfig/isolated-declarations"]
+    }
+    ```
+
+- [#2332](https://github.com/sanity-io/pkg-utils/pull/2332) [`c99d52f`](https://github.com/sanity-io/pkg-utils/commit/c99d52f36b0216000f0cab70110ae248e52a72e0) Thanks [@stipsan](https://github.com/stipsan)! - Removed internal exports:
+
+  ```ts
+  import {
+    build,
+    check,
+    createLogger,
+    getExtractMessagesConfig,
+    init,
+    loadPkg,
+    loadPkgWithReporting,
+    parseExports,
+    parseStrictOptions,
+    watch,
+  } from '@sanity/pkg-utils'
+  ```
+
+- [#2331](https://github.com/sanity-io/pkg-utils/pull/2331) [`ae7b51c`](https://github.com/sanity-io/pkg-utils/commit/ae7b51c31deeac4af706520d39b94b22cd6112f0) Thanks [@stipsan](https://github.com/stipsan)! - Removed `noPackageJsonMain` and `noPackageJsonModule` rules
+
 ## 9.2.3
 
 ### Patch Changes
