@@ -1,0 +1,74 @@
+{
+  "name": "@sanity/tsdown-config",
+  "version": "0.0.1",
+  "description": "Shared configuration for tsdown",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "npm",
+    "build",
+    "bundling",
+    "utilities",
+    "tsdown",
+    "rolldown",
+    "rollup"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsdown-config#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/tsdown-config"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "pnpm build",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "publint": "^0.3.15"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "workspace:*",
+    "@typescript/native-preview": "catalog:",
+    "tsdown": "^0.16.8",
+    "typescript": "catalog:",
+    "vitest": "^4.0.14"
+  },
+  "peerDependencies": {
+    "tsdown": "^0.16.8",
+    "typescript": "5.8.x || 5.9.x"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs"
+      },
+      "./package.json": "./package.json"
+    }
+  }
+}
