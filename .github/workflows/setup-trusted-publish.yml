@@ -1,0 +1,20 @@
+name: Setup a new npm package with Trusted Publishing
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "The package name name, for example @sanity/foo-bar"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
+      - run: pnpm setup-npm-trusted-publish ${{ inputs.package }}
