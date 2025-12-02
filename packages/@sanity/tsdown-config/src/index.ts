@@ -16,5 +16,9 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     publint: true,
     format: options.format ?? 'esm',
     inputOptions: {experimental: {attachDebugInfo: 'none'}},
+    exports: {
+      enabled: 'local-only',
+      devExports: 'source',
+    }
   })
 }
