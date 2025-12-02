@@ -2,7 +2,7 @@ import path from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {spawnProject} from './env/spawnProject'
 
-describe('cli', () => {
+describe.concurrent('cli', () => {
   test('should build `js` package', async () => {
     const project = await spawnProject('js')
 
