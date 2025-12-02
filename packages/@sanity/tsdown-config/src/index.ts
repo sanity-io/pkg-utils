@@ -17,6 +17,6 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     report: {gzip: false},
     publint: true,
     format: options.format ?? 'esm',
-    inputOptions: {experimental: {attachDebugInfo: 'none'}}
+    inputOptions: {experimental: {attachDebugInfo: 'none'}},
   })
 }
