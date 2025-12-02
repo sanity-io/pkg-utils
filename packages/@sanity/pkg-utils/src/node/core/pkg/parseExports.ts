@@ -200,19 +200,7 @@ export function parseExports(options: {
         exp.import = exp.default
       }
 
-      if (exportPath === '.') {
-        if (exportEntry.require && pkg.main && exportEntry.require !== pkg.main) {
-          errors.push(
-            'package.json: mismatch between "main" and "exports.require". These must be equal.',
-          )
-        }
 
-        if (exportEntry.import && pkg.module && exportEntry.import !== pkg.module) {
-          errors.push(
-            'package.json: mismatch between "module" and "exports.import" These must be equal.',
-          )
-        }
-      }
 
       _exports.push(exp)
     } else if (!isRecord(exportEntry)) {
