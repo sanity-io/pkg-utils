@@ -1,8 +1,8 @@
-import {useState} from 'react'
+import {useEffect} from 'react'
 
 const bool = true
 const Foo = () => {
-  const [open, setOpen] = useState(false)
+  useEffect(() => {console.log('Foo')})
   return <div />
 }
 const bar = <div />
@@ -16,7 +16,7 @@ export function Button({
 }): React.JSX.Element {
   return (
     <>
-      {/* oxlint-disable-next-line no-constant-binary-expression */}
+      {/* @ts-expect-error - This is a test */}
       {process.env.NODE_ENV === 'development' && <Foo />}
       <button type={type} data-bool={bool}>
         {children}
