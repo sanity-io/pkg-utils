@@ -9,5 +9,12 @@ export function Button({
   children: React.ReactNode
   type?: 'submit' | 'button' | 'reset'
 }): React.JSX.Element {
-  return <><button type={type} data-bool={bool}>{children}</button>{bar}</>
+  return (
+    <>
+      <button type={type} data-bool={bool}>
+        {children}
+      </button>
+      {bar}
+    </>
+  )
 }
