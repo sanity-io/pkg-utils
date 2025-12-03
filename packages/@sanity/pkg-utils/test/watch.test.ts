@@ -1,3 +1,4 @@
+import {up as findPkgPath} from 'empathic/package'
 import {describe, expect, test} from 'vitest'
 import {loadConfig} from '../src/node/core/config/loadConfig'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
@@ -16,10 +17,11 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
 
       const cwd = project.cwd
       const logger = createLogger(true) // quiet mode
-      const config = await loadConfig({cwd})
+      const pkgPath = findPkgPath({cwd})!
+      const config = await loadConfig({cwd, pkgPath})
       const {parseStrictOptions} = await import('../src/node/strict')
       const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({cwd, logger, strict: false, strictOptions})
+      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
       const tsconfig = config?.tsconfig || 'tsconfig.json'
 
       const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
@@ -75,10 +77,11 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
 
       const cwd = project.cwd
       const logger = createLogger(true) // quiet mode
-      const config = await loadConfig({cwd})
+      const pkgPath = findPkgPath({cwd})!
+      const config = await loadConfig({cwd, pkgPath})
       const {parseStrictOptions} = await import('../src/node/strict')
       const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({cwd, logger, strict: false, strictOptions})
+      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
       const tsconfig = config?.tsconfig || 'tsconfig.json'
 
       const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
@@ -106,10 +109,11 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
 
       const cwd = project.cwd
       const logger = createLogger(true)
-      const config = await loadConfig({cwd})
+      const pkgPath = findPkgPath({cwd})!
+      const config = await loadConfig({cwd, pkgPath})
       const {parseStrictOptions} = await import('../src/node/strict')
       const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({cwd, logger, strict: false, strictOptions})
+      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
       const tsconfig = config?.tsconfig || 'tsconfig.json'
 
       const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
@@ -144,10 +148,11 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
 
       const cwd = project.cwd
       const logger = createLogger(true)
-      const config = await loadConfig({cwd})
+      const pkgPath = findPkgPath({cwd})!
+      const config = await loadConfig({cwd, pkgPath})
       const {parseStrictOptions} = await import('../src/node/strict')
       const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({cwd, logger, strict: false, strictOptions})
+      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
       const tsconfig = config?.tsconfig || 'tsconfig.json'
 
       const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})

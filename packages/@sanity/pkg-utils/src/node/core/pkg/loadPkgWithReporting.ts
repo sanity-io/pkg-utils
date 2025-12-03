@@ -8,15 +8,15 @@ import {loadPkg} from './loadPkg.ts'
 
 /** @alpha */
 export async function loadPkgWithReporting(options: {
-  cwd: string
+  pkgPath: string
   logger: Logger
   strict: boolean
   strictOptions: StrictOptions
 }): Promise<PackageJSON> {
-  const {cwd, logger, strict, strictOptions} = options
+  const {pkgPath, logger, strict, strictOptions} = options
 
   try {
-    const pkg = await loadPkg({cwd})
+    const pkg = await loadPkg({pkgPath})
     let shouldError = false
 
     if (strict) {

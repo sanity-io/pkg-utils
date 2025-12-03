@@ -188,6 +188,9 @@ importers:
       chokidar:
         specifier: ^5.0.0
         version: 5.0.0
+      empathic:
+        specifier: ^2.0.0
+        version: 2.0.0
       esbuild:
         specifier: ^0.27.0
         version: 0.27.0
@@ -215,9 +218,6 @@ importers:
       outdent:
         specifier: ^0.8.0
         version: 0.8.0
-      package-up:
-        specifier: ^5.0.0
-        version: 5.0.0
       prettier:
         specifier: ^3.7.3
         version: 3.7.3
@@ -5923,10 +5923,6 @@ packages:
 
   package-manager-detector@1.5.0:
     resolution: {integrity: sha512-uBj69dVlYe/+wxj8JOpr97XfsxH/eumMt6HqjNTmJDf/6NO9s+0uxeOneIz3AsPt2m6y9PqzDzd3ATcU17MNfw==}
-
-  package-up@5.0.0:
-    resolution: {integrity: sha512-MQEgDUvXCa3sGvqHg3pzHO8e9gqTCMPVrWUko3vPQGntwegmFo52mZb2abIVTjFnUcW0BcPz0D93jV5Cas1DWA==}
-    engines: {node: '>=18'}
 
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
@@ -13604,10 +13600,6 @@ snapshots:
       quansync: 0.2.11
 
   package-manager-detector@1.5.0: {}
-
-  package-up@5.0.0:
-    dependencies:
-      find-up-simple: 1.0.1
 
   pako@0.2.9: {}
 
