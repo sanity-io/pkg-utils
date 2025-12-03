@@ -18,6 +18,7 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   const platform = options.platform ?? 'neutral'
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
+  const hash = false
   const format = options.format ?? 'esm'
   const inputOptions = {
     preserveEntrySignatures: 'strict',
@@ -30,12 +31,13 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   } as const satisfies UserConfig['exports']
 
   return defineTsdownConfig({
-    tsconfig,
-    platform,
-    report,
-    publint,
-    format,
-    inputOptions,
     exports,
+    format,
+    hash,
+    inputOptions,
+    platform,
+    publint,
+    report,
+    tsconfig,
   })
 }
