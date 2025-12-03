@@ -1,12 +1,12 @@
 import {existsSync} from 'node:fs'
 import {resolve as resolvePath} from 'node:path'
+import type {PackageJSON} from '@sanity/parse-package-json'
 import type {Logger} from '../../logger.ts'
 import type {StrictOptions} from '../../strict.ts'
 import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths.ts'
 import type {PkgExport} from '../config/types.ts'
 import {isRecord} from '../isRecord.ts'
 import {pkgExtMap} from './pkgExt.ts'
-import type {PackageJSON} from './types.ts'
 import {validateExports} from './validateExports.ts'
 
 // Type guard to filter out falsy values
@@ -15,7 +15,7 @@ function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
 }
 
 /** @alpha */
-export function parseExports(options: {
+export function parseAndValidateExports(options: {
   cwd: string
   pkg: PackageJSON
   strict: boolean

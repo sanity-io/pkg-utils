@@ -1,2 +1,2 @@
 export {parseExports} from './parseExports.ts'
-export type {PackageJSON, PkgExport} from './types.ts'
+export type {PackageJSON, PkgExport, PkgExports} from './types.ts'

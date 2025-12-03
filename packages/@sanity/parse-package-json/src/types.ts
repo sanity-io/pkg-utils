@@ -24,6 +24,11 @@ export interface PkgExport {
 }
 
 /** @public */
+export interface PkgExports {
+  [path: string]: PkgExport
+}
+
+/** @public */
 export interface PackageJSON {
   type?: 'commonjs' | 'module' | undefined
   version: string

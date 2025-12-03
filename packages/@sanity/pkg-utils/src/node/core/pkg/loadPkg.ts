@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
+import type {PackageJSON} from '@sanity/parse-package-json'
 import {packageUp} from 'package-up'
-import type {PackageJSON} from './types.ts'
 import {validatePkg} from './validatePkg.ts'
 
 /** @internal */

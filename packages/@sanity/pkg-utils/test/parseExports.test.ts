@@ -1,6 +1,6 @@
+import type {PackageJSON} from '@sanity/parse-package-json'
 import {describe, expect, test} from 'vitest'
-import {parseExports} from '../src/node/core/pkg/parseExports'
-import type {PackageJSON} from '../src/node/core/pkg/types'
+import {parseAndValidateExports} from '../src/node/core/pkg/parseExports'
 import {createLogger} from '../src/node/logger'
 import {parseStrictOptions} from '../src/node/strict'
 
@@ -24,10 +24,10 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
   ({type}) => {
     const testParseExports = (
       options: Omit<
-        Parameters<typeof parseExports>[0],
+        Parameters<typeof parseAndValidateExports>[0],
         'strict' | 'strictOptions' | 'logger' | 'cwd'
       >,
-    ) => parseExports({strict: true, logger, strictOptions, cwd, ...options})
+    ) => parseAndValidateExports({strict: true, logger, strictOptions, cwd, ...options})
     const reference = {
       '.': {
         source: defaults['.'].source,

@@ -1,27 +1,14 @@
-import type {PkgExport, PackageJSON} from './types.ts'
-
-
-
-
+import type {PackageJSON, PkgExport} from './types.ts'
 
 /** @public */
-export function parseExports(options: {
-  pkg: PackageJSON
-}): (PkgExport & {_path: string})[] {
+export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: string})[] {
   const {pkg} = options
   const type = pkg.type || 'commonjs'
 
-
-
-
   if (pkg.source) {
     if (!pkg.exports && pkg.main) {
-
-
-
     }
   }
-
 
   if (!pkg.exports) {
     return []
@@ -34,7 +21,6 @@ export function parseExports(options: {
       exportPath.endsWith('.json') ||
       (typeof exportEntry === 'string' && exportEntry.endsWith('.json'))
     ) {
-
     } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {
       // @TODO should we report a warning or a debug message here about a detected svelte export that is ignored?
     } else if (isPkgExport(exportEntry)) {
@@ -65,10 +51,10 @@ export function parseExports(options: {
 
       if (exportPath === '.') {
         if (exportEntry.require && pkg.main && exportEntry.require !== pkg.main) {
-
         }
 
-        if (exportEntry.import && pkg.module && exportEntry.import !== pkg.module) {}
+        if (exportEntry.import && pkg.module && exportEntry.import !== pkg.module) {
+        }
       }
 
       _exports.push(exp)
@@ -77,16 +63,12 @@ export function parseExports(options: {
     }
   }
 
-
-
   return _exports
 }
 
 function isPkgExport(value: unknown): value is PkgExport {
   return isRecord(value) && 'source' in value && typeof value['source'] === 'string'
 }
-
-
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && !Array.isArray(value) && typeof value === 'object'

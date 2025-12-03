@@ -1,5 +1,5 @@
+import type {PackageJSON} from '@sanity/parse-package-json'
 import type {PkgBundle, PkgExport} from '../../core/config/types.ts'
-import type {PackageJSON} from '../../core/pkg/types.ts'
 
 /** @internal */
 export const fileEnding: RegExp = /\.[mc]?js$/

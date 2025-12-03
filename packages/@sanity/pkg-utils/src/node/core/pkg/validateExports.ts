@@ -1,6 +1,6 @@
+import type {PackageJSON} from '@sanity/parse-package-json'
 import type {PkgExport} from '../config/types.ts'
 import {pkgExtMap as extMap} from './pkgExt.ts'
-import type {PackageJSON} from './types.ts'
 
 export function validateExports(
   _exports: (PkgExport & {_path: string})[],

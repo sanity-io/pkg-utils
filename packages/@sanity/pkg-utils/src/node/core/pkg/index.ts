@@ -1,5 +1,5 @@
 export {loadPkg} from './loadPkg.ts'
 export {loadPkgWithReporting} from './loadPkgWithReporting.ts'
-export {parseExports} from './parseExports.ts'
+export {parseAndValidateExports as parseExports} from './parseExports.ts'
 export {type PkgExtMap, pkgExtMap} from './pkgExt.ts'
-export type {PackageJSON} from './types.ts'
+export type {PackageJSON} from '@sanity/parse-package-json'

@@ -1,5 +1,5 @@
+import type {PackageJSON} from '@sanity/parse-package-json'
 import {z} from 'zod/v3'
-import type {PackageJSON} from './types.ts'
 
 const exportEntrySchema = z
   .object({
