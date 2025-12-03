@@ -1,11 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime");
-function Button({
-  children,
-  type = "button"
-}) {
-  return /* @__PURE__ */ jsxRuntime.jsx("button", { type, children });
+let react_jsx_runtime = require("react/jsx-runtime");
+const bool = !0, bar = /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {});
+function Button({ children, type = "button" }) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+		!1,
+		/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+			type,
+			"data-bool": !0,
+			children
+		}),
+		bar
+	] });
 }
 exports.Button = Button;
-//# sourceMappingURL=index.cjs.map

@@ -108,6 +108,9 @@ importers:
       '@sanity/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
+      '@sanity/tsdown-config':
+        specifier: workspace:^
+        version: link:../tsdown-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1
@@ -321,6 +324,9 @@ importers:
 
   packages/@sanity/tsdown-config:
     dependencies:
+      '@sanity/parse-package-json':
+        specifier: workspace:^
+        version: link:../parse-package-json
       publint:
         specifier: ^0.3.15
         version: 0.3.15
