@@ -1,0 +1,116 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parsePackage > { exports: { '.': { Source: './src/index.ts', module: './dist/index.js' } } } throws an error 1`] = `
+[ZodError: [
+  {
+    "code": "custom",
+    "message": "Export must have either \\"default\\", \\"import\\", or \\"require\\" field",
+    "path": [
+      "exports",
+      "."
+    ]
+  }
+]]
+`;
+
+exports[`parsePackage > { exports: { '.': { source: './src/index.ts' } } } throws an error 1`] = `
+[ZodError: [
+  {
+    "code": "custom",
+    "message": "Export must have either \\"default\\", \\"import\\", or \\"require\\" field",
+    "path": [
+      "exports",
+      "."
+    ]
+  }
+]]
+`;
+
+exports[`parsePackage > { type: 'commonjs' } => { type: 'commonjs', exports: { '.': { default: './dist/index.cjs' } } } 1`] = `
+{
+  "exports": {
+    ".": {
+      "default": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "type": "commonjs",
+  "version": "0.0.0",
+}
+`;
+
+exports[`parsePackage > { type: 'commonjs', exports: { '.': { source: './src/index.ts', require: './dist/index.js', import: './dist/index.mjs' } } } => { exports: { '.': { import: './dist/index.mjs', default: './dist/index.js' } } } 1`] = `
+{
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "source": "./src/index.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "type": "commonjs",
+  "version": "0.0.0",
+}
+`;
+
+exports[`parsePackage > { type: 'esm' } throws an error 1`] = `
+[ZodError: [
+  {
+    "received": "esm",
+    "code": "invalid_enum_value",
+    "options": [
+      "commonjs",
+      "module"
+    ],
+    "path": [
+      "type"
+    ],
+    "message": "Invalid enum value. Expected 'commonjs' | 'module', received 'esm'"
+  }
+]]
+`;
+
+exports[`parsePackage > { type: 'module' } => { exports: { '.': { default: './dist/index.js' } } } 1`] = `
+{
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "type": "module",
+  "version": "0.0.0",
+}
+`;
+
+exports[`parsePackage > { type: undefined } => { type: 'commonjs', exports: { '.': { default: './dist/index.cjs' } } } 1`] = `
+{
+  "exports": {
+    ".": {
+      "default": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "source": "./src/index.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "type": "commonjs",
+  "version": "0.0.0",
+}
+`;

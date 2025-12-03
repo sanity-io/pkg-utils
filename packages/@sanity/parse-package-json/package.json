@@ -31,6 +31,9 @@
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
+  "dependencies": {
+    "zod": "^4.1.13"
+  },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
     "@types/node": "catalog:",
