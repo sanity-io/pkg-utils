@@ -3,7 +3,12 @@ import {defineConfig as defineTsdownConfig, type UserConfig} from 'tsdown'
 /**
  * @public
  */
-export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 'format'> {}
+export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 'format'> {
+  /**
+   * @defaultValue 'neutral'
+   */
+  platform?: UserConfig['platform']
+}
 
 /**
  * @public
@@ -11,7 +16,7 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
 export function defineConfig(options: PackageOptions = {}): UserConfig {
   return defineTsdownConfig({
     tsconfig: options.tsconfig ?? 'tsconfig.json',
-    platform: 'neutral',
+    platform: options.platform ?? 'neutral',
     report: {gzip: false},
     publint: true,
     format: options.format ?? 'esm',
