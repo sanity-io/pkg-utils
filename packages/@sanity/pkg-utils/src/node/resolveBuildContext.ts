@@ -6,7 +6,7 @@ import {type PkgConfigOptions, type PkgExports, type PkgRuntime} from './core/co
 import type {BuildContext} from './core/contexts/buildContext.ts'
 import {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults.ts'
 import {findCommonDirPath, pathContains} from './core/findCommonPath.ts'
-import {parseAndValidateExports} from './core/pkg/parseExports.ts'
+import {parseAndValidateExports} from './core/pkg/parseAndValidateExports.ts'
 import {loadTSConfig} from './core/ts/loadTSConfig.ts'
 import type {Logger} from './logger.ts'
 import {resolveBrowserTarget} from './resolveBrowserTarget.ts'

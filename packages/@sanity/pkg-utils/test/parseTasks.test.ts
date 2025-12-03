@@ -1,7 +1,7 @@
 import type {PackageJSON} from '@sanity/parse-package-json'
 import {expect, test, vi} from 'vitest'
 import type {BuildContext} from '../src/node/core/contexts/buildContext'
-import {parseAndValidateExports} from '../src/node/core/pkg/parseExports'
+import {parseAndValidateExports} from '../src/node/core/pkg/parseAndValidateExports'
 import {createLogger} from '../src/node/logger'
 import {resolveBuildTasks} from '../src/node/resolveBuildTasks'
 import {parseStrictOptions} from '../src/node/strict'
