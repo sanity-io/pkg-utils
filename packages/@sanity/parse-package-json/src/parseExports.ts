@@ -6,8 +6,6 @@ export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: 
   const type = pkg.type || 'commonjs'
 
   if (pkg.source) {
-    if (!pkg.exports && pkg.main) {
-    }
   }
 
   if (!pkg.exports) {
