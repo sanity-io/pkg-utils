@@ -24,6 +24,9 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     preserveEntrySignatures: 'strict',
     experimental: {attachDebugInfo: 'none'},
   } as const satisfies UserConfig['inputOptions']
+  const outputOptions = {
+    hoistTransitiveImports: false,
+  } as const satisfies UserConfig['outputOptions']
   const exports = {
     enabled: 'local-only',
     // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
@@ -35,6 +38,7 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     format,
     hash,
     inputOptions,
+    outputOptions,
     platform,
     publint,
     report,
