@@ -22,7 +22,7 @@ export function validateExports(
 
       if (exp.import && pkg.module && exp.import !== pkg.module) {
         errors.push(
-          'package.json: mismatch between "module" and "exports.import" These must be equal.',
+          'package.json: mismatch between "module" and "exports.import". These must be equal.',
         )
       }
     }
