@@ -43,5 +43,6 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     publint,
     report,
     tsconfig,
+    // minify: 'dce-only'
   })
 }
