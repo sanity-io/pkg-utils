@@ -17,13 +17,7 @@ export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: 
   const _exports: (PkgExport & {_path: string})[] = []
 
   for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
-    if (
-      exportPath.endsWith('.json') ||
-      (typeof exportEntry === 'string' && exportEntry.endsWith('.json'))
-    ) {
-    } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {
-      // @TODO should we report a warning or a debug message here about a detected svelte export that is ignored?
-    } else if (isPkgExport(exportEntry)) {
+    if (isPkgExport(exportEntry)) {
       const exp = {
         _exported: true,
         _path: exportPath,
@@ -49,17 +43,7 @@ export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: 
         exp.import = exp.default
       }
 
-      if (exportPath === '.') {
-        if (exportEntry.require && pkg.main && exportEntry.require !== pkg.main) {
-        }
-
-        if (exportEntry.import && pkg.module && exportEntry.import !== pkg.module) {
-        }
-      }
-
       _exports.push(exp)
-    } else if (!isRecord(exportEntry)) {
-      //
     }
   }
 
