@@ -1,5 +1,10 @@
+import {useState} from 'react'
+
 const bool = true
-const foo = <div />
+const Foo = () => {
+  const [open, setOpen] = useState(false)
+  return <div />
+}
 const bar = <div />
 
 export function Button({
@@ -11,6 +16,8 @@ export function Button({
 }): React.JSX.Element {
   return (
     <>
+      {/* oxlint-disable-next-line no-constant-binary-expression */}
+      {process.env.NODE_ENV === 'development' && <Foo />}
       <button type={type} data-bool={bool}>
         {children}
       </button>

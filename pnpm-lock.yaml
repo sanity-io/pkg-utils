@@ -324,6 +324,9 @@ importers:
 
   packages/@sanity/tsdown-config:
     dependencies:
+      '@sanity/parse-package-json':
+        specifier: workspace:^
+        version: link:../parse-package-json
       publint:
         specifier: ^0.3.15
         version: 0.3.15
