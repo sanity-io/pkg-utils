@@ -1,12 +1,12 @@
 import path from 'node:path'
+import type {PackageJSON} from '@sanity/parse-package-json'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {resolveConfigProperty} from './core/config/resolveConfigProperty.ts'
 import {type PkgConfigOptions, type PkgExports, type PkgRuntime} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
 import {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults.ts'
 import {findCommonDirPath, pathContains} from './core/findCommonPath.ts'
-import {parseExports} from './core/pkg/parseExports.ts'
-import type {PackageJSON} from './core/pkg/types.ts'
+import {parseAndValidateExports} from './core/pkg/parseAndValidateExports.ts'
 import {loadTSConfig} from './core/ts/loadTSConfig.ts'
 import type {Logger} from './logger.ts'
 import {resolveBrowserTarget} from './resolveBrowserTarget.ts'
@@ -103,7 +103,7 @@ export async function resolveBuildContext(options: {
     'node': nodeTarget,
   }
 
-  const parsedExports = parseExports({
+  const parsedExports = parseAndValidateExports({
     cwd,
     pkg,
     strict,

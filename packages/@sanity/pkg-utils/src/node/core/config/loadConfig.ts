@@ -1,17 +1,15 @@
 import path from 'node:path'
 import {pathToFileURL} from 'node:url'
-import {packageUp} from 'package-up'
 import {tsImport} from 'tsx/esm/api'
 import {findConfigFile} from './findConfigFile.ts'
 import type {PkgConfigOptions} from './types.ts'
 
 /** @alpha */
-export async function loadConfig(options: {cwd: string}): Promise<PkgConfigOptions | undefined> {
-  const {cwd} = options
-
-  const pkgPath = await packageUp({cwd})
-
-  if (!pkgPath) return undefined
+export async function loadConfig(options: {
+  cwd: string
+  pkgPath: string
+}): Promise<PkgConfigOptions | undefined> {
+  const {cwd, pkgPath} = options
 
   const root = path.dirname(pkgPath)
 

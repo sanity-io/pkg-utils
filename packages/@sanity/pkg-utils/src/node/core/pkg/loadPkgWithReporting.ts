@@ -1,22 +1,21 @@
+import {ZodError, type PackageJSON} from '@sanity/parse-package-json'
 import chalk from 'chalk'
-import {ZodError} from 'zod/v3'
 import type {Logger} from '../../logger.ts'
 import type {StrictOptions} from '../../strict.ts'
 import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
-import type {PackageJSON} from './types.ts'
 
 /** @alpha */
 export async function loadPkgWithReporting(options: {
-  cwd: string
+  pkgPath: string
   logger: Logger
   strict: boolean
   strictOptions: StrictOptions
 }): Promise<PackageJSON> {
-  const {cwd, logger, strict, strictOptions} = options
+  const {pkgPath, logger, strict, strictOptions} = options
 
   try {
-    const pkg = await loadPkg({cwd})
+    const pkg = await loadPkg({pkgPath})
     let shouldError = false
 
     if (strict) {

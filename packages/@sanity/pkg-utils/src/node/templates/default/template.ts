@@ -1,12 +1,12 @@
 import {execSync} from 'node:child_process'
 import {resolve} from 'node:path'
+import type {PackageJSON} from '@sanity/parse-package-json'
 import prettierConfig from '@sanity/prettier-config'
 import getLatestVersion from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
 import {format, type Config as PrettierConfig} from 'prettier'
 import {isRecord} from '../../core/isRecord.ts'
-import type {PackageJSON} from '../../core/pkg/types.ts'
 import {defineTemplateOption} from '../../core/template/define.ts'
 import {type PkgTemplate, type PkgTemplateFile} from '../../core/template/types.ts'
 

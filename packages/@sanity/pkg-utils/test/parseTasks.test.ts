@@ -1,7 +1,7 @@
+import type {PackageJSON} from '@sanity/parse-package-json'
 import {expect, test, vi} from 'vitest'
 import type {BuildContext} from '../src/node/core/contexts/buildContext'
-import {parseExports} from '../src/node/core/pkg/parseExports'
-import type {PackageJSON} from '../src/node/core/pkg/types'
+import {parseAndValidateExports} from '../src/node/core/pkg/parseAndValidateExports'
 import {createLogger} from '../src/node/logger'
 import {resolveBuildTasks} from '../src/node/resolveBuildTasks'
 import {parseStrictOptions} from '../src/node/strict'
@@ -39,7 +39,7 @@ test('should parse tasks (type: module)', () => {
     },
   }
 
-  const exports = parseExports({
+  const exports = parseAndValidateExports({
     cwd,
     pkg,
     strict: true,

@@ -1,7 +1,7 @@
+import type {PackageJSON} from '@sanity/parse-package-json'
 import type ts from 'typescript'
 import type {Logger} from '../../logger.ts'
 import type {DtsType, PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types.ts'
-import type {PackageJSON} from '../pkg/types.ts'
 
 /** @internal */
 export interface BuildFile {

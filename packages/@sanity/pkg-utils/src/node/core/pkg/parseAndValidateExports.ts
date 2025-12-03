@@ -1,12 +1,12 @@
 import {existsSync} from 'node:fs'
 import {resolve as resolvePath} from 'node:path'
+import {parseExports, type PackageJSON} from '@sanity/parse-package-json'
 import type {Logger} from '../../logger.ts'
 import type {StrictOptions} from '../../strict.ts'
 import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths.ts'
 import type {PkgExport} from '../config/types.ts'
 import {isRecord} from '../isRecord.ts'
 import {pkgExtMap} from './pkgExt.ts'
-import type {PackageJSON} from './types.ts'
 import {validateExports} from './validateExports.ts'
 
 // Type guard to filter out falsy values
@@ -15,7 +15,7 @@ function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
 }
 
 /** @alpha */
-export function parseExports(options: {
+export function parseAndValidateExports(options: {
   cwd: string
   pkg: PackageJSON
   strict: boolean
@@ -128,7 +128,7 @@ export function parseExports(options: {
     )
   }
 
-  const _exports: (PkgExport & {_path: string})[] = []
+  const _exports = parseExports({pkg})
 
   if (strict && strictOptions.noPackageJsonTypings !== 'off' && 'typings' in pkg) {
     report(strictOptions.noPackageJsonTypings, 'package.json: `typings` should be `types`')
@@ -213,8 +213,6 @@ export function parseExports(options: {
           )
         }
       }
-
-      _exports.push(exp)
     } else if (!isRecord(exportEntry)) {
       errors.push('package.json: exports must be an object')
     }

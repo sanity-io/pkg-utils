@@ -1,4 +1,5 @@
 import path from 'node:path'
+import {up as findPkgPath} from 'empathic/package'
 import {switchMap} from 'rxjs'
 import {loadConfig} from './core/config/loadConfig.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
@@ -27,14 +28,15 @@ export async function watch(options: {
 
       const packageJsonPath = files.find((f) => f === 'package.json')
 
-      if (!packageJsonPath) {
-        throw new Error('missing package.json')
+      const pkgPath = findPkgPath({cwd})
+      if (!packageJsonPath || !pkgPath) {
+        throw new Error('missing package.json', {cause: {cwd}})
       }
 
-      const config = await loadConfig({cwd})
+      const config = await loadConfig({cwd, pkgPath})
       const {parseStrictOptions} = await import('./strict.ts')
       const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({cwd, logger, strict, strictOptions})
+      const pkg = await loadPkgWithReporting({pkgPath, logger, strict, strictOptions})
       const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 
       return resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})

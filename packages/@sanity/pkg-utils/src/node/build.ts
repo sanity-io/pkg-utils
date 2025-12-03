@@ -1,4 +1,5 @@
 import path from 'node:path'
+import {up as findPkgPath} from 'empathic/package'
 import {rimraf} from 'rimraf'
 import {loadConfig} from './core/config/loadConfig.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
@@ -46,11 +47,15 @@ export async function build(options: {
   } = options
   const logger = createLogger(quiet)
 
-  const config = await loadConfig({cwd})
+  const pkgPath = findPkgPath({cwd})
+  if (!pkgPath) {
+    throw new Error('no package.json found', {cause: {cwd}})
+  }
+  const config = await loadConfig({cwd, pkgPath})
 
   const {parseStrictOptions} = await import('./strict.ts')
   const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-  const pkg = await loadPkgWithReporting({cwd, logger, strict, strictOptions})
+  const pkg = await loadPkgWithReporting({pkgPath, logger, strict, strictOptions})
 
   const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
 

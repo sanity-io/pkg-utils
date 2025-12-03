@@ -1,40 +1,18 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
+import type {PkgExports} from '@sanity/parse-package-json'
 import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict.ts'
+
+export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'
 
 /** @public */
 export type PkgRuntime = '*' | 'browser' | 'node'
-
-/** @public */
-export interface PkgExport {
-  /** @internal */
-  _exported?: boolean
-  browser?: {
-    source: string
-    import?: string
-    require?: string
-  }
-  // electron?: {
-  //   node?: string
-  //   default?: string
-  // }
-  node?: {
-    source?: string
-    import?: string
-    require?: string
-  }
-  types?: string
-  source: string
-  import?: string
-  require?: string
-  default: string
-}
 
 /** @public */
 export type PkgConfigPropertyResolver<T> = (prev: T) => T
@@ -48,11 +26,6 @@ export interface PkgBundle {
   import?: string
   require?: string
   runtime?: PkgRuntime
-}
-
-/** @public */
-export interface PkgExports {
-  [path: string]: PkgExport
 }
 
 /** @public */

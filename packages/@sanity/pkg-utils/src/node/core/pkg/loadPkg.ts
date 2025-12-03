@@ -1,19 +1,12 @@
 import fs from 'node:fs/promises'
-import {packageUp} from 'package-up'
-import type {PackageJSON} from './types.ts'
+import type {PackageJSON} from '@sanity/parse-package-json'
 import {validatePkg} from './validatePkg.ts'
 
 /** @internal */
-export async function loadPkg(options: {cwd: string}): Promise<PackageJSON> {
-  const {cwd} = options
+export async function loadPkg(options: {pkgPath: string}): Promise<PackageJSON> {
+  const {pkgPath} = options
 
-  const pkgPath = await packageUp({cwd})
-
-  if (!pkgPath) throw new Error('no package.json found')
-
-  const buf = await fs.readFile(pkgPath)
-
-  const raw = JSON.parse(buf.toString())
+  const raw = JSON.parse(await fs.readFile(pkgPath, 'utf-8'))
 
   validatePkg(raw)
 

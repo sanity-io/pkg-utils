@@ -1,4 +1,34 @@
-/** @alpha */
+/** @public */
+export interface PkgExport {
+  /** @internal */
+  _exported?: boolean
+  browser?: {
+    source: string
+    import?: string
+    require?: string
+  }
+  // electron?: {
+  //   node?: string
+  //   default?: string
+  // }
+  node?: {
+    source?: string
+    import?: string
+    require?: string
+  }
+  types?: string
+  source: string
+  import?: string
+  require?: string
+  default: string
+}
+
+/** @public */
+export interface PkgExports {
+  [path: string]: PkgExport
+}
+
+/** @public */
 export interface PackageJSON {
   type?: 'commonjs' | 'module' | undefined
   version: string

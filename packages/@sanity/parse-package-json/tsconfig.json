@@ -1,8 +1,8 @@
 {
   "extends": "@sanity/tsconfig/strictest",
+  "exclude": ["**/dist/**"],
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./dist",
-    "allowImportingTsExtensions": true
+    "outDir": "dist"
   }
 }

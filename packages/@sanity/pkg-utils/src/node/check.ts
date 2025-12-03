@@ -1,5 +1,6 @@
 import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
+import {up as findPkgPath} from 'empathic/package'
 import type {BuildFailure, Message} from 'esbuild'
 import {createConsoleSpy} from './consoleSpy.ts'
 import {loadConfig} from './core/config/loadConfig.ts'
@@ -21,10 +22,14 @@ export async function check(options: {
   const logger = createLogger()
   const spinner = createSpinner('')
   try {
-    const config = await loadConfig({cwd})
+    const pkgPath = findPkgPath({cwd})
+    if (!pkgPath) {
+      throw new Error('no package.json found', {cause: {cwd}})
+    }
+    const config = await loadConfig({cwd, pkgPath})
     const {parseStrictOptions} = await import('./strict.ts')
     const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-    const pkg = await loadPkgWithReporting({cwd, logger, strict, strictOptions})
+    const pkg = await loadPkgWithReporting({pkgPath, logger, strict, strictOptions})
     const tsconfig = tsconfigOption || config?.tsconfig || 'tsconfig.json'
     const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict, tsconfig})
 
