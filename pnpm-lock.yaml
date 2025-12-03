@@ -15,6 +15,9 @@ catalogs:
     '@sanity/logos':
       specifier: ^2.2.2
       version: 2.2.2
+    '@types/node':
+      specifier: 24.10.1
+      version: 24.10.1
     '@typescript/native-preview':
       specifier: 7.0.0-dev.20251129.1
       version: 7.0.0-dev.20251129.1
@@ -60,7 +63,7 @@ importers:
         specifier: workspace:*
         version: link:packages/@sanity/tsdown-config
       '@types/node':
-        specifier: ^24.10.1
+        specifier: 'catalog:'
         version: 24.10.1
       husky:
         specifier: ^9.1.7
@@ -101,6 +104,9 @@ importers:
       '@sanity/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.10.1
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251129.1
@@ -164,6 +170,9 @@ importers:
       '@sanity/browserslist-config':
         specifier: ^1.0.5
         version: 1.0.5
+      '@sanity/parse-package-json':
+        specifier: workspace:^
+        version: link:../parse-package-json
       '@vanilla-extract/rollup-plugin':
         specifier: ^1.5.0
         version: 1.5.0(rollup@4.53.3)
@@ -268,7 +277,7 @@ importers:
         specifier: ^11.0.4
         version: 11.0.4
       '@types/node':
-        specifier: ^24.10.1
+        specifier: 'catalog:'
         version: 24.10.1
       '@types/prompts':
         specifier: ^2.4.9
