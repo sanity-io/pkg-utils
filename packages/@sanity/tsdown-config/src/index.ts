@@ -44,7 +44,15 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     report,
     tsconfig,
     minify: {compress: true, codegen: false, mangle: false},
-    // minify: false,
-    // treeshake: {annotations: true, moduleSideEffects: 'no-external'}
+    treeshake: {
+      annotations: true,
+      propertyReadSideEffects: false,
+      moduleSideEffects: [
+        // If the module ends with `.css` it is considered to be a side effect, even if the module is marked as no side effect,
+        {test: /\.css$/, sideEffects: true},
+        // This is the equivalent of `moduleSideEffects: 'no-external'`, and included here so it works the same as before the CSS exemption were added.
+        {external: true, sideEffects: false},
+      ],
+    },
   })
 }

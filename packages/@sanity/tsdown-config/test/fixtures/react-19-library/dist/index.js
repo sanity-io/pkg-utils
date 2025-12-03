@@ -1,4 +1,3 @@
-import "react";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 const bar = /* @__PURE__ */ jsx("div", {});
 function Button({ children, type = "button" }) {

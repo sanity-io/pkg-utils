@@ -1,4 +1,3 @@
-require("react");
 let react_jsx_runtime = require("react/jsx-runtime");
 const bool = !0, bar = /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {});
 function Button({ children, type = "button" }) {
