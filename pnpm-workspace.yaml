@@ -9,11 +9,13 @@ catalog:
   '@sanity/icons': ^3.7.4
   '@sanity/logos': ^2.2.2
   '@typescript/native-preview': 7.0.0-dev.20251129.1
+  publint: ^0.3.15
   tsdown: ^0.16.8
   typescript: 5.9.3
   vitest: ^4.0.14
 
 minimumReleaseAge: 4320
+
 minimumReleaseAgeExclude:
   - '@next/*'
   - '@oxlint/*'
@@ -25,24 +27,24 @@ minimumReleaseAgeExclude:
   - '@typescript/*'
   - '@vite/*'
   - '@vitest/*'
-  - 'csstype'
-  - 'groq'
-  - 'next'
-  - 'oxlint'
-  - 'oxlint-tsgolint'
-  - 'rollup'
-  - 'sanity'
-  - 'vite'
-  - 'vitest'
+  - csstype
+  - groq
+  - next
+  - oxlint
+  - oxlint-tsgolint
+  - rollup
+  - sanity
+  - vite
+  - vitest
 
 overrides:
   '@sanity/pkg-utils': workspace:*
 
-# This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
   - '*prettier*'
 
-trustPolicy: 'no-downgrade'
+trustPolicy: no-downgrade
+
 trustPolicyExclude:
   - '@octokit/endpoint@9.0.6'
   - '@octokit/plugin-paginate-rest@9.2.2'

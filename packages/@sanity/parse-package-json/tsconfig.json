@@ -1,0 +1,10 @@
+{
+  "extends": "@sanity/tsconfig/strictest",
+  "exclude": ["**/dist/**"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "exactOptionalPropertyTypes": false,
+    "customConditions": ["source"]
+  }
+}
