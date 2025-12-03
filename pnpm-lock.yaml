@@ -108,6 +108,9 @@ importers:
       '@sanity/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
+      '@sanity/tsdown-config':
+        specifier: workspace:^
+        version: link:../tsdown-config
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1
