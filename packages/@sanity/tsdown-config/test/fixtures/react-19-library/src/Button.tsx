@@ -2,7 +2,9 @@ import {useEffect} from 'react'
 
 const bool = true
 const Foo = () => {
-  useEffect(() => {console.log('Foo')})
+  useEffect(() => {
+    console.log('Foo')
+  })
   return <div />
 }
 const bar = <div />
