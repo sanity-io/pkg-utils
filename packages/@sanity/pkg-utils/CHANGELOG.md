@@ -1,5 +1,14 @@
 # @sanity/pkg-utils
 
+## 10.1.1
+
+### Patch Changes
+
+- [#2314](https://github.com/sanity-io/pkg-utils/pull/2314) [`bd387a2`](https://github.com/sanity-io/pkg-utils/commit/bd387a20f5f34a6ef40d16693bb486d69af2e669) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency tsx to ^4.21.0
+
+- Updated dependencies []:
+  - @sanity/parse-package-json@1.0.0
+
 ## 10.1.0
 
 ### Minor Changes
