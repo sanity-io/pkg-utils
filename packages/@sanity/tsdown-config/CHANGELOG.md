@@ -1,5 +1,26 @@
 # @sanity/tsdown-config
 
+## 0.3.0
+
+### Minor Changes
+
+- [#2344](https://github.com/sanity-io/pkg-utils/pull/2344) [`7f3d821`](https://github.com/sanity-io/pkg-utils/commit/7f3d821055918a2ffdeb4a1fdf5b9be741558e34) Thanks [@stipsan](https://github.com/stipsan)! - Add `outputOptions.hoistTransitiveImports: false`
+
+- [#2344](https://github.com/sanity-io/pkg-utils/pull/2344) [`7f3d821`](https://github.com/sanity-io/pkg-utils/commit/7f3d821055918a2ffdeb4a1fdf5b9be741558e34) Thanks [@stipsan](https://github.com/stipsan)! - Add `inputOptions.preserveEntrySignatures: 'strict'`
+
+- [#2344](https://github.com/sanity-io/pkg-utils/pull/2344) [`7f3d821`](https://github.com/sanity-io/pkg-utils/commit/7f3d821055918a2ffdeb4a1fdf5b9be741558e34) Thanks [@stipsan](https://github.com/stipsan)! - Set `hash: false`
+
+- [#2344](https://github.com/sanity-io/pkg-utils/pull/2344) [`7f3d821`](https://github.com/sanity-io/pkg-utils/commit/7f3d821055918a2ffdeb4a1fdf5b9be741558e34) Thanks [@stipsan](https://github.com/stipsan)! - Set devExports to `true` instead of `'source'`
+
+- [#2344](https://github.com/sanity-io/pkg-utils/pull/2344) [`7f3d821`](https://github.com/sanity-io/pkg-utils/commit/7f3d821055918a2ffdeb4a1fdf5b9be741558e34) Thanks [@stipsan](https://github.com/stipsan)! - Add `treeshake` options
+
+- [#2344](https://github.com/sanity-io/pkg-utils/pull/2344) [`7f3d821`](https://github.com/sanity-io/pkg-utils/commit/7f3d821055918a2ffdeb4a1fdf5b9be741558e34) Thanks [@stipsan](https://github.com/stipsan)! - Add `minify: {compress: true}`
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/parse-package-json@1.0.0
+
 ## 0.2.0
 
 ### Minor Changes
