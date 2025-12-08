@@ -49,13 +49,13 @@ importers:
         version: 2.29.8(@types/node@24.10.1)
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.7.0
-        version: 4.7.0(prettier@3.7.3)
+        version: 4.7.0(prettier@3.7.4)
       '@sanity/pkg-utils':
         specifier: workspace:*
         version: link:packages/@sanity/pkg-utils
       '@sanity/prettier-config':
         specifier: ^1.0.6
-        version: 1.0.6(prettier@3.7.3)
+        version: 1.0.6(prettier@3.7.4)
       '@sanity/tsconfig':
         specifier: workspace:*
         version: link:packages/@sanity/tsconfig
@@ -81,8 +81,8 @@ importers:
         specifier: ^0.8.3
         version: 0.8.3
       prettier:
-        specifier: ^3.7.3
-        version: 3.7.3
+        specifier: ^3.7.4
+        version: 3.7.4
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
@@ -226,8 +226,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0
       prettier:
-        specifier: ^3.7.3
-        version: 3.7.3
+        specifier: ^3.7.4
+        version: 3.7.4
       pretty-bytes:
         specifier: ^7.1.0
         version: 7.1.0
@@ -6101,8 +6101,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.7.3:
-    resolution: {integrity: sha512-QgODejq9K3OzoBbuyobZlUhznP5SKwPqp+6Q6xw6o8gnhr4O85L2U915iM2IDcfF2NPXVaM9zlo9tdwipnYwzg==}
+  prettier@3.7.4:
+    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -9058,13 +9058,13 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.7.0(prettier@3.7.3)':
+  '@ianvs/prettier-plugin-sort-imports@4.7.0(prettier@3.7.4)':
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.5
       '@babel/traverse': 7.28.5
       '@babel/types': 7.28.5
-      prettier: 3.7.3
+      prettier: 3.7.4
       semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
@@ -10009,7 +10009,7 @@ snapshots:
       get-latest-version: 5.1.0(debug@4.4.3)
       groq-js: 1.22.0
       pkg-dir: 5.0.0
-      prettier: 3.7.3
+      prettier: 3.7.4
       semver: 7.7.3
     optionalDependencies:
       babel-plugin-react-compiler: 1.0.0
@@ -10272,10 +10272,10 @@ snapshots:
       - '@sanity/client'
       - '@sanity/types'
 
-  '@sanity/prettier-config@1.0.6(prettier@3.7.3)':
+  '@sanity/prettier-config@1.0.6(prettier@3.7.4)':
     dependencies:
-      prettier: 3.7.3
-      prettier-plugin-packagejson: 2.5.19(prettier@3.7.3)
+      prettier: 3.7.4
+      prettier-plugin-packagejson: 2.5.19(prettier@3.7.4)
 
   '@sanity/preview-url-secret@3.0.0(@sanity/client@7.13.1(debug@4.4.3))(@sanity/icons@3.7.4(react@19.2.1))(sanity@4.20.3(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.2.6(@sanity/schema@4.20.3(@types/react@19.2.7)(debug@4.4.3))(@sanity/types@4.20.3(@types/react@19.2.7)(debug@4.4.3)))(@types/node@24.10.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(immer@11.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.1))':
     dependencies:
@@ -13775,16 +13775,16 @@ snapshots:
       find-yarn-workspace-root2: 1.2.16
       which-pm: 3.0.1
 
-  prettier-plugin-packagejson@2.5.19(prettier@3.7.3):
+  prettier-plugin-packagejson@2.5.19(prettier@3.7.4):
     dependencies:
       sort-package-json: 3.4.0
       synckit: 0.11.11
     optionalDependencies:
-      prettier: 3.7.3
+      prettier: 3.7.4
 
   prettier@2.8.8: {}
 
-  prettier@3.7.3: {}
+  prettier@3.7.4: {}
 
   pretty-bytes@7.1.0: {}
 
