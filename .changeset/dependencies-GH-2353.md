@@ -1,5 +1,5 @@
 ---
-"@sanity/tsdown-config": patch
+"@sanity/tsdown-config": minor
 "@sanity/parse-package-json": patch
 ---
 
