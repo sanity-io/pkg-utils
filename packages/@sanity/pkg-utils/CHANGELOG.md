@@ -1,5 +1,20 @@
 # @sanity/pkg-utils
 
+## 10.1.2
+
+### Patch Changes
+
+- [#2342](https://github.com/sanity-io/pkg-utils/pull/2342) [`c03aaa8`](https://github.com/sanity-io/pkg-utils/commit/c03aaa8c1bdfa8e821d346b31514067a4ba54e24) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.53
+
+- [#2343](https://github.com/sanity-io/pkg-utils/pull/2343) [`37be18c`](https://github.com/sanity-io/pkg-utils/commit/37be18c56cf925c6b941e6736ed1561727338873) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.18.3
+
+- [#2350](https://github.com/sanity-io/pkg-utils/pull/2350) [`3c219a3`](https://github.com/sanity-io/pkg-utils/commit/3c219a3c4c653c5eb0fd5cdab26fff22f1adc4ce) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.27.1
+
+- [#2355](https://github.com/sanity-io/pkg-utils/pull/2355) [`8b61293`](https://github.com/sanity-io/pkg-utils/commit/8b612932f9596c15ba7180bb20c46e541b8db490) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency browserslist to ^4.28.1
+
+- Updated dependencies [[`82b99cd`](https://github.com/sanity-io/pkg-utils/commit/82b99cdc6350e4963366ebfcdeba37e2988711e2)]:
+  - @sanity/parse-package-json@1.0.1
+
 ## 10.1.1
 
 ### Patch Changes
