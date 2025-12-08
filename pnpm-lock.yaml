@@ -241,11 +241,11 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       rolldown:
-        specifier: 1.0.0-beta.52
-        version: 1.0.0-beta.52
+        specifier: 1.0.0-beta.53
+        version: 1.0.0-beta.53
       rolldown-plugin-dts:
         specifier: 0.18.3
-        version: 0.18.3(@typescript/native-preview@7.0.0-dev.20251205.1)(rolldown@1.0.0-beta.52)(typescript@5.9.3)
+        version: 0.18.3(@typescript/native-preview@7.0.0-dev.20251205.1)(rolldown@1.0.0-beta.53)(typescript@5.9.3)
       rollup:
         specifier: ^4.53.3
         version: 4.53.3
@@ -309,7 +309,7 @@ importers:
         version: 11.3.2
       rollup-plugin-visualizer:
         specifier: ^6.0.5
-        version: 6.0.5(rolldown@1.0.0-beta.52)(rollup@4.53.3)
+        version: 6.0.5(rolldown@1.0.0-beta.53)(rollup@4.53.3)
       semver:
         specifier: ^7.7.3
         version: 7.7.3
@@ -9911,6 +9911,8 @@ snapshots:
 
   '@oxc-project/types@0.101.0': {}
 
+  '@oxc-project/types@0.101.0': {}
+
   '@oxc-project/types@0.99.0': {}
 
   '@oxlint-tsgolint/darwin-arm64@0.8.4':
@@ -14706,14 +14708,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  rollup-plugin-visualizer@6.0.5(rolldown@1.0.0-beta.52)(rollup@4.53.3):
+  rollup-plugin-visualizer@6.0.5(rolldown@1.0.0-beta.53)(rollup@4.53.3):
     dependencies:
       open: 8.4.2
       picomatch: 4.0.3
       source-map: 0.7.6
       yargs: 17.7.2
     optionalDependencies:
-      rolldown: 1.0.0-beta.52
+      rolldown: 1.0.0-beta.53
       rollup: 4.53.3
 
   rollup@4.53.3:
