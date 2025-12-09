@@ -54,8 +54,8 @@ importers:
         specifier: workspace:*
         version: link:packages/@sanity/pkg-utils
       '@sanity/prettier-config':
-        specifier: ^1.0.6
-        version: 1.0.6(prettier@3.7.4)
+        specifier: ^3.0.0
+        version: 3.0.0(prettier@3.7.4)
       '@sanity/tsconfig':
         specifier: workspace:*
         version: link:packages/@sanity/tsconfig
@@ -3219,10 +3219,10 @@ packages:
     resolution: {integrity: sha512-D0S2CfVyda99cd/8SnXxQ2tsVlVuRq4CAOjxRuF53evYmBhpWezSEpWKqAa0e1lunGBKK1EroxmOzb5ofNRwMg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/prettier-config@1.0.6':
-    resolution: {integrity: sha512-pbkaHa33gJjRhhDr7be5WJ+c2PNEUCcrNNsgAA0W3a/pAkdrNujC09Gzvi/JkydgjliP/T2KLeuPCBlzftuzKw==}
+  '@sanity/prettier-config@3.0.0':
+    resolution: {integrity: sha512-xEfjbEzn1nIVcwlSKeXST+4wkqLevX9pq1jx3w5bUF51ku/EJFxAqlRGpBQghjwZPZbq0mQ9FAglgaB+k3/J5Q==}
     peerDependencies:
-      prettier: ^3.6.0
+      prettier: ^3.7.3
 
   '@sanity/preview-url-secret@3.0.0':
     resolution: {integrity: sha512-O7o6hsxbMp7y20znU9seV6h8WeTS+U4ovtqLd6j3oaSRyuriZenN/O6K39LJaKC2TZY1RUsYRvcv5/rNq7sAEQ==}
@@ -10493,7 +10493,7 @@ snapshots:
       - '@sanity/client'
       - '@sanity/types'
 
-  '@sanity/prettier-config@1.0.6(prettier@3.7.4)':
+  '@sanity/prettier-config@3.0.0(prettier@3.7.4)':
     dependencies:
       prettier: 3.7.4
       prettier-plugin-packagejson: 2.5.20(prettier@3.7.4)
