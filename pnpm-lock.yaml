@@ -25,8 +25,8 @@ catalogs:
       specifier: ^0.3.15
       version: 0.3.15
     tsdown:
-      specifier: ^0.17.0
-      version: 0.17.0
+      specifier: ^0.17.2
+      version: 0.17.2
     typescript:
       specifier: 5.9.3
       version: 5.9.3
@@ -91,7 +91,7 @@ importers:
         version: 1.0.3
       tsdown:
         specifier: 'catalog:'
-        version: 0.17.0(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.17.2(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -122,7 +122,7 @@ importers:
         version: 0.3.15
       tsdown:
         specifier: 'catalog:'
-        version: 0.17.0(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.17.2(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -345,7 +345,7 @@ importers:
         version: 1.0.2
       tsdown:
         specifier: 'catalog:'
-        version: 0.17.0(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.17.2(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2680,10 +2680,6 @@ packages:
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
-
-  '@oxc-project/runtime@0.101.0':
-    resolution: {integrity: sha512-t3qpfVZIqSiLQ5Kqt/MC4Ge/WCOGrrcagAdzTcDaggupjiGxUx4nJF2v6wUCXWSzWHn5Ns7XLv13fCJEwCOERQ==}
-    engines: {node: ^20.19.0 || >=22.12.0}
 
   '@oxc-project/types@0.101.0':
     resolution: {integrity: sha512-nuFhqlUzJX+gVIPPfuE6xurd4lST3mdcWOhyK/rZO0B9XWMKm79SuszIQEnSMmmDhq1DC8WWVYGVd+6F93o1gQ==}
@@ -7285,13 +7281,13 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
-  tsdown@0.17.0:
-    resolution: {integrity: sha512-NPZRrlC51X9Bb55ZTDwrWges8Dm1niCvNA5AYw7aix6pfnDnB4WR0neG5RPq75xIodg3hqlQUzzyrX7n4dmnJg==}
+  tsdown@0.17.2:
+    resolution: {integrity: sha512-SuU+0CWm/95KfXqojHTVuwcouIsdn7HpYcwDyOdKktJi285NxKwysjFUaxYLxpCNqqPvcFvokXLO4dZThRwzkw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
-      '@vitejs/devtools': ^0.0.0-alpha.18
+      '@vitejs/devtools': ^0.0.0-alpha.19
       publint: ^0.3.0
       typescript: ^5.0.0
       unplugin-lightningcss: ^0.4.0
@@ -7474,8 +7470,8 @@ packages:
     resolution: {integrity: sha512-gwXJnPRewT4rT7sBi/IvxKTjsms7jX7QIDLOClApuZwR49SXbrB1z2NLUZ+vDHyqCj/n58OzRRqaW+B8OZi8vg==}
     engines: {node: '>=18.12.0'}
 
-  unrun@0.2.16:
-    resolution: {integrity: sha512-DBkjUpQv9AQs1464XWnWQ97RuxPCu+CImvQMPmqFeHoL2Bi6C1BGPacMuXVw4VMIfQewNJZWUxPt5envG90oUA==}
+  unrun@0.2.19:
+    resolution: {integrity: sha512-DbwbJ9BvPEb3BeZnIpP9S5tGLO/JIgPQ3JrpMRFIfZMZfMG19f26OlLbC2ml8RRdrI2ZA7z2t+at5tsIHbh6Qw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -10027,8 +10023,6 @@ snapshots:
       magic-string: 0.30.21
 
   '@oslojs/encoding@1.1.0': {}
-
-  '@oxc-project/runtime@0.101.0': {}
 
   '@oxc-project/types@0.101.0': {}
 
@@ -15600,7 +15594,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.17.0(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3):
+  tsdown@0.17.2(@typescript/native-preview@7.0.0-dev.20251207.1)(publint@0.3.15)(synckit@0.11.11)(typescript@5.9.3):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
@@ -15615,7 +15609,7 @@ snapshots:
       tinyglobby: 0.2.15
       tree-kill: 1.2.2
       unconfig-core: 7.4.2
-      unrun: 0.2.16(synckit@0.11.11)
+      unrun: 0.2.19(synckit@0.11.11)
     optionalDependencies:
       publint: 0.3.15
       typescript: 5.9.3
@@ -15790,9 +15784,8 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.3
 
-  unrun@0.2.16(synckit@0.11.11):
+  unrun@0.2.19(synckit@0.11.11):
     dependencies:
-      '@oxc-project/runtime': 0.101.0
       rolldown: 1.0.0-beta.53
     optionalDependencies:
       synckit: 0.11.11
