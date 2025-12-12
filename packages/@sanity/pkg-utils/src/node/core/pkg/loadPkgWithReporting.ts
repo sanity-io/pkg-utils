@@ -5,6 +5,65 @@ import type {StrictOptions} from '../../strict.ts'
 import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
 
+/**
+ * Helper function to recursively compare export values, excluding source and development conditions
+ */
+function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
+  // If both are strings, simple comparison
+  if (typeof value1 === 'string' && typeof value2 === 'string') {
+    return value1 === value2
+  }
+
+  // If types don't match, they're not equal
+  if (typeof value1 !== typeof value2) {
+    return false
+  }
+
+  // Both are objects, compare recursively
+  if (
+    typeof value1 === 'object' &&
+    value1 !== null &&
+    typeof value2 === 'object' &&
+    value2 !== null &&
+    !Array.isArray(value1) &&
+    !Array.isArray(value2)
+  ) {
+    const obj1 = value1 as Record<string, any>
+    const obj2 = value2 as Record<string, any>
+
+    const keys1 = Object.keys(obj1).filter((k) => k !== 'source' && k !== 'development')
+    const keys2 = Object.keys(obj2).filter((k) => k !== 'source' && k !== 'development')
+
+    // Check if they have the same keys
+    if (keys1.length !== keys2.length) {
+      return false
+    }
+
+    for (const key of keys1) {
+      if (!keys2.includes(key)) {
+        return false
+      }
+
+      const val1 = obj1[key]
+      const val2 = obj2[key]
+
+      // Skip if either value is undefined
+      if (val1 === undefined || val2 === undefined) {
+        return false
+      }
+
+      // Recursively compare nested values
+      if (!areExportValuesEqual(val1, val2)) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  return false
+}
+
 /** @alpha */
 export async function loadPkgWithReporting(options: {
   pkgPath: string
@@ -229,6 +288,15 @@ export async function loadPkgWithReporting(options: {
                 logger.error(
                   `publishConfig.exports["${exportPath}"]: is a string but exports["${exportPath}"] has multiple conditions besides source/development: ${conditions.join(', ')}`,
                 )
+              } else {
+                // Validate that the string value matches the default condition value
+                const expectedValue = exp.default
+                if (publishExp !== expectedValue) {
+                  shouldError = true
+                  logger.error(
+                    `publishConfig.exports["${exportPath}"]: should be "${expectedValue}" but got "${publishExp}"`,
+                  )
+                }
               }
               continue
             }
@@ -274,6 +342,26 @@ export async function loadPkgWithReporting(options: {
                 logger.error(
                   `publishConfig.exports["${exportPath}"]: unexpected \`${condition}\` condition that does not exist in exports["${exportPath}"]`,
                 )
+              }
+            }
+
+            // Validate that values match for all conditions
+            for (const condition of exportConditions) {
+              if (condition in publishExp) {
+                const exportValue = exp[condition]
+                const publishValue = publishExp[condition]
+
+                // Compare values recursively for nested objects
+                if (!areExportValuesEqual(exportValue, publishValue)) {
+                  const exportValueStr =
+                    typeof exportValue === 'string' ? exportValue : JSON.stringify(exportValue)
+                  const publishValueStr =
+                    typeof publishValue === 'string' ? publishValue : JSON.stringify(publishValue)
+                  shouldError = true
+                  logger.error(
+                    `publishConfig.exports["${exportPath}"].${condition}: should be ${exportValueStr} but got ${publishValueStr}`,
+                  )
+                }
               }
             }
           }
