@@ -1,0 +1,5 @@
+{
+  "extends": ["@sanity/tsconfig/strictest", "../../../tsconfig.settings.json"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
