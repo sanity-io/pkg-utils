@@ -119,6 +119,31 @@ exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index
 }
 `;
 
+exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index.ts', development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { access: 'public', registry: 'https://registry.npmjs.org', tag: 'latest', exports: { '.': './dist/index.js' } } } => { exports: { '.': { development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { access: 'public', registry: 'https://registry.npmjs.org', tag: 'latest', exports: { '.': './dist/index.js' } } } 1`] = `
+{
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "development": "./src/index.ts",
+      "source": "./src/index.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": "./dist/index.js",
+    },
+    "registry": "https://registry.npmjs.org",
+    "tag": "latest",
+  },
+  "type": "module",
+  "version": "0.0.0",
+}
+`;
+
 exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index.ts', development: './src/index.ts', require: './dist/index.cjs', import: './dist/index.js' } } } => { exports: { '.': { development: './src/index.ts', import: './dist/index.js', default: './dist/index.js' } } } 1`] = `
 {
   "exports": {

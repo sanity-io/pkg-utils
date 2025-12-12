@@ -73,6 +73,9 @@ export interface PackageJSON {
       }
   >
   publishConfig?: {
+    access?: 'public' | 'restricted'
+    registry?: string
+    tag?: string
     exports?: Record<
       string,
       | string
@@ -96,6 +99,11 @@ export interface PackageJSON {
           default?: string
         }
     >
+    /**
+     * Any other npm config option applied at publish time.
+     * Undocumented and not guaranteed to be stable.
+     */
+    [npmConfigKey: string]: unknown
   }
   main?: string
   browser?: Record<string, string>
