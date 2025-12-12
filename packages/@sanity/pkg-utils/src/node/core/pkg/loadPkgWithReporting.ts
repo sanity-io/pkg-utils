@@ -157,14 +157,16 @@ export async function loadPkgWithReporting(options: {
     if (strict && pkg.exports && Object.keys(pkg.exports).length > 0) {
       // Check if exports contains source or development conditions
       const hasSourceOrDevelopment = Object.entries(pkg.exports).some(([, exp]) => {
-        if (typeof exp === 'string' || 'svelte' in exp) return false
-        return exp.source || exp.development
+        if (typeof exp === 'string') return false
+        if (typeof exp === 'object' && 'svelte' in exp) return false
+        return Boolean(exp.source || exp.development)
       })
 
       if (hasSourceOrDevelopment) {
         if (!pkg.publishConfig?.exports) {
           const msg =
-            'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source` or `development` condition that points to code that cannot be used by the resolver. See https://tsdown.dev/options/package-exports#conditional-dev-exports for more information.'
+            'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source` or `development` condition that points to code that cannot be used by the resolver. ' +
+            'See https://tsdown.dev/options/package-exports#conditional-dev-exports for more information.'
           if (strictOptions.noPublishConfigExports === 'error') {
             shouldError = true
             logger.error(msg)
@@ -200,7 +202,10 @@ export async function loadPkgWithReporting(options: {
             if (typeof exp === 'string' || 'svelte' in exp) {
               // For string or svelte exports, publishConfig should match
               const publishExp = publishExports[exportPath]
-              if (typeof publishExp !== 'string' && !('svelte' in (publishExp as any))) {
+              if (
+                typeof publishExp !== 'string' &&
+                (typeof publishExp !== 'object' || !('svelte' in publishExp))
+              ) {
                 shouldError = true
                 logger.error(
                   `publishConfig.exports["${exportPath}"]: should be a string matching exports["${exportPath}"]`,

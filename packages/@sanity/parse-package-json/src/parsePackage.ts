@@ -64,7 +64,22 @@ const basePkgSchema = z.object({
         access: z.optional(z.enum(['public', 'restricted'])),
         registry: z.optional(z.string()),
         tag: z.optional(z.string()),
-        exports: z.optional(z.record(z.union([z.string(), z.record(z.string())]))),
+        exports: z.optional(
+          z.record(
+            z.union([
+              z.string(),
+              z.object({
+                types: z.optional(z.string()),
+                browser: z.optional(z.record(z.string())),
+                node: z.optional(z.record(z.string())),
+                import: z.optional(z.string()),
+                require: z.optional(z.string()),
+                default: z.optional(z.string()),
+                svelte: z.optional(z.string()),
+              }),
+            ]),
+          ),
+        ),
       })
       .passthrough(), // Allow any other npm config options
   ),
