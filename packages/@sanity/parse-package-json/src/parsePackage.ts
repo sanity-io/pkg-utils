@@ -115,6 +115,7 @@ const pkgSchema = basePkgSchema.transform((pkg): PackageJSON => {
     }
   }
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   return {...pkg, exports: transformedExports} as PackageJSON
 })
 
