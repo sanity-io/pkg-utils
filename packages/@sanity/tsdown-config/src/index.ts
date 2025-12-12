@@ -14,6 +14,7 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
  * @public
  */
 export function defineConfig(options: PackageOptions = {}): UserConfig {
+  const {entry} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
   const report = {gzip: false} as const satisfies UserConfig['report']
@@ -34,6 +35,7 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   } as const satisfies UserConfig['exports']
 
   return defineTsdownConfig({
+    entry,
     exports,
     format,
     hash,

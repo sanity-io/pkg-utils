@@ -166,7 +166,7 @@ export async function loadPkgWithReporting(options: {
         if (!pkg.publishConfig?.exports) {
           const msg =
             'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source` or `development` condition that points to code that cannot be used by the resolver. ' +
-            'See https://tsdown.dev/options/package-exports#conditional-dev-exports for more information.'
+            'See https://tsdown.dev/options/package-exports#dev-exports for more information.'
           if (strictOptions.noPublishConfigExports === 'error') {
             shouldError = true
             logger.error(msg)
