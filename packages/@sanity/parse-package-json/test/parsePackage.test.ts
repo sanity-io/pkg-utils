@@ -98,7 +98,6 @@ describe('parsePackage', () => {
       {
         type: 'module',
         exports: {
-          // @ts-expect-error - this is a test
           '.': {
             source: './src/index.ts',
             development: './src/index.ts',
@@ -129,7 +128,6 @@ describe('parsePackage', () => {
       {
         type: 'module',
         exports: {
-          // @ts-expect-error - this is a test
           '.': {
             source: './src/index.ts',
             development: './src/index.ts',
