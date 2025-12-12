@@ -97,28 +97,6 @@ exports[`parsePackage > { type: 'module' } => { exports: { '.': { default: './di
 }
 `;
 
-exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index.ts', development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { exports: { '.': './dist/index.js' } } } => { exports: { '.': { development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { exports: { '.': './dist/index.js' } } } 1`] = `
-{
-  "exports": {
-    ".": {
-      "default": "./dist/index.js",
-      "development": "./src/index.ts",
-      "source": "./src/index.ts",
-    },
-    "./package.json": "./package.json",
-  },
-  "license": "MIT",
-  "name": "dummy-module",
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.js",
-    },
-  },
-  "type": "module",
-  "version": "0.0.0",
-}
-`;
-
 exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index.ts', development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { access: 'public', registry: 'https://registry.npmjs.org', tag: 'latest', exports: { '.': './dist/index.js' } } } => { exports: { '.': { development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { access: 'public', registry: 'https://registry.npmjs.org', tag: 'latest', exports: { '.': './dist/index.js' } } } 1`] = `
 {
   "exports": {
@@ -138,6 +116,28 @@ exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index
     },
     "registry": "https://registry.npmjs.org",
     "tag": "latest",
+  },
+  "type": "module",
+  "version": "0.0.0",
+}
+`;
+
+exports[`parsePackage > { type: 'module', exports: { '.': { source: './src/index.ts', development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { exports: { '.': './dist/index.js' } } } => { exports: { '.': { development: './src/index.ts', default: './dist/index.js' } }, publishConfig: { exports: { '.': './dist/index.js' } } } 1`] = `
+{
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "development": "./src/index.ts",
+      "source": "./src/index.ts",
+    },
+    "./package.json": "./package.json",
+  },
+  "license": "MIT",
+  "name": "dummy-module",
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+    },
   },
   "type": "module",
   "version": "0.0.0",

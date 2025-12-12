@@ -215,6 +215,9 @@ export async function loadPkgWithReporting(options: {
             }
 
             const publishExp = publishExports[exportPath]
+            if (!publishExp) {
+              continue
+            }
             if (typeof publishExp === 'string') {
               // publishConfig has a string, validate it's correct
               // It should be a condensed form when only default remains after removing source/development
