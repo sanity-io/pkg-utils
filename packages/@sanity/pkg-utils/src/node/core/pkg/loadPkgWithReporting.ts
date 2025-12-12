@@ -91,6 +91,13 @@ export async function loadPkgWithReporting(options: {
           )
         }
 
+        if (exp.development && exp.source && exp.development !== exp.source) {
+          shouldError = true
+          logger.error(
+            `exports["${expPath}"]: the \`development\` condition must have the same value as \`source\` when both are present. Expected "${exp.source}" but got "${exp.development}"`,
+          )
+        }
+
         if (exp.node) {
           if (exp.import && exp.node.import && !assertOrder('node', 'import', keys)) {
             shouldError = true
@@ -142,6 +149,126 @@ export async function loadPkgWithReporting(options: {
           logger.error(
             `exports["${expPath}"]: the \`default\` property should be the last property`,
           )
+        }
+      }
+    }
+
+    // validate publishConfig.exports
+    if (strict && pkg.exports && Object.keys(pkg.exports).length > 0) {
+      // Check if exports contains source or development conditions
+      const hasSourceOrDevelopment = Object.entries(pkg.exports).some(([, exp]) => {
+        if (typeof exp === 'string' || 'svelte' in exp) return false
+        return exp.source || exp.development
+      })
+
+      if (hasSourceOrDevelopment) {
+        if (!pkg.publishConfig?.exports) {
+          const msg =
+            'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source` or `development` condition that points to code that cannot be used by the resolver. See https://tsdown.dev/options/package-exports#conditional-dev-exports for more information.'
+          if (strictOptions.noPublishConfigExports === 'error') {
+            shouldError = true
+            logger.error(msg)
+          } else if (strictOptions.noPublishConfigExports !== 'off') {
+            logger.warn(msg)
+          }
+        } else {
+          // Validate publishConfig.exports structure
+          const publishExports = pkg.publishConfig.exports
+
+          // Check that all keys in exports exist in publishConfig.exports
+          for (const exportPath of Object.keys(pkg.exports)) {
+            if (!(exportPath in publishExports)) {
+              shouldError = true
+              logger.error(
+                `publishConfig.exports: missing export path "${exportPath}" that exists in exports`,
+              )
+            }
+          }
+
+          // Check that all keys in publishConfig.exports exist in exports
+          for (const exportPath of Object.keys(publishExports)) {
+            if (!(exportPath in pkg.exports)) {
+              shouldError = true
+              logger.error(
+                `publishConfig.exports: unexpected export path "${exportPath}" that does not exist in exports`,
+              )
+            }
+          }
+
+          // Validate each export path
+          for (const [exportPath, exp] of Object.entries(pkg.exports)) {
+            if (typeof exp === 'string' || 'svelte' in exp) {
+              // For string or svelte exports, publishConfig should match
+              const publishExp = publishExports[exportPath]
+              if (typeof publishExp !== 'string' && !('svelte' in (publishExp as any))) {
+                shouldError = true
+                logger.error(
+                  `publishConfig.exports["${exportPath}"]: should be a string matching exports["${exportPath}"]`,
+                )
+              }
+              continue
+            }
+
+            const publishExp = publishExports[exportPath]
+            if (typeof publishExp === 'string') {
+              // publishConfig has a string, validate it's correct
+              // It should be a condensed form when only default remains after removing source/development
+              const conditions = Object.keys(exp).filter(
+                (k) => k !== 'source' && k !== 'development',
+              )
+              if (conditions.length !== 1 || conditions[0] !== 'default') {
+                shouldError = true
+                logger.error(
+                  `publishConfig.exports["${exportPath}"]: is a string but exports["${exportPath}"] has multiple conditions besides source/development: ${conditions.join(', ')}`,
+                )
+              }
+              continue
+            }
+
+            if ('svelte' in publishExp) {
+              continue
+            }
+
+            // Validate conditions
+            const exportConditions = Object.keys(exp).filter(
+              (k) => k !== 'source' && k !== 'development',
+            )
+            const publishConditions = Object.keys(publishExp)
+
+            // Check for source or development in publishConfig
+            if ('source' in publishExp) {
+              shouldError = true
+              logger.error(
+                `publishConfig.exports["${exportPath}"]: should not contain the \`source\` condition`,
+              )
+            }
+
+            if ('development' in publishExp) {
+              shouldError = true
+              logger.error(
+                `publishConfig.exports["${exportPath}"]: should not contain the \`development\` condition`,
+              )
+            }
+
+            // Check that all conditions match (except source/development)
+            for (const condition of exportConditions) {
+              if (!(condition in publishExp)) {
+                shouldError = true
+                logger.error(
+                  `publishConfig.exports["${exportPath}"]: missing \`${condition}\` condition that exists in exports["${exportPath}"]`,
+                )
+              }
+            }
+
+            for (const condition of publishConditions) {
+              if (!exportConditions.includes(condition)) {
+                shouldError = true
+                logger.error(
+                  `publishConfig.exports["${exportPath}"]: unexpected \`${condition}\` condition that does not exist in exports["${exportPath}"]`,
+                )
+              }
+            }
+          }
         }
       }
     }

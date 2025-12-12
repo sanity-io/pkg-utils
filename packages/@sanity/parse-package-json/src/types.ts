@@ -18,6 +18,7 @@ export interface PkgExport {
   }
   types?: string
   source: string
+  development?: string
   import?: string
   require?: string
   default: string
@@ -47,6 +48,7 @@ export interface PackageJSON {
     | `./${string}.css`
     | {
         source?: string
+        development?: string
         types?: string
         browser?: {
           source: string
@@ -70,6 +72,31 @@ export interface PackageJSON {
         default?: string
       }
   >
+  publishConfig?: {
+    exports?: Record<
+      string,
+      | string
+      | {
+          types?: string
+          browser?: {
+            import?: string
+            require?: string
+          }
+          node?: {
+            import?: string
+            require?: string
+          }
+          import?: string
+          require?: string
+          default: string
+        }
+      | {
+          types?: string
+          svelte: string
+          default?: string
+        }
+    >
+  }
   main?: string
   browser?: Record<string, string>
   source?: string
