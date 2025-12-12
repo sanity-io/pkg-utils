@@ -14,7 +14,7 @@ describe('publishConfig.exports validation', () => {
     const pkgPath = join(testPath, 'package.json')
     writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
 
-    const logger = createLogger({silent: true, logLevel: 'info'})
+    const logger = createLogger(true)
 
     let exitCalled = false
     const originalExit = process.exit

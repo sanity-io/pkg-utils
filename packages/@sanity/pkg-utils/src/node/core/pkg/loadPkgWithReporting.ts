@@ -348,8 +348,8 @@ export async function loadPkgWithReporting(options: {
             // Validate that values match for all conditions
             for (const condition of exportConditions) {
               if (condition in publishExp) {
-                const exportValue = exp[condition]
-                const publishValue = publishExp[condition]
+                const exportValue = (exp as Record<string, unknown>)[condition]
+                const publishValue = (publishExp as Record<string, unknown>)[condition]
 
                 // Compare values recursively for nested objects
                 if (!areExportValuesEqual(exportValue, publishValue)) {
