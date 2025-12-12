@@ -547,7 +547,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
       vite:
-        specifier: ^7.2.6
+        specifier: ^7.2.7
         version: 7.2.7(@types/node@24.10.2)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   playground/sanity-plugin-with-styled-components:
@@ -618,7 +618,7 @@ importers:
         specifier: ^6.1.19
         version: 6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       vite:
-        specifier: ^7.2.6
+        specifier: ^7.2.7
         version: 7.2.7(@types/node@24.10.2)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   playground/strict-legacy-fields:
@@ -5991,6 +5991,7 @@ packages:
   next@16.0.8:
     resolution: {integrity: sha512-LmcZzG04JuzNXi48s5P+TnJBsTGPJunViNKV/iE4uM6kstjTQsQhvsAv+xF6MJxU2Pr26tl15eVbp0jQnsv6/g==}
     engines: {node: '>=20.9.0'}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
