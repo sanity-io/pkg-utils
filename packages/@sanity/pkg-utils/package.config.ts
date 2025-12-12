@@ -2,6 +2,9 @@ import {visualizer} from 'rollup-plugin-visualizer'
 import {defineConfig} from './src/node'
 
 export default defineConfig({
+  strictOptions: {
+    noPublishConfigExports: 'error',
+  },
   bundles: [
     {
       source: './src/cli/index.ts',
