@@ -71,6 +71,60 @@ describe('parsePackage', () => {
         },
       },
     ],
+    [
+      {
+        type: 'module',
+        exports: {
+          // @ts-expect-error - this is a test
+          '.': {
+            source: './src/index.ts',
+            development: './src/index.ts',
+            require: './dist/index.cjs',
+            import: './dist/index.js',
+          },
+        },
+      },
+      {
+        exports: {
+          '.': {
+            development: './src/index.ts',
+            import: './dist/index.js',
+            default: './dist/index.js',
+          },
+        },
+      },
+    ],
+    [
+      {
+        type: 'module',
+        exports: {
+          // @ts-expect-error - this is a test
+          '.': {
+            source: './src/index.ts',
+            development: './src/index.ts',
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': './dist/index.js',
+          },
+        },
+      },
+      {
+        exports: {
+          '.': {
+            development: './src/index.ts',
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': './dist/index.js',
+          },
+        },
+      },
+    ],
   ] as const satisfies [actual: Partial<PackageJSON>, expected: Partial<PackageJSON>][])(
     '%o => %o',
     (actual, expected) => {
@@ -133,6 +187,7 @@ test('typoMap lists all known keys', () => {
       "MODULE" => "module",
       "TYPES" => "types",
       "EXPORTS" => "exports",
+      "PUBLISHCONFIG" => "publishConfig",
       "BROWSERSLIST" => "browserslist",
       "SIDEEFFECTS" => "sideEffects",
       "TYPESVERSIONS" => "typesVersions",

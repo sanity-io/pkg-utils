@@ -16,6 +16,7 @@ const strictOptions = z
     noPackageJsonBrowser: toggle.default('warn'),
     noPackageJsonTypesVersions: toggle.default('warn'),
     preferModuleType: toggle.default('warn'),
+    noPublishConfigExports: toggle.default('warn'),
   })
   .strict()
 
@@ -80,6 +81,11 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   preferModuleType: ToggleType
+  /**
+   * Warns if `publishConfig.exports` is missing when `source` or `development` conditions are used in exports.
+   * @defaultValue 'warn'
+   */
+  noPublishConfigExports: ToggleType
 }
 
 /** @alpha */

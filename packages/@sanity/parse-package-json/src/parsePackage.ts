@@ -5,6 +5,7 @@ const exportEntrySchema = z
   .object({
     types: z.optional(z.string()),
     source: z.optional(z.string()),
+    development: z.optional(z.string()),
     browser: z.optional(
       z.object({
         source: z.string(),
@@ -56,6 +57,11 @@ const basePkgSchema = z.object({
         }),
       ]),
     ),
+  ),
+  publishConfig: z.optional(
+    z.object({
+      exports: z.optional(z.record(z.union([z.string(), z.record(z.string())]))),
+    }),
   ),
   browserslist: z.optional(z.union([z.string(), z.array(z.string())])),
   sideEffects: z.optional(z.union([z.boolean(), z.array(z.string())])),
