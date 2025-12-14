@@ -1,8 +1,8 @@
+import {mkdirSync, rmSync, writeFileSync} from 'node:fs'
+import {tmpdir} from 'node:os'
+import {join} from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
-import {mkdirSync, writeFileSync, rmSync} from 'node:fs'
-import {join} from 'node:path'
-import {tmpdir} from 'node:os'
 import {createLogger} from '../src/node/logger'
 
 describe('publishConfig.exports validation', () => {
