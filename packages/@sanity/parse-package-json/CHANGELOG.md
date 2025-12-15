@@ -1,5 +1,11 @@
 # @sanity/parse-package-json
 
+## 2.0.0
+
+### Major Changes
+
+- [#2385](https://github.com/sanity-io/pkg-utils/pull/2385) [`b3858a0`](https://github.com/sanity-io/pkg-utils/commit/b3858a0fe43f2a91c20ba19f95fc8d2586e87e87) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add stricter publishConfig.exports validation to ensure values match exports
+
 ## 1.1.0
 
 ### Minor Changes

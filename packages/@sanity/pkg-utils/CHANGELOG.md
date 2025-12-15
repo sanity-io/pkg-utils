@@ -1,5 +1,18 @@
 # @sanity/pkg-utils
 
+## 10.2.0
+
+### Minor Changes
+
+- [#2385](https://github.com/sanity-io/pkg-utils/pull/2385) [`b3858a0`](https://github.com/sanity-io/pkg-utils/commit/b3858a0fe43f2a91c20ba19f95fc8d2586e87e87) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add stricter publishConfig.exports validation to ensure values match exports
+
+- [#2395](https://github.com/sanity-io/pkg-utils/pull/2395) [`fbe8c6e`](https://github.com/sanity-io/pkg-utils/commit/fbe8c6e6bb964bd9623e63a6603717c5d9d57f98) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add `extract.checkTypes` option to control type checking during dts generation. When set to false, it has the same effect as setting `"noCheck": true` in tsconfig.json.
+
+### Patch Changes
+
+- Updated dependencies [[`b3858a0`](https://github.com/sanity-io/pkg-utils/commit/b3858a0fe43f2a91c20ba19f95fc8d2586e87e87)]:
+  - @sanity/parse-package-json@2.0.0
+
 ## 10.1.3
 
 ### Patch Changes
