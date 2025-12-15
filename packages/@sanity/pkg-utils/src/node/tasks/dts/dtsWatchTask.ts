@@ -66,7 +66,10 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
           emitDeclarationOnly: true,
           noEmit: false,
           noEmitOnError: strict ? true : (tsContext.config.options.noEmitOnError ?? true),
-          noCheck: config?.extract?.checkTypes === false ? true : (tsContext.config.options.noCheck ?? tsContext.config.options.isolatedDeclarations),
+          noCheck:
+            config?.extract?.checkTypes === false
+              ? true
+              : (tsContext.config.options.noCheck ?? tsContext.config.options.isolatedDeclarations),
           outDir: tmpPath,
         },
         ts.sys,
