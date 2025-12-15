@@ -1,5 +1,11 @@
 # @sanity/tsconfig
 
+## 2.1.0
+
+### Minor Changes
+
+- [`f8d6dcc`](https://github.com/sanity-io/pkg-utils/commit/f8d6dcc592d022de46c4111d9f11d54ed73583a4) Thanks [@stipsan](https://github.com/stipsan)! - Add `noEmitOnError: false` to `recommended` preset
+
 ## 2.0.0
 
 ### Major Changes
