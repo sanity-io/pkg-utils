@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.2.1
+
+### Patch Changes
+
+- [#2399](https://github.com/sanity-io/pkg-utils/pull/2399) [`2a44a46`](https://github.com/sanity-io/pkg-utils/commit/2a44a46289aa2164ae6ade29018f5eea851d7959) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.54
+
+- [#2403](https://github.com/sanity-io/pkg-utils/pull/2403) [`cc3f98d`](https://github.com/sanity-io/pkg-utils/commit/cc3f98d3619e21a10118ca70d897d2019e79f574) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix noCheck warning when extract.checkTypes is false
+
 ## 10.2.0
 
 ### Minor Changes
