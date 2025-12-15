@@ -97,6 +97,13 @@ export interface PkgConfigOptions {
      */
     enabled?: boolean
     /**
+     * When set to false, disables type checking during type definition generation.
+     * This is equivalent to setting `"noCheck": true` in tsconfig.json but can be
+     * controlled from package.config.ts without needing multiple tsconfig files.
+     * @defaultValue undefined (uses tsconfig.json settings)
+     */
+    checkTypes?: boolean
+    /**
      * Packages in `devDependencies` that are not in `external` are automatically added to the `bundledPackages` config.
      * You can exclude a package from being bundled by using a callback:
      * ```

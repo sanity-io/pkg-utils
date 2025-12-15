@@ -30,7 +30,7 @@ export async function doExtract(
 
   const tmpPath = path.resolve(outDir, '__tmp__')
 
-  await buildTypes({cwd, logger, outDir: tmpPath, strict, tsconfig: ts.config})
+  await buildTypes({cwd, logger, outDir: tmpPath, strict, tsconfig: ts.config, checkTypes: config?.extract?.checkTypes})
   const messages: ExtractorMessage[] = []
 
   const results: {sourcePath: string; filePaths: string[]}[] = []

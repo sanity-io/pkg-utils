@@ -9,8 +9,9 @@ export async function buildTypes(options: {
   outDir: string
   tsconfig: ts.ParsedCommandLine
   strict: boolean
+  checkTypes?: boolean
 }): Promise<void> {
-  const {cwd, logger, outDir, tsconfig, strict = false} = options
+  const {cwd, logger, outDir, tsconfig, strict = false, checkTypes} = options
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,
@@ -19,7 +20,7 @@ export async function buildTypes(options: {
     emitDeclarationOnly: true,
     noEmit: false,
     noEmitOnError: strict ? true : (tsconfig.options.noEmitOnError ?? true),
-    noCheck: tsconfig.options.noCheck ?? tsconfig.options.isolatedDeclarations,
+    noCheck: checkTypes === false ? true : (tsconfig.options.noCheck ?? tsconfig.options.isolatedDeclarations),
     outDir,
   }
 
