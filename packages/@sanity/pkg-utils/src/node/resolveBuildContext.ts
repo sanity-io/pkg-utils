@@ -40,14 +40,14 @@ export async function resolveBuildContext(options: {
   const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
 
   if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options && config?.dts !== 'rolldown') {
-    if (tsconfig.options.noCheck !== false && !tsconfig.options.noCheck) {
+    if (tsconfig.options.noCheck !== false && !tsconfig.options.noCheck && config?.extract?.checkTypes !== false) {
       if (strictOptions.noCheckTypes === 'error') {
         throw new Error(
-          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it.',
+          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it. You can set `noCheck: true` in tsconfig.json or set `extract: { checkTypes: false }` in package.config.ts to disable type checking.',
         )
       } else {
         logger.warn(
-          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it.',
+          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it. You can set `noCheck: true` in tsconfig.json or set `extract: { checkTypes: false }` in package.config.ts to disable type checking.',
         )
       }
     }
