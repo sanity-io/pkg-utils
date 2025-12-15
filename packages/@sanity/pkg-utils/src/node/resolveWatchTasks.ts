@@ -11,7 +11,7 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
   const tasks: WatchTask[] = []
 
   const exports = Object.entries(ctx.exports || {}).map(
-    ([_path, exp]) => ({_path, ...exp}) as PkgExport & {_path: string},
+    ([_path, exp]) => Object.assign({}, exp, {_path}) as PkgExport & {_path: string},
   )
 
   const dtsTask: DtsWatchTask = {
