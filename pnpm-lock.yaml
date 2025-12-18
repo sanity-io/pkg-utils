@@ -25,8 +25,8 @@ catalogs:
       specifier: ^0.3.16
       version: 0.3.16
     tsdown:
-      specifier: ^0.17.2
-      version: 0.17.2
+      specifier: ^0.18.0
+      version: 0.18.0
     typescript:
       specifier: 5.9.3
       version: 5.9.3
@@ -91,7 +91,7 @@ importers:
         version: 1.0.3
       tsdown:
         specifier: 'catalog:'
-        version: 0.17.2(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.18.0(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -122,7 +122,7 @@ importers:
         version: 0.3.16
       tsdown:
         specifier: 'catalog:'
-        version: 0.17.2(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.18.0(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -345,7 +345,7 @@ importers:
         version: 1.0.2
       tsdown:
         specifier: 'catalog:'
-        version: 0.17.2(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.18.0(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -5016,8 +5016,8 @@ packages:
   import-meta-resolve@4.2.0:
     resolution: {integrity: sha512-Iqv2fzaTQN28s/FwZAoFq0ZSs/7hMAHJVX+w8PZl3cY19Pxk6jFFalxQoIfW2826i/fDLXv8IiEZRIT0lDuWcg==}
 
-  import-without-cache@0.2.2:
-    resolution: {integrity: sha512-4TTuRrZ0jBULXzac3EoX9ZviOs8Wn9iAbNhJEyLhTpAGF9eNmYSruaMMN/Tec/yqaO7H6yS2kALfQDJ5FxfatA==}
+  import-without-cache@0.2.3:
+    resolution: {integrity: sha512-roCvX171VqJ7+7pQt1kSRfwaJvFAC2zhThJWXal1rN8EqzPS3iapkAoNpHh4lM8Na1BDen+n9rVfo73RN+Y87g==}
     engines: {node: '>=20.19.0'}
 
   imurmurhash@0.1.4:
@@ -7086,8 +7086,8 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
-  tsdown@0.17.2:
-    resolution: {integrity: sha512-SuU+0CWm/95KfXqojHTVuwcouIsdn7HpYcwDyOdKktJi285NxKwysjFUaxYLxpCNqqPvcFvokXLO4dZThRwzkw==}
+  tsdown@0.18.0:
+    resolution: {integrity: sha512-Yotdh3NzizysnqR96xfpHFYtEntk1cZvSRHz8A+Pn3ZHNdTQa4fBQxh6HHzWZwfjdQv47xb7GCv6vEWMtxBirw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
     peerDependencies:
@@ -12598,7 +12598,7 @@ snapshots:
 
   import-meta-resolve@4.2.0: {}
 
-  import-without-cache@0.2.2: {}
+  import-without-cache@0.2.3: {}
 
   imurmurhash@0.1.4: {}
 
@@ -15086,13 +15086,14 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.17.2(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3):
+  tsdown@0.18.0(@typescript/native-preview@7.0.0-dev.20251215.1)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3):
     dependencies:
       ansis: 4.2.0
       cac: 6.7.14
+      defu: 6.1.4
       empathic: 2.0.0
       hookable: 5.5.3
-      import-without-cache: 0.2.2
+      import-without-cache: 0.2.3
       obug: 2.1.1
       rolldown: 1.0.0-beta.53
       rolldown-plugin-dts: 0.18.3(@typescript/native-preview@7.0.0-dev.20251215.1)(rolldown@1.0.0-beta.53)(typescript@5.9.3)
