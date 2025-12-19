@@ -1,5 +1,11 @@
 # @sanity/parse-package-json
 
+## 2.0.2
+
+### Patch Changes
+
+- [#2422](https://github.com/sanity-io/pkg-utils/pull/2422) [`0963ad2`](https://github.com/sanity-io/pkg-utils/commit/0963ad27a3ac388fc7fc3981a7f77319325edb67) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.2.1
+
 ## 2.0.1
 
 ### Patch Changes
