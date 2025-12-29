@@ -1,5 +1,24 @@
 # @sanity/pkg-utils
 
+## 10.2.4
+
+### Patch Changes
+
+- [#2428](https://github.com/sanity-io/pkg-utils/pull/2428) [`770dfca`](https://github.com/sanity-io/pkg-utils/commit/770dfcafceaa75e1ce3d8127a134a27724d7b782) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.5.1
+
+- [#2429](https://github.com/sanity-io/pkg-utils/pull/2429) [`2f5af52`](https://github.com/sanity-io/pkg-utils/commit/2f5af5265161d08e6660a7bcb4cfc3d13f07073b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.27.2
+
+- [#2433](https://github.com/sanity-io/pkg-utils/pull/2433) [`0edb5b6`](https://github.com/sanity-io/pkg-utils/commit/0edb5b625ab1066d69f980194016fb155b104152) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.57
+
+- [#2437](https://github.com/sanity-io/pkg-utils/pull/2437) [`920895f`](https://github.com/sanity-io/pkg-utils/commit/920895f53d460f4ec28460ac8f7068f602ec7ff1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency globby to ^16.1.0
+
+- [#2438](https://github.com/sanity-io/pkg-utils/pull/2438) [`d8118d5`](https://github.com/sanity-io/pkg-utils/commit/d8118d551fdb700dcbe72a68f7d0f8de04653612) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.20.0
+
+- [#2439](https://github.com/sanity-io/pkg-utils/pull/2439) [`5c5ca25`](https://github.com/sanity-io/pkg-utils/commit/5c5ca25f8b31991425b5b0a2847efa3827b87712) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.54.0
+
+- Updated dependencies [[`405355c`](https://github.com/sanity-io/pkg-utils/commit/405355c627e66ea95afa085ac23d010b6de9c7eb)]:
+  - @sanity/parse-package-json@2.0.3
+
 ## 10.2.3
 
 ### Patch Changes
