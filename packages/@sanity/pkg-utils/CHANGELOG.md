@@ -1,5 +1,14 @@
 # @sanity/pkg-utils
 
+## 10.2.5
+
+### Patch Changes
+
+- [#2440](https://github.com/sanity-io/pkg-utils/pull/2440) [`f50f6f1`](https://github.com/sanity-io/pkg-utils/commit/f50f6f1e45b5e4811d6e25621b4333f44c0ea0d9) Thanks [@stipsan](https://github.com/stipsan)! - Update LICENSE year to 2026
+
+- Updated dependencies [[`f50f6f1`](https://github.com/sanity-io/pkg-utils/commit/f50f6f1e45b5e4811d6e25621b4333f44c0ea0d9)]:
+  - @sanity/parse-package-json@2.0.4
+
 ## 10.2.4
 
 ### Patch Changes
