@@ -1,5 +1,16 @@
 # @sanity/pkg-utils
 
+## 10.2.6
+
+### Patch Changes
+
+- [#2449](https://github.com/sanity-io/pkg-utils/pull/2449) [`65a803f`](https://github.com/sanity-io/pkg-utils/commit/65a803f2e40cf87b5bd22b026365f3ed3e4b3a1c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.58
+
+- [#2451](https://github.com/sanity-io/pkg-utils/pull/2451) [`5537cfc`](https://github.com/sanity-io/pkg-utils/commit/5537cfc0fe66bf1265978d7d4cf7bd9e76cbee1b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.3.4
+
+- Updated dependencies [[`5537cfc`](https://github.com/sanity-io/pkg-utils/commit/5537cfc0fe66bf1265978d7d4cf7bd9e76cbee1b)]:
+  - @sanity/parse-package-json@2.0.5
+
 ## 10.2.5
 
 ### Patch Changes
