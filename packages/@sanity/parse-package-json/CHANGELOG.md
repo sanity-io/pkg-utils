@@ -1,5 +1,15 @@
 # @sanity/parse-package-json
 
+## 2.1.0
+
+### Minor Changes
+
+- [#2465](https://github.com/sanity-io/pkg-utils/pull/2465) [`d05d1b9`](https://github.com/sanity-io/pkg-utils/commit/d05d1b936d07d32901f1748f15c245ec6af7e95c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add support for `monorepo` export condition alongside `development` and `source` conditions
+
+### Patch Changes
+
+- [#2459](https://github.com/sanity-io/pkg-utils/pull/2459) [`9c8fad8`](https://github.com/sanity-io/pkg-utils/commit/9c8fad8c58bfd4cd7c98f5a32aa30cfee9c12b7e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.3.5
+
 ## 2.0.5
 
 ### Patch Changes
