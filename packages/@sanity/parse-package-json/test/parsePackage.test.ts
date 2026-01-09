@@ -98,6 +98,59 @@ describe('parsePackage', () => {
       {
         type: 'module',
         exports: {
+          // @ts-expect-error - this is a test
+          '.': {
+            source: './src/index.ts',
+            monorepo: './src/index.ts',
+            require: './dist/index.cjs',
+            import: './dist/index.js',
+          },
+        },
+      },
+      {
+        exports: {
+          '.': {
+            monorepo: './src/index.ts',
+            import: './dist/index.js',
+            default: './dist/index.js',
+          },
+        },
+      },
+    ],
+    [
+      {
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            monorepo: './src/index.ts',
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': './dist/index.js',
+          },
+        },
+      },
+      {
+        exports: {
+          '.': {
+            monorepo: './src/index.ts',
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': './dist/index.js',
+          },
+        },
+      },
+    ],
+    [
+      {
+        type: 'module',
+        exports: {
           '.': {
             source: './src/index.ts',
             development: './src/index.ts',

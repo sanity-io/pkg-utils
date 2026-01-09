@@ -19,6 +19,7 @@ export interface PkgExport {
   types?: string
   source: string
   development?: string
+  monorepo?: string
   import?: string
   require?: string
   default: string
@@ -49,6 +50,7 @@ export interface PackageJSON {
     | {
         source?: string
         development?: string
+        monorepo?: string
         types?: string
         browser?: {
           source: string

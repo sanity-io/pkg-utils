@@ -6,6 +6,7 @@ const exportEntrySchema = z
     types: z.optional(z.string()),
     source: z.optional(z.string()),
     development: z.optional(z.string()),
+    monorepo: z.optional(z.string()),
     browser: z.optional(
       z.object({
         source: z.string(),
