@@ -344,7 +344,7 @@ export async function loadPkgWithReporting(options: {
               )
             }
 
-            // Check that all conditions match (except source/development)
+            // Check that all conditions match (except source/development/monorepo)
             for (const condition of exportConditions) {
               if (!(condition in publishExp)) {
                 shouldError = true
