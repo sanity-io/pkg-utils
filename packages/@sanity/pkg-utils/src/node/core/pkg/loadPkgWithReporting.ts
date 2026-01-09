@@ -6,7 +6,7 @@ import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
 
 /**
- * Helper function to recursively compare export values, excluding source and development conditions
+ * Helper function to recursively compare export values, excluding source, development, and monorepo conditions
  */
 function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
   // If both are strings, simple comparison
@@ -31,8 +31,12 @@ function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
     const obj1 = value1 as Record<string, any>
     const obj2 = value2 as Record<string, any>
 
-    const keys1 = Object.keys(obj1).filter((k) => k !== 'source' && k !== 'development')
-    const keys2 = Object.keys(obj2).filter((k) => k !== 'source' && k !== 'development')
+    const keys1 = Object.keys(obj1).filter(
+      (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
+    )
+    const keys2 = Object.keys(obj2).filter(
+      (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
+    )
 
     // Check if they have the same keys
     if (keys1.length !== keys2.length) {
@@ -157,6 +161,13 @@ export async function loadPkgWithReporting(options: {
           )
         }
 
+        if (exp.monorepo && exp.source && exp.monorepo !== exp.source) {
+          shouldError = true
+          logger.error(
+            `exports["${expPath}"]: the \`monorepo\` condition must have the same value as \`source\` when both are present. Expected "${exp.source}" but got "${exp.monorepo}"`,
+          )
+        }
+
         if (exp.node) {
           if (exp.import && exp.node.import && !assertOrder('node', 'import', keys)) {
             shouldError = true
@@ -214,17 +225,17 @@ export async function loadPkgWithReporting(options: {
 
     // validate publishConfig.exports
     if (strict && pkg.exports && Object.keys(pkg.exports).length > 0) {
-      // Check if exports contains source or development conditions
+      // Check if exports contains source, development, or monorepo conditions
       const hasSourceOrDevelopment = Object.entries(pkg.exports).some(([, exp]) => {
         if (typeof exp === 'string') return false
         if (typeof exp === 'object' && 'svelte' in exp) return false
-        return Boolean(exp.source || exp.development)
+        return Boolean(exp.source || exp.development || exp.monorepo)
       })
 
       if (hasSourceOrDevelopment) {
         if (!pkg.publishConfig?.exports) {
           const msg =
-            'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source` or `development` condition that points to code that cannot be used by the resolver. ' +
+            'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source`, `development`, or `monorepo` condition that points to code that cannot be used by the resolver. ' +
             'See https://tsdown.dev/options/package-exports#dev-exports for more information.'
           if (strictOptions.noPublishConfigExports === 'error') {
             shouldError = true
@@ -279,14 +290,14 @@ export async function loadPkgWithReporting(options: {
             }
             if (typeof publishExp === 'string') {
               // publishConfig has a string, validate it's correct
-              // It should be a condensed form when only default remains after removing source/development
+              // It should be a condensed form when only default remains after removing source/development/monorepo
               const conditions = Object.keys(exp).filter(
-                (k) => k !== 'source' && k !== 'development',
+                (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
               )
               if (conditions.length !== 1 || conditions[0] !== 'default') {
                 shouldError = true
                 logger.error(
-                  `publishConfig.exports["${exportPath}"]: is a string but exports["${exportPath}"] has multiple conditions besides source/development: ${conditions.join(', ')}`,
+                  `publishConfig.exports["${exportPath}"]: is a string but exports["${exportPath}"] has multiple conditions besides source/development/monorepo: ${conditions.join(', ')}`,
                 )
               } else {
                 // Validate that the string value matches the default condition value
@@ -307,11 +318,11 @@ export async function loadPkgWithReporting(options: {
 
             // Validate conditions
             const exportConditions = Object.keys(exp).filter(
-              (k) => k !== 'source' && k !== 'development',
+              (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
             )
             const publishConditions = Object.keys(publishExp)
 
-            // Check for source or development in publishConfig
+            // Check for source, development, or monorepo in publishConfig
             if ('source' in publishExp) {
               shouldError = true
               logger.error(
@@ -326,7 +337,14 @@ export async function loadPkgWithReporting(options: {
               )
             }
 
-            // Check that all conditions match (except source/development)
+            if ('monorepo' in publishExp) {
+              shouldError = true
+              logger.error(
+                `publishConfig.exports["${exportPath}"]: should not contain the \`monorepo\` condition`,
+              )
+            }
+
+            // Check that all conditions match (except source/development/monorepo)
             for (const condition of exportConditions) {
               if (!(condition in publishExp)) {
                 shouldError = true

@@ -82,7 +82,7 @@ export interface StrictOptions {
    */
   preferModuleType: ToggleType
   /**
-   * Warns if `publishConfig.exports` is missing when `source` or `development` conditions are used in exports.
+   * Warns if `publishConfig.exports` is missing when `source`, `development`, or `monorepo` conditions are used in exports.
    * @defaultValue 'warn'
    */
   noPublishConfigExports: ToggleType
