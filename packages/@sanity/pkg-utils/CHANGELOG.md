@@ -1,5 +1,14 @@
 # @sanity/pkg-utils
 
+## 10.3.3
+
+### Patch Changes
+
+- [#2488](https://github.com/sanity-io/pkg-utils/pull/2488) [`b6905ce`](https://github.com/sanity-io/pkg-utils/commit/b6905ce58f58f337176935e51a9a30b074d0c933) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update babel monorepo to ^7.28.6
+
+- Updated dependencies [[`d722c3c`](https://github.com/sanity-io/pkg-utils/commit/d722c3cc2546501c815a522fe978ac35f5415178)]:
+  - @sanity/parse-package-json@2.1.2
+
 ## 10.3.2
 
 ### Patch Changes
