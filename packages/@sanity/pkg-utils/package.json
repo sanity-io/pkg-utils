@@ -51,7 +51,7 @@
     "extract": "sanity-tsdoc etl --outDir etc/api/@sanity/pkg-utils --tsconfig tsconfig.dist.json",
     "prepublishOnly": "pnpm run build",
     "pretest": "pnpm run clean && pnpm run build",
-    "test": "vitest run",
+    "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest run",
     "typecheck": "tsc --build",
     "watch": "tsx scripts/watch.ts"
   },
