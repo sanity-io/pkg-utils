@@ -12,9 +12,12 @@ export default defineConfig({
     // Reduce threads as suites will use the filesystem and `pnpm install` and need to run in sequence
     fileParallelism: false,
 
-    // Limit to single worker to prevent memory issues
-    pool: 'forks',
-    maxWorkers: 1,
+    // Increase Node memory limit for vitest 4.0.17+ to prevent heap out of memory errors
+    poolOptions: {
+      forks: {
+        execArgv: ['--max-old-space-size=4096'],
+      },
+    },
   },
   esbuild: {
     target: 'node14',
