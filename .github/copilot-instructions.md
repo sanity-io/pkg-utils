@@ -43,7 +43,7 @@ playground/           # Test projects for validation
 
 - Use 2 spaces for indentation
 - Use single quotes for strings (from Prettier config)
-- No console.log in production code (except console.warn/error)
+- No console.log/debug/info in production code (only console.warn/error are allowed)
 - Imports must not create cycles (import/no-cycle)
 - No barrel files (oxc/no-barrel-file)
 - Type-aware linting is enabled
@@ -84,7 +84,7 @@ playground/           # Test projects for validation
 ### pnpm Workspace
 
 - This is a pnpm workspace monorepo
-- Package manager: pnpm 10.28.0
+- Package manager: pnpm ^10.28.0
 - Workspace packages use `workspace:*` or `workspace:^` protocol
 - Always use pnpm, never npm or yarn
 
@@ -158,9 +158,9 @@ playground/           # Test projects for validation
 ### CLI Tool
 
 - Binary: `pkg-utils` or `pkg` command
-- Built with `cac` library
-- Commands: check, build, watch, init
+- Available commands: check, build, watch, init
 - Located in `bin/` directory
+- Run `pkg-utils -h` for detailed help
 
 ## Common Tasks
 
