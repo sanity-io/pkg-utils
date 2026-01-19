@@ -282,10 +282,10 @@ const Input = forwardRef(function(props, forwardedRef) {
   } = props, $[0] = props, $[1] = idProp, $[2] = label, $[3] = rest) : (idProp = $[1], label = $[2], rest = $[3]);
   const _id = useId(), id = idProp || _id, ref = useRef(null);
   let t0;
-  $[4] === Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
+  $[4] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
   const [focused, setFocused] = useState(!1);
   let t1, t2;
-  $[5] === Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
     if (!ref.current)
       return;
     const controller = new AbortController(), {
@@ -386,7 +386,7 @@ function SearchResults(t0) {
     return null;
   let t1, t2;
   if ($[0] !== query) {
-    t2 = Symbol.for("react.early_return_sentinel");
+    t2 = /* @__PURE__ */ Symbol.for("react.early_return_sentinel");
     bb0: {
       const albums = fetchSearchResults(query);
       if (albums.length === 0) {
@@ -407,7 +407,7 @@ function SearchResults(t0) {
     $[0] = query, $[1] = t1, $[2] = t2;
   } else
     t1 = $[1], t2 = $[2];
-  if (t2 !== Symbol.for("react.early_return_sentinel"))
+  if (t2 !== /* @__PURE__ */ Symbol.for("react.early_return_sentinel"))
     return t2;
   let t3;
   return $[5] !== t1 ? (t3 = /* @__PURE__ */ jsx("ul", { children: t1 }), $[5] = t1, $[6] = t3) : t3 = $[6], t3;
@@ -423,11 +423,11 @@ function _temp$1(album) {
 function App() {
   const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
   let t0;
-  $[0] === Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
   let t1;
   $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
   let t2;
-  $[3] === Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
   const t3 = isStale ? 0.5 : 1;
   let t4;
   $[4] !== t3 ? (t4 = {
@@ -485,10 +485,10 @@ function Input(props) {
   } = props, $[0] = props, $[1] = forwardedRef, $[2] = idProp, $[3] = label, $[4] = rest) : (forwardedRef = $[1], idProp = $[2], label = $[3], rest = $[4]);
   const _id = useId(), id = idProp || _id, ref = useRef(null);
   let t0;
-  $[5] === Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
+  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
   const [focused, setFocused] = useState(!1);
   let t1, t2;
-  $[6] === Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+  $[6] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
     if (!ref.current)
       return;
     const controller = new AbortController(), {
@@ -611,11 +611,11 @@ function _temp$1(album) {
 function App() {
   const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
   let t0;
-  $[0] === Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
   let t1;
   $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
   let t2;
-  $[3] === Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
   const t3 = isStale ? 0.5 : 1;
   let t4;
   $[4] !== t3 ? (t4 = {
