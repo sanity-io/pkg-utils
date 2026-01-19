@@ -11,6 +11,14 @@ export default defineConfig({
 
     // Reduce threads as suites will use the filesystem and `pnpm install` and need to run in sequence
     fileParallelism: false,
+
+    // Limit pool to prevent memory issues
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
   },
   esbuild: {
     target: 'node14',
