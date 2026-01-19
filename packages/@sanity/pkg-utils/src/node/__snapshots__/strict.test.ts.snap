@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`{'noPackageJsonBrowser': 'error'}} 1`] = `
+exports[`strict options > {'noPackageJsonBrowser': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -10,11 +10,12 @@ exports[`{'noPackageJsonBrowser': 'error'}} 1`] = `
   "noPackageJsonBrowser": "error",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonBrowser': 'off'}} 1`] = `
+exports[`strict options > {'noPackageJsonBrowser': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -24,11 +25,12 @@ exports[`{'noPackageJsonBrowser': 'off'}} 1`] = `
   "noPackageJsonBrowser": "off",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonBrowser': 'warn'}} 1`] = `
+exports[`strict options > {'noPackageJsonBrowser': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -38,11 +40,12 @@ exports[`{'noPackageJsonBrowser': 'warn'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypesVersions': 'error'}} 1`] = `
+exports[`strict options > {'noPackageJsonTypesVersions': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -52,11 +55,12 @@ exports[`{'noPackageJsonTypesVersions': 'error'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "error",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypesVersions': 'off'}} 1`] = `
+exports[`strict options > {'noPackageJsonTypesVersions': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -66,11 +70,12 @@ exports[`{'noPackageJsonTypesVersions': 'off'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "off",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypesVersions': 'warn'}} 1`] = `
+exports[`strict options > {'noPackageJsonTypesVersions': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -80,11 +85,12 @@ exports[`{'noPackageJsonTypesVersions': 'warn'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
+exports[`strict options > {'noPackageJsonTypings': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -94,11 +100,12 @@ exports[`{'noPackageJsonTypings': 'error'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
+exports[`strict options > {'noPackageJsonTypings': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -108,11 +115,12 @@ exports[`{'noPackageJsonTypings': 'off'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "off",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypings': 'warn'}} 1`] = `
+exports[`strict options > {'noPackageJsonTypings': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -122,11 +130,12 @@ exports[`{'noPackageJsonTypings': 'warn'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "warn",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
 
-exports[`{'noPackageJsonTypings': false}} 1`] = `
+exports[`strict options > {'noPackageJsonTypings': false}} 1`] = `
 [ZodError: [
   {
     "code": "invalid_union",
@@ -186,7 +195,7 @@ exports[`{'noPackageJsonTypings': false}} 1`] = `
 ]]
 `;
 
-exports[`{'noPackageJsonTypings': true}} 1`] = `
+exports[`strict options > {'noPackageJsonTypings': true}} 1`] = `
 [ZodError: [
   {
     "code": "invalid_union",
@@ -246,7 +255,7 @@ exports[`{'noPackageJsonTypings': true}} 1`] = `
 ]]
 `;
 
-exports[`{'preferModuleType': 'error'}} 1`] = `
+exports[`strict options > {'preferModuleType': 'error'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -256,11 +265,12 @@ exports[`{'preferModuleType': 'error'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "error",
 }
 `;
 
-exports[`{'preferModuleType': 'off'}} 1`] = `
+exports[`strict options > {'preferModuleType': 'off'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -270,11 +280,12 @@ exports[`{'preferModuleType': 'off'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "off",
 }
 `;
 
-exports[`{'preferModuleType': 'warn'}} 1`] = `
+exports[`strict options > {'preferModuleType': 'warn'}} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -284,6 +295,7 @@ exports[`{'preferModuleType': 'warn'}} 1`] = `
   "noPackageJsonBrowser": "warn",
   "noPackageJsonTypesVersions": "warn",
   "noPackageJsonTypings": "error",
+  "noPublishConfigExports": "warn",
   "preferModuleType": "warn",
 }
 `;
