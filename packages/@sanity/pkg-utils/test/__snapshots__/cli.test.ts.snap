@@ -1099,14 +1099,12 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
 /**
  * Delete the draft version of a document.
  * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
@@ -1114,7 +1112,6 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
  * @public
  * @deprecated Use {@link DiscardVersionAction} instead
  */
-
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1437,14 +1434,12 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
 /**
  * Delete the draft version of a document.
  * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
@@ -1452,7 +1447,6 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
  * @public
  * @deprecated Use {@link DiscardVersionAction} instead
  */
-
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
