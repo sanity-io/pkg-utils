@@ -122,10 +122,6 @@ export function resolveRolldownConfig(
             ? config.tsgo
             : typeof pkg.devDependencies === 'object' &&
               '@typescript/native-preview' in pkg.devDependencies,
-        // Enable the resolver by giving an allow list of packages to dig through node_modules.
-        // If there are none that should be resolved, then this process is skipped and our build is faster.
-        // If there's a match then it'll call the resolver function defined on `inputOptions.external`
-        resolve: ctx.bundledPackages,
         // Always create dts from scratch, don't reuse contexts from previous builds
         newContext: true,
       }),
