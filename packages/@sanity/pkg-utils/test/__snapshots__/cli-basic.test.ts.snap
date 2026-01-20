@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`cli > should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
+exports[`cli > basic > should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const runtime = "browser";
@@ -9,8 +9,7 @@ exports.runtime = runtime;
 "
 `;
 
-
-exports[`cli > should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
+exports[`cli > basic > should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
 "const runtime = "browser";
 export {
   runtime
@@ -19,8 +18,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
+exports[`cli > basic > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const VERSION = "1.0.0";
@@ -29,8 +27,7 @@ exports.VERSION = VERSION;
 "
 `;
 
-
-exports[`cli > should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
+exports[`cli > basic > should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
 "/** @public */
 export declare const VERSION = '1.0.0'
 
@@ -38,8 +35,7 @@ export {}
 "
 `;
 
-
-exports[`cli > should build \`custom-dist\` package > ./lib/index.js 1`] = `
+exports[`cli > basic > should build \`custom-dist\` package > ./lib/index.js 1`] = `
 "const VERSION = "1.0.0";
 export {
   VERSION
@@ -48,8 +44,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
 "const format = "esm", runtime = "browser", path = "dist/extra.browser.js";
 export {
   format,
@@ -60,8 +55,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const format = "commonjs", runtime = "*", path = "dist/extra.cjs";
@@ -72,8 +66,7 @@ exports.runtime = runtime;
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -87,8 +80,7 @@ export {}
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/extra.js 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/extra.js 1`] = `
 "const format = "esm", runtime = "*", path = "dist/extra.js";
 export {
   format,
@@ -99,8 +91,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
 "const format = "esm", runtime = "browser", path = "dist/index.browser.js";
 export {
   format,
@@ -111,8 +102,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 const format = "commonjs", runtime = "*", path = "dist/index.cjs";
@@ -123,8 +113,7 @@ exports.runtime = runtime;
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare const format: string
 
@@ -138,8 +127,7 @@ export {}
 "
 `;
 
-
-exports[`cli > should build \`dummy-module\` package > ./dist/index.js 1`] = `
+exports[`cli > basic > should build \`dummy-module\` package > ./dist/index.js 1`] = `
 "const format = "esm", runtime = "*", path = "dist/index.js";
 export {
   format,
@@ -150,8 +138,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`multi-export\` package > ./dist/index.cjs 1`] = `
+exports[`cli > basic > should build \`multi-export\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 function defineConfig(options) {
@@ -166,8 +153,7 @@ exports.definePlugin = definePlugin;
 "
 `;
 
-
-exports[`cli > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
+exports[`cli > basic > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 export declare interface Config extends Plugin_2 {
   plugins?: Plugin_2[]
@@ -197,8 +183,7 @@ export {}
 "
 `;
 
-
-exports[`cli > should build \`multi-export\` package > ./dist/index.js 1`] = `
+exports[`cli > basic > should build \`multi-export\` package > ./dist/index.js 1`] = `
 "function defineConfig(options) {
   return options;
 }
@@ -213,8 +198,7 @@ export {
 "
 `;
 
-
-exports[`cli > should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
+exports[`cli > basic > should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
 var multiExport = require("multi-export");
@@ -228,8 +212,7 @@ exports.plugin = plugin;
 "
 `;
 
-
-exports[`cli > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
+exports[`cli > basic > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
 "/** @public */
 export declare function plugin(): Plugin_2
 
@@ -250,8 +233,7 @@ export {}
 "
 `;
 
-
-exports[`cli > should build \`multi-export\` package > ./dist/plugin.js 1`] = `
+exports[`cli > basic > should build \`multi-export\` package > ./dist/plugin.js 1`] = `
 "import { definePlugin } from "multi-export";
 function plugin() {
   return definePlugin({
@@ -264,5 +246,3 @@ export {
 //# sourceMappingURL=plugin.js.map
 "
 `;
-
-

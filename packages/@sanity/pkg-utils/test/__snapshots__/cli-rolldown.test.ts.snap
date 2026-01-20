@@ -7,7 +7,6 @@ exports.c = "c";
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
 "/** @public */
 declare const c = "c";
@@ -15,14 +14,12 @@ export { c as t };
 //# sourceMappingURL=c.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
 "/** @public */
 declare const c = "c";
 export { c as t };
 //# sourceMappingURL=c.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
 "const c = "c";
@@ -32,7 +29,6 @@ export {
 //# sourceMappingURL=c.js.map
 "
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
 ""use strict";
@@ -45,7 +41,6 @@ exports.a = a;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
 "import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
@@ -54,7 +49,6 @@ export { a, c };
 //# sourceMappingURL=a.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
 "import { t as c } from "./_chunks-dts/c.js";
 /** @public */
@@ -62,7 +56,6 @@ declare const a = "a";
 export { a, c };
 //# sourceMappingURL=a.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
 "import { c } from "./_chunks-es/c.js";
@@ -75,7 +68,6 @@ export {
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
@@ -87,7 +79,6 @@ exports.b = b;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
 "import { t as c } from "./_chunks-dts/c.cjs";
 /** @public */
@@ -96,7 +87,6 @@ export { b, c };
 //# sourceMappingURL=b.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
 "import { t as c } from "./_chunks-dts/c.js";
 /** @public */
@@ -104,7 +94,6 @@ declare const b = "b";
 export { b, c };
 //# sourceMappingURL=b.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
 "import { c } from "./_chunks-es/c.js";
@@ -117,7 +106,6 @@ export {
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
@@ -127,7 +115,6 @@ exports.VERSION = VERSION;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION: string;
@@ -135,14 +122,12 @@ export { VERSION };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION: string;
 export { VERSION };
 //# sourceMappingURL=index.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
 "const VERSION = "0.0.0-development";
@@ -153,7 +138,6 @@ export {
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
@@ -192,7 +176,6 @@ exports.validateApiPerspective = validateApiPerspective;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -226,7 +209,6 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -259,7 +241,6 @@ declare function validateApiPerspective(perspective: unknown): asserts perspecti
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
@@ -295,7 +276,6 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
@@ -334,7 +314,6 @@ exports.RemoveIcon = RemoveIcon;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -350,7 +329,6 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -365,7 +343,6 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
@@ -396,7 +373,6 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
@@ -435,7 +411,6 @@ exports.RemoveIcon = RemoveIcon;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -451,7 +426,6 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -466,7 +440,6 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
@@ -497,7 +470,6 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
 ""use strict";
@@ -536,7 +508,6 @@ exports.RemoveIcon = RemoveIcon;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
@@ -569,7 +540,6 @@ declare function validateApiPerspective(perspective: unknown): asserts perspecti
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
@@ -604,7 +574,6 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
 import { forwardRef } from "react";
@@ -635,7 +604,6 @@ export {
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
@@ -645,20 +613,17 @@ exports.VERSION = VERSION;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
 "declare const VERSION = "1.0.0";
 export { VERSION };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
 "declare const VERSION = "1.0.0";
 export { VERSION };
 //# sourceMappingURL=index.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
 "const VERSION = "1.0.0";
@@ -668,7 +633,6 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
 
 exports[`cli > rolldown > should build \`tsgo\` package > ./dist/index.cjs 1`] = `
 ""use strict";
@@ -679,7 +643,6 @@ exports.VERSION = VERSION;
 "
 `;
 
-
 exports[`cli > rolldown > should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
 declare const VERSION = "1.0.0";
@@ -687,14 +650,12 @@ export { VERSION };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
-
 exports[`cli > rolldown > should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
 declare const VERSION = "1.0.0";
 export { VERSION };
 //# sourceMappingURL=index.d.ts.map"
 `;
-
 
 exports[`cli > rolldown > should build \`tsgo\` package > ./dist/index.js 1`] = `
 "const VERSION = "1.0.0";
@@ -704,527 +665,3 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-function validateApiPerspective(perspective) {
-  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
-    throw new TypeError(
-      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
-    );
-}
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-exports.validateApiPerspective = validateApiPerspective;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-function validateApiPerspective(perspective) {
-  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
-    throw new TypeError(
-      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
-    );
-}
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "1.0.0";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > rolldown > should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
-"const VERSION = "1.0.0";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-

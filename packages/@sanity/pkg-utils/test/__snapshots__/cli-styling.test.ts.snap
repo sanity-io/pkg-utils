@@ -40,7 +40,6 @@ export {
 "
 `;
 
-
 exports[`cli > styling > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
 "import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
@@ -72,7 +71,6 @@ export { type ColorDefinition, ColorInput, colorInput };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
-
 exports[`cli > styling > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
 "import { defineType, definePlugin } from "sanity";
 import { lazy } from "react";
@@ -96,7 +94,6 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
 
 exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
 "import { jsx, jsxs } from "react/jsx-runtime";
@@ -124,13 +121,11 @@ export {
 "
 `;
 
-
 exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
 "._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}}
 /*# sourceMappingURL=bundle.css.map*/
 "
 `;
-
 
 exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
 "import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
@@ -163,7 +158,6 @@ export { type ColorDefinition, ColorInput, colorInput };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
-
 exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
 "import "./bundle.css";
 import "@sanity/ui/css/index.css";
@@ -189,196 +183,3 @@ export {
 //# sourceMappingURL=index.js.map
 "
 `;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsxs, jsx } from "react/jsx-runtime";
-import { c } from "react-compiler-runtime";
-import { Stack, Text } from "@sanity/ui";
-import { styled } from "styled-components";
-const CustomTextInput = styled.input.attrs({
-  type: "color"
-}).withConfig({
-  displayName: "CustomTextInput",
-  componentId: "sc-11pprad-0"
-})\`cursor:pointer;box-sizing:border-box;background:var(--card-border-color);border:0 solid transparent;border-radius:2px;padding:0;appearance:none;margin:0;height:1.6rem;width:8ch;&:hover{box-shadow:0 0 0 2px \${({
-  theme
-}) => theme.sanity.color.card.hovered.border};}&::-webkit-color-swatch-wrapper{padding:0;}&::-webkit-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}&::-moz-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}\`;
-function ColorInput(props) {
-  const $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
-  let t2;
-  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx(CustomTextInput, { ...props.elementProps, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
-  let t3;
-  $[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { as: "output", muted: !0, size: 0, htmlFor: props.elementProps.id, children: props.value }), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
-  let t4;
-  return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, { space: 2, children: [
-    t2,
-    t3
-  ] }), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
-}
-export {
-  ColorInput as default
-};
-//# sourceMappingURL=ColorInput.js.map
-"
-`;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
-interface ColorOptions {
-  alpha?: boolean;
-  colorspace?: 'limited-srgb' | 'display-p3';
-}
-interface ColorSchemaType extends StringSchemaType {
-  options?: StringSchemaType['options'] & ColorOptions;
-}
-type ColorInputProps = StringInputProps<ColorSchemaType>;
-/** @public */
-declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
-/**
- * @public
- */
-interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
-  type: typeof colorTypeName;
-  options?: ColorOptions;
-}
-declare module 'sanity' {
-  interface IntrinsicDefinitions {
-    color: ColorDefinition;
-  }
-}
-/** @public */
-declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
-"import { defineType, definePlugin } from "sanity";
-import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
-  name: colorTypeName,
-  type: "string",
-  title: "Color",
-  components: {
-    input: ColorInput
-  }
-}), colorInput = definePlugin({
-  name: "@sanity/color-input",
-  schema: {
-    types: [colorType]
-  }
-});
-export {
-  ColorInput,
-  colorInput
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsx, jsxs } from "react/jsx-runtime";
-import { c } from "react/compiler-runtime";
-import { Root, Stack, Text } from "@sanity/ui";
-var input = "_1n31tph0";
-function ColorInput(props) {
-  const $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
-  let t2;
-  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", { ...props.elementProps, type: "color", className: input, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
-  let t3;
-  $[4] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { muted: !0, size: 0, children: props.value }), $[4] = props.value, $[5] = t3) : t3 = $[5];
-  let t4;
-  $[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", { htmlFor: props.elementProps.id, children: t3 }), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
-  let t5;
-  return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsx(Root, { as: "div", overflow: "visible", children: /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
-    t2,
-    t4
-  ] }) }), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
-}
-export {
-  ColorInput as default
-};
-//# sourceMappingURL=ColorInput.js.map
-"
-`;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}}
-/*# sourceMappingURL=bundle.css.map*/
-"
-`;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
-interface ColorOptions {
-  alpha?: boolean;
-  colorspace?: 'limited-srgb' | 'display-p3';
-}
-interface ColorSchemaType extends StringSchemaType {
-  options?: StringSchemaType['options'] & ColorOptions;
-}
-type ColorInputProps = StringInputProps<ColorSchemaType>;
-/** @public */
-declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
-/**
- * @public
- */
-interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
-  type: typeof colorTypeName;
-  options?: ColorOptions;
-}
-declare module 'sanity' {
-  interface IntrinsicDefinitions {
-    color: ColorDefinition;
-  }
-}
-/** @public */
-declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-
-exports[`cli > styling > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
-"import "./bundle.css";
-import "@sanity/ui/css/index.css";
-import { defineType, definePlugin } from "sanity";
-import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
-  name: colorTypeName,
-  type: "string",
-  title: "Color",
-  components: {
-    input: ColorInput
-  }
-}), colorInput = definePlugin({
-  name: "@sanity/color-input",
-  schema: {
-    types: [colorType]
-  }
-});
-export {
-  ColorInput,
-  colorInput
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-
