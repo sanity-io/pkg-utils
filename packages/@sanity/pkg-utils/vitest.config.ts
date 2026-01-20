@@ -14,7 +14,6 @@ export default defineConfig({
 
     // Use single worker to minimize memory usage
     maxWorkers: 1,
-    minWorkers: 1,
   },
   esbuild: {
     target: 'node14',
