@@ -1,5 +1,14 @@
 # @sanity/tsdown-config
 
+## 0.5.7
+
+### Patch Changes
+
+- [#2481](https://github.com/sanity-io/pkg-utils/pull/2481) [`d722c3c`](https://github.com/sanity-io/pkg-utils/commit/d722c3cc2546501c815a522fe978ac35f5415178) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency tsdown to v0.19.0
+
+- Updated dependencies [[`d722c3c`](https://github.com/sanity-io/pkg-utils/commit/d722c3cc2546501c815a522fe978ac35f5415178)]:
+  - @sanity/parse-package-json@2.1.2
+
 ## 0.5.6
 
 ### Patch Changes

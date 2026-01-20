@@ -1,5 +1,18 @@
 # @sanity/pkg-utils
 
+## 10.3.3
+
+### Patch Changes
+
+- [#2488](https://github.com/sanity-io/pkg-utils/pull/2488) [`b6905ce`](https://github.com/sanity-io/pkg-utils/commit/b6905ce58f58f337176935e51a9a30b074d0c933) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update babel monorepo to ^7.28.6
+
+- [#2489](https://github.com/sanity-io/pkg-utils/pull/2489) [`31ce38d`](https://github.com/sanity-io/pkg-utils/commit/31ce38dab88cca8db973fff9d45162a83aed1fe1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.21.2
+
+- [#2492](https://github.com/sanity-io/pkg-utils/pull/2492) [`6f91a08`](https://github.com/sanity-io/pkg-utils/commit/6f91a085d41badbad1cfade746718dd5a0a89513) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-beta.60
+
+- Updated dependencies [[`d722c3c`](https://github.com/sanity-io/pkg-utils/commit/d722c3cc2546501c815a522fe978ac35f5415178)]:
+  - @sanity/parse-package-json@2.1.2
+
 ## 10.3.2
 
 ### Patch Changes
