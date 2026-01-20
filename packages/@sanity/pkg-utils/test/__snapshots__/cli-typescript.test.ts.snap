@@ -1,0 +1,100 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`cli > typescript > should build \`ts\` package > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+
+exports[`cli > typescript > should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+
+exports[`cli > typescript > should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
+"/**
+ * @internal
+ */
+export declare interface _Dummy {
+  field: string
+}
+
+/**
+ * @public
+ */
+export declare interface IncludedModuleDummy {
+  field: string
+}
+
+/** @public */
+export declare const VERSION = '1.0.0'
+
+export {}
+
+declare module './module2.js' {
+  interface IncludedModuleDummy {
+    addedField: string
+  }
+}
+//# sourceMappingURL=module1.d.ts.map
+"
+`;
+
+
+exports[`cli > typescript > should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
+"export declare const VERSION = '1.0.0'
+
+export {}
+"
+`;
+
+

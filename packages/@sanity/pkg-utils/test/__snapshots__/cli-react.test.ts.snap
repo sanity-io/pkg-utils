@@ -1,0 +1,401 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`cli > react > should build \`react-18\` package > ./dist/index.d.ts 1`] = `
+"import {ForwardRefExoticComponent, HTMLProps, RefAttributes} from 'react'
+
+/** @public */
+export declare function App(): React.JSX.Element
+
+/** @public */
+export declare const Input: ForwardRefExoticComponent<
+  Omit<
+    {
+      label?: React.ReactNode
+    } & HTMLProps<HTMLInputElement>,
+    'ref'
+  > &
+    RefAttributes<HTMLInputElement>
+>
+
+export {}
+"
+`;
+
+
+exports[`cli > react > should build \`react-18\` package > ./dist/index.js 1`] = `
+"import { jsxs, Fragment, jsx } from "react/jsx-runtime";
+import { c } from "react-compiler-runtime";
+import { forwardRef, useId, useRef, useImperativeHandle, useState, useEffect, useDeferredValue, Suspense } from "react";
+const Input = forwardRef(function(props, forwardedRef) {
+  const $ = c(18);
+  let idProp, label, rest;
+  $[0] !== props ? ({
+    label,
+    id: idProp,
+    ...rest
+  } = props, $[0] = props, $[1] = idProp, $[2] = label, $[3] = rest) : (idProp = $[1], label = $[2], rest = $[3]);
+  const _id = useId(), id = idProp || _id, ref = useRef(null);
+  let t0;
+  $[4] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
+  const [focused, setFocused] = useState(!1);
+  let t1, t2;
+  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+    if (!ref.current)
+      return;
+    const controller = new AbortController(), {
+      signal
+    } = controller;
+    return ref.current.addEventListener("focus", () => setFocused(!0), {
+      signal
+    }), ref.current.addEventListener("blur", () => setFocused(!1), {
+      signal
+    }), () => controller.abort();
+  }, t2 = [], $[5] = t1, $[6] = t2) : (t1 = $[5], t2 = $[6]), useEffect(t1, t2);
+  let t3;
+  $[7] !== focused || $[8] !== id || $[9] !== label ? (t3 = label && /* @__PURE__ */ jsx("label", { "data-focused": focused ? "" : void 0, htmlFor: id, children: label }), $[7] = focused, $[8] = id, $[9] = label, $[10] = t3) : t3 = $[10];
+  const t4 = focused ? "" : void 0;
+  let t5;
+  $[11] !== id || $[12] !== rest || $[13] !== t4 ? (t5 = /* @__PURE__ */ jsx("input", { ...rest, "data-focused": t4, id, ref }), $[11] = id, $[12] = rest, $[13] = t4, $[14] = t5) : t5 = $[14];
+  let t6;
+  return $[15] !== t3 || $[16] !== t5 ? (t6 = /* @__PURE__ */ jsxs(Fragment, { children: [
+    t3,
+    t5
+  ] }), $[15] = t3, $[16] = t5, $[17] = t6) : t6 = $[17], t6;
+}), allAlbums = [{
+  id: 13,
+  title: "Let It Be",
+  year: 1970
+}, {
+  id: 12,
+  title: "Abbey Road",
+  year: 1969
+}, {
+  id: 11,
+  title: "Yellow Submarine",
+  year: 1969
+}, {
+  id: 10,
+  title: "The Beatles",
+  year: 1968
+}, {
+  id: 9,
+  title: "Magical Mystery Tour",
+  year: 1967
+}, {
+  id: 8,
+  title: "Sgt. Pepper's Lonely Hearts Club Band",
+  year: 1967
+}, {
+  id: 7,
+  title: "Revolver",
+  year: 1966
+}, {
+  id: 6,
+  title: "Rubber Soul",
+  year: 1965
+}, {
+  id: 5,
+  title: "Help!",
+  year: 1965
+}, {
+  id: 4,
+  title: "Beatles For Sale",
+  year: 1964
+}, {
+  id: 3,
+  title: "A Hard Day's Night",
+  year: 1964
+}, {
+  id: 2,
+  title: "With The Beatles",
+  year: 1963
+}, {
+  id: 1,
+  title: "Please Please Me",
+  year: 1963
+}], promises = /* @__PURE__ */ new Map(), cache = /* @__PURE__ */ new Map();
+function fetchSearchResults(query) {
+  if (cache.has(query))
+    return cache.get(query);
+  if (promises.has(query))
+    throw promises.get(query);
+  const promise = getSearchResults(query.trim().toLowerCase()).then((result) => {
+    cache.set(query, result);
+  });
+  throw promises.set(query, promise), promise;
+}
+async function getSearchResults(lowerQuery) {
+  return await new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  }), allAlbums.filter((album) => {
+    const lowerTitle = album.title.toLowerCase();
+    return lowerTitle.startsWith(lowerQuery) || lowerTitle.indexOf(" " + lowerQuery) !== -1;
+  });
+}
+function SearchResults(t0) {
+  const $ = c(7), {
+    query
+  } = t0;
+  if (query === "")
+    return null;
+  let t1, t2;
+  if ($[0] !== query) {
+    t2 = /* @__PURE__ */ Symbol.for("react.early_return_sentinel");
+    bb0: {
+      const albums = fetchSearchResults(query);
+      if (albums.length === 0) {
+        const t32 = /* @__PURE__ */ jsxs("i", { children: [
+          '"',
+          query,
+          '"'
+        ] });
+        let t4;
+        $[3] !== t32 ? (t4 = /* @__PURE__ */ jsxs("p", { children: [
+          "No matches for ",
+          t32
+        ] }), $[3] = t32, $[4] = t4) : t4 = $[4], t2 = t4;
+        break bb0;
+      }
+      t1 = albums.map(_temp$1);
+    }
+    $[0] = query, $[1] = t1, $[2] = t2;
+  } else
+    t1 = $[1], t2 = $[2];
+  if (t2 !== /* @__PURE__ */ Symbol.for("react.early_return_sentinel"))
+    return t2;
+  let t3;
+  return $[5] !== t1 ? (t3 = /* @__PURE__ */ jsx("ul", { children: t1 }), $[5] = t1, $[6] = t3) : t3 = $[6], t3;
+}
+function _temp$1(album) {
+  return /* @__PURE__ */ jsxs("li", { children: [
+    album.title,
+    " (",
+    album.year,
+    ")"
+  ] }, album.id);
+}
+function App() {
+  const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
+  let t0;
+  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+  let t1;
+  $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
+  let t2;
+  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+  const t3 = isStale ? 0.5 : 1;
+  let t4;
+  $[4] !== t3 ? (t4 = {
+    opacity: t3
+  }, $[4] = t3, $[5] = t4) : t4 = $[5];
+  let t5;
+  $[6] !== deferredQuery ? (t5 = /* @__PURE__ */ jsx(SearchResults, { query: deferredQuery }), $[6] = deferredQuery, $[7] = t5) : t5 = $[7];
+  let t6;
+  $[8] !== t4 || $[9] !== t5 ? (t6 = /* @__PURE__ */ jsx(Suspense, { fallback: t2, children: /* @__PURE__ */ jsx("div", { style: t4, children: t5 }) }), $[8] = t4, $[9] = t5, $[10] = t6) : t6 = $[10];
+  let t7;
+  return $[11] !== t1 || $[12] !== t6 ? (t7 = /* @__PURE__ */ jsxs(Fragment, { children: [
+    t1,
+    t6
+  ] }), $[11] = t1, $[12] = t6, $[13] = t7) : t7 = $[13], t7;
+}
+function _temp(node) {
+  node?.focus();
+}
+export {
+  App,
+  Input
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+
+exports[`cli > react > should build \`react-19\` package > ./dist/index.d.ts 1`] = `
+"/** @public */
+export declare function App(): React.JSX.Element
+
+/** @public */
+export declare function Input(
+  props: {
+    label?: React.ReactNode
+    ref: React.Ref<HTMLInputElement>
+  } & React.HTMLProps<HTMLInputElement>,
+): React.JSX.Element
+
+export {}
+"
+`;
+
+
+exports[`cli > react > should build \`react-19\` package > ./dist/index.js 1`] = `
+"import { jsxs, Fragment, jsx } from "react/jsx-runtime";
+import { c } from "react/compiler-runtime";
+import { useId, useRef, useImperativeHandle, useState, useEffect, use, useDeferredValue, Suspense } from "react";
+function Input(props) {
+  const $ = c(19);
+  let forwardedRef, idProp, label, rest;
+  $[0] !== props ? ({
+    label,
+    id: idProp,
+    ref: forwardedRef,
+    ...rest
+  } = props, $[0] = props, $[1] = forwardedRef, $[2] = idProp, $[3] = label, $[4] = rest) : (forwardedRef = $[1], idProp = $[2], label = $[3], rest = $[4]);
+  const _id = useId(), id = idProp || _id, ref = useRef(null);
+  let t0;
+  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
+  const [focused, setFocused] = useState(!1);
+  let t1, t2;
+  $[6] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+    if (!ref.current)
+      return;
+    const controller = new AbortController(), {
+      signal
+    } = controller;
+    return ref.current.addEventListener("focus", () => setFocused(!0), {
+      signal
+    }), ref.current.addEventListener("blur", () => setFocused(!1), {
+      signal
+    }), () => controller.abort();
+  }, t2 = [], $[6] = t1, $[7] = t2) : (t1 = $[6], t2 = $[7]), useEffect(t1, t2);
+  let t3;
+  $[8] !== focused || $[9] !== id || $[10] !== label ? (t3 = label && /* @__PURE__ */ jsx("label", { "data-focused": focused ? "" : void 0, htmlFor: id, children: label }), $[8] = focused, $[9] = id, $[10] = label, $[11] = t3) : t3 = $[11];
+  const t4 = focused ? "" : void 0;
+  let t5;
+  $[12] !== id || $[13] !== rest || $[14] !== t4 ? (t5 = /* @__PURE__ */ jsx("input", { ...rest, "data-focused": t4, id, ref }), $[12] = id, $[13] = rest, $[14] = t4, $[15] = t5) : t5 = $[15];
+  let t6;
+  return $[16] !== t3 || $[17] !== t5 ? (t6 = /* @__PURE__ */ jsxs(Fragment, { children: [
+    t3,
+    t5
+  ] }), $[16] = t3, $[17] = t5, $[18] = t6) : t6 = $[18], t6;
+}
+const allAlbums = [{
+  id: 13,
+  title: "Let It Be",
+  year: 1970
+}, {
+  id: 12,
+  title: "Abbey Road",
+  year: 1969
+}, {
+  id: 11,
+  title: "Yellow Submarine",
+  year: 1969
+}, {
+  id: 10,
+  title: "The Beatles",
+  year: 1968
+}, {
+  id: 9,
+  title: "Magical Mystery Tour",
+  year: 1967
+}, {
+  id: 8,
+  title: "Sgt. Pepper's Lonely Hearts Club Band",
+  year: 1967
+}, {
+  id: 7,
+  title: "Revolver",
+  year: 1966
+}, {
+  id: 6,
+  title: "Rubber Soul",
+  year: 1965
+}, {
+  id: 5,
+  title: "Help!",
+  year: 1965
+}, {
+  id: 4,
+  title: "Beatles For Sale",
+  year: 1964
+}, {
+  id: 3,
+  title: "A Hard Day's Night",
+  year: 1964
+}, {
+  id: 2,
+  title: "With The Beatles",
+  year: 1963
+}, {
+  id: 1,
+  title: "Please Please Me",
+  year: 1963
+}], cache = /* @__PURE__ */ new Map();
+function fetchSearchResults(query) {
+  return cache.has(query) || cache.set(query, getSearchResults(query.trim().toLowerCase())), cache.get(query);
+}
+async function getSearchResults(lowerQuery) {
+  return await new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  }), allAlbums.filter((album) => {
+    const lowerTitle = album.title.toLowerCase();
+    return lowerTitle.startsWith(lowerQuery) || lowerTitle.indexOf(" " + lowerQuery) !== -1;
+  });
+}
+function SearchResults(t0) {
+  const $ = c(8), {
+    query
+  } = t0;
+  if (query === "")
+    return null;
+  let t1;
+  $[0] !== query ? (t1 = fetchSearchResults(query), $[0] = query, $[1] = t1) : t1 = $[1];
+  const albums = use(t1);
+  if (albums.length === 0) {
+    let t22;
+    return $[2] !== query ? (t22 = /* @__PURE__ */ jsxs("p", { children: [
+      "No matches for ",
+      /* @__PURE__ */ jsxs("i", { children: [
+        '"',
+        query,
+        '"'
+      ] })
+    ] }), $[2] = query, $[3] = t22) : t22 = $[3], t22;
+  }
+  let t2;
+  $[4] !== albums ? (t2 = albums.map(_temp$1), $[4] = albums, $[5] = t2) : t2 = $[5];
+  let t3;
+  return $[6] !== t2 ? (t3 = /* @__PURE__ */ jsx("ul", { children: t2 }), $[6] = t2, $[7] = t3) : t3 = $[7], t3;
+}
+function _temp$1(album) {
+  return /* @__PURE__ */ jsxs("li", { children: [
+    album.title,
+    " (",
+    album.year,
+    ")"
+  ] }, album.id);
+}
+function App() {
+  const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
+  let t0;
+  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+  let t1;
+  $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
+  let t2;
+  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+  const t3 = isStale ? 0.5 : 1;
+  let t4;
+  $[4] !== t3 ? (t4 = {
+    opacity: t3
+  }, $[4] = t3, $[5] = t4) : t4 = $[5];
+  let t5;
+  $[6] !== deferredQuery ? (t5 = /* @__PURE__ */ jsx(SearchResults, { query: deferredQuery }), $[6] = deferredQuery, $[7] = t5) : t5 = $[7];
+  let t6;
+  $[8] !== t4 || $[9] !== t5 ? (t6 = /* @__PURE__ */ jsx(Suspense, { fallback: t2, children: /* @__PURE__ */ jsx("div", { style: t4, children: t5 }) }), $[8] = t4, $[9] = t5, $[10] = t6) : t6 = $[10];
+  let t7;
+  return $[11] !== t1 || $[12] !== t6 ? (t7 = /* @__PURE__ */ jsxs(Fragment, { children: [
+    t1,
+    t6
+  ] }), $[11] = t1, $[12] = t6, $[13] = t7) : t7 = $[13], t7;
+}
+function _temp(node) {
+  node?.focus();
+}
+export {
+  App,
+  Input
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+
