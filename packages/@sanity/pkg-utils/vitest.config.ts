@@ -8,9 +8,6 @@ export default defineConfig({
 
     // Set to 2 minutes to support long-running Next.js test
     testTimeout: 2 * 60 * 1000,
-
-    // Reduce threads as suites will use the filesystem and `pnpm install` and need to run in sequence
-    fileParallelism: false,
   },
   esbuild: {
     target: 'node14',
