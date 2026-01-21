@@ -1,3 +1,4 @@
+import {realpathSync} from 'node:fs'
 import path from 'node:path'
 import {pathToFileURL} from 'node:url'
 import {tsImport} from 'tsx/esm/api'
@@ -20,8 +21,19 @@ export async function loadConfig(options: {
   }
 
   // Do not accept config files outside of the root
-  if (!configFile.startsWith(cwd)) {
-    return undefined
+  // Resolve symlinks to ensure accurate path comparison
+  try {
+    const realConfigFile = realpathSync(configFile)
+    const realCwd = realpathSync(cwd)
+    
+    if (!realConfigFile.startsWith(realCwd)) {
+      return undefined
+    }
+  } catch {
+    // If we can't resolve paths, fall back to original check
+    if (!configFile.startsWith(cwd)) {
+      return undefined
+    }
   }
 
   const mod = await tsImport(pathToFileURL(configFile).toString(), import.meta.url)
