@@ -11,9 +11,6 @@ export default defineConfig({
 
     // Reduce threads as suites will use the filesystem and `pnpm install` and need to run in sequence
     fileParallelism: false,
-
-    // Use single worker to minimize memory usage
-    maxWorkers: 1,
   },
   esbuild: {
     target: 'node14',
