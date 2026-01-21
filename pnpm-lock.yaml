@@ -34,6 +34,9 @@ catalogs:
       specifier: ^4.0.16
       version: 4.0.16
 
+overrides:
+  '@sanity/pkg-utils': workspace:*
+
 importers:
 
   .:
