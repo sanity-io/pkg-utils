@@ -26,18 +26,18 @@ export async function loadConfig(options: {
     const realConfigFile = realpathSync(configFile)
     const realCwd = realpathSync(cwd)
     
-    // Normalize cwd with trailing separator to prevent false matches
-    // e.g., prevent /path/to/config matching /path/to/configDir/file
-    const normalizedCwd = realCwd.endsWith(path.sep) ? realCwd : realCwd + path.sep
+    // Use path.relative to check if config is within cwd
+    // If the relative path starts with '..', the config is outside the root
+    const relativePath = path.relative(realCwd, realConfigFile)
     
-    if (!realConfigFile.startsWith(normalizedCwd) && realConfigFile !== realCwd) {
+    if (relativePath.startsWith('..')) {
       return undefined
     }
   } catch {
     // If we can't resolve paths, fall back to original check
-    const normalizedCwd = cwd.endsWith(path.sep) ? cwd : cwd + path.sep
+    const relativePath = path.relative(cwd, configFile)
     
-    if (!configFile.startsWith(normalizedCwd) && configFile !== cwd) {
+    if (relativePath.startsWith('..')) {
       return undefined
     }
   }
