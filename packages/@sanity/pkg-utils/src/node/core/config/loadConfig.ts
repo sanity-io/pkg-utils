@@ -26,12 +26,18 @@ export async function loadConfig(options: {
     const realConfigFile = realpathSync(configFile)
     const realCwd = realpathSync(cwd)
     
-    if (!realConfigFile.startsWith(realCwd)) {
+    // Normalize cwd with trailing separator to prevent false matches
+    // e.g., prevent /path/to/config matching /path/to/configDir/file
+    const normalizedCwd = realCwd.endsWith(path.sep) ? realCwd : realCwd + path.sep
+    
+    if (!realConfigFile.startsWith(normalizedCwd) && realConfigFile !== realCwd) {
       return undefined
     }
   } catch {
     // If we can't resolve paths, fall back to original check
-    if (!configFile.startsWith(cwd)) {
+    const normalizedCwd = cwd.endsWith(path.sep) ? cwd : cwd + path.sep
+    
+    if (!configFile.startsWith(normalizedCwd) && configFile !== cwd) {
       return undefined
     }
   }
