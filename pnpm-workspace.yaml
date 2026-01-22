@@ -42,8 +42,8 @@ minimumReleaseAgeExclude:
   - vite
   - vitest
 
-preferWorkspacePackages: true
-linkWorkspacePackages: deep
+overrides:
+  '@sanity/pkg-utils': workspace:*
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
