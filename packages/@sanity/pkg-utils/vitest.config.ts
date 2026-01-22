@@ -6,11 +6,11 @@ export default defineConfig({
 
     exclude: ['**/node_modules/**', '.cache', '.git', '.idea', 'dist', 'playground'],
 
-    // Set to 2 minutes to support long-running Next.js test
+    // Set to 2 minutes to support long-running build tests
     testTimeout: 2 * 60 * 1000,
 
-    // Reduce threads as suites will use the filesystem and `pnpm install` and need to run in sequence
-    fileParallelism: false,
+    // Limit workers in CI where os.cpus() over-reports available cores
+    maxWorkers: process.env.CI ? 2 : undefined,
   },
   esbuild: {
     target: 'node14',
