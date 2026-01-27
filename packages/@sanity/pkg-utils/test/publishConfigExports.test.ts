@@ -18,11 +18,20 @@ describe('publishConfig.exports validation', () => {
 
     let exitCalled = false
     const originalExit = process.exit
+    const originalConsoleError = console.error
+    const originalConsoleLog = console.log
+
     // Mock process.exit to prevent test from exiting
     process.exit = (() => {
       exitCalled = true
       throw new Error('process.exit called')
     }) as any
+
+    // Suppress console output when we expect failure (to keep test output clean)
+    if (shouldFail) {
+      console.error = () => {}
+      console.log = () => {}
+    }
 
     try {
       await loadPkgWithReporting({
@@ -55,6 +64,8 @@ describe('publishConfig.exports validation', () => {
       }
     } finally {
       process.exit = originalExit
+      console.error = originalConsoleError
+      console.log = originalConsoleLog
       rmSync(testPath, {recursive: true, force: true})
     }
 

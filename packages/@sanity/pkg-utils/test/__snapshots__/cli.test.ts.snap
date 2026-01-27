@@ -282,10 +282,10 @@ const Input = forwardRef(function(props, forwardedRef) {
   } = props, $[0] = props, $[1] = idProp, $[2] = label, $[3] = rest) : (idProp = $[1], label = $[2], rest = $[3]);
   const _id = useId(), id = idProp || _id, ref = useRef(null);
   let t0;
-  $[4] === Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
+  $[4] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
   const [focused, setFocused] = useState(!1);
   let t1, t2;
-  $[5] === Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
     if (!ref.current)
       return;
     const controller = new AbortController(), {
@@ -386,7 +386,7 @@ function SearchResults(t0) {
     return null;
   let t1, t2;
   if ($[0] !== query) {
-    t2 = Symbol.for("react.early_return_sentinel");
+    t2 = /* @__PURE__ */ Symbol.for("react.early_return_sentinel");
     bb0: {
       const albums = fetchSearchResults(query);
       if (albums.length === 0) {
@@ -407,7 +407,7 @@ function SearchResults(t0) {
     $[0] = query, $[1] = t1, $[2] = t2;
   } else
     t1 = $[1], t2 = $[2];
-  if (t2 !== Symbol.for("react.early_return_sentinel"))
+  if (t2 !== /* @__PURE__ */ Symbol.for("react.early_return_sentinel"))
     return t2;
   let t3;
   return $[5] !== t1 ? (t3 = /* @__PURE__ */ jsx("ul", { children: t1 }), $[5] = t1, $[6] = t3) : t3 = $[6], t3;
@@ -423,11 +423,11 @@ function _temp$1(album) {
 function App() {
   const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
   let t0;
-  $[0] === Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
   let t1;
   $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
   let t2;
-  $[3] === Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
   const t3 = isStale ? 0.5 : 1;
   let t4;
   $[4] !== t3 ? (t4 = {
@@ -485,10 +485,10 @@ function Input(props) {
   } = props, $[0] = props, $[1] = forwardedRef, $[2] = idProp, $[3] = label, $[4] = rest) : (forwardedRef = $[1], idProp = $[2], label = $[3], rest = $[4]);
   const _id = useId(), id = idProp || _id, ref = useRef(null);
   let t0;
-  $[5] === Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
+  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
   const [focused, setFocused] = useState(!1);
   let t1, t2;
-  $[6] === Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+  $[6] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
     if (!ref.current)
       return;
     const controller = new AbortController(), {
@@ -611,11 +611,11 @@ function _temp$1(album) {
 function App() {
   const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
   let t0;
-  $[0] === Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
   let t1;
   $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
   let t2;
-  $[3] === Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
   const t3 = isStale ? 0.5 : 1;
   let t4;
   $[4] !== t3 ? (t4 = {
@@ -764,7 +764,7 @@ export {
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}}
+"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid transparent;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid transparent;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid transparent;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y) r g b / 20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y) r g b / 20%)}}
 /*# sourceMappingURL=bundle.css.map*/
 "
 `;
@@ -1099,14 +1099,12 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
 /**
  * Delete the draft version of a document.
  * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
@@ -1114,7 +1112,6 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
  * @public
  * @deprecated Use {@link DiscardVersionAction} instead
  */
-
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1135,14 +1132,12 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
 /**
  * Delete the draft version of a document.
  * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
@@ -1150,7 +1145,6 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
  * @public
  * @deprecated Use {@link DiscardVersionAction} instead
  */
-
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1437,14 +1431,12 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
 /**
  * Delete the draft version of a document.
  * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
@@ -1452,7 +1444,6 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
  * @public
  * @deprecated Use {@link DiscardVersionAction} instead
  */
-
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1473,14 +1464,12 @@ declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>
 /**
 * @public
 */
-
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
 /**
  * Delete the draft version of a document.
  * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
@@ -1488,7 +1477,6 @@ declare type DeprecatedPreviewDrafts = 'previewDrafts';
  * @public
  * @deprecated Use {@link DiscardVersionAction} instead
  */
-
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1599,727 +1587,6 @@ export {
 `;
 
 exports[`cli > should build with \`--quiet\` flag suppressing output > ./dist/index.d.ts 1`] = `
-"/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
- * @public
- */
-export declare interface IncludedModuleDummy {
-  field: string
-}
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
-declare module './module2' {
-  interface IncludedModuleDummy {
-    addedField: string
-  }
-}
-//# sourceMappingURL=module1.d.ts.map
-"
-`;
-
-exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsxs, jsx } from "react/jsx-runtime";
-import { c } from "react-compiler-runtime";
-import { Stack, Text } from "@sanity/ui";
-import { styled } from "styled-components";
-const CustomTextInput = styled.input.attrs({
-  type: "color"
-}).withConfig({
-  displayName: "CustomTextInput",
-  componentId: "sc-11pprad-0"
-})\`cursor:pointer;box-sizing:border-box;background:var(--card-border-color);border:0 solid transparent;border-radius:2px;padding:0;appearance:none;margin:0;height:1.6rem;width:8ch;&:hover{box-shadow:0 0 0 2px \${({
-  theme
-}) => theme.sanity.color.card.hovered.border};}&::-webkit-color-swatch-wrapper{padding:0;}&::-webkit-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}&::-moz-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({
-  theme
-}) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}\`;
-function ColorInput(props) {
-  const $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
-  let t2;
-  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx(CustomTextInput, { ...props.elementProps, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
-  let t3;
-  $[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { as: "output", muted: !0, size: 0, htmlFor: props.elementProps.id, children: props.value }), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
-  let t4;
-  return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, { space: 2, children: [
-    t2,
-    t3
-  ] }), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
-}
-export {
-  ColorInput as default
-};
-//# sourceMappingURL=ColorInput.js.map
-"
-`;
-
-exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
-interface ColorOptions {
-  alpha?: boolean;
-  colorspace?: 'limited-srgb' | 'display-p3';
-}
-interface ColorSchemaType extends StringSchemaType {
-  options?: StringSchemaType['options'] & ColorOptions;
-}
-type ColorInputProps = StringInputProps<ColorSchemaType>;
-/** @public */
-declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
-/**
- * @public
- */
-interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
-  type: typeof colorTypeName;
-  options?: ColorOptions;
-}
-declare module 'sanity' {
-  interface IntrinsicDefinitions {
-    color: ColorDefinition;
-  }
-}
-/** @public */
-declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
-"import { defineType, definePlugin } from "sanity";
-import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
-  name: colorTypeName,
-  type: "string",
-  title: "Color",
-  components: {
-    input: ColorInput
-  }
-}), colorInput = definePlugin({
-  name: "@sanity/color-input",
-  schema: {
-    types: [colorType]
-  }
-});
-export {
-  ColorInput,
-  colorInput
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsx, jsxs } from "react/jsx-runtime";
-import { c } from "react/compiler-runtime";
-import { Root, Stack, Text } from "@sanity/ui";
-var input = "_1n31tph0";
-function ColorInput(props) {
-  const $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
-  let t2;
-  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", { ...props.elementProps, type: "color", className: input, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
-  let t3;
-  $[4] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { muted: !0, size: 0, children: props.value }), $[4] = props.value, $[5] = t3) : t3 = $[5];
-  let t4;
-  $[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", { htmlFor: props.elementProps.id, children: t3 }), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
-  let t5;
-  return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsx(Root, { as: "div", overflow: "visible", children: /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
-    t2,
-    t4
-  ] }) }), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
-}
-export {
-  ColorInput as default
-};
-//# sourceMappingURL=ColorInput.js.map
-"
-`;
-
-exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y)r g b/20%)}}
-/*# sourceMappingURL=bundle.css.map*/
-"
-`;
-
-exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
-interface ColorOptions {
-  alpha?: boolean;
-  colorspace?: 'limited-srgb' | 'display-p3';
-}
-interface ColorSchemaType extends StringSchemaType {
-  options?: StringSchemaType['options'] & ColorOptions;
-}
-type ColorInputProps = StringInputProps<ColorSchemaType>;
-/** @public */
-declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
-/**
- * @public
- */
-interface ColorDefinition extends Omit<StringDefinition, 'type' | 'options' | 'placeholder'> {
-  type: typeof colorTypeName;
-  options?: ColorOptions;
-}
-declare module 'sanity' {
-  interface IntrinsicDefinitions {
-    color: ColorDefinition;
-  }
-}
-/** @public */
-declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
-"import "./bundle.css";
-import "@sanity/ui/css/index.css";
-import { defineType, definePlugin } from "sanity";
-import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
-  name: colorTypeName,
-  type: "string",
-  title: "Color",
-  components: {
-    input: ColorInput
-  }
-}), colorInput = definePlugin({
-  name: "@sanity/color-input",
-  schema: {
-    types: [colorType]
-  }
-});
-export {
-  ColorInput,
-  colorInput
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-function validateApiPerspective(perspective) {
-  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
-    throw new TypeError(
-      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
-    );
-}
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-exports.validateApiPerspective = validateApiPerspective;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-function validateApiPerspective(perspective) {
-  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
-    throw new TypeError(
-      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
-    );
-}
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
-import { SanityLogo } from "@sanity/logos";
-/**
-* @public
-*/
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
-
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
-
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
-"import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
-import { SanityLogo } from "@sanity/logos";
-import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "1.0.0";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
-//# sourceMappingURL=index.d.ts.map"
-`;
-
-exports[`should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
-"const VERSION = "1.0.0";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
-exports[`should build with \`--quiet\` flag suppressing output > ./dist/index.d.ts 1`] = `
 "/**
  * @internal
  */

@@ -1,27 +1,18 @@
-import path from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {spawnProject} from './env/spawnProject'
 
 describe.skipIf(process.platform === 'win32')('cli', () => {
   test('should build `js` package', async () => {
     const project = await spawnProject('js')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.js → ./dist/index.mjs')
     expect(stdout).toContain('./src/index.js → ./dist/index.js')
-
-    await project.remove()
   })
 
   test('should build `browser-bundle` package', async () => {
     const project = await spawnProject('browser-bundle')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.js → ./dist/index.js')
     expect(stdout).toContain('./src/index.js → ./dist/index.cjs')
@@ -31,16 +22,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
 
     expect(await project.readFile('./dist/browser.js')).toMatchSnapshot('./dist/browser.js')
     expect(await project.readFile('./dist/browser.cjs')).toMatchSnapshot('./dist/browser.cjs')
-
-    await project.remove()
   })
 
   test('should build `dummy-module` package', async () => {
     const project = await spawnProject('dummy-module')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     // types
     expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.d.ts')
@@ -71,16 +57,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/extra.browser.js')).toMatchSnapshot(
       './dist/extra.browser.js',
     )
-
-    await project.remove()
   })
 
   test('should build `custom-dist` package', async () => {
     const project = await spawnProject('custom-dist')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./lib/index.cjs')
     expect(stdout).toContain('./src/index.ts → ./lib/index.js')
@@ -89,16 +70,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('lib/index.cjs')).toMatchSnapshot('./lib/index.cjs')
     expect(await project.readFile('lib/index.js')).toMatchSnapshot('./lib/index.js')
     expect(await project.readFile('lib/index.d.ts')).toMatchSnapshot('./lib/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `multi-export` package', async () => {
     const project = await spawnProject('multi-export')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.cjs')
     expect(stdout).toContain('./src/index.ts → ./dist/index.js')
@@ -115,44 +91,29 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/plugin.cjs')).toMatchSnapshot('./dist/plugin.cjs')
     expect(await project.readFile('dist/plugin.js')).toMatchSnapshot('./dist/plugin.js')
     expect(await project.readFile('dist/plugin.d.ts')).toMatchSnapshot('./dist/plugin.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts` package', async () => {
     const project = await spawnProject('ts')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-without-extract` package', async () => {
     const project = await spawnProject('ts-without-extract')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-rolldown-without-extract` package', async () => {
     const project = await spawnProject('ts-rolldown-without-extract')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
     expect(stdout).not.toContain('Check tsdoc release tags')
@@ -161,16 +122,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
     expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-rolldown-bundle-dev-dependency` package', async () => {
     const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
 
@@ -216,16 +172,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-rolldown-bundle-peer-dependency` package', async () => {
     const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
 
@@ -271,16 +222,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-rolldown-bundle-prod-dependency` package', async () => {
     const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
 
@@ -327,16 +273,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-rolldown-inline-types-external-js` package', async () => {
     const project = await spawnProject('ts-rolldown-inline-types-external-js')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
 
@@ -384,16 +325,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-rolldown` package', async () => {
     const project = await spawnProject('ts-rolldown')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
 
@@ -419,16 +355,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/_chunks-dts/c.d.ts')).toMatchSnapshot(
       './dist/_chunks-dts/c.d.ts',
     )
-
-    await project.remove()
   })
 
   test('should build `tsgo` package', async () => {
     const project = await spawnProject('tsgo')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
     expect(stdout).toContain('The `tsgo` option is experimental')
@@ -437,88 +368,58 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
     expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-node16` package', async () => {
     const project = await spawnProject('ts-node16')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `ts-bundler` package', async () => {
     const project = await spawnProject('ts-bundler')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `react-18` package', async () => {
     const project = await spawnProject('react-18')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
     expect(stdout).toContain('./src/index.ts → ./dist/index.js')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
     expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
-
-    await project.remove()
   })
 
   test('should build `react-19` package', async () => {
     const project = await spawnProject('react-19')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
     expect(stdout).toContain('./src/index.ts → ./dist/index.js')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
     expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
-
-    await project.remove()
   })
 
   test('should build `css-export` package', async () => {
     const project = await spawnProject('css-export')
-
-    await project.install()
-
-    const {stdout} = await project.run('build')
+    const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.js → ./dist/index.js')
     // @TODO test that styles.css is available as an export from the package
-
-    await project.remove()
   })
 
   test('should build `sanity-plugin-with-styled-components` package', async () => {
     const project = await spawnProject('sanity-plugin-with-styled-components')
-
-    await project.install()
-
     await project.run('build')
 
     const [distChunksColorInput, distIndexJs, distIndexDts] = await Promise.all([
@@ -539,15 +440,10 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should build `sanity-plugin-with-vanilla-extract` package', async () => {
     const project = await spawnProject('sanity-plugin-with-vanilla-extract')
-
-    await project.install()
-
     await project.run('build')
 
     const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss] = await Promise.all([
@@ -574,44 +470,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
     expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
-
-    await project.remove()
-  })
-
-  describe.skip('runtime: next.js', () => {
-    test('import `dist/*.browser.js` from package', async () => {
-      const exportsDummy = await spawnProject('dummy-module')
-      const runtime = await spawnProject('runtime-next-js')
-
-      // install and build dummy package
-      await exportsDummy.install()
-      await exportsDummy.run('build')
-
-      await runtime.install()
-
-      // build (uses `next build`)
-      await runtime.run('build')
-
-      const buildManifest = runtime.require('.next/build-manifest.json')
-
-      const pageScriptPath = buildManifest.pages['/'].find((f: string) => f.includes('pages/index'))
-
-      const pageFile = await runtime.readFile(path.join('.next', pageScriptPath))
-
-      expect(pageFile).toContain(`"dist/index.browser.js"`)
-      expect(pageFile).toContain(`"dist/extra.browser.js"`)
-
-      await runtime.remove()
-      await exportsDummy.remove()
-    })
   })
 
   test('should build with `--quiet` flag suppressing output', async () => {
     const project = await spawnProject('ts')
-
-    await project.install()
-
-    const {stdout} = await project.run('build:quiet')
+    const stdout = await project.run('build:quiet')
 
     // Should not contain build progress messages
     expect(stdout).not.toContain('Build type definitions')
@@ -622,25 +485,16 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
 
     // But should still produce the expected dist files
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-
-    await project.remove()
   })
 
   test('should warn with --strict when legacy fields are present', async () => {
     const project = await spawnProject('strict-legacy-fields')
 
-    await project.install()
-
     // The build should succeed but with warnings
-    const result = await project.run('build')
-
-    // Errors can be in either stderr or stdout depending on how they're caught
-    const output = result.stderr + result.stdout
+    const stdout = await project.run('build')
 
     // Should warn on browser and typesVersions fields
-    expect(output).toContain('the `browser` field is no longer needed')
-    expect(output).toContain('the `typesVersions` field is no longer needed')
-
-    await project.remove()
+    expect(stdout).toContain('the `browser` field is no longer needed')
+    expect(stdout).toContain('the `typesVersions` field is no longer needed')
   })
 })
