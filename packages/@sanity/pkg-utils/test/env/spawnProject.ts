@@ -1,86 +1,52 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import {copy} from 'fs-extra'
-import {globby} from 'globby'
-import {mkdirp} from 'mkdirp'
-import {rimraf} from 'rimraf'
-import {v4 as uuid} from 'uuid'
-import {exec} from './exec'
-import {ExecError} from './ExecError'
-import {stripColor} from './stripColor'
+import {stripVTControlCharacters} from 'node:util'
+import exec from 'nanoexec'
 
-async function tmpWorkspace() {
-  const key = uuid()
-  const workspacePath = path.resolve(__dirname, `__tmp__/${key}`)
-
-  await mkdirp(workspacePath)
-
-  return {
-    path: workspacePath,
-    remove: () => rimraf(workspacePath),
-  }
+export interface SpawnedProject {
+  cwd: string
+  readFile: (filePath: string) => Promise<string>
+  run: (cmd: string) => Promise<string>
 }
 
-export async function spawnProject(name: string): Promise<{
-  cwd: string
-  add: (pkg: string) => Promise<{stdout: string; stderr: string}>
-  install: () => Promise<{stdout: string; stderr: string}>
-  pack: () => Promise<{path: string}>
-  readFile: (filePath: string) => Promise<string>
-  remove: () => Promise<boolean>
-  require: (id: string) => any
-  run: (cmd: string) => Promise<{stdout: string; stderr: string}>
-}> {
-  const {path: tmpPath, remove: tmpRemove} = await tmpWorkspace()
+/**
+ * Spawn a project from the playground directory.
+ * Dependencies are pre-installed, so this just provides helpers to run commands and read files.
+ */
+export async function spawnProject(name: string): Promise<SpawnedProject> {
+  const cwd = path.resolve(__dirname, '../../../../../playground', name)
+  const binPath = path.resolve(__dirname, '../../bin')
 
-  {
-    const packagePath = path.resolve(__dirname, '../../../../../playground', name)
-    const files = await globby('**/*', {
-      cwd: packagePath,
-    })
-    await Promise.all(
-      files.map((file) => copy(path.join(packagePath, file), path.join(tmpPath, file))),
-    )
+  const env = {
+    ...process.env,
+    PATH: `${process.env['PATH']}${path.delimiter}${binPath}`,
+  }
 
-    const pkg = require(path.resolve(tmpPath, 'package.json'))
+  return {
+    cwd,
 
-    async function runExec(cmd: string) {
-      try {
-        const env = {
-          ...process.env,
-          PATH: `${process.env['PATH']}${path.delimiter}${path.resolve(__dirname, '../../bin')}`,
-        }
+    readFile: (filePath: string) =>
+      fs.readFile(path.resolve(cwd, filePath), 'utf-8'),
 
-        return exec(cmd, {cwd: tmpPath, env})
-      } catch (execErr) {
-        if (execErr instanceof ExecError) {
-          console.log(execErr.stdout)
-          console.error(execErr.stderr)
+    run: async (cmd: string): Promise<string> => {
+      const result = await exec('pnpm', ['run', cmd], {
+        cwd,
+        env,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      })
 
-          return {
-            stdout: stripColor(execErr.stdout),
-            stderr: stripColor(execErr.stderr),
-          }
-        }
+      const stdout = result.stdout?.toString('utf-8') || ''
+      const stderr = result.stderr?.toString('utf-8') || ''
 
-        throw execErr
+      if (!result.ok) {
+        const cleanStdout = stripVTControlCharacters(stdout)
+        const cleanStderr = stripVTControlCharacters(stderr)
+        console.log(cleanStdout)
+        console.error(cleanStderr)
+        throw new Error(`Command "pnpm run ${cmd}" failed with exit code ${result.code}`)
       }
-    }
 
-    return {
-      cwd: tmpPath,
-      add: (id: string) => runExec(`pnpm add ${id}`),
-      install: () => runExec('pnpm install --no-frozen-lockfile'),
-      pack: async () => {
-        await runExec('pnpm pack')
-
-        return {path: path.resolve(tmpPath, `${pkg.name}-${pkg.version}.tgz`)}
-      },
-      readFile: (filePath: string) =>
-        fs.readFile(path.resolve(tmpPath, filePath)).then((r) => r.toString()),
-      remove: tmpRemove,
-      require: (id) => require(path.resolve(tmpPath, id)),
-      run: (cmd: string) => runExec(`pnpm run ${cmd}`),
-    }
+      return stripVTControlCharacters(stdout)
+    },
   }
 }

@@ -1,6 +1,9 @@
 import {defineConfig} from '@sanity/pkg-utils'
 
-module.exports = defineConfig({
+export default defineConfig({
+  extract: {
+    checkTypes: false,
+  },
   bundles: [
     {
       source: './src/browser.js',

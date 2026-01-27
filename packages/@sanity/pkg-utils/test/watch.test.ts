@@ -11,161 +11,133 @@ import {spawnProject} from './env/spawnProject'
 describe.skipIf(process.platform === 'win32')('watch functionality', () => {
   test('resolveWatchTasks should generate correct tasks for TypeScript project', async () => {
     const project = await spawnProject('ts')
+    const cwd = project.cwd
+    const logger = createLogger(true) // quiet mode
+    const pkgPath = findPkgPath({cwd})!
+    const config = await loadConfig({cwd, pkgPath})
+    const {parseStrictOptions} = await import('../src/node/strict')
+    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
+    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
+    const tsconfig = config?.tsconfig || 'tsconfig.json'
 
-    try {
-      await project.install()
+    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
+    const watchTasks = resolveWatchTasks(ctx)
 
-      const cwd = project.cwd
-      const logger = createLogger(true) // quiet mode
-      const pkgPath = findPkgPath({cwd})!
-      const config = await loadConfig({cwd, pkgPath})
-      const {parseStrictOptions} = await import('../src/node/strict')
-      const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-      const tsconfig = config?.tsconfig || 'tsconfig.json'
+    // Should have at least a DTS watch task and a JS watch task for TS projects
+    expect(watchTasks.length).toBeGreaterThan(0)
 
-      const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-      const watchTasks = resolveWatchTasks(ctx)
+    const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
+    const jsTask = watchTasks.find((task) => task.type === 'watch:js')
 
-      // Should have at least a DTS watch task and a JS watch task for TS projects
-      expect(watchTasks.length).toBeGreaterThan(0)
+    expect(dtsTask).toBeDefined()
+    expect(jsTask).toBeDefined()
 
-      const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
-      const jsTask = watchTasks.find((task) => task.type === 'watch:js')
+    if (dtsTask && dtsTask.type === 'watch:dts') {
+      expect(dtsTask.entries).toBeDefined()
+      expect(Array.isArray(dtsTask.entries)).toBe(true)
+      expect(dtsTask.entries.length).toBeGreaterThan(0)
 
-      expect(dtsTask).toBeDefined()
-      expect(jsTask).toBeDefined()
-
-      if (dtsTask && dtsTask.type === 'watch:dts') {
-        expect(dtsTask.entries).toBeDefined()
-        expect(Array.isArray(dtsTask.entries)).toBe(true)
-        expect(dtsTask.entries.length).toBeGreaterThan(0)
-
-        // Check structure of DTS entries
-        const entry = dtsTask.entries[0]
-        expect(entry).toBeDefined()
-        expect(entry).toHaveProperty('exportPath')
-        expect(entry).toHaveProperty('importId')
-        expect(entry).toHaveProperty('sourcePath')
-        expect(entry).toHaveProperty('targetPaths')
-        if (entry) {
-          expect(Array.isArray(entry.targetPaths)).toBe(true)
-        }
+      // Check structure of DTS entries
+      const entry = dtsTask.entries[0]
+      expect(entry).toBeDefined()
+      expect(entry).toHaveProperty('exportPath')
+      expect(entry).toHaveProperty('importId')
+      expect(entry).toHaveProperty('sourcePath')
+      expect(entry).toHaveProperty('targetPaths')
+      if (entry) {
+        expect(Array.isArray(entry.targetPaths)).toBe(true)
       }
+    }
 
-      if (jsTask && jsTask.type === 'watch:js') {
-        expect(jsTask.entries).toBeDefined()
-        expect(Array.isArray(jsTask.entries)).toBe(true)
-        expect(jsTask.entries.length).toBeGreaterThan(0)
+    if (jsTask && jsTask.type === 'watch:js') {
+      expect(jsTask.entries).toBeDefined()
+      expect(Array.isArray(jsTask.entries)).toBe(true)
+      expect(jsTask.entries.length).toBeGreaterThan(0)
 
-        // Check structure of JS entries
-        const entry = jsTask.entries[0]
-        expect(entry).toHaveProperty('path')
-        expect(entry).toHaveProperty('source')
-        expect(entry).toHaveProperty('output')
-      }
-    } finally {
-      await project.remove()
+      // Check structure of JS entries
+      const entry = jsTask.entries[0]
+      expect(entry).toHaveProperty('path')
+      expect(entry).toHaveProperty('source')
+      expect(entry).toHaveProperty('output')
     }
   })
 
   test('resolveWatchTasks should generate correct tasks for JavaScript project', async () => {
     const project = await spawnProject('js')
+    const cwd = project.cwd
+    const logger = createLogger(true) // quiet mode
+    const pkgPath = findPkgPath({cwd})!
+    const config = await loadConfig({cwd, pkgPath})
+    const {parseStrictOptions} = await import('../src/node/strict')
+    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
+    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
+    const tsconfig = config?.tsconfig || 'tsconfig.json'
 
-    try {
-      await project.install()
+    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
+    const watchTasks = resolveWatchTasks(ctx)
 
-      const cwd = project.cwd
-      const logger = createLogger(true) // quiet mode
-      const pkgPath = findPkgPath({cwd})!
-      const config = await loadConfig({cwd, pkgPath})
-      const {parseStrictOptions} = await import('../src/node/strict')
-      const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-      const tsconfig = config?.tsconfig || 'tsconfig.json'
+    // JS projects should have watch:js tasks but no watch:dts tasks
+    expect(watchTasks.length).toBeGreaterThan(0)
 
-      const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-      const watchTasks = resolveWatchTasks(ctx)
+    const jsTask = watchTasks.find((task) => task.type === 'watch:js')
+    expect(jsTask).toBeDefined()
 
-      // JS projects should have watch:js tasks but no watch:dts tasks
-      expect(watchTasks.length).toBeGreaterThan(0)
-
-      const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-      expect(jsTask).toBeDefined()
-
-      // Should not have DTS tasks for pure JS projects
-      const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
-      expect(dtsTask).toBeUndefined()
-    } finally {
-      await project.remove()
-    }
+    // Should not have DTS tasks for pure JS projects
+    const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
+    expect(dtsTask).toBeUndefined()
   })
 
   test('resolveWatchTasks should handle multi-export projects correctly', async () => {
     const project = await spawnProject('multi-export')
+    const cwd = project.cwd
+    const logger = createLogger(true)
+    const pkgPath = findPkgPath({cwd})!
+    const config = await loadConfig({cwd, pkgPath})
+    const {parseStrictOptions} = await import('../src/node/strict')
+    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
+    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
+    const tsconfig = config?.tsconfig || 'tsconfig.json'
 
-    try {
-      await project.install()
+    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
+    const watchTasks = resolveWatchTasks(ctx)
 
-      const cwd = project.cwd
-      const logger = createLogger(true)
-      const pkgPath = findPkgPath({cwd})!
-      const config = await loadConfig({cwd, pkgPath})
-      const {parseStrictOptions} = await import('../src/node/strict')
-      const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-      const tsconfig = config?.tsconfig || 'tsconfig.json'
+    expect(watchTasks.length).toBeGreaterThan(0)
 
-      const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-      const watchTasks = resolveWatchTasks(ctx)
+    const jsTask = watchTasks.find((task) => task.type === 'watch:js')
+    expect(jsTask).toBeDefined()
 
-      expect(watchTasks.length).toBeGreaterThan(0)
+    if (jsTask && jsTask.type === 'watch:js') {
+      // Multi-export projects should have multiple entries
+      expect(jsTask.entries.length).toBeGreaterThan(1)
 
-      const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-      expect(jsTask).toBeDefined()
-
-      if (jsTask && jsTask.type === 'watch:js') {
-        // Multi-export projects should have multiple entries
-        expect(jsTask.entries.length).toBeGreaterThan(1)
-
-        // Each entry should have correct structure
-        jsTask.entries.forEach((entry) => {
-          expect(entry).toHaveProperty('path')
-          expect(entry).toHaveProperty('source')
-          expect(entry).toHaveProperty('output')
-        })
-      }
-    } finally {
-      await project.remove()
+      // Each entry should have correct structure
+      jsTask.entries.forEach((entry) => {
+        expect(entry).toHaveProperty('path')
+        expect(entry).toHaveProperty('source')
+        expect(entry).toHaveProperty('output')
+      })
     }
   })
 
   test('resolveWatchTasks should handle browser-specific exports', async () => {
     const project = await spawnProject('browser-bundle')
+    const cwd = project.cwd
+    const logger = createLogger(true)
+    const pkgPath = findPkgPath({cwd})!
+    const config = await loadConfig({cwd, pkgPath})
+    const {parseStrictOptions} = await import('../src/node/strict')
+    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
+    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
+    const tsconfig = config?.tsconfig || 'tsconfig.json'
 
-    try {
-      await project.install()
+    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
+    const watchTasks = resolveWatchTasks(ctx)
 
-      const cwd = project.cwd
-      const logger = createLogger(true)
-      const pkgPath = findPkgPath({cwd})!
-      const config = await loadConfig({cwd, pkgPath})
-      const {parseStrictOptions} = await import('../src/node/strict')
-      const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-      const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-      const tsconfig = config?.tsconfig || 'tsconfig.json'
+    expect(watchTasks.length).toBeGreaterThan(0)
 
-      const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-      const watchTasks = resolveWatchTasks(ctx)
-
-      expect(watchTasks.length).toBeGreaterThan(0)
-
-      // Should have watch tasks
-      const jsTasks = watchTasks.filter((task) => task.type === 'watch:js')
-      expect(jsTasks.length).toBeGreaterThan(0)
-    } finally {
-      await project.remove()
-    }
+    // Should have watch tasks
+    const jsTasks = watchTasks.filter((task) => task.type === 'watch:js')
+    expect(jsTasks.length).toBeGreaterThan(0)
   })
 
   // This test is skipped because watch() doesn't return a cleanup mechanism.
@@ -179,26 +151,18 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
     async () => {
       const project = await spawnProject('dummy-module')
 
-      try {
-        await project.install()
+      // This test verifies that watch() can be called and initialized
+      // We don't let it run indefinitely, just verify it starts without error
+      void watch({
+        cwd: project.cwd,
+        strict: false,
+      })
 
-        // This test verifies that watch() can be called and initialized
-        // We don't let it run indefinitely, just verify it starts without error
-        void watch({
-          cwd: project.cwd,
-          strict: false,
-        })
+      // Give it a moment to initialize
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        // Give it a moment to initialize
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // If we got here without an error being thrown, the watch initialized successfully
-        expect(true).toBe(true)
-
-        // Note: We can't easily stop the watch process, but the test cleanup will handle it
-      } finally {
-        await project.remove()
-      }
+      // If we got here without an error being thrown, the watch initialized successfully
+      expect(true).toBe(true)
     },
   )
 })
