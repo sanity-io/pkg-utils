@@ -1,5 +1,22 @@
 # @sanity/pkg-utils
 
+## 10.3.4
+
+### Patch Changes
+
+- [#2510](https://github.com/sanity-io/pkg-utils/pull/2510) [`6981ea0`](https://github.com/sanity-io/pkg-utils/commit/6981ea00b6edff0a514b4a8080bd685257bbb54e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.56.0
+
+- [#2511](https://github.com/sanity-io/pkg-utils/pull/2511) [`847ae7d`](https://github.com/sanity-io/pkg-utils/commit/847ae7dd67f2f2ccdf2d0e379cd2d9a4a3abb893) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.1
+
+- [#2521](https://github.com/sanity-io/pkg-utils/pull/2521) [`3277895`](https://github.com/sanity-io/pkg-utils/commit/3277895f328ad26d3e37c7cf30f60f75f7bd37b2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.3.6
+
+- [#2522](https://github.com/sanity-io/pkg-utils/pull/2522) [`26fa84f`](https://github.com/sanity-io/pkg-utils/commit/26fa84f455b441cefc1acc7e0a117c1e094f9b74) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency lightningcss to ^1.31.1
+
+- [#2523](https://github.com/sanity-io/pkg-utils/pull/2523) [`b083a6a`](https://github.com/sanity-io/pkg-utils/commit/b083a6a8e5f96d5ed3caf72393aca0d86e346118) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.21.6
+
+- Updated dependencies [[`8652e7e`](https://github.com/sanity-io/pkg-utils/commit/8652e7e2448e265b3bb2c54ad9a7c506682d1f85), [`3277895`](https://github.com/sanity-io/pkg-utils/commit/3277895f328ad26d3e37c7cf30f60f75f7bd37b2)]:
+  - @sanity/parse-package-json@2.1.3
+
 ## 10.3.3
 
 ### Patch Changes
