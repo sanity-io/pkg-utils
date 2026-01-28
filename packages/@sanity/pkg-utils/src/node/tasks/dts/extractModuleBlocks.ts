@@ -34,8 +34,8 @@ export async function extractModuleBlocksFromTypes({
   return moduleBlocks
 }
 
-/** @internal */
-export function extractModuleBlocks(fileContent: string): string[] {
+
+function extractModuleBlocks(fileContent: string): string[] {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Babel parser returns any, but we know it's a File
   const ast = parse(fileContent, {
     parser: typeScriptParser,
