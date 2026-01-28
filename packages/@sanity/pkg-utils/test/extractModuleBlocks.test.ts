@@ -142,3 +142,42 @@ test('skips files without declare module', () => {
   expect(blocks.length).toEqual(1)
   expect(blocks[0]).toContain('declare module Test')
 })
+
+test('extracts module blocks with string literal names', () => {
+  const extractResult = createMockExtractorResult({
+    './virtual/module.d.ts': outdent`
+      export interface Foo {}
+
+      declare module './other' {
+        interface ExtendedFoo {
+          extra: string
+        }
+      }
+
+      declare module "sanity" {
+        interface SanityExtension {
+          custom: boolean
+        }
+      }
+    `,
+  })
+
+  const blocks = extractModuleBlocksFromTypes({
+    tsOutDir: 'virtual',
+    extractResult,
+  })
+
+  expect(blocks.length).toEqual(2)
+  expect(blocks[0]).toEqual(outdent`
+    declare module './other' {
+      interface ExtendedFoo {
+        extra: string
+      }
+    }`)
+  expect(blocks[1]).toEqual(outdent`
+    declare module "sanity" {
+      interface SanityExtension {
+        custom: boolean
+      }
+    }`)
+})

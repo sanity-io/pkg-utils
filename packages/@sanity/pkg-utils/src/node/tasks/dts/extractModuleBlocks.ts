@@ -24,7 +24,15 @@ export function extractModuleBlocksFromTypes({
 
   for (const sourceFile of sourceFiles) {
     if (sourceFile.text.includes('declare module')) {
-      moduleBlocks.push(...extractModuleBlocks(sourceFile))
+      // Re-parse the source file to ensure we have a complete AST
+      // The source files from API Extractor's program may not have fully parsed statements
+      const parsedFile = ts.createSourceFile(
+        sourceFile.fileName,
+        sourceFile.text,
+        ts.ScriptTarget.Latest,
+        /* setParentNodes */ true,
+      )
+      moduleBlocks.push(...extractModuleBlocks(parsedFile))
     }
   }
 
@@ -35,24 +43,45 @@ export function extractModuleBlocksFromTypes({
  * Extract `declare module` blocks from a TypeScript source file.
  */
 function extractModuleBlocks(sourceFile: ts.SourceFile): string[] {
+  const text = sourceFile.text
   const moduleBlocks: string[] = []
 
-  for (const statement of sourceFile.statements) {
-    if (ts.isModuleDeclaration(statement)) {
+  const statements = sourceFile.statements
+  for (let i = 0; i < statements.length; i++) {
+    const statement = statements[i]
+    if (statement && ts.isModuleDeclaration(statement)) {
       // Get positions for extracting text
       const fullStart = statement.getFullStart()
       const start = statement.getStart(sourceFile)
-      const end = statement.getEnd()
+      let end = statement.getEnd()
+
+      // Include trailing comments (like sourceMappingURL)
+      // First check for same-line trailing comments
+      const trailingComments = ts.getTrailingCommentRanges(text, end)
+      const lastTrailing = trailingComments?.at(-1)
+      if (lastTrailing) {
+        end = lastTrailing.end
+      } else {
+        // Check for comments on following lines (only if this is the last statement
+        // or if they come before the next statement)
+        const nextStatement = statements[i + 1]
+        const nextStatementStart = nextStatement?.getFullStart() ?? text.length
+        const commentsAfter = ts.getLeadingCommentRanges(text, end)
+        const lastCommentAfter = commentsAfter?.at(-1)
+        if (lastCommentAfter && lastCommentAfter.end <= nextStatementStart) {
+          end = lastCommentAfter.end
+        }
+      }
 
       // Check for leading JSDoc comments
-      const leadingComments = ts.getLeadingCommentRanges(sourceFile.text, fullStart)
+      const leadingComments = ts.getLeadingCommentRanges(text, fullStart)
 
       let blockStart = start
       if (leadingComments && leadingComments.length > 0) {
         // Use the last comment if it's a JSDoc comment (starts with /**)
         const lastComment = leadingComments.at(-1)
         if (lastComment) {
-          const commentText = sourceFile.text.slice(lastComment.pos, lastComment.end)
+          const commentText = text.slice(lastComment.pos, lastComment.end)
           if (commentText.startsWith('/**')) {
             blockStart = lastComment.pos
           }
@@ -62,12 +91,12 @@ function extractModuleBlocks(sourceFile: ts.SourceFile): string[] {
       // Find the start of the line containing blockStart
       // This ensures we capture the leading whitespace for proper dedenting
       let lineStart = blockStart
-      while (lineStart > 0 && sourceFile.text[lineStart - 1] !== '\n') {
+      while (lineStart > 0 && text[lineStart - 1] !== '\n') {
         lineStart--
       }
 
       // Extract the text from the start of the line
-      const blockText = sourceFile.text.slice(lineStart, end)
+      const blockText = text.slice(lineStart, end)
 
       // Dedent the block to remove common leading whitespace
       moduleBlocks.push(dedent(blockText))
