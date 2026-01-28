@@ -88,46 +88,11 @@ function extractModuleBlocks(sourceFile: ts.SourceFile): string[] {
         }
       }
 
-      // Find the start of the line containing blockStart
-      // This ensures we capture the leading whitespace for proper dedenting
-      let lineStart = blockStart
-      while (lineStart > 0 && text[lineStart - 1] !== '\n') {
-        lineStart--
-      }
-
-      // Extract the text from the start of the line
-      const blockText = text.slice(lineStart, end)
-
-      // Dedent the block to remove common leading whitespace
-      moduleBlocks.push(dedent(blockText))
+      // Extract the text from blockStart to end
+      // No need to dedent - the output will be formatted by prettier
+      moduleBlocks.push(text.slice(blockStart, end))
     }
   }
 
   return moduleBlocks
-}
-
-/**
- * Remove common leading whitespace from all lines.
- */
-function dedent(text: string): string {
-  const lines = text.split('\n')
-
-  // Find minimum indentation (ignoring empty lines)
-  let minIndent = Infinity
-  for (const line of lines) {
-    if (line.trim().length === 0) continue
-    const match = line.match(/^(\s*)/)
-    if (match?.[1] !== undefined) {
-      minIndent = Math.min(minIndent, match[1].length)
-    }
-  }
-
-  if (minIndent === Infinity || minIndent === 0) {
-    return text.trim()
-  }
-
-  // Remove the common indentation from each line
-  const dedentedLines = lines.map((line) => (line.length >= minIndent ? line.slice(minIndent) : line))
-
-  return dedentedLines.join('\n').trim()
 }

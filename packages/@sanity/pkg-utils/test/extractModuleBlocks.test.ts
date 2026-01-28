@@ -1,11 +1,8 @@
-import {EOL} from 'node:os'
 import type {ExtractorResult} from '@microsoft/api-extractor'
-import _outdent from 'outdent'
+import * as prettier from 'prettier'
 import ts from 'typescript'
 import {expect, test} from 'vitest'
 import {extractModuleBlocksFromTypes} from '../src/node/tasks/dts/extractModuleBlocks'
-
-const outdent = _outdent({newline: EOL})
 
 /**
  * Create a mock ExtractorResult with the given source files.
@@ -25,7 +22,14 @@ function createMockExtractorResult(files: Record<string, string>): ExtractorResu
   } as ExtractorResult
 }
 
-test('extract module blocks from types', () => {
+/**
+ * Format TypeScript code with prettier (same as extractTypes.ts does)
+ */
+async function format(code: string): Promise<string> {
+  return prettier.format(code, {parser: 'typescript'})
+}
+
+test('extract module blocks from types', async () => {
   const extractResult = createMockExtractorResult({
     './virtual/test.d.ts': `
     interface A {}
@@ -83,8 +87,8 @@ test('extract module blocks from types', () => {
 
   expect(blocks.length).toEqual(3)
 
-  expect(blocks[0]).toEqual(
-    outdent`
+  expect(await format(blocks[0]!)).toEqual(
+    await format(`
     declare module X {
       /**
        * @beta
@@ -92,28 +96,32 @@ test('extract module blocks from types', () => {
       interface A {
           a: string
       }
-    }`,
+    }`),
   )
 
-  expect(blocks[1]).toEqual(outdent`
+  expect(await format(blocks[1]!)).toEqual(
+    await format(`
     /** @public */
     declare module TT {
       /** @public */
       interface X {
           x: string
       }
-    }`)
+    }`),
+  )
 
-  expect(blocks[2]).toEqual(outdent`
+  expect(await format(blocks[2]!)).toEqual(
+    await format(`
     declare module YY {
       /** @internal */
       interface Y {
           y: string
       }
-    }`)
+    }`),
+  )
 })
 
-test('filters files by tsOutDir', () => {
+test('filters files by tsOutDir', async () => {
   const extractResult = createMockExtractorResult({
     './virtual/included.d.ts': 'declare module Included { interface A {} }',
     './other/excluded.d.ts': 'declare module Excluded { interface B {} }',
@@ -125,10 +133,10 @@ test('filters files by tsOutDir', () => {
   })
 
   expect(blocks.length).toEqual(1)
-  expect(blocks[0]).toContain('declare module Included')
+  expect(await format(blocks[0]!)).toContain('declare module Included')
 })
 
-test('skips files without declare module', () => {
+test('skips files without declare module', async () => {
   const extractResult = createMockExtractorResult({
     './virtual/no-modules.d.ts': 'interface A { a: string }',
     './virtual/has-modules.d.ts': 'declare module Test { interface B {} }',
@@ -140,12 +148,12 @@ test('skips files without declare module', () => {
   })
 
   expect(blocks.length).toEqual(1)
-  expect(blocks[0]).toContain('declare module Test')
+  expect(await format(blocks[0]!)).toContain('declare module Test')
 })
 
-test('extracts module blocks with string literal names', () => {
+test('extracts module blocks with string literal names', async () => {
   const extractResult = createMockExtractorResult({
-    './virtual/module.d.ts': outdent`
+    './virtual/module.d.ts': `
       export interface Foo {}
 
       declare module './other' {
@@ -168,16 +176,20 @@ test('extracts module blocks with string literal names', () => {
   })
 
   expect(blocks.length).toEqual(2)
-  expect(blocks[0]).toEqual(outdent`
+  expect(await format(blocks[0]!)).toEqual(
+    await format(`
     declare module './other' {
       interface ExtendedFoo {
         extra: string
       }
-    }`)
-  expect(blocks[1]).toEqual(outdent`
+    }`),
+  )
+  expect(await format(blocks[1]!)).toEqual(
+    await format(`
     declare module "sanity" {
       interface SanityExtension {
         custom: boolean
       }
-    }`)
+    }`),
+  )
 })
