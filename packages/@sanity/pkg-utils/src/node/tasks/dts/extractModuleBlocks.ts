@@ -8,13 +8,13 @@ import type {Program} from 'typescript'
  * A workaround to find all module blocks in extract TS files.
  * @internal
  * */
-export async function extractModuleBlocksFromTypes({
+export function extractModuleBlocksFromTypes({
   tsOutDir,
   extractResult,
 }: {
   tsOutDir: string
   extractResult: ExtractorResult
-}): Promise<string[]> {
+}): string[] {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- ExtractorResult type from @microsoft/api-extractor is complex
   const program = extractResult.compilerState.program as Program
   const moduleBlocks: string[] = []
