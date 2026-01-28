@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.3.5
+
+### Patch Changes
+
+- [#2533](https://github.com/sanity-io/pkg-utils/pull/2533) [`518d45a`](https://github.com/sanity-io/pkg-utils/commit/518d45ac53055809ec22c220c3d9acc5455cd5fd) Thanks [@stipsan](https://github.com/stipsan)! - Remove dependency on `recast`
+
 ## 10.3.4
 
 ### Patch Changes
