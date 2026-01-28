@@ -25,8 +25,7 @@ export async function spawnProject(name: string): Promise<SpawnedProject> {
   return {
     cwd,
 
-    readFile: (filePath: string) =>
-      fs.readFile(path.resolve(cwd, filePath), 'utf-8'),
+    readFile: (filePath: string) => fs.readFile(path.resolve(cwd, filePath), 'utf-8'),
 
     run: async (cmd: string): Promise<string> => {
       const result = await exec('pnpm', ['run', cmd], {
