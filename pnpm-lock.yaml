@@ -381,7 +381,7 @@ importers:
   playground/dummy-lodash:
     dependencies:
       lodash:
-        specifier: ^4.17.21
+        specifier: ^4.17.23
         version: 4.17.23
     devDependencies:
       '@types/lodash':
@@ -391,7 +391,7 @@ importers:
   playground/dummy-lodash-es:
     dependencies:
       lodash:
-        specifier: ^4.17.21
+        specifier: ^4.17.23
         version: 4.17.23
       lodash-es:
         specifier: ^4.17.23
@@ -502,7 +502,7 @@ importers:
         specifier: workspace:*
         version: link:../dummy-module
       next:
-        specifier: ^16.1.4
+        specifier: ^16.1.6
         version: 16.1.6(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: ^19.2.4
