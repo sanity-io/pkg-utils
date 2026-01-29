@@ -19,7 +19,7 @@ function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
 }
 
 /**
- * Check if a package is in the dependencies
+ * Check if a package is in the peerDependencies
  */
 function hasPeerDependency(pkg: PackageJSON, packageName: string): boolean {
   return pkg.peerDependencies ? packageName in pkg.peerDependencies : false
@@ -58,18 +58,11 @@ export async function resolveBuildContext(options: {
   const hasBabelPluginStyledComponents = hasDevDependency(pkg, 'babel-plugin-styled-components')
   const styledComponentsConfigSet = config?.babel?.styledComponents !== undefined
 
-  if (hasStyledComponents && !styledComponentsConfigSet) {
-    if (hasBabelPluginStyledComponents) {
-      // Auto-enable styled-components if both are present and no explicit config is set
-      logger.log(
-        'Detected styled-components in peerDependencies and babel-plugin-styled-components in devDependencies. Automatically enabling babel.styledComponents. To disable this, set `babel: { styledComponents: false }` in package.config.ts.',
-      )
-    } else {
-      // Warn if styled-components is present but babel-plugin-styled-components is not
-      logger.warn(
-        'Detected styled-components in peerDependencies. Consider installing babel-plugin-styled-components as a devDependency to enable better debugging and optimization. Add `"babel-plugin-styled-components": "^2.1.4"` to devDependencies and it will be automatically enabled, or set `babel: { styledComponents: false }` in package.config.ts to disable this warning.',
-      )
-    }
+  if (hasStyledComponents && !styledComponentsConfigSet && !hasBabelPluginStyledComponents) {
+    // Warn if styled-components is present but babel-plugin-styled-components is not
+    logger.warn(
+      'Detected styled-components in peerDependencies. Consider installing babel-plugin-styled-components as a devDependency to enable better debugging and optimization. Add `"babel-plugin-styled-components": "^2.0.0"` to devDependencies and it will be automatically enabled, or set `babel: { styledComponents: false }` in package.config.ts to disable this warning.',
+    )
   }
 
   if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options && config?.dts !== 'rolldown') {
@@ -221,6 +214,9 @@ export async function resolveBuildContext(options: {
   // Apply auto-detected styled-components configuration
   let resolvedConfig: PkgConfigOptions | undefined = config
   if (hasStyledComponents && !styledComponentsConfigSet && hasBabelPluginStyledComponents) {
+    logger.log(
+      'Detected styled-components in peerDependencies and babel-plugin-styled-components in devDependencies. Automatically enabling babel.styledComponents. To disable this, set `babel: { styledComponents: false }` in package.config.ts.',
+    )
     resolvedConfig = {
       ...config,
       babel: {
