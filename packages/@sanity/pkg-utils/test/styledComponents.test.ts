@@ -4,7 +4,7 @@ import {resolveBuildContext} from '../src/node/resolveBuildContext'
 import {createLogger} from '../src/node/logger'
 
 describe('styled-components auto-detection', () => {
-  test('should log auto-enable message when both styled-components and babel-plugin are present', async () => {
+  test('should not log in resolveBuildContext when both styled-components and babel-plugin are present', async () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
@@ -41,16 +41,13 @@ describe('styled-components auto-detection', () => {
       tsconfig: 'tsconfig.json',
     })
 
-    // Should log the auto-enable message in resolveBuildContext
-    expect(logSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Automatically enabling babel.styledComponents'),
-    )
+    // Logging now happens in resolveRollupConfig, not in resolveBuildContext
+    expect(logSpy).not.toHaveBeenCalled()
     expect(warnSpy).not.toHaveBeenCalled()
-    // Config should not be modified in resolveBuildContext - the actual enabling happens in resolveRollupConfig
     expect(ctx.config?.babel?.styledComponents).toBeUndefined()
   })
 
-  test('should warn when styled-components is present but babel-plugin is not', async () => {
+  test('should not warn in resolveBuildContext when styled-components is present but babel-plugin is not', async () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
@@ -84,12 +81,9 @@ describe('styled-components auto-detection', () => {
       tsconfig: 'tsconfig.json',
     })
 
-    expect(warnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Consider installing babel-plugin-styled-components'),
-    )
-    expect(logSpy).not.toHaveBeenCalledWith(
-      expect.stringContaining('Automatically enabling'),
-    )
+    // Logging now happens in resolveRollupConfig, not in resolveBuildContext
+    expect(warnSpy).not.toHaveBeenCalled()
+    expect(logSpy).not.toHaveBeenCalled()
     expect(ctx.config?.babel?.styledComponents).toBeUndefined()
   })
 

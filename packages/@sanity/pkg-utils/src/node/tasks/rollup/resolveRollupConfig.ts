@@ -37,12 +37,16 @@ function hasDevDependency(pkg: PackageJSON, packageName: string): boolean {
   return pkg.devDependencies ? packageName in pkg.devDependencies : false
 }
 
+// Track if we've already logged styled-components messages to avoid duplicates
+let styledComponentsLogged = false
+
 /**
  * Determine if styled-components should be enabled
  */
 function shouldEnableStyledComponents(
   config: BuildContext['config'],
   pkg: PackageJSON,
+  logger: BuildContext['logger'],
 ): boolean {
   const hasStyledComponents = hasPeerDependency(pkg, 'styled-components')
   const hasBabelPluginStyledComponents = hasDevDependency(pkg, 'babel-plugin-styled-components')
@@ -51,6 +55,25 @@ function shouldEnableStyledComponents(
   // If explicitly set, respect that
   if (styledComponentsConfigSet) {
     return !!config?.babel?.styledComponents
+  }
+
+  // Log messages only once per build
+  if (!styledComponentsLogged) {
+    styledComponentsLogged = true
+    
+    if (hasStyledComponents) {
+      if (hasBabelPluginStyledComponents) {
+        // Log that auto-enabling will happen
+        logger.log(
+          'Detected styled-components in peerDependencies and babel-plugin-styled-components in devDependencies. Automatically enabling babel.styledComponents. To disable this, set `babel: { styledComponents: false }` in package.config.ts.',
+        )
+      } else {
+        // Warn if styled-components is present but babel-plugin-styled-components is not
+        logger.warn(
+          'Detected styled-components in peerDependencies. Consider installing babel-plugin-styled-components as a devDependency to enable better debugging and optimization. Add `"babel-plugin-styled-components": "^2.0.0"` to devDependencies and it will be automatically enabled, or set `babel: { styledComponents: false }` in package.config.ts to disable this warning.',
+        )
+      }
+    }
   }
 
   // Auto-enable if both styled-components and babel plugin are present
@@ -102,7 +125,7 @@ export function resolveRollupConfig(
   const {optimizeLodash: enableOptimizeLodash = hasDependency(pkg, 'lodash')} = config?.rollup || {}
 
   // Auto-detect if styled-components should be enabled
-  const enableStyledComponents = shouldEnableStyledComponents(config, pkg)
+  const enableStyledComponents = shouldEnableStyledComponents(config, pkg, logger)
 
   const defaultPlugins = [
     replace({
