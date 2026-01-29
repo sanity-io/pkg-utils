@@ -4,7 +4,7 @@ import {resolveBuildContext} from '../src/node/resolveBuildContext'
 import {createLogger} from '../src/node/logger'
 
 describe('styled-components auto-detection', () => {
-  test('should not modify config when both styled-components and babel-plugin are present', async () => {
+  test('should log auto-enable message when both styled-components and babel-plugin are present', async () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
@@ -41,9 +41,12 @@ describe('styled-components auto-detection', () => {
       tsconfig: 'tsconfig.json',
     })
 
-    // Config should not be modified in resolveBuildContext - the auto-detection happens in resolveRollupConfig
-    expect(logSpy).not.toHaveBeenCalled()
+    // Should log the auto-enable message in resolveBuildContext
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Automatically enabling babel.styledComponents'),
+    )
     expect(warnSpy).not.toHaveBeenCalled()
+    // Config should not be modified in resolveBuildContext - the actual enabling happens in resolveRollupConfig
     expect(ctx.config?.babel?.styledComponents).toBeUndefined()
   })
 

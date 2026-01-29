@@ -58,11 +58,18 @@ export async function resolveBuildContext(options: {
   const hasBabelPluginStyledComponents = hasDevDependency(pkg, 'babel-plugin-styled-components')
   const styledComponentsConfigSet = config?.babel?.styledComponents !== undefined
 
-  if (hasStyledComponents && !styledComponentsConfigSet && !hasBabelPluginStyledComponents) {
-    // Warn if styled-components is present but babel-plugin-styled-components is not
-    logger.warn(
-      'Detected styled-components in peerDependencies. Consider installing babel-plugin-styled-components as a devDependency to enable better debugging and optimization. Add `"babel-plugin-styled-components": "^2.0.0"` to devDependencies and it will be automatically enabled, or set `babel: { styledComponents: false }` in package.config.ts to disable this warning.',
-    )
+  if (hasStyledComponents && !styledComponentsConfigSet) {
+    if (hasBabelPluginStyledComponents) {
+      // Log that auto-enabling will happen (actual enabling happens in resolveRollupConfig)
+      logger.log(
+        'Detected styled-components in peerDependencies and babel-plugin-styled-components in devDependencies. Automatically enabling babel.styledComponents. To disable this, set `babel: { styledComponents: false }` in package.config.ts.',
+      )
+    } else {
+      // Warn if styled-components is present but babel-plugin-styled-components is not
+      logger.warn(
+        'Detected styled-components in peerDependencies. Consider installing babel-plugin-styled-components as a devDependency to enable better debugging and optimization. Add `"babel-plugin-styled-components": "^2.0.0"` to devDependencies and it will be automatically enabled, or set `babel: { styledComponents: false }` in package.config.ts to disable this warning.',
+      )
+    }
   }
 
   if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options && config?.dts !== 'rolldown') {
