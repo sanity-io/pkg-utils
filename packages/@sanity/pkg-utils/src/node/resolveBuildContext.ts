@@ -211,23 +211,8 @@ export async function resolveBuildContext(options: {
     throw new Error('could not detect `dist` path')
   }
 
-  // Apply auto-detected styled-components configuration
-  let resolvedConfig: PkgConfigOptions | undefined = config
-  if (hasStyledComponents && !styledComponentsConfigSet && hasBabelPluginStyledComponents) {
-    logger.log(
-      'Detected styled-components in peerDependencies and babel-plugin-styled-components in devDependencies. Automatically enabling babel.styledComponents. To disable this, set `babel: { styledComponents: false }` in package.config.ts.',
-    )
-    resolvedConfig = {
-      ...config,
-      babel: {
-        ...config?.babel,
-        styledComponents: true,
-      },
-    }
-  }
-
   const ctx: BuildContext = {
-    config: resolvedConfig,
+    config,
     cwd,
     distPath,
     emitDeclarationOnly,

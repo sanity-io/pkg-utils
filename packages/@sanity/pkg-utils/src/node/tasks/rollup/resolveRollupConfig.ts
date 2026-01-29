@@ -23,6 +23,48 @@ function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
   return Boolean(value)
 }
 
+/**
+ * Check if a package is in the peerDependencies
+ */
+function hasPeerDependency(pkg: PackageJSON, packageName: string): boolean {
+  return pkg.peerDependencies ? packageName in pkg.peerDependencies : false
+}
+
+/**
+ * Check if a package is in the devDependencies
+ */
+function hasDevDependency(pkg: PackageJSON, packageName: string): boolean {
+  return pkg.devDependencies ? packageName in pkg.devDependencies : false
+}
+
+/**
+ * Determine if styled-components should be enabled
+ */
+function shouldEnableStyledComponents(
+  config: BuildContext['config'],
+  pkg: PackageJSON,
+  logger: BuildContext['logger'],
+): boolean {
+  const hasStyledComponents = hasPeerDependency(pkg, 'styled-components')
+  const hasBabelPluginStyledComponents = hasDevDependency(pkg, 'babel-plugin-styled-components')
+  const styledComponentsConfigSet = config?.babel?.styledComponents !== undefined
+
+  // If explicitly set, respect that
+  if (styledComponentsConfigSet) {
+    return !!config?.babel?.styledComponents
+  }
+
+  // Auto-enable if both styled-components and babel plugin are present
+  if (hasStyledComponents && hasBabelPluginStyledComponents) {
+    logger.log(
+      'Detected styled-components in peerDependencies and babel-plugin-styled-components in devDependencies. Automatically enabling babel.styledComponents. To disable this, set `babel: { styledComponents: false }` in package.config.ts.',
+    )
+    return true
+  }
+
+  return false
+}
+
 export interface RollupConfig {
   inputOptions: InputOptions
   outputOptions: OutputOptions
@@ -62,6 +104,9 @@ export function resolveRollupConfig(
   )
 
   const {optimizeLodash: enableOptimizeLodash = hasDependency(pkg, 'lodash')} = config?.rollup || {}
+
+  // Auto-detect if styled-components should be enabled
+  const enableStyledComponents = shouldEnableStyledComponents(config, pkg, logger)
 
   const defaultPlugins = [
     replace({
@@ -142,7 +187,7 @@ export function resolveRollupConfig(
               browserslist: config.rollup.vanillaExtract.browserslist || DEFAULT_BROWSERSLIST_QUERY,
             },
       ),
-    (config?.babel?.reactCompiler || config?.babel?.styledComponents) &&
+    (config?.babel?.reactCompiler || enableStyledComponents) &&
       babel({
         babelrc: false,
         presets: ['@babel/preset-typescript'],
@@ -150,7 +195,7 @@ export function resolveRollupConfig(
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
         plugins: [
           // The styled-components plugin needs to run before the react-compiler plugin, in case the css prop is used
-          config?.babel?.styledComponents && [
+          enableStyledComponents && [
             'babel-plugin-styled-components',
             {
               // Unnecessary, as the way we use styled-components in Sanity is usually by wrapping `@sanity/ui` primitives, not declaring new ones like "const Button = styled.button``"
@@ -161,7 +206,7 @@ export function resolveRollupConfig(
               pure: true,
               // disabled, as pkg-utils tends to be used for npm publishing, while other tooling, like `sanity dev`, `next dev`, etc are used for testing
               cssProp: false,
-              ...(typeof config.babel.styledComponents === 'object'
+              ...(typeof config?.babel?.styledComponents === 'object'
                 ? config.babel.styledComponents
                 : {}),
             },
