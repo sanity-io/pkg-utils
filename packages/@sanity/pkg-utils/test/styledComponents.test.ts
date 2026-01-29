@@ -8,6 +8,7 @@ describe('styled-components auto-detection', () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
+      type: 'module',
       peerDependencies: {
         'styled-components': '^6.0.0',
       },
@@ -51,6 +52,7 @@ describe('styled-components auto-detection', () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
+      type: 'module',
       peerDependencies: {
         'styled-components': '^6.0.0',
       },
@@ -93,6 +95,7 @@ describe('styled-components auto-detection', () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
+      type: 'module',
       peerDependencies: {
         'styled-components': '^6.0.0',
       },
@@ -138,6 +141,7 @@ describe('styled-components auto-detection', () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
+      type: 'module',
       peerDependencies: {
         'styled-components': '^6.0.0',
       },
@@ -183,6 +187,7 @@ describe('styled-components auto-detection', () => {
     const pkg: PackageJSON = {
       name: 'test-package',
       version: '1.0.0',
+      type: 'module',
       exports: {
         '.': {
           source: './src/index.ts',
