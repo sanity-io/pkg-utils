@@ -1,7 +1,7 @@
-import {describe, expect, test, vi} from 'vitest'
 import type {PackageJSON} from '@sanity/parse-package-json'
-import {resolveBuildContext} from '../src/node/resolveBuildContext'
+import {describe, expect, test, vi} from 'vitest'
 import {createLogger} from '../src/node/logger'
+import {resolveBuildContext} from '../src/node/resolveBuildContext'
 
 describe('styled-components auto-detection', () => {
   test('should not log in resolveBuildContext when both styled-components and babel-plugin are present', async () => {

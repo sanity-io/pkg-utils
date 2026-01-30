@@ -60,7 +60,7 @@ function shouldEnableStyledComponents(
   // Log messages only once per build
   if (!styledComponentsLogged) {
     styledComponentsLogged = true
-    
+
     if (hasStyledComponents) {
       if (hasBabelPluginStyledComponents) {
         // Log that auto-enabling will happen
