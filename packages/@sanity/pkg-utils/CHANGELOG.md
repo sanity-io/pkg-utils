@@ -1,5 +1,17 @@
 # @sanity/pkg-utils
 
+## 10.4.0
+
+### Minor Changes
+
+- [#2538](https://github.com/sanity-io/pkg-utils/pull/2538) [`a7bd216`](https://github.com/sanity-io/pkg-utils/commit/a7bd216fdb03cfebdf12272f4248a4d46f901f5a) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Auto-enable styled-components compiler when detected as peer dependency. If `styled-components` is in peerDependencies and `babel-plugin-styled-components` is in devDependencies, the babel plugin is automatically enabled without requiring explicit configuration. Users can disable this behavior by setting `babel: { styledComponents: false }` in package.config.ts.
+
+### Patch Changes
+
+- [#2543](https://github.com/sanity-io/pkg-utils/pull/2543) [`02423ba`](https://github.com/sanity-io/pkg-utils/commit/02423ba7184ff3a11a3ad7e7c2c61284741e846a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.55.5
+
+- [#2544](https://github.com/sanity-io/pkg-utils/pull/2544) [`1c06f32`](https://github.com/sanity-io/pkg-utils/commit/1c06f32f3287fe9b8af2a2d57b1f9430866dfd43) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.21.7
+
 ## 10.3.5
 
 ### Patch Changes
