@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.4.1
+
+### Patch Changes
+
+- [#2548](https://github.com/sanity-io/pkg-utils/pull/2548) [`ebfe640`](https://github.com/sanity-io/pkg-utils/commit/ebfe6403673c32aa29804e23db31fa103b3ff45e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.57.0
+
 ## 10.4.0
 
 ### Minor Changes
