@@ -1,5 +1,15 @@
 # @sanity/pkg-utils
 
+## 10.4.2
+
+### Patch Changes
+
+- [#2546](https://github.com/sanity-io/pkg-utils/pull/2546) [`2b3c6f8`](https://github.com/sanity-io/pkg-utils/commit/2b3c6f883039f0aeb14f6070ea64c53b14efa472) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.2
+
+- [#2547](https://github.com/sanity-io/pkg-utils/pull/2547) [`033a811`](https://github.com/sanity-io/pkg-utils/commit/033a811af28e07b60630a158f1363326d9807aba) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.21.8
+
+- [#2549](https://github.com/sanity-io/pkg-utils/pull/2549) [`574c6b0`](https://github.com/sanity-io/pkg-utils/commit/574c6b074b711146e3719a8a1726e645e88514b4) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.56.0
+
 ## 10.4.1
 
 ### Patch Changes
