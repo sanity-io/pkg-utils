@@ -235,8 +235,8 @@ importers:
         specifier: 1.0.0-rc.2
         version: 1.0.0-rc.2
       rolldown-plugin-dts:
-        specifier: 0.21.7
-        version: 0.21.7(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.2)(typescript@5.9.3)
+        specifier: 0.21.8
+        version: 0.21.8(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.2)(typescript@5.9.3)
       rollup:
         specifier: ^4.57.0
         version: 4.57.0
@@ -6563,8 +6563,8 @@ packages:
     engines: {node: 20 || >=22}
     hasBin: true
 
-  rolldown-plugin-dts@0.21.7:
-    resolution: {integrity: sha512-u6mHPTxLzC/eU3hbFqu1Hd47if1zXITvNtbro5PRVqMe3tLzUkdeur87wRg8Y/bX5PYUUtPuGO815uHp8zi9uQ==}
+  rolldown-plugin-dts@0.21.8:
+    resolution: {integrity: sha512-czOQoe6eZpRKCv9P+ijO/v4A2TwQjASAV7qezUxRZSua06Yb2REPIZv/mbfXiZDP1ZfI7Ez7re7qfK9F9u0Epw==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@ts-macro/tsc': ^0.3.6
@@ -14394,7 +14394,7 @@ snapshots:
       glob: 13.0.0
       package-json-from-dist: 1.0.1
 
-  rolldown-plugin-dts@0.21.7(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.1)(typescript@5.9.3):
+  rolldown-plugin-dts@0.21.8(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.1)(typescript@5.9.3):
     dependencies:
       '@babel/generator': 8.0.0-beta.4
       '@babel/parser': 8.0.0-beta.4
@@ -14411,7 +14411,7 @@ snapshots:
     transitivePeerDependencies:
       - oxc-resolver
 
-  rolldown-plugin-dts@0.21.7(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.2)(typescript@5.9.3):
+  rolldown-plugin-dts@0.21.8(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.2)(typescript@5.9.3):
     dependencies:
       '@babel/generator': 8.0.0-beta.4
       '@babel/parser': 8.0.0-beta.4
@@ -15360,7 +15360,7 @@ snapshots:
       obug: 2.1.1
       picomatch: 4.0.3
       rolldown: 1.0.0-rc.1
-      rolldown-plugin-dts: 0.21.7(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.1)(typescript@5.9.3)
+      rolldown-plugin-dts: 0.21.8(@typescript/native-preview@7.0.0-dev.20260130.1)(rolldown@1.0.0-rc.1)(typescript@5.9.3)
       semver: 7.7.3
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
