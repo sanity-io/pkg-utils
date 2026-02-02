@@ -139,8 +139,8 @@ importers:
         specifier: ^7.28.5
         version: 7.28.5(@babel/core@7.28.6)
       '@microsoft/api-extractor':
-        specifier: ^7.55.5
-        version: 7.55.5(@types/node@24.10.9)
+        specifier: ^7.56.0
+        version: 7.56.0(@types/node@24.10.9)
       '@microsoft/tsdoc-config':
         specifier: ^0.18.0
         version: 0.18.0
@@ -2239,8 +2239,8 @@ packages:
   '@microsoft/api-extractor-model@7.32.2':
     resolution: {integrity: sha512-Ussc25rAalc+4JJs9HNQE7TuO9y6jpYQX9nWD1DhqUzYPBr3Lr7O9intf+ZY8kD5HnIqeIRJX7ccCT0QyBy2Ww==}
 
-  '@microsoft/api-extractor@7.55.5':
-    resolution: {integrity: sha512-QYpt3CmDle3ijYzRDhvD2mEUiTS1IqGVX25YrYsIJMpgf6XmhB991HdULMwdcsHY/ym0uM5GaqvNcQLa1IQKkw==}
+  '@microsoft/api-extractor@7.56.0':
+    resolution: {integrity: sha512-H0V69QG5jIb9Ayx35NVBv2lOgFSS3q+Eab2oyGEy0POL3ovYPST+rCNPbwYoczOZXNG8IKjWUmmAMxmDTsXlQA==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.18.0':
@@ -9333,7 +9333,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.55.5(@types/node@24.10.9)':
+  '@microsoft/api-extractor@7.56.0(@types/node@24.10.9)':
     dependencies:
       '@microsoft/api-extractor-model': 7.32.2(@types/node@24.10.9)
       '@microsoft/tsdoc': 0.16.0
