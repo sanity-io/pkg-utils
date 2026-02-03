@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.4.4
+
+### Patch Changes
+
+- [#2563](https://github.com/sanity-io/pkg-utils/pull/2563) [`c39a359`](https://github.com/sanity-io/pkg-utils/commit/c39a359cac68e8a34d016f0e68205ae38007a5ef) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @babel/core to ^7.29.0
+
 ## 10.4.3
 
 ### Patch Changes
