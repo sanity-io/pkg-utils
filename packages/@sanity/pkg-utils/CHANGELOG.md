@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.4.3
+
+### Patch Changes
+
+- [`6ee4fc6`](https://github.com/sanity-io/pkg-utils/commit/6ee4fc6ceec0933a4663b1ad263b4ba59c36ceac) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): Update dependency rollup to ^4.57.1
+
 ## 10.4.2
 
 ### Patch Changes
