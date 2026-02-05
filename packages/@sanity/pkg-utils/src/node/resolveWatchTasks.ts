@@ -48,7 +48,7 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
       dtsTask.entries.push({
         importId,
         exportPath: exp._path,
-        sourcePath: sourcePath,
+        sourcePath,
         targetPaths: getTargetPaths(pkg.type, exp),
       })
     }

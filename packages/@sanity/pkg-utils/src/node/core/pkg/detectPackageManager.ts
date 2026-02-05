@@ -27,9 +27,9 @@ async function detectPackageManagerFromField(cwd: string): Promise<PackageManage
       if (pkg.packageManager && typeof pkg.packageManager === 'string') {
         // Parse packageManager field (format: "pnpm@9.0.0" or "npm@10.0.0")
         const match = pkg.packageManager.match(/^([^@]+)@?(.*)$/)
-        if (match) {
+        if (match && match[1]) {
           return {
-            name: match[1]!,
+            name: match[1],
             version: match[2] || undefined,
           }
         }
