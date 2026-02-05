@@ -6,6 +6,7 @@ import type {StrictOptions} from '../../strict.ts'
 import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths.ts'
 import type {PkgExport} from '../config/types.ts'
 import {isRecord} from '../isRecord.ts'
+import {validatePnpmPackageManager} from './detectPackageManager.ts'
 import {pkgExtMap} from './pkgExt.ts'
 import {validateExports} from './validateExports.ts'
 
@@ -15,13 +16,13 @@ function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
 }
 
 /** @alpha */
-export function parseAndValidateExports(options: {
+export async function parseAndValidateExports(options: {
   cwd: string
   pkg: PackageJSON
   strict: boolean
   strictOptions: StrictOptions
   logger: Logger
-}): (PkgExport & {_path: string})[] {
+}): Promise<(PkgExport & {_path: string})[]> {
   const {cwd, pkg, strict, strictOptions, logger} = options
   const type = pkg.type || 'commonjs'
   const errors: string[] = []
@@ -139,8 +140,8 @@ export function parseAndValidateExports(options: {
     strictOptions.alwaysPackageJsonTypes !== 'off' &&
     !pkg.types &&
     typeof pkg.exports?.['.'] === 'object' &&
-    'source' in pkg.exports['.'] &&
-    pkg.exports['.'].source?.endsWith('.ts')
+    (('source' in pkg.exports['.'] && pkg.exports['.'].source?.endsWith('.ts')) ||
+      ('monorepo' in pkg.exports['.'] && pkg.exports['.'].monorepo?.endsWith('.ts')))
   ) {
     report(
       strictOptions.alwaysPackageJsonTypes,
@@ -218,6 +219,28 @@ export function parseAndValidateExports(options: {
     }
   }
 
+  // Validate monorepo condition requirements
+  const hasMonorepoCondition = Object.entries(pkg.exports).some(([, exp]) => {
+    if (typeof exp === 'string') return false
+    if (typeof exp === 'object' && 'svelte' in exp) return false
+    return Boolean(exp.monorepo)
+  })
+
+  if (hasMonorepoCondition) {
+    // Check that publishConfig.exports is defined
+    if (!pkg.publishConfig?.exports) {
+      errors.push(
+        'package.json: When using the `monorepo` export condition, `publishConfig.exports` must be defined to ensure the package is published without the monorepo condition.',
+      )
+    }
+
+    // Validate that pnpm is being used as the package manager
+    const pnpmError = await validatePnpmPackageManager(cwd)
+    if (pnpmError) {
+      errors.push(`package.json: ${pnpmError}`)
+    }
+  }
+
   errors.push(...validateExports(_exports, {pkg}))
 
   if (errors.length) {
@@ -228,5 +251,9 @@ export function parseAndValidateExports(options: {
 }
 
 function isPkgExport(value: unknown): value is PkgExport {
-  return isRecord(value) && 'source' in value && typeof value['source'] === 'string'
+  return (
+    isRecord(value) &&
+    (('source' in value && typeof value['source'] === 'string') ||
+      ('monorepo' in value && typeof value['monorepo'] === 'string'))
+  )
 }

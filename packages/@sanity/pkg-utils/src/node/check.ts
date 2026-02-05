@@ -5,6 +5,7 @@ import type {BuildFailure, Message} from 'esbuild'
 import {createConsoleSpy} from './consoleSpy.ts'
 import {loadConfig} from './core/config/loadConfig.ts'
 import type {BuildContext} from './core/contexts/index.ts'
+import {getSourcePath} from './core/exportUtils.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {fileExists} from './fileExists.ts'
 import {createLogger, type Logger} from './logger.ts'
@@ -40,8 +41,9 @@ export async function check(options: {
 
       // Check if there are missing files
       for (const [, exp] of Object.entries(ctx.exports || {})) {
-        if (exp.source && !fileExists(path.resolve(cwd, exp.source))) {
-          missingFiles.push(exp.source)
+        const sourcePath = getSourcePath(exp)
+        if (sourcePath && !fileExists(path.resolve(cwd, sourcePath))) {
+          missingFiles.push(sourcePath)
         }
 
         if (exp.require && !fileExists(path.resolve(cwd, exp.require))) {
