@@ -10,7 +10,7 @@ const strictOptions = parseStrictOptions({})
 const logger = createLogger()
 const cwd = process.cwd()
 
-test('should parse tasks (type: module)', () => {
+test('should parse tasks (type: module)', async () => {
   const pkg: PackageJSON = {
     type: 'module',
     name: 'test',
@@ -39,7 +39,7 @@ test('should parse tasks (type: module)', () => {
     },
   }
 
-  const exports = parseAndValidateExports({
+  const exports = await parseAndValidateExports({
     cwd,
     pkg,
     strict: true,

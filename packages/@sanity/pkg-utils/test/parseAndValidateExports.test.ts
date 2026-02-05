@@ -22,7 +22,7 @@ const cwd = process.cwd()
 describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: undefined}])(
   'parseAndValidateExports({type: $type})',
   ({type}) => {
-    const testParseExports = (
+    const testParseExports = async (
       options: Omit<
         Parameters<typeof parseAndValidateExports>[0],
         'strict' | 'strictOptions' | 'logger' | 'cwd'
@@ -39,7 +39,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
     } as const
 
     describe('valid package.json examples', () => {
-      test('parse basic package.json', () => {
+      test('parse basic package.json', async () => {
         const pkg = {
           type,
           name,
@@ -50,7 +50,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           exports: reference,
         } satisfies PackageJSON
 
-        const exports = testParseExports({pkg})
+        const exports = await testParseExports({pkg})
 
         expect(exports).toEqual([
           {
@@ -61,7 +61,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
         ])
       })
 
-      test.skipIf(type === 'module')('parse minimal CJS package.json', () => {
+      test.skipIf(type === 'module')('parse minimal CJS package.json', async () => {
         const pkg = {
           type,
           name,
@@ -79,7 +79,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        const exports = testParseExports({pkg})
+        const exports = await testParseExports({pkg})
 
         expect(exports).toEqual([
           {
@@ -90,7 +90,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
         ])
       })
 
-      test.skipIf(type === 'module')('parse minimal CJS-only package.json', () => {
+      test.skipIf(type === 'module')('parse minimal CJS-only package.json', async () => {
         const pkg = {
           type,
           name,
@@ -107,7 +107,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        const exports = testParseExports({pkg})
+        const exports = await testParseExports({pkg})
 
         expect(exports).toEqual([
           {
@@ -120,7 +120,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
         ])
       })
 
-      test.skipIf(type !== 'module')('parse minimal ESM package.json', () => {
+      test.skipIf(type !== 'module')('parse minimal ESM package.json', async () => {
         const pkg = {
           type,
           name,
@@ -138,7 +138,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        const exports = testParseExports({pkg})
+        const exports = await testParseExports({pkg})
 
         expect(exports).toEqual([
           {
@@ -149,7 +149,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
         ])
       })
 
-      test.skipIf(type !== 'module')('parse minimal ESM-only package.json', () => {
+      test.skipIf(type !== 'module')('parse minimal ESM-only package.json', async () => {
         const pkg = {
           type,
           name,
@@ -166,7 +166,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        const exports = testParseExports({pkg})
+        const exports = await testParseExports({pkg})
 
         expect(exports).toEqual([
           {
@@ -182,7 +182,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
 
     describe('invalid packages', () => {
       describe('the "exports" key is required', () => {
-        test('uses the "browsers" field to specify a "browser" condition', () => {
+        test('uses the "browsers" field to specify a "browser" condition', async () => {
           const pkg = {
             type,
             name,
@@ -207,12 +207,12 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
                   }) as Record<string, string>,
           } satisfies PackageJSON
 
-          expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
-          expect(() => testParseExports({pkg})).toThrowError(/"browser"/)
-          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+          await expect(testParseExports({pkg})).rejects.toThrowError(/`exports` are missing/)
+          await expect(testParseExports({pkg})).rejects.toThrowError(/"browser"/)
+          await expect(testParseExports({pkg})).rejects.toThrowErrorMatchingSnapshot()
         })
 
-        test('maps "source" to "browsers" field to specify a "browser" condition', () => {
+        test('maps "source" to "browsers" field to specify a "browser" condition', async () => {
           const pkg = {
             type,
             name,
@@ -240,12 +240,12 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
                   }) as Record<string, string>,
           } satisfies PackageJSON
 
-          expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
-          expect(() => testParseExports({pkg})).toThrowError(/"browser"/)
-          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+          await expect(testParseExports({pkg})).rejects.toThrowError(/`exports` are missing/)
+          await expect(testParseExports({pkg})).rejects.toThrowError(/"browser"/)
+          await expect(testParseExports({pkg})).rejects.toThrowErrorMatchingSnapshot()
         })
 
-        test('uses the "main" and "source" fields to specify a suggested "exports" definition', () => {
+        test('uses the "main" and "source" fields to specify a suggested "exports" definition', async () => {
           const pkg = {
             type,
             name,
@@ -256,11 +256,11 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
             types: './dist/index.d.ts',
           } satisfies PackageJSON
 
-          expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
-          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+          await expect(testParseExports({pkg})).rejects.toThrowError(/`exports` are missing/)
+          await expect(testParseExports({pkg})).rejects.toThrowErrorMatchingSnapshot()
         })
 
-        test.skip('shows a best effort message if there is no "main" field', () => {
+        test.skip('shows a best effort message if there is no "main" field', async () => {
           const pkg = {
             type,
             name,
@@ -270,11 +270,11 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
             types: './dist/index.d.ts',
           } satisfies PackageJSON
 
-          expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
-          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+          await expect(testParseExports({pkg})).rejects.toThrowError(/`exports` are missing/)
+          await expect(testParseExports({pkg})).rejects.toThrowErrorMatchingSnapshot()
         })
 
-        test('shows a best effort message if there is no "source" field either', () => {
+        test('shows a best effort message if there is no "source" field either', async () => {
           const pkg = {
             type,
             name,
@@ -284,12 +284,12 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
             types: './dist/index.d.ts',
           } satisfies PackageJSON
 
-          expect(() => testParseExports({pkg})).toThrowError(/`exports` are missing/)
-          expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+          await expect(testParseExports({pkg})).rejects.toThrowError(/`exports` are missing/)
+          await expect(testParseExports({pkg})).rejects.toThrowErrorMatchingSnapshot()
         })
       })
 
-      test('the "source" field should be removed when "exports" is set', () => {
+      test('the "source" field should be removed when "exports" is set', async () => {
         const pkg = {
           type,
           name,
@@ -307,11 +307,11 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        expect(() => testParseExports({pkg})).toThrowError(/the "source" property can be removed/)
-        expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
+        await expect(testParseExports({pkg})).rejects.toThrowError(/the "source" property can be removed/)
+        await expect(testParseExports({pkg})).rejects.toThrowErrorMatchingSnapshot()
       })
 
-      test('css exports must be strings (paths)', () => {
+      test('css exports must be strings (paths)', async () => {
         const pkg = {
           type,
           name,
@@ -329,12 +329,12 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        expect(() => testParseExports({pkg})).toThrowError(
+        await expect(testParseExports({pkg})).rejects.toThrowError(
           'package.json: `exports["./style.css"]`: export conditions not supported for CSS files.',
         )
       })
 
-      test('css exports must exist on file system', () => {
+      test('css exports must exist on file system', async () => {
         const pkg = {
           type,
           name,
@@ -352,12 +352,12 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        expect(() => testParseExports({pkg})).toThrowError(
+        await expect(testParseExports({pkg})).rejects.toThrowError(
           'package.json: `exports["./style.css"]`: file does not exist.',
         )
       })
 
-      test('the "package.json" field should be set to "./package.json" (if set)', () => {
+      test('the "package.json" field should be set to "./package.json" (if set)', async () => {
         const pkg = {
           type,
           name,
@@ -374,7 +374,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         } satisfies PackageJSON
 
-        expect(() => testParseExports({pkg})).toThrowError(
+        await expect(testParseExports({pkg})).rejects.toThrowError(
           'package.json: `exports["./package.json"]` must be "./package.json"',
         )
       })
