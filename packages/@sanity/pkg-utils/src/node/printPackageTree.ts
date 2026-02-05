@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import treeify from 'treeify'
 import type {PkgExport} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
+import {getSourcePath} from './core/exportUtils.ts'
 import {fileExists} from './fileExists.ts'
 import {getFilesize} from './getFilesize.ts'
 
@@ -47,8 +48,10 @@ export function printPackageTree(ctx: BuildContext): void {
     Object.entries(exports)
       .filter(([, entry]) => entry._exported)
       .map(([exportPath, entry]) => {
+        const sourcePath = getSourcePath(entry)
         const exp: Omit<PkgExport, '_exported'> = {
-          source: fileInfo(entry.source),
+          source: sourcePath ? fileInfo(sourcePath) : undefined,
+          monorepo: entry.monorepo ? fileInfo(entry.monorepo) : undefined,
           browser: undefined,
           require: undefined,
           node: undefined,

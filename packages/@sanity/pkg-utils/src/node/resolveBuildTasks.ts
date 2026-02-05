@@ -1,6 +1,7 @@
 import path from 'node:path'
 import type {PkgExport, PkgFormat, PkgRuntime} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
+import {getSourcePath} from './core/exportUtils.ts'
 import {getTargetPaths} from './tasks/dts/getTargetPaths.ts'
 import type {DtsTask} from './tasks/dts/types.ts'
 import type {BuildTask, RolldownDtsTask, RollupTask, RollupTaskEntry} from './tasks/types.ts'
@@ -63,12 +64,13 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     // Parse `dts` tasks
     for (const exp of exports) {
       const importId = path.join(pkg.name, exp._path)
+      const sourcePath = getSourcePath(exp)
 
-      if (exp.source?.endsWith('.ts')) {
+      if (sourcePath?.endsWith('.ts')) {
         dtsTask.entries.push({
           importId,
           exportPath: exp._path,
-          sourcePath: exp.source,
+          sourcePath,
           targetPaths: getTargetPaths(pkg.type, exp),
         })
       }
@@ -119,12 +121,13 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
   // Parse rollup:commonjs:* tasks
   for (const exp of exports) {
     const output = exp.require
+    const sourcePath = getSourcePath(exp)
 
     if (!output) continue
 
     addRollupTaskEntry('commonjs', ctx.runtime, {
       path: exp._path,
-      source: exp.source,
+      source: sourcePath,
       output,
     })
   }
@@ -132,12 +135,13 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
   // Parse rollup:esm:* tasks
   for (const exp of exports) {
     const output = exp.import
+    const sourcePath = getSourcePath(exp)
 
     if (!output) continue
 
     addRollupTaskEntry('esm', ctx.runtime, {
       path: exp._path,
-      source: exp.source,
+      source: sourcePath,
       output,
     })
   }
@@ -150,7 +154,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
     addRollupTaskEntry('commonjs', 'browser', {
       path: exp._path,
-      source: exp.browser?.source || exp.source,
+      source: exp.browser?.source || getSourcePath(exp),
       output,
     })
   }
@@ -163,7 +167,7 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
     addRollupTaskEntry('esm', 'browser', {
       path: exp._path,
-      source: exp.browser?.source || exp.source,
+      source: exp.browser?.source || getSourcePath(exp),
       output,
     })
   }

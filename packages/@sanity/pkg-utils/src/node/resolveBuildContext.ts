@@ -107,13 +107,15 @@ export async function resolveBuildContext(options: {
     'node': nodeTarget,
   }
 
-  const parsedExports = parseAndValidateExports({
-    cwd,
-    pkg,
-    strict,
-    strictOptions,
-    logger,
-  }).reduce<PkgExports>(
+  const parsedExports = (
+    await parseAndValidateExports({
+      cwd,
+      pkg,
+      strict,
+      strictOptions,
+      logger,
+    })
+  ).reduce<PkgExports>(
     (acc, {_path: exportPath, ...exportEntry}) => Object.assign(acc, {[exportPath]: exportEntry}),
     {},
   )

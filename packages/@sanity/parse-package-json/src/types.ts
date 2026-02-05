@@ -17,7 +17,7 @@ export interface PkgExport {
     require?: string
   }
   types?: string
-  source: string
+  source?: string
   development?: string
   monorepo?: string
   import?: string
