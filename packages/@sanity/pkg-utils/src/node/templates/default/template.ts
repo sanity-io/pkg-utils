@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process'
 import {resolve} from 'node:path'
 import type {PackageJSON} from '@sanity/parse-package-json'
 import prettierConfig from '@sanity/prettier-config'
-import getLatestVersion from 'get-latest-version'
+import {getLatestVersion} from 'get-latest-version'
 import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
 import {format, type Config as PrettierConfig} from 'prettier'
@@ -524,7 +524,7 @@ async function resolveLatestDeps(deps: Record<string, string | undefined>) {
     const [name, version] = entry
 
     if (version) {
-      const latestVersion = await getLatestVersion(name, version)
+      const latestVersion = await getLatestVersion(name, {range: version})
 
       latestDeps[name] = latestVersion ? `^${latestVersion}` : version
     }
