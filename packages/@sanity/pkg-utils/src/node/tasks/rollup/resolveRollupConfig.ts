@@ -349,7 +349,7 @@ export function resolveRollupConfig(
         propertyReadSideEffects: false,
         // If the module ends with `.css` it is considered to be a side effect, even if the module is marked as no side effect,
         // this option used to be `moduleSideEffects: 'no-external'`, and thus if it's not CSS it uses `!external`, which is equivalent to `'no-external'`
-        moduleSideEffects: (id, external) => (id.endsWith('.css') ? true : !external),
+        moduleSideEffects: (id, isExternal) => (id.endsWith('.css') ? true : !isExternal),
         annotations: true,
         ...config?.rollup?.treeshake,
       },
