@@ -148,13 +148,13 @@ async function execPromise(ctx: BuildContext, task: RolldownDtsTask) {
   }
 }
 
-function replaceFileEnding(path: string) {
+function replaceFileEnding(filePath: string) {
   switch (true) {
-    case path.endsWith('.mjs'):
-      return path.replace(/\.mjs$/, '.d.mts')
-    case path.endsWith('.cjs'):
-      return path.replace(/\.cjs$/, '.d.cts')
+    case filePath.endsWith('.mjs'):
+      return filePath.replace(/\.mjs$/, '.d.mts')
+    case filePath.endsWith('.cjs'):
+      return filePath.replace(/\.cjs$/, '.d.cts')
     default:
-      return path.replace(/\.js$/, '.d.ts')
+      return filePath.replace(/\.js$/, '.d.ts')
   }
 }
