@@ -139,8 +139,8 @@ importers:
         specifier: ^7.28.5
         version: 7.28.5(@babel/core@7.29.0)
       '@microsoft/api-extractor':
-        specifier: ^7.57.5
-        version: 7.57.5(@types/node@24.11.0)
+        specifier: ^7.57.6
+        version: 7.57.6(@types/node@24.11.0)
       '@microsoft/tsdoc-config':
         specifier: ^0.18.1
         version: 0.18.1
@@ -2259,11 +2259,11 @@ packages:
   '@manypkg/get-packages@1.1.3':
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==}
 
-  '@microsoft/api-extractor-model@7.33.3':
-    resolution: {integrity: sha512-EMwfPbyt0bAxPEOf2skhaURyNayxSDinjyInOuZJleG1Zb4YmDrKpNP9XRI01jfJCT1OKdUyEIuX5GYHi11y2A==}
+  '@microsoft/api-extractor-model@7.33.4':
+    resolution: {integrity: sha512-u1LTaNTikZAQ9uK6KG1Ms7nvNedsnODnspq/gH2dcyETWvH4hVNGNDvRAEutH66kAmxA4/necElqGNs1FggC8w==}
 
-  '@microsoft/api-extractor@7.57.5':
-    resolution: {integrity: sha512-QwbB6UgdB+ASXA2kdhuOfBOkVdE4PO+rETfBhbIakE3eTSd3gwUvL8PBf4YVRJUq1aBWYP8lkp7PzUShvh2ODw==}
+  '@microsoft/api-extractor@7.57.6':
+    resolution: {integrity: sha512-0rFv/D8Grzw1Mjs2+8NGUR+o4h9LVm5zKRtMeWnpdB5IMJF4TeHCL1zR5LMCIudkOvyvjbhMG5Wjs0B5nqsrRQ==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.18.1':
@@ -9525,7 +9525,7 @@ snapshots:
       globby: 11.1.0
       read-yaml-file: 1.1.0
 
-  '@microsoft/api-extractor-model@7.33.3(@types/node@24.11.0)':
+  '@microsoft/api-extractor-model@7.33.4(@types/node@24.11.0)':
     dependencies:
       '@microsoft/tsdoc': 0.16.0
       '@microsoft/tsdoc-config': 0.18.1
@@ -9533,9 +9533,9 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.57.5(@types/node@24.11.0)':
+  '@microsoft/api-extractor@7.57.6(@types/node@24.11.0)':
     dependencies:
-      '@microsoft/api-extractor-model': 7.33.3(@types/node@24.11.0)
+      '@microsoft/api-extractor-model': 7.33.4(@types/node@24.11.0)
       '@microsoft/tsdoc': 0.16.0
       '@microsoft/tsdoc-config': 0.18.1
       '@rushstack/node-core-library': 5.20.3(@types/node@24.11.0)
