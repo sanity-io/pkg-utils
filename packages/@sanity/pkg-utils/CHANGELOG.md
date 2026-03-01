@@ -1,5 +1,25 @@
 # @sanity/pkg-utils
 
+## 10.4.5
+
+### Patch Changes
+
+- [#2578](https://github.com/sanity-io/pkg-utils/pull/2578) [`5ee8931`](https://github.com/sanity-io/pkg-utils/commit/5ee893166513e96461fb54c7a37cd2fa530d4417) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.27.3
+
+- [#2581](https://github.com/sanity-io/pkg-utils/pull/2581) [`62980f8`](https://github.com/sanity-io/pkg-utils/commit/62980f805f808f08844c421e8d1d0dbcacf1d6b2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency globby to ^16.1.1
+
+- [#2592](https://github.com/sanity-io/pkg-utils/pull/2592) [`7a48c18`](https://github.com/sanity-io/pkg-utils/commit/7a48c1891d7f19545d940f1aceb42044762e2ee3) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/tsdoc-config to ^0.18.1
+
+- [#2593](https://github.com/sanity-io/pkg-utils/pull/2593) [`cde1deb`](https://github.com/sanity-io/pkg-utils/commit/cde1deb9f8b89a5451f51a5165670cf4a4d35e12) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.5
+
+- [#2600](https://github.com/sanity-io/pkg-utils/pull/2600) [`118274b`](https://github.com/sanity-io/pkg-utils/commit/118274b379f1568dc89806b9698a211983a95ad8) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.59.0
+
+- [#2611](https://github.com/sanity-io/pkg-utils/pull/2611) [`919af3e`](https://github.com/sanity-io/pkg-utils/commit/919af3ee15d55568d5cf55de36e775eb378bcc27) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.57.6
+
+- [#2615](https://github.com/sanity-io/pkg-utils/pull/2615) [`9766f55`](https://github.com/sanity-io/pkg-utils/commit/9766f55256df4ebf4700192f049dbb1c0b6b3226) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.22.2
+
+- [#2609](https://github.com/sanity-io/pkg-utils/pull/2609) [`9f06503`](https://github.com/sanity-io/pkg-utils/commit/9f06503a6165308f81f926d0932b0efddcc12efd) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - fix(deps): Upgrade get-latest-version to v6 (ESM-only, named exports)
+
 ## 10.4.4
 
 ### Patch Changes
