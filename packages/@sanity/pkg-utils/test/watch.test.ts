@@ -140,26 +140,26 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
     expect(jsTasks.length).toBeGreaterThan(0)
   })
 
-  // This test is skipped because watch() doesn't return a cleanup mechanism.
-  // The orphaned watch process calls process.exit(1) on error, which causes
-  // vitest to fail with "unhandled error" after the test completes but before
-  // the process cleanup. This is particularly problematic in workspace mode.
-  // TODO: Fix watch() to return an AbortController or subscription for cleanup.
-  test.skip(
-    'watch function should initialize without crashing',
+  test(
+    'watch function should initialize and clean up with AbortController',
     {retry: process.platform === 'darwin' ? 3 : 0},
     async () => {
-      const project = await spawnProject('dummy-module')
+      const project = await spawnProject('js')
+      const ac = new AbortController()
 
       // This test verifies that watch() can be called and initialized
       // We don't let it run indefinitely, just verify it starts without error
       void watch({
         cwd: project.cwd,
         strict: false,
+        signal: ac.signal,
       })
 
       // Give it a moment to initialize
       await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Clean up the watch subscriptions
+      ac.abort()
 
       // If we got here without an error being thrown, the watch initialized successfully
       expect(true).toBe(true)
