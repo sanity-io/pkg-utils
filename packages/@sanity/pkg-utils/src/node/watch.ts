@@ -47,14 +47,6 @@ export async function watch(options: {
     }),
   )
 
-  function cleanup() {
-    for (const sub of taskSubscriptions) {
-      sub.unsubscribe()
-    }
-    taskSubscriptions.length = 0
-    ctxSubscription.unsubscribe()
-  }
-
   const ctxSubscription = ctx$.subscribe(async (ctx) => {
     // Unsubscribe previous task subscriptions when config changes trigger a new context
     for (const sub of taskSubscriptions) {
@@ -90,6 +82,16 @@ export async function watch(options: {
   })
 
   if (signal) {
-    signal.addEventListener('abort', cleanup, {once: true})
+    signal.addEventListener(
+      'abort',
+      () => {
+        for (const sub of taskSubscriptions) {
+          sub.unsubscribe()
+        }
+        taskSubscriptions.length = 0
+        ctxSubscription.unsubscribe()
+      },
+      {once: true},
+    )
   }
 }
