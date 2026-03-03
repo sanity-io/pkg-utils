@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.4.6
+
+### Patch Changes
+
+- [#2616](https://github.com/sanity-io/pkg-utils/pull/2616) [`2cac539`](https://github.com/sanity-io/pkg-utils/commit/2cac5397a9a23313dda8850a922c26e37063312b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.6
+
 ## 10.4.5
 
 ### Patch Changes
