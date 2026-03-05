@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.4.7
+
+### Patch Changes
+
+- [#2626](https://github.com/sanity-io/pkg-utils/pull/2626) [`95d12dd`](https://github.com/sanity-io/pkg-utils/commit/95d12dd939e3d558a3896b6d125a4ff6b91dd36e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.22.3
+
+- [#2630](https://github.com/sanity-io/pkg-utils/pull/2630) [`8165026`](https://github.com/sanity-io/pkg-utils/commit/81650263cc3efab8eb61f2c216356aa1e26e10cc) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - fix(deps): Update dependency cac to ^7.0.0
+
 ## 10.4.6
 
 ### Patch Changes
