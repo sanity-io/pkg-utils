@@ -1,5 +1,15 @@
 # @sanity/pkg-utils
 
+## 10.4.8
+
+### Patch Changes
+
+- [#2640](https://github.com/sanity-io/pkg-utils/pull/2640) [`67f5063`](https://github.com/sanity-io/pkg-utils/commit/67f5063f39903aeecf749ab69fa4e1fa9c5b3f21) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.7
+
+- [#2642](https://github.com/sanity-io/pkg-utils/pull/2642) [`d759132`](https://github.com/sanity-io/pkg-utils/commit/d7591323a1e0bd834983a41d3133d40d806a1b64) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @rollup/plugin-babel to v7
+
+- [#2643](https://github.com/sanity-io/pkg-utils/pull/2643) [`85e8c02`](https://github.com/sanity-io/pkg-utils/commit/85e8c024df8510264597613dc233a9e6d68cbc47) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @rollup/plugin-terser to v1
+
 ## 10.4.7
 
 ### Patch Changes
