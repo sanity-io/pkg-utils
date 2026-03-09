@@ -1,6 +1,6 @@
 ---
 name: options-dependencies
-description: tsdown dependency handling - external, noExternal, bundling behavior
+description: tsdown dependency handling - deps.neverBundle, deps.alwaysBundle, bundling behavior
 ---
 
 # Dependencies
@@ -25,29 +25,33 @@ Prevent bundling any dependencies from `node_modules`:
 import {defineConfig} from 'tsdown'
 
 export default defineConfig({
-  skipNodeModulesBundle: true,
+  deps: {
+    skipNodeModulesBundle: true,
+  },
 })
 ```
 
 ## Customizing Dependencies
 
-### Mark as External
+### Mark as External (Never Bundle)
 
 ```ts
 import {defineConfig} from 'tsdown'
 
 export default defineConfig({
-  external: ['lodash', /^@my-scope\//],
+  deps: {
+    neverBundle: ['lodash', /^@my-scope\//],
+  },
 })
 ```
 
 Also via CLI:
 
 ```bash
-tsdown --external lodash
+tsdown --deps.never-bundle lodash
 ```
 
-### Force Bundle
+### Force Bundle (Always Bundle)
 
 Bundle dependencies even if listed in `dependencies`/`peerDependencies`:
 
@@ -55,7 +59,9 @@ Bundle dependencies even if listed in `dependencies`/`peerDependencies`:
 import {defineConfig} from 'tsdown'
 
 export default defineConfig({
-  noExternal: ['some-package'],
+  deps: {
+    alwaysBundle: ['some-package'],
+  },
 })
 ```
 

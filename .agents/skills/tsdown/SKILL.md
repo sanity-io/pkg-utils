@@ -9,7 +9,7 @@ metadata:
 
 tsdown is a next-generation TypeScript library bundler built on Rolldown and Oxc. It provides blazing-fast builds, automatic `.d.ts` generation, and seamless migration from tsup. Supports Rolldown/Rollup/Unplugin plugins and features smart dependency handling.
 
-> The skill is based on tsdown v0.20.1, generated at 2026-01-28.
+> The skill is based on tsdown v0.21.0, updated at 2026-03-09.
 
 **Anthony's Preferences:**
 
@@ -31,7 +31,7 @@ tsdown is a next-generation TypeScript library bundler built on Rolldown and Oxc
 | ----------------- | ------------------------------------------------------ | ---------------------------------------------------------------- |
 | Output            | Format (ESM/CJS/IIFE/UMD), directory, target, platform | [options-output](references/options-output.md)                   |
 | Declaration Files | .d.ts generation, isolatedDeclarations, sourcemaps     | [options-dts](references/options-dts.md)                         |
-| Dependencies      | External, noExternal, dependency bundling              | [options-dependencies](references/options-dependencies.md)       |
+| Dependencies      | deps.neverBundle, deps.alwaysBundle, dependency bundling | [options-dependencies](references/options-dependencies.md)       |
 | Package Exports   | Auto-generating exports, main, module fields           | [options-package-exports](references/options-package-exports.md) |
 
 ## Features

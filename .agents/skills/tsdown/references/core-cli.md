@@ -65,8 +65,8 @@ tsdown -d ./build
 --no-clean
 
 # External modules
---external lodash
---external "@my-scope/*"
+--deps.never-bundle lodash
+--deps.never-bundle "@my-scope/*"
 
 # Watch mode
 --watch [path]

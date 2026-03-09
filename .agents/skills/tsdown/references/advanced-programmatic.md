@@ -36,7 +36,7 @@ await build({
   clean: true,
   sourcemap: true,
   minify: false,
-  external: ['lodash'],
+  deps: {neverBundle: ['lodash']},
   plugins: [
     // Your plugins here
   ],
