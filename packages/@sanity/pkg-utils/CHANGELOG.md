@@ -1,5 +1,19 @@
 # @sanity/pkg-utils
 
+## 10.4.10
+
+### Patch Changes
+
+- [#2649](https://github.com/sanity-io/pkg-utils/pull/2649) [`33d26ce`](https://github.com/sanity-io/pkg-utils/commit/33d26cec64867049d9bc551105ebb258e9c933b5) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @rollup/plugin-commonjs to ^29.0.2
+
+- [#2650](https://github.com/sanity-io/pkg-utils/pull/2650) [`3821a82`](https://github.com/sanity-io/pkg-utils/commit/3821a829590eb3cc721d55b4b9474fe78d9f9441) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.22.5
+
+- [#2659](https://github.com/sanity-io/pkg-utils/pull/2659) [`cc56003`](https://github.com/sanity-io/pkg-utils/commit/cc5600319d000c431a414d0c7e5be2abae5055a1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency lightningcss to ^1.32.0
+
+- [#2665](https://github.com/sanity-io/pkg-utils/pull/2665) [`94f1a49`](https://github.com/sanity-io/pkg-utils/commit/94f1a4901343aec70573899b8a0024059ca5ca4c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.27.4
+
+- [#2666](https://github.com/sanity-io/pkg-utils/pull/2666) [`e795861`](https://github.com/sanity-io/pkg-utils/commit/e795861549a0c5dda337f5447832e223a97ca899) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.9
+
 ## 10.4.9
 
 ### Patch Changes
