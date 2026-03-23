@@ -175,8 +175,8 @@ importers:
         specifier: workspace:^
         version: link:../parse-package-json
       '@vanilla-extract/rollup-plugin':
-        specifier: ^1.5.2
-        version: 1.5.2(rollup@4.59.0)
+        specifier: ^1.5.3
+        version: 1.5.3(rollup@4.59.0)
       browserslist:
         specifier: ^4.28.1
         version: 4.28.1
@@ -3649,17 +3649,23 @@ packages:
   '@vanilla-extract/css@1.19.0':
     resolution: {integrity: sha512-CmiHmTn0VXYW2/A575zzAJ+gJWBRdpEhEseg93WBst0QNQJiHO3cQXyVMIW+RhPi5D9TM8W4U929/ELDaXq6yQ==}
 
+  '@vanilla-extract/css@1.20.0':
+    resolution: {integrity: sha512-yKuajXFlghIjRZmEfy95z6MYj+mzJPoD3nbNLVAUB8Np6I1P9g5vBlznQPD+0A46osCn0za/wIvp/cg8HU3aig==}
+
   '@vanilla-extract/dynamic@2.1.5':
     resolution: {integrity: sha512-QGIFGb1qyXQkbzx6X6i3+3LMc/iv/ZMBttMBL+Wm/DetQd36KsKsFg5CtH3qy+1hCA/5w93mEIIAiL4fkM8ycw==}
 
   '@vanilla-extract/integration@8.0.8':
     resolution: {integrity: sha512-/MIdmUzeTHdGY00BJVGk9IPYxOkzVIzSpnxiyr2aoZnlxDyvCpjApQSwtMaP0a01T3xiROufDCn4cmSnOjwr1Q==}
 
+  '@vanilla-extract/integration@8.0.9':
+    resolution: {integrity: sha512-NP+CSo5IYHDmkMMy5vAxY4R9i2+CAg4sxgvVaxuHiuY9q30i6dNUTujNNKZGW2urEkd4HVVI6NggeIyYjbGPwA==}
+
   '@vanilla-extract/private@1.0.9':
     resolution: {integrity: sha512-gT2jbfZuaaCLrAxwXbRgIhGhcXbRZCG3v4TTUnjw0EJ7ArdBRxkq4msNJkbuRkCgfIK5ATmprB5t9ljvLeFDEA==}
 
-  '@vanilla-extract/rollup-plugin@1.5.2':
-    resolution: {integrity: sha512-Ppy5ISVwdJQ0TrHQMxYgUijJwdKW7/AcjvOdkk4SRO6ppJPQ/ltP0VR9aot4t1DVRoBfLosvMP5z9k2nyU+vog==}
+  '@vanilla-extract/rollup-plugin@1.5.3':
+    resolution: {integrity: sha512-c6sHCjArGv2ejGLnz2Z2VaDKpFhbAQxZuD0Bw6PKobxOdDZ8OPIyP5mPEAJBHjCZuRHUi47rIVEapsg5c/Y11g==}
     peerDependencies:
       rollup: ^2.0.0 || ^3.0.0 || ^4.0.0
 
@@ -10893,6 +10899,23 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
+  '@vanilla-extract/css@1.20.0':
+    dependencies:
+      '@emotion/hash': 0.9.2
+      '@vanilla-extract/private': 1.0.9
+      css-what: 6.2.2
+      cssesc: 3.0.0
+      csstype: 3.2.3
+      dedent: 1.7.2
+      deep-object-diff: 1.1.9
+      deepmerge: 4.3.1
+      lru-cache: 10.4.3
+      media-query-parser: 2.0.2
+      modern-ahocorasick: 1.1.0
+      picocolors: 1.1.1
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
   '@vanilla-extract/dynamic@2.1.5':
     dependencies:
       '@vanilla-extract/private': 1.0.9
@@ -10913,11 +10936,27 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
+  '@vanilla-extract/integration@8.0.9':
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/plugin-syntax-typescript': 7.28.6(@babel/core@7.29.0)
+      '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
+      '@vanilla-extract/css': 1.20.0
+      dedent: 1.7.2
+      esbuild: 0.27.4
+      eval: 0.1.8
+      find-up: 5.0.0
+      javascript-stringify: 2.1.0
+      mlly: 1.8.1
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+
   '@vanilla-extract/private@1.0.9': {}
 
-  '@vanilla-extract/rollup-plugin@1.5.2(rollup@4.59.0)':
+  '@vanilla-extract/rollup-plugin@1.5.3(rollup@4.59.0)':
     dependencies:
-      '@vanilla-extract/integration': 8.0.8
+      '@vanilla-extract/integration': 8.0.9
       magic-string: 0.30.21
       rollup: 4.59.0
     transitivePeerDependencies:
