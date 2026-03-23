@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@sanity/client':
-      specifier: ^7.17.0
-      version: 7.17.0
+      specifier: ^7.20.0
+      version: 7.20.0
     '@sanity/icons':
       specifier: ^3.7.4
       version: 3.7.4
@@ -631,7 +631,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.17.0(debug@4.4.3)
+        version: 7.20.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.4)
@@ -647,7 +647,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.17.0(debug@4.4.3)
+        version: 7.20.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.4)
@@ -659,7 +659,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.17.0(debug@4.4.3)
+        version: 7.20.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.4)
@@ -674,7 +674,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.17.0(debug@4.4.3)
+        version: 7.20.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.4)
@@ -3166,6 +3166,10 @@ packages:
 
   '@sanity/client@7.17.0':
     resolution: {integrity: sha512-ApwC9MC73A0WkVeD9QEuH1Fw0Odr+hSUlo02zmoqxs4WxOsXXg29fF/DZGnrwWlAdrt5BmHq8HUtY3LPlo3Khg==}
+    engines: {node: '>=20'}
+
+  '@sanity/client@7.20.0':
+    resolution: {integrity: sha512-uKwfqA+UfyWH6QzqpDD2DQnZu+WRa2iCM3OJ9AoyDZB9oHLl2NKI+9mX1xEZ7PiBuq09pogI7sxKaTKnaB6d+g==}
     engines: {node: '>=20'}
 
   '@sanity/codegen@6.0.1':
@@ -10082,7 +10086,7 @@ snapshots:
       '@sanity/export': 6.1.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 5.0.1(@sanity/client@7.17.0)(@types/react@19.2.14)
+      '@sanity/import': 5.0.1(@sanity/client@7.17.0(debug@4.4.3))(@types/react@19.2.14)
       '@sanity/migrate': 6.0.0(@oclif/core@4.9.0)(@sanity/cli-core@1.1.2(@noble/hashes@2.0.1)(@sanity/telemetry@0.8.1(react@19.2.4))(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)(yaml@2.8.2))(@types/react@19.2.14)(xstate@5.28.0)
       '@sanity/runtime-cli': 14.5.1(@types/node@24.12.0)(debug@4.4.3)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       '@sanity/schema': 5.17.1(@types/react@19.2.14)(debug@4.4.3)
@@ -10165,6 +10169,15 @@ snapshots:
       - xstate
 
   '@sanity/client@7.17.0(debug@4.4.3)':
+    dependencies:
+      '@sanity/eventsource': 5.0.2
+      get-it: 8.7.0(debug@4.4.3)
+      nanoid: 3.3.11
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - debug
+
+  '@sanity/client@7.20.0':
     dependencies:
       '@sanity/eventsource': 5.0.2
       get-it: 8.7.0(debug@4.4.3)
@@ -10276,7 +10289,7 @@ snapshots:
     dependencies:
       '@sanity/signed-urls': 2.0.2
 
-  '@sanity/import@5.0.1(@sanity/client@7.17.0)(@types/react@19.2.14)':
+  '@sanity/import@5.0.1(@sanity/client@7.17.0(debug@4.4.3))(@types/react@19.2.14)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.17.0(debug@4.4.3)
