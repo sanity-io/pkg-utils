@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.4.12
+
+### Patch Changes
+
+- [#2685](https://github.com/sanity-io/pkg-utils/pull/2685) [`87a253b`](https://github.com/sanity-io/pkg-utils/commit/87a253b541f0f6d3e6a28dd2a00d963c8ae43958) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vanilla-extract/rollup-plugin to ^1.5.3
+
+- [#2686](https://github.com/sanity-io/pkg-utils/pull/2686) [`c0280ee`](https://github.com/sanity-io/pkg-utils/commit/c0280eeb4f145fba56e8d4286e8847c02173bb9a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.10
+
 ## 10.4.11
 
 ### Patch Changes
