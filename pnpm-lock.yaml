@@ -373,7 +373,7 @@ importers:
     dependencies:
       lodash:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
     devDependencies:
       '@types/lodash':
         specifier: ^4.17.24
@@ -383,7 +383,7 @@ importers:
     dependencies:
       lodash:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
       lodash-es:
         specifier: ^4.17.23
         version: 4.17.23
@@ -5435,6 +5435,9 @@ packages:
   lodash@4.17.23:
     resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
+
   log-symbols@7.0.1:
     resolution: {integrity: sha512-ja1E3yCr9i/0hmBVaM0bfwDjnGy8I/s6PP4DFp+yP+a+mrHO4Rm7DtmnqROTUkHIkqffC84YY7AeqX6oFk0WFg==}
     engines: {node: '>=18'}
@@ -10249,7 +10252,7 @@ snapshots:
       '@sanity/export': 6.1.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 6.0.1(@sanity/client@7.20.0(debug@4.4.3))(@types/react@19.2.14)
+      '@sanity/import': 6.0.1(@sanity/client@7.20.0)(@types/react@19.2.14)
       '@sanity/migrate': 6.1.1(@oclif/core@4.10.5)(@sanity/cli-core@1.3.0(@noble/hashes@2.0.1)(@sanity/telemetry@0.9.0(react@19.2.4))(@types/node@25.3.2)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.0)(yaml@2.8.3))(@types/react@19.2.14)(xstate@5.28.0)
       '@sanity/runtime-cli': 14.9.0(@types/node@25.3.2)(debug@4.4.3)(lightningcss@1.32.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
       '@sanity/schema': 5.20.0(@types/react@19.2.14)(debug@4.4.3)
@@ -10436,14 +10439,14 @@ snapshots:
   '@sanity/id-utils@1.0.0':
     dependencies:
       '@sanity/uuid': 3.0.2
-      lodash: 4.17.23
+      lodash: 4.18.1
       ts-brand: 0.2.0
 
   '@sanity/image-url@2.0.3':
     dependencies:
       '@sanity/signed-urls': 2.0.2
 
-  '@sanity/import@6.0.1(@sanity/client@7.20.0(debug@4.4.3))(@types/react@19.2.14)':
+  '@sanity/import@6.0.1(@sanity/client@7.20.0)(@types/react@19.2.14)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.20.0(debug@4.4.3)
@@ -10536,7 +10539,7 @@ snapshots:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/uuid': 3.0.2
       hotscript: 1.0.13
-      lodash: 4.17.23
+      lodash: 4.18.1
       mendoza: 3.0.8
       nanoid: 5.1.6
       rxjs: 7.8.2
@@ -10549,7 +10552,7 @@ snapshots:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/uuid': 3.0.2
       hotscript: 1.0.13
-      lodash: 4.17.23
+      lodash: 4.18.1
       mendoza: 3.0.8
       nanoid: 5.1.6
       rxjs: 7.8.2
@@ -11440,7 +11443,7 @@ snapshots:
       '@babel/helper-annotate-as-pure': 7.27.3
       '@babel/helper-module-imports': 7.28.6
       '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
-      lodash: 4.17.23
+      lodash: 4.18.1
       picomatch: 2.3.1
       styled-components: 6.3.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     transitivePeerDependencies:
@@ -12932,6 +12935,8 @@ snapshots:
   lodash.startcase@4.4.0: {}
 
   lodash@4.17.23: {}
+
+  lodash@4.18.1: {}
 
   log-symbols@7.0.1:
     dependencies:
