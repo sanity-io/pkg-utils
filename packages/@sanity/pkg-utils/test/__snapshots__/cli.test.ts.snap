@@ -286,14 +286,12 @@ const Input = forwardRef(function(props, forwardedRef) {
   const [focused, setFocused] = useState(!1);
   let t1, t2;
   $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
-    if (!ref.current)
-      return;
     const controller = new AbortController(), {
       signal
     } = controller;
-    return ref.current.addEventListener("focus", () => setFocused(!0), {
+    return ref.current?.addEventListener("focus", () => setFocused(!0), {
       signal
-    }), ref.current.addEventListener("blur", () => setFocused(!1), {
+    }), ref.current?.addEventListener("blur", () => setFocused(!1), {
       signal
     }), () => controller.abort();
   }, t2 = [], $[5] = t1, $[6] = t2) : (t1 = $[5], t2 = $[6]), useEffect(t1, t2);
@@ -489,14 +487,12 @@ function Input(props) {
   const [focused, setFocused] = useState(!1);
   let t1, t2;
   $[6] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
-    if (!ref.current)
-      return;
     const controller = new AbortController(), {
       signal
     } = controller;
-    return ref.current.addEventListener("focus", () => setFocused(!0), {
+    return ref.current?.addEventListener("focus", () => setFocused(!0), {
       signal
-    }), ref.current.addEventListener("blur", () => setFocused(!1), {
+    }), ref.current?.addEventListener("blur", () => setFocused(!1), {
       signal
     }), () => controller.abort();
   }, t2 = [], $[6] = t1, $[7] = t2) : (t1 = $[6], t2 = $[7]), useEffect(t1, t2);
