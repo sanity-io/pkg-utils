@@ -33,7 +33,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
         observer.next({type: 'dts', messages: [], results: []})
         observer.complete()
 
-        return
+        return () => {}
       }
 
       const {outDir, rootDir = cwd} = tsContext.config.options
@@ -41,7 +41,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
       if (!outDir) {
         observer.error(new Error('tsconfig.json is missing `compilerOptions.outDir`'))
 
-        return
+        return () => {}
       }
 
       const tmpPath = path.resolve(outDir, '__tmp__')

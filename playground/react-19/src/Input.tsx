@@ -21,13 +21,11 @@ export function Input(
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
-    if (!ref.current) return
-
     const controller = new AbortController()
     const {signal} = controller
 
-    ref.current.addEventListener('focus', () => setFocused(true), {signal})
-    ref.current.addEventListener('blur', () => setFocused(false), {signal})
+    ref.current?.addEventListener('focus', () => setFocused(true), {signal})
+    ref.current?.addEventListener('blur', () => setFocused(false), {signal})
 
     return () => controller.abort()
   }, [])

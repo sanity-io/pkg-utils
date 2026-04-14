@@ -11,7 +11,7 @@ export async function buildTypes(options: {
   strict: boolean
   checkTypes?: boolean
 }): Promise<void> {
-  const {cwd, logger, outDir, tsconfig, strict = false, checkTypes} = options
+  const {cwd, logger, outDir, tsconfig, strict, checkTypes} = options
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,

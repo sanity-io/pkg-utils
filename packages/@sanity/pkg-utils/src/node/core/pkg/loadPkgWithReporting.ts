@@ -412,7 +412,7 @@ export async function loadPkgWithReporting(options: {
       logger.error(err)
     }
 
-    process.exit(1)
+    return process.exit(1)
   }
 }
 
