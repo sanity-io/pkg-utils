@@ -205,8 +205,8 @@ importers:
         specifier: ^16.1.0
         version: 16.1.0
       globby:
-        specifier: ^16.1.1
-        version: 16.1.1
+        specifier: ^16.2.0
+        version: 16.2.0
       jsonc-parser:
         specifier: ^3.3.1
         version: 3.3.1
@@ -5064,8 +5064,8 @@ packages:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
 
-  globby@16.1.1:
-    resolution: {integrity: sha512-dW7vl+yiAJSp6aCekaVnVJxurRv7DCOLyXqEG3RYMYUg7AuJ2jCqPkZTA8ooqC2vtnkaMcV5WfFBMuEnTu1OQg==}
+  globby@16.2.0:
+    resolution: {integrity: sha512-QrJia2qDf5BB/V6HYlDTs0I0lBahyjLzpGQg3KT7FnCdTonAyPy2RtY802m2k4ALx6Dp752f82WsOczEVr3l6Q==}
     engines: {node: '>=20'}
 
   globrex@0.1.2:
@@ -12695,7 +12695,7 @@ snapshots:
       merge2: 1.4.1
       slash: 3.0.0
 
-  globby@16.1.1:
+  globby@16.2.0:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       fast-glob: 3.3.3
