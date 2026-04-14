@@ -5,8 +5,6 @@
     "declarationMap": true,
     "sourceMap": true,
     "jsx": "preserve",
-
-    // Strict type-checking
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -14,16 +12,12 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-
-    // Additional checks
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-
-    // Module resolution
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   }
