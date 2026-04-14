@@ -1,5 +1,21 @@
 # @sanity/pkg-utils
 
+## 10.4.15
+
+### Patch Changes
+
+- [#2725](https://github.com/sanity-io/pkg-utils/pull/2725) [`086d1c7`](https://github.com/sanity-io/pkg-utils/commit/086d1c7af887a9bb4242550f44fbcf87b6e3dc74) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.28.0
+
+- [#2726](https://github.com/sanity-io/pkg-utils/pull/2726) [`8f4793a`](https://github.com/sanity-io/pkg-utils/commit/8f4793acde0752cddbaf30811cb873115514093d) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency globby to ^16.2.0
+
+- [#2731](https://github.com/sanity-io/pkg-utils/pull/2731) [`0bcccb3`](https://github.com/sanity-io/pkg-utils/commit/0bcccb378be2dbb29898db82e30060927e6bcfc1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.58.2
+
+- [#2732](https://github.com/sanity-io/pkg-utils/pull/2732) [`7c102f7`](https://github.com/sanity-io/pkg-utils/commit/7c102f78cde6500b57e567e847ec7f4a417045e7) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency browserslist to ^4.28.2
+
+- [#2733](https://github.com/sanity-io/pkg-utils/pull/2733) [`c05d10d`](https://github.com/sanity-io/pkg-utils/commit/c05d10dd50ede5a2bf3294d8d4cf8a64055ebafd) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.15
+
+- [#2734](https://github.com/sanity-io/pkg-utils/pull/2734) [`b5fedbe`](https://github.com/sanity-io/pkg-utils/commit/b5fedbec096a0132ea5eb4406afaf2d914b43354) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.60.1
+
 ## 10.4.14
 
 ### Patch Changes
