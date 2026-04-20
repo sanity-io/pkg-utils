@@ -1,5 +1,14 @@
 # @sanity/pkg-utils
 
+## 10.4.16
+
+### Patch Changes
+
+- [#2743](https://github.com/sanity-io/pkg-utils/pull/2743) [`c102ab2`](https://github.com/sanity-io/pkg-utils/commit/c102ab227f35af89209cdd28df7475c7a6257b4b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.16
+
+- Updated dependencies []:
+  - @sanity/parse-package-json@2.1.3
+
 ## 10.4.15
 
 ### Patch Changes
