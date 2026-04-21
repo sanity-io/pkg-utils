@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.4.17
+
+### Patch Changes
+
+- [#2746](https://github.com/sanity-io/pkg-utils/pull/2746) [`8b3445b`](https://github.com/sanity-io/pkg-utils/commit/8b3445be4dfdf27cec365520c666e155b672b60e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.58.5
+
 ## 10.4.16
 
 ### Patch Changes
