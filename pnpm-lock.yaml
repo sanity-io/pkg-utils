@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@sanity/client':
-      specifier: ^7.21.0
-      version: 7.21.0
+      specifier: ^7.22.0
+      version: 7.22.0
     '@sanity/icons':
       specifier: ^3.7.4
       version: 3.7.4
@@ -631,7 +631,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.21.0
+        version: 7.22.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.5)
@@ -647,7 +647,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.21.0
+        version: 7.22.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.5)
@@ -659,7 +659,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.21.0
+        version: 7.22.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.5)
@@ -674,7 +674,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.21.0
+        version: 7.22.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.5)
@@ -3255,6 +3255,10 @@ packages:
 
   '@sanity/client@7.21.0':
     resolution: {integrity: sha512-j3SdOGy9ggQSj9LtlrV8x4jaZgJmyYKNB5cXpXWkMLgi2/v0U+OTu0mHj17smioTdQSCHuVyJaxGcdpu3hxoOA==}
+    engines: {node: '>=20'}
+
+  '@sanity/client@7.22.0':
+    resolution: {integrity: sha512-KqN9cowZwfZNCwCchRaz1B9WrZTThQxX/gfJhJO1uKJBuk/JcbYGBiSK9CSqocWoYDQ/QqANVXy1r7a8zognww==}
     engines: {node: '>=20'}
 
   '@sanity/codegen@6.0.2':
@@ -10306,6 +10310,13 @@ snapshots:
       - xstate
 
   '@sanity/client@7.21.0':
+    dependencies:
+      '@sanity/eventsource': 5.0.2
+      get-it: 8.7.2
+      nanoid: 3.3.11
+      rxjs: 7.8.2
+
+  '@sanity/client@7.22.0':
     dependencies:
       '@sanity/eventsource': 5.0.2
       get-it: 8.7.2
