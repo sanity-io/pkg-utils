@@ -1,5 +1,17 @@
 # @sanity/pkg-utils
 
+## 10.5.0
+
+### Minor Changes
+
+- [#2781](https://github.com/sanity-io/pkg-utils/pull/2781) [`a8f395f`](https://github.com/sanity-io/pkg-utils/commit/a8f395ff63949dc2def329c8eef78aa9185b2859) Thanks [@rexxars](https://github.com/rexxars)! - feat: schedule JS build tasks for `node` export sub-conditions
+
+  Exports with a `node` sub-condition (`exports['.'].node.import` / `.require`) now generate JS build tasks under `runtime: 'node'` using `target.node`, symmetric to how `browser` sub-conditions are already handled. Previously these outputs only got `.d.ts` files emitted while the JS was never built, leaving the declared output paths dangling. Isomorphic packages can now ship a node-specific entry without relaxing the package-wide browserslist.
+
+### Patch Changes
+
+- [#2768](https://github.com/sanity-io/pkg-utils/pull/2768) [`b86cb83`](https://github.com/sanity-io/pkg-utils/commit/b86cb831c05616a7ba7a83f01a1076d6c0e5ae75) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.0-rc.18
+
 ## 10.4.18
 
 ### Patch Changes
