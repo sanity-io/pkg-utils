@@ -247,6 +247,81 @@ export {
 "
 `;
 
+exports[`cli > should build \`node-condition\` package > ./dist/index.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+const format = "commonjs", runtime = "*";
+exports.format = format;
+exports.runtime = runtime;
+//# sourceMappingURL=index.cjs.map
+"
+`;
+
+exports[`cli > should build \`node-condition\` package > ./dist/index.d.ts 1`] = `
+"/** @public */
+export declare const format: string
+
+/** @public */
+export declare const runtime: string
+
+export {}
+"
+`;
+
+exports[`cli > should build \`node-condition\` package > ./dist/index.js 1`] = `
+"const format = "esm", runtime = "*";
+export {
+  format,
+  runtime
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`cli > should build \`node-condition\` package > ./dist/index.node.cjs 1`] = `
+""use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var node_fs = require("node:fs");
+const format = "commonjs", runtime = "node";
+function readPackageJson(filePath) {
+  return node_fs.readFileSync(filePath, "utf-8");
+}
+exports.format = format;
+exports.readPackageJson = readPackageJson;
+exports.runtime = runtime;
+//# sourceMappingURL=index.node.cjs.map
+"
+`;
+
+exports[`cli > should build \`node-condition\` package > ./dist/index.node.d.ts 1`] = `
+"/** @public */
+export declare const format: string
+
+/** @public */
+export declare function readPackageJson(filePath: string): string
+
+/** @public */
+export declare const runtime: string
+
+export {}
+"
+`;
+
+exports[`cli > should build \`node-condition\` package > ./dist/index.node.js 1`] = `
+"import { readFileSync } from "node:fs";
+const format = "esm", runtime = "node";
+function readPackageJson(filePath) {
+  return readFileSync(filePath, "utf-8");
+}
+export {
+  format,
+  readPackageJson,
+  runtime
+};
+//# sourceMappingURL=index.node.js.map
+"
+`;
+
 exports[`cli > should build \`react-18\` package > ./dist/index.d.ts 1`] = `
 "import {ForwardRefExoticComponent, HTMLProps, RefAttributes} from 'react'
 
