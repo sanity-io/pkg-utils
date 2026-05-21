@@ -93,6 +93,55 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/plugin.d.ts')).toMatchSnapshot('./dist/plugin.d.ts')
   })
 
+  test('should build `node-condition` package', async () => {
+    const project = await spawnProject('node-condition')
+    const stdout = await project.run('build')
+
+    // types
+    expect(stdout).toContain('node-condition: ./src/index.ts → ./dist/index.d.ts')
+    expect(stdout).toContain('node-condition: ./src/index.node.ts → ./dist/index.node.d.ts')
+
+    // default runtime
+    expect(stdout).toContain('node-condition: ./src/index.ts → ./dist/index.cjs')
+    expect(stdout).toContain('node-condition: ./src/index.ts → ./dist/index.js')
+
+    // node runtime — uses the node-only source
+    expect(stdout).toContain('node-condition: ./src/index.node.ts → ./dist/index.node.cjs')
+    expect(stdout).toContain('node-condition: ./src/index.node.ts → ./dist/index.node.js')
+
+    const [distIndexJs, distIndexCjs, distNodeJs, distNodeCjs, distIndexDts, distNodeDts] =
+      await Promise.all([
+        project.readFile('dist/index.js'),
+        project.readFile('dist/index.cjs'),
+        project.readFile('dist/index.node.js'),
+        project.readFile('dist/index.node.cjs'),
+        project.readFile('dist/index.d.ts'),
+        project.readFile('dist/index.node.d.ts'),
+      ])
+
+    // PKG_RUNTIME is replaced at build time per task; the default-runtime files
+    // get `"*"` and the node sub-condition files get `"node"`. This proves the
+    // new `commonjs:node` / `esm:node` task scheduler branches are active.
+    expect(distIndexJs).toContain('runtime = "*"')
+    expect(distIndexCjs).toContain('runtime = "*"')
+    expect(distNodeJs).toContain('runtime = "node"')
+    expect(distNodeCjs).toContain('runtime = "node"')
+
+    // The node-only source uses node:fs and that import should survive into both formats.
+    expect(distNodeJs).toContain('node:fs')
+    expect(distNodeCjs).toContain('node:fs')
+    // It should NOT appear in the default-runtime build, which uses ./src/index.ts.
+    expect(distIndexJs).not.toContain('node:fs')
+    expect(distIndexCjs).not.toContain('node:fs')
+
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+    expect(distNodeJs).toMatchSnapshot('./dist/index.node.js')
+    expect(distNodeCjs).toMatchSnapshot('./dist/index.node.cjs')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    expect(distNodeDts).toMatchSnapshot('./dist/index.node.d.ts')
+  })
+
   test('should build `ts` package', async () => {
     const project = await spawnProject('ts')
     const stdout = await project.run('build')

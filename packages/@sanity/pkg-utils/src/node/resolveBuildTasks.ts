@@ -168,6 +168,32 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
     })
   }
 
+  // Parse rollup:commonjs:node tasks
+  for (const exp of exports) {
+    const output = exp.node?.require
+
+    if (!output) continue
+
+    addRollupTaskEntry('commonjs', 'node', {
+      path: exp._path,
+      source: exp.node?.source || exp.source,
+      output,
+    })
+  }
+
+  // Parse rollup:esm:node tasks
+  for (const exp of exports) {
+    const output = exp.node?.import
+
+    if (!output) continue
+
+    addRollupTaskEntry('esm', 'node', {
+      path: exp._path,
+      source: exp.node?.source || exp.source,
+      output,
+    })
+  }
+
   for (const bundle of bundles) {
     const idx = bundles.indexOf(bundle)
 

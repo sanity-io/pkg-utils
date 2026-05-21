@@ -122,6 +122,32 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
     })
   }
 
+  // Parse rollup:commonjs:node tasks
+  for (const exp of exports) {
+    const output = exp.node?.require
+
+    if (!output) continue
+
+    addRollupTaskEntry('commonjs', 'node', {
+      path: exp._path,
+      source: exp.node?.source || exp.source,
+      output,
+    })
+  }
+
+  // Parse rollup:esm:node tasks
+  for (const exp of exports) {
+    const output = exp.node?.import
+
+    if (!output) continue
+
+    addRollupTaskEntry('esm', 'node', {
+      path: exp._path,
+      source: exp.node?.source || exp.source,
+      output,
+    })
+  }
+
   if (dtsTask.entries.length) {
     tasks.push(dtsTask)
   }
