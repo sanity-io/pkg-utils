@@ -46,10 +46,9 @@ minimumReleaseAgeExclude:
   - lodash@4.17.23
   # Renovate security update: astro@6.1.10
   - astro@6.1.10
-  # Renovate dependency update: babel monorepo@7.29.7
-  - '@babel/*'
 
 overrides:
+  '@babel/core': 7.29.0
   '@sanity/pkg-utils': workspace:*
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
