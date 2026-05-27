@@ -7,9 +7,9 @@ catalog:
   '@sanity/client': ^7.22.0
   '@sanity/icons': ^3.7.4
   '@sanity/logos': ^2.2.2
-  '@types/node': ^24.12.2
+  '@types/node': ^24.12.4
   '@typescript/native-preview': 7.0.0-dev.20260523.1
-  publint: ^0.3.18
+  publint: ^0.3.21
   tsdown: ^0.22.0
   typescript: 6.0.3
   vitest: ^4.1.5
@@ -44,6 +44,10 @@ minimumReleaseAgeExclude:
   - lodash-es@4.17.23
   # Renovate security update: lodash@4.17.23
   - lodash@4.17.23
+  # Renovate security update: astro@6.1.10
+  - astro@6.1.10
+  # Renovate dependency update: babel monorepo@7.29.7
+  - '@babel/*'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
