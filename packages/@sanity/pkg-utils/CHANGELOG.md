@@ -1,5 +1,24 @@
 # @sanity/pkg-utils
 
+## 10.5.1
+
+### Patch Changes
+
+- [#2769](https://github.com/sanity-io/pkg-utils/pull/2769) [`60f10ad`](https://github.com/sanity-io/pkg-utils/commit/60f10ad058aa49b2f400e3208e0fe109d80000aa) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency zod to ^4.4.3
+
+- [#2775](https://github.com/sanity-io/pkg-utils/pull/2775) [`ab35f5c`](https://github.com/sanity-io/pkg-utils/commit/ab35f5c2558167ee90806b02247f67c5ff8b2902) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.25.1
+
+- [#2783](https://github.com/sanity-io/pkg-utils/pull/2783) [`5e0ae6d`](https://github.com/sanity-io/pkg-utils/commit/5e0ae6d936d4c69510f4feb3cc042bb297720cfa) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency empathic to ^2.0.1
+
+- [#2784](https://github.com/sanity-io/pkg-utils/pull/2784) [`0b3b078`](https://github.com/sanity-io/pkg-utils/commit/0b3b078e95e2f4fb82446aa9a96ea7c58b0d8925) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.2
+
+- [#2785](https://github.com/sanity-io/pkg-utils/pull/2785) [`72555a3`](https://github.com/sanity-io/pkg-utils/commit/72555a38018273c06cc1c81188583617f181bcc9) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rollup to ^4.60.4
+
+- [#2795](https://github.com/sanity-io/pkg-utils/pull/2795) [`9a83fe7`](https://github.com/sanity-io/pkg-utils/commit/9a83fe70ad89dd9bcc7b0db325519b893f5ecfeb) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency tsx to ^4.22.3
+
+- Updated dependencies [[`60f10ad`](https://github.com/sanity-io/pkg-utils/commit/60f10ad058aa49b2f400e3208e0fe109d80000aa)]:
+  - @sanity/parse-package-json@2.1.5
+
 ## 10.5.0
 
 ### Minor Changes

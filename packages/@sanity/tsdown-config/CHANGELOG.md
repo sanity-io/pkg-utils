@@ -1,5 +1,16 @@
 # @sanity/tsdown-config
 
+## 0.7.0
+
+### Minor Changes
+
+- [#2790](https://github.com/sanity-io/pkg-utils/pull/2790) [`92c6121`](https://github.com/sanity-io/pkg-utils/commit/92c6121630681f0fe67262a4fac7de94bdf8743b) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - feat(deps): Upgrade tsdown peer dependency to 0.22.x
+
+### Patch Changes
+
+- Updated dependencies [[`60f10ad`](https://github.com/sanity-io/pkg-utils/commit/60f10ad058aa49b2f400e3208e0fe109d80000aa)]:
+  - @sanity/parse-package-json@2.1.5
+
 ## 0.6.1
 
 ### Patch Changes
