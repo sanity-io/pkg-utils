@@ -13,10 +13,10 @@ const defaults = {
 } as const
 const files = ['dist']
 
+const testParseExports = (options: {pkg: PackageJSON}) => parseExports(options)
 describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: undefined}])(
   'parseExports({type: $type})',
   ({type}) => {
-    const testParseExports = (options: {pkg: PackageJSON}) => parseExports(options)
     const reference = {
       '.': {
         source: defaults['.'].source,

@@ -38,6 +38,10 @@
       ],
       "matchPackageNames": ["@types/react", "@types/react-dom", "react", "react-dom"],
       "allowedVersions": "<=18"
+    },
+    {
+      "matchPackageNames": ["@typescript/native-preview"],
+      "followTag": "beta"
     }
   ]
 }
