@@ -1,5 +1,11 @@
 # @sanity/parse-package-json
 
+## 2.1.6
+
+### Patch Changes
+
+- [#2810](https://github.com/sanity-io/pkg-utils/pull/2810) [`370f616`](https://github.com/sanity-io/pkg-utils/commit/370f616431326e2311f261636e37d53915ee57ec) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency tsdown to v0.22.1
+
 ## 2.1.5
 
 ### Patch Changes
