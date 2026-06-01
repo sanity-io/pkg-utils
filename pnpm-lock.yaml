@@ -151,11 +151,11 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0(rollup@4.60.4)
       '@rollup/plugin-babel':
-        specifier: ^7.0.0
-        version: 7.0.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.60.4)
+        specifier: ^7.1.0
+        version: 7.1.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.60.4)
       '@rollup/plugin-commonjs':
-        specifier: ^29.0.2
-        version: 29.0.2(rollup@4.60.4)
+        specifier: ^29.0.3
+        version: 29.0.3(rollup@4.60.4)
       '@rollup/plugin-json':
         specifier: ^6.1.0
         version: 6.1.0(rollup@4.60.4)
@@ -3135,8 +3135,8 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-babel@7.0.0':
-    resolution: {integrity: sha512-NS2+P7v80N3MQqehZEjgpaFb9UyX3URNMW/zvoECKGo4PY4DvJfQusTI7BX/Ks+CPvtTfk3TqcR6S9VYBi/C+A==}
+  '@rollup/plugin-babel@7.1.0':
+    resolution: {integrity: sha512-h9Y+xYha6p4wKO+FwdiPIkE+eIYCm8MzZPpX1iARIoFBnmKP9CnpT1p9dDf/DTFm6fyN8PmuLyRI5qZgchnitw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -3148,8 +3148,8 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-commonjs@29.0.2':
-    resolution: {integrity: sha512-S/ggWH1LU7jTyi9DxZOKyxpVd4hF/OZ0JrEbeLjXk/DFXwRny0tjD2c992zOUYQobLrVkRVMDdmHP16HKP7GRg==}
+  '@rollup/plugin-commonjs@29.0.3':
+    resolution: {integrity: sha512-ZaOxZceP7SOUW7Lqw5IRVweSQYWaeIPnXIGLiB690EBA3FGJTO40EEr2L5yZplJWsgTCogILRSpcAe7+U0Otdg==}
     engines: {node: '>=16.0.0 || 14 >= 14.17'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0||^4.0.0
@@ -7714,6 +7714,9 @@ packages:
   wordwrap@1.0.0:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
 
+  workerpool@9.3.4:
+    resolution: {integrity: sha512-TmPRQYYSAnnDiEB0P/Ytip7bFGvqnSU6I2BcuSw7Hx+JSg/DsUi5ebYfc8GYaSdpuvOcEs6dXxPurOYpe9QFwg==}
+
   wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
     engines: {node: '>=8'}
@@ -10252,18 +10255,19 @@ snapshots:
     optionalDependencies:
       rollup: 4.60.4
 
-  '@rollup/plugin-babel@7.0.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.60.4)':
+  '@rollup/plugin-babel@7.1.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.60.4)':
     dependencies:
       '@babel/core': 7.29.7
-      '@babel/helper-module-imports': 7.28.6
+      '@babel/helper-module-imports': 7.29.7
       '@rollup/pluginutils': 5.3.0(rollup@4.60.4)
+      workerpool: 9.3.4
     optionalDependencies:
       '@types/babel__core': 7.20.5
       rollup: 4.60.4
     transitivePeerDependencies:
       - supports-color
 
-  '@rollup/plugin-commonjs@29.0.2(rollup@4.60.4)':
+  '@rollup/plugin-commonjs@29.0.3(rollup@4.60.4)':
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@4.60.4)
       commondir: 1.0.1
@@ -15522,6 +15526,8 @@ snapshots:
       string-width: 7.2.0
 
   wordwrap@1.0.0: {}
+
+  workerpool@9.3.4: {}
 
   wrap-ansi@6.2.0:
     dependencies:
