@@ -1,5 +1,20 @@
 # @sanity/pkg-utils
 
+## 10.5.2
+
+### Patch Changes
+
+- [#2808](https://github.com/sanity-io/pkg-utils/pull/2808) [`33ecccf`](https://github.com/sanity-io/pkg-utils/commit/33ecccfea9c8957ea5fc59f2581221c802442a28) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update babel monorepo to ^7.29.7
+
+- [#2811](https://github.com/sanity-io/pkg-utils/pull/2811) [`496fb46`](https://github.com/sanity-io/pkg-utils/commit/496fb462925e0ca276aa5cffe184befd40374056) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.0.3
+
+- [#2814](https://github.com/sanity-io/pkg-utils/pull/2814) [`913dbc4`](https://github.com/sanity-io/pkg-utils/commit/913dbc46b87aa07cd757d942ec2a03099f5bf1ab) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.25.2
+
+- [#2817](https://github.com/sanity-io/pkg-utils/pull/2817) [`09a3e6c`](https://github.com/sanity-io/pkg-utils/commit/09a3e6c6790e8e7db23f988c8e4748185410dcd1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update rollup packages and enable Rollup Babel worker-thread parallelization
+
+- Updated dependencies [[`370f616`](https://github.com/sanity-io/pkg-utils/commit/370f616431326e2311f261636e37d53915ee57ec)]:
+  - @sanity/parse-package-json@2.1.6
+
 ## 10.5.1
 
 ### Patch Changes
