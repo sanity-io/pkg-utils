@@ -211,6 +211,7 @@ export function resolveRollupConfig(
         babelrc: false,
         presets: ['@babel/preset-typescript'],
         babelHelpers: 'bundled',
+        parallel: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
         plugins: [
           // The styled-components plugin needs to run before the react-compiler plugin, in case the css prop is used
@@ -252,6 +253,7 @@ export function resolveRollupConfig(
     Array.isArray(config?.babel?.plugins) &&
       getBabelOutputPlugin({
         babelrc: false,
+        parallel: true,
         plugins: config.babel.plugins,
       }),
     enableOptimizeLodash &&
