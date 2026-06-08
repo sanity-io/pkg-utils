@@ -1,5 +1,20 @@
 # @sanity/pkg-utils
 
+## 10.5.3
+
+### Patch Changes
+
+- [#2821](https://github.com/sanity-io/pkg-utils/pull/2821) [`f506c56`](https://github.com/sanity-io/pkg-utils/commit/f506c5649b6f7babacdf68ba2922ca2cc3c9fe19) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency tsx to ^4.22.4
+
+- [#2826](https://github.com/sanity-io/pkg-utils/pull/2826) [`384f9da`](https://github.com/sanity-io/pkg-utils/commit/384f9da8f3e159ddfc5adfb452fd0c7d3052b127) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update rollup packages to ^4.61.0
+
+- [#2832](https://github.com/sanity-io/pkg-utils/pull/2832) [`47f9ece`](https://github.com/sanity-io/pkg-utils/commit/47f9ecee3eb89da01e876bcef825c127f83d00fb) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update rollup packages to ^4.61.1
+
+- [#2833](https://github.com/sanity-io/pkg-utils/pull/2833) [`d9677b5`](https://github.com/sanity-io/pkg-utils/commit/d9677b59f9229e31d6f57644e36dd405f72f0ef4) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.1.0
+
+- Updated dependencies [[`66b1028`](https://github.com/sanity-io/pkg-utils/commit/66b10281b75cb3ab0bfd8801bd52c71ec94a885b)]:
+  - @sanity/parse-package-json@2.1.7
+
 ## 10.5.2
 
 ### Patch Changes
