@@ -28,8 +28,12 @@
     {
       "matchDepTypes": ["peerDependencies"],
       "matchPackageNames": ["tsdown"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "matchDepTypes": ["peerDependencies"],
+      "matchPackageNames": ["tsdown"],
       "matchUpdateTypes": ["major"],
-      "rangeStrategy": "bump",
       "semanticCommitType": "fix"
     },
     {
