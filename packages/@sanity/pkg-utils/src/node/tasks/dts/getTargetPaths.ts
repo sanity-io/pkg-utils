@@ -4,7 +4,7 @@ import type {PkgBundle, PkgExport} from '../../core/config/types.ts'
 /** @internal */
 export const fileEnding: RegExp = /\.[mc]?js$/
 /** @internal */
-export const dtsEnding = '.d.ts'
+const dtsEnding = '.d.ts'
 /** @internal */
 export const defaultEnding = '.js'
 /** @internal */

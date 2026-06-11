@@ -1,0 +1,62 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreWorkspaces": [
+    "playground/*",
+    "packages/@sanity/tsdown-config/test/fixtures/**",
+  ],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true,
+  },
+  "rules": {
+    // dev workspaces are ignored, so their catalog entries appear unused
+    "catalog": "warn",
+  },
+  "workspaces": {
+    ".": {
+      "entry": ["*.{ts,mts,mjs}"],
+      "project": ["*.{ts,mts,mjs}"],
+      "ignoreDependencies": [
+        "@sanity/pkg-utils",
+        "@sanity/tsconfig",
+        "@sanity/tsdown-config",
+        "husky",
+        "rimraf",
+        "tsdown",
+      ],
+      "ignoreBinaries": ["changeset", "setup-npm-trusted-publish"],
+    },
+    "packages/@sanity/pkg-utils": {
+      "entry": ["package.config.ts", "scripts/*.ts", "src/cli/index.ts"],
+      "project": ["src/**/*.ts", "scripts/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // Referenced as a string in babel config, not imported
+        "@babel/preset-typescript",
+        // Optional peer resolved at runtime by babel transform
+        "babel-plugin-react-compiler",
+      ],
+      "ignoreBinaries": ["sanity-tsdoc"],
+    },
+    "packages/@sanity/parse-package-json": {
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // TypeScript native compiler, used as a dev tool not imported
+        "@typescript/native-preview",
+        // Used by tsdown at build time via tsdown-config
+        "publint",
+      ],
+    },
+    "packages/@sanity/tsdown-config": {
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // Used in test fixtures, not imported in package source
+        "@sanity/pkg-utils",
+        // TypeScript native compiler, used as a dev tool not imported
+        "@typescript/native-preview",
+        // tsdown config flag, not imported
+        "publint",
+      ],
+    },
+    "packages/@sanity/tsconfig": {},
+  },
+}
