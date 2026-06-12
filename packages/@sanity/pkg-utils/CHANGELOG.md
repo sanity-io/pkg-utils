@@ -1,5 +1,15 @@
 # @sanity/pkg-utils
 
+## 10.5.4
+
+### Patch Changes
+
+- [#2837](https://github.com/sanity-io/pkg-utils/pull/2837) [`cc5b92a`](https://github.com/sanity-io/pkg-utils/commit/cc5b92a0bc68a70e3a8416df3220ead6f179d5bf) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.58.8
+
+- [#2844](https://github.com/sanity-io/pkg-utils/pull/2844) [`c27e975`](https://github.com/sanity-io/pkg-utils/commit/c27e9750874b031c00199963daefc3f826dd9d6e) Thanks [@jasonevines](https://github.com/jasonevines)! - fix: preserve subpath imports of external packages in rolldown dts output
+
+  Bare specifiers are now matched against their package name when deciding externals in the rolldown dts pipeline, so subpath imports of external dependencies (e.g. `@sanity/client/stega`) keep their original specifier instead of resolving to an absolute filesystem path in the emitted declarations.
+
 ## 10.5.3
 
 ### Patch Changes
