@@ -324,6 +324,29 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
   })
 
+  test('should build `ts-rolldown-external-subpath-import` package', async () => {
+    const project = await spawnProject('ts-rolldown-external-subpath-import')
+    const stdout = await project.run('build')
+
+    expect(stdout).toContain('with rolldown')
+
+    const [distIndexDcts, distIndexDts] = await Promise.all([
+      project.readFile('dist/index.d.cts'),
+      project.readFile('dist/index.d.ts'),
+    ])
+
+    // The `AgentActionPath` type is imported from the `@sanity/client/stega` subpath export.
+    // `@sanity/client` is a prod dependency, so the emitted declarations must preserve the
+    // original specifier instead of the resolved absolute filesystem path.
+    expect(distIndexDcts).toContain('@sanity/client/stega')
+    expect(distIndexDts).toContain('@sanity/client/stega')
+    expect(distIndexDcts).not.toContain('node_modules')
+    expect(distIndexDts).not.toContain('node_modules')
+    // Snapshot the contents for easier debugging
+    expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+  })
+
   test('should build `ts-rolldown-inline-types-external-js` package', async () => {
     const project = await spawnProject('ts-rolldown-inline-types-external-js')
     const stdout = await project.run('build')

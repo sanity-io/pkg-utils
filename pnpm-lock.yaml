@@ -672,6 +672,12 @@ importers:
         specifier: '*'
         version: 19.2.6
 
+  playground/ts-rolldown-external-subpath-import:
+    dependencies:
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 7.22.1
+
   playground/ts-rolldown-inline-types-external-js:
     dependencies:
       '@sanity/client':
