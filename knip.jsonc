@@ -1,5 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "treatConfigHintsAsErrors": true,
   "ignoreWorkspaces": [
     "playground/*",
     "packages/@sanity/tsdown-config/test/fixtures/**",
@@ -24,7 +25,6 @@
         "rimraf",
         "tsdown",
       ],
-      "ignoreBinaries": ["changeset", "setup-npm-trusted-publish"],
     },
     "packages/@sanity/pkg-utils": {
       "entry": ["package.config.ts", "scripts/*.ts", "src/cli/index.ts"],
@@ -32,8 +32,6 @@
       "ignoreDependencies": [
         // Referenced as a string in babel config, not imported
         "@babel/preset-typescript",
-        // Optional peer resolved at runtime by babel transform
-        "babel-plugin-react-compiler",
       ],
       "ignoreBinaries": ["sanity-tsdoc"],
     },
@@ -42,8 +40,6 @@
       "ignoreDependencies": [
         // TypeScript native compiler, used as a dev tool not imported
         "@typescript/native-preview",
-        // Used by tsdown at build time via tsdown-config
-        "publint",
       ],
     },
     "packages/@sanity/tsdown-config": {
@@ -53,8 +49,6 @@
         "@sanity/pkg-utils",
         // TypeScript native compiler, used as a dev tool not imported
         "@typescript/native-preview",
-        // tsdown config flag, not imported
-        "publint",
       ],
     },
     "packages/@sanity/tsconfig": {},
