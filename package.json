@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "pnpm --filter './packages/@sanity/*' build",
-    "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
     "check:deps": "knip --dependencies",
+    "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
     "knip": "knip",
     "lint": "oxlint --type-aware",
     "playground:build": "pnpm --filter './playground/**' build",

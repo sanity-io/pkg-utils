@@ -1,10 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "treatConfigHintsAsErrors": true,
-  "ignoreWorkspaces": [
-    "playground/*",
-    "packages/@sanity/tsdown-config/test/fixtures/**",
-  ],
+  "ignoreWorkspaces": ["playground/*", "packages/@sanity/tsdown-config/test/fixtures/**"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
