@@ -105,7 +105,18 @@ export function resolveRolldownConfig(
         }
       }
 
-      return external.some((name) => name === id || id.includes(`/node_modules/${name}/`))
+      // Derive the package name of bare specifiers so that subpath imports
+      // (e.g. `@sanity/client/stega`) are externalized before resolution,
+      // instead of resolving to absolute filesystem paths that leak into the
+      // emitted declarations
+      const idParts = id.split('/')
+      const idPackageName = idParts[0]!.startsWith('@')
+        ? `${idParts[0]}/${idParts[1]}`
+        : idParts[0]!
+
+      return external.some(
+        (name) => name === id || name === idPackageName || id.includes(`/node_modules/${name}/`),
+      )
     },
 
     input: entries.reduce<{[entryAlias: string]: string}>(
