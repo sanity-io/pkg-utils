@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.5.6
+
+### Patch Changes
+
+- [#2859](https://github.com/sanity-io/pkg-utils/pull/2859) [`b7a6402`](https://github.com/sanity-io/pkg-utils/commit/b7a6402720f1395351265981386022e8d4ffe364) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.28.1
+
+- [#2861](https://github.com/sanity-io/pkg-utils/pull/2861) [`f3ca6b0`](https://github.com/sanity-io/pkg-utils/commit/f3ca6b004bc4e38486587fe7b5bcf818212af819) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.58.9
+
 ## 10.5.5
 
 ### Patch Changes
