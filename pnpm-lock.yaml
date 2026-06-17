@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@sanity/client':
-      specifier: ^7.22.1
-      version: 7.22.1
+      specifier: ^7.23.0
+      version: 7.23.0
     '@sanity/icons':
       specifier: ^3.7.4
       version: 3.7.4
@@ -633,7 +633,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.22.1
+        version: 7.23.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.7)
@@ -649,7 +649,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.22.1
+        version: 7.23.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.7)
@@ -661,7 +661,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.22.1
+        version: 7.23.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.7)
@@ -676,13 +676,13 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.22.1
+        version: 7.23.0
 
   playground/ts-rolldown-inline-types-external-js:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.22.1
+        version: 7.23.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 3.7.4(react@19.2.7)
@@ -3624,6 +3624,10 @@ packages:
 
   '@sanity/client@7.22.1':
     resolution: {integrity: sha512-DrQqLAes7W9Ek2iKgTZ+ffY1v3DURJ6//iXJZMEQSUeRbxls2ifRTdV1gRS26v8nMkL0OCH+WCoUUseD4vhuQQ==}
+    engines: {node: '>=20'}
+
+  '@sanity/client@7.23.0':
+    resolution: {integrity: sha512-4VFcLeP/lD0lhe5TD102tSnoW72ERT6xD/ZLb9pdLNMbZgbOciAy3m0hAYvs1vjA6663ZjNM6SLwl1Utq97DHA==}
     engines: {node: '>=20'}
 
   '@sanity/codegen@7.0.2':
@@ -10888,6 +10892,13 @@ snapshots:
       - xstate
 
   '@sanity/client@7.22.1':
+    dependencies:
+      '@sanity/eventsource': 5.0.2
+      get-it: 8.8.0
+      nanoid: 3.3.12
+      rxjs: 7.8.2
+
+  '@sanity/client@7.23.0':
     dependencies:
       '@sanity/eventsource': 5.0.2
       get-it: 8.8.0
