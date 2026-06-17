@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.5.7
+
+### Patch Changes
+
+- [#2864](https://github.com/sanity-io/pkg-utils/pull/2864) [`94505ec`](https://github.com/sanity-io/pkg-utils/commit/94505ec0226c8b3210fa07c5d872b1ef567de3c6) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update rollup packages to ^4.62.0
+
 ## 10.5.6
 
 ### Patch Changes
