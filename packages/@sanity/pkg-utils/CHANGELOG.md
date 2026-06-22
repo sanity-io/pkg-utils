@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.5.8
+
+### Patch Changes
+
+- [#2875](https://github.com/sanity-io/pkg-utils/pull/2875) [`8c1f3f3`](https://github.com/sanity-io/pkg-utils/commit/8c1f3f35dacfc7ddeb5443dfacdcc81fdbbb7123) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.1.2
+
+- [#2876](https://github.com/sanity-io/pkg-utils/pull/2876) [`3948fd3`](https://github.com/sanity-io/pkg-utils/commit/3948fd3bb655580a141ecbe4fc15909b20aee15a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.26.0
+
 ## 10.5.7
 
 ### Patch Changes
