@@ -210,6 +210,9 @@ export function resolveRollupConfig(
       babel({
         babelrc: false,
         presets: ['@babel/preset-typescript'],
+        parserOpts: {
+          plugins: ['jsx'],
+        },
         babelHelpers: 'bundled',
         parallel: true,
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
