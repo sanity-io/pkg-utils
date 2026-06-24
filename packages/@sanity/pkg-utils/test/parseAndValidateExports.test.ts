@@ -178,6 +178,38 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           },
         ])
       })
+
+      test('allows a conditional `bundle.css` export with a node shim', () => {
+        // The conditional CSS export object is intentionally not part of the strict `PackageJSON`
+        // type (CSS exports are modelled as strings there); it is supported at runtime.
+        const pkg = {
+          type,
+          name,
+          version,
+          files,
+          main: reference['.'].require,
+          types: './dist/index.d.ts',
+          exports: {
+            ...reference,
+            './bundle.css': {
+              browser: './dist/bundle.css',
+              style: './dist/bundle.css',
+              node: './dist/bundle.css.js',
+              default: './dist/bundle.css.js',
+            },
+          },
+        } as unknown as PackageJSON
+
+        // The conditional CSS export is accepted and is not surfaced as a JS module export.
+        expect(() => testParseExports({pkg})).not.toThrow()
+        expect(testParseExports({pkg})).toEqual([
+          {
+            _exported: true,
+            _path: '.',
+            ...reference['.'],
+          },
+        ])
+      })
     })
 
     describe('invalid packages', () => {
@@ -311,7 +343,7 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
         expect(() => testParseExports({pkg})).toThrowErrorMatchingSnapshot()
       })
 
-      test('css exports must be strings (paths)', () => {
+      test('conditional css exports must have string targets', () => {
         const pkg = {
           type,
           name,
@@ -324,13 +356,14 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
               source: './src/index.ts',
               default: './lib/index.js',
             },
-            './style.css': {source: './src/style.css', default: './lib/style.css'},
+            // A nested condition object is not a valid leaf - only flat condition -> path strings.
+            './style.css': {browser: {import: './lib/style.css'}, default: './lib/style.css'},
             './package.json': './package.json',
           },
-        } satisfies PackageJSON
+        } as unknown as PackageJSON
 
         expect(() => testParseExports({pkg})).toThrowError(
-          'package.json: `exports["./style.css"]`: export conditions not supported for CSS files.',
+          'package.json: `exports["./style.css"]["browser"]`: must be a string path.',
         )
       })
 
