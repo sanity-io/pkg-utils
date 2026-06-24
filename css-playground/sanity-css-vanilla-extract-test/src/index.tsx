@@ -1,4 +1,3 @@
-import {createElement, type ReactElement} from 'react'
 import {box} from './styles.css'
 
 /**
@@ -29,10 +28,22 @@ export function createConfig(): {marker: string} {
  * A React component that applies the extracted vanilla-extract styles.
  * @public
  */
-export function TestComponent(): ReactElement {
-  return createElement(
-    'div',
-    {className: box, 'data-testid': 'sanity-css-vanilla-extract-test'},
-    'sanity-css-vanilla-extract-test',
+export function TestComponent(): React.JSX.Element {
+  return (
+    <div className={box} data-testid="sanity-css-vanilla-extract-test">
+      sanity-css-vanilla-extract-test
+    </div>
   )
+}
+
+/**
+ * Mounts {@link TestComponent} into a DOM element using the `react-dom/client` `createRoot` API.
+ * Provided so non-React hosts (e.g. SolidJS, Nuxt) can render the component without authoring React
+ * elements themselves. `react-dom` is loaded lazily so importing this package in a Node-only context
+ * never pulls it in.
+ * @public
+ */
+export async function renderInto(element: Element): Promise<void> {
+  const {createRoot} = await import('react-dom/client')
+  createRoot(element).render(<TestComponent />)
 }
