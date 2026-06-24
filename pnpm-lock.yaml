@@ -102,6 +102,36 @@ importers:
         specifier: 'catalog:'
         version: 4.1.9(@types/node@24.13.2)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
 
+  css-playground/node:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.2
+      sanity-css-vanilla-extract-test:
+        specifier: workspace:*
+        version: link:../sanity-css-vanilla-extract-test
+
+  css-playground/sanity-css-vanilla-extract-test:
+    devDependencies:
+      '@sanity/pkg-utils':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/pkg-utils
+      '@sanity/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/tsconfig
+      '@types/react':
+        specifier: ^19.2.17
+        version: 19.2.17
+      '@vanilla-extract/css':
+        specifier: ^1.20.1
+        version: 1.20.1
+      react:
+        specifier: ^19.2.7
+        version: 19.2.7
+      rimraf:
+        specifier: ^6.1.3
+        version: 6.1.3
+
   packages/@sanity/parse-package-json:
     dependencies:
       zod:

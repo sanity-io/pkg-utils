@@ -1,0 +1,13 @@
+{
+  "name": "@css-playground/node",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning src/main.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "sanity-css-vanilla-extract-test": "workspace:*"
+  }
+}
