@@ -5,10 +5,8 @@
   "scripts": {
     "build": "parcel build src/index.html --dist-dir dist --no-cache",
     "clean": "rimraf dist .parcel-cache",
+    "dev": "parcel src/index.html --dist-dir dist",
     "test": "parcel build src/index.html --dist-dir dist --no-cache"
-  },
-  "@parcel/resolver-default": {
-    "packageExports": true
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
@@ -18,5 +16,8 @@
     "react-dom": "^19.2.7",
     "rimraf": "^6.1.3",
     "sanity-css-vanilla-extract-test": "workspace:*"
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
   }
 }

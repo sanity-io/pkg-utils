@@ -1,6 +1,6 @@
-import {TestComponent} from 'sanity-css-vanilla-extract-test'
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
+import {TestComponent} from 'sanity-css-vanilla-extract-test'
 
 // Bundled by rspack; rendering the component pulls the package (and its self-referential
 // `import "<pkg>/bundle.css"`) into the build graph.

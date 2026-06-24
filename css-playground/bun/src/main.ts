@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} from 'sanity-css-vanilla-extract-test'
+import {CREATE_CONFIG_MESSAGE, createConfig, TestComponent} from 'sanity-css-vanilla-extract-test'
 
 // Bun emulates Node when importing packages, so the self-referential `import "<pkg>/bundle.css"`
 // must resolve to the JS shim (via the `node`/`default` condition) rather than crash on a `.css`

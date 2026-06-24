@@ -1,4 +1,4 @@
-import {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} from 'sanity-css-vanilla-extract-test'
+import {CREATE_CONFIG_MESSAGE, createConfig, TestComponent} from 'sanity-css-vanilla-extract-test'
 import {expect, test} from 'vitest'
 
 // Vitest resolves the package through Vite's (SSR/node) resolver, so the self-referential

@@ -6,6 +6,8 @@
   "scripts": {
     "build": "vite build",
     "clean": "rimraf .output .tanstack dist .nitro",
+    "dev": "vite dev",
+    "preview": "vite preview",
     "test": "vite build"
   },
   "devDependencies": {

@@ -8,7 +8,12 @@ import {TestComponent} from 'sanity-css-vanilla-extract-test'
     <title>@css-playground/astro</title>
   </head>
   <body>
-    <!-- Rendered by @astrojs/react: SSR exercises the Node shim path, client hydration the CSS path. -->
+    <!--
+      Rendered by @astrojs/react. NOTE: Astro collects component CSS from the SSR module graph, where
+      the self-referential import resolves to the Node shim, so the island renders WITHOUT the
+      producer's CSS. This is a documented limitation of the conditional-export approach under
+      Astro - see css-playground/README.md.
+    -->
     <TestComponent client:load />
   </body>
 </html>

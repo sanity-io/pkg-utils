@@ -1,5 +1,6 @@
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import {rspack} from '@rspack/core'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -11,6 +12,11 @@ export default {
     path: path.resolve(dirname, 'dist'),
     filename: 'bundle.js',
     clean: true,
+  },
+  plugins: [new rspack.HtmlRspackPlugin({template: './src/index.html'})],
+  devServer: {
+    port: 8081,
+    open: false,
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],

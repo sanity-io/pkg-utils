@@ -1,5 +1,6 @@
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -11,6 +12,11 @@ export default {
     path: path.resolve(dirname, 'dist'),
     filename: 'bundle.js',
     clean: true,
+  },
+  plugins: [new HtmlWebpackPlugin({template: './src/index.html'})],
+  devServer: {
+    port: 8080,
+    open: false,
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],

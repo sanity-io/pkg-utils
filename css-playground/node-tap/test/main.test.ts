@@ -1,4 +1,4 @@
-import {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} from 'sanity-css-vanilla-extract-test'
+import {CREATE_CONFIG_MESSAGE, createConfig, TestComponent} from 'sanity-css-vanilla-extract-test'
 import t from 'tap'
 
 // node-tap runs the test file in Node, so the self-referential `import "<pkg>/bundle.css"` must

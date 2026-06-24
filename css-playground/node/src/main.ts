@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} from 'sanity-css-vanilla-extract-test'
+import {CREATE_CONFIG_MESSAGE, createConfig, TestComponent} from 'sanity-css-vanilla-extract-test'
 
 /**
  * Importing the package evaluates its entry chunk, which runs the side-effectful

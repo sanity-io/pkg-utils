@@ -5,6 +5,8 @@
   "scripts": {
     "build": "next build --turbopack",
     "clean": "rimraf .next",
+    "dev": "next dev --turbopack",
+    "start": "next start",
     "test": "next build --turbopack"
   },
   "devDependencies": {

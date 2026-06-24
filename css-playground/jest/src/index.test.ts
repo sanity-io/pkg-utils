@@ -1,4 +1,4 @@
-import {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} from 'sanity-css-vanilla-extract-test'
+import {CREATE_CONFIG_MESSAGE, createConfig, TestComponent} from 'sanity-css-vanilla-extract-test'
 
 // Jest (node test environment) resolves the package's `exports` conditions, so the self-referential
 // `import "<pkg>/bundle.css"` must resolve to the JS shim rather than crash on an unknown `.css`.
