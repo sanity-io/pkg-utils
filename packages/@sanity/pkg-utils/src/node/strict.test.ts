@@ -17,6 +17,18 @@ describe.skipIf(process.platform === 'win32')('strict options', () => {
     {key: 'preferModuleType', value: 'error', fails: false},
     {key: 'preferModuleType', value: 'warn', fails: false},
     {key: 'preferModuleType', value: 'off', fails: false},
+    {key: 'noReactIsPeerDependency', value: 'off', fails: false},
+    {key: 'noReactIsPeerDependency', value: true, fails: true},
+    {key: 'noSanityUiPeerDependency', value: 'off', fails: false},
+    {key: 'noSanityDependency', value: 'off', fails: false},
+    {key: 'noStyledComponentsDependency', value: 'off', fails: false},
+    {key: 'noReactDependency', value: 'off', fails: false},
+    {key: 'noReactDomDependency', value: 'off', fails: false},
+    {key: 'noReactTypesDependency', value: 'off', fails: false},
+    {key: 'noReactDomTypesDependency', value: 'off', fails: false},
+    {key: 'noNodeTypesDependency', value: 'off', fails: false},
+    {key: 'noRxjsPeerDependency', value: 'off', fails: false},
+    {key: 'noSanityClientPeerDependency', value: 'off', fails: false},
   ])('{$key: $value}}', ({key, value, fails}) => {
     if (fails) {
       expect(() => parseStrictOptions({[key]: value})).toThrowErrorMatchingSnapshot()

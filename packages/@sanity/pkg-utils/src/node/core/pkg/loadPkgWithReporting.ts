@@ -2,6 +2,7 @@ import {ZodError, type PackageJSON} from '@sanity/parse-package-json'
 import chalk from 'chalk'
 import type {Logger} from '../../logger.ts'
 import type {StrictOptions} from '../../strict.ts'
+import {checkDependencyPlacement} from './dependencyPlacement.ts'
 import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
 
@@ -126,6 +127,11 @@ export async function loadPkgWithReporting(options: {
         } else {
           logger.warn(msg)
         }
+      }
+
+      // Check that well-known packages are declared in the correct dependency fields
+      if (checkDependencyPlacement({pkg, logger, strictOptions})) {
+        shouldError = true
       }
     }
 
