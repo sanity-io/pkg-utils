@@ -1,0 +1,12 @@
+{
+  "name": "@css-playground/bun",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun run src/main.ts"
+  },
+  "devDependencies": {
+    "sanity-css-vanilla-extract-test": "workspace:*"
+  }
+}

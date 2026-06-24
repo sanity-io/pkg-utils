@@ -1,0 +1,13 @@
+{
+  "name": "@css-playground/node-tap",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tap --disable-coverage --allow-empty-coverage"
+  },
+  "devDependencies": {
+    "sanity-css-vanilla-extract-test": "workspace:*",
+    "tap": "^21.1.0"
+  }
+}
