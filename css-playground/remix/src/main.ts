@@ -27,7 +27,8 @@ assert.equal(typeof TestComponent, 'function')
 try {
   await import('remix')
 } catch (error) {
-  console.warn('note: could not load the remix runtime:', (error as Error).message)
+  const message = error instanceof Error ? error.message : String(error)
+  console.warn('note: could not load the remix runtime:', message)
 }
 
 console.log('OK: @css-playground/remix imported the package under Remix v3 without a .css crash')

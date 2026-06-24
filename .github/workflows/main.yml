@@ -56,6 +56,32 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=8192
 
+  css-playground:
+    runs-on: ubuntu-latest
+    name: CSS Playground smoke tests
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: pnpm install
+      # Build the packages (so the `pkg` CLI is available) and the producer package.
+      - run: pnpm build
+      - run: pnpm --filter sanity-css-vanilla-extract-test build
+      # Run each consumer's smoke command (build/test/run). Serialized to keep memory in check across
+      # the heavier framework builds. The goal is only to assert nothing crashes on the
+      # self-referential `bundle.css` import - CSS correctness is verified downstream.
+      - run: pnpm --workspace-concurrency=1 --filter "./css-playground/**" test
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+
   test:
     runs-on: ${{ matrix.platform }}
     name: Node.js ${{ matrix.node-version }} / ${{ matrix.platform }}
