@@ -28,7 +28,12 @@ describe('writeBundleCssExports', () => {
       },
     })
 
-    await writeBundleCssExports({cwd, distPath: path.join(cwd, 'dist'), cssName: 'bundle.css', logger})
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
 
     const pkg = await readPkg(cwd)
     expect(pkg.exports['./bundle.css']).toEqual({
@@ -57,7 +62,12 @@ describe('writeBundleCssExports', () => {
     })
     const before = await readFile(path.join(cwd, 'package.json'), 'utf8')
 
-    await writeBundleCssExports({cwd, distPath: path.join(cwd, 'dist'), cssName: 'bundle.css', logger})
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
 
     expect(await readFile(path.join(cwd, 'package.json'), 'utf8')).toEqual(before)
   })
@@ -69,7 +79,12 @@ describe('writeBundleCssExports', () => {
       exports: {'.': {source: './src/index.ts', default: './lib/index.js'}},
     })
 
-    await writeBundleCssExports({cwd, distPath: path.join(cwd, 'lib'), cssName: 'styles.css', logger})
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'lib'),
+      cssName: 'styles.css',
+      logger,
+    })
 
     const pkg = await readPkg(cwd)
     expect(pkg.exports['./styles.css']).toEqual({

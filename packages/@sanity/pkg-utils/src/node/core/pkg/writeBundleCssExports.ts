@@ -82,5 +82,7 @@ export async function writeBundleCssExports(options: {
   pkg.exports = nextExports
 
   await writeFile(pkgPath, `${JSON.stringify(pkg, null, detectIndent(source))}\n`)
-  logger.log(`Updated package.json: added \`exports["${exportKey}"]\` for vanilla-extract compat mode`)
+  logger.log(
+    `Updated package.json: added \`exports["${exportKey}"]\` for vanilla-extract compat mode`,
+  )
 }

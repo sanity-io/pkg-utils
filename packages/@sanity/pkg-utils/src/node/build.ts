@@ -2,10 +2,7 @@ import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
 import {rimraf} from 'rimraf'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {
-  resolveVanillaExtract,
-  resolveVanillaExtractCssName,
-} from './core/config/vanillaExtract.ts'
+import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
