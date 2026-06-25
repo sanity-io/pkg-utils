@@ -1,5 +1,13 @@
 # @sanity/parse-package-json
 
+## 2.2.1
+
+### Patch Changes
+
+- [#2890](https://github.com/sanity-io/pkg-utils/pull/2890) [`c219497`](https://github.com/sanity-io/pkg-utils/commit/c219497fb7e354c9e9d518184ccf141fc40cd111) Thanks [@stipsan](https://github.com/stipsan)! - fix: allow conditional CSS exports in `publishConfig.exports`
+
+  Conditional CSS exports (e.g. the `bundle.css` browser/node/default map) are now accepted in `publishConfig.exports`, matching the support already present for the top-level `exports` field. Previously declaring one there threw a validation error (`Expected object, received string`).
+
 ## 2.2.0
 
 ### Minor Changes

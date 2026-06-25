@@ -1,5 +1,24 @@
 # @sanity/pkg-utils
 
+## 10.7.0
+
+### Minor Changes
+
+- [#2890](https://github.com/sanity-io/pkg-utils/pull/2890) [`c219497`](https://github.com/sanity-io/pkg-utils/commit/c219497fb7e354c9e9d518184ccf141fc40cd111) Thanks [@stipsan](https://github.com/stipsan)! - feat: auto-wire the conditional `bundle.css` export for vanilla-extract
+
+  When `rollup.vanillaExtract` is enabled, pkg-utils now (by default) bakes in the conditional CSS export pattern so userland no longer needs a manual `rollup.output.intro` + shim plugin + `package.json` export. This new "compat mode" (`rollup.vanillaExtract.extract.compatMode`, defaults to `true`):
+
+  - injects the self-referential `import "<pkg-name>/<name>"` into each entry chunk,
+  - emits a no-op `<name>.js` shim for runtimes that cannot import `.css` files, and
+  - writes the conditional `"./<name>"` export to `package.json` (`browser`/`style` → the real CSS, `node`/`default` → the shim).
+
+  The emitted CSS file name is configurable via `rollup.vanillaExtract.extract.name` (default `"bundle.css"`), and the `vanillaExtract` option is now fully typed (`PkgVanillaExtractOptions`) with its real defaults documented. Set `extract.compatMode: false` to opt out and wire these up yourself.
+
+### Patch Changes
+
+- Updated dependencies [[`c219497`](https://github.com/sanity-io/pkg-utils/commit/c219497fb7e354c9e9d518184ccf141fc40cd111)]:
+  - @sanity/parse-package-json@2.2.1
+
 ## 10.6.0
 
 ### Minor Changes
