@@ -1,18 +1,19 @@
 packages:
   - packages/@sanity/*
   - playground/*
+  - css-playground/*
   - packages/@sanity/tsdown-config/test/fixtures/**
 
 catalog:
-  '@sanity/client': ^7.22.1
+  '@sanity/client': ^7.23.0
   '@sanity/icons': ^3.7.4
   '@sanity/logos': ^2.2.2
-  '@types/node': ^24.13.1
+  '@types/node': ^24.13.2
   '@typescript/native-preview': 7.0.0-dev.20260421.2
   publint: ^0.3.21
-  tsdown: ^0.22.2
+  tsdown: ^0.22.3
   typescript: 6.0.3
-  vitest: ^4.1.8
+  vitest: ^4.1.9
 
 minimumReleaseAge: 4320
 
@@ -46,6 +47,12 @@ minimumReleaseAgeExclude:
   - lodash@4.17.23
   # Renovate security update: astro@6.1.10
   - astro@6.1.10
+  # Renovate security update: esbuild@0.28.1
+  - esbuild@0.28.1
+  # Dev-only framework deps used exclusively by the css-playground smoke tests. These are not
+  # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
+  # cross-framework matrix building against current releases.
+  - '@astrojs/react'
 
 overrides:
   '@sanity/pkg-utils': workspace:*

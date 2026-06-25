@@ -1,0 +1,22 @@
+{
+  "name": "@css-playground/next-client-component",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build --turbopack",
+    "clean": "rimraf .next",
+    "dev": "next dev --turbopack",
+    "start": "next start",
+    "test": "next build --turbopack"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "next": "^16.2.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "rimraf": "^6.1.3",
+    "sanity-css-vanilla-extract-test": "workspace:*"
+  }
+}

@@ -1,16 +1,4 @@
 /** @internal */
-export function assertFirst<T>(a: T, arr: T[]): boolean {
-  const aIdx = arr.indexOf(a)
-
-  // if not found, then we don't care
-  if (aIdx === -1) {
-    return true
-  }
-
-  return aIdx === 0
-}
-
-/** @internal */
 export function assertLast<T>(a: T, arr: T[]): boolean {
   const aIdx = arr.indexOf(a)
 

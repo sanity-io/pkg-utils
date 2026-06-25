@@ -1,0 +1,16 @@
+{
+  "name": "@css-playground/jest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "sanity-css-vanilla-extract-test": "workspace:*",
+    "ts-jest": "^29.4.4",
+    "typescript": "catalog:"
+  }
+}

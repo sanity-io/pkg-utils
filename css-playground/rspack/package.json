@@ -1,0 +1,22 @@
+{
+  "name": "@css-playground/rspack",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rspack build",
+    "clean": "rimraf dist",
+    "dev": "rspack serve",
+    "test": "rspack build"
+  },
+  "devDependencies": {
+    "@rspack/cli": "^1.5.6",
+    "@rspack/core": "^1.5.6",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "rimraf": "^6.1.3",
+    "sanity-css-vanilla-extract-test": "workspace:*"
+  }
+}

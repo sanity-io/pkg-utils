@@ -1,5 +1,73 @@
 # @sanity/pkg-utils
 
+## 10.6.0
+
+### Minor Changes
+
+- [#2887](https://github.com/sanity-io/pkg-utils/pull/2887) [`a6adaa1`](https://github.com/sanity-io/pkg-utils/commit/a6adaa193a82dd09ce5213ecab2588b9d1b20361) Thanks [@stipsan](https://github.com/stipsan)! - feat: support conditional `exports` for CSS files
+
+  CSS subpath exports may now be declared as a conditional object (a flat map of condition name to path) instead of only a plain string. This enables re-adding a `import "<pkg>/bundle.css"` statement that resolves to the real CSS file in bundler/browser environments, while resolving to a no-op JS shim in runtimes (like Node) that cannot import `.css` files directly:
+
+  ```json
+  {
+    "exports": {
+      "./bundle.css": {
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle.css.js",
+        "default": "./dist/bundle.css.js"
+      }
+    }
+  }
+  ```
+
+### Patch Changes
+
+- [#2878](https://github.com/sanity-io/pkg-utils/pull/2878) [`10e1150`](https://github.com/sanity-io/pkg-utils/commit/10e11506d49b956ac70be73b71692b558d01897a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update babel monorepo to v8
+
+- [#2883](https://github.com/sanity-io/pkg-utils/pull/2883) [`c8c192f`](https://github.com/sanity-io/pkg-utils/commit/c8c192f50a78d19b1f9c32ecc19c76185efde7eb) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update rollup packages
+
+- Updated dependencies [[`a6adaa1`](https://github.com/sanity-io/pkg-utils/commit/a6adaa193a82dd09ce5213ecab2588b9d1b20361)]:
+  - @sanity/parse-package-json@2.2.0
+
+## 10.5.8
+
+### Patch Changes
+
+- [#2875](https://github.com/sanity-io/pkg-utils/pull/2875) [`8c1f3f3`](https://github.com/sanity-io/pkg-utils/commit/8c1f3f35dacfc7ddeb5443dfacdcc81fdbbb7123) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.1.2
+
+- [#2876](https://github.com/sanity-io/pkg-utils/pull/2876) [`3948fd3`](https://github.com/sanity-io/pkg-utils/commit/3948fd3bb655580a141ecbe4fc15909b20aee15a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown-plugin-dts to v0.26.0
+
+## 10.5.7
+
+### Patch Changes
+
+- [#2864](https://github.com/sanity-io/pkg-utils/pull/2864) [`94505ec`](https://github.com/sanity-io/pkg-utils/commit/94505ec0226c8b3210fa07c5d872b1ef567de3c6) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update rollup packages to ^4.62.0
+
+## 10.5.6
+
+### Patch Changes
+
+- [#2859](https://github.com/sanity-io/pkg-utils/pull/2859) [`b7a6402`](https://github.com/sanity-io/pkg-utils/commit/b7a6402720f1395351265981386022e8d4ffe364) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency esbuild to ^0.28.1
+
+- [#2861](https://github.com/sanity-io/pkg-utils/pull/2861) [`f3ca6b0`](https://github.com/sanity-io/pkg-utils/commit/f3ca6b004bc4e38486587fe7b5bcf818212af819) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.58.9
+
+## 10.5.5
+
+### Patch Changes
+
+- [#2854](https://github.com/sanity-io/pkg-utils/pull/2854) [`9d06a16`](https://github.com/sanity-io/pkg-utils/commit/9d06a16d18286c58786c6686ca10bd76a60e8f10) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rolldown to v1.1.1
+
+## 10.5.4
+
+### Patch Changes
+
+- [#2837](https://github.com/sanity-io/pkg-utils/pull/2837) [`cc5b92a`](https://github.com/sanity-io/pkg-utils/commit/cc5b92a0bc68a70e3a8416df3220ead6f179d5bf) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @microsoft/api-extractor to ^7.58.8
+
+- [#2844](https://github.com/sanity-io/pkg-utils/pull/2844) [`c27e975`](https://github.com/sanity-io/pkg-utils/commit/c27e9750874b031c00199963daefc3f826dd9d6e) Thanks [@jasonevines](https://github.com/jasonevines)! - fix: preserve subpath imports of external packages in rolldown dts output
+
+  Bare specifiers are now matched against their package name when deciding externals in the rolldown dts pipeline, so subpath imports of external dependencies (e.g. `@sanity/client/stega`) keep their original specifier instead of resolving to an absolute filesystem path in the emitted declarations.
+
 ## 10.5.3
 
 ### Patch Changes

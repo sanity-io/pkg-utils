@@ -6,6 +6,7 @@ import type {OutputAsset, Plugin} from 'rollup'
 export function optimizeCss(options: {
   extractFileName: string
   browserslist: string | string[]
+  minify?: boolean
 }): Plugin {
   return {
     name: 'optimize-css',
@@ -21,6 +22,7 @@ export function optimizeCss(options: {
               asset,
               bundle[sourceMapFileName]?.type === 'asset' ? bundle[sourceMapFileName] : undefined,
               options.browserslist,
+              options.minify ?? true,
             )
           }
         }
@@ -33,17 +35,18 @@ async function transformCss(
   asset: OutputAsset,
   sourceMapAsset: OutputAsset | undefined,
   browserslistConfig: string | string[],
+  minify: boolean,
 ) {
   const css = asset.source.toString()
   const file = asset.fileName
 
   const targets = browserslistToTargets(browserslist(browserslistConfig))
 
-  // process and minify css using lightningcss
+  // process (and, unless disabled, minify) css using lightningcss
   const lightningCssResult = transform({
     filename: file,
     code: Buffer.from(css),
-    minify: true,
+    minify,
     cssModules: false,
     targets,
     sourceMap: !!sourceMapAsset,

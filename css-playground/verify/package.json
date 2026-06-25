@@ -1,0 +1,14 @@
+{
+  "name": "@css-playground/verify",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "install-browser": "playwright install chromium",
+    "verify": "node verify-css.mjs",
+    "verify-app": "node dev-and-verify.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.50.0"
+  }
+}

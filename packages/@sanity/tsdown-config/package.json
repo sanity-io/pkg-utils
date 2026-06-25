@@ -30,8 +30,6 @@
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "files": [
     "dist"
@@ -43,7 +41,6 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@sanity/parse-package-json": "workspace:^",
     "publint": "^0.3.21"
   },
   "devDependencies": {

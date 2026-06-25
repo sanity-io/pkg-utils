@@ -872,7 +872,7 @@ export { type ColorDefinition, ColorInput, colorInput };
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
-"import "./bundle.css";
+"import "sanity-plugin-with-vanilla-extract/bundle.css";
 import "@sanity/ui/css/index.css";
 import { defineType, definePlugin } from "sanity";
 import { lazy } from "react";
@@ -1453,6 +1453,38 @@ export {
 };
 //# sourceMappingURL=index.js.map
 "
+`;
+
+exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./dist/index.d.cts 1`] = `
+"import { AgentActionPath } from "@sanity/client/stega";
+/**
+* @public
+*/
+interface ExternalSubpathImport {
+  path: AgentActionPath;
+}
+/**
+* @public
+*/
+declare function identity(path: AgentActionPath): AgentActionPath;
+export { ExternalSubpathImport, identity };
+//# sourceMappingURL=index.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./dist/index.d.ts 1`] = `
+"import { AgentActionPath } from "@sanity/client/stega";
+/**
+* @public
+*/
+interface ExternalSubpathImport {
+  path: AgentActionPath;
+}
+/**
+* @public
+*/
+declare function identity(path: AgentActionPath): AgentActionPath;
+export { ExternalSubpathImport, identity };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `

@@ -324,6 +324,29 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
   })
 
+  test('should build `ts-rolldown-external-subpath-import` package', async () => {
+    const project = await spawnProject('ts-rolldown-external-subpath-import')
+    const stdout = await project.run('build')
+
+    expect(stdout).toContain('with rolldown')
+
+    const [distIndexDcts, distIndexDts] = await Promise.all([
+      project.readFile('dist/index.d.cts'),
+      project.readFile('dist/index.d.ts'),
+    ])
+
+    // The `AgentActionPath` type is imported from the `@sanity/client/stega` subpath export.
+    // `@sanity/client` is a prod dependency, so the emitted declarations must preserve the
+    // original specifier instead of the resolved absolute filesystem path.
+    expect(distIndexDcts).toContain('@sanity/client/stega')
+    expect(distIndexDts).toContain('@sanity/client/stega')
+    expect(distIndexDcts).not.toContain('node_modules')
+    expect(distIndexDts).not.toContain('node_modules')
+    // Snapshot the contents for easier debugging
+    expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+  })
+
   test('should build `ts-rolldown-inline-types-external-js` package', async () => {
     const project = await spawnProject('ts-rolldown-inline-types-external-js')
     const stdout = await project.run('build')
@@ -495,19 +518,32 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('sanity-plugin-with-vanilla-extract')
     await project.run('build')
 
-    const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss] = await Promise.all([
-      project.readFile('dist/_chunks-es/ColorInput.js'),
-      project.readFile('dist/index.js'),
-      project.readFile('dist/index.d.ts'),
-      project.readFile('dist/bundle.css'),
-    ])
+    const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss, distBundleCssShim, pkg] =
+      await Promise.all([
+        project.readFile('dist/_chunks-es/ColorInput.js'),
+        project.readFile('dist/index.js'),
+        project.readFile('dist/index.d.ts'),
+        project.readFile('dist/bundle.css'),
+        project.readFile('dist/bundle.css.js'),
+        project.readFile('package.json'),
+      ])
 
     // The inline CSS should be extracted to a separate file
     expect(distChunksColorInput).not.toContain('border:')
     expect(distBundleCss).toContain('border:')
     // The CSS side effectful imports should remain
     expect(distIndexJs).toContain(`import "@sanity/ui/css/index.css"`)
-    expect(distIndexJs).toContain(`import "./bundle.css"`)
+    // `vanillaExtract` compat mode injects the self-referential bundle.css import automatically
+    expect(distIndexJs).toContain(`import "sanity-plugin-with-vanilla-extract/bundle.css"`)
+    // …emits a no-op JS shim for CSS-unaware runtimes
+    expect(distBundleCssShim).toContain('export default ""')
+    // …and declares the conditional `./bundle.css` export in package.json
+    expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
+      browser: './dist/bundle.css',
+      style: './dist/bundle.css',
+      node: './dist/bundle.css.js',
+      default: './dist/bundle.css.js',
+    })
     // React Compiler adds a `c` function call
     expect(distChunksColorInput).toContain('const $ = c(')
     // The index has a lazy loaded import to the chunk

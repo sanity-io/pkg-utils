@@ -29,6 +29,29 @@ const exportEntrySchema = z
     message: 'Export must have either "default", "import", or "require" field',
   })
 
+/**
+ * Conditional export for a CSS file, e.g.
+ * ```json
+ * "./bundle.css": {
+ *   "browser": "./dist/bundle.css",
+ *   "node": "./dist/bundle.css.js",
+ *   "default": "./dist/bundle.css.js"
+ * }
+ * ```
+ * This lets a package re-add a `import "<pkg>/bundle.css"` statement that resolves to the real CSS
+ * file in bundler/browser environments, while resolving to a no-op JS shim in runtimes (like Node)
+ * that cannot import `.css` files directly.
+ *
+ * It is intentionally a flat map of condition name -> relative path string. To distinguish it from a
+ * regular export entry (and to avoid silently accepting malformed objects), at least one of the
+ * resolved targets must be a `.css` file.
+ */
+const cssExportConditionsSchema = z
+  .record(z.string(), z.string())
+  .refine((data) => Object.values(data).some((value) => value.endsWith('.css')), {
+    message: 'A conditional CSS export must resolve to at least one ".css" file',
+  })
+
 const basePkgSchema = z.object({
   type: z.enum(['commonjs', 'module']).default('commonjs'),
   name: z.string(),
@@ -56,6 +79,7 @@ const basePkgSchema = z.object({
           svelte: z.string(),
           default: z.optional(z.string()),
         }),
+        cssExportConditionsSchema,
       ]),
     ),
   ),
@@ -78,6 +102,7 @@ const basePkgSchema = z.object({
                 default: z.optional(z.string()),
                 svelte: z.optional(z.string()),
               }),
+              cssExportConditionsSchema,
             ]),
           ),
         ),
@@ -95,10 +120,16 @@ const pkgSchema = basePkgSchema.transform((pkg): PackageJSON => {
   if (!pkg.exports) return pkg as PackageJSON
 
   const isModule = pkg.type === 'module'
-  const transformedExports: PackageJSON['exports'] = {}
+  // Built loosely and asserted to `PackageJSON` on return - CSS exports may be a conditional object
+  // (a flat condition -> path map) which the public `PackageJSON` type models as a plain string.
+  const transformedExports: Record<string, unknown> = {}
 
   for (const [key, value] of Object.entries(pkg.exports)) {
     if (typeof value === 'string') {
+      transformedExports[key] = value
+    } else if (key.endsWith('.css')) {
+      // Conditional CSS exports are a flat map of condition -> path; pass through untouched
+      // (no `default` is computed for CSS files).
       transformedExports[key] = value
     } else if ('svelte' in value) {
       transformedExports[key] = value
