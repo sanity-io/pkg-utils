@@ -1,7 +1,7 @@
 import type {PkgConfigOptions, PkgRuntime, PkgVanillaExtractOptions} from './types.ts'
 
 /** The default name of the extracted CSS file. */
-export const DEFAULT_VANILLA_EXTRACT_CSS_NAME = 'bundle.css'
+const DEFAULT_VANILLA_EXTRACT_CSS_NAME = 'bundle.css'
 
 export interface ResolvedVanillaExtract {
   enabled: boolean
