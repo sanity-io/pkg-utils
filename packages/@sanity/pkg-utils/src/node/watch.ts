@@ -3,10 +3,7 @@ import {up as findPkgPath} from 'empathic/package'
 import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {
-  resolveVanillaExtract,
-  resolveVanillaExtractCssName,
-} from './core/config/vanillaExtract.ts'
+import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'

@@ -19,7 +19,9 @@ export interface ResolvedVanillaExtract {
  * compatibility mode is active.
  * @internal
  */
-export function resolveVanillaExtract(config: PkgConfigOptions | undefined): ResolvedVanillaExtract {
+export function resolveVanillaExtract(
+  config: PkgConfigOptions | undefined,
+): ResolvedVanillaExtract {
   const value = config?.rollup?.vanillaExtract
   const enabled = Boolean(value)
   const options: PkgVanillaExtractOptions = value === true || !value ? {} : value
