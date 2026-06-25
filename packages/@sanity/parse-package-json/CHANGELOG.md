@@ -1,5 +1,26 @@
 # @sanity/parse-package-json
 
+## 2.2.0
+
+### Minor Changes
+
+- [#2887](https://github.com/sanity-io/pkg-utils/pull/2887) [`a6adaa1`](https://github.com/sanity-io/pkg-utils/commit/a6adaa193a82dd09ce5213ecab2588b9d1b20361) Thanks [@stipsan](https://github.com/stipsan)! - feat: support conditional `exports` for CSS files
+
+  CSS subpath exports may now be declared as a conditional object (a flat map of condition name to path) instead of only a plain string. This enables re-adding a `import "<pkg>/bundle.css"` statement that resolves to the real CSS file in bundler/browser environments, while resolving to a no-op JS shim in runtimes (like Node) that cannot import `.css` files directly:
+
+  ```json
+  {
+    "exports": {
+      "./bundle.css": {
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle.css.js",
+        "default": "./dist/bundle.css.js"
+      }
+    }
+  }
+  ```
+
 ## 2.1.7
 
 ### Patch Changes
