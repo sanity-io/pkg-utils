@@ -11,6 +11,58 @@ export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'
 
+/**
+ * Options for the `@vanilla-extract/rollup-plugin` integration, including pkg-utils-specific
+ * extensions (`minify`, `browserslist`, and `extract.compatMode`).
+ * @alpha
+ */
+export interface PkgVanillaExtractOptions extends Omit<VanillaExtractOptions, 'extract'> {
+  /**
+   * Minify the extracted CSS with `lightningcss`.
+   * @defaultValue true
+   */
+  minify?: boolean
+  /**
+   * Browserslist query passed to `lightningcss` when optimizing the extracted CSS.
+   * @defaultValue the project's browserslist config, falling back to pkg-utils' default query
+   */
+  browserslist?: string | string[]
+  /**
+   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc).
+   * @defaultValue "short"
+   */
+  identifiers?: VanillaExtractOptions['identifiers']
+  /**
+   * Extract the CSS into a separate file. pkg-utils always extracts, so this configures _how_.
+   */
+  extract?: {
+    /**
+     * Name of the emitted `.css` file (and, with `compatMode`, the `exports` subpath + shim base).
+     * @defaultValue "bundle.css"
+     */
+    name?: string
+    /**
+     * Generate a `.css.map` sourcemap file.
+     * @defaultValue true
+     */
+    sourcemap?: boolean
+    /**
+     * Compatibility mode automatically wires up the conditional CSS export pattern so userland does
+     * not have to. When enabled, pkg-utils:
+     *
+     * - injects `import "<pkg-name>/<name>"` into each entry chunk (no manual `rollup.output.intro`),
+     * - emits a no-op `<name>.js` shim for runtimes that cannot import `.css` files, and
+     * - writes the conditional `"./<name>"` export to `package.json`
+     *   (`browser`/`style` → the real CSS, `node`/`default` → the shim).
+     *
+     * The result is that `import "<pkg>/<name>"` resolves to the real CSS in bundlers/browsers and
+     * to the no-op shim in Node and similar runtimes. Disable it to wire these up yourself.
+     * @defaultValue true
+     */
+    compatMode?: boolean
+  }
+}
+
 /** @public */
 export type PkgRuntime = '*' | 'browser' | 'node'
 
@@ -180,12 +232,15 @@ export interface PkgConfigOptions {
      */
     optimizeLodash?: boolean | OptimizeLodashOptions
     /**
-     * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for minifying the extracted CSS.
+     * Enables \@vanilla-extract/rollup-plugin to extract CSS into a separate file, with support for
+     * minifying the extracted CSS. Pass `true` to use the defaults, or an object to customize.
+     *
+     * By default (`extract.compatMode: true`) pkg-utils also injects the self-referential
+     * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
+     * `"./bundle.css"` export to `package.json` - see {@link PkgVanillaExtractOptions}.
      * @alpha
      */
-    vanillaExtract?:
-      | boolean
-      | (VanillaExtractOptions & {minify?: boolean; browserslist?: string | string[]})
+    vanillaExtract?: boolean | PkgVanillaExtractOptions
   }
   /**
    * Default runtime of package exports

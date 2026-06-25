@@ -8,8 +8,11 @@ that cannot import `.css` files (Node SSR, typegen, importing a package in `next
 ## What's here
 
 - **`sanity-css-vanilla-extract-test`** — the _producer_. A `@sanity/pkg-utils`-built package that
-  uses vanilla-extract, injects a self-referential `import "sanity-css-vanilla-extract-test/bundle.css"`
-  into its entry chunk, and exposes a conditional export so that import resolves to:
+  enables `rollup.vanillaExtract`. With pkg-utils' compat mode (`extract.compatMode`, on by default)
+  this is all it takes — pkg-utils automatically injects the self-referential
+  `import "sanity-css-vanilla-extract-test/bundle.css"` into the entry chunk, emits the no-op
+  `bundle.css.js` shim, and writes the conditional `./bundle.css` export to `package.json` so that
+  the import resolves to:
   - the real CSS file under the `browser`/`style` conditions (bundlers / browsers), and
   - a no-op JS shim (`export default ""`) under the `node`/`default` conditions (Node-like runtimes).
 

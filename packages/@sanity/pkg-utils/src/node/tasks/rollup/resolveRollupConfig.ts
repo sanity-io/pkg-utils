@@ -9,13 +9,18 @@ import replace from '@rollup/plugin-replace'
 import terser from '@rollup/plugin-terser'
 import type {PackageJSON} from '@sanity/parse-package-json'
 import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
-import type {InputOptions, OutputOptions} from 'rollup'
+import type {InputOptions, OutputOptions, RenderedChunk} from 'rollup'
 import esbuild from 'rollup-plugin-esbuild'
 import {pkgExtMap as extMap} from '../../../node/core/pkg/pkgExt.ts'
 import {resolveConfigProperty} from '../../core/config/resolveConfigProperty.ts'
+import {
+  resolveVanillaExtract,
+  resolveVanillaExtractCssName,
+} from '../../core/config/vanillaExtract.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {DEFAULT_BROWSERSLIST_QUERY} from '../../core/defaults.ts'
 import type {RollupTask, RollupWatchTask} from '../types.ts'
+import {bundleCssShim} from './bundleCssShim.ts'
 import {optimizeCss} from './optimizeCss.ts'
 
 // Type guard to filter out falsy values
@@ -127,6 +132,13 @@ export function resolveRollupConfig(
   // Auto-detect if styled-components should be enabled
   const enableStyledComponents = shouldEnableStyledComponents(config, pkg, logger)
 
+  // Resolve vanilla-extract options + the conditional CSS export "compat mode"
+  const vanillaExtract = resolveVanillaExtract(config)
+  const vanillaExtractCssName = resolveVanillaExtractCssName(vanillaExtract.options, {
+    compatMode: vanillaExtract.compatMode,
+    runtime,
+  })
+
   const defaultPlugins = [
     replace({
       preventAssignment: true,
@@ -164,48 +176,26 @@ export function resolveRollupConfig(
     }),
     commonjs(),
     json(),
-    config?.rollup?.vanillaExtract &&
-      vanillaExtractPlugin(
-        config?.rollup?.vanillaExtract === true
-          ? {
-              extract: {
-                name:
-                  runtime === 'node'
-                    ? 'bundle.node.css'
-                    : runtime === 'browser'
-                      ? 'bundle.browser.css'
-                      : 'bundle.css',
-                sourcemap: true,
-              },
-              identifiers: 'short',
-            }
-          : config?.rollup?.vanillaExtract,
-      ),
-    config?.rollup?.vanillaExtract &&
-      optimizeCss(
-        config?.rollup?.vanillaExtract === true
-          ? {
-              extractFileName:
-                runtime === 'node'
-                  ? 'bundle.node.css'
-                  : runtime === 'browser'
-                    ? 'bundle.browser.css'
-                    : 'bundle.css',
-              browserslist: DEFAULT_BROWSERSLIST_QUERY,
-            }
-          : {
-              extractFileName:
-                typeof config.rollup.vanillaExtract.extract === 'object' &&
-                config.rollup.vanillaExtract.extract.name
-                  ? config.rollup.vanillaExtract.extract.name
-                  : runtime === 'node'
-                    ? 'bundle.node.css'
-                    : runtime === 'browser'
-                      ? 'bundle.browser.css'
-                      : 'bundle.css',
-              browserslist: config.rollup.vanillaExtract.browserslist || DEFAULT_BROWSERSLIST_QUERY,
-            },
-      ),
+    vanillaExtract.enabled &&
+      vanillaExtractPlugin({
+        identifiers: vanillaExtract.options.identifiers ?? 'short',
+        cwd: vanillaExtract.options.cwd,
+        esbuildOptions: vanillaExtract.options.esbuildOptions,
+        unstable_injectFilescopes: vanillaExtract.options.unstable_injectFilescopes,
+        extract: {
+          name: vanillaExtractCssName,
+          sourcemap: vanillaExtract.options.extract?.sourcemap ?? true,
+        },
+      }),
+    vanillaExtract.enabled &&
+      optimizeCss({
+        extractFileName: vanillaExtractCssName,
+        browserslist: vanillaExtract.options.browserslist || DEFAULT_BROWSERSLIST_QUERY,
+        minify: vanillaExtract.options.minify ?? true,
+      }),
+    // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
+    // `./<css>` export resolve to.
+    vanillaExtract.compatMode && bundleCssShim({fileName: `${vanillaExtractCssName}.js`}),
     (config?.babel?.reactCompiler || enableStyledComponents) &&
       babel({
         babelrc: false,
@@ -373,7 +363,41 @@ export function resolveRollupConfig(
       minifyInternalExports: minify,
       assetFileNames: '[name][extname]',
       ...config?.rollup?.output,
+      // In compat mode, inject the self-referential bundle.css import into entry chunks so userland
+      // does not need to set `rollup.output.intro` themselves. Use `require()` for CommonJS output
+      // (a top-level `import` would be invalid in a `.cjs` bundle).
+      ...(vanillaExtract.compatMode
+        ? {
+            intro: composeIntro(
+              format === 'commonjs'
+                ? `require(${JSON.stringify(`${pkg.name}/${vanillaExtractCssName}`)})`
+                : `import ${JSON.stringify(`${pkg.name}/${vanillaExtractCssName}`)}`,
+              config?.rollup?.output?.intro,
+            ),
+          }
+        : {}),
     },
+  }
+}
+
+/**
+ * Build an `intro` function that prepends `autoImport` to every entry chunk, preserving any
+ * user-provided `intro`.
+ */
+function composeIntro(
+  autoImport: string,
+  userIntro: OutputOptions['intro'],
+): (chunkInfo: RenderedChunk) => Promise<string> {
+  return async (chunkInfo) => {
+    const auto = chunkInfo.isEntry ? `${autoImport}\n` : ''
+    const user =
+      typeof userIntro === 'function'
+        ? await userIntro(chunkInfo)
+        : typeof userIntro === 'string'
+          ? userIntro
+          : ''
+
+    return `${auto}${user}`
   }
 }
 

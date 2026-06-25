@@ -233,4 +233,81 @@ describe('publishConfig.exports validation', () => {
       false,
     )
   })
+
+  test('should pass with a matching conditional CSS export in publishConfig.exports', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './dist/index.js',
+          },
+          './bundle.css': {
+            browser: './dist/bundle.css',
+            style: './dist/bundle.css',
+            node: './dist/bundle.css.js',
+            default: './dist/bundle.css.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              default: './dist/index.js',
+            },
+            './bundle.css': {
+              browser: './dist/bundle.css',
+              style: './dist/bundle.css',
+              node: './dist/bundle.css.js',
+              default: './dist/bundle.css.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      false,
+    )
+  })
+
+  test('should fail when publishConfig.exports conditional CSS export differs from exports', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './dist/index.js',
+          },
+          './bundle.css': {
+            browser: './dist/bundle.css',
+            style: './dist/bundle.css',
+            node: './dist/bundle.css.js',
+            default: './dist/bundle.css.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              default: './dist/index.js',
+            },
+            './bundle.css': {
+              browser: './dist/bundle.css',
+              style: './dist/bundle.css',
+              node: './dist/bundle.css.js',
+              // mismatched: points back at the real CSS instead of the shim
+              default: './dist/bundle.css',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+    )
+  })
 })

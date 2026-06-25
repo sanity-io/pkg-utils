@@ -102,6 +102,7 @@ const basePkgSchema = z.object({
                 default: z.optional(z.string()),
                 svelte: z.optional(z.string()),
               }),
+              cssExportConditionsSchema,
             ]),
           ),
         ),

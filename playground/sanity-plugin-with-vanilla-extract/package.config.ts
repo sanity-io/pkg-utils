@@ -6,14 +6,8 @@ export default defineConfig({
   babel: {reactCompiler: true},
   reactCompilerOptions: {target: '19'},
   rollup: {
-    output: {
-      intro: (chunkInfo) => {
-        if (!chunkInfo.isEntry) {
-          return ''
-        }
-        return `import './bundle.css'`
-      },
-    },
+    // `vanillaExtract` compat mode (default) injects the self-referential bundle.css import, emits
+    // the JS shim, and writes the `./bundle.css` export to package.json automatically.
     vanillaExtract: true,
   },
 })

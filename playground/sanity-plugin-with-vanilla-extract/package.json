@@ -10,6 +10,12 @@
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./bundle.css": {
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle.css.js",
+      "default": "./dist/bundle.css.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
