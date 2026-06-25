@@ -53,7 +53,9 @@ export async function writeBundleCssExports(options: {
   // oxlint-disable-next-line no-unsafe-type-assertion
   const pkg = JSON.parse(source) as {exports?: Record<string, unknown>}
 
-  const distRel = path.relative(cwd, distPath) || 'dist'
+  // Normalize to POSIX separators - `path.relative` uses `\\` on Windows, but `exports` paths in
+  // package.json must always use `/`.
+  const distRel = (path.relative(cwd, distPath) || 'dist').split(path.sep).join('/')
   const exportKey = `./${cssName}`
   const cssFile = `./${path.posix.join(distRel, cssName)}`
   const shimFile = `./${path.posix.join(distRel, `${cssName}.js`)}`

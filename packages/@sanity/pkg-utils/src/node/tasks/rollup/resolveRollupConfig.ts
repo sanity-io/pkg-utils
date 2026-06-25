@@ -191,6 +191,7 @@ export function resolveRollupConfig(
       optimizeCss({
         extractFileName: vanillaExtractCssName,
         browserslist: vanillaExtract.options.browserslist || DEFAULT_BROWSERSLIST_QUERY,
+        minify: vanillaExtract.options.minify ?? true,
       }),
     // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
     // `./<css>` export resolve to.
@@ -362,12 +363,15 @@ export function resolveRollupConfig(
       minifyInternalExports: minify,
       assetFileNames: '[name][extname]',
       ...config?.rollup?.output,
-      // In compat mode, inject the self-referential `import "<pkg>/<css>"` into entry chunks so
-      // userland does not need to set `rollup.output.intro` themselves.
+      // In compat mode, inject the self-referential bundle.css import into entry chunks so userland
+      // does not need to set `rollup.output.intro` themselves. Use `require()` for CommonJS output
+      // (a top-level `import` would be invalid in a `.cjs` bundle).
       ...(vanillaExtract.compatMode
         ? {
             intro: composeIntro(
-              `import ${JSON.stringify(`${pkg.name}/${vanillaExtractCssName}`)}`,
+              format === 'commonjs'
+                ? `require(${JSON.stringify(`${pkg.name}/${vanillaExtractCssName}`)})`
+                : `import ${JSON.stringify(`${pkg.name}/${vanillaExtractCssName}`)}`,
               config?.rollup?.output?.intro,
             ),
           }
