@@ -28,9 +28,8 @@ interface DependencyPlacementRule {
 
 /**
  * The set of dependency placement rules enforced in `--strict` mode.
- * @internal
  */
-export const dependencyPlacementRules: DependencyPlacementRule[] = [
+const dependencyPlacementRules: DependencyPlacementRule[] = [
   {
     name: 'react-is',
     option: 'noReactIsPeerDependency',
