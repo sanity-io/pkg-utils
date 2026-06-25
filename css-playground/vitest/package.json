@@ -1,0 +1,13 @@
+{
+  "name": "@css-playground/vitest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "sanity-css-vanilla-extract-test": "workspace:*",
+    "vitest": "catalog:"
+  }
+}

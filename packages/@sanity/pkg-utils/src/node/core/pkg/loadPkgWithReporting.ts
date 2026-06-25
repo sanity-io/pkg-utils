@@ -134,7 +134,9 @@ export async function loadPkgWithReporting(options: {
       const _exports = Object.entries(pkg.exports)
 
       for (const [expPath, exp] of _exports) {
-        if (typeof exp === 'string' || 'svelte' in exp) {
+        // Skip plain string exports, svelte exports, and conditional CSS exports (a flat
+        // condition -> path map at a `.css` subpath); none of these use standard export conditions.
+        if (typeof exp === 'string' || expPath.endsWith('.css') || 'svelte' in exp) {
           continue
         }
 
