@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.7.1
+
+### Patch Changes
+
+- [#2895](https://github.com/sanity-io/pkg-utils/pull/2895) [`ba964f1`](https://github.com/sanity-io/pkg-utils/commit/ba964f1d2444b01b4bb3cd76c31f756dc9f39a38) Thanks [@stipsan](https://github.com/stipsan)! - Revert the upgrade of `@babel/core` and `@babel/preset-typescript` to v8, pinning them back to v7
+
 ## 10.7.0
 
 ### Minor Changes
