@@ -19,6 +19,8 @@
       "entry": ["*.{ts,mts,mjs}"],
       "project": ["*.{ts,mts,mjs}"],
       "ignoreDependencies": [
+        // Provides the workspace-level Babel 7 peer for packages that auto-resolve @babel/core
+        "@babel/core",
         "@sanity/pkg-utils",
         "@sanity/tsconfig",
         "@sanity/tsdown-config",
