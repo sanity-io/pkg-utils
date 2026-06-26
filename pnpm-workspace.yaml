@@ -56,6 +56,7 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/pkg-utils': workspace:*
+  '@babel/core': ^7.29.7
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
