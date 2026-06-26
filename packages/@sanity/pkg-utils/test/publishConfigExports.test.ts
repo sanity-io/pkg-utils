@@ -5,6 +5,7 @@ import {describe, expect, test} from 'vitest'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
 import {writeBundleCssExports} from '../src/node/core/pkg/writeBundleCssExports'
 import {createLogger} from '../src/node/logger'
+import {parseStrictOptions} from '../src/node/strict'
 
 describe('publishConfig.exports validation', () => {
   const testDir = join(tmpdir(), 'pkg-utils-test-publishconfig')
@@ -49,18 +50,7 @@ describe('publishConfig.exports validation', () => {
         pkgPath,
         logger,
         strict: true,
-        strictOptions: {
-          noPackageJsonTypings: 'error',
-          noImplicitSideEffects: 'warn',
-          noImplicitBrowsersList: 'warn',
-          alwaysPackageJsonTypes: 'error',
-          alwaysPackageJsonFiles: 'error',
-          noCheckTypes: 'warn',
-          noPackageJsonBrowser: 'warn',
-          noPackageJsonTypesVersions: 'warn',
-          preferModuleType: 'warn',
-          noPublishConfigExports: 'warn',
-        },
+        strictOptions: parseStrictOptions({}),
       })
 
       if (shouldFail) {

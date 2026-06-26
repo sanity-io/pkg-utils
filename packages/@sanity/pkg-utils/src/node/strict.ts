@@ -17,6 +17,17 @@ const strictOptions = z
     noPackageJsonTypesVersions: toggle.default('warn'),
     preferModuleType: toggle.default('warn'),
     noPublishConfigExports: toggle.default('warn'),
+    noReactIsPeerDependency: toggle.default('error'),
+    noSanityUiPeerDependency: toggle.default('error'),
+    noSanityDependency: toggle.default('error'),
+    noStyledComponentsDependency: toggle.default('error'),
+    noReactDependency: toggle.default('error'),
+    noReactDomDependency: toggle.default('error'),
+    noReactTypesDependency: toggle.default('error'),
+    noReactDomTypesDependency: toggle.default('error'),
+    noNodeTypesDependency: toggle.default('error'),
+    noRxjsPeerDependency: toggle.default('error'),
+    noSanityClientPeerDependency: toggle.default('error'),
   })
   .strict()
 
@@ -86,6 +97,61 @@ export interface StrictOptions {
    * @defaultValue 'warn'
    */
   noPublishConfigExports: ToggleType
+  /**
+   * Disallows `react-is` in `peerDependencies`. It should be in `dependencies` (or `devDependencies`) instead.
+   * @defaultValue 'error'
+   */
+  noReactIsPeerDependency: ToggleType
+  /**
+   * Disallows `@sanity/ui` in `peerDependencies`. It should be in `dependencies` (or `devDependencies`) instead.
+   * @defaultValue 'error'
+   */
+  noSanityUiPeerDependency: ToggleType
+  /**
+   * Disallows `sanity` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`.
+   * @defaultValue 'error'
+   */
+  noSanityDependency: ToggleType
+  /**
+   * Disallows `styled-components` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`.
+   * @defaultValue 'error'
+   */
+  noStyledComponentsDependency: ToggleType
+  /**
+   * Disallows `react` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`.
+   * @defaultValue 'error'
+   */
+  noReactDependency: ToggleType
+  /**
+   * Disallows `react-dom` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`.
+   * @defaultValue 'error'
+   */
+  noReactDomDependency: ToggleType
+  /**
+   * Disallows `@types/react` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`, and when declared as a peer dependency the version range should be `*`.
+   * @defaultValue 'error'
+   */
+  noReactTypesDependency: ToggleType
+  /**
+   * Disallows `@types/react-dom` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`, and when declared as a peer dependency the version range should be `*`.
+   * @defaultValue 'error'
+   */
+  noReactDomTypesDependency: ToggleType
+  /**
+   * Disallows `@types/node` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`, and when declared as a peer dependency the version range should be `*`.
+   * @defaultValue 'error'
+   */
+  noNodeTypesDependency: ToggleType
+  /**
+   * Disallows `rxjs` in `peerDependencies`. It should only be in `dependencies` and/or `devDependencies`.
+   * @defaultValue 'error'
+   */
+  noRxjsPeerDependency: ToggleType
+  /**
+   * Disallows `@sanity/client` in `peerDependencies`. It should only be in `dependencies` and/or `devDependencies`.
+   * @defaultValue 'error'
+   */
+  noSanityClientPeerDependency: ToggleType
 }
 
 /** @alpha */
