@@ -518,15 +518,25 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('sanity-plugin-with-vanilla-extract')
     await project.run('build')
 
-    const [distChunksColorInput, distIndexJs, distIndexDts, distBundleCss, distBundleCssShim, pkg] =
-      await Promise.all([
-        project.readFile('dist/_chunks-es/ColorInput.js'),
-        project.readFile('dist/index.js'),
-        project.readFile('dist/index.d.ts'),
-        project.readFile('dist/bundle.css'),
-        project.readFile('dist/bundle.css.js'),
-        project.readFile('package.json'),
-      ])
+    const [
+      distChunksColorInput,
+      distIndexJs,
+      distIndexDts,
+      distBundleCss,
+      distBundleCssDts,
+      distBundleCssShim,
+      distBundleCssShimDts,
+      pkg,
+    ] = await Promise.all([
+      project.readFile('dist/_chunks-es/ColorInput.js'),
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.d.ts'),
+      project.readFile('dist/bundle.css'),
+      project.readFile('dist/bundle.css.d.ts'),
+      project.readFile('dist/bundle.css.js'),
+      project.readFile('dist/bundle.css.js.d.ts'),
+      project.readFile('package.json'),
+    ])
 
     // The inline CSS should be extracted to a separate file
     expect(distChunksColorInput).not.toContain('border:')
@@ -537,6 +547,9 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexJs).toContain(`import "sanity-plugin-with-vanilla-extract/bundle.css"`)
     // …emits a no-op JS shim for CSS-unaware runtimes
     expect(distBundleCssShim).toContain('export default ""')
+    // …and declaration files for both conditional export targets
+    expect(distBundleCssDts).toContain('export {}')
+    expect(distBundleCssShimDts).toContain('export default css')
     // …and declares the conditional `./bundle.css` export in package.json
     expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
       browser: './dist/bundle.css',
