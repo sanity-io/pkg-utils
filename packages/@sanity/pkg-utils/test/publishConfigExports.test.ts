@@ -3,16 +3,27 @@ import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
+import {writeBundleCssExports} from '../src/node/core/pkg/writeBundleCssExports'
 import {createLogger} from '../src/node/logger'
 
 describe('publishConfig.exports validation', () => {
   const testDir = join(tmpdir(), 'pkg-utils-test-publishconfig')
 
-  async function testPackage(pkg: any, shouldFail: boolean) {
+  async function testPackage(
+    pkg: any,
+    shouldFail: boolean,
+    // Optional hook to mutate the package on disk after it is written but before validation, e.g. to
+    // run `writeBundleCssExports` (which is what a real build does between load and check).
+    beforeValidate?: (cwd: string) => Promise<void>,
+  ) {
     const testPath = join(testDir, Math.random().toString(36).substring(7))
     mkdirSync(testPath, {recursive: true})
     const pkgPath = join(testPath, 'package.json')
     writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
+
+    if (beforeValidate) {
+      await beforeValidate(testPath)
+    }
 
     const logger = createLogger(true)
 
@@ -308,6 +319,46 @@ describe('publishConfig.exports validation', () => {
         files: ['dist'],
       },
       true,
+    )
+  })
+
+  // Regression test: a vanilla-extract build adds the `./bundle.css` export to `exports` via
+  // `writeBundleCssExports` and then runs the strict `--check`. If the export is not mirrored into
+  // `publishConfig.exports`, the check fails with "missing export path". This asserts the build +
+  // check stays green for packages that declare `publishConfig.exports`.
+  test('should pass after writeBundleCssExports mirrors the css export into publishConfig.exports', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './dist/index.js',
+          },
+          './package.json': './package.json',
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              default: './dist/index.js',
+            },
+            './package.json': './package.json',
+          },
+        },
+        files: ['dist'],
+      },
+      false,
+      async (cwd) => {
+        await writeBundleCssExports({
+          cwd,
+          distPath: join(cwd, 'dist'),
+          cssName: 'bundle.css',
+          logger: createLogger(true),
+        })
+      },
     )
   })
 })

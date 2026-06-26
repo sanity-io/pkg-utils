@@ -1,6 +1,7 @@
 import {readFile, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import type {Logger} from '../../logger.ts'
+import {isRecord} from '../isRecord.ts'
 
 /**
  * Build the conditional CSS export object that vanilla-extract compat mode expects, e.g.
@@ -26,6 +27,31 @@ function hasMatchingExport(value: unknown, expected: Record<string, string>): bo
   )
 }
 
+/**
+ * Insert (or replace) the `"./<cssName>"` export in an `exports`-shaped map, preserving the existing
+ * order and placing it before `./package.json` when present.
+ */
+function insertCssExport(
+  exports: Record<string, unknown>,
+  exportKey: string,
+  conditionalExport: Record<string, string>,
+): Record<string, unknown> {
+  const nextExports: Record<string, unknown> = {}
+  let inserted = false
+  for (const [key, value] of Object.entries(exports)) {
+    if (key === exportKey) continue
+    if (key === './package.json' && !inserted) {
+      nextExports[exportKey] = conditionalExport
+      inserted = true
+    }
+    nextExports[key] = value
+  }
+  if (!inserted) {
+    nextExports[exportKey] = conditionalExport
+  }
+  return nextExports
+}
+
 function detectIndent(source: string): string | number {
   const match = source.match(/\n([ \t]+)\S/)
   if (!match) return 2
@@ -37,6 +63,11 @@ function detectIndent(source: string): string | number {
  * Write the conditional `"./<cssName>"` export to `package.json` (used by vanilla-extract compat
  * mode), so userland does not have to maintain it by hand. The write is idempotent: if the export
  * already matches, the file is left untouched.
+ *
+ * When `publishConfig.exports` is present, the same conditional CSS export is mirrored into it. The
+ * conditional CSS export has no `source`/`development`/`monorepo` conditions to strip, so the entry
+ * is identical in both places. Keeping them in sync prevents the `publishConfig.exports` validation
+ * from failing with a "missing export path" error for the auto-added `./<cssName>` export.
  *
  * @internal
  */
@@ -51,7 +82,10 @@ export async function writeBundleCssExports(options: {
   const pkgPath = path.resolve(cwd, 'package.json')
   const source = await readFile(pkgPath, 'utf8')
   // oxlint-disable-next-line no-unsafe-type-assertion
-  const pkg = JSON.parse(source) as {exports?: Record<string, unknown>}
+  const pkg = JSON.parse(source) as {
+    exports?: Record<string, unknown>
+    publishConfig?: {exports?: Record<string, unknown>}
+  }
 
   // Normalize to POSIX separators - `path.relative` uses `\\` on Windows, but `exports` paths in
   // package.json must always use `/`.
@@ -61,28 +95,28 @@ export async function writeBundleCssExports(options: {
   const shimFile = `./${path.posix.join(distRel, `${cssName}.js`)}`
   const conditionalExport = createConditionalCssExport(cssFile, shimFile)
 
-  if (hasMatchingExport(pkg.exports?.[exportKey], conditionalExport)) {
+  // Only mirror into `publishConfig.exports` when it already exists; never create it here.
+  const publishConfig = pkg.publishConfig
+  const publishConfigExports = isRecord(publishConfig?.exports) ? publishConfig.exports : undefined
+
+  const exportsMatch = hasMatchingExport(pkg.exports?.[exportKey], conditionalExport)
+  const publishConfigExportsMatch =
+    !publishConfigExports || hasMatchingExport(publishConfigExports[exportKey], conditionalExport)
+
+  if (exportsMatch && publishConfigExportsMatch) {
     return
   }
 
-  // Re-insert the css export (before `./package.json` when present) preserving the existing order.
-  const nextExports: Record<string, unknown> = {}
-  let inserted = false
-  for (const [key, value] of Object.entries(pkg.exports ?? {})) {
-    if (key === exportKey) continue
-    if (key === './package.json' && !inserted) {
-      nextExports[exportKey] = conditionalExport
-      inserted = true
-    }
-    nextExports[key] = value
+  pkg.exports = insertCssExport(pkg.exports ?? {}, exportKey, conditionalExport)
+
+  if (publishConfig && publishConfigExports) {
+    publishConfig.exports = insertCssExport(publishConfigExports, exportKey, conditionalExport)
   }
-  if (!inserted) {
-    nextExports[exportKey] = conditionalExport
-  }
-  pkg.exports = nextExports
 
   await writeFile(pkgPath, `${JSON.stringify(pkg, null, detectIndent(source))}\n`)
   logger.log(
-    `Updated package.json: added \`exports["${exportKey}"]\` for vanilla-extract compat mode`,
+    `Updated package.json: added \`exports["${exportKey}"]\`${
+      publishConfigExports ? ` and \`publishConfig.exports["${exportKey}"]\`` : ''
+    } for vanilla-extract compat mode`,
   )
 }
