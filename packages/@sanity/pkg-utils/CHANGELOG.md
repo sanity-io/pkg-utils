@@ -1,5 +1,17 @@
 # @sanity/pkg-utils
 
+## 10.7.2
+
+### Patch Changes
+
+- [#2897](https://github.com/sanity-io/pkg-utils/pull/2897) [`de87bc9`](https://github.com/sanity-io/pkg-utils/commit/de87bc94184f4724bb04b401d10e83e5616e2d4c) Thanks [@stipsan](https://github.com/stipsan)! - fix: mirror the auto-added `bundle.css` export into `publishConfig.exports`
+
+  In vanilla-extract compat mode, pkg-utils auto-writes the conditional `"./bundle.css"` export to `package.json`. It only updated the top-level `exports`, so packages that also declare `publishConfig.exports` ended up out of sync, and the next strict `--check` failed with `publishConfig.exports: missing export path "./bundle.css" that exists in exports`.
+
+  The conditional CSS export is now mirrored into `publishConfig.exports` as well (when that field exists), keeping the two in sync. The entry is identical in both places since the CSS export has no `source`/`development`/`monorepo` conditions to strip. `publishConfig.exports` is never created when it is absent.
+
+- [#2899](https://github.com/sanity-io/pkg-utils/pull/2899) [`97cbc33`](https://github.com/sanity-io/pkg-utils/commit/97cbc339f75ed616760e75799f7a6b8b809480dd) Thanks [@stipsan](https://github.com/stipsan)! - Emit a `<css>.d.ts` declaration alongside the vanilla-extract compat-mode CSS shim, so dts export checkers that resolve a `.d.ts` for every export target don't crash on a missing declaration file.
+
 ## 10.7.1
 
 ### Patch Changes
