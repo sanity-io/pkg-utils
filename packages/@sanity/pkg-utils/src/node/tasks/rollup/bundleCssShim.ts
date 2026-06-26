@@ -1,31 +1,15 @@
 import type {Plugin} from 'rollup'
 
-function createBundleCssDeclaration(cssName: string): string {
-  return `/**
- * Side-effect CSS bundle extracted by vanilla-extract compat mode.
- */
-export {}
-`
-}
-
-function createBundleCssShimDeclaration(cssName: string): string {
-  return `/**
- * No-op shim for \`${cssName}\` in runtimes that cannot import \`.css\` files directly.
- */
-declare const css: ''
-export default css
-`
-}
-
 /**
  * Emits a no-op JavaScript shim (`export default ""`) alongside the extracted CSS. The conditional
  * `./<css>` export points its `node`/`default` conditions at this file so that the self-referential
  * `import "<pkg>/<css>"` resolves to a harmless module in runtimes that cannot import `.css` files,
  * instead of throwing `Error: Unknown file extension ".css"`.
  *
- * Also emits `.d.ts` companions for both export targets:
- * - `<css>.d.ts` for the extracted CSS file (`browser` / `style` conditions)
- * - `<css>.js.d.ts` for the JS shim (`node` / `default` conditions)
+ * A matching `.d.ts` declaration is emitted next to the shim as well. Both the `browser`/`style`
+ * (`<css>`) and the `node`/`default` (`<css>.js`) conditions of the `./<css>` export resolve their
+ * types to the same `<css>.d.ts` file, so type-aware tooling (e.g. dts export checkers that load a
+ * `.d.ts` for every export target) does not crash on a missing declaration file.
  *
  * @param options.fileName - The shim file name, e.g. `bundle.css.js`.
  * @internal
@@ -44,12 +28,7 @@ export function bundleCssShim(options: {fileName: string}): Plugin {
       this.emitFile({
         type: 'asset',
         fileName: `${cssName}.d.ts`,
-        source: createBundleCssDeclaration(cssName),
-      })
-      this.emitFile({
-        type: 'asset',
-        fileName: `${options.fileName}.d.ts`,
-        source: createBundleCssShimDeclaration(cssName),
+        source: `// Type declarations for \`${cssName}\` and its no-op JS shim.\ndeclare const _default: string\nexport default _default\n`,
       })
     },
   }

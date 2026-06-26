@@ -523,18 +523,16 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
       distIndexJs,
       distIndexDts,
       distBundleCss,
-      distBundleCssDts,
       distBundleCssShim,
-      distBundleCssShimDts,
+      distBundleCssDts,
       pkg,
     ] = await Promise.all([
       project.readFile('dist/_chunks-es/ColorInput.js'),
       project.readFile('dist/index.js'),
       project.readFile('dist/index.d.ts'),
       project.readFile('dist/bundle.css'),
-      project.readFile('dist/bundle.css.d.ts'),
       project.readFile('dist/bundle.css.js'),
-      project.readFile('dist/bundle.css.js.d.ts'),
+      project.readFile('dist/bundle.css.d.ts'),
       project.readFile('package.json'),
     ])
 
@@ -547,9 +545,9 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexJs).toContain(`import "sanity-plugin-with-vanilla-extract/bundle.css"`)
     // …emits a no-op JS shim for CSS-unaware runtimes
     expect(distBundleCssShim).toContain('export default ""')
-    // …and declaration files for both conditional export targets
-    expect(distBundleCssDts).toContain('export {}')
-    expect(distBundleCssShimDts).toContain('export default css')
+    // …emits a matching `.d.ts` so dts export checkers don't crash on a missing declaration file
+    expect(distBundleCssDts).toContain('declare const _default: string')
+    expect(distBundleCssDts).toContain('export default _default')
     // …and declares the conditional `./bundle.css` export in package.json
     expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
       browser: './dist/bundle.css',
