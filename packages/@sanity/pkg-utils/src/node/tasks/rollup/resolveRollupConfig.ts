@@ -360,8 +360,8 @@ export function resolveRollupConfig(
       minifyInternalExports: minify,
       assetFileNames: '[name][extname]',
       ...config?.rollup?.output,
-      // In compat mode, inject the self-referential bundle.css import into entry chunks so userland
-      // does not need to set `rollup.output.intro` themselves. Use `require()` for CommonJS output
+      // In compat mode, inject the self-referential bundle.css import into the `index` entry chunk
+      // so userland does not need to set `rollup.output.intro` themselves. Use `require()` for CommonJS output
       // (a top-level `import` would be invalid in a `.cjs` bundle).
       ...(vanillaExtract.compatMode
         ? {
@@ -378,15 +378,15 @@ export function resolveRollupConfig(
 }
 
 /**
- * Build an `intro` function that prepends `autoImport` to every entry chunk, preserving any
- * user-provided `intro`.
+ * Build an `intro` function that prepends `autoImport` to the `index` entry chunk only,
+ * preserving any user-provided `intro`.
  */
 function composeIntro(
   autoImport: string,
   userIntro: OutputOptions['intro'],
 ): (chunkInfo: RenderedChunk) => Promise<string> {
   return async (chunkInfo) => {
-    const auto = chunkInfo.isEntry ? `${autoImport}\n` : ''
+    const auto = chunkInfo.isEntry && chunkInfo.name === 'index' ? `${autoImport}\n` : ''
     const user =
       typeof userIntro === 'function'
         ? await userIntro(chunkInfo)
