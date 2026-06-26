@@ -29,7 +29,7 @@ describe.skipIf(process.platform === 'win32')('strict options', () => {
     {key: 'noNodeTypesDependency', value: 'off', fails: false},
     {key: 'noRxjsPeerDependency', value: 'off', fails: false},
     {key: 'noSanityClientPeerDependency', value: 'off', fails: false},
-  ])('{$key: $value}}', ({key, value, fails}) => {
+  ])('{$key: $value}', ({key, value, fails}) => {
     if (fails) {
       expect(() => parseStrictOptions({[key]: value})).toThrowErrorMatchingSnapshot()
     } else {
