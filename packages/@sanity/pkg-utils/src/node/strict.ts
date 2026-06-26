@@ -19,6 +19,7 @@ const strictOptions = z
     noPublishConfigExports: toggle.default('warn'),
     noReactIsPeerDependency: toggle.default('error'),
     noSanityUiPeerDependency: toggle.default('error'),
+    noSanityIconsPeerDependency: toggle.default('error'),
     noSanityDependency: toggle.default('error'),
     noStyledComponentsDependency: toggle.default('error'),
     noReactDependency: toggle.default('error'),
@@ -107,6 +108,11 @@ export interface StrictOptions {
    * @defaultValue 'error'
    */
   noSanityUiPeerDependency: ToggleType
+  /**
+   * Disallows `@sanity/icons` in `peerDependencies`. It should be in `dependencies` (or `devDependencies`) instead.
+   * @defaultValue 'error'
+   */
+  noSanityIconsPeerDependency: ToggleType
   /**
    * Disallows `sanity` in `dependencies`. It should only be in `devDependencies` and/or `peerDependencies`.
    * @defaultValue 'error'
