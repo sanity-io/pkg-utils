@@ -6,6 +6,10 @@
   "scripts": {
     "build": "pnpm --filter './packages/@sanity/*' build",
     "check:deps": "knip --dependencies",
+    "css-playground:build": "pnpm --filter './css-playground/**' build",
+    "css-playground:clean": "pnpm --filter './css-playground/**' --silent clean",
+    "css-playground:test": "pnpm --filter './css-playground/**' test",
+    "css-playground:typecheck": "pnpm --filter './css-playground/**' typecheck",
     "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
     "knip": "knip",
     "lint": "oxlint --type-aware",
@@ -50,5 +54,8 @@
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "packageManager": "pnpm@10.34.4"
+  "packageManager": "pnpm@10.34.4",
+  "@parcel/resolver-default": {
+    "packageExports": true
+  }
 }

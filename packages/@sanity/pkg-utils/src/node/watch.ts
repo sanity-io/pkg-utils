@@ -3,7 +3,9 @@ import {up as findPkgPath} from 'empathic/package'
 import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
 import {loadConfig} from './core/config/loadConfig.ts'
+import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
+import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
 import {resolveWatchTasks} from './resolveWatchTasks.ts'
@@ -53,6 +55,21 @@ export async function watch(options: {
       sub.unsubscribe()
     }
     taskSubscriptions.length = 0
+
+    // Keep the conditional `./<css>` export in package.json in sync with the injected
+    // `import "<pkg>/<css>"` for watch builds too (idempotent, so it won't loop).
+    const vanillaExtract = resolveVanillaExtract(ctx.config)
+    if (vanillaExtract.compatMode) {
+      await writeBundleCssExports({
+        cwd,
+        distPath: ctx.distPath,
+        cssName: resolveVanillaExtractCssName(vanillaExtract.options, {
+          compatMode: true,
+          runtime: '*',
+        }),
+        logger,
+      })
+    }
 
     const watchTasks = resolveWatchTasks(ctx)
 

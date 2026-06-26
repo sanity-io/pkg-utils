@@ -1,0 +1,18 @@
+{
+  "name": "@css-playground/remix",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning src/main.ts"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "sanity-css-vanilla-extract-test": "workspace:*"
+  },
+  "optionalDependencies": {
+    "remix": "3.0.0-beta.4"
+  }
+}

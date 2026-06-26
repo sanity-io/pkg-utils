@@ -1,0 +1,12 @@
+{
+  "name": "@css-playground/deno",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "deno run --allow-read --allow-env --allow-sys src/main.ts"
+  },
+  "devDependencies": {
+    "sanity-css-vanilla-extract-test": "workspace:*"
+  }
+}

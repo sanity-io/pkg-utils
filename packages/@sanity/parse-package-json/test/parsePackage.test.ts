@@ -256,6 +256,58 @@ describe('parsePackage', () => {
 
     expect(() => parsePackage(pkg)).toThrowErrorMatchingSnapshot()
   })
+
+  test('allows conditional CSS exports and passes them through untouched', () => {
+    const pkg = {
+      ...template,
+      exports: {
+        ...template.exports,
+        './bundle.css': {
+          browser: './dist/bundle.css',
+          style: './dist/bundle.css',
+          node: './dist/bundle.css.js',
+          default: './dist/bundle.css.js',
+        },
+      },
+    }
+
+    const parsed = parsePackage(pkg)
+
+    // The conditional CSS export must NOT have a `default` computed/added or be otherwise rewritten.
+    expect(parsed.exports?.['./bundle.css']).toEqual({
+      browser: './dist/bundle.css',
+      style: './dist/bundle.css',
+      node: './dist/bundle.css.js',
+      default: './dist/bundle.css.js',
+    })
+  })
+
+  test('still allows plain string CSS exports', () => {
+    const pkg = {
+      ...template,
+      exports: {
+        ...template.exports,
+        './styles.css': './dist/styles.css',
+      },
+    }
+
+    const parsed = parsePackage(pkg)
+
+    expect(parsed.exports?.['./styles.css']).toBe('./dist/styles.css')
+  })
+
+  test('rejects a conditional object export with no `.css` target that is otherwise malformed', () => {
+    const pkg = {
+      ...template,
+      exports: {
+        ...template.exports,
+        // Not a valid export entry (no default/import/require) and not a CSS conditions map.
+        './broken': {foo: './dist/foo.js'},
+      },
+    }
+
+    expect(() => parsePackage(pkg)).toThrow()
+  })
 })
 
 test('typoMap lists all known keys', () => {

@@ -163,13 +163,29 @@ export function parseAndValidateExports(options: {
         }
       }
     } else if (exportPath.endsWith('.css')) {
-      if (typeof exportEntry === 'string' && !existsSync(resolvePath(cwd, exportEntry))) {
+      if (typeof exportEntry === 'string') {
+        if (!existsSync(resolvePath(cwd, exportEntry))) {
+          errors.push(
+            `package.json: \`exports[${JSON.stringify(exportPath)}]\`: file does not exist.`,
+          )
+        }
+      } else if (isRecord(exportEntry)) {
+        // Conditional CSS export, e.g.
+        // "./bundle.css": { "browser": "./dist/bundle.css", "node": "./dist/bundle.css.js", "default": "./dist/bundle.css.js" }
+        // This lets a package re-add a `import "<pkg>/bundle.css"` that resolves to the real CSS in
+        // bundler/browser environments and to a no-op JS shim in CSS-unaware runtimes (e.g. Node).
+        // Only the shape is validated here: the targets usually point at generated `dist` files that
+        // do not exist yet at validation time, so file existence is intentionally not checked.
+        for (const [condition, target] of Object.entries(exportEntry)) {
+          if (typeof target !== 'string') {
+            errors.push(
+              `package.json: \`exports[${JSON.stringify(exportPath)}][${JSON.stringify(condition)}]\`: must be a string path.`,
+            )
+          }
+        }
+      } else {
         errors.push(
-          `package.json: \`exports[${JSON.stringify(exportPath)}]\`: file does not exist.`,
-        )
-      } else if (typeof exportEntry !== 'string') {
-        errors.push(
-          `package.json: \`exports[${JSON.stringify(exportPath)}]\`: export conditions not supported for CSS files.`,
+          `package.json: \`exports[${JSON.stringify(exportPath)}]\`: must be a string path or an object of export conditions.`,
         )
       }
     } else if (isRecord(exportEntry) && 'svelte' in exportEntry) {

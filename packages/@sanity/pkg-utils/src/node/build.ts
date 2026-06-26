@@ -2,7 +2,9 @@ import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
 import {rimraf} from 'rimraf'
 import {loadConfig} from './core/config/loadConfig.ts'
+import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
+import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
 import {resolveBuildTasks} from './resolveBuildTasks.ts'
@@ -108,5 +110,20 @@ export async function build(options: {
 
       process.exit(1)
     }
+  }
+
+  // In vanilla-extract compat mode, make sure package.json declares the conditional `./<css>`
+  // export that the injected `import "<pkg>/<css>"` resolves through.
+  const vanillaExtract = resolveVanillaExtract(config)
+  if (vanillaExtract.compatMode) {
+    await writeBundleCssExports({
+      cwd,
+      distPath: ctx.distPath,
+      cssName: resolveVanillaExtractCssName(vanillaExtract.options, {
+        compatMode: true,
+        runtime: '*',
+      }),
+      logger,
+    })
   }
 }
