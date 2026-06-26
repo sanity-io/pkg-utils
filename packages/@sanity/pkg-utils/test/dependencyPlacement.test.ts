@@ -100,6 +100,23 @@ describe('checkDependencyPlacement', () => {
     expect(error.mock.calls[0]?.[0]).toContain('`devDependencies` or `peerDependencies`')
   })
 
+  test('only considers own properties, not inherited ones', () => {
+    const {logger, warn, error} = createMockLogger()
+    // A dependency map that inherits `react-is` from its prototype but does not own
+    // it. Using the `in` operator would incorrectly flag this; an own-property check
+    // does not.
+    const peerDependencies: Record<string, string> = Object.create({'react-is': '^18.0.0'})
+    const shouldError = checkDependencyPlacement({
+      pkg: basePkg({peerDependencies}),
+      logger,
+      strictOptions: parseStrictOptions({noReactIsPeerDependency: 'error'}),
+    })
+
+    expect(shouldError).toBe(false)
+    expect(warn).not.toHaveBeenCalled()
+    expect(error).not.toHaveBeenCalled()
+  })
+
   test('allows correct placements without any report', () => {
     const {logger, warn, error} = createMockLogger()
     const shouldError = checkDependencyPlacement({

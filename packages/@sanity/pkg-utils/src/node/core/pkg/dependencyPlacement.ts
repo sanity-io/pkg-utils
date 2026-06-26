@@ -141,7 +141,7 @@ export function checkDependencyPlacement(options: {
     }
 
     for (const field of rule.disallowedIn) {
-      if (rule.name in (pkg[field] ?? {})) {
+      if (Object.hasOwn(pkg[field] ?? {}, rule.name)) {
         report(
           level,
           `package.json: \`${rule.name}\` should not be in \`${field}\`. It should be in ${formatFields(
@@ -155,7 +155,7 @@ export function checkDependencyPlacement(options: {
       const peerDependencies = pkg.peerDependencies ?? {}
 
       if (
-        rule.name in peerDependencies &&
+        Object.hasOwn(peerDependencies, rule.name) &&
         peerDependencies[rule.name] !== rule.requiredPeerVersion
       ) {
         report(
