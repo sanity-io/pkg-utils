@@ -13,7 +13,10 @@ async function setupPackage(pkg: Record<string, unknown>): Promise<string> {
   return cwd
 }
 
-async function readPkg(cwd: string): Promise<{exports: Record<string, unknown>}> {
+async function readPkg(cwd: string): Promise<{
+  exports: Record<string, unknown>
+  publishConfig?: {exports?: Record<string, unknown>}
+}> {
   return JSON.parse(await readFile(path.join(cwd, 'package.json'), 'utf8'))
 }
 
@@ -93,5 +96,166 @@ describe('writeBundleCssExports', () => {
       node: './lib/styles.css.js',
       default: './lib/styles.css.js',
     })
+  })
+
+  test('mirrors the css export into publishConfig.exports when it exists', async () => {
+    const cwd = await setupPackage({
+      name: 'example',
+      version: '1.0.0',
+      exports: {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+        './package.json': './package.json',
+      },
+      publishConfig: {
+        exports: {
+          '.': {default: './dist/index.js'},
+          './package.json': './package.json',
+        },
+      },
+    })
+
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
+
+    const pkg = await readPkg(cwd)
+    const expected = {
+      browser: './dist/bundle.css',
+      style: './dist/bundle.css',
+      node: './dist/bundle.css.js',
+      default: './dist/bundle.css.js',
+    }
+    expect(pkg.exports['./bundle.css']).toEqual(expected)
+    expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual(expected)
+    // Inserted before `./package.json` in publishConfig.exports too, preserving order.
+    expect(Object.keys(pkg.publishConfig!.exports!)).toEqual([
+      '.',
+      './bundle.css',
+      './package.json',
+    ])
+  })
+
+  test('appends the css export to publishConfig.exports when there is no ./package.json entry', async () => {
+    const cwd = await setupPackage({
+      name: 'example',
+      version: '1.0.0',
+      exports: {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+      },
+      publishConfig: {
+        exports: {
+          '.': {default: './dist/index.js'},
+        },
+      },
+    })
+
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
+
+    const pkg = await readPkg(cwd)
+    expect(Object.keys(pkg.publishConfig!.exports!)).toEqual(['.', './bundle.css'])
+  })
+
+  test('does not create publishConfig.exports when it does not exist', async () => {
+    const cwd = await setupPackage({
+      name: 'example',
+      version: '1.0.0',
+      exports: {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+      },
+      // publishConfig without an `exports` map should be left alone.
+      publishConfig: {access: 'public'},
+    })
+
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
+
+    const pkg = await readPkg(cwd)
+    expect(pkg.exports['./bundle.css']).toBeDefined()
+    expect(pkg.publishConfig?.exports).toBeUndefined()
+  })
+
+  test('adds the css export to publishConfig.exports even when exports already has it', async () => {
+    const cwd = await setupPackage({
+      name: 'example',
+      version: '1.0.0',
+      exports: {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+        './bundle.css': {
+          browser: './dist/bundle.css',
+          style: './dist/bundle.css',
+          node: './dist/bundle.css.js',
+          default: './dist/bundle.css.js',
+        },
+        './package.json': './package.json',
+      },
+      publishConfig: {
+        exports: {
+          '.': {default: './dist/index.js'},
+          './package.json': './package.json',
+        },
+      },
+    })
+
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
+
+    const pkg = await readPkg(cwd)
+    expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual({
+      browser: './dist/bundle.css',
+      style: './dist/bundle.css',
+      node: './dist/bundle.css.js',
+      default: './dist/bundle.css.js',
+    })
+  })
+
+  test('is idempotent when both exports and publishConfig.exports already match', async () => {
+    const conditionalExport = {
+      browser: './dist/bundle.css',
+      style: './dist/bundle.css',
+      node: './dist/bundle.css.js',
+      default: './dist/bundle.css.js',
+    }
+    const cwd = await setupPackage({
+      name: 'example',
+      version: '1.0.0',
+      exports: {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+        './bundle.css': conditionalExport,
+        './package.json': './package.json',
+      },
+      publishConfig: {
+        exports: {
+          '.': {default: './dist/index.js'},
+          './bundle.css': conditionalExport,
+          './package.json': './package.json',
+        },
+      },
+    })
+    const before = await readFile(path.join(cwd, 'package.json'), 'utf8')
+
+    await writeBundleCssExports({
+      cwd,
+      distPath: path.join(cwd, 'dist'),
+      cssName: 'bundle.css',
+      logger,
+    })
+
+    expect(await readFile(path.join(cwd, 'package.json'), 'utf8')).toEqual(before)
   })
 })
