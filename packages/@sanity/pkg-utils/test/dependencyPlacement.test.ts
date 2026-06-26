@@ -46,12 +46,26 @@ describe('checkDependencyPlacement', () => {
     expect(error.mock.calls[0]?.[0]).toContain('`dependencies` or `devDependencies`')
   })
 
-  test('warns (and does not error) by default', () => {
+  test('errors by default', () => {
     const {logger, warn, error} = createMockLogger()
     const shouldError = checkDependencyPlacement({
       pkg: basePkg({peerDependencies: {'react-is': '^18.0.0'}}),
       logger,
       strictOptions: parseStrictOptions({}),
+    })
+
+    expect(shouldError).toBe(true)
+    expect(warn).not.toHaveBeenCalled()
+    expect(error).toHaveBeenCalledTimes(1)
+    expect(error.mock.calls[0]?.[0]).toContain('`react-is` should not be in `peerDependencies`')
+  })
+
+  test('can be downgraded to "warn"', () => {
+    const {logger, warn, error} = createMockLogger()
+    const shouldError = checkDependencyPlacement({
+      pkg: basePkg({peerDependencies: {'react-is': '^18.0.0'}}),
+      logger,
+      strictOptions: parseStrictOptions({noReactIsPeerDependency: 'warn'}),
     })
 
     expect(shouldError).toBe(false)
