@@ -20,6 +20,7 @@ describe.skipIf(process.platform === 'win32')('strict options', () => {
     {key: 'noReactIsPeerDependency', value: 'off', fails: false},
     {key: 'noReactIsPeerDependency', value: true, fails: true},
     {key: 'noSanityUiPeerDependency', value: 'off', fails: false},
+    {key: 'noSanityIconsPeerDependency', value: 'off', fails: false},
     {key: 'noSanityDependency', value: 'off', fails: false},
     {key: 'noStyledComponentsDependency', value: 'off', fails: false},
     {key: 'noReactDependency', value: 'off', fails: false},

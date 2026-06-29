@@ -43,6 +43,12 @@ const dependencyPlacementRules: DependencyPlacementRule[] = [
     allowedIn: ['dependencies', 'devDependencies'],
   },
   {
+    name: '@sanity/icons',
+    option: 'noSanityIconsPeerDependency',
+    disallowedIn: ['peerDependencies'],
+    allowedIn: ['dependencies', 'devDependencies'],
+  },
+  {
     name: 'sanity',
     option: 'noSanityDependency',
     disallowedIn: ['dependencies'],
