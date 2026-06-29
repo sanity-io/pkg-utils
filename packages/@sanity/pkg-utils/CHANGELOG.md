@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.8.1
+
+### Patch Changes
+
+- [#2933](https://github.com/sanity-io/pkg-utils/pull/2933) [`9f4550e`](https://github.com/sanity-io/pkg-utils/commit/9f4550e45aa53de97251d3699784c82e382d01bc) Thanks [@filmaj](https://github.com/filmaj)! - fix: order of paths passed into `findCommonDirPath` no longer matters.
+
+- [#2928](https://github.com/sanity-io/pkg-utils/pull/2928) [`c6dde4f`](https://github.com/sanity-io/pkg-utils/commit/c6dde4ff1082581df681ba2c67f614dab2557cac) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to v1.1.3
+
 ## 10.8.0
 
 ### Minor Changes
