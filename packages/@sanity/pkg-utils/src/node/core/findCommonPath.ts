@@ -16,14 +16,14 @@ export function findCommonDirPath(filePaths: string[]): string | undefined {
     }
 
     while (dirPath !== ret) {
-      dirPath = path.dirname(dirPath)
-
-      if (dirPath === ret) {
+      if (pathContains(dirPath, ret)) {
+        ret = dirPath
         break
       }
 
-      if (pathContains(dirPath, ret)) {
-        ret = dirPath
+      dirPath = path.dirname(dirPath)
+
+      if (dirPath === ret) {
         break
       }
 
