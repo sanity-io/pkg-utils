@@ -1,5 +1,37 @@
 # @sanity/pkg-utils
 
+## 10.8.0
+
+### Minor Changes
+
+- [#2888](https://github.com/sanity-io/pkg-utils/pull/2888) [`59fdc02`](https://github.com/sanity-io/pkg-utils/commit/59fdc02b1e64b58e60c9679fe28c33972dc09865) Thanks [@stipsan](https://github.com/stipsan)! - feat: add strict dependency placement checks for well-known packages
+
+  When running with `--strict`, `package.json` is now validated to ensure these packages are declared in the correct dependency fields:
+
+  - `react-is` and `@sanity/ui` should not be in `peerDependencies` (use `dependencies` or `devDependencies`).
+  - `sanity`, `styled-components`, `react`, and `react-dom` should not be in `dependencies` (use `devDependencies` and/or `peerDependencies`).
+  - `@types/react`, `@types/react-dom`, and `@types/node` should not be in `dependencies` (use `devDependencies` and/or `peerDependencies`), and when listed in `peerDependencies` the version range should be `*`.
+  - `rxjs` and `@sanity/client` should not be in `peerDependencies` (use `dependencies` or `devDependencies`).
+
+  Each check is enabled by default at the `error` level and can be downgraded to `warn` or disabled via `strictOptions` in `package.config.ts`, e.g.:
+
+  ```ts
+  import {defineConfig} from '@sanity/pkg-utils'
+
+  export default defineConfig({
+    strictOptions: {
+      noReactDependency: 'warn',
+      noSanityClientPeerDependency: 'off',
+    },
+  })
+  ```
+
+### Patch Changes
+
+- [#2903](https://github.com/sanity-io/pkg-utils/pull/2903) [`296482a`](https://github.com/sanity-io/pkg-utils/commit/296482a88a96a05e91f742b364fb38382acf2b45) Thanks [@stipsan](https://github.com/stipsan)! - feat: disallow `@sanity/icons` in `peerDependencies`
+
+  When running with `--strict`, `package.json` is now validated to ensure `@sanity/icons` is not declared in `peerDependencies` (use `dependencies` or `devDependencies` instead). The check defaults to `error` and can be configured via `noSanityIconsPeerDependency` in `strictOptions`.
+
 ## 10.7.2
 
 ### Patch Changes
