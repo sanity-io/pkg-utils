@@ -344,7 +344,7 @@ export {}
 `;
 
 exports[`cli > should build \`react-18\` package > ./dist/index.js 1`] = `
-"import { jsxs, Fragment, jsx } from "react/jsx-runtime";
+"import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
 import { forwardRef, useId, useRef, useImperativeHandle, useState, useEffect, useDeferredValue, Suspense } from "react";
 const Input = forwardRef(function(props, forwardedRef) {
@@ -544,7 +544,7 @@ export {}
 `;
 
 exports[`cli > should build \`react-19\` package > ./dist/index.js 1`] = `
-"import { jsxs, Fragment, jsx } from "react/jsx-runtime";
+"import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
 import { useId, useRef, useImperativeHandle, useState, useEffect, use, useDeferredValue, Suspense } from "react";
 function Input(props) {
@@ -714,9 +714,9 @@ export {
 `;
 
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsxs, jsx } from "react/jsx-runtime";
+"import { jsx, jsxs } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
-import { Stack, Text } from "@sanity/ui";
+import { Text, Stack } from "@sanity/ui";
 import { styled } from "styled-components";
 const CustomTextInput = styled.input.attrs({
   type: "color"
@@ -811,7 +811,7 @@ export {
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
 "import { jsx, jsxs } from "react/jsx-runtime";
 import { c } from "react/compiler-runtime";
-import { Root, Stack, Text } from "@sanity/ui";
+import { Text, Root, Stack } from "@sanity/ui";
 var input = "_1n31tph0";
 function ColorInput(props) {
   const $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
