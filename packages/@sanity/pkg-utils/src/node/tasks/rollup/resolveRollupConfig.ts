@@ -336,13 +336,15 @@ export function resolveRollupConfig(
 
       plugins,
 
+      // Rely on Rollup's `recommended` tree-shaking defaults instead of customizing
+      // `moduleSideEffects`/`propertyReadSideEffects` ourselves. Previously we set
+      // `moduleSideEffects` to the equivalent of `'no-external'` (with a `.css` exemption),
+      // which incorrectly stripped intentional side-effect-only imports of external packages
+      // (e.g. `import 'react-time-ago/locale/en'`) from the bundle. The `recommended` preset
+      // uses `moduleSideEffects: true`, so these imports are preserved while `package.json`
+      // `sideEffects` fields are still honored for bundled modules.
       treeshake: {
         preset: 'recommended',
-        propertyReadSideEffects: false,
-        // If the module ends with `.css` it is considered to be a side effect, even if the module is marked as no side effect,
-        // this option used to be `moduleSideEffects: 'no-external'`, and thus if it's not CSS it uses `!external`, which is equivalent to `'no-external'`
-        moduleSideEffects: (id, isExternal) => (id.endsWith('.css') ? true : !isExternal),
-        annotations: true,
         ...config?.rollup?.treeshake,
       },
       experimentalLogSideEffects: config?.rollup?.experimentalLogSideEffects,

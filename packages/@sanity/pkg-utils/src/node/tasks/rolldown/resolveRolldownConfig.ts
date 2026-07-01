@@ -138,11 +138,10 @@ export function resolveRolldownConfig(
       }),
     ],
 
-    treeshake: {
-      moduleSideEffects: 'no-external',
-      unknownGlobalSideEffects: false,
-      annotations: true,
-    },
+    // Rely on rolldown's default tree-shaking (`moduleSideEffects: true`) instead of the
+    // equivalent of `moduleSideEffects: 'no-external'`, which stripped intentional
+    // side-effect-only imports of external packages. Unused declarations are still
+    // tree-shaken (that happens at the binding level, independent of `moduleSideEffects`).
   } satisfies InputOptions
   const outputOptions = {
     dir: outDir,

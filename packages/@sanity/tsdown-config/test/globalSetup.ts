@@ -7,7 +7,7 @@ export async function setup() {
     'pnpm',
     [
       '--filter',
-      '"./packages/@sanity/tsdown-config/test/fixtures/**"',
+      './packages/@sanity/tsdown-config/test/fixtures/**',
       '--parallel',
       '--stream',
       '-r',
