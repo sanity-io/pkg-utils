@@ -211,7 +211,8 @@ export interface PkgConfigOptions {
     plugins?: PkgConfigProperty<RollupPlugin[]>
     output?: Partial<NormalizedOutputOptions>
     /**
-     * Default options are `preset: 'recommended'` and `propertyReadSideEffects: false`
+     * Defaults to Rollup's `preset: 'recommended'` tree-shaking options. Anything provided here
+     * is merged on top of that preset.
      * @alpha
      */
     treeshake?: TreeshakingOptions
