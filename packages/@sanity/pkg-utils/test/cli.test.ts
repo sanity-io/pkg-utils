@@ -93,6 +93,29 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/plugin.d.ts')).toMatchSnapshot('./dist/plugin.d.ts')
   })
 
+  test('should preserve external side-effect imports in `external-side-effect` package', async () => {
+    const project = await spawnProject('external-side-effect')
+    const stdout = await project.run('build')
+
+    expect(stdout).toContain('./src/index.ts → ./dist/index.js')
+    expect(stdout).toContain('./src/index.ts → ./dist/index.cjs')
+
+    const [distIndexJs, distIndexCjs] = await Promise.all([
+      project.readFile('dist/index.js'),
+      project.readFile('dist/index.cjs'),
+    ])
+
+    // A binding-less, side-effect-only import of an *external* package subpath must survive
+    // tree-shaking (e.g. `import 'react-time-ago/locale/en'`). Previously our `moduleSideEffects`
+    // treeshake option stripped these from the bundle. See https://github.com/sanity-io/plugins/pull/1468
+    expect(distIndexJs).toContain('import "dummy-side-effects/side-effect"')
+    expect(distIndexCjs).toContain('require("dummy-side-effects/side-effect")')
+
+    // The exported value should still be present
+    expect(distIndexJs).toContain('answer')
+    expect(distIndexCjs).toContain('answer')
+  })
+
   test('should build `node-condition` package', async () => {
     const project = await spawnProject('node-condition')
     const stdout = await project.run('build')

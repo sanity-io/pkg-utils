@@ -1,0 +1,32 @@
+{
+  "name": "external-side-effect",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/index.cjs"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "dummy-side-effects": "workspace:*"
+  }
+}
