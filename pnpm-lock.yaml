@@ -778,6 +778,18 @@ importers:
 
   packages/@sanity/tsdown-config:
     dependencies:
+      '@sanity/browserslist-config':
+        specifier: ^1.0.5
+        version: 1.0.5
+      '@vanilla-extract/rollup-plugin':
+        specifier: ^1.5.3
+        version: 1.5.3(rollup@4.62.2)
+      browserslist:
+        specifier: ^4.28.2
+        version: 4.28.2
+      lightningcss:
+        specifier: ^1.32.0
+        version: 1.32.0
       publint:
         specifier: ^0.3.21
         version: 0.3.21
@@ -821,6 +833,12 @@ importers:
       react-dom:
         specifier: ^19.2.7
         version: 19.2.7(react@19.2.7)
+
+  packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-library:
+    devDependencies:
+      '@vanilla-extract/css':
+        specifier: ^1.21.0
+        version: 1.21.0
 
   playground/babel-plugin:
     devDependencies:
