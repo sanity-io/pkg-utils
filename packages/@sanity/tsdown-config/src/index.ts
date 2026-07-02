@@ -23,7 +23,11 @@ export interface StyledComponentsOptions {
   /** @defaultValue false */
   transpileTemplateLiterals?: boolean
   namespace?: string
-  /** @defaultValue true */
+  /**
+   * Adds `@__PURE__` annotations, and treats the `styled` factory as side effect free
+   * (`treeshake.manualPureFunctions`), so unused styled components are tree-shaken.
+   * @defaultValue true
+   */
   pure?: boolean
 }
 
@@ -53,6 +57,9 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
   const styledComponents = options.styledComponents ?? false
+  const styledComponentsPure =
+    styledComponents !== false &&
+    (typeof styledComponents === 'object' ? (styledComponents.pure ?? true) : true)
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
   const hash = false
@@ -68,9 +75,13 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
             // `fileName` is unnecessary, as the way we use styled-components in Sanity is usually by wrapping
             // `@sanity/ui` primitives, not declaring new ones like "const Button = styled.button``"
             fileName: false,
-            // Native template literals take less space than this transpilation
+            // Native template literals take less space than this transpilation, and unlike
+            // `babel-plugin-styled-components`, oxc doesn't add a `@__PURE__` annotation to the
+            // transpiled call expression either, so enabling it wouldn't help tree-shaking:
+            // tree-shaking of unused styled components is handled by `treeshake.manualPureFunctions` below
             transpileTemplateLiterals: false,
-            // Helps dead code elimination and tree-shaking
+            // Helps dead code elimination and tree-shaking, although oxc only annotates plain call
+            // expressions so far, not tagged template expressions (https://github.com/rollup/rollup/issues/4035)
             pure: true,
             // Disabled, as tsdown tends to be used for npm publishing, while other tooling,
             // like `sanity dev`, `next dev`, etc are used for testing
@@ -101,6 +112,11 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     publint,
     report,
     tsconfig,
+    // Since oxc's `pure` option can't annotate `styled.button`...`` tagged template expressions
+    // (no bundler supports pure annotations in that position, https://github.com/rollup/rollup/issues/4035),
+    // tell the tree-shaker to treat the `styled` factory itself as side effect free, so unused
+    // styled components are removed from the output like `@sanity/pkg-utils` does
+    ...(styledComponentsPure && {treeshake: {manualPureFunctions: ['styled']}}),
     minify: {compress: true, codegen: false, mangle: false},
     // Rely on tsdown's/rolldown's default tree-shaking (`moduleSideEffects: true`) rather than
     // customizing it. Previously this set the equivalent of `moduleSideEffects: 'no-external'`
