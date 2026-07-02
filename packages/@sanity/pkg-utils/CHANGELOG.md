@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 10.8.2
+
+### Patch Changes
+
+- [#2934](https://github.com/sanity-io/pkg-utils/pull/2934) [`d6cfe32`](https://github.com/sanity-io/pkg-utils/commit/d6cfe325c12623e63d0039a1ce76c41c53d86dfd) Thanks [@stipsan](https://github.com/stipsan)! - fix: preserve side-effect-only imports of external packages
+
+  Tree-shaking no longer sets the equivalent of `moduleSideEffects: 'no-external'` and instead relies on the bundler's default (`moduleSideEffects: true`). Previously, binding-less side-effect imports of external package subpaths — e.g. `import 'react-time-ago/locale/en'` — were stripped from the output, breaking consumers that depended on those side effects. `package.json` `sideEffects` fields are still honored for bundled modules, so dead-code elimination is unaffected.
+
 ## 10.8.1
 
 ### Patch Changes
