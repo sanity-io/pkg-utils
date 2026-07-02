@@ -1,4 +1,6 @@
-import {defineConfig as defineTsdownConfig, type UserConfig} from 'tsdown'
+import {babel} from '@rollup/plugin-babel'
+import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
+import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 
 /**
  * @public
@@ -8,6 +10,21 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
    * @defaultValue 'neutral'
    */
   platform?: UserConfig['platform']
+  /** @alpha */
+  babel?: {
+    /**
+     * Runs `babel-plugin-react-compiler` on the source files before they are bundled.
+     * Requires `babel-plugin-react-compiler` to be installed.
+     * This is the same feature as `babel.reactCompiler` in `@sanity/pkg-utils`.
+     * @alpha
+     */
+    reactCompiler?: boolean
+  }
+  /**
+   * Configure the React Compiler.
+   * To enable it set `babel.reactCompiler` to `true`
+   * @beta */
+  reactCompilerOptions?: Partial<ReactCompilerOptions>
 }
 
 /**
@@ -34,6 +51,24 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     devExports: true,
   } as const satisfies UserConfig['exports']
 
+  const plugins = options.babel?.reactCompiler
+    ? [
+        // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
+        // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
+        // oxlint-disable-next-line no-unsafe-type-assertion
+        babel({
+          babelrc: false,
+          babelHelpers: 'bundled',
+          // Let Babel parse TS and JSX so the React Compiler sees the original JSX, but leave the
+          // actual TS and JSX transforms to rolldown's oxc pipeline:
+          // https://tsdown.dev/recipes/react-support#react-compiler
+          parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
+          plugins: [['babel-plugin-react-compiler', options.reactCompilerOptions ?? {}]],
+          extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        }) as unknown as Rolldown.Plugin,
+      ]
+    : undefined
+
   return defineTsdownConfig({
     entry,
     exports,
@@ -42,6 +77,7 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     inputOptions,
     outputOptions,
     platform,
+    plugins,
     publint,
     report,
     tsconfig,
