@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@sanity/browserslist-config": "^1.0.5",
-    "@vanilla-extract/rollup-plugin": "^1.5.3",
     "browserslist": "^4.28.2",
     "lightningcss": "^1.32.0",
     "publint": "^0.3.21"
@@ -51,14 +50,21 @@
     "@sanity/pkg-utils": "workspace:^",
     "@sanity/tsconfig": "workspace:^",
     "@typescript/native-preview": "catalog:",
+    "@vanilla-extract/rollup-plugin": "^1.5.3",
     "tinyexec": "^1.2.4",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@vanilla-extract/rollup-plugin": "^1.5.3",
     "tsdown": "0.22.x",
     "typescript": "5.8.x || 5.9.x || 6.0.x"
+  },
+  "peerDependenciesMeta": {
+    "@vanilla-extract/rollup-plugin": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

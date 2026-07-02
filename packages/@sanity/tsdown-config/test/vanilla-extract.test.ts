@@ -96,6 +96,21 @@ describe('defineConfig', () => {
     expect(config.exports).not.toHaveProperty('customExports')
   })
 
+  test('lazily loads the vanilla-extract plugin pipeline', async () => {
+    const config = defineConfig({vanillaExtract: true})
+
+    // `plugins` is a promise: the optional `@vanilla-extract/rollup-plugin` peer dependency (and
+    // the CSS toolchain) only load when the option is enabled.
+    expect(config.plugins).toBeInstanceOf(Promise)
+
+    const plugins = (await config.plugins) as ({name: string} | false)[]
+    expect(plugins.map((plugin) => plugin && plugin.name)).toEqual([
+      'vanilla-extract',
+      'sanity-tsdown-config:optimize-css',
+      'sanity-tsdown-config:bundle-css-shim',
+    ])
+  })
+
   test('adds the conditional CSS export through `exports.customExports`', async () => {
     const config = defineConfig({vanillaExtract: true})
 
@@ -143,12 +158,17 @@ describe('defineConfig', () => {
     })
   })
 
-  test('skips the compat mode wiring when `extract.compatMode` is false', () => {
+  test('skips the compat mode wiring when `extract.compatMode` is false', async () => {
     const config = defineConfig({vanillaExtract: {extract: {compatMode: false}}})
 
-    // The vanilla-extract + optimize-css plugins are still applied…
-    expect(config.plugins).toBeDefined()
-    // …but the exports wiring is not
+    // The vanilla-extract + optimize-css plugins are still applied, but the shim is not…
+    const plugins = (await config.plugins) as ({name: string} | false)[]
+    expect(plugins.map((plugin) => plugin && plugin.name)).toEqual([
+      'vanilla-extract',
+      'sanity-tsdown-config:optimize-css',
+      false,
+    ])
+    // …and neither is the exports wiring
     expect(config.exports).not.toHaveProperty('customExports')
   })
 })

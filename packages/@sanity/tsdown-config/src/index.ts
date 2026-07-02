@@ -1,16 +1,13 @@
 import {readFileSync} from 'node:fs'
 import path from 'node:path'
-import browserslistConfig from '@sanity/browserslist-config'
-import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
 import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
-import {bundleCssShim} from './bundleCssShim.ts'
-import {optimizeCss} from './optimizeCss.ts'
 import {
   createConditionalCssExport,
   insertCssExport,
   resolveVanillaExtract,
   resolveVanillaExtractCssName,
   type PackageVanillaExtractOptions,
+  type ResolvedVanillaExtract,
 } from './vanillaExtract.ts'
 
 export type {PackageVanillaExtractOptions}
@@ -61,29 +58,7 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   const vanillaExtractCssName = resolveVanillaExtractCssName(vanillaExtract.options)
 
   const plugins = vanillaExtract.enabled
-    ? [
-        // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
-        // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        vanillaExtractPlugin({
-          identifiers: vanillaExtract.options.identifiers ?? 'short',
-          cwd: vanillaExtract.options.cwd,
-          esbuildOptions: vanillaExtract.options.esbuildOptions,
-          unstable_injectFilescopes: vanillaExtract.options.unstable_injectFilescopes,
-          extract: {
-            name: vanillaExtractCssName,
-            sourcemap: vanillaExtract.options.extract?.sourcemap ?? true,
-          },
-        }) as unknown as Rolldown.Plugin,
-        optimizeCss({
-          extractFileName: vanillaExtractCssName,
-          browserslist: vanillaExtract.options.browserslist || browserslistConfig,
-          minify: vanillaExtract.options.minify ?? true,
-        }),
-        // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
-        // `./<css>` export resolve to.
-        vanillaExtract.compatMode && bundleCssShim({fileName: `${vanillaExtractCssName}.js`}),
-      ]
+    ? loadVanillaExtractPlugins(vanillaExtract, vanillaExtractCssName)
     : undefined
 
   // The vanilla-extract plugin resolves each compiled `.css.ts` module's CSS to an external,
@@ -164,6 +139,25 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     // from the output. The default preserves those imports while still honoring `package.json`
     // `sideEffects` fields for bundled modules.
   })
+}
+
+/**
+ * Load the vanilla-extract plugin pipeline lazily: neither the optional
+ * `@vanilla-extract/rollup-plugin` peer dependency nor the CSS toolchain (`lightningcss`,
+ * `browserslist`) load unless the `vanillaExtract` option is enabled. tsdown accepts promises in
+ * `plugins`, so the dynamic import stays out of the synchronous `defineConfig` path.
+ */
+function loadVanillaExtractPlugins(
+  vanillaExtract: ResolvedVanillaExtract,
+  cssName: string,
+): Promise<(Rolldown.Plugin | false)[]> {
+  const plugins = import('./vanillaExtractPlugins.ts').then((module) =>
+    module.vanillaExtractPlugins(vanillaExtract, cssName),
+  )
+  // Mark rejections as handled: tsdown awaits the plugins during the build, so a missing peer
+  // dependency surfaces there instead of as an unhandled rejection.
+  plugins.catch(() => {})
+  return plugins
 }
 
 const RE_DTS = /\.d\.[cm]?ts$/
