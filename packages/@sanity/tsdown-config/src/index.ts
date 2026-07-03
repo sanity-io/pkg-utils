@@ -1,5 +1,3 @@
-import {babel} from '@rollup/plugin-babel'
-import type {PluginOptions} from 'babel-plugin-react-compiler'
 import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 
 /**
@@ -31,9 +29,56 @@ export interface StyledComponentsOptions {
 
 /**
  * Options for the React Compiler, the same options as `babel-plugin-react-compiler`.
+ * The type is maintained by hand so that `babel-plugin-react-compiler` (an optional peer
+ * dependency, only needed when `reactCompiler` is enabled) doesn't become a type dependency
+ * of every package that uses this config.
  * @public
  */
-export type ReactCompilerOptions = Partial<PluginOptions>
+export interface ReactCompilerOptions {
+  /**
+   * The React version the compiled output should target.
+   * `'17'` and `'18'` require the `react-compiler-runtime` package to be installed.
+   * @defaultValue '19'
+   */
+  target?: '17' | '18' | '19'
+  /**
+   * Which functions the compiler memoizes.
+   * @defaultValue 'infer'
+   */
+  compilationMode?: 'infer' | 'syntax' | 'annotation' | 'all'
+  /**
+   * When the compiler should throw instead of skipping over functions that fail to compile.
+   * @defaultValue 'none'
+   */
+  panicThreshold?: 'none' | 'all_errors' | 'critical_errors'
+  /**
+   * Only compile files whose path contains one of these strings, or matches the predicate.
+   */
+  sources?: string[] | ((filename: string) => boolean) | null
+  /**
+   * Compile and report diagnostics without emitting the compiled output.
+   * @defaultValue false
+   */
+  noEmit?: boolean
+  /**
+   * Gate compiled functions behind an imported feature flag check.
+   */
+  gating?: {source: string; importSpecifierName: string} | null
+  dynamicGating?: {source: string} | null
+  logger?: {logEvent: (filename: string | null, event: unknown) => void} | null
+  /**
+   * Fine-tune the compiler environment, see the `babel-plugin-react-compiler` docs.
+   */
+  environment?: Record<string, unknown>
+  customOptOutDirectives?: string[] | null
+  eslintSuppressionRules?: string[] | null
+  /** @defaultValue true */
+  flowSuppressions?: boolean
+  /** @deprecated use `customOptOutDirectives` instead */
+  ignoreUseNoForget?: boolean
+  /** @defaultValue false */
+  enableReanimatedCheck?: boolean
+}
 
 /**
  * @public
@@ -115,24 +160,31 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   const plugins =
     reactCompiler !== false
       ? [
-          // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
-          // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
-          // oxlint-disable-next-line no-unsafe-type-assertion
-          babel({
-            babelrc: false,
-            babelHelpers: 'bundled',
-            // Let Babel parse TS and JSX so the React Compiler sees the original JSX, but leave the
-            // actual TS and JSX transforms to rolldown's oxc pipeline:
-            // https://tsdown.dev/recipes/react-support#react-compiler
-            parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
-            plugins: [
-              [
-                'babel-plugin-react-compiler',
-                typeof reactCompiler === 'object' ? reactCompiler : {},
-              ],
-            ],
-            extensions: ['.ts', '.tsx', '.js', '.jsx'],
-          }) as unknown as Rolldown.Plugin,
+          // Lazy load `@rollup/plugin-babel` (which in turn loads `@babel/core`) only when the
+          // React Compiler is enabled — tsdown awaits promises in the `plugins` array.
+          // `babel-plugin-react-compiler` itself stays a string that Babel resolves from the
+          // consumer package during the build, which is why it can be an optional peer dependency.
+          import('@rollup/plugin-babel').then(
+            ({babel}) =>
+              // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
+              // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
+              // oxlint-disable-next-line no-unsafe-type-assertion
+              babel({
+                babelrc: false,
+                babelHelpers: 'bundled',
+                // Let Babel parse TS and JSX so the React Compiler sees the original JSX, but leave the
+                // actual TS and JSX transforms to rolldown's oxc pipeline:
+                // https://tsdown.dev/recipes/react-support#react-compiler
+                parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
+                plugins: [
+                  [
+                    'babel-plugin-react-compiler',
+                    typeof reactCompiler === 'object' ? reactCompiler : {},
+                  ],
+                ],
+                extensions: ['.ts', '.tsx', '.js', '.jsx'],
+              }) as unknown as Rolldown.Plugin,
+          ),
         ]
       : undefined
 
