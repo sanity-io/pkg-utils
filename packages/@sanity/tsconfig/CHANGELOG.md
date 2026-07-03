@@ -1,5 +1,22 @@
 # @sanity/tsconfig
 
+## 2.2.0
+
+### Minor Changes
+
+- [#2959](https://github.com/sanity-io/pkg-utils/pull/2959) [`7a1e207`](https://github.com/sanity-io/pkg-utils/commit/7a1e20734b6d9b33c8bb00e5b273df0aba0d42e6) Thanks [@stipsan](https://github.com/stipsan)! - Add `outDir: "${configDir}/dist"` to the `recommended` preset
+
+  Emitting to `dist` is already the default in `@sanity/pkg-utils` and `tsdown`, but every repo extending these presets had to repeat it in their own tsconfig. Since `${configDir}` resolves to the directory of the tsconfig that extends the preset, output now lands in the `dist` folder next to your `package.json` by default, and the manual declaration can be removed:
+
+  ```diff
+  {
+    "extends": "@sanity/tsconfig/strictest",
+  -  "compilerOptions": {
+  -    "outDir": "${configDir}/dist"
+  -  }
+  }
+  ```
+
 ## 2.1.0
 
 ### Minor Changes
