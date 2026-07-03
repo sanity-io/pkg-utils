@@ -1,5 +1,22 @@
 # @sanity/tsdown-config
 
+## 0.8.0
+
+### Minor Changes
+
+- [#2953](https://github.com/sanity-io/pkg-utils/pull/2953) [`fd85068`](https://github.com/sanity-io/pkg-utils/commit/fd85068fa452f8c246156701a64466f4fd93f59c) Thanks [@stipsan](https://github.com/stipsan)! - Add `styledComponents` option, the same feature as `babel: {styledComponents: true}` in `@sanity/pkg-utils`.
+
+  ```ts
+  import {defineConfig} from '@sanity/tsdown-config'
+
+  export default defineConfig({
+    tsconfig: 'tsconfig.dist.json',
+    styledComponents: true,
+  })
+  ```
+
+  It applies the `styled-components` transform (adding `displayName` for better debugging, `componentId` to avoid SSR hydration mismatches, and minifying the CSS in tagged template literals) with the same defaults as `@sanity/pkg-utils`. Unlike `@sanity/pkg-utils` it doesn't require installing `babel-plugin-styled-components`, as it uses oxc's native port of the babel plugin. Pass an object instead of `true` to customize the transform with the same options as `babel-plugin-styled-components`.
+
 ## 0.7.3
 
 ### Patch Changes
