@@ -112,13 +112,19 @@ export interface PkgConfigOptions {
           topLevelImportPaths?: string[]
           /** @defaultValue true */
           ssr?: boolean
-          /** @defaultValue fale */
+          /** @defaultValue false */
           fileName?: boolean
           /** @defaultValue ["index"] */
           meaninglessFileNames?: string[]
           /** @defaultValue true */
           minify?: boolean
-          /** @defaultValue false */
+          /**
+           * Transpiles `styled.button`...`` to `styled.button(["..."])` so that the `pure` option can
+           * annotate a plain call expression, as pure annotations on tagged template expressions aren't
+           * supported by bundlers (https://github.com/rollup/rollup/issues/4035). Without it unused
+           * styled components can't be tree-shaken.
+           * @defaultValue true
+           */
           transpileTemplateLiterals?: boolean
           namespace?: string
           /** @defaultValue true */

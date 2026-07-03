@@ -210,8 +210,11 @@ export function resolveRollupConfig(
             {
               // Unnecessary, as the way we use styled-components in Sanity is usually by wrapping `@sanity/ui` primitives, not declaring new ones like "const Button = styled.button``"
               fileName: false,
-              // Native template literals take less space than this transpilation
-              transpileTemplateLiterals: false,
+              // Transpile `styled.button`...`` to `styled.button(["..."])` so that the `pure` option below
+              // can annotate a plain call expression. Pure annotations on tagged template expressions are
+              // not supported by any bundler (https://github.com/rollup/rollup/issues/4035), so without
+              // this transpilation unused styled components can't be tree-shaken at all.
+              transpileTemplateLiterals: true,
               // Massively helps dead code elimination and tree-shaking
               pure: true,
               // disabled, as pkg-utils tends to be used for npm publishing, while other tooling, like `sanity dev`, `next dev`, etc are used for testing

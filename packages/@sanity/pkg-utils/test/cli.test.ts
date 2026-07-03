@@ -525,6 +525,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
 
     // The ColorInput component should have babel-plugin-styled-components applied, which adds a static `.withConfig` call
     expect(distChunksColorInput).toContain('.withConfig({')
+    // The tagged template literal is transpiled to a plain call expression with a `/*#__PURE__*/`
+    // annotation, so bundlers can tree-shake unused styled components (pure annotations on tagged
+    // template expressions aren't supported: https://github.com/rollup/rollup/issues/4035)
+    expect(distChunksColorInput).toContain('/* @__PURE__ */ styled.input.attrs({')
+    expect(distChunksColorInput).toContain('})(["')
     // React Compiler adds a `c` function call
     expect(distChunksColorInput).toContain('const $ = c(')
     // The index has a lazy loaded import to the chunk
