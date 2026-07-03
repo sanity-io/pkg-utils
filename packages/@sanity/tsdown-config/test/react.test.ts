@@ -1,20 +1,42 @@
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import type {UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
+import {defineConfig} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/react-19-library')
 
+function getPluginNames(config: UserConfig) {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) return undefined
+  return plugins.map((plugin) =>
+    plugin && typeof plugin === 'object' && 'name' in plugin ? plugin.name : undefined,
+  )
+}
+
+describe('reactCompiler option', () => {
+  test('is disabled by default', () => {
+    expect(getPluginNames(defineConfig())).toBeUndefined()
+    expect(getPluginNames(defineConfig({reactCompiler: false}))).toBeUndefined()
+  })
+
+  test('adds the babel plugin when enabled', () => {
+    expect(getPluginNames(defineConfig({reactCompiler: true}))).toEqual(['babel'])
+    expect(getPluginNames(defineConfig({reactCompiler: {target: '19'}}))).toEqual(['babel'])
+  })
+})
+
 describe('react-19-library', () => {
-  test('applies the React Compiler when `babel.reactCompiler` is enabled', async () => {
+  test('applies the React Compiler to esm and cjs output', async () => {
     const [distIndexJs, distIndexCjs] = await Promise.all([
       readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
       readFile(path.join(fixtureDir, 'dist/index.cjs'), 'utf-8'),
     ])
 
     // The React Compiler memoizes components with a memo cache provided by
-    // `react/compiler-runtime` (since the fixture sets `reactCompilerOptions: {target: '19'}`)
+    // `react/compiler-runtime` (since the fixture sets `reactCompiler: {target: '19'}`)
     expect(distIndexJs).toContain('import { c } from "react/compiler-runtime"')
     expect(distIndexJs).toContain('$ = c(')
     expect(distIndexJs).toContain('react.memo_cache_sentinel')

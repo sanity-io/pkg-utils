@@ -6,8 +6,7 @@ export default {
     tsconfig: 'tsconfig.dist.json',
     format: ['esm', 'cjs'],
     platform: 'neutral',
-    babel: {reactCompiler: true},
-    reactCompilerOptions: {target: '19'},
+    reactCompiler: {target: '19'},
   }),
   define: {'process.env.NODE_ENV': JSON.stringify('production')},
 } as any

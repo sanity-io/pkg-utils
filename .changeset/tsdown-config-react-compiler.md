@@ -2,6 +2,15 @@
 "@sanity/tsdown-config": minor
 ---
 
-feat: add the `babel.reactCompiler` option known from `@sanity/pkg-utils`
+Add `reactCompiler` option, the same feature as `babel: {reactCompiler: true}` in `@sanity/pkg-utils`.
 
-Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published components are memoized automatically. Like in `@sanity/pkg-utils`, enable it with `babel: {reactCompiler: true}` and configure the compiler with `reactCompilerOptions`. Requires `babel-plugin-react-compiler` to be installed.
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: true,
+})
+```
+
+It runs `babel-plugin-react-compiler` on the source files before they are bundled, so published components are memoized automatically. Pass an object instead of `true` to configure the compiler with the same options as `babel-plugin-react-compiler` (e.g. `reactCompiler: {target: '18'}`). Requires `babel-plugin-react-compiler` to be installed.

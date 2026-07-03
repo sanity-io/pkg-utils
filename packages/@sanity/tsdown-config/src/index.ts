@@ -1,5 +1,5 @@
 import {babel} from '@rollup/plugin-babel'
-import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
+import type {PluginOptions} from 'babel-plugin-react-compiler'
 import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 
 /**
@@ -30,6 +30,12 @@ export interface StyledComponentsOptions {
 }
 
 /**
+ * Options for the React Compiler, the same options as `babel-plugin-react-compiler`.
+ * @public
+ */
+export type ReactCompilerOptions = Partial<PluginOptions>
+
+/**
  * @public
  */
 export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 'format'> {
@@ -37,21 +43,16 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
    * @defaultValue 'neutral'
    */
   platform?: UserConfig['platform']
-  /** @alpha */
-  babel?: {
-    /**
-     * Runs `babel-plugin-react-compiler` on the source files before they are bundled.
-     * Requires `babel-plugin-react-compiler` to be installed.
-     * This is the same feature as `babel.reactCompiler` in `@sanity/pkg-utils`.
-     * @alpha
-     */
-    reactCompiler?: boolean
-  }
   /**
-   * Configure the React Compiler.
-   * To enable it set `babel.reactCompiler` to `true`
-   * @beta */
-  reactCompilerOptions?: Partial<ReactCompilerOptions>
+   * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
+   * components are memoized automatically. Pass `true` to use the defaults, or an options object
+   * to configure the compiler (e.g. `{target: '18'}`).
+   * This is the same feature as the `babel: {reactCompiler: true}` and `reactCompilerOptions`
+   * options in `@sanity/pkg-utils`. Unlike `styledComponents` there's no oxc native port of the
+   * React Compiler yet, so `babel-plugin-react-compiler` needs to be installed.
+   * @defaultValue false
+   */
+  reactCompiler?: boolean | ReactCompilerOptions
   /**
    * Applies the `styled-components` transform (`displayName`, `componentId`, CSS minification, etc)
    * with the same defaults as the `babel: {styledComponents: true}` option in `@sanity/pkg-utils`.
@@ -69,6 +70,7 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   const {entry} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
+  const reactCompiler = options.reactCompiler ?? false
   const styledComponents = options.styledComponents ?? false
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
@@ -110,23 +112,29 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     devExports: true,
   } as const satisfies UserConfig['exports']
 
-  const plugins = options.babel?.reactCompiler
-    ? [
-        // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
-        // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        babel({
-          babelrc: false,
-          babelHelpers: 'bundled',
-          // Let Babel parse TS and JSX so the React Compiler sees the original JSX, but leave the
-          // actual TS and JSX transforms to rolldown's oxc pipeline:
-          // https://tsdown.dev/recipes/react-support#react-compiler
-          parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
-          plugins: [['babel-plugin-react-compiler', options.reactCompilerOptions ?? {}]],
-          extensions: ['.ts', '.tsx', '.js', '.jsx'],
-        }) as unknown as Rolldown.Plugin,
-      ]
-    : undefined
+  const plugins =
+    reactCompiler !== false
+      ? [
+          // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
+          // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
+          // oxlint-disable-next-line no-unsafe-type-assertion
+          babel({
+            babelrc: false,
+            babelHelpers: 'bundled',
+            // Let Babel parse TS and JSX so the React Compiler sees the original JSX, but leave the
+            // actual TS and JSX transforms to rolldown's oxc pipeline:
+            // https://tsdown.dev/recipes/react-support#react-compiler
+            parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
+            plugins: [
+              [
+                'babel-plugin-react-compiler',
+                typeof reactCompiler === 'object' ? reactCompiler : {},
+              ],
+            ],
+            extensions: ['.ts', '.tsx', '.js', '.jsx'],
+          }) as unknown as Rolldown.Plugin,
+        ]
+      : undefined
 
   return defineTsdownConfig({
     entry,
