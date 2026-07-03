@@ -784,9 +784,21 @@ importers:
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@sanity/browserslist-config':
+        specifier: ^1.0.5
+        version: 1.0.5
+      '@vanilla-extract/rollup-plugin':
+        specifier: ^1.5.3
+        version: 1.5.3(rollup@4.62.2)
       '@vitejs/plugin-react':
         specifier: ^6.0.3
         version: 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.0(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.0(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+      browserslist:
+        specifier: ^4.28.4
+        version: 4.28.4
+      lightningcss:
+        specifier: ^1.32.0
+        version: 1.32.0
       publint:
         specifier: ^0.3.21
         version: 0.3.21
@@ -854,6 +866,12 @@ importers:
       styled-components:
         specifier: ^6.4.3
         version: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+
+  packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-library:
+    devDependencies:
+      '@vanilla-extract/css':
+        specifier: ^1.21.0
+        version: 1.21.0
 
   playground/babel-plugin:
     devDependencies:
