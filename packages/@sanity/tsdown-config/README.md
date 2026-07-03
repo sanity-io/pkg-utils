@@ -109,3 +109,34 @@ consumers by adding it to `sideEffects` in `package.json`:
 Pass an options object instead of `true` to customize (e.g. `minify`, `browserslist`,
 `extract.name`), or set `extract.compatMode: false` to wire up the import, shim, and export
 yourself.
+
+## dts
+
+tsdown's [`dts` option](https://tsdown.dev/options/dts) is passed through as-is. By default tsdown
+auto-detects it from `package.json` (it's enabled when a `types` field or a `types` condition in
+`exports` is present). Pass an object to customize how the `.d.ts` files are generated, for example
+to use [`tsgo`](https://github.com/microsoft/typescript-go) (the same feature as the `tsgo` option
+in `@sanity/pkg-utils`, requires `@typescript/native-preview` to be installed):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  dts: {tsgo: true},
+})
+```
+
+## define
+
+tsdown's `define` option is also passed through as-is. It replaces global identifiers with constant
+expressions at build time (the same feature as the `define` option in `@sanity/pkg-utils`):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  define: {'process.env.NODE_ENV': JSON.stringify('production')},
+})
+```
