@@ -18,7 +18,6 @@ describe('styledComponents option', () => {
   test('is disabled by default', () => {
     expect(getStyledComponentsTransform(defineConfig())).toBeUndefined()
     expect(getStyledComponentsTransform(defineConfig({styledComponents: false}))).toBeUndefined()
-    expect(defineConfig().treeshake).toBeUndefined()
   })
 
   test('applies the same defaults as `babel: {styledComponents: true}` in @sanity/pkg-utils', () => {
@@ -33,26 +32,15 @@ describe('styledComponents option', () => {
   test('merges user provided options with the defaults', () => {
     expect(
       getStyledComponentsTransform(
-        defineConfig({styledComponents: {namespace: 'my-lib', fileName: true}}),
+        defineConfig({styledComponents: {namespace: 'my-lib', fileName: true, pure: false}}),
       ),
     ).toEqual({
       fileName: true,
       transpileTemplateLiterals: false,
-      pure: true,
+      pure: false,
       cssProp: false,
       namespace: 'my-lib',
     })
-  })
-
-  test('treats `styled` as side effect free so unused styled components are tree-shaken', () => {
-    // oxc can't add `@__PURE__` annotations to tagged template expressions
-    // (https://github.com/rollup/rollup/issues/4035), so `treeshake.manualPureFunctions`
-    // handles tree-shaking of unused styled components instead
-    expect(defineConfig({styledComponents: true}).treeshake).toEqual({
-      manualPureFunctions: ['styled'],
-    })
-    // Opting out of `pure` also opts out of `manualPureFunctions`
-    expect(defineConfig({styledComponents: {pure: false}}).treeshake).toBeUndefined()
   })
 })
 
@@ -70,9 +58,6 @@ describe('styled-components-library', () => {
       expect(output).toMatch(/componentId: "sc-/)
       // The CSS inside the tagged template literal is minified
       expect(output).toContain('`cursor:pointer;border-radius:2px;padding:0;`')
-      // Styled components that aren't exported from the package entry are tree-shaken
-      expect(output).not.toContain('UnusedButton')
-      expect(output).not.toContain('appearance:none')
     }
   })
 })

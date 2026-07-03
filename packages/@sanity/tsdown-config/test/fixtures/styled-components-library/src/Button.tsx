@@ -6,12 +6,6 @@ const StyledButton = styled.button`
   padding: 0;
 `
 
-// Not exported from the package entry: relies on `treeshake.manualPureFunctions`
-// treating the `styled` factory as side effect free to be removed from the output
-export const UnusedButton: React.ComponentType<React.ComponentProps<'button'>> = styled.button`
-  appearance: none;
-`
-
 export function Button({
   children,
   type = 'button',

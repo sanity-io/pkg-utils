@@ -25,7 +25,7 @@ export default defineConfig({
 })
 ```
 
-It adds `displayName` (better debugging) and `componentId` (avoids SSR hydration mismatches) to your styled components, minifies the CSS in tagged template literals, and tree-shakes unused styled components from the output.
+It adds `displayName` (better debugging) and `componentId` (avoids SSR hydration mismatches) to your styled components, and minifies the CSS in tagged template literals.
 Unlike `@sanity/pkg-utils` it doesn't require installing `babel-plugin-styled-components`, as it uses [oxc's native port](https://oxc.rs/docs/guide/usage/transformer/plugins.html#styled-components) of the babel plugin.
 
 Pass an object to customize the transform, using the same options as [`babel-plugin-styled-components`](https://styled-components.com/docs/tooling#babel-plugin):
