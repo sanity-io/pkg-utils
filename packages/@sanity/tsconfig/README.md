@@ -34,6 +34,8 @@ Add to your `tsconfig.json`:
 }
 ```
 
+The preset sets `outDir` to `${configDir}/dist`. Since [`${configDir}`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html#the-configdir-template-variable-for-configuration-files) resolves to the directory of the tsconfig that extends the preset, output lands in the `dist` folder next to your `package.json`, matching the defaults of `@sanity/pkg-utils` and `tsdown`. Set your own `outDir` to override it.
+
 ### Strict <kbd><a href="./strict.tsconfig.json">tsconfig.json</a></kbd>
 
 Add to your `tsconfig.json`:
