@@ -8,29 +8,27 @@ import {defineConfig} from '../src/index.ts'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/react-19-library')
 
-async function getPluginNames(config: UserConfig) {
+function getPluginNames(config: UserConfig) {
   const {plugins} = config
   if (!Array.isArray(plugins)) return undefined
-  // The babel plugin is lazy loaded, so entries can be promises that tsdown awaits
-  return Promise.all(
-    plugins.map(async (plugin) => {
-      const resolved = await plugin
-      return resolved && typeof resolved === 'object' && 'name' in resolved
-        ? resolved.name
-        : undefined
-    }),
+  return plugins.map((plugin) =>
+    plugin && typeof plugin === 'object' && 'name' in plugin ? plugin.name : undefined,
   )
 }
 
 describe('reactCompiler option', () => {
   test('is disabled by default', async () => {
-    expect(await getPluginNames(defineConfig())).toBeUndefined()
-    expect(await getPluginNames(defineConfig({reactCompiler: false}))).toBeUndefined()
+    expect(getPluginNames(await defineConfig())).toEqual([])
+    expect(getPluginNames(await defineConfig({reactCompiler: false}))).toEqual([])
   })
 
   test('adds the babel plugin when enabled', async () => {
-    expect(await getPluginNames(defineConfig({reactCompiler: true}))).toEqual(['babel'])
-    expect(await getPluginNames(defineConfig({reactCompiler: {target: '19'}}))).toEqual(['babel'])
+    expect(getPluginNames(await defineConfig({reactCompiler: true}))).toEqual([
+      '@rolldown/plugin-babel',
+    ])
+    expect(getPluginNames(await defineConfig({reactCompiler: {target: '19'}}))).toEqual([
+      '@rolldown/plugin-babel',
+    ])
   })
 })
 

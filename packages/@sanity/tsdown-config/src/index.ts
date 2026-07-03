@@ -111,7 +111,7 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
 /**
  * @public
  */
-export function defineConfig(options: PackageOptions = {}): UserConfig {
+export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
   const {entry} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
@@ -157,36 +157,28 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     devExports: true,
   } as const satisfies UserConfig['exports']
 
-  const plugins =
-    reactCompiler !== false
-      ? [
-          // Lazy load `@rollup/plugin-babel` (which in turn loads `@babel/core`) only when the
-          // React Compiler is enabled — tsdown awaits promises in the `plugins` array.
-          // `babel-plugin-react-compiler` itself stays a string that Babel resolves from the
-          // consumer package during the build, which is why it can be an optional peer dependency.
-          import('@rollup/plugin-babel').then(
-            ({babel}) =>
-              // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
-              // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
-              // oxlint-disable-next-line no-unsafe-type-assertion
-              babel({
-                babelrc: false,
-                babelHelpers: 'bundled',
-                // Let Babel parse TS and JSX so the React Compiler sees the original JSX, but leave the
-                // actual TS and JSX transforms to rolldown's oxc pipeline:
-                // https://tsdown.dev/recipes/react-support#react-compiler
-                parserOpts: {sourceType: 'module', plugins: ['jsx', 'typescript']},
-                plugins: [
-                  [
-                    'babel-plugin-react-compiler',
-                    typeof reactCompiler === 'object' ? reactCompiler : {},
-                  ],
-                ],
-                extensions: ['.ts', '.tsx', '.js', '.jsx'],
-              }) as unknown as Rolldown.Plugin,
-          ),
-        ]
-      : undefined
+  const plugins: Rolldown.Plugin[] = []
+  if (reactCompiler !== false) {
+    // Follows the official tsdown recipe for the React Compiler:
+    // https://tsdown.dev/recipes/react-support#enabling-react-compiler
+    // The plugins are lazy loaded so they're only paid for when the React Compiler is enabled.
+    // `babel-plugin-react-compiler` itself is resolved by Babel from the consumer package during
+    // the build, which is why it can be an optional peer dependency. Once rolldown ships its rust
+    // port of the React Compiler this can be swapped out for an oxc transform, like `styledComponents`.
+    const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
+      import('@rolldown/plugin-babel'),
+      import('@vitejs/plugin-react'),
+    ])
+    plugins.push(
+      // The plugin types don't match when `@rolldown/plugin-babel` resolves its `rolldown` peer
+      // dependency to a different version than the one bundled with `tsdown`, so cast it:
+      // https://tsdown.dev/advanced/plugins#rollup-plugins
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      (await pluginBabel({
+        presets: [reactCompilerPreset(typeof reactCompiler === 'object' ? reactCompiler : {})],
+      })) as unknown as Rolldown.Plugin,
+    )
+  }
 
   return defineTsdownConfig({
     entry,

@@ -15,13 +15,15 @@ function getStyledComponentsTransform(config: UserConfig) {
 }
 
 describe('styledComponents option', () => {
-  test('is disabled by default', () => {
-    expect(getStyledComponentsTransform(defineConfig())).toBeUndefined()
-    expect(getStyledComponentsTransform(defineConfig({styledComponents: false}))).toBeUndefined()
+  test('is disabled by default', async () => {
+    expect(getStyledComponentsTransform(await defineConfig())).toBeUndefined()
+    expect(
+      getStyledComponentsTransform(await defineConfig({styledComponents: false})),
+    ).toBeUndefined()
   })
 
-  test('applies the same defaults as `babel: {styledComponents: true}` in @sanity/pkg-utils', () => {
-    expect(getStyledComponentsTransform(defineConfig({styledComponents: true}))).toEqual({
+  test('applies the same defaults as `babel: {styledComponents: true}` in @sanity/pkg-utils', async () => {
+    expect(getStyledComponentsTransform(await defineConfig({styledComponents: true}))).toEqual({
       fileName: false,
       transpileTemplateLiterals: false,
       pure: true,
@@ -29,10 +31,10 @@ describe('styledComponents option', () => {
     })
   })
 
-  test('merges user provided options with the defaults', () => {
+  test('merges user provided options with the defaults', async () => {
     expect(
       getStyledComponentsTransform(
-        defineConfig({styledComponents: {namespace: 'my-lib', fileName: true, pure: false}}),
+        await defineConfig({styledComponents: {namespace: 'my-lib', fileName: true, pure: false}}),
       ),
     ).toEqual({
       fileName: true,
