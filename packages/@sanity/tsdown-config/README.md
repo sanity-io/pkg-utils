@@ -12,6 +12,37 @@ import {defineConfig} from '@sanity/tsdown-config'
 export default defineConfig({tsconfig: 'tsconfig.dist.json'})
 ```
 
+## React Compiler
+
+The same React Compiler feature as `@sanity/pkg-utils` is available. It runs
+[`babel-plugin-react-compiler`](https://react.dev/learn/react-compiler) on the source files before
+they are bundled, so published components are memoized automatically. The plugin needs to be
+installed separately:
+
+```sh
+pnpm add --save-dev babel-plugin-react-compiler
+```
+
+Then enable it:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: true,
+})
+```
+
+Pass an object to configure the compiler, using the same options as [`babel-plugin-react-compiler`](https://react.dev/reference/react-compiler/configuration):
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: {target: '18'},
+})
+```
+
 ## styled-components
 
 If your package uses `styled-components`, enable the same `styledComponents` transform that `@sanity/pkg-utils` has:

@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs'
 import path from 'node:path'
+import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
 import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 import {
   createConditionalCssExport,
@@ -7,7 +8,6 @@ import {
   resolveVanillaExtract,
   resolveVanillaExtractCssName,
   type PackageVanillaExtractOptions,
-  type ResolvedVanillaExtract,
 } from './vanillaExtract.ts'
 
 export type {PackageVanillaExtractOptions}
@@ -40,6 +40,15 @@ export interface StyledComponentsOptions {
 }
 
 /**
+ * Options for the React Compiler, the same options as `babel-plugin-react-compiler`.
+ * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
+ * dependency, required to use `reactCompiler`) is installed, and always match the installed
+ * version of the compiler.
+ * @public
+ */
+export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
+
+/**
  * @public
  */
 export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 'format'> {
@@ -47,6 +56,16 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
    * @defaultValue 'neutral'
    */
   platform?: UserConfig['platform']
+  /**
+   * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
+   * components are memoized automatically. Pass `true` to use the defaults, or an options object
+   * to configure the compiler (e.g. `{target: '18'}`).
+   * This is the same feature as the `babel: {reactCompiler: true}` and `reactCompilerOptions`
+   * options in `@sanity/pkg-utils`. Unlike `styledComponents` there's no oxc native port of the
+   * React Compiler yet, so `babel-plugin-react-compiler` needs to be installed.
+   * @defaultValue false
+   */
+  reactCompiler?: boolean | ReactCompilerOptions
   /**
    * Applies the `styled-components` transform (`displayName`, `componentId`, CSS minification, etc)
    * with the same defaults as the `babel: {styledComponents: true}` option in `@sanity/pkg-utils`.
@@ -71,10 +90,11 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
 /**
  * @public
  */
-export function defineConfig(options: PackageOptions = {}): UserConfig {
+export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
   const {entry} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
+  const reactCompiler = options.reactCompiler ?? false
   const styledComponents = options.styledComponents ?? false
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
@@ -115,10 +135,6 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
   // Resolve vanilla-extract options + the conditional CSS export "compat mode"
   const vanillaExtract = resolveVanillaExtract(options.vanillaExtract)
   const vanillaExtractCssName = resolveVanillaExtractCssName(vanillaExtract.options)
-
-  const plugins = vanillaExtract.enabled
-    ? loadVanillaExtractPlugins(vanillaExtract, vanillaExtractCssName)
-    : undefined
 
   // The vanilla-extract plugin resolves each compiled `.css.ts` module's CSS to an external,
   // side-effect-only `<file>.vanilla.css` import and extracts the CSS into a single file. The
@@ -177,6 +193,36 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     }),
   } as const satisfies UserConfig['exports']
 
+  const plugins: Rolldown.Plugin[] = []
+  if (reactCompiler !== false) {
+    // Follows the official tsdown recipe for the React Compiler:
+    // https://tsdown.dev/recipes/react-support#enabling-react-compiler
+    // The plugins are lazy loaded so they're only paid for when the React Compiler is enabled.
+    // `babel-plugin-react-compiler` itself is resolved by Babel from the consumer package during
+    // the build, which is why it can be an optional peer dependency. Once rolldown ships its rust
+    // port of the React Compiler this can be swapped out for an oxc transform, like `styledComponents`.
+    const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
+      import('@rolldown/plugin-babel'),
+      import('@vitejs/plugin-react'),
+    ])
+    plugins.push(
+      // The plugin types don't match when `@rolldown/plugin-babel` resolves its `rolldown` peer
+      // dependency to a different version than the one bundled with `tsdown`, so cast it:
+      // https://tsdown.dev/advanced/plugins#rollup-plugins
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      (await pluginBabel({
+        presets: [reactCompilerPreset(typeof reactCompiler === 'object' ? reactCompiler : {})],
+      })) as unknown as Rolldown.Plugin,
+    )
+  }
+  if (vanillaExtract.enabled) {
+    // The plugin pipeline is lazy loaded, like `reactCompiler`, so `@vanilla-extract/rollup-plugin`
+    // and the CSS toolchain (`lightningcss`, `browserslist`) are only paid for when vanilla-extract
+    // is enabled.
+    const {vanillaExtractPlugins} = await import('./vanillaExtractPlugins.ts')
+    plugins.push(...vanillaExtractPlugins(vanillaExtract, vanillaExtractCssName))
+  }
+
   return defineTsdownConfig({
     entry,
     exports,
@@ -198,25 +244,6 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
     // from the output. The default preserves those imports while still honoring `package.json`
     // `sideEffects` fields for bundled modules.
   })
-}
-
-/**
- * Load the vanilla-extract plugin pipeline lazily: neither `@vanilla-extract/rollup-plugin` nor
- * the CSS toolchain (`lightningcss`, `browserslist`) load unless the `vanillaExtract` option is
- * enabled. tsdown accepts promises in `plugins`, so the dynamic import stays out of the
- * synchronous `defineConfig` path.
- */
-function loadVanillaExtractPlugins(
-  vanillaExtract: ResolvedVanillaExtract,
-  cssName: string,
-): Promise<(Rolldown.Plugin | false)[]> {
-  const plugins = import('./vanillaExtractPlugins.ts').then((module) =>
-    module.vanillaExtractPlugins(vanillaExtract, cssName),
-  )
-  // Mark rejections as handled: tsdown awaits the plugins during the build, so a failed import
-  // surfaces there instead of as an unhandled rejection.
-  plugins.catch(() => {})
-  return plugins
 }
 
 const RE_DTS = /\.d\.[cm]?ts$/

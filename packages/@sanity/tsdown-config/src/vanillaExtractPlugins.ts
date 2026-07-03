@@ -15,8 +15,8 @@ import type {ResolvedVanillaExtract} from './vanillaExtract.ts'
 export function vanillaExtractPlugins(
   vanillaExtract: ResolvedVanillaExtract,
   cssName: string,
-): (Rolldown.Plugin | false)[] {
-  return [
+): Rolldown.Plugin[] {
+  const plugins: Rolldown.Plugin[] = [
     // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
     // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
     // oxlint-disable-next-line no-unsafe-type-assertion
@@ -35,8 +35,11 @@ export function vanillaExtractPlugins(
       browserslist: vanillaExtract.options.browserslist || browserslistConfig,
       minify: vanillaExtract.options.minify ?? true,
     }),
+  ]
+  if (vanillaExtract.compatMode) {
     // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
     // `./<css>` export resolve to.
-    vanillaExtract.compatMode && bundleCssShim({fileName: `${cssName}.js`}),
-  ]
+    plugins.push(bundleCssShim({fileName: `${cssName}.js`}))
+  }
+  return plugins
 }
