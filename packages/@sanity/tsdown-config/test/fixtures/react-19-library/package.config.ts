@@ -4,4 +4,6 @@ export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   extract: {enabled: false},
   dts: 'rolldown',
+  babel: {reactCompiler: true},
+  reactCompilerOptions: {target: '19'},
 })
