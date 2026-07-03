@@ -43,7 +43,10 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
 /**
  * @public
  */
-export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 'format'> {
+export interface PackageOptions extends Pick<
+  UserConfig,
+  'tsconfig' | 'entry' | 'format' | 'dts' | 'define'
+> {
   /**
    * @defaultValue 'neutral'
    */
@@ -83,7 +86,9 @@ export interface PackageOptions extends Pick<UserConfig, 'tsconfig' | 'entry' | 
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  const {entry} = options
+  // `dts` and `define` are passed through to tsdown as-is. When left undefined, tsdown keeps its
+  // default behavior (`dts` is auto-detected from `package.json`, `define` replaces nothing).
+  const {entry, dts, define} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
   const reactCompiler = options.reactCompiler ?? false
@@ -255,6 +260,8 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   } as const satisfies UserConfig['exports']
 
   return defineTsdownConfig({
+    define,
+    dts,
     entry,
     exports,
     format,

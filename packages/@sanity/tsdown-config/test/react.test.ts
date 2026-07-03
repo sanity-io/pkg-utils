@@ -48,4 +48,18 @@ describe('react-19-library', () => {
     expect(distIndexCjs).toContain('require("react/compiler-runtime")')
     expect(distIndexCjs).toContain('react.memo_cache_sentinel')
   })
+
+  test('replaces `define` globals at build time', async () => {
+    const [distIndexJs, distIndexCjs] = await Promise.all([
+      readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/index.cjs'), 'utf-8'),
+    ])
+
+    // The fixture sets `define: {'process.env.NODE_ENV': JSON.stringify('production')}`, so the
+    // `process.env.NODE_ENV === 'development'` branch is evaluated and eliminated at build time
+    for (const output of [distIndexJs, distIndexCjs]) {
+      expect(output).not.toContain('process.env.NODE_ENV')
+      expect(output).not.toContain('Foo')
+    }
+  })
 })
