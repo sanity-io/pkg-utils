@@ -1,5 +1,15 @@
 # @sanity/tsdown-config
 
+## 0.10.0
+
+### Minor Changes
+
+- [#2937](https://github.com/sanity-io/pkg-utils/pull/2937) [`cfa9845`](https://github.com/sanity-io/pkg-utils/commit/cfa984514d196dff447413997b2b76b615f44656) Thanks [@stipsan](https://github.com/stipsan)! - feat: add the `vanillaExtract` option known from `@sanity/pkg-utils`
+
+  Enables `@vanilla-extract/rollup-plugin` to extract CSS from `.css.ts` files into a separate file that is optimized with `lightningcss`. Like in `@sanity/pkg-utils`, the compat mode (on by default) automatically injects the self-referential `import "<pkg>/bundle.css"` into the entry chunk, emits a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`) for runtimes that cannot import `.css` files, and writes the conditional `"./bundle.css"` export (`browser`/`style` → the real CSS, `node`/`default` → the shim) to `package.json`.
+
+  The feature is fully opt-in: neither `@vanilla-extract/rollup-plugin` nor the CSS toolchain (`lightningcss`, `browserslist`) is loaded unless `vanillaExtract` is enabled.
+
 ## 0.9.0
 
 ### Minor Changes
