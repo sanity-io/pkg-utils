@@ -99,8 +99,8 @@ describe('defineConfig', () => {
   test('lazily loads the vanilla-extract plugin pipeline', async () => {
     const config = defineConfig({vanillaExtract: true})
 
-    // `plugins` is a promise: the optional `@vanilla-extract/rollup-plugin` peer dependency (and
-    // the CSS toolchain) only load when the option is enabled.
+    // `plugins` is a promise: `@vanilla-extract/rollup-plugin` (and the CSS toolchain) only load
+    // when the option is enabled.
     expect(config.plugins).toBeInstanceOf(Promise)
 
     const plugins = (await config.plugins) as ({name: string} | false)[]

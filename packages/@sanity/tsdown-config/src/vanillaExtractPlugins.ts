@@ -1,4 +1,5 @@
 import browserslistConfig from '@sanity/browserslist-config'
+import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
 import type {Rolldown} from 'tsdown'
 import {bundleCssShim} from './bundleCssShim.ts'
 import {optimizeCss} from './optimizeCss.ts'
@@ -6,17 +7,15 @@ import type {ResolvedVanillaExtract} from './vanillaExtract.ts'
 
 /**
  * Create the vanilla-extract plugin pipeline. This module is only loaded (through a dynamic
- * import) when the `vanillaExtract` option is enabled, so that neither the optional
- * `@vanilla-extract/rollup-plugin` peer dependency nor the CSS toolchain (`lightningcss`,
- * `browserslist`) load for configs that do not opt in.
+ * import) when the `vanillaExtract` option is enabled, so that neither
+ * `@vanilla-extract/rollup-plugin` nor the CSS toolchain (`lightningcss`, `browserslist`) load for
+ * configs that do not opt in.
  * @internal
  */
-export async function vanillaExtractPlugins(
+export function vanillaExtractPlugins(
   vanillaExtract: ResolvedVanillaExtract,
   cssName: string,
-): Promise<(Rolldown.Plugin | false)[]> {
-  const {vanillaExtractPlugin} = await importVanillaExtractRollupPlugin()
-
+): (Rolldown.Plugin | false)[] {
   return [
     // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
     // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
@@ -40,17 +39,4 @@ export async function vanillaExtractPlugins(
     // `./<css>` export resolve to.
     vanillaExtract.compatMode && bundleCssShim({fileName: `${cssName}.js`}),
   ]
-}
-
-async function importVanillaExtractRollupPlugin(): Promise<
-  typeof import('@vanilla-extract/rollup-plugin')
-> {
-  try {
-    return await import('@vanilla-extract/rollup-plugin')
-  } catch (error) {
-    throw new Error(
-      'The `vanillaExtract` option requires the optional `@vanilla-extract/rollup-plugin` peer dependency. Please install it: `pnpm add --save-dev @vanilla-extract/rollup-plugin`',
-      {cause: error},
-    )
-  }
 }

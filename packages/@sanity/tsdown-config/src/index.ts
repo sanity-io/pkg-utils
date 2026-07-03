@@ -201,10 +201,10 @@ export function defineConfig(options: PackageOptions = {}): UserConfig {
 }
 
 /**
- * Load the vanilla-extract plugin pipeline lazily: neither the optional
- * `@vanilla-extract/rollup-plugin` peer dependency nor the CSS toolchain (`lightningcss`,
- * `browserslist`) load unless the `vanillaExtract` option is enabled. tsdown accepts promises in
- * `plugins`, so the dynamic import stays out of the synchronous `defineConfig` path.
+ * Load the vanilla-extract plugin pipeline lazily: neither `@vanilla-extract/rollup-plugin` nor
+ * the CSS toolchain (`lightningcss`, `browserslist`) load unless the `vanillaExtract` option is
+ * enabled. tsdown accepts promises in `plugins`, so the dynamic import stays out of the
+ * synchronous `defineConfig` path.
  */
 function loadVanillaExtractPlugins(
   vanillaExtract: ResolvedVanillaExtract,
@@ -213,8 +213,8 @@ function loadVanillaExtractPlugins(
   const plugins = import('./vanillaExtractPlugins.ts').then((module) =>
     module.vanillaExtractPlugins(vanillaExtract, cssName),
   )
-  // Mark rejections as handled: tsdown awaits the plugins during the build, so a missing peer
-  // dependency surfaces there instead of as an unhandled rejection.
+  // Mark rejections as handled: tsdown awaits the plugins during the build, so a failed import
+  // surfaces there instead of as an unhandled rejection.
   plugins.catch(() => {})
   return plugins
 }

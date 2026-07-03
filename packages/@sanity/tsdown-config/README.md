@@ -39,15 +39,12 @@ export default defineConfig({
 
 ## vanilla-extract
 
-The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It enables
-[`@vanilla-extract/rollup-plugin`](https://vanilla-extract.style/documentation/integrations/rollup/)
-to extract the CSS from `.css.ts` files into a separate, `lightningcss`-optimized file
-(`dist/bundle.css` by default). The plugin is an optional peer dependency and is only loaded when
-the option is enabled, so start by installing it (along with `@vanilla-extract/css` for authoring
-the `.css.ts` files):
+The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
+`.css.ts` files into a separate, `lightningcss`-optimized file (`dist/bundle.css` by default).
+Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
 
 ```sh
-pnpm add --save-dev @vanilla-extract/rollup-plugin @vanilla-extract/css
+pnpm add --save-dev @vanilla-extract/css
 ```
 
 ```ts
