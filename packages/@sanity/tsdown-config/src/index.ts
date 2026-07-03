@@ -1,3 +1,4 @@
+import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
 import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 
 /**
@@ -29,56 +30,12 @@ export interface StyledComponentsOptions {
 
 /**
  * Options for the React Compiler, the same options as `babel-plugin-react-compiler`.
- * The type is maintained by hand so that `babel-plugin-react-compiler` (an optional peer
- * dependency, only needed when `reactCompiler` is enabled) doesn't become a type dependency
- * of every package that uses this config.
+ * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
+ * dependency, required to use `reactCompiler`) is installed, and always match the installed
+ * version of the compiler.
  * @public
  */
-export interface ReactCompilerOptions {
-  /**
-   * The React version the compiled output should target.
-   * `'17'` and `'18'` require the `react-compiler-runtime` package to be installed.
-   * @defaultValue '19'
-   */
-  target?: '17' | '18' | '19'
-  /**
-   * Which functions the compiler memoizes.
-   * @defaultValue 'infer'
-   */
-  compilationMode?: 'infer' | 'syntax' | 'annotation' | 'all'
-  /**
-   * When the compiler should throw instead of skipping over functions that fail to compile.
-   * @defaultValue 'none'
-   */
-  panicThreshold?: 'none' | 'all_errors' | 'critical_errors'
-  /**
-   * Only compile files whose path contains one of these strings, or matches the predicate.
-   */
-  sources?: string[] | ((filename: string) => boolean) | null
-  /**
-   * Compile and report diagnostics without emitting the compiled output.
-   * @defaultValue false
-   */
-  noEmit?: boolean
-  /**
-   * Gate compiled functions behind an imported feature flag check.
-   */
-  gating?: {source: string; importSpecifierName: string} | null
-  dynamicGating?: {source: string} | null
-  logger?: {logEvent: (filename: string | null, event: unknown) => void} | null
-  /**
-   * Fine-tune the compiler environment, see the `babel-plugin-react-compiler` docs.
-   */
-  environment?: Record<string, unknown>
-  customOptOutDirectives?: string[] | null
-  eslintSuppressionRules?: string[] | null
-  /** @defaultValue true */
-  flowSuppressions?: boolean
-  /** @deprecated use `customOptOutDirectives` instead */
-  ignoreUseNoForget?: boolean
-  /** @defaultValue false */
-  enableReanimatedCheck?: boolean
-}
+export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
 
 /**
  * @public
