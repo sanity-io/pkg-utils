@@ -24,7 +24,13 @@ export interface StyledComponentsOptions {
   meaninglessFileNames?: string[]
   /** @defaultValue true */
   minify?: boolean
-  /** @defaultValue false */
+  /**
+   * Transpiles `styled.button`...`` to `styled.button(["..."])` so that the `pure` option can
+   * annotate a plain call expression, as pure annotations on tagged template expressions aren't
+   * supported by bundlers (https://github.com/rollup/rollup/issues/4035). Without it unused
+   * styled components can't be tree-shaken.
+   * @defaultValue true
+   */
   transpileTemplateLiterals?: boolean
   namespace?: string
   /** @defaultValue true */
@@ -103,12 +109,17 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
             // `fileName` is unnecessary, as the way we use styled-components in Sanity is usually by wrapping
             // `@sanity/ui` primitives, not declaring new ones like "const Button = styled.button``"
             fileName: false,
-            // Native template literals take less space than this transpilation, and unlike
-            // `babel-plugin-styled-components`, oxc doesn't add a `@__PURE__` annotation to the
-            // transpiled call expression either, so enabling it wouldn't improve tree-shaking
-            transpileTemplateLiterals: false,
-            // Helps dead code elimination and tree-shaking, although oxc only annotates plain call
-            // expressions so far, not tagged template expressions (https://github.com/rollup/rollup/issues/4035)
+            // Transpile `styled.button`...`` to `styled.button(["..."])`, the same output shape as
+            // `babel: {styledComponents: true}` in `@sanity/pkg-utils`. Pure annotations are only
+            // defined for plain call expressions, not tagged template expressions
+            // (https://github.com/rollup/rollup/issues/4035), so this shape is a prerequisite for
+            // tree-shaking unused styled components.
+            transpileTemplateLiterals: true,
+            // Helps dead code elimination and tree-shaking. Note that unlike
+            // `babel-plugin-styled-components`, oxc doesn't yet annotate the call expression
+            // produced by `transpileTemplateLiterals` (it only annotates initializers that are
+            // already plain call expressions in the source), so the annotation is currently
+            // missing from transpiled output until that's supported upstream.
             pure: true,
             // Disabled, as tsdown tends to be used for npm publishing, while other tooling,
             // like `sanity dev`, `next dev`, etc are used for testing
