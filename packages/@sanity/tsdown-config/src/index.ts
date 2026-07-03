@@ -216,11 +216,41 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     )
   }
   if (vanillaExtract.enabled) {
-    // The plugin pipeline is lazy loaded, like `reactCompiler`, so `@vanilla-extract/rollup-plugin`
-    // and the CSS toolchain (`lightningcss`, `browserslist`) are only paid for when vanilla-extract
-    // is enabled.
-    const {vanillaExtractPlugins} = await import('./vanillaExtractPlugins.ts')
-    plugins.push(...vanillaExtractPlugins(vanillaExtract, vanillaExtractCssName))
+    // The plugins are lazy loaded so they're only paid for when vanilla-extract is enabled:
+    // `@vanilla-extract/rollup-plugin` compiles the `.css.ts` files, and `optimizeCss` pulls in
+    // the CSS toolchain (`lightningcss`, `browserslist`) that minifies the extracted CSS.
+    const [{vanillaExtractPlugin}, {default: browserslistConfig}, {optimizeCss}, {bundleCssShim}] =
+      await Promise.all([
+        import('@vanilla-extract/rollup-plugin'),
+        import('@sanity/browserslist-config'),
+        import('./optimizeCss.ts'),
+        import('./bundleCssShim.ts'),
+      ])
+    plugins.push(
+      // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
+      // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      vanillaExtractPlugin({
+        identifiers: vanillaExtract.options.identifiers ?? 'short',
+        cwd: vanillaExtract.options.cwd,
+        esbuildOptions: vanillaExtract.options.esbuildOptions,
+        unstable_injectFilescopes: vanillaExtract.options.unstable_injectFilescopes,
+        extract: {
+          name: vanillaExtractCssName,
+          sourcemap: vanillaExtract.options.extract?.sourcemap ?? true,
+        },
+      }) as unknown as Rolldown.Plugin,
+      optimizeCss({
+        extractFileName: vanillaExtractCssName,
+        browserslist: vanillaExtract.options.browserslist || browserslistConfig,
+        minify: vanillaExtract.options.minify ?? true,
+      }),
+    )
+    if (vanillaExtract.compatMode) {
+      // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
+      // `./<css>` export resolve to.
+      plugins.push(bundleCssShim({fileName: `${vanillaExtractCssName}.js`}))
+    }
   }
 
   return defineTsdownConfig({
