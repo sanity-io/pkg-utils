@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 10.9.1
+
+### Patch Changes
+
+- [#2944](https://github.com/sanity-io/pkg-utils/pull/2944) [`a94dab0`](https://github.com/sanity-io/pkg-utils/commit/a94dab00bd9e2e157e55e1fc720c269ecb9d8226) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
 ## 10.9.0
 
 ### Minor Changes
