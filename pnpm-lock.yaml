@@ -1074,8 +1074,8 @@ importers:
   playground/sanity-plugin-with-styled-components:
     dependencies:
       '@sanity/ui':
-        specifier: ^3.3.0
-        version: 3.3.1(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        specifier: ^3.3.2
+        version: 3.3.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       react-compiler-runtime:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.7)
@@ -6766,8 +6766,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@sanity/ui@3.3.1':
-    resolution: {integrity: sha512-BX/eO0gOvFwiRa+TfFPn2/RyAedgesX9IQ4hAj6wAB2lM/1tg3R6UE1vKz//Gq6//qSmtIKrUZzhMxGIWrHNnQ==}
+  '@sanity/ui@3.3.5':
+    resolution: {integrity: sha512-xXsaquGfi93EHTuOgctH/ryu7J8fe9lajtsq6We1Opmnjr0bron7DOyAaMAUm1jSxemrVDnVJ6s/6TuagDZVEg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       react: ^18 || >=19.0.0-0
@@ -20737,7 +20737,7 @@ snapshots:
     dependencies:
       '@sanity/icons': 3.8.0(react@19.2.7)
       '@sanity/types': 6.4.0(@types/react@19.2.17)
-      '@sanity/ui': 3.3.1(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+      '@sanity/ui': 3.3.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       lodash-es: 4.18.1
       react: 19.2.7
       react-is: 19.2.7
@@ -20934,14 +20934,14 @@ snapshots:
       '@sanity/media-library-types': 1.5.0
       '@types/react': 19.2.17
 
-  '@sanity/ui@3.3.1(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
+  '@sanity/ui@3.3.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
     dependencies:
       '@floating-ui/react-dom': 2.1.8(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@juggle/resize-observer': 3.4.0
       '@sanity/color': 3.0.6
       '@sanity/icons': 3.8.0(react@19.2.7)
       csstype: 3.2.3
-      motion: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      motion: 12.42.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react: 19.2.7
       react-compiler-runtime: 1.0.0(react@19.2.7)
       react-dom: 19.2.7(react@19.2.7)
@@ -28629,7 +28629,7 @@ snapshots:
       '@sanity/sdk': 2.15.0(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(xstate@5.32.4)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/types': 6.4.0(@types/react@19.2.17)
-      '@sanity/ui': 3.3.1(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+      '@sanity/ui': 3.3.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@sanity/util': 6.4.0(@types/react@19.2.17)
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.63.0(react@19.2.7)
@@ -28777,7 +28777,7 @@ snapshots:
       '@sanity/sdk': 2.15.0(@types/react@19.2.17)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))(xstate@5.32.4)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/types': 6.4.0(@types/react@19.2.17)
-      '@sanity/ui': 3.3.1(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+      '@sanity/ui': 3.3.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@sanity/util': 6.4.0(@types/react@19.2.17)
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.63.0(react@19.2.7)
