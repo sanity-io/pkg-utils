@@ -1,4 +1,5 @@
-import ts from 'typescript'
+import type ts from '@typescript/typescript6'
+import {getCompilerApi} from '../../core/ts/compilerApi.ts'
 import type {Logger} from '../../logger.ts'
 import {printDiagnostic} from './printDiagnostic.ts'
 
@@ -12,6 +13,7 @@ export async function buildTypes(options: {
   checkTypes?: boolean
 }): Promise<void> {
   const {cwd, logger, outDir, tsconfig, strict, checkTypes} = options
+  const tsApi = await getCompilerApi()
 
   const compilerOptions: ts.CompilerOptions = {
     ...tsconfig.options,
@@ -27,18 +29,18 @@ export async function buildTypes(options: {
     outDir,
   }
 
-  const program = ts.createProgram(tsconfig.fileNames, compilerOptions)
+  const program = tsApi.createProgram(tsconfig.fileNames, compilerOptions)
 
   const emitResult = program.emit()
 
-  const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+  const allDiagnostics = tsApi.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
 
   for (const diagnostic of allDiagnostics) {
-    printDiagnostic({cwd, logger, diagnostic})
+    printDiagnostic({cwd, logger, diagnostic, tsApi})
   }
 
   if (emitResult.emitSkipped) {
-    const errors = allDiagnostics.filter((diag) => diag.category === ts.DiagnosticCategory.Error)
+    const errors = allDiagnostics.filter((diag) => diag.category === tsApi.DiagnosticCategory.Error)
 
     if (errors.length) {
       throw new Error('failed to compile TypeScript definitions')

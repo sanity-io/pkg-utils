@@ -765,7 +765,7 @@ interface ColorSchemaType extends StringSchemaType {
 type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
 declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
+declare const colorTypeName: 'color';
 /**
  * @public
  */
@@ -841,7 +841,8 @@ exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./d
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
+"import "@sanity/ui/css/index.css";
+import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
   alpha?: boolean;
   colorspace?: 'limited-srgb' | 'display-p3';
@@ -852,7 +853,7 @@ interface ColorSchemaType extends StringSchemaType {
 type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
 declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
+declare const colorTypeName: 'color';
 /**
  * @public
  */
@@ -1163,26 +1164,18 @@ exports.validateApiPerspective = validateApiPerspective;
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
+import "get-it";
+import "rxjs";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1196,26 +1189,18 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
+import "get-it";
+import "rxjs";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1303,12 +1288,9 @@ exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./d
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
@@ -1318,12 +1300,9 @@ exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./d
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
@@ -1400,12 +1379,9 @@ exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./d
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
@@ -1415,12 +1391,9 @@ exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./d
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
@@ -1458,14 +1431,14 @@ export {
 exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./dist/index.d.cts 1`] = `
 "import { AgentActionPath } from "@sanity/client/stega";
 /**
-* @public
-*/
+ * @public
+ */
 interface ExternalSubpathImport {
   path: AgentActionPath;
 }
 /**
-* @public
-*/
+ * @public
+ */
 declare function identity(path: AgentActionPath): AgentActionPath;
 export { ExternalSubpathImport, identity };
 //# sourceMappingURL=index.d.cts.map"
@@ -1474,14 +1447,14 @@ export { ExternalSubpathImport, identity };
 exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./dist/index.d.ts 1`] = `
 "import { AgentActionPath } from "@sanity/client/stega";
 /**
-* @public
-*/
+ * @public
+ */
 interface ExternalSubpathImport {
   path: AgentActionPath;
 }
 /**
-* @public
-*/
+ * @public
+ */
 declare function identity(path: AgentActionPath): AgentActionPath;
 export { ExternalSubpathImport, identity };
 //# sourceMappingURL=index.d.ts.map"
@@ -1527,26 +1500,19 @@ exports.RemoveIcon = RemoveIcon;
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
+import "@sanity/client/csm";
+import "get-it";
+import "rxjs";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
@@ -1560,26 +1526,19 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
+import "@sanity/client/csm";
+import "get-it";
+import "rxjs";
 /**
-* @public
-*/
+ * @public
+ */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/**
-* @public
-*/
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
  * @deprecated use 'drafts' instead
  */
 declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/**
- * Delete the draft version of a document.
- * It is an error if it does not exist. If the purge flag is set, the document history is also deleted.
- *
- * @public
- * @deprecated Use {@link DiscardVersionAction} instead
- */
 /** @public */
 declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**

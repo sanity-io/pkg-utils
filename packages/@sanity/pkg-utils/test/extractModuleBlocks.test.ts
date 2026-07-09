@@ -1,6 +1,9 @@
 import type {ExtractorResult} from '@microsoft/api-extractor'
+// The typescript v7 main entry point no longer exposes the JS compiler API, so build the mock
+// source files with the TypeScript 6 compat package, like `extractModuleBlocksFromTypes` falls
+// back to at runtime
+import ts from '@typescript/typescript6'
 import * as prettier from 'prettier'
-import ts from 'typescript'
 import {expect, test} from 'vitest'
 import {extractModuleBlocksFromTypes} from '../src/node/tasks/dts/extractModuleBlocks'
 
@@ -80,7 +83,7 @@ test('extract module blocks from types', async () => {
   `,
   })
 
-  const blocks = extractModuleBlocksFromTypes({
+  const blocks = await extractModuleBlocksFromTypes({
     tsOutDir: 'virtual',
     extractResult,
   })
@@ -127,7 +130,7 @@ test('filters files by tsOutDir', async () => {
     './other/excluded.d.ts': 'declare module Excluded { interface B {} }',
   })
 
-  const blocks = extractModuleBlocksFromTypes({
+  const blocks = await extractModuleBlocksFromTypes({
     tsOutDir: 'virtual',
     extractResult,
   })
@@ -142,7 +145,7 @@ test('skips files without declare module', async () => {
     './virtual/has-modules.d.ts': 'declare module Test { interface B {} }',
   })
 
-  const blocks = extractModuleBlocksFromTypes({
+  const blocks = await extractModuleBlocksFromTypes({
     tsOutDir: 'virtual',
     extractResult,
   })
@@ -170,7 +173,7 @@ test('extracts module blocks with string literal names', async () => {
     `,
   })
 
-  const blocks = extractModuleBlocksFromTypes({
+  const blocks = await extractModuleBlocksFromTypes({
     tsOutDir: 'virtual',
     extractResult,
   })

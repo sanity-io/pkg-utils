@@ -1,4 +1,5 @@
-import ts from 'typescript'
+import type ts from '@typescript/typescript6'
+import {getCompilerApi} from './compilerApi.ts'
 
 /** @internal */
 export async function loadTSConfig(options: {
@@ -6,16 +7,17 @@ export async function loadTSConfig(options: {
   tsconfigPath: string
 }): Promise<ts.ParsedCommandLine | undefined> {
   const {cwd, tsconfigPath} = options
+  const tsApi = await getCompilerApi()
 
   // oxlint-disable-next-line unbound-method
-  const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, tsconfigPath)
+  const configPath = tsApi.findConfigFile(cwd, tsApi.sys.fileExists, tsconfigPath)
 
   if (!configPath) {
     return undefined
   }
 
   // oxlint-disable-next-line unbound-method
-  const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
+  const configFile = tsApi.readConfigFile(configPath, tsApi.sys.readFile)
 
-  return ts.parseJsonConfigFileContent(configFile.config, ts.sys, cwd)
+  return tsApi.parseJsonConfigFileContent(configFile.config, tsApi.sys, cwd)
 }

@@ -6,9 +6,9 @@ import {
   type ExtractorMessage,
   type ExtractorResult,
 } from '@microsoft/api-extractor'
+import type ts from '@typescript/typescript6'
 import {mkdirp} from 'mkdirp'
 import * as prettier from 'prettier'
-import type ts from 'typescript'
 import type {PkgConfigOptions} from '../../core/config/types.ts'
 import type {BuildFile} from '../../core/contexts/buildContext.ts'
 import {createApiExtractorConfig} from './createApiExtractorConfig.ts'
@@ -97,7 +97,7 @@ export async function extractTypes(options: {
   await mkdirp(path.dirname(typesPath))
 
   const {extractModuleBlocksFromTypes} = await import('./extractModuleBlocks.ts')
-  const moduleBlocks = extractModuleBlocksFromTypes({
+  const moduleBlocks = await extractModuleBlocksFromTypes({
     extractResult: extractorResult,
     tsOutDir: tmpPath,
   })
