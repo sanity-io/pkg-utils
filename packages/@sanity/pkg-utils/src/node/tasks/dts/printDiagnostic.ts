@@ -12,7 +12,7 @@ export function printDiagnostic(options: {
 }): void {
   const {cwd, logger, diagnostic, tsApi} = options
 
-  if (diagnostic.file && diagnostic.start) {
+  if (diagnostic.file && diagnostic.start !== undefined) {
     const {line, character} = tsApi.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
     const message = tsApi.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
 

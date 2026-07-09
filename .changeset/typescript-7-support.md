@@ -1,7 +1,6 @@
 ---
 '@sanity/pkg-utils': minor
 '@sanity/tsdown-config': minor
-'@sanity/parse-package-json': patch
 ---
 
 feat: support TypeScript 7 (the Go-native compiler)
