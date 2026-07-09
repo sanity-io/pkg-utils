@@ -3,8 +3,13 @@
 '@sanity/tsdown-config': minor
 ---
 
-feat: support TypeScript 7 (the Go-native compiler)
+feat: ship a self-contained TypeScript toolchain, drop the `typescript` peer dependency
 
-- The `typescript` peer dependency ranges now allow `7.0.x`.
-- TypeScript 7 no longer ships the JS compiler API (`ts.sys`, `ts.createProgram`, etc), so `@sanity/pkg-utils` now loads the compiler API through the official [`@typescript/typescript6`](https://www.npmjs.com/package/@typescript/typescript6) compat package when the installed `typescript` doesn't provide it. Projects on TypeScript 5.8–6.0 keep using their installed compiler exactly as before.
-- `rolldown-plugin-dts` is upgraded to 0.27.x: when TypeScript 7 is installed, `dts: 'rolldown'` automatically uses the native compiler (`tsgo`) for type generation, without needing `@typescript/native-preview`. Note that `tsgo: false` is not supported when TypeScript 7 is installed, as the non-tsgo code path depends on the removed JS compiler API.
+`@sanity/pkg-utils` no longer uses (or constrains) the `typescript` install of the consuming project. Instead it ships its own toolchain:
+
+- The classic JS compiler API (used for parsing `tsconfig.json` and the `api-extractor` dts pipeline) comes from the official [`@typescript/typescript6`](https://www.npmjs.com/package/@typescript/typescript6) compat package, since TypeScript 7 (the Go-native compiler) no longer provides it.
+- `dts: 'rolldown'` always generates types with the Go-native compiler (`tsgo`) from the bundled `typescript` v7 dependency (via `rolldown-plugin-dts` 0.27). The `tsgo` config option is deprecated: it's always enabled, and `tsgo: false` is ignored with a warning. `@typescript/native-preview` is no longer needed.
+
+This removes the `typescript` peer dependency from both `@sanity/pkg-utils` and `@sanity/tsdown-config`, so any TypeScript version (or none at all) can be installed in the consuming project without peer range conflicts, and new TypeScript releases no longer require an updated peer range here.
+
+Note that builds now use the bundled compilers regardless of the locally installed TypeScript version. If a `tsconfig.json` relies on compiler options that TypeScript 6 deprecates (e.g. `baseUrl`, `moduleResolution: "node"`), the `api-extractor` dts pipeline will report those deprecation errors even if an older TypeScript is installed locally.
