@@ -765,7 +765,7 @@ interface ColorSchemaType extends StringSchemaType {
 type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
 declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
+declare const colorTypeName: 'color';
 /**
  * @public
  */
@@ -853,7 +853,7 @@ interface ColorSchemaType extends StringSchemaType {
 type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
 declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
-declare const colorTypeName: "color";
+declare const colorTypeName: 'color';
 /**
  * @public
  */

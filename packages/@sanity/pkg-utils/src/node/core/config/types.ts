@@ -270,9 +270,12 @@ export interface PkgConfigOptions {
    */
   dts?: DtsType
   /**
-   * When using `dts: 'rolldown'`, enables the use of `@typescript/native-preview` for type generation.
-   * By default, `tsgo` is automatically enabled if `@typescript/native-preview` is found in `devDependencies`.
+   * When using `dts: 'rolldown'`, enables the use of the Go-native TypeScript compiler (`tsgo`) for type generation.
+   * By default, `tsgo` is automatically enabled if `@typescript/native-preview` is found in `devDependencies`,
+   * or if the installed `typescript` is v7 (which is the Go-native compiler).
    * Set to `true` to explicitly enable or `false` to explicitly disable.
+   * Note that `tsgo` cannot be disabled when `typescript` v7 is installed, as v7 no longer ships
+   * the JS compiler API that the non-tsgo code path depends on.
    * @alpha
    */
   tsgo?: boolean

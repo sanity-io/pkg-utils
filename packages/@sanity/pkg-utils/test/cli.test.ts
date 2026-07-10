@@ -457,7 +457,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const stdout = await project.run('build')
 
     expect(stdout).toContain('with rolldown')
-    expect(stdout).toContain('The `tsgo` option is experimental')
+    expect(stdout).toContain('TypeScript 7.0 does not yet have a stable API and is experimental')
 
     expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
     expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')

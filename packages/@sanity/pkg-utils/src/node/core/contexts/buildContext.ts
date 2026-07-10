@@ -1,5 +1,5 @@
 import type {PackageJSON} from '@sanity/parse-package-json'
-import type ts from 'typescript'
+import type ts from '@typescript/typescript6'
 import type {Logger} from '../../logger.ts'
 import type {DtsType, PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types.ts'
 

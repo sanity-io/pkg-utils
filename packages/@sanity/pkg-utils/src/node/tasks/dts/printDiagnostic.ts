@@ -1,6 +1,6 @@
 import path from 'node:path'
+import ts from '@typescript/typescript6'
 import chalk from 'chalk'
-import ts from 'typescript'
 import type {Logger} from '../../logger.ts'
 
 export function printDiagnostic(options: {
@@ -10,7 +10,7 @@ export function printDiagnostic(options: {
 }): void {
   const {cwd, logger, diagnostic} = options
 
-  if (diagnostic.file && diagnostic.start) {
+  if (diagnostic.file && diagnostic.start !== undefined) {
     const {line, character} = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
     const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
 
