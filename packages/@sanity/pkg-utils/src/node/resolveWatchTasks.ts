@@ -10,8 +10,8 @@ export function resolveWatchTasks(ctx: BuildContext): WatchTask[] {
   const {pkg, target} = ctx
   const tasks: WatchTask[] = []
 
-  const exports = Object.entries(ctx.exports || {}).map(
-    ([_path, exp]) => Object.assign({}, exp, {_path}) as PkgExport & {_path: string},
+  const exports: Array<PkgExport & {_path: string}> = Object.entries(ctx.exports || {}).map(
+    ([_path, exp]) => Object.assign({}, exp, {_path}),
   )
 
   const dtsTask: DtsWatchTask = {

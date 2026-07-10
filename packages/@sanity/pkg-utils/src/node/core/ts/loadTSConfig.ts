@@ -7,7 +7,7 @@ import ts from '@typescript/typescript6'
 export async function loadTSConfig(options: {
   cwd: string
   tsconfigPath: string
-}): Promise<ts.ParsedCommandLine | undefined> {
+}): Promise<ReturnType<typeof ts.parseJsonConfigFileContent> | undefined> {
   const {cwd, tsconfigPath} = options
 
   // oxlint-disable-next-line unbound-method
