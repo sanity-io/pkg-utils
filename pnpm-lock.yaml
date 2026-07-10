@@ -1074,7 +1074,7 @@ importers:
   playground/sanity-plugin-with-styled-components:
     dependencies:
       '@sanity/ui':
-        specifier: ^3.3.2
+        specifier: ^3.3.5
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       react-compiler-runtime:
         specifier: ^1.0.0
@@ -11353,9 +11353,6 @@ packages:
 
   modern-ahocorasick@1.1.0:
     resolution: {integrity: sha512-sEKPVl2rM+MNVkGQt3ChdmD8YsigmXdn5NifZn6jiwn9LRJpWm8F3guhaqrJT/JOat6pwpbXEk6kv+b9DMIjsQ==}
-
-  motion-dom@12.40.0:
-    resolution: {integrity: sha512-HxU3ZaBwNPVQUBQf1xxgq+7JrPNZvjLVxgbpEZL7RrWJnsxOf0/OM+yrHG9ogLQ31Do/r57Oz2gQWPK+6q62mg==}
 
   motion-dom@12.42.2:
     resolution: {integrity: sha512-5gIMWLp/PycBtJRJWRgjxke5n8dlvkSn2DrYW+tr3XcqAZY1xZh6BJyooJXCM8wdfM7wfMjkBJNLge1CKPUIRA==}
@@ -24520,7 +24517,7 @@ snapshots:
 
   framer-motion@12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
-      motion-dom: 12.40.0
+      motion-dom: 12.42.2
       motion-utils: 12.39.0
       tslib: 2.8.1
     optionalDependencies:
@@ -26584,10 +26581,6 @@ snapshots:
   mocked-exports@0.1.1: {}
 
   modern-ahocorasick@1.1.0: {}
-
-  motion-dom@12.40.0:
-    dependencies:
-      motion-utils: 12.39.0
 
   motion-dom@12.42.2:
     dependencies:
