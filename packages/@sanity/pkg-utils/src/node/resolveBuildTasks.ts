@@ -13,8 +13,8 @@ export function resolveBuildTasks(ctx: BuildContext): BuildTask[] {
 
   const tasks: BuildTask[] = []
 
-  const exports = Object.entries(ctx.exports || {}).map(
-    ([_path, exp]) => Object.assign({}, exp, {_path}) as PkgExport & {_path: string},
+  const exports: Array<PkgExport & {_path: string}> = Object.entries(ctx.exports || {}).map(
+    ([_path, exp]) => Object.assign({}, exp, {_path}),
   )
 
   const dtsTask: DtsTask = {
