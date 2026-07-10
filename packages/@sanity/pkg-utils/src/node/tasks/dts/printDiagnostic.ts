@@ -1,20 +1,18 @@
 import path from 'node:path'
-import type ts from '@typescript/typescript6'
+import ts from '@typescript/typescript6'
 import chalk from 'chalk'
-import type {TSCompilerApi} from '../../core/ts/compilerApi.ts'
 import type {Logger} from '../../logger.ts'
 
 export function printDiagnostic(options: {
   cwd: string
   logger: Logger
   diagnostic: ts.Diagnostic
-  tsApi: TSCompilerApi
 }): void {
-  const {cwd, logger, diagnostic, tsApi} = options
+  const {cwd, logger, diagnostic} = options
 
   if (diagnostic.file && diagnostic.start !== undefined) {
-    const {line, character} = tsApi.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
-    const message = tsApi.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+    const {line, character} = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start)
+    const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
 
     const file = path.relative(cwd, diagnostic.file.fileName)
 
@@ -23,22 +21,22 @@ export function printDiagnostic(options: {
       `${chalk.gray(`TS${diagnostic.code}:`)} ${message}`,
     ].join('')
 
-    if (diagnostic.category === tsApi.DiagnosticCategory.Error) {
+    if (diagnostic.category === ts.DiagnosticCategory.Error) {
       logger.error(output)
     }
 
-    if (diagnostic.category === tsApi.DiagnosticCategory.Warning) {
+    if (diagnostic.category === ts.DiagnosticCategory.Warning) {
       logger.warn(output)
     }
 
-    if (diagnostic.category === tsApi.DiagnosticCategory.Message) {
+    if (diagnostic.category === ts.DiagnosticCategory.Message) {
       logger.log(output)
     }
 
-    if (diagnostic.category === tsApi.DiagnosticCategory.Suggestion) {
+    if (diagnostic.category === ts.DiagnosticCategory.Suggestion) {
       logger.log(output)
     }
   } else {
-    logger.log(tsApi.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+    logger.log(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
   }
 }

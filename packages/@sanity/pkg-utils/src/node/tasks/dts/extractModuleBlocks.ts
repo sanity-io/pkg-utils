@@ -1,19 +1,17 @@
 import type {ExtractorResult} from '@microsoft/api-extractor'
-import type ts from '@typescript/typescript6'
-import {getCompilerApi, type TSCompilerApi} from '../../core/ts/compilerApi.ts'
+import ts from '@typescript/typescript6'
 
 /**
  * A workaround to find all module blocks in extract TS files.
  * @internal
  * */
-export async function extractModuleBlocksFromTypes({
+export function extractModuleBlocksFromTypes({
   tsOutDir,
   extractResult,
 }: {
   tsOutDir: string
   extractResult: ExtractorResult
-}): Promise<string[]> {
-  const tsApi = await getCompilerApi()
+}): string[] {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- ExtractorResult type from @microsoft/api-extractor is complex
   const program = extractResult.compilerState.program as ts.Program
   const moduleBlocks: string[] = []
@@ -28,13 +26,13 @@ export async function extractModuleBlocksFromTypes({
     if (sourceFile.text.includes('declare module')) {
       // Re-parse the source file to ensure we have a complete AST
       // The source files from API Extractor's program may not have fully parsed statements
-      const parsedFile = tsApi.createSourceFile(
+      const parsedFile = ts.createSourceFile(
         sourceFile.fileName,
         sourceFile.text,
-        tsApi.ScriptTarget.Latest,
+        ts.ScriptTarget.Latest,
         /* setParentNodes */ true,
       )
-      moduleBlocks.push(...extractModuleBlocks(tsApi, parsedFile))
+      moduleBlocks.push(...extractModuleBlocks(parsedFile))
     }
   }
 
@@ -44,14 +42,14 @@ export async function extractModuleBlocksFromTypes({
 /**
  * Extract `declare module` blocks from a TypeScript source file.
  */
-function extractModuleBlocks(tsApi: TSCompilerApi, sourceFile: ts.SourceFile): string[] {
+function extractModuleBlocks(sourceFile: ts.SourceFile): string[] {
   const text = sourceFile.text
   const moduleBlocks: string[] = []
 
   const statements = sourceFile.statements
   for (let i = 0; i < statements.length; i++) {
     const statement = statements[i]
-    if (statement && tsApi.isModuleDeclaration(statement)) {
+    if (statement && ts.isModuleDeclaration(statement)) {
       // Get positions for extracting text
       const fullStart = statement.getFullStart()
       const start = statement.getStart(sourceFile)
@@ -59,7 +57,7 @@ function extractModuleBlocks(tsApi: TSCompilerApi, sourceFile: ts.SourceFile): s
 
       // Include trailing comments (like sourceMappingURL)
       // First check for same-line trailing comments
-      const trailingComments = tsApi.getTrailingCommentRanges(text, end)
+      const trailingComments = ts.getTrailingCommentRanges(text, end)
       const lastTrailing = trailingComments?.at(-1)
       if (lastTrailing) {
         end = lastTrailing.end
@@ -68,7 +66,7 @@ function extractModuleBlocks(tsApi: TSCompilerApi, sourceFile: ts.SourceFile): s
         // or if they come before the next statement)
         const nextStatement = statements[i + 1]
         const nextStatementStart = nextStatement?.getFullStart() ?? text.length
-        const commentsAfter = tsApi.getLeadingCommentRanges(text, end)
+        const commentsAfter = ts.getLeadingCommentRanges(text, end)
         const lastCommentAfter = commentsAfter?.at(-1)
         if (lastCommentAfter && lastCommentAfter.end <= nextStatementStart) {
           end = lastCommentAfter.end
@@ -76,7 +74,7 @@ function extractModuleBlocks(tsApi: TSCompilerApi, sourceFile: ts.SourceFile): s
       }
 
       // Check for leading JSDoc comments
-      const leadingComments = tsApi.getLeadingCommentRanges(text, fullStart)
+      const leadingComments = ts.getLeadingCommentRanges(text, fullStart)
 
       let blockStart = start
       if (leadingComments && leadingComments.length > 0) {

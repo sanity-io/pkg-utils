@@ -1,10 +1,9 @@
 import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
-import type ts from '@typescript/typescript6'
+import ts from '@typescript/typescript6'
 import chalk from 'chalk'
 import * as rimraf from 'rimraf'
 import {Observable} from 'rxjs'
-import {getCompilerApi} from '../../core/ts/compilerApi.ts'
 import {printExtractMessages} from '../../printExtractMessages.ts'
 import type {TaskHandler} from '../types.ts'
 import {buildTypes} from './buildTypes.ts'
@@ -60,109 +59,89 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
         observer.error(err)
       })
 
-      let watchProgram:
-        ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram> | undefined
-      let closed = false
+      const host = ts.createWatchCompilerHost(
+        tsConfigPath,
+        {
+          ...tsConfig.options,
+          declaration: true,
+          declarationDir: tmpPath,
+          emitDeclarationOnly: true,
+          noEmit: false,
+          noEmitOnError: strict ? true : (tsConfig.options.noEmitOnError ?? true),
+          noCheck:
+            config?.extract?.checkTypes === false
+              ? true
+              : (tsConfig.options.noCheck ?? tsConfig.options.isolatedDeclarations),
+          outDir: tmpPath,
+        },
+        ts.sys,
+        ts.createEmitAndSemanticDiagnosticsBuilderProgram,
+        (diagnostic) => {
+          logger.error(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+        },
+        (diagnostic) => {
+          logger.info(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+        },
+      )
 
-      const startWatchProgram = async () => {
-        const tsApi = await getCompilerApi()
+      // oxlint-disable-next-line unbound-method
+      const origPostProgramCreate = host.afterProgramCreate
 
-        if (closed) {
-          return
-        }
+      host.afterProgramCreate = async (program) => {
+        origPostProgramCreate?.(program)
 
-        const host = tsApi.createWatchCompilerHost(
-          tsConfigPath,
-          {
-            ...tsConfig.options,
-            declaration: true,
-            declarationDir: tmpPath,
-            emitDeclarationOnly: true,
-            noEmit: false,
-            noEmitOnError: strict ? true : (tsConfig.options.noEmitOnError ?? true),
-            noCheck:
-              config?.extract?.checkTypes === false
-                ? true
-                : (tsConfig.options.noCheck ?? tsConfig.options.isolatedDeclarations),
-            outDir: tmpPath,
-          },
-          tsApi.sys,
-          tsApi.createEmitAndSemanticDiagnosticsBuilderProgram,
-          (diagnostic) => {
-            logger.error(tsApi.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
-          },
-          (diagnostic) => {
-            logger.info(tsApi.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
-          },
-        )
+        const messages: ExtractorMessage[] = []
+        const results: {sourcePath: string; filePaths: string[]}[] = []
 
-        // oxlint-disable-next-line unbound-method
-        const origPostProgramCreate = host.afterProgramCreate
+        for (const entry of task.entries) {
+          const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
 
-        host.afterProgramCreate = async (program) => {
-          origPostProgramCreate?.(program)
+          const sourceTypesPath = path.resolve(
+            tmpPath,
+            path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
+          )
 
-          const messages: ExtractorMessage[] = []
-          const results: {sourcePath: string; filePaths: string[]}[] = []
+          const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
+          const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
 
-          for (const entry of task.entries) {
-            const exportPath = entry.exportPath === '.' ? './index' : entry.exportPath
-
-            const sourceTypesPath = path.resolve(
+          try {
+            const result = await extractTypes({
+              bundledPackages: bundledPackages || [],
+              customTags: config?.extract?.customTags,
+              cwd,
+              distPath: outDir,
+              exportPath,
+              files,
+              filePaths,
+              projectPath: cwd,
+              rules: config?.extract?.rules,
+              sourceTypesPath: sourceTypesPath,
+              tsconfig: tsConfig,
               tmpPath,
-              path.relative(rootDir, path.resolve(cwd, entry.sourcePath)).replace(/\.ts$/, '.d.ts'),
-            )
+              tsconfigPath: path.resolve(cwd, tsConfigPath),
+              extractorDisabled: config?.extract?.enabled === false,
+            })
 
-            const targetPaths = entry.targetPaths.map((targetPath) => path.resolve(cwd, targetPath))
-            const filePaths = targetPaths.map((targetPath) => path.relative(outDir, targetPath))
+            messages.push(...result.messages)
+            results.push({sourcePath: path.resolve(cwd, entry.sourcePath), filePaths: targetPaths})
+          } catch (err) {
+            if (err instanceof DtsError) {
+              messages.push(...err.messages)
+            } else {
+              observer.error(err)
 
-            try {
-              const result = await extractTypes({
-                bundledPackages: bundledPackages || [],
-                customTags: config?.extract?.customTags,
-                cwd,
-                distPath: outDir,
-                exportPath,
-                files,
-                filePaths,
-                projectPath: cwd,
-                rules: config?.extract?.rules,
-                sourceTypesPath: sourceTypesPath,
-                tsconfig: tsConfig,
-                tmpPath,
-                tsconfigPath: path.resolve(cwd, tsConfigPath),
-                extractorDisabled: config?.extract?.enabled === false,
-              })
-
-              messages.push(...result.messages)
-              results.push({
-                sourcePath: path.resolve(cwd, entry.sourcePath),
-                filePaths: targetPaths,
-              })
-            } catch (err) {
-              if (err instanceof DtsError) {
-                messages.push(...err.messages)
-              } else {
-                observer.error(err)
-
-                return
-              }
+              return
             }
           }
-
-          observer.next({type: 'dts', messages, results})
         }
 
-        watchProgram = tsApi.createWatchProgram(host)
+        observer.next({type: 'dts', messages, results})
       }
 
-      startWatchProgram().catch((err) => {
-        observer.error(err)
-      })
+      const watchProgram = ts.createWatchProgram(host)
 
       return () => {
-        closed = true
-        watchProgram?.close()
+        watchProgram.close()
         rimraf.sync(tmpPath)
       }
     })

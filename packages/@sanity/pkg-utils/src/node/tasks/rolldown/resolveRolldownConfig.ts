@@ -19,12 +19,6 @@ export function resolveRolldownConfig(
   const outputExt = extMap[pkg.type || 'commonjs'][format]
   const outDir = path.relative(cwd, distPath)
 
-  if (config?.tsgo === false) {
-    logger.warn(
-      "the `tsgo: false` option is ignored: `dts: 'rolldown'` always uses the Go-native TypeScript compiler shipped with `@sanity/pkg-utils`",
-    )
-  }
-
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
       return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0]!)]
@@ -134,10 +128,15 @@ export function resolveRolldownConfig(
       dtsPlugin({
         emitDtsOnly: true,
         tsconfig: ctx.ts.configPath || 'tsconfig.json',
-        // `dts: 'rolldown'` always uses the Go-native TypeScript compiler (tsgo) from the
-        // `typescript` v7 dependency that ships with `@sanity/pkg-utils`, so `tsgo: false` is
-        // ignored (the non-tsgo code path needs the JS compiler API that v7 no longer provides)
-        tsgo: config?.tsgo === false ? undefined : config?.tsgo,
+        // When neither the config nor `@typescript/native-preview` decides, leave `tsgo`
+        // undefined so `rolldown-plugin-dts` applies its own default: tsgo is auto-enabled when
+        // the installed `typescript` is v7 (the Go-native compiler), and disabled otherwise
+        tsgo:
+          config?.tsgo !== undefined
+            ? config.tsgo
+            : (typeof pkg.devDependencies === 'object' &&
+                '@typescript/native-preview' in pkg.devDependencies) ||
+              undefined,
         // Always create dts from scratch, don't reuse contexts from previous builds
         newContext: true,
       }),

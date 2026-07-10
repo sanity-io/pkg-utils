@@ -1,5 +1,7 @@
-import type ts from '@typescript/typescript6'
-import {getCompilerApi} from './compilerApi.ts'
+// The JS compiler API is loaded from the official `@typescript/typescript6` compat package
+// instead of the `typescript` peer dependency, as TypeScript 7 (the Go-native compiler) no longer
+// ships it
+import ts from '@typescript/typescript6'
 
 /** @internal */
 export async function loadTSConfig(options: {
@@ -7,17 +9,16 @@ export async function loadTSConfig(options: {
   tsconfigPath: string
 }): Promise<ts.ParsedCommandLine | undefined> {
   const {cwd, tsconfigPath} = options
-  const tsApi = await getCompilerApi()
 
   // oxlint-disable-next-line unbound-method
-  const configPath = tsApi.findConfigFile(cwd, tsApi.sys.fileExists, tsconfigPath)
+  const configPath = ts.findConfigFile(cwd, ts.sys.fileExists, tsconfigPath)
 
   if (!configPath) {
     return undefined
   }
 
   // oxlint-disable-next-line unbound-method
-  const configFile = tsApi.readConfigFile(configPath, tsApi.sys.readFile)
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
 
-  return tsApi.parseJsonConfigFileContent(configFile.config, tsApi.sys, cwd)
+  return ts.parseJsonConfigFileContent(configFile.config, ts.sys, cwd)
 }

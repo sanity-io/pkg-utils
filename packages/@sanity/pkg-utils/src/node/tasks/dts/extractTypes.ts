@@ -97,7 +97,7 @@ export async function extractTypes(options: {
   await mkdirp(path.dirname(typesPath))
 
   const {extractModuleBlocksFromTypes} = await import('./extractModuleBlocks.ts')
-  const moduleBlocks = await extractModuleBlocksFromTypes({
+  const moduleBlocks = extractModuleBlocksFromTypes({
     extractResult: extractorResult,
     tsOutDir: tmpPath,
   })
