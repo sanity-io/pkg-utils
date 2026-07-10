@@ -1,6 +1,6 @@
 ---
 '@sanity/pkg-utils': major
-'@sanity/tsdown-config': major
+'@sanity/tsdown-config': minor
 ---
 
 feat: support TypeScript 7 (the Go-native compiler), require TypeScript 6 or later
