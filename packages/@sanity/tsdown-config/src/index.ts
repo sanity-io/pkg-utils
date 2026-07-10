@@ -186,13 +186,9 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       import('@vitejs/plugin-react'),
     ])
     plugins.push(
-      // The plugin types don't match when `@rolldown/plugin-babel` resolves its `rolldown` peer
-      // dependency to a different version than the one bundled with `tsdown`, so cast it:
-      // https://tsdown.dev/advanced/plugins#rollup-plugins
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      (await pluginBabel({
+      await pluginBabel({
         presets: [reactCompilerPreset(typeof reactCompiler === 'object' ? reactCompiler : {})],
-      })) as unknown as Rolldown.Plugin,
+      }),
     )
   }
   if (options.vanillaExtract) {

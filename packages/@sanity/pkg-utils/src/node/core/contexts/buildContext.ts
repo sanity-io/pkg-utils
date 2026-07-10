@@ -25,7 +25,7 @@ export interface BuildContext {
   strict: boolean
   target: Record<PkgRuntime, string[]>
   ts: {
-    config?: ts.ParsedCommandLine
+    config?: ReturnType<typeof ts.parseJsonConfigFileContent>
     configPath?: string | undefined
   }
   dts: DtsType
