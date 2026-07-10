@@ -171,10 +171,6 @@ export interface PkgConfigOptions {
     bundledPackages?: PkgConfigProperty<string[]>
     customTags?: TSDocCustomTag[]
     rules?: {
-      /**
-       * @deprecated as it's no longer needed since TypeScript 5.5 https://github.com/microsoft/TypeScript/issues/42873
-       */
-      'ae-forgotten-export'?: never
       'ae-incompatible-release-tags'?: PkgRuleLevel
       'ae-internal-missing-underscore'?: PkgRuleLevel
       'ae-missing-release-tag'?: PkgRuleLevel
@@ -207,10 +203,6 @@ export interface PkgConfigOptions {
    * Defaults to `"react"`
    */
   jsxImportSource?: string
-  /**
-   * @deprecated no longer supported
-   */
-  legacyExports?: never
   minify?: boolean
   /** @alpha */
   rollup?: {
