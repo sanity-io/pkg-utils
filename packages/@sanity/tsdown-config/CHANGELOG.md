@@ -1,5 +1,15 @@
 # @sanity/tsdown-config
 
+## 0.12.1
+
+### Patch Changes
+
+- [#2979](https://github.com/sanity-io/pkg-utils/pull/2979) [`cc771d2`](https://github.com/sanity-io/pkg-utils/commit/cc771d2386471ca64cc513c33dadd944f04f0755) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency vitest to ^4.1.10
+
+- [#2987](https://github.com/sanity-io/pkg-utils/pull/2987) [`9fe5a25`](https://github.com/sanity-io/pkg-utils/commit/9fe5a255824f1900af60e34d3008469bd3d8b264) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to v0.22.3
+
+- [#2990](https://github.com/sanity-io/pkg-utils/pull/2990) [`f067d9a`](https://github.com/sanity-io/pkg-utils/commit/f067d9a19db5501c98ec2bc7896586c35122436f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.5
+
 ## 0.12.0
 
 ### Minor Changes
