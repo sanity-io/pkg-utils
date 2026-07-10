@@ -106,8 +106,10 @@ export function resolveRollupConfig(
   const outDir = path.relative(cwd, distPath)
 
   const pathAliases = Object.fromEntries(
-    Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
-      return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0])]
+    Object.entries(ts.config?.options.paths || {}).flatMap(([key, val]) => {
+      const pathAlias = val[0]
+      if (!pathAlias) return []
+      return [[key, path.resolve(cwd, ts.config?.options.baseUrl || '.', pathAlias)]]
     }),
   )
 
