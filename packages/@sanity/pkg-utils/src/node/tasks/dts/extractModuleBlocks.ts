@@ -1,5 +1,5 @@
 import type {ExtractorResult} from '@microsoft/api-extractor'
-import ts from 'typescript'
+import ts from '@typescript/typescript6'
 
 /**
  * A workaround to find all module blocks in extract TS files.

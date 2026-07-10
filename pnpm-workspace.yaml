@@ -9,10 +9,9 @@ catalog:
   '@sanity/icons': ^3.8.0
   '@sanity/logos': ^2.2.2
   '@types/node': ^24.13.2
-  '@typescript/native-preview': 7.0.0-dev.20260421.2
   publint: ^0.3.21
-  tsdown: ^0.22.3
-  typescript: 6.0.3
+  tsdown: ^0.22.4
+  typescript: 7.0.2
   vitest: ^4.1.10
 
 minimumReleaseAge: 4320
@@ -53,6 +52,14 @@ minimumReleaseAgeExclude:
   # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
   # cross-framework matrix building against current releases.
   - '@astrojs/react'
+  # TypeScript 7 (the Go-native compiler) and the toolchain releases that add support for it,
+  # including the yuku AST toolchain that rolldown-plugin-dts 0.27 replaced babel with.
+  - typescript
+  - tsdown
+  - rolldown-plugin-dts
+  - yuku-ast
+  - yuku-parser
+  - yuku-codegen
 
 overrides:
   '@sanity/pkg-utils': workspace:*

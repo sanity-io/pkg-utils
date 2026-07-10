@@ -1,10 +1,13 @@
-import ts from 'typescript'
+// The JS compiler API is loaded from the official `@typescript/typescript6` compat package
+// instead of the `typescript` peer dependency, as TypeScript 7 (the Go-native compiler) no longer
+// ships it
+import ts from '@typescript/typescript6'
 
 /** @internal */
 export async function loadTSConfig(options: {
   cwd: string
   tsconfigPath: string
-}): Promise<ts.ParsedCommandLine | undefined> {
+}) {
   const {cwd, tsconfigPath} = options
 
   // oxlint-disable-next-line unbound-method

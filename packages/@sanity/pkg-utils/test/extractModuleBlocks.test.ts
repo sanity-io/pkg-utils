@@ -1,6 +1,9 @@
 import type {ExtractorResult} from '@microsoft/api-extractor'
+// The typescript v7 main entry point no longer exposes the JS compiler API, so build the mock
+// source files with the TypeScript 6 compat package, the same API `extractModuleBlocksFromTypes`
+// uses at runtime
+import ts from '@typescript/typescript6'
 import * as prettier from 'prettier'
-import ts from 'typescript'
 import {expect, test} from 'vitest'
 import {extractModuleBlocksFromTypes} from '../src/node/tasks/dts/extractModuleBlocks'
 

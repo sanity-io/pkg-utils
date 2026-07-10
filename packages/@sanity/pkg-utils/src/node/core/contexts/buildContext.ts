@@ -1,5 +1,5 @@
 import type {PackageJSON} from '@sanity/parse-package-json'
-import type ts from 'typescript'
+import type ts from '@typescript/typescript6'
 import type {Logger} from '../../logger.ts'
 import type {DtsType, PkgConfigOptions, PkgExports, PkgRuntime} from '../config/types.ts'
 
@@ -25,7 +25,7 @@ export interface BuildContext {
   strict: boolean
   target: Record<PkgRuntime, string[]>
   ts: {
-    config?: ts.ParsedCommandLine | undefined
+    config?: ts.ParsedCommandLine
     configPath?: string | undefined
   }
   dts: DtsType

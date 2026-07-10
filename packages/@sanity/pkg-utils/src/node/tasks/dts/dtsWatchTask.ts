@@ -1,9 +1,9 @@
 import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
+import ts from '@typescript/typescript6'
 import chalk from 'chalk'
 import * as rimraf from 'rimraf'
 import {Observable} from 'rxjs'
-import ts from 'typescript'
 import {printExtractMessages} from '../../printExtractMessages.ts'
 import type {TaskHandler} from '../types.ts'
 import {buildTypes} from './buildTypes.ts'
@@ -29,14 +29,16 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
     const {config, cwd, files, logger, strict, ts: tsContext, bundledPackages} = ctx
 
     return new Observable((observer) => {
-      if (!tsContext.config || !tsContext.configPath) {
+      const {config: tsConfig, configPath: tsConfigPath} = tsContext
+
+      if (!tsConfig || !tsConfigPath) {
         observer.next({type: 'dts', messages: [], results: []})
         observer.complete()
 
         return () => {}
       }
 
-      const {outDir, rootDir = cwd} = tsContext.config.options
+      const {outDir, rootDir = cwd} = tsConfig.options
 
       if (!outDir) {
         observer.error(new Error('tsconfig.json is missing `compilerOptions.outDir`'))
@@ -50,7 +52,7 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
         cwd,
         logger,
         outDir: tmpPath,
-        tsconfig: tsContext.config,
+        tsconfig: tsConfig,
         strict,
         checkTypes: config?.extract?.checkTypes,
       }).catch((err) => {
@@ -58,18 +60,18 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
       })
 
       const host = ts.createWatchCompilerHost(
-        tsContext.configPath,
+        tsConfigPath,
         {
-          ...tsContext.config.options,
+          ...tsConfig.options,
           declaration: true,
           declarationDir: tmpPath,
           emitDeclarationOnly: true,
           noEmit: false,
-          noEmitOnError: strict ? true : (tsContext.config.options.noEmitOnError ?? true),
+          noEmitOnError: strict ? true : (tsConfig.options.noEmitOnError ?? true),
           noCheck:
             config?.extract?.checkTypes === false
               ? true
-              : (tsContext.config.options.noCheck ?? tsContext.config.options.isolatedDeclarations),
+              : (tsConfig.options.noCheck ?? tsConfig.options.isolatedDeclarations),
           outDir: tmpPath,
         },
         ts.sys,
@@ -114,9 +116,9 @@ export const dtsWatchTask: TaskHandler<DtsWatchTask, DtsResult> = {
               projectPath: cwd,
               rules: config?.extract?.rules,
               sourceTypesPath: sourceTypesPath,
-              tsconfig: tsContext.config!,
+              tsconfig: tsConfig,
               tmpPath,
-              tsconfigPath: path.resolve(cwd, tsContext.configPath || 'tsconfig.json'),
+              tsconfigPath: path.resolve(cwd, tsConfigPath),
               extractorDisabled: config?.extract?.enabled === false,
             })
 

@@ -21,7 +21,7 @@ export function resolveRolldownConfig(
 
   const pathAliases = Object.fromEntries(
     Object.entries(ts.config?.options.paths || {}).map(([key, val]) => {
-      return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0]!)]
+      return [key, path.resolve(cwd, ts.config?.options.baseUrl || '.', val[0])]
     }),
   )
 
@@ -128,11 +128,15 @@ export function resolveRolldownConfig(
       dtsPlugin({
         emitDtsOnly: true,
         tsconfig: ctx.ts.configPath || 'tsconfig.json',
+        // When neither the config nor `@typescript/native-preview` decides, leave `tsgo`
+        // undefined so `rolldown-plugin-dts` applies its own default: tsgo is auto-enabled when
+        // the installed `typescript` is v7 (the Go-native compiler), and disabled otherwise
         tsgo:
           config?.tsgo !== undefined
             ? config.tsgo
-            : typeof pkg.devDependencies === 'object' &&
-              '@typescript/native-preview' in pkg.devDependencies,
+            : (typeof pkg.devDependencies === 'object' &&
+                '@typescript/native-preview' in pkg.devDependencies) ||
+              undefined,
         // Always create dts from scratch, don't reuse contexts from previous builds
         newContext: true,
       }),

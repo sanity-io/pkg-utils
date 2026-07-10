@@ -6,9 +6,9 @@ import {
   type ExtractorMessage,
   type ExtractorResult,
 } from '@microsoft/api-extractor'
+import type ts from '@typescript/typescript6'
 import {mkdirp} from 'mkdirp'
 import * as prettier from 'prettier'
-import type ts from 'typescript'
 import type {PkgConfigOptions} from '../../core/config/types.ts'
 import type {BuildFile} from '../../core/contexts/buildContext.ts'
 import {createApiExtractorConfig} from './createApiExtractorConfig.ts'

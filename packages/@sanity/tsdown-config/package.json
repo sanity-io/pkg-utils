@@ -1,6 +1,6 @@
 {
   "name": "@sanity/tsdown-config",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "Shared configuration for tsdown",
   "keywords": [
     "sanity-io",
@@ -54,7 +54,6 @@
     "@sanity/pkg-utils": "workspace:^",
     "@sanity/tsconfig": "workspace:^",
     "@types/babel__core": "^7.20.5",
-    "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "^1.0.0",
     "tinyexec": "^1.2.4",
     "tsdown": "catalog:",
@@ -63,8 +62,8 @@
   },
   "peerDependencies": {
     "babel-plugin-react-compiler": "*",
-    "tsdown": "0.22.3",
-    "typescript": "5.8.x || 5.9.x || 6.0.x"
+    "tsdown": "0.22.4",
+    "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
     "babel-plugin-react-compiler": {

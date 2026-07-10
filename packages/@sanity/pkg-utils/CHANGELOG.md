@@ -1,5 +1,24 @@
 # @sanity/pkg-utils
 
+## 10.9.2
+
+### Patch Changes
+
+- [#2973](https://github.com/sanity-io/pkg-utils/pull/2973) [`a8147d7`](https://github.com/sanity-io/pkg-utils/commit/a8147d7693893d40434904c7364db4ddabbe1f62) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to v1.1.4
+
+- [#2979](https://github.com/sanity-io/pkg-utils/pull/2979) [`cc771d2`](https://github.com/sanity-io/pkg-utils/commit/cc771d2386471ca64cc513c33dadd944f04f0755) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency vitest to ^4.1.10
+
+- [#2990](https://github.com/sanity-io/pkg-utils/pull/2990) [`f067d9a`](https://github.com/sanity-io/pkg-utils/commit/f067d9a19db5501c98ec2bc7896586c35122436f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.5
+
+- [#2991](https://github.com/sanity-io/pkg-utils/pull/2991) [`14d99f2`](https://github.com/sanity-io/pkg-utils/commit/14d99f2193ace1786924098a0b062f012cb5e4b5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency globby to ^16.2.1
+
+- [#2993](https://github.com/sanity-io/pkg-utils/pull/2993) [`c2b9b4a`](https://github.com/sanity-io/pkg-utils/commit/c2b9b4a619dfc6d276776da54c9a7e611dafceb0) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown-plugin-dts to v0.27.1
+
+- [#2994](https://github.com/sanity-io/pkg-utils/pull/2994) [`5665861`](https://github.com/sanity-io/pkg-utils/commit/566586114ae9e3b42573165ef1896781b6adfbdb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.0
+
+- Updated dependencies [[`cc771d2`](https://github.com/sanity-io/pkg-utils/commit/cc771d2386471ca64cc513c33dadd944f04f0755)]:
+  - @sanity/parse-package-json@2.2.2
+
 ## 10.9.1
 
 ### Patch Changes
