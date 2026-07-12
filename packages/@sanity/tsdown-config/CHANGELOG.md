@@ -1,5 +1,13 @@
 # @sanity/tsdown-config
 
+## 0.13.1
+
+### Patch Changes
+
+- [#3008](https://github.com/sanity-io/pkg-utils/pull/3008) [`abd8c07`](https://github.com/sanity-io/pkg-utils/commit/abd8c0792cfbe7a021bc861bb3dfb2cfb2de9cf9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vanilla-extract/rollup-plugin to ^1.5.4
+
+- [#3015](https://github.com/sanity-io/pkg-utils/pull/3015) [`d619032`](https://github.com/sanity-io/pkg-utils/commit/d6190327863a4c101f857f5825f41113c8a3f8c3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to v0.22.5
+
 ## 0.13.0
 
 ### Minor Changes

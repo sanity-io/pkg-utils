@@ -1,5 +1,20 @@
 # @sanity/pkg-utils
 
+## 11.0.1
+
+### Patch Changes
+
+- [#3008](https://github.com/sanity-io/pkg-utils/pull/3008) [`abd8c07`](https://github.com/sanity-io/pkg-utils/commit/abd8c0792cfbe7a021bc861bb3dfb2cfb2de9cf9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vanilla-extract/rollup-plugin to ^1.5.4
+
+- [#3009](https://github.com/sanity-io/pkg-utils/pull/3009) [`fe1e54b`](https://github.com/sanity-io/pkg-utils/commit/fe1e54b4bb3a46b2b1f1de68a3343a7e9c646380) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency prettier to ^3.9.5
+
+- [#3013](https://github.com/sanity-io/pkg-utils/pull/3013) [`e048141`](https://github.com/sanity-io/pkg-utils/commit/e048141dc9eb93d7c27cb707c419d94a1767b6cd) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to v1.1.5
+
+- [#3014](https://github.com/sanity-io/pkg-utils/pull/3014) [`f49c859`](https://github.com/sanity-io/pkg-utils/commit/f49c859839a24fdae1aea15eb7305ac377801779) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown-plugin-dts to v0.27.4
+
+- Updated dependencies [[`d619032`](https://github.com/sanity-io/pkg-utils/commit/d6190327863a4c101f857f5825f41113c8a3f8c3)]:
+  - @sanity/parse-package-json@2.2.3
+
 ## 11.0.0
 
 ### Major Changes
