@@ -75,13 +75,14 @@ export interface PackageOptions extends Pick<
    */
   styledComponents?: boolean | StyledComponentsOptions
   /**
-   * Enables `@sanity/vanilla-extract-rolldown-plugin` to extract CSS into a separate,
+   * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate,
    * `lightningcss`-optimized file. Pass `true` to use the defaults, or an object to customize.
    *
-   * By default (`extract.compatMode: true`) the config also injects the self-referential
-   * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
-   * `"./bundle.css"` export to `package.json` - see {@link PackageVanillaExtractOptions}.
-   * This is the same feature as `rollup.vanillaExtract` in `@sanity/pkg-utils`.
+   * By default (`inject: true`) the plugin also injects the self-referential
+   * `import "<pkg>/bundle.css"` and emits a `bundle.css.js` shim, and the config writes the
+   * conditional `"./bundle.css"` export to `package.json` - see
+   * {@link PackageVanillaExtractOptions}. This is the same feature as `rollup.vanillaExtract`
+   * in `@sanity/pkg-utils`.
    * @alpha
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
@@ -169,8 +170,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       chunkFileNames: resolveChunkFileNames(defaultOptions, outputFormat),
     }) satisfies Rolldown.OutputOptions
 
-  let outputOptions: UserConfig['outputOptions'] = resolveBaseOutputOptions
-  let treeshake: UserConfig['treeshake']
+  const outputOptions: UserConfig['outputOptions'] = resolveBaseOutputOptions
   let customExports: ((exportsMap: Record<string, unknown>) => Record<string, unknown>) | undefined
 
   const plugins: Rolldown.Plugin[] = []
@@ -193,86 +193,44 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   }
   if (options.vanillaExtract) {
     // Everything vanilla-extract related is lazy loaded, like `reactCompiler`, so it's only paid
-    // for when the option is enabled: `@sanity/vanilla-extract-rolldown-plugin` compiles the
-    // `.css.ts` files, extracts the CSS into a single file, and optimizes it with `lightningcss`.
+    // for when the option is enabled: `@sanity/vanilla-extract-tsdown-plugin` compiles the
+    // `.css.ts` files, extracts the CSS into a single `lightningcss`-optimized file, and (with
+    // `inject`, the default) injects the self-referential CSS import and emits the no-op JS shim
+    // of the conditional CSS export pattern.
     const [
       {vanillaExtractPlugin},
       {
-        composeIntro,
         createConditionalCssExport,
         insertCssExport,
-        readPackageName,
         resolveVanillaExtract,
-        resolveVanillaExtractCssName,
+        resolveVanillaExtractFileName,
       },
     ] = await Promise.all([
-      import('@sanity/vanilla-extract-rolldown-plugin'),
+      import('@sanity/vanilla-extract-tsdown-plugin'),
       import('./vanillaExtract.ts'),
     ])
 
-    // Resolve vanilla-extract options + the conditional CSS export "compat mode"
     const vanillaExtract = resolveVanillaExtract(options.vanillaExtract)
-    const cssName = resolveVanillaExtractCssName(vanillaExtract.options)
+    const cssFileName = resolveVanillaExtractFileName(vanillaExtract.options)
 
-    // The plugin owns the CSS pipeline (compile, extract, optimize, and - in compat mode - the
-    // no-op JS shim), while the config wires up the tsdown-specific parts of compat mode below
-    // (the self-referential import and the conditional `package.json` export).
     plugins.push(
-      ...vanillaExtractPlugin({
+      vanillaExtractPlugin({
         identifiers: vanillaExtract.options.identifiers,
+        fileName: cssFileName,
         minify: vanillaExtract.options.minify,
-        browserslist: vanillaExtract.options.browserslist,
-        extract: {
-          name: cssName,
-          sourcemap: vanillaExtract.options.extract?.sourcemap,
-          compatMode: vanillaExtract.compatMode,
-        },
+        target: vanillaExtract.options.target,
+        inject: vanillaExtract.inject,
       }),
     )
 
-    // The vanilla-extract plugin resolves each compiled `.css.ts` module's CSS to an external,
-    // side-effect-only `<file>.vanilla.css` import and extracts the CSS into a single file. The
-    // imports are redundant once the CSS is extracted, so the plugin marks them side-effect free
-    // in its `resolveId` hook, letting tree-shaking drop them up front. This config-level rule is
-    // kept as belt-and-braces (e.g. should another plugin resolve the virtual modules first):
-    // the plugin's `generateBundle` fallback only strips imports at the start of a line, which
-    // the minifier's statement merging can defeat (e.g. `a(), require("….vanilla.css")` in CJS).
-    // Modules not matching the rule keep the default tree-shaking behavior.
-    treeshake = {moduleSideEffects: [{test: /\.vanilla\.css$/, external: true, sideEffects: false}]}
-
-    // In compat mode, the self-referential `import "<pkg>/<css>"` needs the package name.
-    const cssImportId = vanillaExtract.compatMode
-      ? `${readPackageName(process.cwd())}/${cssName}`
-      : undefined
-
-    outputOptions = (defaultOptions, outputFormat, context) => ({
-      ...resolveBaseOutputOptions(defaultOptions, outputFormat),
-      // Emit the extracted CSS (and its sourcemap) with a stable name at the root of the tsdown
-      // default `outDir` ('dist', not configurable yet) instead of rolldown's default
-      // `assets/[name]-[hash][extname]`, so it can back the conditional `./<css>` export.
-      assetFileNames: '[name][extname]',
-      // In compat mode, inject the self-referential CSS import into the `index` entry chunk so
-      // userland does not need to set `outputOptions.intro` themselves. Use `require()` for
-      // CommonJS output (a top-level `import` would be invalid in a `.cjs` bundle).
-      ...(cssImportId && !context.cjsDts && (outputFormat === 'es' || outputFormat === 'cjs')
-        ? {
-            intro: composeIntro(
-              outputFormat === 'cjs'
-                ? `require(${JSON.stringify(cssImportId)})`
-                : `import ${JSON.stringify(cssImportId)}`,
-            ),
-          }
-        : {}),
-    })
-
-    if (vanillaExtract.compatMode) {
-      // In compat mode (the plugin already emits the no-op JS shim that the `node`/`default`
-      // conditions resolve to), write the conditional `./<css>` export to `package.json` (and,
-      // through tsdown, mirror it into `publishConfig.exports`) so userland does not have to
-      // maintain it.
-      const conditionalCssExport = createConditionalCssExport(cssName, 'dist')
+    if (vanillaExtract.inject) {
+      // The plugin handles the runtime side of the conditional CSS export pattern (the
+      // self-referential import and the no-op JS shim); the config completes it by writing the
+      // conditional `./<fileName>` export to `package.json` (and, through tsdown, mirroring it
+      // into `publishConfig.exports`) so userland does not have to maintain it.
+      const conditionalCssExport = createConditionalCssExport(cssFileName, 'dist')
       customExports = (exportsMap) =>
-        insertCssExport(exportsMap, `./${cssName}`, conditionalCssExport)
+        insertCssExport(exportsMap, `./${cssFileName}`, conditionalCssExport)
     }
   }
 
@@ -296,14 +254,12 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     plugins,
     publint,
     report,
-    treeshake,
     tsconfig,
     minify: {compress: true, codegen: false, mangle: false},
-    // `treeshake` stays `undefined` (tsdown's/rolldown's default, `moduleSideEffects: true`)
-    // unless vanilla-extract needs its targeted rule above. Previously this set the equivalent of
-    // `moduleSideEffects: 'no-external'` (with a `.css` exemption), which stripped intentional
-    // side-effect-only imports of external packages (e.g. `import 'react-time-ago/locale/en'`)
-    // from the output. The default preserves those imports while still honoring `package.json`
-    // `sideEffects` fields for bundled modules.
+    // `treeshake` is left at tsdown's/rolldown's default (`moduleSideEffects: true`). Previously
+    // this set the equivalent of `moduleSideEffects: 'no-external'` (with a `.css` exemption),
+    // which stripped intentional side-effect-only imports of external packages (e.g.
+    // `import 'react-time-ago/locale/en'`) from the output. The default preserves those imports
+    // while still honoring `package.json` `sideEffects` fields for bundled modules.
   })
 }

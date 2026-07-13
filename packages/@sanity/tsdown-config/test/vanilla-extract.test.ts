@@ -23,11 +23,9 @@ describe('vanilla-extract-library', () => {
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
 
-    // `extract.sourcemap` defaults to true, so a sourcemap is emitted and linked
-    expect(bundleCss).toContain('/*# sourceMappingURL=bundle.css.map*/')
-    await expect(
-      readFile(path.join(fixtureDir, 'dist/bundle.css.map'), 'utf-8'),
-    ).resolves.toContain('"version"')
+    // CSS sourcemaps are intentionally skipped, aligned with `@tsdown/css` (and Vite lib mode)
+    expect(bundleCss).not.toContain('sourceMappingURL')
+    await expect(readFile(path.join(fixtureDir, 'dist/bundle.css.map'), 'utf-8')).rejects.toThrow()
   })
 
   test('emits the no-op JS shim and its type declarations', async () => {
@@ -114,14 +112,10 @@ describe('vanillaExtract option', () => {
     expect(config.exports).not.toHaveProperty('customExports')
   })
 
-  test('lazily loads the vanilla-extract plugin pipeline when enabled', async () => {
-    // The pipeline (`@sanity/vanilla-extract-rolldown-plugin`, which pulls in the CSS toolchain)
+  test('lazily loads the vanilla-extract plugin when enabled', async () => {
+    // The plugin (`@sanity/vanilla-extract-tsdown-plugin`, which pulls in the CSS toolchain)
     // is only dynamically imported when the option is enabled, like `reactCompiler`.
-    expect(getPluginNames(await defineConfig({vanillaExtract: true}))).toEqual([
-      'vanilla-extract',
-      'vanilla-extract:optimize-css',
-      'vanilla-extract:css-shim',
-    ])
+    expect(getPluginNames(await defineConfig({vanillaExtract: true}))).toEqual(['vanilla-extract'])
   })
 
   test('adds the conditional CSS export through `exports.customExports`', async () => {
@@ -148,8 +142,8 @@ describe('vanillaExtract option', () => {
     expect(Object.keys(result)).toEqual(['.', './bundle.css', './package.json'])
   })
 
-  test('respects a custom `extract.name`', async () => {
-    const config = await defineConfig({vanillaExtract: {extract: {name: 'styles.css'}}})
+  test('respects a custom `fileName`', async () => {
+    const config = await defineConfig({vanillaExtract: {fileName: 'styles.css'}})
 
     const exportsOption = config.exports
     if (typeof exportsOption !== 'object' || typeof exportsOption?.customExports !== 'function') {
@@ -169,12 +163,12 @@ describe('vanillaExtract option', () => {
     })
   })
 
-  test('skips the compat mode wiring when `extract.compatMode` is false', async () => {
-    const config = await defineConfig({vanillaExtract: {extract: {compatMode: false}}})
+  test('skips the conditional CSS export wiring when `inject` is false', async () => {
+    const config = await defineConfig({vanillaExtract: {inject: false}})
 
-    // The vanilla-extract + optimize-css plugins are still applied, but the shim is not…
-    expect(getPluginNames(config)).toEqual(['vanilla-extract', 'vanilla-extract:optimize-css'])
-    // …and neither is the exports wiring
+    // The vanilla-extract plugin is still applied (it extracts without injecting)…
+    expect(getPluginNames(config)).toEqual(['vanilla-extract'])
+    // …but the exports wiring is not
     expect(config.exports).not.toHaveProperty('customExports')
   })
 })

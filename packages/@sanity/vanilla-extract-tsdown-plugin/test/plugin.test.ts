@@ -7,15 +7,20 @@ import {vanillaExtractPlugin, type Options} from '../src/index.ts'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
 
-async function buildFixture(options?: Options, format: 'esm' | 'cjs' = 'esm') {
+/**
+ * Outside tsdown (which provides the package name via its `tsdownConfigResolved` hook) the
+ * plugin resolves the name for the injected self-referential import from the working
+ * directory's package.json - in these tests that's this package itself.
+ */
+const selfReferentialSpecifier = '@sanity/vanilla-extract-tsdown-plugin/bundle.css'
+
+async function buildFixture(options?: Options, format: 'esm' | 'cjs' = 'esm', sourcemap = false) {
   const bundle = await rolldown({
     input: path.join(fixtureDir, 'index.ts'),
     plugins: [vanillaExtractPlugin(options)],
   })
   try {
-    // Mirrors the `assetFileNames` used by `@sanity/tsdown-config`, so the extracted CSS keeps a
-    // stable name instead of rolldown's default `assets/[name]-[hash][extname]`.
-    const {output} = await bundle.generate({format, assetFileNames: '[name][extname]'})
+    const {output} = await bundle.generate({format, sourcemap})
     return output
   } finally {
     await bundle.close()
@@ -54,44 +59,25 @@ describe('vanillaExtractPlugin', () => {
     expect(bundleCss.indexOf('#040506')).toBeLessThan(bundleCss.indexOf('#010203'))
   })
 
-  test('emits a sourcemap and links it from the CSS', async () => {
+  test('does not emit a CSS sourcemap', async () => {
+    // Aligned with `@tsdown/css` (and Vite lib mode), which intentionally skip CSS sourcemaps
     const output = await buildFixture()
-
-    expect(findAsset(output, 'bundle.css')).toContain('/*# sourceMappingURL=bundle.css.map*/')
-    expect(findAsset(output, 'bundle.css.map')).toContain('"version"')
-  })
-
-  test('skips the sourcemap when `extract.sourcemap` is false', async () => {
-    const output = await buildFixture({extract: {sourcemap: false}})
 
     expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.map')).toBe(false)
     expect(findAsset(output, 'bundle.css')).not.toContain('sourceMappingURL')
   })
 
-  test('emits the no-op JS shim and its type declarations by default', async () => {
-    const output = await buildFixture()
-
-    expect(findAsset(output, 'bundle.css.js')).toContain('export default ""')
-    const shimDts = findAsset(output, 'bundle.css.d.ts')
-    expect(shimDts).toContain('declare const _default: string')
-    expect(shimDts).toContain('export default _default')
-  })
-
-  test('skips the shim when `extract.compatMode` is false', async () => {
-    const output = await buildFixture({extract: {compatMode: false}})
-
-    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
-    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
-    expect(
-      vanillaExtractPlugin({extract: {compatMode: false}}).map((plugin) => plugin.name),
-    ).toEqual(['vanilla-extract', 'vanilla-extract:optimize-css'])
-  })
-
   test.each(['esm', 'cjs'] as const)(
-    'strips the virtual .vanilla.css imports from the %s output',
+    'injects the self-referential CSS import into the %s entry chunk',
     async (format) => {
       const output = await buildFixture(undefined, format)
       const {code} = findEntryChunk(output)
+
+      expect(code).toContain(
+        format === 'cjs'
+          ? `require("${selfReferentialSpecifier}");`
+          : `import "${selfReferentialSpecifier}";`,
+      )
 
       // The styles must be extracted, not inlined or imported in the JS output
       expect(code).not.toContain('.vanilla.css')
@@ -103,21 +89,66 @@ describe('vanillaExtractPlugin', () => {
     },
   )
 
-  test('respects a custom `extract.name`', async () => {
-    const output = await buildFixture({extract: {name: 'styles.css'}})
+  test('keeps the JS sourcemap intact when injecting (native magic-string)', async () => {
+    const output = await buildFixture(undefined, 'esm', true)
+    const chunk = findEntryChunk(output)
+
+    expect(chunk.code.startsWith(`import "${selfReferentialSpecifier}";\n`)).toBe(true)
+    expect(chunk.map).toBeTruthy()
+    expect(chunk.map?.mappings.length).toBeGreaterThan(0)
+  })
+
+  test('emits the no-op JS shim and its type declarations by default', async () => {
+    const output = await buildFixture()
+
+    expect(findAsset(output, 'bundle.css.js')).toContain('export default ""')
+    const shimDts = findAsset(output, 'bundle.css.d.ts')
+    expect(shimDts).toContain('declare const _default: string')
+    expect(shimDts).toContain('export default _default')
+  })
+
+  test('skips the import and shim when `inject` is false', async () => {
+    const output = await buildFixture({inject: false})
+
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
+    expect(findEntryChunk(output).code).not.toContain(selfReferentialSpecifier)
+
+    // The CSS itself is still extracted
+    expect(findAsset(output, 'bundle.css')).toContain('#010203')
+  })
+
+  test('respects a custom `fileName`', async () => {
+    const output = await buildFixture({fileName: 'styles.css'})
 
     expect(findAsset(output, 'styles.css')).toContain('#010203')
-    expect(findAsset(output, 'styles.css')).toContain('/*# sourceMappingURL=styles.css.map*/')
     expect(findAsset(output, 'styles.css.js')).toContain('export default ""')
     expect(findAsset(output, 'styles.css.d.ts')).toContain('declare const _default: string')
+    expect(findEntryChunk(output).code).toContain(
+      'import "@sanity/vanilla-extract-tsdown-plugin/styles.css";',
+    )
   })
 
   test('keeps the CSS readable when `minify` is false', async () => {
     const output = await buildFixture({minify: false})
 
-    // lightningcss still runs (applying browserslist targets), but without minification the
-    // declarations keep their whitespace
+    // lightningcss still runs (applying the syntax lowering targets), but without minification
+    // the declarations keep their whitespace
     expect(findAsset(output, 'bundle.css')).toContain('padding: 8px')
+  })
+
+  test('lowers CSS syntax for esbuild-style `target`s, like `css.target` in @tsdown/css', async () => {
+    const [lowered, modern] = await Promise.all([
+      buildFixture({target: 'chrome61'}),
+      buildFixture({target: false, minify: false}),
+    ])
+
+    // chrome61 predates the `inset` shorthand, so it is flattened into `top`/`right`/…
+    expect(findAsset(lowered, 'bundle.css')).not.toContain('inset:')
+    expect(findAsset(lowered, 'bundle.css')).toContain('top:')
+
+    // `target: false` disables syntax lowering entirely
+    expect(findAsset(modern, 'bundle.css')).toContain('inset: 0')
   })
 
   test('defaults to short identifiers, and passes `identifiers` through', async () => {
@@ -135,19 +166,21 @@ describe('vanillaExtractPlugin', () => {
 describe('plugin hook filters', () => {
   // Regression for https://github.com/vanilla-extract-css/vanilla-extract/issues/1641: the hooks
   // declare filters so rolldown can skip the Rust ↔ JS roundtrip for non-matching modules.
-  test('the transform and resolveId hooks declare id filters', () => {
-    const [core] = vanillaExtractPlugin()
-    if (!core) {
-      expect.unreachable('expected the core vanilla-extract plugin')
-    }
+  test('the transform, resolveId and load hooks declare id filters', () => {
+    const plugin = vanillaExtractPlugin()
 
-    expect(core.name).toBe('vanilla-extract')
+    expect(plugin.name).toBe('vanilla-extract')
 
-    const {transform, resolveId} = core
-    if (typeof transform !== 'object' || typeof resolveId !== 'object') {
-      expect.unreachable('expected the transform and resolveId hooks to be object hooks')
+    const {transform, resolveId, load} = plugin
+    if (
+      typeof transform !== 'object' ||
+      typeof resolveId !== 'object' ||
+      typeof load !== 'object'
+    ) {
+      expect.unreachable('expected the transform, resolveId and load hooks to be object hooks')
     }
     expect(transform.filter).toMatchObject({id: expect.any(RegExp)})
     expect(resolveId.filter).toMatchObject({id: expect.any(RegExp)})
+    expect(load.filter).toMatchObject({id: expect.any(RegExp)})
   })
 })

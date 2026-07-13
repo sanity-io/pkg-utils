@@ -1,47 +1,34 @@
-import {readFileSync} from 'node:fs'
-import path from 'node:path'
-import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-rolldown-plugin'
-import type {Rolldown} from 'tsdown'
+import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 
 /** The default name of the extracted CSS file. */
-const DEFAULT_VANILLA_EXTRACT_CSS_NAME = 'bundle.css'
+const DEFAULT_VANILLA_EXTRACT_CSS_FILE_NAME = 'bundle.css'
 
 /**
- * Options for the `@sanity/vanilla-extract-rolldown-plugin` integration, the same options as the
- * plugin itself (`identifiers`, `minify`, `browserslist`, and `extract`), with `extract.compatMode`
- * extended to also wire up the tsdown-specific parts of the conditional CSS export pattern.
+ * Options for the `@sanity/vanilla-extract-tsdown-plugin` integration - the same options as the
+ * plugin itself (`identifiers`, `fileName`, `minify`, and `target`, all modeled after the `css`
+ * options of `@tsdown/css`), with `inject` extended to also write the conditional CSS export to
+ * `package.json`.
  * @public
  */
-export interface PackageVanillaExtractOptions extends Omit<VanillaExtractPluginOptions, 'extract'> {
+export interface PackageVanillaExtractOptions extends Omit<VanillaExtractPluginOptions, 'inject'> {
   /**
-   * Extract the CSS into a separate file. The CSS is always extracted, so this configures _how_.
+   * Automatically wires up the conditional CSS export pattern so userland does not have to.
+   * When enabled, the plugin:
+   *
+   * - injects the self-referential `import "<pkg-name>/<fileName>"` into the entry chunks that
+   *   use vanilla-extract styles, and
+   * - emits a no-op `<fileName>.js` shim (plus a `<fileName>.d.ts` declaration) for runtimes
+   *   that cannot import `.css` files,
+   *
+   * and the config writes the conditional `"./<fileName>"` export to `package.json`
+   * (`browser`/`style` → the real CSS, `node`/`default` → the shim).
+   *
+   * The result is that `import "<pkg>/<fileName>"` resolves to the real CSS in
+   * bundlers/browsers and to the no-op shim in Node and similar runtimes. Disable it to wire
+   * these up yourself.
+   * @defaultValue true
    */
-  extract?: {
-    /**
-     * Name of the emitted `.css` file (and, with `compatMode`, the `exports` subpath + shim base).
-     * @defaultValue "bundle.css"
-     */
-    name?: string
-    /**
-     * Generate a `.css.map` sourcemap file.
-     * @defaultValue true
-     */
-    sourcemap?: boolean
-    /**
-     * Compatibility mode automatically wires up the conditional CSS export pattern so userland does
-     * not have to. When enabled, the config:
-     *
-     * - injects `import "<pkg-name>/<name>"` into the `index` entry chunk,
-     * - emits a no-op `<name>.js` shim for runtimes that cannot import `.css` files, and
-     * - writes the conditional `"./<name>"` export to `package.json`
-     *   (`browser`/`style` → the real CSS, `node`/`default` → the shim).
-     *
-     * The result is that `import "<pkg>/<name>"` resolves to the real CSS in bundlers/browsers and
-     * to the no-op shim in Node and similar runtimes. Disable it to wire these up yourself.
-     * @defaultValue true
-     */
-    compatMode?: boolean
-  }
+  inject?: boolean
 }
 
 /** @internal */
@@ -50,15 +37,15 @@ export interface ResolvedVanillaExtract {
   /** Normalized options (the object form, or `{}` when `vanillaExtract: true`). */
   options: PackageVanillaExtractOptions
   /**
-   * Whether to automatically wire up the conditional CSS export pattern (intro import, JS shim, and
-   * the `package.json` export). Only `true` when vanilla-extract is enabled.
+   * Whether to automatically wire up the conditional CSS export pattern (the plugin's `inject`
+   * plus the `package.json` export). Only `true` when vanilla-extract is enabled.
    */
-  compatMode: boolean
+  inject: boolean
 }
 
 /**
- * Normalize the `vanillaExtract` option into a consistent shape and resolve whether compatibility
- * mode is active.
+ * Normalize the `vanillaExtract` option into a consistent shape and resolve whether the
+ * conditional CSS export wiring (`inject`) is active.
  * @internal
  */
 export function resolveVanillaExtract(
@@ -66,9 +53,9 @@ export function resolveVanillaExtract(
 ): ResolvedVanillaExtract {
   const enabled = Boolean(value)
   const options: PackageVanillaExtractOptions = value === true || !value ? {} : value
-  const compatMode = enabled ? (options.extract?.compatMode ?? true) : false
+  const inject = enabled ? (options.inject ?? true) : false
 
-  return {enabled, options, compatMode}
+  return {enabled, options, inject}
 }
 
 /**
@@ -76,12 +63,12 @@ export function resolveVanillaExtract(
  * bundle that is shared across runtimes, so there are no runtime-suffixed defaults.
  * @internal
  */
-export function resolveVanillaExtractCssName(options: PackageVanillaExtractOptions): string {
-  return options.extract?.name ?? DEFAULT_VANILLA_EXTRACT_CSS_NAME
+export function resolveVanillaExtractFileName(options: PackageVanillaExtractOptions): string {
+  return options.fileName ?? DEFAULT_VANILLA_EXTRACT_CSS_FILE_NAME
 }
 
 /**
- * Build the conditional CSS export object that vanilla-extract compat mode expects, e.g.
+ * Build the conditional CSS export object that the vanilla-extract `inject` wiring expects, e.g.
  * ```json
  * {
  *   "browser": "./dist/bundle.css",
@@ -93,16 +80,16 @@ export function resolveVanillaExtractCssName(options: PackageVanillaExtractOptio
  * @internal
  */
 export function createConditionalCssExport(
-  cssName: string,
+  cssFileName: string,
   outDir: string,
 ): Record<string, string> {
-  const cssFile = `./${outDir}/${cssName}`
-  const shimFile = `./${outDir}/${cssName}.js`
+  const cssFile = `./${outDir}/${cssFileName}`
+  const shimFile = `./${outDir}/${cssFileName}.js`
   return {browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
 }
 
 /**
- * Insert (or replace) the `"./<cssName>"` export in an `exports`-shaped map, preserving the
+ * Insert (or replace) the `"./<cssFileName>"` export in an `exports`-shaped map, preserving the
  * existing order and placing it before `./package.json` when present. Used with tsdown's
  * `exports.customExports` so both `exports` and `publishConfig.exports` receive the entry.
  * @internal
@@ -126,33 +113,4 @@ export function insertCssExport(
     nextExports[exportKey] = conditionalExport
   }
   return nextExports
-}
-
-const RE_DTS = /\.d\.[cm]?ts$/
-
-/**
- * Build an `intro` function that prepends `autoImport` to the `index` entry chunk only. The
- * `.d.ts` chunks generated by tsdown share the build, so they are explicitly excluded.
- * @internal
- */
-export function composeIntro(autoImport: string): (chunk: Rolldown.RenderedChunk) => string {
-  return (chunk) =>
-    chunk.isEntry && chunk.name === 'index' && !RE_DTS.test(chunk.fileName) ? `${autoImport}\n` : ''
-}
-
-/**
- * Resolve the package name from `package.json`, required by compat mode to inject the
- * self-referential CSS import.
- * @internal
- */
-export function readPackageName(cwd: string): string {
-  const pkgPath = path.resolve(cwd, 'package.json')
-  // oxlint-disable-next-line no-unsafe-type-assertion
-  const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as {name?: unknown}
-  if (typeof pkg.name !== 'string' || !pkg.name) {
-    throw new Error(
-      `Unable to resolve the package name from ${pkgPath}, which is required by \`vanillaExtract\` compat mode to inject the self-referential CSS import. Set \`vanillaExtract: {extract: {compatMode: false}}\` to wire up the CSS export manually.`,
-    )
-  }
-  return pkg.name
 }

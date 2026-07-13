@@ -72,8 +72,8 @@ export default defineConfig({
 
 The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
 `.css.ts` files into a separate, `lightningcss`-optimized file (`dist/bundle.css` by default).
-Under the hood it uses [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme),
-a rolldown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
+Under the hood it uses [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme),
+a tsdown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
 into your project. Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
 
 ```sh
@@ -89,10 +89,10 @@ export default defineConfig({
 })
 ```
 
-By default a compatibility mode is active that automatically wires up the conditional CSS export
-pattern:
+By default (`inject: true`) the conditional CSS export pattern is wired up automatically:
 
-- injects the self-referential `import "<pkg>/bundle.css"` into the `index` entry chunk,
+- injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
+  vanilla-extract styles,
 - emits a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`) for runtimes that cannot import
   `.css` files, and
 - writes the conditional `"./bundle.css"` export to `package.json` (`browser`/`style` → the real
@@ -108,9 +108,9 @@ consumers by adding it to `sideEffects` in `package.json`:
 }
 ```
 
-Pass an options object instead of `true` to customize (e.g. `minify`, `browserslist`,
-`extract.name`), or set `extract.compatMode: false` to wire up the import, shim, and export
-yourself.
+Pass an options object instead of `true` to customize - the options are modeled after the
+[`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
+`target`) - or set `inject: false` to wire up the import, shim, and export yourself.
 
 ## dts
 
