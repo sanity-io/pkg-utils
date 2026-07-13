@@ -133,6 +133,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   const hash = false
   const format = options.format ?? 'esm'
   const inputOptions = {
+    // https://github.com/rolldown/rolldown/blob/main/packages/rolldown/src/options/docs/preserve-entry-signatures.md#strict
     preserveEntrySignatures: 'strict',
     experimental: {attachDebugInfo: 'none'},
     ...(styledComponents !== false && {
