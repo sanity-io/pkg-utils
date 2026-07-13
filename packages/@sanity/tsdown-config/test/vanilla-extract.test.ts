@@ -97,6 +97,35 @@ describe('vanilla-extract-library', () => {
   })
 })
 
+describe('vanilla-extract-node-target-library', () => {
+  const nodeTargetFixtureDir = path.resolve(
+    __dirname,
+    'fixtures/vanilla-extract-node-target-library',
+  )
+
+  test('falls back to @sanity/browserslist-config for the node-only `target`', async () => {
+    // The fixture builds with `target: 'node20'` and `minify: false`: a JS-runtime-only target
+    // says nothing about the browsers the extracted CSS runs in, so the CSS syntax lowering
+    // targets fall back to `@sanity/browserslist-config`. lightningcss processing the CSS with
+    // those targets is observable even without minification, as it normalizes the authored
+    // `rgb(1, 2, 3)` to `#010203` - had the node-only target disabled the processing (the way
+    // `@tsdown/css` behaves), the authored form would pass through untouched.
+    const bundleCss = await readFile(path.join(nodeTargetFixtureDir, 'dist/bundle.css'), 'utf-8')
+    expect(bundleCss).toContain('#010203')
+    expect(bundleCss).not.toContain('rgb(1, 2, 3)')
+  })
+
+  test('lowers CSS syntax for the fallback browserslist targets', async () => {
+    // `light-dark()` is not supported by all browsers of `@sanity/browserslist-config`, so
+    // lightningcss lowers it to its custom-property polyfill. (Once every browser in the
+    // browserslist query supports `light-dark()` this marker stops being lowered - swap it for
+    // a newer CSS feature if this assertion starts failing after a caniuse-lite update.)
+    const bundleCss = await readFile(path.join(nodeTargetFixtureDir, 'dist/bundle.css'), 'utf-8')
+    expect(bundleCss).not.toContain('light-dark(')
+    expect(bundleCss).toContain('var(--lightningcss-light')
+  })
+})
+
 function getPluginNames(config: UserConfig) {
   const {plugins} = config
   if (!Array.isArray(plugins)) return undefined
