@@ -66,8 +66,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       knip:
-        specifier: ^6.25.0
-        version: 6.25.0
+        specifier: ^6.26.0
+        version: 6.26.0
       lint-staged:
         specifier: ^16.4.0
         version: 16.4.0
@@ -993,39 +993,6 @@ importers:
       react:
         specifier: ^19.2.7
         version: 19.2.7
-
-  playground/reference-cjs:
-    devDependencies:
-      '@tsconfig/node-lts':
-        specifier: 24.0.0
-        version: 24.0.0
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
-
-  playground/reference-cjs-legacy: {}
-
-  playground/reference-cjs-only: {}
-
-  playground/reference-esm:
-    devDependencies:
-      '@tsconfig/node-lts':
-        specifier: 24.0.0
-        version: 24.0.0
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
-
-  playground/reference-esm-legacy: {}
-
-  playground/reference-esm-only:
-    devDependencies:
-      '@tsconfig/node-lts':
-        specifier: 24.0.0
-        version: 24.0.0
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
 
   playground/runtime-astro:
     devDependencies:
@@ -7227,9 +7194,6 @@ packages:
     peerDependencies:
       '@tapjs/core': 4.5.8
 
-  '@tsconfig/node-lts@24.0.0':
-    resolution: {integrity: sha512-8mSTqWwCd6aQpvxSrpQlMoA9RiUZSs7bYhL5qsLXIIaN9HQaINeoydrRu/Y7/fws4bvfuyhs0BRnW9/NI8tySg==}
-
   '@tsconfig/node14@14.1.8':
     resolution: {integrity: sha512-SjGT+qPvh8Uhc849yNMD0ZIPr69AyB7Z46nMqhrI3gCVocd6mhI0jP4YE4onO/ufpmengRfTxNMpdpKEp2xRIg==}
 
@@ -10853,8 +10817,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.25.0:
-    resolution: {integrity: sha512-Q3n41VjOOB/aqsbxb8kallAcFKrUz3b2S5fD5pTODljVpP01t+rvAgy2x3j0Cq8yEpRRHNdar1vHuqFfGuIakQ==}
+  knip@6.26.0:
+    resolution: {integrity: sha512-e9eELEEpBpGTd4H4HB7818/DYj9dMzMyUqAddfYwUN/EbSkgIjOuWEF96W/xHsmV0SDrsdXjIM+oZ2xpPzPsBA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -21419,8 +21383,6 @@ snapshots:
     dependencies:
       '@tapjs/core': 4.5.8(@swc/core@1.15.43)(@types/node@24.13.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
-  '@tsconfig/node-lts@24.0.0': {}
-
   '@tsconfig/node14@14.1.8': {}
 
   '@tsconfig/node16@16.1.8': {}
@@ -25391,15 +25353,15 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.25.0:
+  knip@6.26.0:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.4)
+      fdir: 6.5.0(picomatch@4.0.5)
       formatly: 0.3.0
       get-tsconfig: 4.14.0
       jiti: 2.7.0
       oxc-parser: 0.137.0
       oxc-resolver: 11.21.3
-      picomatch: 4.0.4
+      picomatch: 4.0.5
       smol-toml: 1.6.1
       strip-json-comments: 5.0.3
       tinyglobby: 0.2.17
