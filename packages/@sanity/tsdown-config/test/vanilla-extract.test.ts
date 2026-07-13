@@ -108,7 +108,6 @@ describe('vanillaExtract option', () => {
     }
     // Without vanilla-extract there's no `assetFileNames`/`intro` wiring, only the base options
     expect(await outputOptions({}, 'es', {cjsDts: false})).toEqual({
-      hoistTransitiveImports: false,
       chunkFileNames: expect.any(Function),
     })
     expect(config.exports).not.toHaveProperty('customExports')
