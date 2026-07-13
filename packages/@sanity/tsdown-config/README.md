@@ -130,6 +130,38 @@ export default defineConfig({
 })
 ```
 
+## Isolated declarations
+
+If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsconfig#isolated-declarations-tsconfigjson)
+preset — which makes tsdown generate the `.d.ts` files with oxc's fast isolated declarations
+transform — annotate the default export of `tsdown.config.ts` with `satisfies Promise<UserConfig>`:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
+
+export default defineConfig() satisfies Promise<UserConfig>
+```
+
+Without the annotation, type-checking `tsdown.config.ts` with the `@sanity/tsconfig` presets (they
+enable `declaration`) fails with TS2883 in pnpm projects: the inferred type of the default export
+can only be named through `@sanity/tsdown-config`'s own copy of `tsdown`, which isn't portable.
+`satisfies Promise<UserConfig>` names the type through your own `tsdown` dependency instead.
+
+Keep the `isolated-declarations` preset scoped to the tsconfig that tsdown builds with (e.g. a
+`tsconfig.dist.json` that only includes `./src`). If `isolatedDeclarations` covers
+`tsdown.config.ts` itself, the default export can't be inferred at all (TS9037), and the config has
+to move into an explicitly annotated variable instead:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
+
+const config: Promise<UserConfig> = defineConfig()
+
+export default config
+```
+
 ## define
 
 tsdown's `define` option is also passed through as-is. It replaces global identifiers with constant
