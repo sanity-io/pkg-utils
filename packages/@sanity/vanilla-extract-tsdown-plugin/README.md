@@ -11,12 +11,15 @@ the Rust ↔ JS roundtrip for modules that aren't vanilla-extract related
 
 The plugin compiles all `.css.ts` modules and extracts their CSS into a single file (`bundle.css`
 by default), optimized and minified with [lightningcss](https://lightningcss.dev), following the
-same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css). With
-`inject` (the default) it wires up the whole conditional CSS export pattern: the self-referential
-`import "<pkg>/bundle.css"` is injected into the entry chunks — through rolldown's native
-magic-string, so sourcemaps stay intact — a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`)
-is emitted for the `node`/`default` conditions of the export to point at, so the import is
-harmless in runtimes that cannot import `.css` files, and when tsdown's
+same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css).
+
+Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; `inject: true`
+injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —
+through rolldown's native magic-string, so sourcemaps stay intact. `inject: {nodeCompat: true}`
+additionally wires up the whole conditional CSS export pattern: the injected import becomes the
+self-referential `import "<pkg>/bundle.css"`, a no-op `bundle.css.js` shim (plus
+`bundle.css.d.ts`) is emitted for the `node`/`default` conditions of the export to point at, so
+the import is harmless in runtimes that cannot import `.css` files, and when tsdown's
 [`exports` feature](https://tsdown.dev/options/package-exports) is enabled, the conditional
 `"./bundle.css"` export is written to `package.json` (`browser`/`style` → the real CSS,
 `node`/`default` → the shim) through the plugin's `tsdownConfig` hook.
@@ -39,9 +42,9 @@ export default defineConfig({
 ```
 
 If you're using [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsdown-config#vanilla-extract),
-prefer its `vanillaExtract` option instead: it uses this plugin under the hood, with tsdown's
-`exports` feature already enabled so the conditional `"./bundle.css"` export is maintained
-automatically.
+prefer its `vanillaExtract` option instead: it uses this plugin under the hood with the defaults
+most Sanity libraries want - `inject: {nodeCompat: true}`, and tsdown's `exports` feature already
+enabled so the conditional `"./bundle.css"` export is maintained automatically.
 
 ## Options
 
@@ -74,14 +77,14 @@ vanillaExtractPlugin({
    */
   target: 'chrome90',
   /**
-   * Inject a CSS import into the JS output, like `css.inject` — but as the self-referential
-   * `import "<pkg>/<fileName>"` of the conditional CSS export pattern, plus the no-op JS shim,
-   * plus the conditional `"./<fileName>"` export in `package.json` (when tsdown's `exports`
-   * feature is enabled). Unlike `@tsdown/css` this defaults to `true`, as that pattern is the
-   * point of this plugin.
-   * @defaultValue true
+   * Inject an import of the extracted CSS into the JS output, like `css.inject` (and matching
+   * its default of `false`). `true` injects a relative `import "./<fileName>"`;
+   * `{nodeCompat: true}` instead injects the self-referential `import "<pkg>/<fileName>"` of
+   * the conditional CSS export pattern, plus the no-op JS shim, plus the conditional
+   * `"./<fileName>"` export in `package.json` (when tsdown's `exports` feature is enabled).
+   * @defaultValue false
    */
-  inject: true,
+  inject: {nodeCompat: true},
 })
 ```
 

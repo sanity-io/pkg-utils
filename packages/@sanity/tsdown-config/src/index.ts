@@ -10,7 +10,10 @@ import {
 /**
  * Options for the `vanillaExtract` option — the same options as
  * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`, and
- * `inject`, all modeled after the `css` options of `@tsdown/css`).
+ * `inject`, all modeled after the `css` options of `@tsdown/css`), with one different default:
+ * `inject` defaults to `{nodeCompat: true}` (instead of the plugin's `false`), wiring up the
+ * conditional CSS export pattern that Sanity libraries ship with. Set `inject: true` for a plain
+ * relative CSS import, or `inject: false` to only extract the CSS.
  * @public
  */
 export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
@@ -98,11 +101,10 @@ export interface PackageOptions extends Pick<
    * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate,
    * `lightningcss`-optimized file. Pass `true` to use the defaults, or an object to customize.
    *
-   * By default (`inject: true`) the plugin also injects the self-referential
-   * `import "<pkg>/bundle.css"` and emits a `bundle.css.js` shim, and the config writes the
-   * conditional `"./bundle.css"` export to `package.json` - see
-   * {@link PackageVanillaExtractOptions}. This is the same feature as `rollup.vanillaExtract`
-   * in `@sanity/pkg-utils`.
+   * By default (`inject: {nodeCompat: true}`) the plugin also injects the self-referential
+   * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
+   * `"./bundle.css"` export to `package.json` - see {@link PackageVanillaExtractOptions}.
+   * This is the same feature as `rollup.vanillaExtract` in `@sanity/pkg-utils`.
    * @alpha
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
@@ -175,14 +177,19 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   }
   if (options.vanillaExtract) {
     // Lazy loaded, like `reactCompiler`, so the CSS toolchain is only paid for when the option is
-    // enabled. The plugin owns the whole conditional CSS export pattern: it compiles the `.css.ts`
-    // files, extracts the CSS into a single `lightningcss`-optimized file, and (with `inject`, the
-    // default) injects the self-referential CSS import, emits the no-op JS shim, and writes the
-    // conditional `./<fileName>` export through this config's `exports` option (which its
+    // enabled. The plugin compiles the `.css.ts` files and extracts the CSS into a single
+    // `lightningcss`-optimized file. Its `inject` option is general purpose (and, like
+    // `css.inject` in `@tsdown/css`, disabled by default), so this config supplies the default
+    // most Sanity libraries want: `{nodeCompat: true}` wires up the whole conditional CSS export
+    // pattern - the self-referential CSS import, the no-op JS shim, and the conditional
+    // `./<fileName>` export written through this config's `exports` option (which the plugin's
     // `tsdownConfig` hook composes into).
     const {vanillaExtractPlugin} = await import('@sanity/vanilla-extract-tsdown-plugin')
     plugins.push(
-      vanillaExtractPlugin(options.vanillaExtract === true ? {} : options.vanillaExtract),
+      vanillaExtractPlugin({
+        inject: {nodeCompat: true},
+        ...(options.vanillaExtract === true ? {} : options.vanillaExtract),
+      }),
     )
   }
 

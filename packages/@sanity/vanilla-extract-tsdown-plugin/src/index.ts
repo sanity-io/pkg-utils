@@ -60,23 +60,25 @@ export interface Options {
    */
   target?: string | string[] | false
   /**
-   * Inject a CSS import into the JS output, like `css.inject` in `@tsdown/css` — but instead of
-   * a relative `./<fileName>` import, the conditional-CSS-export flavor used by Sanity libraries:
+   * Inject an import of the extracted CSS file into the JS output, like `css.inject` in
+   * `@tsdown/css` (and matching its default of `false`):
    *
-   * - injects the self-referential `import "<pkg-name>/<fileName>"` (or `require()` in CJS
-   *   output) into every entry chunk that uses vanilla-extract styles,
-   * - emits a no-op `<fileName>.js` shim (plus a `<fileName>.d.ts` declaration) for the
-   *   `node`/`default` conditions of a conditional `"./<fileName>"` export to point at, so the
-   *   import resolves to a harmless module in runtimes that cannot import `.css` files, and
-   * - when tsdown's [`exports` feature](https://tsdown.dev/options/package-exports) is enabled,
-   *   writes the conditional `"./<fileName>"` export to `package.json` (`browser`/`style` → the
-   *   real CSS, `node`/`default` → the shim) through `exports.customExports`.
+   * - `true` (or an object) injects a relative `import "./<fileName>"` (or `require()` in CJS
+   *   output) into every entry chunk that uses vanilla-extract styles, so bundler-consumed
+   *   libraries load their CSS automatically.
+   * - `{nodeCompat: true}` additionally makes the import safe for runtimes that cannot import
+   *   `.css` files: the injected import becomes the self-referential `"<pkg-name>/<fileName>"`
+   *   bare specifier, a no-op `<fileName>.js` shim (plus a `<fileName>.d.ts` declaration) is
+   *   emitted for the `node`/`default` conditions of the conditional `"./<fileName>"` export to
+   *   point at, and — when tsdown's
+   *   [`exports` feature](https://tsdown.dev/options/package-exports) is enabled — that
+   *   conditional export is written to `package.json` (`browser`/`style` → the real CSS,
+   *   `node`/`default` → the shim) through `exports.customExports`.
    *
-   * Unlike `@tsdown/css` this defaults to `true`, as the conditional CSS export pattern is the
-   * point of this plugin. Disable it to only extract the CSS.
-   * @defaultValue true
+   * `@sanity/tsdown-config` defaults this to `{nodeCompat: true}`.
+   * @defaultValue false
    */
-  inject?: boolean
+  inject?: boolean | {nodeCompat?: boolean}
 }
 
 /**
@@ -91,7 +93,13 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
   const identifiers = options.identifiers ?? 'short'
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
   const minify = options.minify ?? true
-  const inject = options.inject ?? true
+  const inject = Boolean(options.inject ?? false)
+  /**
+   * The conditional CSS export flavor of `inject`: a self-referential bare import specifier
+   * backed by a no-op shim and a conditional `package.json` export, instead of a relative import.
+   */
+  const nodeCompat =
+    typeof options.inject === 'object' ? (options.inject.nodeCompat ?? false) : false
 
   let cwd = process.cwd()
   /** tsdown's resolved top-level `target`, the default for the `target` option. */
@@ -128,7 +136,7 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
       packageName ?? getPackageInfo(entryModuleId === null ? cwd : path.dirname(entryModuleId)).name
     if (!name) {
       throw new Error(
-        `[vanilla-extract] Unable to resolve the package name from package.json, which is required by \`inject\` for the self-referential CSS import. Set \`inject: false\` to wire up the CSS import yourself.`,
+        `[vanilla-extract] Unable to resolve the package name from package.json, which is required by \`inject.nodeCompat\` for the self-referential CSS import. Disable \`nodeCompat\` (or \`inject\`) to wire up the CSS import yourself.`,
       )
     }
     return name
@@ -137,13 +145,13 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
   return {
     name: 'vanilla-extract',
 
-    // With `inject`, write the conditional `./<fileName>` export to `package.json` (and, through
-    // tsdown, to `publishConfig.exports`) by composing into `exports.customExports` before the
-    // config is resolved — the tsdown analogue of a Vite plugin extending the user config from
-    // its `config` hook. tsdown's `exports` feature is opt-in, so nothing is written (and the
-    // conditional export has to be maintained manually) when it's not enabled.
+    // With `inject.nodeCompat`, write the conditional `./<fileName>` export to `package.json`
+    // (and, through tsdown, to `publishConfig.exports`) by composing into `exports.customExports`
+    // before the config is resolved — the tsdown analogue of a Vite plugin extending the user
+    // config from its `config` hook. tsdown's `exports` feature is opt-in, so nothing is written
+    // (and the conditional export has to be maintained manually) when it's not enabled.
     tsdownConfig(config: UserConfig) {
-      if (!inject) return undefined
+      if (!nodeCompat) return undefined
       const exportsOption = config.exports
       if (!exportsOption) return undefined
 
@@ -252,7 +260,9 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
       },
     },
 
-    // Inject the self-referential CSS import into entry chunks that use vanilla-extract styles
+    // Inject the CSS import into entry chunks that use vanilla-extract styles: relative by
+    // default (like `css.inject` in `@tsdown/css`), or the self-referential bare specifier of
+    // the conditional CSS export pattern with `nodeCompat`
     renderChunk(code, chunk, outputOptions, meta) {
       if (!inject || styles.size === 0) return undefined
       if (!chunk.isEntry || chunk.name.endsWith('.d') || RE_DTS.test(chunk.fileName))
@@ -261,7 +271,11 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
       if (format !== 'es' && format !== 'cjs') return undefined
       if (!chunkHasStyles(chunk, meta.chunks, styles)) return undefined
 
-      const specifier = JSON.stringify(`${resolvePackageName(chunk.facadeModuleId)}/${fileName}`)
+      const specifier = JSON.stringify(
+        nodeCompat
+          ? `${resolvePackageName(chunk.facadeModuleId)}/${fileName}`
+          : relativeImportPath(chunk.fileName, fileName),
+      )
       const statement = format === 'cjs' ? `require(${specifier});\n` : `import ${specifier};\n`
 
       const {magicString} = meta
@@ -280,7 +294,8 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
       return {code: statement + code}
     },
 
-    // Emit the merged CSS file (optimized with lightningcss) and, with `inject`, the JS shim
+    // Emit the merged CSS file (optimized with lightningcss) and, with `inject.nodeCompat`,
+    // the JS shim
     async generateBundle(_outputOptions, bundle) {
       // The cjs d.ts pass renders no JS chunks, so skip it instead of re-emitting the assets
       const chunks = Object.values(bundle).filter(
@@ -293,11 +308,11 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
 
       let css = collectCss(chunks, styles)
 
-      // With `inject`, the conditional `./<fileName>` export (written into `package.json` by the
-      // `tsdownConfig` hook at config-resolution time, before any CSS is known) must resolve, so
-      // the CSS file and its shims are emitted even when no styles were extracted. Without
-      // `inject` nothing references the CSS file, so an empty one would just be a stray artifact.
-      if (!css && !inject) return
+      // With `nodeCompat`, the conditional `./<fileName>` export (written into `package.json` by
+      // the `tsdownConfig` hook at config-resolution time, before any CSS is known) must resolve,
+      // so the CSS file and its shims are emitted even when no styles were extracted. Otherwise
+      // nothing references an empty CSS file, so it would just be a stray artifact.
+      if (!css && !nodeCompat) return
 
       const targets = resolveTargets()
       if (css && (targets || minify)) {
@@ -319,7 +334,7 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
 
       this.emitFile({type: 'asset', fileName, source: css})
 
-      if (inject) {
+      if (nodeCompat) {
         this.emitFile({
           type: 'asset',
           fileName: `${fileName}.js`,
@@ -333,6 +348,15 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
       }
     },
   }
+}
+
+/**
+ * The relative import path from a chunk to the emitted CSS file (which lives at the root of the
+ * output directory), like the `css.inject` implementation in `@tsdown/css`.
+ */
+function relativeImportPath(chunkFileName: string, cssFileName: string): string {
+  const relativePath = path.posix.relative(path.posix.dirname(chunkFileName), cssFileName)
+  return relativePath.startsWith('.') ? relativePath : `./${relativePath}`
 }
 
 /**

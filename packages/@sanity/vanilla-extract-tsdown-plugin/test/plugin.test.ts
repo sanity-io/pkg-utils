@@ -75,10 +75,42 @@ describe('vanillaExtractPlugin', () => {
     expect(findAsset(output, 'bundle.css')).not.toContain('sourceMappingURL')
   })
 
+  test('does not inject or emit shims by default, like `css.inject` in @tsdown/css', async () => {
+    const output = await buildFixture()
+    const {code} = findEntryChunk(output)
+
+    // The CSS is extracted, but nothing is injected and no shims are emitted
+    expect(findAsset(output, 'bundle.css')).toContain('#010203')
+    expect(code).not.toContain('bundle.css')
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
+
+    // The styles must not be inlined or imported in the JS output either
+    expect(code).not.toContain('.vanilla.css')
+    expect(code).not.toContain('rgb(1, 2, 3)')
+    expect(code).not.toContain('#010203')
+  })
+
   test.each(['esm', 'cjs'] as const)(
-    'injects the self-referential CSS import into the %s entry chunk',
+    'injects a relative CSS import into the %s entry chunk with `inject: true`',
     async (format) => {
-      const output = await buildFixture(undefined, format)
+      const output = await buildFixture({inject: true}, format)
+      const {code} = findEntryChunk(output)
+
+      // Like `css.inject` in `@tsdown/css`: a relative import of the emitted CSS file,
+      // and no shim (that's the `nodeCompat` flavor)
+      expect(code).toContain(
+        format === 'cjs' ? `require("./bundle.css");` : `import "./bundle.css";`,
+      )
+      expect(code).not.toContain(selfReferentialSpecifier)
+      expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
+    },
+  )
+
+  test.each(['esm', 'cjs'] as const)(
+    'injects the self-referential CSS import into the %s entry chunk with `inject.nodeCompat`',
+    async (format) => {
+      const output = await buildFixture({inject: {nodeCompat: true}}, format)
       const {code} = findEntryChunk(output)
 
       expect(code).toContain(
@@ -98,7 +130,7 @@ describe('vanillaExtractPlugin', () => {
   )
 
   test('keeps the JS sourcemap intact when injecting (native magic-string)', async () => {
-    const output = await buildFixture(undefined, 'esm', true)
+    const output = await buildFixture({inject: {nodeCompat: true}}, 'esm', true)
     const chunk = findEntryChunk(output)
 
     expect(chunk.code.startsWith(`import "${selfReferentialSpecifier}";\n`)).toBe(true)
@@ -106,8 +138,8 @@ describe('vanillaExtractPlugin', () => {
     expect(chunk.map?.mappings.length).toBeGreaterThan(0)
   })
 
-  test('emits the no-op JS shim and its type declarations by default', async () => {
-    const output = await buildFixture()
+  test('emits the no-op JS shim and its type declarations with `inject.nodeCompat`', async () => {
+    const output = await buildFixture({inject: {nodeCompat: true}})
 
     expect(findAsset(output, 'bundle.css.js')).toContain('export default ""')
     const shimDts = findAsset(output, 'bundle.css.d.ts')
@@ -115,19 +147,8 @@ describe('vanillaExtractPlugin', () => {
     expect(shimDts).toContain('export default _default')
   })
 
-  test('skips the import and shim when `inject` is false', async () => {
-    const output = await buildFixture({inject: false})
-
-    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
-    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
-    expect(findEntryChunk(output).code).not.toContain(selfReferentialSpecifier)
-
-    // The CSS itself is still extracted
-    expect(findAsset(output, 'bundle.css')).toContain('#010203')
-  })
-
   test('respects a custom `fileName`', async () => {
-    const output = await buildFixture({fileName: 'styles.css'})
+    const output = await buildFixture({fileName: 'styles.css', inject: {nodeCompat: true}})
 
     expect(findAsset(output, 'styles.css')).toContain('#010203')
     expect(findAsset(output, 'styles.css.js')).toContain('export default ""')
@@ -203,25 +224,27 @@ describe('vanillaExtractPlugin', () => {
     expect(bundleCss.indexOf('#010203')).toBeLessThan(bundleCss.indexOf('#070809'))
   })
 
-  test('emits no CSS or shim for style-less builds, unless `inject` needs them', async () => {
-    // Without `inject`, nothing references the CSS file, so an empty one would just be a stray
-    // artifact and nothing is emitted
-    const withoutInject = await buildFixture({inject: false}, 'esm', false, 'no-css')
+  test('emits no CSS or shim for style-less builds, unless `nodeCompat` needs them', async () => {
+    // By default (and with a plain `inject: true`), nothing references the CSS file, so an
+    // empty one would just be a stray artifact and nothing is emitted
+    const withoutInject = await buildFixture(undefined, 'esm', false, 'no-css')
     expect(withoutInject.map((assetOrChunk) => assetOrChunk.fileName)).toEqual(['index.js'])
+    const withPlainInject = await buildFixture({inject: true}, 'esm', false, 'no-css')
+    expect(withPlainInject.map((assetOrChunk) => assetOrChunk.fileName)).toEqual(['index.js'])
 
-    // With `inject` (the default), the conditional `./bundle.css` export is written to
+    // With `inject.nodeCompat`, the conditional `./bundle.css` export is written to
     // `package.json` by the `tsdownConfig` hook at config-resolution time - before any CSS is
     // known - so the CSS file and its shims are emitted even when empty to keep it resolving
-    const withInject = await buildFixture(undefined, 'esm', false, 'no-css')
-    expect(withInject.map((assetOrChunk) => assetOrChunk.fileName).toSorted()).toEqual([
+    const withNodeCompat = await buildFixture({inject: {nodeCompat: true}}, 'esm', false, 'no-css')
+    expect(withNodeCompat.map((assetOrChunk) => assetOrChunk.fileName).toSorted()).toEqual([
       'bundle.css',
       'bundle.css.d.ts',
       'bundle.css.js',
       'index.js',
     ])
-    expect(findAsset(withInject, 'bundle.css')).toBe('')
+    expect(findAsset(withNodeCompat, 'bundle.css')).toBe('')
     // No import is injected when there are no styles to load
-    expect(findEntryChunk(withInject).code).not.toContain('bundle.css')
+    expect(findEntryChunk(withNodeCompat).code).not.toContain('bundle.css')
   })
 
   test('warns and still injects when the native magic-string is unavailable', async () => {
@@ -229,7 +252,7 @@ describe('vanillaExtractPlugin', () => {
     const bundle = await rolldown({
       input: path.join(fixtureDir, 'index.ts'),
       plugins: [
-        vanillaExtractPlugin(),
+        vanillaExtractPlugin({inject: {nodeCompat: true}}),
         {
           name: 'disable-native-magic-string',
           options: (inputOptions) => ({
@@ -278,7 +301,10 @@ const conditionalCssExport = {
 }
 
 /** Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. */
-async function runTsdownConfigHook(config: UserConfig, options?: Options): Promise<UserConfig> {
+async function runTsdownConfigHook(
+  config: UserConfig,
+  options: Options = {inject: {nodeCompat: true}},
+): Promise<UserConfig> {
   const plugin = vanillaExtractPlugin(options)
   expect(typeof plugin.tsdownConfig).toBe('function')
   const result = await plugin.tsdownConfig?.(config, {})
@@ -362,9 +388,7 @@ describe('tsdownConfig hook', () => {
   test('respects `fileName` and the configured `outDir`', async () => {
     const config = await runTsdownConfigHook(
       {exports: true, outDir: 'lib'},
-      {
-        fileName: 'styles.css',
-      },
+      {fileName: 'styles.css', inject: {nodeCompat: true}},
     )
 
     expect(await getCustomExports(config)({}, customExportsContext)).toEqual({
@@ -377,14 +401,20 @@ describe('tsdownConfig hook', () => {
     })
   })
 
-  test('leaves the `exports` option untouched when disabled, or when `inject` is false', async () => {
+  test('leaves the `exports` option untouched when disabled, or without `nodeCompat`', async () => {
     // tsdown's exports feature is opt-in: the conditional export is only written when enabled
     expect((await runTsdownConfigHook({})).exports).toBeUndefined()
     expect((await runTsdownConfigHook({exports: false})).exports).toBe(false)
 
-    // `inject: false` skips the wiring entirely
-    const config = await runTsdownConfigHook({exports: {enabled: 'local-only'}}, {inject: false})
-    expect(config.exports).not.toHaveProperty('customExports')
+    // Only the `nodeCompat` flavor of `inject` writes the conditional export: the default and
+    // the plain relative-import flavor leave the `exports` option alone
+    const withDefaults = await runTsdownConfigHook({exports: {enabled: 'local-only'}}, {})
+    expect(withDefaults.exports).not.toHaveProperty('customExports')
+    const withPlainInject = await runTsdownConfigHook(
+      {exports: {enabled: 'local-only'}},
+      {inject: true},
+    )
+    expect(withPlainInject.exports).not.toHaveProperty('customExports')
   })
 })
 

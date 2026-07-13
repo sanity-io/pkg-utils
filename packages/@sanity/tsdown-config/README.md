@@ -89,7 +89,8 @@ export default defineConfig({
 })
 ```
 
-By default (`inject: true`) the conditional CSS export pattern is wired up automatically:
+By default (`inject: {nodeCompat: true}`) the conditional CSS export pattern is wired up
+automatically:
 
 - injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
   vanilla-extract styles,
@@ -110,7 +111,8 @@ consumers by adding it to `sideEffects` in `package.json`:
 
 Pass an options object instead of `true` to customize - the options are modeled after the
 [`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
-`target`) - or set `inject: false` to wire up the import, shim, and export yourself.
+`target`). Set `inject: true` for a plain relative `import "./bundle.css"` instead of the
+conditional export pattern, or `inject: false` to wire up the import, shim, and export yourself.
 
 ## dts
 
