@@ -1,4 +1,3 @@
-import type {NormalizedFormat, Rolldown, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {defineConfig} from '../src/index.ts'
 
@@ -29,47 +28,15 @@ describe('define option', () => {
   })
 })
 
-async function renderChunkFileName(
-  config: UserConfig,
-  defaultChunkFileNames: string,
-  format: NormalizedFormat,
-  chunkName: string,
-) {
-  const {outputOptions} = config
-  if (typeof outputOptions !== 'function') throw new Error('expected outputOptions function')
-
-  const resolved = await outputOptions({chunkFileNames: defaultChunkFileNames}, format, {
-    cjsDts: false,
-  })
-  if (!resolved) throw new Error('expected output options')
-
-  const {chunkFileNames} = resolved
-  if (typeof chunkFileNames !== 'function') throw new Error('expected chunkFileNames function')
-
-  return chunkFileNames({name: chunkName} as Rolldown.PreRenderedChunk)
-}
-
 describe('chunk file names', () => {
-  test('emits shared chunks into `_chunks-*` folders, like `@sanity/pkg-utils`', async () => {
+  test('relies on tsdown defaults, so shared chunks get hashed filenames', async () => {
     const config = await defineConfig()
 
-    // JS chunks are grouped per output format, reusing the `[name]` template with the output
-    // extension that tsdown resolved for the format and package type
-    expect(await renderChunkFileName(config, '[name].mjs', 'es', 'theme')).toBe(
-      '_chunks-es/[name].mjs',
-    )
-    expect(await renderChunkFileName(config, '[name].js', 'cjs', 'theme')).toBe(
-      '_chunks-cjs/[name].js',
-    )
-
-    // `rolldown-plugin-dts` names d.ts chunks with a `.d` suffix and rewrites the rendered JS
-    // filename to the matching d.ts extension (e.g. `_chunks-dts/theme.mjs` becomes
-    // `_chunks-dts/theme.d.mts`)
-    expect(await renderChunkFileName(config, '[name].mjs', 'es', 'theme.d')).toBe(
-      '_chunks-dts/[name].mjs',
-    )
-    expect(await renderChunkFileName(config, '[name].js', 'cjs', 'theme.d')).toBe(
-      '_chunks-dts/[name].js',
-    )
+    // `hash` stays at tsdown's default (`true`), which renders chunks as `[name]-[hash].<ext>`:
+    // the hash suffix keeps a chunk from ever taking an entry's filename, which could otherwise
+    // hand an entry's d.ts filename to a chunk that re-exports everything under minified aliases
+    // (https://github.com/sanity-io/ui/issues/2262)
+    expect(config.hash).toBeUndefined()
+    expect(config.outputOptions).toEqual({hoistTransitiveImports: false})
   })
 })

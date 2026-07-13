@@ -1,10 +1,5 @@
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
-import {
-  defineConfig as defineTsdownConfig,
-  type NormalizedFormat,
-  type Rolldown,
-  type UserConfig,
-} from 'tsdown'
+import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 import type {PackageVanillaExtractOptions} from './vanillaExtract.ts'
 
 export type {PackageVanillaExtractOptions}
@@ -88,36 +83,6 @@ export interface PackageOptions extends Pick<
 }
 
 /**
- * Emits shared (non-entry) chunks into subfolders per output flavor, following the same naming
- * convention as `@sanity/pkg-utils` (`_chunks-es`, `_chunks-cjs` and `_chunks-dts`), instead of
- * rolldown's default of placing chunks at the root of the output directory next to the entries.
- * A chunk can otherwise be named like an entry (e.g. code shared between `index` and `theme`
- * entries forms a chunk that rolldown also names `theme`): the JS output deduplicates such
- * filename collisions in favor of the entry, but the d.ts output can resolve them the other way
- * around, handing `theme.d.ts` to the chunk - which re-exports everything under minified aliases -
- * so every named import from the `theme` entry fails to type-check with TS2460
- * (https://github.com/sanity-io/ui/issues/2262).
- */
-function resolveChunkFileNames(
-  defaultOutputOptions: Rolldown.OutputOptions,
-  format: NormalizedFormat,
-): Rolldown.OutputOptions['chunkFileNames'] {
-  return (chunk) => {
-    // tsdown's default is a `[name]` template string carrying the resolved output extension for
-    // the current format and package type (e.g. `[name].mjs`), so reuse it for the file names
-    const template =
-      (typeof defaultOutputOptions.chunkFileNames === 'function'
-        ? defaultOutputOptions.chunkFileNames(chunk)
-        : defaultOutputOptions.chunkFileNames) ?? '[name].js'
-    // `rolldown-plugin-dts` names d.ts chunks with a `.d` suffix and later rewrites the rendered
-    // JS filename to the matching d.ts extension (e.g. `_chunks-dts/[name].mjs` renders
-    // `_chunks-dts/theme.mjs`, which becomes `_chunks-dts/theme.d.mts`)
-    const folder = chunk.name.endsWith('.d') ? '_chunks-dts' : `_chunks-${format}`
-    return `${folder}/${template}`
-  }
-}
-
-/**
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
@@ -130,7 +95,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   const styledComponents = options.styledComponents ?? false
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
-  const hash = false
   const format = options.format ?? 'esm'
   const inputOptions = {
     // https://github.com/rolldown/rolldown/blob/main/packages/rolldown/src/options/docs/preserve-entry-signatures.md#strict
@@ -161,16 +125,17 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     }),
   } as const satisfies UserConfig['inputOptions']
 
-  const resolveBaseOutputOptions = (
-    defaultOptions: Rolldown.OutputOptions,
-    outputFormat: NormalizedFormat,
-  ) =>
-    ({
-      hoistTransitiveImports: false,
-      chunkFileNames: resolveChunkFileNames(defaultOptions, outputFormat),
-    }) satisfies Rolldown.OutputOptions
+  // `hash` is left at tsdown's default (`true`), so shared (non-entry) chunks are emitted as
+  // `[name]-[hash].<ext>` next to the entries. The hash suffix keeps a chunk from ever taking an
+  // entry's filename: code shared between entries forms a chunk that rolldown can name after one
+  // of the entries (e.g. `theme`), and without the hash the d.ts output could hand `theme.d.ts`
+  // to the chunk - which re-exports everything under minified aliases - breaking every named
+  // import from the `theme` entry with TS2460 (https://github.com/sanity-io/ui/issues/2262).
+  const baseOutputOptions = {
+    hoistTransitiveImports: false,
+  } as const satisfies Rolldown.OutputOptions
 
-  let outputOptions: UserConfig['outputOptions'] = resolveBaseOutputOptions
+  let outputOptions: UserConfig['outputOptions'] = baseOutputOptions
   let treeshake: UserConfig['treeshake']
   let customExports: ((exportsMap: Record<string, unknown>) => Record<string, unknown>) | undefined
 
@@ -256,8 +221,8 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       ? `${readPackageName(process.cwd())}/${cssName}`
       : undefined
 
-    outputOptions = (defaultOptions, outputFormat, context) => ({
-      ...resolveBaseOutputOptions(defaultOptions, outputFormat),
+    outputOptions = (_defaultOptions, outputFormat, context) => ({
+      ...baseOutputOptions,
       // Emit the extracted CSS (and its sourcemap) with a stable name at the root of the tsdown
       // default `outDir` ('dist', not configurable yet) instead of rolldown's default
       // `assets/[name]-[hash][extname]`, so it can back the conditional `./<css>` export.
@@ -302,7 +267,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     entry,
     exports,
     format,
-    hash,
     inputOptions,
     outputOptions,
     platform,
