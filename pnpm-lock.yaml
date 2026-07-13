@@ -790,6 +790,9 @@ importers:
       lightningcss:
         specifier: ^1.32.0
         version: 1.32.0
+      package-manager-detector:
+        specifier: ^1.7.0
+        version: 1.7.0
       publint:
         specifier: ^0.3.21
         version: 0.3.21
@@ -11812,6 +11815,9 @@ packages:
 
   package-manager-detector@1.6.0:
     resolution: {integrity: sha512-61A5ThoTiDG/C8s8UMZwSorAGwMJ0ERVGj2OjoW5pAalsNOg15+iQiPzrLJ4jhZ1HJzmC2PIHT2oEiH3R5fzNA==}
+
+  package-manager-detector@1.7.0:
+    resolution: {integrity: sha512-xg1eHpwYL/D/HEdWw2goFZP6vV0FH7W+PZ5rFkGjdIDLtxq7EkzBUeT3m+lndYCt8wKbmofUu1MUdMCXkCk9ZQ==}
 
   pacote@21.5.1:
     resolution: {integrity: sha512-KvcJ9iy3crysCsgqc4+PknH/w6jkrp8JN36mpZBPwNaDRwTfMZD37YzRazNstiZUOhuF5pno9f78n9mEJBavwg==}
@@ -26726,6 +26732,8 @@ snapshots:
       quansync: 0.2.11
 
   package-manager-detector@1.6.0: {}
+
+  package-manager-detector@1.7.0: {}
 
   pacote@21.5.1:
     dependencies:

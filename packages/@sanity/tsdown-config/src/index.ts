@@ -1,4 +1,5 @@
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
+import {detect} from 'package-manager-detector/detect'
 import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
 import type {PackageVanillaExtractOptions} from './vanillaExtract.ts'
 
@@ -247,10 +248,12 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     }
   }
 
+  const packageManager = await detect({cwd: process.cwd()})
   const exports = {
     enabled: 'local-only',
-    // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
-    devExports: true,
+    // Only opt in when pnpm is detected: support for replacing package fields from
+    // `publishConfig` is not reliable across package managers.
+    ...(packageManager?.name === 'pnpm' && {devExports: true}),
     ...(customExports && {customExports}),
   } as const satisfies UserConfig['exports']
 
