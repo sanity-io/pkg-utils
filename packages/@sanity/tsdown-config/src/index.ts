@@ -1,3 +1,4 @@
+import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
 import {
   defineConfig as defineTsdownConfig,
@@ -5,9 +6,14 @@ import {
   type Rolldown,
   type UserConfig,
 } from 'tsdown'
-import type {PackageVanillaExtractOptions} from './vanillaExtract.ts'
 
-export type {PackageVanillaExtractOptions}
+/**
+ * Options for the `vanillaExtract` option — the same options as
+ * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`, and
+ * `inject`, all modeled after the `css` options of `@tsdown/css`).
+ * @public
+ */
+export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
 
 /**
  * Options for the `styled-components` transform, the same options as `babel-plugin-styled-components`.
@@ -172,7 +178,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     }) satisfies Rolldown.OutputOptions
 
   const outputOptions: UserConfig['outputOptions'] = resolveBaseOutputOptions
-  let customExports: ((exportsMap: Record<string, unknown>) => Record<string, unknown>) | undefined
 
   const plugins: Rolldown.Plugin[] = []
   if (reactCompiler !== false) {
@@ -193,53 +198,22 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     )
   }
   if (options.vanillaExtract) {
-    // Everything vanilla-extract related is lazy loaded, like `reactCompiler`, so it's only paid
-    // for when the option is enabled: `@sanity/vanilla-extract-tsdown-plugin` compiles the
-    // `.css.ts` files, extracts the CSS into a single `lightningcss`-optimized file, and (with
-    // `inject`, the default) injects the self-referential CSS import and emits the no-op JS shim
-    // of the conditional CSS export pattern.
-    const [
-      {vanillaExtractPlugin},
-      {
-        createConditionalCssExport,
-        insertCssExport,
-        resolveVanillaExtract,
-        resolveVanillaExtractFileName,
-      },
-    ] = await Promise.all([
-      import('@sanity/vanilla-extract-tsdown-plugin'),
-      import('./vanillaExtract.ts'),
-    ])
-
-    const vanillaExtract = resolveVanillaExtract(options.vanillaExtract)
-    const cssFileName = resolveVanillaExtractFileName(vanillaExtract.options)
-
+    // Lazy loaded, like `reactCompiler`, so the CSS toolchain is only paid for when the option is
+    // enabled. The plugin owns the whole conditional CSS export pattern: it compiles the `.css.ts`
+    // files, extracts the CSS into a single `lightningcss`-optimized file, and (with `inject`, the
+    // default) injects the self-referential CSS import, emits the no-op JS shim, and writes the
+    // conditional `./<fileName>` export through this config's `exports` option (which its
+    // `tsdownConfig` hook composes into).
+    const {vanillaExtractPlugin} = await import('@sanity/vanilla-extract-tsdown-plugin')
     plugins.push(
-      vanillaExtractPlugin({
-        identifiers: vanillaExtract.options.identifiers,
-        fileName: cssFileName,
-        minify: vanillaExtract.options.minify,
-        target: vanillaExtract.options.target,
-        inject: vanillaExtract.inject,
-      }),
+      vanillaExtractPlugin(options.vanillaExtract === true ? {} : options.vanillaExtract),
     )
-
-    if (vanillaExtract.inject) {
-      // The plugin handles the runtime side of the conditional CSS export pattern (the
-      // self-referential import and the no-op JS shim); the config completes it by writing the
-      // conditional `./<fileName>` export to `package.json` (and, through tsdown, mirroring it
-      // into `publishConfig.exports`) so userland does not have to maintain it.
-      const conditionalCssExport = createConditionalCssExport(cssFileName, 'dist')
-      customExports = (exportsMap) =>
-        insertCssExport(exportsMap, `./${cssFileName}`, conditionalCssExport)
-    }
   }
 
   const exports = {
     enabled: 'local-only',
     // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
     devExports: true,
-    ...(customExports && {customExports}),
   } as const satisfies UserConfig['exports']
 
   return defineTsdownConfig({

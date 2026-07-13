@@ -1,7 +1,7 @@
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-import type {UserConfig} from 'tsdown'
+import type {TsdownPlugin, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {defineConfig} from '../src/index.ts'
 
@@ -103,6 +103,28 @@ function getPluginNames(config: UserConfig) {
   )
 }
 
+/**
+ * Runs the vanilla-extract plugin's `tsdownConfig` hook against the config, like tsdown does when
+ * it resolves the user config. This is how the conditional CSS export gets composed into the
+ * config's `exports` option.
+ */
+async function runVanillaExtractConfigHook(config: UserConfig): Promise<UserConfig> {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) expect.unreachable('expected `plugins` to be an array')
+  const plugin: TsdownPlugin | undefined = plugins.find(
+    (candidate): candidate is TsdownPlugin =>
+      !!candidate &&
+      typeof candidate === 'object' &&
+      'name' in candidate &&
+      candidate.name === 'vanilla-extract',
+  )
+  if (!plugin || typeof plugin.tsdownConfig !== 'function') {
+    expect.unreachable('expected the vanilla-extract plugin with a `tsdownConfig` hook')
+  }
+  expect(await plugin.tsdownConfig(config, {})).toBeUndefined() // mutates the config in place
+  return config
+}
+
 describe('vanillaExtract option', () => {
   test('is disabled by default', async () => {
     const config = await defineConfig()
@@ -126,13 +148,20 @@ describe('vanillaExtract option', () => {
     expect(getPluginNames(await defineConfig({vanillaExtract: true}))).toEqual(['vanilla-extract'])
   })
 
-  test('adds the conditional CSS export through `exports.customExports`', async () => {
+  test("adds the conditional CSS export through the plugin's `tsdownConfig` hook", async () => {
+    // The config itself no longer wires `customExports` - the plugin composes it into the
+    // `exports` option when tsdown dispatches its `tsdownConfig` hook.
     const config = await defineConfig({vanillaExtract: true})
+    expect(config.exports).not.toHaveProperty('customExports')
+
+    await runVanillaExtractConfigHook(config)
 
     const exportsOption = config.exports
     if (typeof exportsOption !== 'object' || typeof exportsOption?.customExports !== 'function') {
       expect.unreachable('expected `exports.customExports` to be a function')
     }
+    // The config's own exports settings are preserved
+    expect(exportsOption).toMatchObject({enabled: 'local-only', devExports: true})
 
     const result = await exportsOption.customExports(
       {
@@ -151,7 +180,9 @@ describe('vanillaExtract option', () => {
   })
 
   test('respects a custom `fileName`', async () => {
-    const config = await defineConfig({vanillaExtract: {fileName: 'styles.css'}})
+    const config = await runVanillaExtractConfigHook(
+      await defineConfig({vanillaExtract: {fileName: 'styles.css'}}),
+    )
 
     const exportsOption = config.exports
     if (typeof exportsOption !== 'object' || typeof exportsOption?.customExports !== 'function') {
@@ -176,7 +207,8 @@ describe('vanillaExtract option', () => {
 
     // The vanilla-extract plugin is still applied (it extracts without injecting)…
     expect(getPluginNames(config)).toEqual(['vanilla-extract'])
-    // …but the exports wiring is not
+    // …but its `tsdownConfig` hook leaves the exports wiring alone
+    await runVanillaExtractConfigHook(config)
     expect(config.exports).not.toHaveProperty('customExports')
   })
 })

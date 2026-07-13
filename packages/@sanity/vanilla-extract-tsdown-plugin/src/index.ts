@@ -11,7 +11,8 @@ import {
 } from '@vanilla-extract/integration'
 import browserslist from 'browserslist'
 import {browserslistToTargets, transform, type Targets} from 'lightningcss'
-import type {ResolvedConfig, Rolldown, TsdownPlugin} from 'tsdown'
+import type {ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
+import {createConditionalCssExport, insertCssExport} from './exports.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
 
 /** The default name of the extracted CSS file. */
@@ -60,10 +61,13 @@ export interface Options {
    * a relative `./<fileName>` import, the conditional-CSS-export flavor used by Sanity libraries:
    *
    * - injects the self-referential `import "<pkg-name>/<fileName>"` (or `require()` in CJS
-   *   output) into every entry chunk that uses vanilla-extract styles, and
+   *   output) into every entry chunk that uses vanilla-extract styles,
    * - emits a no-op `<fileName>.js` shim (plus a `<fileName>.d.ts` declaration) for the
    *   `node`/`default` conditions of a conditional `"./<fileName>"` export to point at, so the
-   *   import resolves to a harmless module in runtimes that cannot import `.css` files.
+   *   import resolves to a harmless module in runtimes that cannot import `.css` files, and
+   * - when tsdown's [`exports` feature](https://tsdown.dev/options/package-exports) is enabled,
+   *   writes the conditional `"./<fileName>"` export to `package.json` (`browser`/`style` → the
+   *   real CSS, `node`/`default` → the shim) through `exports.customExports`.
    *
    * Unlike `@tsdown/css` this defaults to `true`, as the conditional CSS export pattern is the
    * point of this plugin. Disable it to only extract the CSS.
@@ -125,6 +129,42 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
 
   return {
     name: 'vanilla-extract',
+
+    // With `inject`, write the conditional `./<fileName>` export to `package.json` (and, through
+    // tsdown, to `publishConfig.exports`) by composing into `exports.customExports` before the
+    // config is resolved — the tsdown analogue of a Vite plugin extending the user config from
+    // its `config` hook. tsdown's `exports` feature is opt-in, so nothing is written (and the
+    // conditional export has to be maintained manually) when it's not enabled.
+    tsdownConfig(config: UserConfig) {
+      if (!inject) return undefined
+      const exportsOption = config.exports
+      if (!exportsOption) return undefined
+
+      // Normalize the `boolean | CIOption | object` forms of the `exports` option into the
+      // object form, preserving the enabled-ness (`true` and bare CI conditions mean enabled)
+      const exportsOptions: Extract<NonNullable<UserConfig['exports']>, object> = exportsOption ===
+      true
+        ? {}
+        : typeof exportsOption === 'string'
+          ? {enabled: exportsOption}
+          : exportsOption
+
+      const conditionalCssExport = createConditionalCssExport(fileName, config.outDir ?? 'dist')
+      const previousCustomExports = exportsOptions.customExports
+      exportsOptions.customExports = async (exportsMap, context) => {
+        // Apply a pre-existing `customExports` first (both its function and record forms,
+        // mirroring how tsdown itself applies them), then insert the conditional CSS export
+        const base =
+          typeof previousCustomExports === 'function'
+            ? await previousCustomExports(exportsMap, context)
+            : previousCustomExports
+              ? {...exportsMap, ...previousCustomExports}
+              : exportsMap
+        return insertCssExport(base, `./${fileName}`, conditionalCssExport)
+      }
+      config.exports = exportsOptions
+      return undefined
+    },
 
     // Pick up the tsdown-resolved context: the top-level `target` (the default for the CSS
     // syntax lowering target, like `css.target` in `@tsdown/css`) and the package name (for

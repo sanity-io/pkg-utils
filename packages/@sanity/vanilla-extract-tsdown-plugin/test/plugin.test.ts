@@ -1,6 +1,7 @@
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
+import type {UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {vanillaExtractPlugin, type Options} from '../src/index.ts'
 
@@ -160,6 +161,124 @@ describe('vanillaExtractPlugin', () => {
     // 'short' identifiers are bare hashes, 'debug' ones are prefixed with file and debug names
     expect(findAsset(defaultOutput, 'bundle.css')).not.toContain('styles_box')
     expect(findAsset(debugOutput, 'bundle.css')).toContain('styles_box')
+  })
+})
+
+const conditionalCssExport = {
+  browser: './dist/bundle.css',
+  style: './dist/bundle.css',
+  node: './dist/bundle.css.js',
+  default: './dist/bundle.css.js',
+}
+
+/** Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. */
+async function runTsdownConfigHook(config: UserConfig, options?: Options): Promise<UserConfig> {
+  const plugin = vanillaExtractPlugin(options)
+  expect(typeof plugin.tsdownConfig).toBe('function')
+  const result = await plugin.tsdownConfig?.(config, {})
+  expect(result).toBeUndefined() // the hook mutates the config in place
+  return config
+}
+
+/** Resolves the `customExports` function the hook composed into the `exports` option. */
+function getCustomExports(config: UserConfig) {
+  const exportsOption = config.exports
+  if (typeof exportsOption !== 'object' || typeof exportsOption?.customExports !== 'function') {
+    expect.unreachable('expected `exports.customExports` to be a function')
+  }
+  return exportsOption.customExports
+}
+
+const customExportsContext = {
+  pkg: {packageJsonPath: 'package.json'},
+  chunks: {},
+  isPublish: false,
+}
+
+describe('tsdownConfig hook', () => {
+  test('writes the conditional CSS export through `exports.customExports`', async () => {
+    const config = await runTsdownConfigHook({exports: {enabled: 'local-only'}})
+    const customExports = getCustomExports(config)
+
+    const result = await customExports(
+      {'.': './src/index.ts', './package.json': './package.json'},
+      customExportsContext,
+    )
+
+    // The conditional CSS export is inserted before `./package.json`
+    expect(result).toEqual({
+      '.': './src/index.ts',
+      './bundle.css': conditionalCssExport,
+      './package.json': './package.json',
+    })
+    expect(Object.keys(result)).toEqual(['.', './bundle.css', './package.json'])
+  })
+
+  test('normalizes the boolean and CI-condition forms of the `exports` option', async () => {
+    const enabled = await runTsdownConfigHook({exports: true})
+    expect(await getCustomExports(enabled)({}, customExportsContext)).toEqual({
+      './bundle.css': conditionalCssExport,
+    })
+
+    const ciOnly = await runTsdownConfigHook({exports: 'ci-only'})
+    expect(ciOnly.exports).toMatchObject({enabled: 'ci-only'})
+    expect(await getCustomExports(ciOnly)({}, customExportsContext)).toEqual({
+      './bundle.css': conditionalCssExport,
+    })
+  })
+
+  test('composes with a pre-existing `customExports`', async () => {
+    // Function form: applied first, then the conditional CSS export is inserted
+    const withFunction = await runTsdownConfigHook({
+      exports: {customExports: (exports) => ({...exports, './worker.js': './dist/worker.js'})},
+    })
+    expect(
+      await getCustomExports(withFunction)({'.': './dist/index.mjs'}, customExportsContext),
+    ).toEqual({
+      '.': './dist/index.mjs',
+      './worker.js': './dist/worker.js',
+      './bundle.css': conditionalCssExport,
+    })
+
+    // Record form: merged like tsdown itself does
+    const withRecord = await runTsdownConfigHook({
+      exports: {customExports: {'./worker.js': './dist/worker.js'}},
+    })
+    expect(
+      await getCustomExports(withRecord)({'.': './dist/index.mjs'}, customExportsContext),
+    ).toEqual({
+      '.': './dist/index.mjs',
+      './worker.js': './dist/worker.js',
+      './bundle.css': conditionalCssExport,
+    })
+  })
+
+  test('respects `fileName` and the configured `outDir`', async () => {
+    const config = await runTsdownConfigHook(
+      {exports: true, outDir: 'lib'},
+      {
+        fileName: 'styles.css',
+      },
+    )
+
+    expect(await getCustomExports(config)({}, customExportsContext)).toEqual({
+      './styles.css': {
+        browser: './lib/styles.css',
+        style: './lib/styles.css',
+        node: './lib/styles.css.js',
+        default: './lib/styles.css.js',
+      },
+    })
+  })
+
+  test('leaves the `exports` option untouched when disabled, or when `inject` is false', async () => {
+    // tsdown's exports feature is opt-in: the conditional export is only written when enabled
+    expect((await runTsdownConfigHook({})).exports).toBeUndefined()
+    expect((await runTsdownConfigHook({exports: false})).exports).toBe(false)
+
+    // `inject: false` skips the wiring entirely
+    const config = await runTsdownConfigHook({exports: {enabled: 'local-only'}}, {inject: false})
+    expect(config.exports).not.toHaveProperty('customExports')
   })
 })
 
