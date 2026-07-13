@@ -8,48 +8,47 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/multi-entry-library')
 
 describe('multi-entry-library', () => {
-  test('emits shared chunks into `_chunks-*` folders, like `@sanity/pkg-utils`', async () => {
-    const topLevel = await readdir(path.join(fixtureDir, 'dist'))
+  test('shared chunks carry a content hash, so they never take an entry filename', async () => {
+    const files = (await readdir(path.join(fixtureDir, 'dist'))).filter(
+      (file) => !file.endsWith('.map'),
+    )
 
-    // Only entry files (and the chunk folders) live at the root of `dist`, so a shared chunk can
-    // never take an entry's filename
-    expect(topLevel.filter((file) => !file.endsWith('.map')).toSorted()).toEqual([
-      '_chunks-cjs',
-      '_chunks-dts',
-      '_chunks-es',
-      'index.cjs',
-      'index.d.cts',
-      'index.d.ts',
-      'index.js',
-      'theme.cjs',
-      'theme.d.cts',
-      'theme.d.ts',
-      'theme.js',
-    ])
+    // Entries keep their stable, unhashed filenames
+    expect(files).toEqual(
+      expect.arrayContaining([
+        'index.cjs',
+        'index.d.cts',
+        'index.d.ts',
+        'index.js',
+        'theme.cjs',
+        'theme.d.cts',
+        'theme.d.ts',
+        'theme.js',
+      ]),
+    )
 
     // The code shared between the `index` and `theme` entries forms a chunk that rolldown also
-    // names `theme`, which lands in the format-specific chunk folders
-    const [esChunks, cjsChunks, dtsChunks] = await Promise.all([
-      readdir(path.join(fixtureDir, 'dist/_chunks-es')),
-      readdir(path.join(fixtureDir, 'dist/_chunks-cjs')),
-      readdir(path.join(fixtureDir, 'dist/_chunks-dts')),
-    ])
-    expect(esChunks).toContain('theme.js')
-    expect(cjsChunks).toContain('theme.cjs')
-    expect(dtsChunks).toContain('theme.d.ts')
-    expect(dtsChunks).toContain('theme.d.cts')
+    // names `theme`: tsdown's default `-[hash]` suffix keeps it from colliding with the entry
+    expect(files).toContainEqual(expect.stringMatching(/^theme-[\w-]+\.js$/))
+    expect(files).toContainEqual(expect.stringMatching(/^theme-[\w-]+\.cjs$/))
+    expect(files).toContainEqual(expect.stringMatching(/^theme-[\w-]+\.d\.ts$/))
+    expect(files).toContainEqual(expect.stringMatching(/^theme-[\w-]+\.d\.cts$/))
+
+    // Without the hash, the JS output would dedupe the collision by renaming the chunk `theme2`
+    // and the d.ts output could hand `theme.d.ts` to the chunk instead of the entry
+    expect(files).not.toContainEqual(expect.stringMatching(/^theme2/))
   })
 
-  test('entries reference the shared chunk in the chunk folders', async () => {
+  test('entries reference the hashed shared chunk', async () => {
     const [distIndexJs, distThemeJs, distThemeCjs] = await Promise.all([
       readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
       readFile(path.join(fixtureDir, 'dist/theme.js'), 'utf-8'),
       readFile(path.join(fixtureDir, 'dist/theme.cjs'), 'utf-8'),
     ])
 
-    expect(distIndexJs).toContain('from "./_chunks-es/theme.js"')
-    expect(distThemeJs).toContain('from "./_chunks-es/theme.js"')
-    expect(distThemeCjs).toContain('require("./_chunks-cjs/theme.cjs")')
+    expect(distIndexJs).toMatch(/from "\.\/theme-[\w-]+\.js"/)
+    expect(distThemeJs).toMatch(/from "\.\/theme-[\w-]+\.js"/)
+    expect(distThemeCjs).toMatch(/require\("\.\/theme-[\w-]+\.cjs"\)/)
   })
 
   test('entry d.ts files keep their named exports (sanity-io/ui#2262)', async () => {
@@ -58,14 +57,14 @@ describe('multi-entry-library', () => {
       readFile(path.join(fixtureDir, 'dist/theme.d.cts'), 'utf-8'),
     ])
 
-    // Without the `_chunks-*` folders the shared chunk - which exports everything under minified
+    // Without hashed chunk filenames the shared chunk - which exports everything under minified
     // aliases like `buildTheme as n` - could win the `theme.d.ts` filename over the `theme` entry,
     // breaking every named import from the entry with TS2460
-    expect(distThemeDts).toContain('from "./_chunks-dts/theme.js"')
+    expect(distThemeDts).toMatch(/from "\.\/theme-[\w-]+\.js"/)
     expect(distThemeDts).toContain('export { ThemeConfig, buildTheme }')
     expect(distThemeDts).not.toContain('buildTheme as')
 
-    expect(distThemeDcts).toContain('from "./_chunks-dts/theme.cjs"')
+    expect(distThemeDcts).toMatch(/from "\.\/theme-[\w-]+\.cjs"/)
     expect(distThemeDcts).toContain('export { ThemeConfig, buildTheme }')
     expect(distThemeDcts).not.toContain('buildTheme as')
   })
