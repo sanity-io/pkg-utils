@@ -102,8 +102,9 @@ describe('vanillaExtract option', () => {
 
     expect(getPluginNames(config)).toEqual([])
 
-    // Without vanilla-extract there's no `assetFileNames`/`intro` wiring, only the base options
-    expect(config.outputOptions).toEqual({hoistTransitiveImports: false})
+    // Without vanilla-extract there's no `assetFileNames`/`intro` wiring, and `outputOptions` is
+    // left to tsdown's defaults
+    expect(config.outputOptions).toBeUndefined()
     expect(config.exports).not.toHaveProperty('customExports')
   })
 

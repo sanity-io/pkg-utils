@@ -125,17 +125,14 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     }),
   } as const satisfies UserConfig['inputOptions']
 
-  // `hash` is left at tsdown's default (`true`), so shared (non-entry) chunks are emitted as
-  // `[name]-[hash].<ext>` next to the entries. The hash suffix keeps a chunk from ever taking an
-  // entry's filename: code shared between entries forms a chunk that rolldown can name after one
-  // of the entries (e.g. `theme`), and without the hash the d.ts output could hand `theme.d.ts`
-  // to the chunk - which re-exports everything under minified aliases - breaking every named
-  // import from the `theme` entry with TS2460 (https://github.com/sanity-io/ui/issues/2262).
-  const baseOutputOptions = {
-    hoistTransitiveImports: false,
-  } as const satisfies Rolldown.OutputOptions
-
-  let outputOptions: UserConfig['outputOptions'] = baseOutputOptions
+  // `outputOptions` stays undefined (tsdown's defaults) unless vanilla-extract needs its wiring
+  // below. Notably `hash` is left at tsdown's default (`true`), so shared (non-entry) chunks are
+  // emitted as `[name]-[hash].<ext>` next to the entries. The hash suffix keeps a chunk from ever
+  // taking an entry's filename: code shared between entries forms a chunk that rolldown can name
+  // after one of the entries (e.g. `theme`), and without the hash the d.ts output could hand
+  // `theme.d.ts` to the chunk - which re-exports everything under minified aliases - breaking
+  // every named import from the `theme` entry with TS2460 (https://github.com/sanity-io/ui/issues/2262).
+  let outputOptions: UserConfig['outputOptions']
   let treeshake: UserConfig['treeshake']
   let customExports: ((exportsMap: Record<string, unknown>) => Record<string, unknown>) | undefined
 
@@ -222,7 +219,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       : undefined
 
     outputOptions = (_defaultOptions, outputFormat, context) => ({
-      ...baseOutputOptions,
       // Emit the extracted CSS (and its sourcemap) with a stable name at the root of the tsdown
       // default `outDir` ('dist', not configurable yet) instead of rolldown's default
       // `assets/[name]-[hash][extname]`, so it can back the conditional `./<css>` export.

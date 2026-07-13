@@ -37,6 +37,6 @@ describe('chunk file names', () => {
     // hand an entry's d.ts filename to a chunk that re-exports everything under minified aliases
     // (https://github.com/sanity-io/ui/issues/2262)
     expect(config.hash).toBeUndefined()
-    expect(config.outputOptions).toEqual({hoistTransitiveImports: false})
+    expect(config.outputOptions).toBeUndefined()
   })
 })
