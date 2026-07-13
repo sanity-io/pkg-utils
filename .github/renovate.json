@@ -10,6 +10,11 @@
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
+      "description": "Update the core Rolldown toolchain without the default release-age delay",
+      "matchPackageNames": ["tsdown", "rolldown", "rolldown-plugin-dts"],
+      "minimumReleaseAge": null
+    },
+    {
       "description": "Dependency updates to other package jsons than the root should always use the chore scope as they aren't published to npm",
       "matchFileNames": ["playground/**/package.json"],
       "semanticCommitType": "chore",
