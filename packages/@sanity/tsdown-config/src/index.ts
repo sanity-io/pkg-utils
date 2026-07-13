@@ -45,25 +45,12 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
  */
 export interface PackageOptions extends Pick<
   UserConfig,
-  'tsconfig' | 'entry' | 'format' | 'dts' | 'define'
+  'tsconfig' | 'entry' | 'format' | 'dts' | 'define' | 'hash'
 > {
   /**
    * @defaultValue 'neutral'
    */
   platform?: UserConfig['platform']
-  /**
-   * Appends a content hash to shared (non-entry) chunk filenames (`[name]-[hash].<ext>`), passed
-   * through to tsdown as-is and left at tsdown's default (`true`) when undefined. The hash keeps
-   * a chunk from ever taking an entry's filename: code shared between entries forms a chunk that
-   * rolldown can name after one of the entries (e.g. `theme`), and without the hash the d.ts
-   * output could hand `theme.d.ts` to the chunk - which re-exports everything under minified
-   * aliases - breaking every named import from the `theme` entry with TS2460
-   * (https://github.com/sanity-io/ui/issues/2262). Only set this to `false` if entries and
-   * chunks can't collide (e.g. a single-entry package) or `outputOptions.chunkFileNames` keeps
-   * chunks away from the entries.
-   * @defaultValue true
-   */
-  hash?: UserConfig['hash']
   /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
@@ -140,8 +127,8 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   } as const satisfies UserConfig['inputOptions']
 
   // `outputOptions` stays undefined (tsdown's defaults) unless vanilla-extract needs its wiring
-  // below - notably chunk filenames keep tsdown's hashed default, which prevents chunk/entry
-  // filename collisions (see the `hash` option on `PackageOptions`).
+  // below - notably chunk filenames keep tsdown's hashed default (unless userland sets `hash`),
+  // which prevents chunk/entry filename collisions (https://github.com/sanity-io/ui/issues/2262).
   let outputOptions: UserConfig['outputOptions']
   let treeshake: UserConfig['treeshake']
   let customExports: ((exportsMap: Record<string, unknown>) => Record<string, unknown>) | undefined
