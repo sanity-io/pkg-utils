@@ -28,15 +28,19 @@ describe('define option', () => {
   })
 })
 
-describe('chunk file names', () => {
-  test('relies on tsdown defaults, so shared chunks get hashed filenames', async () => {
-    const config = await defineConfig()
-
-    // `hash` stays at tsdown's default (`true`), which renders chunks as `[name]-[hash].<ext>`:
-    // the hash suffix keeps a chunk from ever taking an entry's filename, which could otherwise
-    // hand an entry's d.ts filename to a chunk that re-exports everything under minified aliases
+describe('hash option', () => {
+  test('is undefined by default, so tsdown keeps its default of hashing chunk filenames', async () => {
+    // tsdown's default (`hash: true`) renders chunks as `[name]-[hash].<ext>`: the hash suffix
+    // keeps a chunk from ever taking an entry's filename, which could otherwise hand an entry's
+    // d.ts filename to a chunk that re-exports everything under minified aliases
     // (https://github.com/sanity-io/ui/issues/2262)
+    const config = await defineConfig()
     expect(config.hash).toBeUndefined()
     expect(config.outputOptions).toBeUndefined()
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    expect((await defineConfig({hash: false})).hash).toBe(false)
+    expect((await defineConfig({hash: true})).hash).toBe(true)
   })
 })

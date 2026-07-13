@@ -52,6 +52,19 @@ export interface PackageOptions extends Pick<
    */
   platform?: UserConfig['platform']
   /**
+   * Appends a content hash to shared (non-entry) chunk filenames (`[name]-[hash].<ext>`), passed
+   * through to tsdown as-is and left at tsdown's default (`true`) when undefined. The hash keeps
+   * a chunk from ever taking an entry's filename: code shared between entries forms a chunk that
+   * rolldown can name after one of the entries (e.g. `theme`), and without the hash the d.ts
+   * output could hand `theme.d.ts` to the chunk - which re-exports everything under minified
+   * aliases - breaking every named import from the `theme` entry with TS2460
+   * (https://github.com/sanity-io/ui/issues/2262). Only set this to `false` if entries and
+   * chunks can't collide (e.g. a single-entry package) or `outputOptions.chunkFileNames` keeps
+   * chunks away from the entries.
+   * @defaultValue true
+   */
+  hash?: UserConfig['hash']
+  /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
    * to configure the compiler (e.g. `{target: '18'}`).
@@ -86,9 +99,10 @@ export interface PackageOptions extends Pick<
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `dts` and `define` are passed through to tsdown as-is. When left undefined, tsdown keeps its
-  // default behavior (`dts` is auto-detected from `package.json`, `define` replaces nothing).
-  const {entry, dts, define} = options
+  // `dts`, `define` and `hash` are passed through to tsdown as-is. When left undefined, tsdown
+  // keeps its default behavior (`dts` is auto-detected from `package.json`, `define` replaces
+  // nothing, `hash` appends content hashes to shared chunk filenames).
+  const {entry, dts, define, hash} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
   const reactCompiler = options.reactCompiler ?? false
@@ -126,12 +140,8 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   } as const satisfies UserConfig['inputOptions']
 
   // `outputOptions` stays undefined (tsdown's defaults) unless vanilla-extract needs its wiring
-  // below. Notably `hash` is left at tsdown's default (`true`), so shared (non-entry) chunks are
-  // emitted as `[name]-[hash].<ext>` next to the entries. The hash suffix keeps a chunk from ever
-  // taking an entry's filename: code shared between entries forms a chunk that rolldown can name
-  // after one of the entries (e.g. `theme`), and without the hash the d.ts output could hand
-  // `theme.d.ts` to the chunk - which re-exports everything under minified aliases - breaking
-  // every named import from the `theme` entry with TS2460 (https://github.com/sanity-io/ui/issues/2262).
+  // below - notably chunk filenames keep tsdown's hashed default, which prevents chunk/entry
+  // filename collisions (see the `hash` option on `PackageOptions`).
   let outputOptions: UserConfig['outputOptions']
   let treeshake: UserConfig['treeshake']
   let customExports: ((exportsMap: Record<string, unknown>) => Record<string, unknown>) | undefined
@@ -263,6 +273,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     entry,
     exports,
     format,
+    hash,
     inputOptions,
     outputOptions,
     platform,
