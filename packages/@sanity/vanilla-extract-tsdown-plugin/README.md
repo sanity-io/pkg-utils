@@ -85,7 +85,10 @@ vanillaExtractPlugin({
 })
 ```
 
-Like `@tsdown/css` (and Vite lib mode), CSS sourcemaps are intentionally not emitted.
+CSS sourcemaps are not emitted, matching `@tsdown/css` — which
+[intentionally skips them](https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099)
+on the grounds that Vite's build mode doesn't support CSS sourcemaps either
+([vitejs/vite#2830](https://github.com/vitejs/vite/issues/2830)).
 
 ## Acknowledgements
 

@@ -23,7 +23,9 @@ describe('vanilla-extract-library', () => {
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
 
-    // CSS sourcemaps are intentionally skipped, aligned with `@tsdown/css` (and Vite lib mode)
+    // CSS sourcemaps are skipped, aligned with `@tsdown/css`
+    // (https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099) and Vite's build
+    // mode (https://github.com/vitejs/vite/issues/2830)
     expect(bundleCss).not.toContain('sourceMappingURL')
     await expect(readFile(path.join(fixtureDir, 'dist/bundle.css.map'), 'utf-8')).rejects.toThrow()
   })

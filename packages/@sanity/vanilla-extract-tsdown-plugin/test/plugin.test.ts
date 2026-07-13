@@ -61,7 +61,9 @@ describe('vanillaExtractPlugin', () => {
   })
 
   test('does not emit a CSS sourcemap', async () => {
-    // Aligned with `@tsdown/css` (and Vite lib mode), which intentionally skip CSS sourcemaps
+    // Aligned with `@tsdown/css`, which intentionally skips CSS sourcemaps
+    // (https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099) as Vite's build
+    // mode doesn't support them either (https://github.com/vitejs/vite/issues/2830)
     const output = await buildFixture()
 
     expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.map')).toBe(false)
