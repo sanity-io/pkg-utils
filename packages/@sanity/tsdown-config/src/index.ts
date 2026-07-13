@@ -51,12 +51,25 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
  */
 export interface PackageOptions extends Pick<
   UserConfig,
-  'tsconfig' | 'entry' | 'format' | 'dts' | 'define' | 'hash' | 'target'
+  'tsconfig' | 'entry' | 'format' | 'dts' | 'define' | 'target'
 > {
   /**
    * @defaultValue 'neutral'
    */
   platform?: UserConfig['platform']
+  /**
+   * tsdown's `exports` option, with defaults suited for publishing Sanity libraries:
+   * `enabled: 'local-only'` generates the `exports` map during local builds and skips it in CI
+   * (where the committed `package.json` is already up to date), and `devExports: true` keeps
+   * the local `exports` map pointing at source files while `publishConfig.exports` receives
+   * the built files.
+   *
+   * Pass an object to override individual fields (it is merged over these defaults), a CI
+   * condition (`'ci-only'`/`'local-only'`) to change when generation runs, or `false` to
+   * disable exports generation entirely.
+   * @defaultValue {enabled: 'local-only', devExports: true}
+   */
+  exports?: UserConfig['exports']
   /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
@@ -93,12 +106,11 @@ export interface PackageOptions extends Pick<
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `dts`, `define`, `hash` and `target` are passed through to tsdown as-is. When left undefined,
-  // tsdown keeps its default behavior (`dts` is auto-detected from `package.json`, `define`
-  // replaces nothing, `hash` appends content hashes to shared chunk filenames, and `target`
-  // applies no syntax downleveling).
-  const {entry, dts, define, hash, target} = options
-  const tsconfig = options.tsconfig ?? 'tsconfig.json'
+  // `tsconfig`, `entry`, `dts`, `define` and `target` are passed through to tsdown as-is. When
+  // left undefined, tsdown keeps its default behavior (`tsconfig` is auto-detected from the
+  // project, `dts` from `package.json`, `define` replaces nothing, and `target` applies no
+  // syntax downleveling).
+  const {entry, tsconfig, dts, define, target} = options
   const platform = options.platform ?? 'neutral'
   const reactCompiler = options.reactCompiler ?? false
   const styledComponents = options.styledComponents ?? false
@@ -168,11 +180,18 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     )
   }
 
-  const exports = {
-    enabled: 'local-only',
-    // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
-    devExports: true,
-  } as const satisfies UserConfig['exports']
+  // tsdown's `exports` feature is enabled with Sanity-flavored defaults. A userland object is
+  // merged over them, a CI condition replaces `enabled`, and `false` disables the feature.
+  const exports: UserConfig['exports'] =
+    options.exports === false
+      ? false
+      : {
+          enabled: 'local-only',
+          // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
+          devExports: true,
+          ...(typeof options.exports === 'string' && {enabled: options.exports}),
+          ...(typeof options.exports === 'object' && options.exports),
+        }
 
   return defineTsdownConfig({
     define,
@@ -180,7 +199,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     entry,
     exports,
     format,
-    hash,
     inputOptions,
     platform,
     plugins,
@@ -189,10 +207,5 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     target,
     tsconfig,
     minify: {compress: true, codegen: false, mangle: false},
-    // `treeshake` is left at tsdown's/rolldown's default (`moduleSideEffects: true`). Previously
-    // this set the equivalent of `moduleSideEffects: 'no-external'` (with a `.css` exemption),
-    // which stripped intentional side-effect-only imports of external packages (e.g.
-    // `import 'react-time-ago/locale/en'`) from the output. The default preserves those imports
-    // while still honoring `package.json` `sideEffects` fields for bundled modules.
   })
 }

@@ -191,3 +191,41 @@ export default defineConfig({
   target: ['chrome90', 'safari16'],
 })
 ```
+
+## exports
+
+tsdown's [`exports` option](https://tsdown.dev/options/package-exports) is forwarded with
+different defaults, suited for publishing Sanity libraries:
+
+- `enabled: 'local-only'` - the `exports` map in `package.json` is generated during local builds
+  and skipped in CI, where the committed `package.json` is already up to date, and
+- `devExports: true` - the local `exports` map points at the source files (so monorepo siblings
+  and editors resolve them directly), while `publishConfig.exports` receives the built files.
+
+Pass an object to override individual fields (it is merged over the defaults), a CI condition
+(`'ci-only'`/`'local-only'`), or `false` to disable exports generation entirely:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  exports: {all: true},
+})
+```
+
+## Everything else: `mergeConfig`
+
+`defineConfig` deliberately only exposes options you're likely to change. For anything else, merge
+tsdown options over the returned config with tsdown's own `mergeConfig` - `defineConfig` returns a
+promise, so `await` it first:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  // Any tsdown option, e.g. opting out of hashed chunk filenames:
+  hash: false,
+})
+```
