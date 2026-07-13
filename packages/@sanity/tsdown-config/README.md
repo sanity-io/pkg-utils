@@ -202,8 +202,9 @@ different defaults, suited for publishing Sanity libraries:
 - `devExports: true` - the local `exports` map points at the source files (so monorepo siblings
   and editors resolve them directly), while `publishConfig.exports` receives the built files.
 
-Pass an object to override individual fields (it is merged over the defaults), a CI condition
-(`'ci-only'`/`'local-only'`), or `false` to disable exports generation entirely:
+Userland values apply with tsdown's `mergeConfig` semantics: an object deep-merges over the
+defaults (so individual fields can be overridden), while any other value - `false` to disable
+exports generation, or a bare CI condition (`'ci-only'`/`'local-only'`) - replaces them entirely:
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'

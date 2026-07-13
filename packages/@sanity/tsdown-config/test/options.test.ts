@@ -88,14 +88,14 @@ describe('exports option', () => {
     })
   })
 
-  test('accepts a CI condition for `enabled`', async () => {
-    expect((await defineConfig({exports: 'ci-only'})).exports).toEqual({
+  test('non-object values replace the defaults, like `mergeConfig`', async () => {
+    // A bare CI condition passes through as-is (dropping the defaults - set
+    // `exports: {enabled: 'ci-only'}` to merge instead), and `false` disables the feature
+    expect((await defineConfig({exports: 'ci-only'})).exports).toBe('ci-only')
+    expect((await defineConfig({exports: {enabled: 'ci-only'}})).exports).toEqual({
       enabled: 'ci-only',
       devExports: true,
     })
-  })
-
-  test('can be disabled entirely', async () => {
     expect((await defineConfig({exports: false})).exports).toBe(false)
   })
 })

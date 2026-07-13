@@ -1,6 +1,11 @@
 import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
-import {defineConfig as defineTsdownConfig, type Rolldown, type UserConfig} from 'tsdown'
+import {
+  defineConfig as defineTsdownConfig,
+  mergeConfig,
+  type Rolldown,
+  type UserConfig,
+} from 'tsdown'
 
 /**
  * Options for the `vanillaExtract` option — the same options as
@@ -64,9 +69,10 @@ export interface PackageOptions extends Pick<
    * the local `exports` map pointing at source files while `publishConfig.exports` receives
    * the built files.
    *
-   * Pass an object to override individual fields (it is merged over these defaults), a CI
-   * condition (`'ci-only'`/`'local-only'`) to change when generation runs, or `false` to
-   * disable exports generation entirely.
+   * Userland values apply with tsdown's `mergeConfig` semantics: an object deep-merges over
+   * these defaults (so individual fields can be overridden), while any other value - `false`
+   * to disable exports generation, or a bare CI condition (`'ci-only'`/`'local-only'`) -
+   * replaces them entirely.
    * @defaultValue {enabled: 'local-only', devExports: true}
    */
   exports?: UserConfig['exports']
@@ -180,18 +186,19 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     )
   }
 
-  // tsdown's `exports` feature is enabled with Sanity-flavored defaults. A userland object is
-  // merged over them, a CI condition replaces `enabled`, and `false` disables the feature.
-  const exports: UserConfig['exports'] =
-    options.exports === false
-      ? false
-      : {
-          enabled: 'local-only',
-          // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
-          devExports: true,
-          ...(typeof options.exports === 'string' && {enabled: options.exports}),
-          ...(typeof options.exports === 'object' && options.exports),
-        }
+  // tsdown's `exports` feature is enabled with Sanity-flavored defaults, and userland values
+  // apply with tsdown's own `mergeConfig` semantics: an object deep-merges over the defaults,
+  // anything else (`false`, a CI condition) replaces them.
+  const {exports} = mergeConfig(
+    {
+      exports: {
+        enabled: 'local-only',
+        // @TODO use @sanity/parse-package-json to determine if devExports should be `true` or `source`
+        devExports: true,
+      },
+    },
+    {exports: options.exports},
+  )
 
   return defineTsdownConfig({
     define,
