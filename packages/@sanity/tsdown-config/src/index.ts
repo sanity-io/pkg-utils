@@ -50,7 +50,7 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
  */
 export interface PackageOptions extends Pick<
   UserConfig,
-  'tsconfig' | 'entry' | 'format' | 'dts' | 'define'
+  'tsconfig' | 'entry' | 'format' | 'dts' | 'define' | 'target'
 > {
   /**
    * @defaultValue 'neutral'
@@ -122,9 +122,10 @@ function resolveChunkFileNames(
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `dts` and `define` are passed through to tsdown as-is. When left undefined, tsdown keeps its
-  // default behavior (`dts` is auto-detected from `package.json`, `define` replaces nothing).
-  const {entry, dts, define} = options
+  // `dts`, `define` and `target` are passed through to tsdown as-is. When left undefined, tsdown
+  // keeps its default behavior (`dts` is auto-detected from `package.json`, `define` replaces
+  // nothing, and `target` applies no syntax downleveling).
+  const {entry, dts, define, target} = options
   const tsconfig = options.tsconfig ?? 'tsconfig.json'
   const platform = options.platform ?? 'neutral'
   const reactCompiler = options.reactCompiler ?? false
@@ -254,6 +255,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     plugins,
     publint,
     report,
+    target,
     tsconfig,
     minify: {compress: true, codegen: false, mangle: false},
     // `treeshake` is left at tsdown's/rolldown's default (`moduleSideEffects: true`). Previously

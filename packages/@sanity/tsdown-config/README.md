@@ -143,3 +143,18 @@ export default defineConfig({
   define: {'process.env.NODE_ENV': JSON.stringify('production')},
 })
 ```
+
+## target
+
+tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
+downlevels JS syntax for the given runtimes (esbuild-style target strings), and doubles as the
+default CSS syntax lowering target when `vanillaExtract` is enabled:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  target: ['chrome90', 'safari16'],
+})
+```

@@ -29,6 +29,22 @@ describe('define option', () => {
   })
 })
 
+describe('target option', () => {
+  test('is undefined by default, so tsdown applies no syntax downleveling', async () => {
+    expect((await defineConfig()).target).toBeUndefined()
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    // tsdown resolves the target into `ResolvedConfig.target`, where plugins pick it up - e.g.
+    // `@sanity/vanilla-extract-tsdown-plugin` uses it as the default CSS syntax lowering target
+    expect((await defineConfig({target: 'chrome90'})).target).toBe('chrome90')
+    expect((await defineConfig({target: ['chrome90', 'safari16']})).target).toEqual([
+      'chrome90',
+      'safari16',
+    ])
+  })
+})
+
 async function renderChunkFileName(
   config: UserConfig,
   defaultChunkFileNames: string,

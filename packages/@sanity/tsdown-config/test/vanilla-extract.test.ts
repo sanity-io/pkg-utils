@@ -28,6 +28,15 @@ describe('vanilla-extract-library', () => {
     await expect(readFile(path.join(fixtureDir, 'dist/bundle.css.map'), 'utf-8')).rejects.toThrow()
   })
 
+  test("uses tsdown's top-level `target` as the CSS syntax lowering target", async () => {
+    const bundleCss = await readFile(path.join(fixtureDir, 'dist/bundle.css'), 'utf-8')
+
+    // The fixture sets `target: 'chrome61'`, which predates the `inset` shorthand used in
+    // `styles.css.ts`, so lightningcss must flatten it into `top`/`right`/`bottom`/`left`
+    expect(bundleCss).not.toContain('inset:')
+    expect(bundleCss).toContain('top:0')
+  })
+
   test('emits the no-op JS shim and its type declarations', async () => {
     const [shim, shimDts] = await Promise.all([
       readFile(path.join(fixtureDir, 'dist/bundle.css.js'), 'utf-8'),
