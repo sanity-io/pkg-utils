@@ -180,7 +180,8 @@ export default defineConfig({
 
 tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
 downlevels JS syntax for the given runtimes (esbuild-style target strings), and doubles as the
-default CSS syntax lowering target when `vanillaExtract` is enabled:
+default CSS syntax lowering target when `vanillaExtract` is enabled (browserless targets like
+`node20` don't affect the CSS - it falls back to `@sanity/browserslist-config`):
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'

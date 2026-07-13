@@ -67,8 +67,10 @@ vanillaExtractPlugin({
   minify: true,
   /**
    * CSS syntax lowering target, in esbuild-style strings like `css.target`. Defaults to tsdown's
-   * top-level `target`; when neither is configured, the targets are resolved from
-   * `@sanity/browserslist-config`. Set to `false` to disable syntax lowering.
+   * top-level `target`. When neither is configured — or when the targets don't include any
+   * browsers (e.g. `'node20'`, which speaks to the JS runtime, not the browsers the CSS runs
+   * in) — the targets are resolved from `@sanity/browserslist-config` instead, where
+   * `@tsdown/css` would silently skip syntax lowering. Set to `false` to disable lowering.
    */
   target: 'chrome90',
   /**

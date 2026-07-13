@@ -1,7 +1,7 @@
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
-import type {UserConfig} from 'tsdown'
+import type {ResolvedConfig, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {vanillaExtractPlugin, type Options} from '../src/index.ts'
 
@@ -148,8 +148,38 @@ describe('vanillaExtractPlugin', () => {
     expect(findAsset(lowered, 'bundle.css')).not.toContain('inset:')
     expect(findAsset(lowered, 'bundle.css')).toContain('top:')
 
-    // `target: false` disables syntax lowering entirely
+    // `target: false` disables syntax lowering entirely: lightningcss is skipped, so the CSS
+    // keeps its authored form
     expect(findAsset(modern, 'bundle.css')).toContain('inset: 0')
+    expect(findAsset(modern, 'bundle.css')).toContain('rgb(1, 2, 3)')
+  })
+
+  test('falls back to @sanity/browserslist-config when the target has no browsers', async () => {
+    // A JS-runtime-only target (e.g. tsdown's common `target: 'node20'`, which says nothing
+    // about the browsers the extracted CSS runs in) falls back to the browserslist defaults
+    // instead of silently skipping syntax lowering the way `@tsdown/css` does. lightningcss
+    // running (with the fallback targets) is observable even without minification: it
+    // normalizes the authored `rgb(1, 2, 3)` to `#010203`, unlike `target: false` above.
+    const output = await buildFixture({target: 'node20', minify: false})
+    expect(findAsset(output, 'bundle.css')).toContain('#010203')
+    expect(findAsset(output, 'bundle.css')).not.toContain('rgb(1, 2, 3)')
+
+    // The same applies to a browserless top-level `target` inherited from tsdown
+    const plugin = vanillaExtractPlugin({minify: false})
+    await plugin.tsdownConfigResolved?.({
+      target: ['node20'],
+    } as Partial<ResolvedConfig> as ResolvedConfig)
+    const bundle = await rolldown({
+      input: path.join(fixtureDir, 'index.ts'),
+      plugins: [plugin],
+    })
+    try {
+      const {output: inherited} = await bundle.generate({format: 'esm'})
+      expect(findAsset(inherited, 'bundle.css')).toContain('#010203')
+      expect(findAsset(inherited, 'bundle.css')).not.toContain('rgb(1, 2, 3)')
+    } finally {
+      await bundle.close()
+    }
   })
 
   test('defaults to short identifiers, and passes `identifiers` through', async () => {

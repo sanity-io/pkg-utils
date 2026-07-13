@@ -52,8 +52,11 @@ export interface Options {
    * (e.g. `'chrome90'`, `'safari16.2'`), like `css.target` in `@tsdown/css`. Set to `false`
    * to disable syntax lowering entirely.
    *
-   * Defaults to tsdown's top-level `target` when building through tsdown; when neither is
-   * configured, the targets are resolved from `@sanity/browserslist-config`.
+   * Defaults to tsdown's top-level `target` when building through tsdown. When neither is
+   * configured — or when the configured targets don't include any browsers (e.g. `'node20'`,
+   * common for libraries, says nothing about the browsers the extracted CSS runs in) — the
+   * targets are resolved from `@sanity/browserslist-config` instead. (`@tsdown/css` would
+   * silently skip syntax lowering in that case.)
    */
   target?: string | string[] | false
   /**
@@ -106,11 +109,15 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
 
   function resolveTargets(): Targets | undefined {
     if (options.target === false) return undefined
-    if (options.target !== undefined) {
-      const target = Array.isArray(options.target) ? options.target : [options.target]
-      return esbuildTargetToLightningCSS(target)
+    const target = options.target ?? tsdownTarget
+    if (target !== undefined) {
+      const targets = esbuildTargetToLightningCSS(Array.isArray(target) ? target : [target])
+      if (targets) return targets
     }
-    if (tsdownTarget) return esbuildTargetToLightningCSS(tsdownTarget)
+    // The extracted CSS always runs in browsers, so a target list without any browsers (e.g.
+    // tsdown's common `target: 'node20'`, which speaks to the JS runtime) falls back to
+    // `@sanity/browserslist-config` instead of silently disabling syntax lowering the way
+    // `@tsdown/css` does — `target: false` is the explicit off switch.
     return browserslistToTargets(browserslist(browserslistConfig))
   }
 
