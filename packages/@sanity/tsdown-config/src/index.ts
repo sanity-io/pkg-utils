@@ -166,7 +166,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     outputFormat: NormalizedFormat,
   ) =>
     ({
-      hoistTransitiveImports: false,
       chunkFileNames: resolveChunkFileNames(defaultOptions, outputFormat),
     }) satisfies Rolldown.OutputOptions
 
