@@ -1,32 +1,18 @@
 import {readFileSync} from 'node:fs'
 import path from 'node:path'
-import type {Options as VanillaExtractPluginOptions} from '@vanilla-extract/rollup-plugin'
+import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-rolldown-plugin'
 import type {Rolldown} from 'tsdown'
 
 /** The default name of the extracted CSS file. */
 const DEFAULT_VANILLA_EXTRACT_CSS_NAME = 'bundle.css'
 
 /**
- * Options for the `@vanilla-extract/rollup-plugin` integration, including the same extensions as
- * `@sanity/pkg-utils` (`minify`, `browserslist`, and `extract.compatMode`).
+ * Options for the `@sanity/vanilla-extract-rolldown-plugin` integration, the same options as the
+ * plugin itself (`identifiers`, `minify`, `browserslist`, and `extract`), with `extract.compatMode`
+ * extended to also wire up the tsdown-specific parts of the conditional CSS export pattern.
  * @public
  */
 export interface PackageVanillaExtractOptions extends Omit<VanillaExtractPluginOptions, 'extract'> {
-  /**
-   * Minify the extracted CSS with `lightningcss`.
-   * @defaultValue true
-   */
-  minify?: boolean
-  /**
-   * Browserslist query passed to `lightningcss` when optimizing the extracted CSS.
-   * @defaultValue `@sanity/browserslist-config`
-   */
-  browserslist?: string | string[]
-  /**
-   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc).
-   * @defaultValue "short"
-   */
-  identifiers?: VanillaExtractPluginOptions['identifiers']
   /**
    * Extract the CSS into a separate file. The CSS is always extracted, so this configures _how_.
    */

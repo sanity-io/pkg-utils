@@ -72,7 +72,9 @@ export default defineConfig({
 
 The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
 `.css.ts` files into a separate, `lightningcss`-optimized file (`dist/bundle.css` by default).
-Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
+Under the hood it uses [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme),
+a rolldown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
+into your project. Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
 
 ```sh
 pnpm add --save-dev @vanilla-extract/css

@@ -115,12 +115,12 @@ describe('vanillaExtract option', () => {
   })
 
   test('lazily loads the vanilla-extract plugin pipeline when enabled', async () => {
-    // The pipeline (and with it `@vanilla-extract/rollup-plugin` and the CSS toolchain) is only
-    // dynamically imported when the option is enabled, like `reactCompiler`.
+    // The pipeline (`@sanity/vanilla-extract-rolldown-plugin`, which pulls in the CSS toolchain)
+    // is only dynamically imported when the option is enabled, like `reactCompiler`.
     expect(getPluginNames(await defineConfig({vanillaExtract: true}))).toEqual([
       'vanilla-extract',
-      'sanity-tsdown-config:optimize-css',
-      'sanity-tsdown-config:bundle-css-shim',
+      'vanilla-extract:optimize-css',
+      'vanilla-extract:css-shim',
     ])
   })
 
@@ -173,7 +173,7 @@ describe('vanillaExtract option', () => {
     const config = await defineConfig({vanillaExtract: {extract: {compatMode: false}}})
 
     // The vanilla-extract + optimize-css plugins are still applied, but the shim is not…
-    expect(getPluginNames(config)).toEqual(['vanilla-extract', 'sanity-tsdown-config:optimize-css'])
+    expect(getPluginNames(config)).toEqual(['vanilla-extract', 'vanilla-extract:optimize-css'])
     // …and neither is the exports wiring
     expect(config.exports).not.toHaveProperty('customExports')
   })

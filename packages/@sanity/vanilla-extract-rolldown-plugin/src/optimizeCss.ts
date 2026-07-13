@@ -1,21 +1,20 @@
 import {basename} from 'node:path'
 import browserslist from 'browserslist'
 import {browserslistToTargets, transform} from 'lightningcss'
-import type {Rolldown} from 'tsdown'
+import type {OutputAsset, Plugin} from 'rolldown'
 
 /**
- * Post-processes the CSS file extracted by `@vanilla-extract/rollup-plugin` with `lightningcss`,
- * applying browserslist targets and (unless disabled) minification. Ported from the equivalent
- * `@sanity/pkg-utils` Rollup plugin.
+ * Post-processes the extracted CSS asset with `lightningcss`, applying browserslist targets and
+ * (unless disabled) minification. Ported from the equivalent `@sanity/pkg-utils` Rollup plugin.
  * @internal
  */
 export function optimizeCss(options: {
   extractFileName: string
   browserslist: string | string[]
-  minify?: boolean
-}): Rolldown.Plugin {
+  minify: boolean
+}): Plugin {
   return {
-    name: 'sanity-tsdown-config:optimize-css',
+    name: 'vanilla-extract:optimize-css',
 
     async generateBundle(_outputOptions, bundle, _isWrite) {
       for (const [fileName, assetOrChunk] of Object.entries(bundle)) {
@@ -31,7 +30,7 @@ export function optimizeCss(options: {
               asset,
               sourceMap?.type === 'asset' ? sourceMap : undefined,
               options.browserslist,
-              options.minify ?? true,
+              options.minify,
             )
           }
         }
@@ -41,8 +40,8 @@ export function optimizeCss(options: {
 }
 
 async function transformCss(
-  asset: Rolldown.OutputAsset,
-  sourceMapAsset: Rolldown.OutputAsset | undefined,
+  asset: OutputAsset,
+  sourceMapAsset: OutputAsset | undefined,
   browserslistConfig: string | string[],
   minify: boolean,
 ) {

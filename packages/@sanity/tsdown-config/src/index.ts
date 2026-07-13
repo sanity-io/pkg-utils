@@ -75,8 +75,8 @@ export interface PackageOptions extends Pick<
    */
   styledComponents?: boolean | StyledComponentsOptions
   /**
-   * Enables `@vanilla-extract/rollup-plugin` to extract CSS into a separate file, with support for
-   * minifying the extracted CSS. Pass `true` to use the defaults, or an object to customize.
+   * Enables `@sanity/vanilla-extract-rolldown-plugin` to extract CSS into a separate,
+   * `lightningcss`-optimized file. Pass `true` to use the defaults, or an object to customize.
    *
    * By default (`extract.compatMode: true`) the config also injects the self-referential
    * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
@@ -193,14 +193,10 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   }
   if (options.vanillaExtract) {
     // Everything vanilla-extract related is lazy loaded, like `reactCompiler`, so it's only paid
-    // for when the option is enabled: `@vanilla-extract/rollup-plugin` compiles the `.css.ts`
-    // files, and `optimizeCss` pulls in the CSS toolchain (`lightningcss`, `browserslist`) that
-    // minifies the extracted CSS.
+    // for when the option is enabled: `@sanity/vanilla-extract-rolldown-plugin` compiles the
+    // `.css.ts` files, extracts the CSS into a single file, and optimizes it with `lightningcss`.
     const [
       {vanillaExtractPlugin},
-      {default: browserslistConfig},
-      {optimizeCss},
-      {bundleCssShim},
       {
         composeIntro,
         createConditionalCssExport,
@@ -210,10 +206,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
         resolveVanillaExtractCssName,
       },
     ] = await Promise.all([
-      import('@vanilla-extract/rollup-plugin'),
-      import('@sanity/browserslist-config'),
-      import('./optimizeCss.ts'),
-      import('./bundleCssShim.ts'),
+      import('@sanity/vanilla-extract-rolldown-plugin'),
       import('./vanillaExtract.ts'),
     ])
 
@@ -221,31 +214,28 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     const vanillaExtract = resolveVanillaExtract(options.vanillaExtract)
     const cssName = resolveVanillaExtractCssName(vanillaExtract.options)
 
+    // The plugin owns the CSS pipeline (compile, extract, optimize, and - in compat mode - the
+    // no-op JS shim), while the config wires up the tsdown-specific parts of compat mode below
+    // (the self-referential import and the conditional `package.json` export).
     plugins.push(
-      // Rolldown supports most Rollup plugins, but the plugin types are not identical, so the
-      // official guidance is to cast: https://tsdown.dev/advanced/plugins#rollup-plugins
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      vanillaExtractPlugin({
-        identifiers: vanillaExtract.options.identifiers ?? 'short',
-        cwd: vanillaExtract.options.cwd,
-        esbuildOptions: vanillaExtract.options.esbuildOptions,
-        unstable_injectFilescopes: vanillaExtract.options.unstable_injectFilescopes,
+      ...vanillaExtractPlugin({
+        identifiers: vanillaExtract.options.identifiers,
+        minify: vanillaExtract.options.minify,
+        browserslist: vanillaExtract.options.browserslist,
         extract: {
           name: cssName,
-          sourcemap: vanillaExtract.options.extract?.sourcemap ?? true,
+          sourcemap: vanillaExtract.options.extract?.sourcemap,
+          compatMode: vanillaExtract.compatMode,
         },
-      }) as unknown as Rolldown.Plugin,
-      optimizeCss({
-        extractFileName: cssName,
-        browserslist: vanillaExtract.options.browserslist || browserslistConfig,
-        minify: vanillaExtract.options.minify ?? true,
       }),
     )
 
     // The vanilla-extract plugin resolves each compiled `.css.ts` module's CSS to an external,
     // side-effect-only `<file>.vanilla.css` import and extracts the CSS into a single file. The
-    // imports are redundant once the CSS is extracted, so let tree-shaking drop them up front:
-    // the plugin's own `generateBundle` cleanup only strips imports at the start of a line, which
+    // imports are redundant once the CSS is extracted, so the plugin marks them side-effect free
+    // in its `resolveId` hook, letting tree-shaking drop them up front. This config-level rule is
+    // kept as belt-and-braces (e.g. should another plugin resolve the virtual modules first):
+    // the plugin's `generateBundle` fallback only strips imports at the start of a line, which
     // the minifier's statement merging can defeat (e.g. `a(), require("….vanilla.css")` in CJS).
     // Modules not matching the rule keep the default tree-shaking behavior.
     treeshake = {moduleSideEffects: [{test: /\.vanilla\.css$/, external: true, sideEffects: false}]}
@@ -276,12 +266,10 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     })
 
     if (vanillaExtract.compatMode) {
-      // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
-      // `./<css>` export resolve to.
-      plugins.push(bundleCssShim({fileName: `${cssName}.js`}))
-
-      // Write the conditional `./<css>` export to `package.json` (and, through tsdown, mirror it
-      // into `publishConfig.exports`) so userland does not have to maintain it.
+      // In compat mode (the plugin already emits the no-op JS shim that the `node`/`default`
+      // conditions resolve to), write the conditional `./<css>` export to `package.json` (and,
+      // through tsdown, mirror it into `publishConfig.exports`) so userland does not have to
+      // maintain it.
       const conditionalCssExport = createConditionalCssExport(cssName, 'dist')
       customExports = (exportsMap) =>
         insertCssExport(exportsMap, `./${cssName}`, conditionalCssExport)

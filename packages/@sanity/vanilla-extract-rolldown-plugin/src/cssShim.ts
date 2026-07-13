@@ -1,10 +1,10 @@
-import type {Rolldown} from 'tsdown'
+import type {Plugin} from 'rolldown'
 
 /**
- * Emits a no-op JavaScript shim (`export default ""`) alongside the extracted CSS. The conditional
- * `./<css>` export points its `node`/`default` conditions at this file so that the self-referential
- * `import "<pkg>/<css>"` resolves to a harmless module in runtimes that cannot import `.css` files,
- * instead of throwing `Error: Unknown file extension ".css"`.
+ * Emits a no-op JavaScript shim (`export default ""`) alongside the extracted CSS. A conditional
+ * `./<css>` export can point its `node`/`default` conditions at this file so that a
+ * self-referential `import "<pkg>/<css>"` resolves to a harmless module in runtimes that cannot
+ * import `.css` files, instead of throwing `Error: Unknown file extension ".css"`.
  *
  * A matching `.d.ts` declaration is emitted next to the shim as well. Both the `browser`/`style`
  * (`<css>`) and the `node`/`default` (`<css>.js`) conditions of the `./<css>` export resolve their
@@ -14,11 +14,11 @@ import type {Rolldown} from 'tsdown'
  * @param options.fileName - The shim file name, e.g. `bundle.css.js`.
  * @internal
  */
-export function bundleCssShim(options: {fileName: string}): Rolldown.Plugin {
+export function cssShim(options: {fileName: string}): Plugin {
   const cssName = options.fileName.replace(/\.js$/, '')
 
   return {
-    name: 'sanity-tsdown-config:bundle-css-shim',
+    name: 'vanilla-extract:css-shim',
     generateBundle() {
       this.emitFile({
         type: 'asset',
