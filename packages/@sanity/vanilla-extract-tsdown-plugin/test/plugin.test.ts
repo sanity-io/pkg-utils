@@ -15,9 +15,14 @@ const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
  */
 const selfReferentialSpecifier = '@sanity/vanilla-extract-tsdown-plugin/bundle.css'
 
-async function buildFixture(options?: Options, format: 'esm' | 'cjs' = 'esm', sourcemap = false) {
+async function buildFixture(
+  options?: Options,
+  format: 'esm' | 'cjs' = 'esm',
+  sourcemap = false,
+  fixture = 'basic',
+) {
   const bundle = await rolldown({
-    input: path.join(fixtureDir, 'index.ts'),
+    input: path.join(__dirname, 'fixtures', fixture, 'index.ts'),
     plugins: [vanillaExtractPlugin(options)],
   })
   try {
@@ -179,6 +184,75 @@ describe('vanillaExtractPlugin', () => {
       const {output: inherited} = await bundle.generate({format: 'esm'})
       expect(findAsset(inherited, 'bundle.css')).toContain('#010203')
       expect(findAsset(inherited, 'bundle.css')).not.toContain('rgb(1, 2, 3)')
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test('orders dynamically imported CSS after the statically imported CSS', async () => {
+    const output = await buildFixture(undefined, 'esm', false, 'dynamic')
+
+    // The dynamic import produces a separate chunk…
+    expect(output.filter((assetOrChunk) => assetOrChunk.type === 'chunk').length).toBeGreaterThan(1)
+
+    // …and its CSS follows the entry's statically imported CSS, matching execution order (the
+    // dynamic chunk only loads later at runtime), regardless of the bundle's iteration order
+    const bundleCss = findAsset(output, 'bundle.css')
+    expect(bundleCss).toContain('#010203')
+    expect(bundleCss).toContain('#070809')
+    expect(bundleCss.indexOf('#010203')).toBeLessThan(bundleCss.indexOf('#070809'))
+  })
+
+  test('emits no CSS or shim for style-less builds, unless `inject` needs them', async () => {
+    // Without `inject`, nothing references the CSS file, so an empty one would just be a stray
+    // artifact and nothing is emitted
+    const withoutInject = await buildFixture({inject: false}, 'esm', false, 'no-css')
+    expect(withoutInject.map((assetOrChunk) => assetOrChunk.fileName)).toEqual(['index.js'])
+
+    // With `inject` (the default), the conditional `./bundle.css` export is written to
+    // `package.json` by the `tsdownConfig` hook at config-resolution time - before any CSS is
+    // known - so the CSS file and its shims are emitted even when empty to keep it resolving
+    const withInject = await buildFixture(undefined, 'esm', false, 'no-css')
+    expect(withInject.map((assetOrChunk) => assetOrChunk.fileName).toSorted()).toEqual([
+      'bundle.css',
+      'bundle.css.d.ts',
+      'bundle.css.js',
+      'index.js',
+    ])
+    expect(findAsset(withInject, 'bundle.css')).toBe('')
+    // No import is injected when there are no styles to load
+    expect(findEntryChunk(withInject).code).not.toContain('bundle.css')
+  })
+
+  test('warns and still injects when the native magic-string is unavailable', async () => {
+    const logs: string[] = []
+    const bundle = await rolldown({
+      input: path.join(fixtureDir, 'index.ts'),
+      plugins: [
+        vanillaExtractPlugin(),
+        {
+          name: 'disable-native-magic-string',
+          options: (inputOptions) => ({
+            ...inputOptions,
+            experimental: {...inputOptions.experimental, nativeMagicString: false},
+          }),
+        },
+      ],
+      onLog(_level, log) {
+        logs.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm', sourcemap: true})
+
+      // The import is still injected through the plain string fallback…
+      const {code} = findEntryChunk(output)
+      expect(code.startsWith(`import "${selfReferentialSpecifier}";\n`)).toBe(true)
+
+      // …but the sourcemap can't be adjusted for it, which is called out instead of failing silently
+      expect(logs.some((message) => message.includes('native magic-string is unavailable'))).toBe(
+        true,
+      )
     } finally {
       await bundle.close()
     }

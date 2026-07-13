@@ -269,7 +269,14 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
         magicString.prepend(statement)
         return magicString
       }
-      // Fallback when another `options` hook disabled `experimental.nativeMagicString`
+      // Fallback when another `options` hook disabled `experimental.nativeMagicString`: the
+      // import is still injected, but without the native magic-string the chunk's sourcemap
+      // can't be adjusted for it (rolldown reports it as SOURCEMAP_BROKEN as well).
+      if (outputOptions.sourcemap) {
+        this.warn(
+          `[vanilla-extract] rolldown's native magic-string is unavailable (another plugin's \`options\` hook may have disabled \`experimental.nativeMagicString\`), so the CSS import injected into "${chunk.fileName}" shifts its sourcemap by one line.`,
+        )
+      }
       return {code: statement + code}
     },
 
@@ -285,6 +292,12 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
       if (chunks.length === 0) return
 
       let css = collectCss(chunks, styles)
+
+      // With `inject`, the conditional `./<fileName>` export (written into `package.json` by the
+      // `tsdownConfig` hook at config-resolution time, before any CSS is known) must resolve, so
+      // the CSS file and its shims are emitted even when no styles were extracted. Without
+      // `inject` nothing references the CSS file, so an empty one would just be a stray artifact.
+      if (!css && !inject) return
 
       const targets = resolveTargets()
       if (css && (targets || minify)) {
@@ -345,10 +358,11 @@ function chunkHasStyles(
 }
 
 /**
- * Concatenate the extracted CSS of every chunk in the output, walking the chunk graph
- * depth-first with imported chunks before their importers (matching execution order, so the
- * CSS of shared chunks precedes the CSS of the entries that import them), and the modules
- * within each chunk in module order.
+ * Concatenate the extracted CSS of every chunk in the output in execution order: starting from
+ * the entry chunks, statically imported chunks come before their importers, the modules within
+ * each chunk follow module order, and dynamically imported chunks follow their importer (they
+ * load later at runtime). Chunks not reachable from an entry are appended last, so the order
+ * never depends on the bundle's own iteration order.
  */
 function collectCss(chunks: Rolldown.OutputChunk[], styles: ReadonlyMap<string, string>): string {
   const chunksByFileName = new Map(chunks.map((chunk) => [chunk.fileName, chunk]))
@@ -368,8 +382,15 @@ function collectCss(chunks: Rolldown.OutputChunk[], styles: ReadonlyMap<string, 
       css += moduleCss
       if (!moduleCss.endsWith('\n')) css += '\n'
     }
+    for (const dynamicallyImported of chunk.dynamicImports) {
+      const dynamicChunk = chunksByFileName.get(dynamicallyImported)
+      if (dynamicChunk) visit(dynamicChunk)
+    }
   }
 
+  for (const chunk of chunks) {
+    if (chunk.isEntry) visit(chunk)
+  }
   for (const chunk of chunks) visit(chunk)
   return css
 }
