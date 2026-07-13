@@ -86,4 +86,5 @@ The plugin combines a port of
 [`@vanilla-extract/rollup-plugin`](https://github.com/vanilla-extract-css/vanilla-extract/tree/master/packages/rollup-plugin)
 (MIT licensed, Copyright (c) 2021 SEEK) with the CSS collection and emission architecture of
 [`@tsdown/css`](https://github.com/rolldown/tsdown/tree/main/packages/css) (MIT licensed,
-Copyright (c) 2025-present VoidZero Inc. & Contributors, Copyright (c) 2024 Kevin Deng).
+Copyright (c) 2025-present VoidZero Inc. & Contributors, Copyright (c) 2024 Kevin Deng). The full
+combined license notices are in this package's [LICENSE](./LICENSE) file.
