@@ -43,7 +43,9 @@ function findAsset(output: readonly (OutputAsset | OutputChunk)[], fileName: str
 }
 
 function findEntryChunk(output: readonly (OutputAsset | OutputChunk)[]): OutputChunk {
-  const chunk = output.find((assetOrChunk) => assetOrChunk.type === 'chunk')
+  // Filter on `isEntry` instead of taking the first chunk: the output order of a multi-chunk
+  // bundle is not contractual, so the first chunk is not guaranteed to be the entry
+  const chunk = output.find((assetOrChunk) => assetOrChunk.type === 'chunk' && assetOrChunk.isEntry)
   if (!chunk || chunk.type !== 'chunk') {
     expect.unreachable('expected an entry chunk')
   }
@@ -216,8 +218,10 @@ describe('vanillaExtractPlugin', () => {
   test('orders dynamically imported CSS after the statically imported CSS', async () => {
     const output = await buildFixture(undefined, 'esm', false, 'dynamic')
 
-    // The dynamic import produces a separate chunk…
+    // The dynamic import produces a separate chunk, and `findEntryChunk` picks the entry among
+    // them (not whichever chunk happens to come first in the output)…
     expect(output.filter((assetOrChunk) => assetOrChunk.type === 'chunk').length).toBeGreaterThan(1)
+    expect(findEntryChunk(output).name).toBe('index')
 
     // …and its CSS follows the entry's statically imported CSS, matching execution order (the
     // dynamic chunk only loads later at runtime), regardless of the bundle's iteration order
