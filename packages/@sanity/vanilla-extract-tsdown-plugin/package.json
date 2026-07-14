@@ -1,26 +1,25 @@
 {
-  "name": "@sanity/tsdown-config",
-  "version": "0.13.1",
-  "description": "Shared configuration for tsdown",
+  "name": "@sanity/vanilla-extract-tsdown-plugin",
+  "version": "0.0.0",
+  "description": "tsdown plugin for vanilla-extract that extracts CSS into a lightningcss-optimized file, modeled after @tsdown/css",
   "keywords": [
     "sanity-io",
     "sanity",
-    "npm",
-    "build",
-    "bundling",
-    "utilities",
+    "vanilla-extract",
     "tsdown",
     "rolldown",
-    "rollup"
+    "css",
+    "lightningcss",
+    "plugin"
   ],
-  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsdown-config#readme",
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
-    "directory": "packages/@sanity/tsdown-config"
+    "directory": "packages/@sanity/vanilla-extract-tsdown-plugin"
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
@@ -41,32 +40,24 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@babel/core": "^7.29.7",
-    "@rolldown/plugin-babel": "^0.2.3",
-    "@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
-    "@vitejs/plugin-react": "^6.0.3",
-    "package-manager-detector": "^1.7.0",
-    "publint": "^0.3.21"
+    "@sanity/browserslist-config": "^1.0.5",
+    "@vanilla-extract/integration": "^8.0.10",
+    "browserslist": "^4.28.5",
+    "lightningcss": "^1.32.0"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "workspace:^",
     "@sanity/tsconfig": "workspace:^",
-    "@types/babel__core": "^7.20.5",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "tinyexec": "^1.2.4",
+    "@sanity/tsdown-config": "workspace:^",
+    "@types/node": "catalog:",
+    "@vanilla-extract/css": "^1.21.1",
+    "publint": "catalog:",
+    "rolldown": "^1.1.5",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "babel-plugin-react-compiler": "*",
-    "tsdown": "0.22.5",
-    "typescript": "6.x || 7.x"
-  },
-  "peerDependenciesMeta": {
-    "babel-plugin-react-compiler": {
-      "optional": true
-    }
+    "tsdown": "^0.22.5"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

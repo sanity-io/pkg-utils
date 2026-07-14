@@ -5,16 +5,8 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "source": "./src/exports/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./theme": {
-      "source": "./src/exports/theme.ts",
-      "import": "./dist/theme.js",
-      "require": "./dist/theme.cjs"
-    },
+    ".": "./src/exports/index.ts",
+    "./theme": "./src/exports/theme.ts",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",

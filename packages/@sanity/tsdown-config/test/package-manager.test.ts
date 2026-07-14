@@ -40,4 +40,22 @@ describe('devExports default', () => {
       enabled: 'local-only',
     })
   })
+
+  test('still merges other export options when pnpm is not detected', async () => {
+    mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
+
+    expect((await defineConfig({exports: {all: true}})).exports).toEqual({
+      enabled: 'local-only',
+      all: true,
+    })
+  })
+
+  test('allows userland to enable dev exports explicitly', async () => {
+    mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
+
+    expect((await defineConfig({exports: {devExports: true}})).exports).toEqual({
+      enabled: 'local-only',
+      devExports: true,
+    })
+  })
 })
