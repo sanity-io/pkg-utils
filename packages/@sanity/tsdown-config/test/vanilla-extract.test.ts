@@ -1,6 +1,6 @@
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
-import {fileURLToPath} from 'node:url'
+import {fileURLToPath, pathToFileURL} from 'node:url'
 import {x} from 'tinyexec'
 import type {TsdownPlugin, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
@@ -13,6 +13,14 @@ const fixtureDir = path.resolve(__dirname, 'fixtures/vanilla-extract-library')
 async function runNode(script: string): Promise<string> {
   const result = await x('node', ['-e', script], {throwOnError: true})
   return result.stdout.trim()
+}
+
+/**
+ * A `file://` URL string for dynamic `import()` in the spawned Node process: a raw absolute
+ * path is not a valid ESM specifier on Windows (the drive letter parses as a URL scheme).
+ */
+function fileUrl(...segments: string[]): string {
+  return pathToFileURL(path.join(...segments)).href
 }
 
 const conditionalCssExport = {
@@ -112,7 +120,7 @@ describe('vanilla-extract-library runtime', () => {
   test.each([
     [
       'import()',
-      `import(${JSON.stringify(path.join(fixtureDir, 'dist/index.js'))}).then((m) => console.log(m.getBoxClassName()))`,
+      `import(${JSON.stringify(fileUrl(fixtureDir, 'dist/index.js'))}).then((m) => console.log(m.getBoxClassName()))`,
     ],
     [
       'require()',
@@ -151,7 +159,7 @@ describe('vanilla-extract-cjs-library', () => {
     ],
     [
       'import()',
-      `import(${JSON.stringify(path.join(__dirname, 'fixtures/vanilla-extract-cjs-library/dist/index.mjs'))}).then((m) => console.log(m.getBoxClassName()))`,
+      `import(${JSON.stringify(fileUrl(__dirname, 'fixtures/vanilla-extract-cjs-library/dist/index.mjs'))}).then((m) => console.log(m.getBoxClassName()))`,
     ],
   ])('the built output loads in plain Node via %s', async (_loader, script) => {
     await expect(runNode(script)).resolves.toMatch(/^\w+$/)
