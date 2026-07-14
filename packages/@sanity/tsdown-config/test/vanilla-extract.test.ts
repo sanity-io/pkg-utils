@@ -1,12 +1,19 @@
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import {x} from 'tinyexec'
 import type {TsdownPlugin, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {defineConfig} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/vanilla-extract-library')
+
+/** Runs a JS snippet in a plain Node process, returning its stdout. */
+async function runNode(script: string): Promise<string> {
+  const result = await x('node', ['-e', script], {throwOnError: true})
+  return result.stdout.trim()
+}
 
 const conditionalCssExport = {
   browser: './dist/bundle.css',
@@ -45,9 +52,11 @@ describe('vanilla-extract-library', () => {
       readFile(path.join(fixtureDir, 'dist/bundle.css.d.ts'), 'utf-8'),
     ])
 
-    expect(shim).toContain('export default ""')
-    expect(shimDts).toContain('declare const _default: string')
-    expect(shimDts).toContain('export default _default')
+    // The shim must be free of JS syntax so it parses as both CommonJS and an ES module,
+    // regardless of the package `type` (the cjs-library fixture covers this at runtime)
+    expect(shim).toContain('No-op shim')
+    expect(shim.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
+    expect(shimDts).toContain('export {}')
   })
 
   test('injects the self-referential CSS import into the entry chunks', async () => {
@@ -94,6 +103,65 @@ describe('vanilla-extract-library', () => {
 
     // The conditional CSS export is inserted before `./package.json`
     expect(Object.keys(pkg.exports)).toEqual(['.', './bundle.css', './package.json'])
+  })
+})
+
+describe('vanilla-extract-library runtime', () => {
+  // `"type": "module"` package: `.js` files are ESM, so the `node`/`default` conditions of the
+  // conditional `./bundle.css` export resolve the shim as an ES module.
+  test.each([
+    [
+      'import()',
+      `import(${JSON.stringify(path.join(fixtureDir, 'dist/index.js'))}).then((m) => console.log(m.getBoxClassName()))`,
+    ],
+    [
+      'require()',
+      `console.log(require(${JSON.stringify(path.join(fixtureDir, 'dist/index.cjs'))}).getBoxClassName())`,
+    ],
+  ])('the built output loads in plain Node via %s', async (_loader, script) => {
+    // The injected self-referential `@fixtures/vanilla-extract-library/bundle.css` import
+    // resolves through the conditional export to the no-op shim instead of crashing on the
+    // `.css` file, and the class name export still works
+    await expect(runNode(script)).resolves.toMatch(/^\w+$/)
+  })
+})
+
+describe('vanilla-extract-cjs-library', () => {
+  const cjsFixtureDir = path.resolve(__dirname, 'fixtures/vanilla-extract-cjs-library')
+
+  test('injects the self-referential CSS import into the entry chunks', async () => {
+    const [distIndexJs, distIndexMjs] = await Promise.all([
+      readFile(path.join(cjsFixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(cjsFixtureDir, 'dist/index.mjs'), 'utf-8'),
+    ])
+
+    // In a `"type": "commonjs"` package the `.js` build is CJS and the `.mjs` build is ESM
+    expect(distIndexJs).toContain('require("@fixtures/vanilla-extract-cjs-library/bundle.css")')
+    expect(distIndexMjs).toContain('import "@fixtures/vanilla-extract-cjs-library/bundle.css"')
+  })
+
+  // Regression: the shim used to be authored as ESM (`export default ""`), which a
+  // `"type": "commonjs"` package parses as CommonJS - so the injected
+  // `require("<pkg>/bundle.css")` crashed with `SyntaxError: Unexpected token 'export'`. The
+  // shim is now free of JS syntax and parses in both module systems.
+  test.each([
+    [
+      'require()',
+      `console.log(require(${JSON.stringify(path.join(__dirname, 'fixtures/vanilla-extract-cjs-library/dist/index.js'))}).getBoxClassName())`,
+    ],
+    [
+      'import()',
+      `import(${JSON.stringify(path.join(__dirname, 'fixtures/vanilla-extract-cjs-library/dist/index.mjs'))}).then((m) => console.log(m.getBoxClassName()))`,
+    ],
+  ])('the built output loads in plain Node via %s', async (_loader, script) => {
+    await expect(runNode(script)).resolves.toMatch(/^\w+$/)
+  })
+
+  test('writes the conditional ./bundle.css export to package.json', async () => {
+    const pkg = JSON.parse(await readFile(path.join(cjsFixtureDir, 'package.json'), 'utf-8'))
+
+    expect(pkg.exports['./bundle.css']).toEqual(conditionalCssExport)
+    expect(pkg.publishConfig.exports['./bundle.css']).toEqual(conditionalCssExport)
   })
 })
 

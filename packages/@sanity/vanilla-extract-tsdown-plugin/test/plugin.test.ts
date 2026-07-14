@@ -141,18 +141,21 @@ describe('vanillaExtractPlugin', () => {
   test('emits the no-op JS shim and its type declarations with `inject.nodeCompat`', async () => {
     const output = await buildFixture({inject: {nodeCompat: true}})
 
-    expect(findAsset(output, 'bundle.css.js')).toContain('export default ""')
-    const shimDts = findAsset(output, 'bundle.css.d.ts')
-    expect(shimDts).toContain('declare const _default: string')
-    expect(shimDts).toContain('export default _default')
+    // The shim must be free of JS syntax so it parses as both CommonJS and an ES module: the
+    // package `type` decides how Node interprets a `.js` file, and the same shim backs the
+    // `node`/`default` conditions for `require()` and `import` alike
+    const shim = findAsset(output, 'bundle.css.js')
+    expect(shim).toContain('No-op shim')
+    expect(shim.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
+    expect(findAsset(output, 'bundle.css.d.ts')).toContain('export {}')
   })
 
   test('respects a custom `fileName`', async () => {
     const output = await buildFixture({fileName: 'styles.css', inject: {nodeCompat: true}})
 
     expect(findAsset(output, 'styles.css')).toContain('#010203')
-    expect(findAsset(output, 'styles.css.js')).toContain('export default ""')
-    expect(findAsset(output, 'styles.css.d.ts')).toContain('declare const _default: string')
+    expect(findAsset(output, 'styles.css.js')).toContain('No-op shim')
+    expect(findAsset(output, 'styles.css.d.ts')).toContain('export {}')
     expect(findEntryChunk(output).code).toContain(
       'import "@sanity/vanilla-extract-tsdown-plugin/styles.css";',
     )

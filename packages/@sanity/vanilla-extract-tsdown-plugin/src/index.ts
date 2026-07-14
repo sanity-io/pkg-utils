@@ -338,12 +338,15 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
         this.emitFile({
           type: 'asset',
           fileName: `${fileName}.js`,
-          source: `// No-op shim for \`${fileName}\` in runtimes that cannot import \`.css\` files directly.\nexport default ""\n`,
+          // The shim is intentionally free of syntax so it parses as both CommonJS and an ES
+          // module: the package `type` decides how Node interprets a `.js` file, and the same
+          // shim backs the `node`/`default` conditions for `require()` and `import` alike.
+          source: `// No-op shim for \`${fileName}\`, resolved by the \`node\`/\`default\` conditions of the\n// conditional CSS export so the self-referential import is harmless in runtimes that cannot\n// load \`.css\` files. Intentionally has no JS syntax: it parses as both CommonJS and an ES\n// module, regardless of the package \`type\`.\n`,
         })
         this.emitFile({
           type: 'asset',
           fileName: `${fileName}.d.ts`,
-          source: `// Type declarations for \`${fileName}\` and its no-op JS shim.\ndeclare const _default: string\nexport default _default\n`,
+          source: `// Type declarations for \`${fileName}\` and its no-op JS shim.\nexport {}\n`,
         })
       }
     },
