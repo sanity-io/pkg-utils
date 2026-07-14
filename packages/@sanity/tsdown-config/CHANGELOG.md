@@ -1,5 +1,28 @@
 # @sanity/tsdown-config
 
+## 0.14.0
+
+### Minor Changes
+
+- [#3017](https://github.com/sanity-io/pkg-utils/pull/3017) [`e73018a`](https://github.com/sanity-io/pkg-utils/commit/e73018a313d69ce1d82cef63f650052a1a646f5b) Thanks [@stipsan](https://github.com/stipsan)! - feat: expose tsdown's top-level `target` option, passed through as-is like `format`, `dts` and `define`. It downlevels JS syntax for the given runtimes and doubles as the default CSS syntax lowering target when `vanillaExtract` is enabled
+
+- [#3017](https://github.com/sanity-io/pkg-utils/pull/3017) [`e73018a`](https://github.com/sanity-io/pkg-utils/commit/e73018a313d69ce1d82cef63f650052a1a646f5b) Thanks [@stipsan](https://github.com/stipsan)! - feat: the `vanillaExtract` option is now powered by `@sanity/vanilla-extract-tsdown-plugin` instead of `@vanilla-extract/rollup-plugin`, so enabling it no longer pulls `rollup` (a peer dependency of the rollup plugin) into tsdown projects. The alpha `vanillaExtract` options are now modeled after the `css` options of `@tsdown/css`: `extract.name` is now `fileName`, `browserslist` is now the esbuild-style `target` (defaulting to tsdown's top-level `target` when it includes browsers, then `@sanity/browserslist-config`), `extract.compatMode` is now `inject: {nodeCompat: true}` (the default here - `inject: true` injects a plain relative CSS import instead), and CSS sourcemaps (`extract.sourcemap`) are no longer emitted, aligned with `@tsdown/css`. The `cwd`, `esbuildOptions` and `unstable_injectFilescopes` options have been removed
+
+- [#3017](https://github.com/sanity-io/pkg-utils/pull/3017) [`e73018a`](https://github.com/sanity-io/pkg-utils/commit/e73018a313d69ce1d82cef63f650052a1a646f5b) Thanks [@stipsan](https://github.com/stipsan)! - feat: forward tsdown's `exports` option with the Sanity defaults documented on `PackageOptions` (`enabled: 'local-only'` and `devExports: true`), applied with tsdown's `mergeConfig` semantics: an object deep-merges over the defaults, while any other value (`false`, a bare CI condition) replaces them. The `tsconfig` option no longer defaults to `'tsconfig.json'` and is forwarded as-is, since tsdown auto-detects the project tsconfig. Options that aren't exposed on `PackageOptions` can be customized by merging over the returned config with tsdown's `mergeConfig`, now documented in the README
+
+- [#3021](https://github.com/sanity-io/pkg-utils/pull/3021) [`acf844f`](https://github.com/sanity-io/pkg-utils/commit/acf844ff5787cfcf8e3238118f26dd910c728b1a) Thanks [@stipsan](https://github.com/stipsan)! - Rely on tsdown's default hashed chunk filenames (`[name]-[hash].<ext>`) instead of setting `hash: false` and emitting shared chunks into `_chunks-es`, `_chunks-cjs` and `_chunks-dts` folders.
+
+  The hash suffix keeps a shared (non-entry) chunk from ever taking an entry's filename, which is what the `_chunks-*` folders were guarding against: code shared between two entries forms a chunk that rolldown may name after one of the entries (e.g. `theme`), and without the hash the d.ts output could hand the entry's `theme.d.ts` filename to the chunk - which exports everything under minified aliases - breaking every named import from that entry with `TS2460` (see [sanity-io/ui#2262](https://github.com/sanity-io/ui/issues/2262)). Entries keep their stable, unhashed filenames, so public import paths are unaffected; only the internal chunk filenames change (e.g. `_chunks-es/theme.js` becomes `theme-CYP9-xTb.js`).
+
+  Opting out of the hashing is possible by merging `{hash: false}` over the returned config with tsdown's `mergeConfig` (at the risk of reintroducing the filename collision on multi-entry packages, unless `outputOptions.chunkFileNames` keeps chunks away from the entries).
+
+### Patch Changes
+
+- [#3018](https://github.com/sanity-io/pkg-utils/pull/3018) [`99bd418`](https://github.com/sanity-io/pkg-utils/commit/99bd41811995bb1ac94254f50f11eec80db2cbe7) Thanks [@stipsan](https://github.com/stipsan)! - Remove `outputOptions.hoistTransitiveImports: false`, the option is not implemented in rolldown and has no effect
+
+- Updated dependencies [[`e73018a`](https://github.com/sanity-io/pkg-utils/commit/e73018a313d69ce1d82cef63f650052a1a646f5b)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.1.0
+
 ## 0.13.1
 
 ### Patch Changes
