@@ -1,5 +1,14 @@
 # @sanity/tsdown-config
 
+## 0.14.2
+
+### Patch Changes
+
+- [#3026](https://github.com/sanity-io/pkg-utils/pull/3026) [`04a6206`](https://github.com/sanity-io/pkg-utils/commit/04a62060a553e40d5d336b1b89e75f44d44bcf79) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.7
+
+- Updated dependencies [[`04a6206`](https://github.com/sanity-io/pkg-utils/commit/04a62060a553e40d5d336b1b89e75f44d44bcf79)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.1.1
+
 ## 0.14.1
 
 ### Patch Changes
