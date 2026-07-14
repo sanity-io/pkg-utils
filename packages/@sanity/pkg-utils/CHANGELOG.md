@@ -1,5 +1,12 @@
 # @sanity/pkg-utils
 
+## 11.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`04a6206`](https://github.com/sanity-io/pkg-utils/commit/04a62060a553e40d5d336b1b89e75f44d44bcf79)]:
+  - @sanity/parse-package-json@2.2.4
+
 ## 11.0.2
 
 ### Patch Changes
