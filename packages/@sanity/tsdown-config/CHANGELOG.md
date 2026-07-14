@@ -1,5 +1,13 @@
 # @sanity/tsdown-config
 
+## 0.14.1
+
+### Patch Changes
+
+- [#3029](https://github.com/sanity-io/pkg-utils/pull/3029) [`b50944c`](https://github.com/sanity-io/pkg-utils/commit/b50944c3550fb8286f04a0e3b58c0f389f041d0f) Thanks [@stipsan](https://github.com/stipsan)! - Relax the `tsdown` peer dependency from an exact pin (`0.22.5`) to a range (`^0.22.5`), so newer `tsdown` patch releases like `0.22.7` no longer trigger unresolved peer dependency warnings on install.
+
+- [#3027](https://github.com/sanity-io/pkg-utils/pull/3027) [`a16513b`](https://github.com/sanity-io/pkg-utils/commit/a16513b5f55839502a7585bfd6e0f141b22d8366) Thanks [@stipsan](https://github.com/stipsan)! - Only enable `devExports: true` by default when the project package manager is detected as pnpm, preventing npm and other package managers from publishing source-only exports.
+
 ## 0.14.0
 
 ### Minor Changes
