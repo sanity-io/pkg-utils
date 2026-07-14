@@ -9,11 +9,7 @@
   ],
   "type": "module",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",

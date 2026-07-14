@@ -72,7 +72,9 @@ export default defineConfig({
 
 The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
 `.css.ts` files into a separate, `lightningcss`-optimized file (`dist/bundle.css` by default).
-Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
+Under the hood it uses [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme),
+a tsdown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
+into your project. Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
 
 ```sh
 pnpm add --save-dev @vanilla-extract/css
@@ -87,10 +89,11 @@ export default defineConfig({
 })
 ```
 
-By default a compatibility mode is active that automatically wires up the conditional CSS export
-pattern:
+By default (`inject: {nodeCompat: true}`) the conditional CSS export pattern is wired up
+automatically:
 
-- injects the self-referential `import "<pkg>/bundle.css"` into the `index` entry chunk,
+- injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
+  vanilla-extract styles,
 - emits a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`) for runtimes that cannot import
   `.css` files, and
 - writes the conditional `"./bundle.css"` export to `package.json` (`browser`/`style` → the real
@@ -106,9 +109,10 @@ consumers by adding it to `sideEffects` in `package.json`:
 }
 ```
 
-Pass an options object instead of `true` to customize (e.g. `minify`, `browserslist`,
-`extract.name`), or set `extract.compatMode: false` to wire up the import, shim, and export
-yourself.
+Pass an options object instead of `true` to customize - the options are modeled after the
+[`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
+`target`). Set `inject: true` for a plain relative `import "./bundle.css"` instead of the
+conditional export pattern, or `inject: false` to wire up the import, shim, and export yourself.
 
 ## dts
 
@@ -171,5 +175,60 @@ import {defineConfig} from '@sanity/tsdown-config'
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   define: {'process.env.NODE_ENV': JSON.stringify('production')},
+})
+```
+
+## target
+
+tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
+downlevels JS syntax for the given runtimes (esbuild-style target strings), and doubles as the
+default CSS syntax lowering target when `vanillaExtract` is enabled (browserless targets like
+`node20` don't affect the CSS - it falls back to `@sanity/browserslist-config`):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  target: ['chrome90', 'safari16'],
+})
+```
+
+## exports
+
+tsdown's [`exports` option](https://tsdown.dev/options/package-exports) is forwarded with
+different defaults, suited for publishing Sanity libraries:
+
+- `enabled: 'local-only'` - the `exports` map in `package.json` is generated during local builds
+  and skipped in CI, where the committed `package.json` is already up to date, and
+- `devExports: true` - the local `exports` map points at the source files (so monorepo siblings
+  and editors resolve them directly), while `publishConfig.exports` receives the built files.
+
+Userland values apply with tsdown's `mergeConfig` semantics: an object deep-merges over the
+defaults (so individual fields can be overridden), while any other value - `false` to disable
+exports generation, or a bare CI condition (`'ci-only'`/`'local-only'`) - replaces them entirely:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  exports: {all: true},
+})
+```
+
+## Everything else: `mergeConfig`
+
+`defineConfig` deliberately only exposes options you're likely to change. For anything else, merge
+tsdown options over the returned config with tsdown's own `mergeConfig` - `defineConfig` returns a
+promise, so `await` it first:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  // Any tsdown option, e.g. opting out of hashed chunk filenames:
+  hash: false,
 })
 ```
