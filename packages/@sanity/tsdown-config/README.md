@@ -201,8 +201,10 @@ different defaults, suited for publishing Sanity libraries:
 
 - `enabled: 'local-only'` - the `exports` map in `package.json` is generated during local builds
   and skipped in CI, where the committed `package.json` is already up to date, and
-- `devExports: true` - the local `exports` map points at the source files (so monorepo siblings
-  and editors resolve them directly), while `publishConfig.exports` receives the built files.
+- `devExports: true` when pnpm is detected - the local `exports` map points at the source files
+  (so monorepo siblings and editors resolve them directly), while `publishConfig.exports` receives
+  the built files. This default is omitted for other or unknown package managers because they do
+  not all reliably apply `publishConfig.exports` when publishing.
 
 Userland values apply with tsdown's `mergeConfig` semantics: an object deep-merges over the
 defaults (so individual fields can be overridden), while any other value - `false` to disable
