@@ -27,6 +27,7 @@ minimumReleaseAgeExclude:
   - '@typescript/*'
   - '@vite/*'
   - '@vitest/*'
+  - '@yuku-parser/*'
   - csstype
   - groq
   - groq-js
@@ -40,14 +41,6 @@ minimumReleaseAgeExclude:
   - sanity
   - vite
   - vitest
-  # Renovate security update: lodash-es@4.17.23
-  - lodash-es@4.17.23
-  # Renovate security update: lodash@4.17.23
-  - lodash@4.17.23
-  # Renovate security update: astro@6.1.10
-  - astro@6.1.10
-  # Renovate security update: esbuild@0.28.1
-  - esbuild@0.28.1
   # Dev-only framework deps used exclusively by the css-playground smoke tests. These are not
   # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
   # cross-framework matrix building against current releases.
