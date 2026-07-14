@@ -31,11 +31,7 @@
       "semanticCommitType": "fix"
     },
     {
-      "matchDepTypes": ["peerDependencies"],
-      "matchPackageNames": ["tsdown"],
-      "rangeStrategy": "bump"
-    },
-    {
+      "description": "Never narrow the tsdown peer range: the shared preset widens peerDependencies, so in-range releases leave the range untouched instead of pinning consumers to an exact version",
       "matchDepTypes": ["peerDependencies"],
       "matchPackageNames": ["tsdown"],
       "matchUpdateTypes": ["major"],
