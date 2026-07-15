@@ -134,6 +134,16 @@ export interface PackageOptions extends Pick<
    */
   deps?: UserConfig['deps']
   /**
+   * tsdown's experimental [`css` option](https://tsdown.dev/options/css) (CSS modules,
+   * preprocessors, Lightning CSS / PostCSS, inject, etc). Passed through as-is — requires
+   * [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) to be installed in the project.
+   * Safe to combine with {@link PackageOptions.vanillaExtract}: vanilla-extract extracts into
+   * `bundle.css` by default, while `@tsdown/css` merges other CSS (including `.module.css`)
+   * into `style.css`, so the two pipelines do not collide.
+   * @see https://tsdown.dev/reference/api/Interface.InlineConfig#css
+   */
+  css?: UserConfig['css']
+  /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
    * to configure the compiler (e.g. `{target: '18'}`).
@@ -163,6 +173,9 @@ export interface PackageOptions extends Pick<
    * `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the conditional
    * `"./bundle.css"` export to `package.json` - see {@link PackageVanillaExtractOptions}.
    * This is the same feature as `rollup.vanillaExtract` in `@sanity/pkg-utils`.
+   *
+   * Combines with {@link PackageOptions.css}: enable both when a package uses vanilla-extract
+   * alongside CSS modules (or other `@tsdown/css` features).
    * @alpha
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
@@ -172,12 +185,13 @@ export interface PackageOptions extends Pick<
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir` and `clean` are passed through to
-  // tsdown as-is. When left undefined, tsdown keeps its default behavior (`tsconfig` is
-  // auto-detected from the project, `dts` from `package.json`, `define` replaces nothing,
-  // `target` applies no syntax downleveling, `outDir` defaults to `'dist'`, and `clean`
-  // defaults to `true` — cleaning `outDir` before each build).
-  const {entry, tsconfig, dts, define, target, outDir, clean} = options
+  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir`, `clean` and `css` are passed
+  // through to tsdown as-is. When left undefined, tsdown keeps its default behavior
+  // (`tsconfig` is auto-detected from the project, `dts` from `package.json`, `define`
+  // replaces nothing, `target` applies no syntax downleveling, `outDir` defaults to `'dist'`,
+  // `clean` defaults to `true` — cleaning `outDir` before each build — and `css` stays off
+  // unless `@tsdown/css` is installed and the option is set).
+  const {entry, tsconfig, dts, define, target, outDir, clean, css} = options
   const platform = options.platform ?? 'neutral'
   const sourcemap = options.sourcemap ?? true
   const reactCompiler = options.reactCompiler ?? false
@@ -340,6 +354,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
 
   return defineTsdownConfig({
     clean,
+    css,
     define,
     deps,
     dts,
