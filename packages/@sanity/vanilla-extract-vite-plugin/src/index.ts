@@ -3,7 +3,11 @@
  * Copyright (c) 2021 SEEK) with plugin hook filters, the environment-aware `hotUpdate` hook,
  * and a caching compiler on Vite's Environment API / `ModuleRunner` instead of `vite-node`.
  */
-import {cssFileFilter, normalizePath, type IdentifierOption} from '@vanilla-extract/integration'
+import {
+  cssFileFilter,
+  normalizePath,
+  type IdentifierOption,
+} from '@sanity/vanilla-extract-integration'
 import {
   loadConfigFromFile,
   type ConfigEnv,
@@ -31,8 +35,8 @@ const virtualIdToFileId = (virtualId: string) => virtualId.slice(0, -virtualExtC
 /**
  * Matches `.css.ts` (and sibling extensions) module ids, tolerating id queries (`?t=…` after an
  * HMR invalidation, `?v=…` for optimized ids) that the query-less `cssFileFilter` of
- * `@vanilla-extract/integration` would reject. The handlers still test the query-stripped id
- * against `cssFileFilter` itself.
+ * `@sanity/vanilla-extract-integration` would reject. The handlers still test the
+ * query-stripped id against `cssFileFilter` itself.
  */
 const CSS_FILE_ID_FILTER = /\.css\.(js|cjs|mjs|jsx|ts|tsx)(\?|$)/
 

@@ -1,7 +1,7 @@
 import {mkdir, rm, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-import {normalizePath} from '@vanilla-extract/integration'
+import {normalizePath} from '@sanity/vanilla-extract-integration'
 import {build, createServer, type Plugin, type Rollup} from 'vite'
 import {afterEach, describe, expect, test} from 'vitest'
 import {createCompiler, vanillaExtractPlugin, type Compiler} from '../src/index.ts'

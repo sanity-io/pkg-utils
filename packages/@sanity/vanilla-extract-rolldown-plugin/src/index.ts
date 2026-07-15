@@ -7,7 +7,7 @@ import {
   processVanillaFile,
   virtualCssFileFilter,
   type IdentifierOption,
-} from '@vanilla-extract/integration'
+} from '@sanity/vanilla-extract-integration'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {OutputChunk, Plugin, RenderedChunk} from 'rolldown'
 import {cssFileDtsFileName, cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'

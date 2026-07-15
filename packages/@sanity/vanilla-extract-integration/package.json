@@ -1,25 +1,23 @@
 {
-  "name": "@sanity/vanilla-extract-vite-plugin",
-  "version": "0.1.1",
-  "description": "Vite 8 plugin for vanilla-extract with plugin hook filters and a caching compiler on Vite's ModuleRunner",
+  "name": "@sanity/vanilla-extract-integration",
+  "version": "0.0.0",
+  "description": "Vendored port of @vanilla-extract/integration onto the rolldown toolchain: oxc-parsed debug IDs and a rolldown child compilation instead of babel and esbuild",
   "keywords": [
     "sanity-io",
     "sanity",
     "vanilla-extract",
-    "vite",
-    "vite-plugin",
     "rolldown",
-    "css",
-    "plugin"
+    "oxc",
+    "css"
   ],
-  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-vite-plugin#readme",
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-integration#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
-    "directory": "packages/@sanity/vanilla-extract-vite-plugin"
+    "directory": "packages/@sanity/vanilla-extract-integration"
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
@@ -34,14 +32,16 @@
     "dist"
   ],
   "scripts": {
+    "bench": "vitest bench",
     "build": "tsdown",
     "prepack": "pnpm build",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@sanity/vanilla-extract-integration": "workspace:^",
-    "@vanilla-extract/css": "^1.21.1"
+    "@vanilla-extract/css": "^1.21.1",
+    "javascript-stringify": "^2.1.0",
+    "rolldown": "^1.2.0"
   },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
@@ -50,11 +50,8 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vite": "^8.1.4",
-    "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "vite": "^8.0.0"
+    "vitest": "catalog:",
+    "yuku-parser": "^0.6.1"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
