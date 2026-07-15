@@ -959,7 +959,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       rolldown:
-        specifier: 1.2.0
+        specifier: ^1.2.0
         version: 1.2.0
     devDependencies:
       '@sanity/tsconfig':
@@ -976,7 +976,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.8(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@tsdown/css@0.22.8)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -21624,7 +21624,7 @@ snapshots:
     dependencies:
       lightningcss: 1.32.0
       postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.16)(tsx@4.23.0)(yaml@2.9.0)
-      rolldown: 1.2.0
+      rolldown: 1.1.5
       tsdown: 0.22.8(@tsdown/css@0.22.8)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
     optionalDependencies:
       postcss: 8.5.16
