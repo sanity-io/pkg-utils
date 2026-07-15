@@ -957,6 +957,9 @@ importers:
 
   packages/@sanity/vanilla-extract-vite-plugin:
     dependencies:
+      '@vanilla-extract/css':
+        specifier: ^1.21.1
+        version: 1.21.1
       '@vanilla-extract/integration':
         specifier: ^8.0.10
         version: 8.0.10
@@ -970,9 +973,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
-      '@vanilla-extract/css':
-        specifier: ^1.21.1
-        version: 1.21.1
       publint:
         specifier: 'catalog:'
         version: 0.3.21
