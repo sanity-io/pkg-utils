@@ -10,6 +10,7 @@ const fixtureRoot = requiredEnvironmentPath('VE_BENCH_FIXTURE_ROOT')
 const outputDirectory = requiredEnvironmentPath('VE_BENCH_OUTPUT_DIR')
 const minify = process.env['VE_BENCH_MINIFY'] === '1'
 const target = process.env['VE_BENCH_TARGET'] || false
+const identifiers = process.env['VE_BENCH_IDENTIFIERS'] === 'debug' ? 'debug' : 'short'
 
 // Lazy-loaded so this process only ever evaluates the plugin under test.
 const {vanillaExtractPlugin} = await import('@vanilla-extract/rollup-plugin')
@@ -52,7 +53,7 @@ export default {
         name: 'bundle.css',
         sourcemap: false,
       },
-      identifiers: 'short',
+      identifiers,
     }),
     (minify || target) && (await createLightningcssPostPlugin()),
   ].filter(Boolean),

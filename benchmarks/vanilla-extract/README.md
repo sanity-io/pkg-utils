@@ -30,16 +30,25 @@ the Rust-to-JavaScript boundary described in
 visible independently of wall-clock noise.
 
 The library-build comparison runs a variant matrix: baseline (no minify, no target), CSS
-minification, syntax downleveling via `target: 'chrome61'`, and minify + target combined. The
-Sanity Rolldown plugin handles minify/target through its own `lightningcss` options; the official
-Rollup plugin has no such options, so those variants add the `lightningcss` post-pass that
-real-world official pipelines (like `@sanity/pkg-utils`'s `optimizeCss`) use — complete pipeline
-against complete pipeline. The generated styles include an `inset` shorthand so the smoke suite
-can verify that downleveling actually happened (chrome61 predates `inset`).
+minification, syntax downleveling via `target: 'chrome61'`, minify + target combined, and
+debug identifiers. The Sanity Rolldown plugin handles minify/target through its own
+`lightningcss` options; the official Rollup plugin has no such options, so those variants add
+the `lightningcss` post-pass that real-world official pipelines (like `@sanity/pkg-utils`'s
+`optimizeCss`) use — complete pipeline against complete pipeline. The generated styles include
+an `inset` shorthand so the smoke suite can verify that downleveling actually happened
+(chrome61 predates `inset`).
 
-The Vite build comparison intentionally skips those variants: Vite handles minify and target
-itself, identically for either plugin, so varying them would only add identical work to both
-sides of the comparison.
+The `debug identifiers` variant (also run for the Vite build) exercises the per-module
+debug-ID source transform that `identifiers: 'short'` skips entirely: babel
+(`@vanilla-extract/babel-plugin-debug-ids`) in the official `@vanilla-extract/integration`
+pipeline, an oxc AST pass (`rolldown/parseAst`) in `@sanity/vanilla-extract-integration`.
+Comparing `debug − short` within one side isolates the debug-ID transform cost from everything
+else that differs between the pipelines. Minify/target aren't crossed with `debug`: they run
+after extraction and are orthogonal to the per-module transform being measured.
+
+The Vite build comparison intentionally skips the minify/target variants: Vite handles minify
+and target itself, identically for either plugin, so varying them would only add identical work
+to both sides of the comparison.
 
 Each benchmark process lazy-loads only the plugin under test — the competing implementation is
 never imported into the same process, so module-level state cannot cross-contaminate runs.

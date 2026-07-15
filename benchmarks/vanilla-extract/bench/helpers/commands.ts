@@ -93,6 +93,7 @@ function buildEnvironment(
 ): NodeJS.ProcessEnv {
   return {
     VE_BENCH_FIXTURE_ROOT: fixtureRoot,
+    VE_BENCH_IDENTIFIERS: variant?.identifiers ?? 'short',
     VE_BENCH_MINIFY: variant?.minify ? '1' : '0',
     VE_BENCH_OUTPUT_DIR: outputDirectory,
     VE_BENCH_TARGET: variant?.target ? variant.target : '',
@@ -129,10 +130,11 @@ export function runViteBuild(
   fixtureRoot: string,
   outputDirectory: string,
   plugin: VitePluginKind,
-  options: {showWarnings?: boolean} = {},
+  options: {showWarnings?: boolean; identifiers?: 'short' | 'debug'} = {},
 ): Promise<CommandResult> {
   return runPackageBin('vite', 'vite', ['build', '--config', configPaths.vite], {
     ...buildEnvironment(fixtureRoot, outputDirectory),
+    VE_BENCH_IDENTIFIERS: options.identifiers ?? 'short',
     VE_BENCH_LOG_LEVEL: options.showWarnings ? 'warn' : 'silent',
     VE_BENCH_PLUGIN: plugin,
   })

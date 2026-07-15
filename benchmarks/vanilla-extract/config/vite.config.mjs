@@ -10,6 +10,7 @@ function requiredEnvironmentPath(name) {
 const fixtureRoot = requiredEnvironmentPath('VE_BENCH_FIXTURE_ROOT')
 const outputDirectory = requiredEnvironmentPath('VE_BENCH_OUTPUT_DIR')
 const plugin = process.env['VE_BENCH_PLUGIN']
+const identifiers = process.env['VE_BENCH_IDENTIFIERS'] === 'debug' ? 'debug' : 'short'
 
 if (plugin !== 'official' && plugin !== 'sanity') {
   throw new Error(`VE_BENCH_PLUGIN must be "official" or "sanity", received ${plugin}`)
@@ -28,7 +29,7 @@ export default defineConfig({
   cacheDir: path.join(outputDirectory, '.vite-cache'),
   clearScreen: false,
   logLevel: process.env['VE_BENCH_LOG_LEVEL'] === 'warn' ? 'warn' : 'silent',
-  plugins: [vanillaExtractPlugin({identifiers: 'short'})],
+  plugins: [vanillaExtractPlugin({identifiers})],
   build: {
     copyPublicDir: false,
     // `esnext` disables Vite's default downleveling so the comparison is transform-free
