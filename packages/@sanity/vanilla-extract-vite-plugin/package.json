@@ -1,0 +1,68 @@
+{
+  "name": "@sanity/vanilla-extract-vite-plugin",
+  "version": "0.0.0",
+  "description": "Vite 8 plugin for vanilla-extract with plugin hook filters and a caching compiler on Vite's ModuleRunner",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "vanilla-extract",
+    "vite",
+    "vite-plugin",
+    "rolldown",
+    "css",
+    "plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-vite-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/vanilla-extract-vite-plugin"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "pnpm build",
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@vanilla-extract/css": "^1.21.1",
+    "@vanilla-extract/integration": "^8.0.10"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "workspace:^",
+    "@sanity/tsdown-config": "workspace:^",
+    "@types/node": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "^8.1.4",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "vite": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    }
+  }
+}
