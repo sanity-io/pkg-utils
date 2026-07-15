@@ -154,7 +154,7 @@ export type VanillaExtractPlugin = Plugin<VanillaExtractPluginApi> & {
  * raw rolldown, from tsdown through `@sanity/vanilla-extract-tsdown-plugin`, and from Vite
  * build-only library setups (`build.rolldownOptions.plugins`). It is not an application
  * (dev-server/HMR) plugin — Vite dev never runs the output-phase hooks the extraction relies
- * on.
+ * on; use `@sanity/vanilla-extract-vite-plugin` for Vite 8 apps.
  * @public
  */
 export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugin {

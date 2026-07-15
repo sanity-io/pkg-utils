@@ -77,9 +77,11 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
     // Forward the tsdown-resolved context to the rolldown plugin: the top-level `target` (the
     // default for the CSS syntax lowering target, like `css.target` in `@tsdown/css`), the
     // package name (for the self-referential import injected by `inject.nodeCompat`), and the
-    // working directory. The hook fires once per output format with the same values. Outside
-    // tsdown the rolldown plugin falls back to `@sanity/browserslist-config` and reading
-    // package.json from the working directory.
+    // working directory. The hook fires once per output format with the same values. Without
+    // this context the rolldown plugin skips syntax lowering (like `@tsdown/css`) and resolves
+    // the package name from the working directory's package.json; the
+    // `@sanity/browserslist-config` fallback for browserless targets lives a layer up, in
+    // `@sanity/tsdown-config`.
     tsdownConfigResolved(config: ResolvedConfig) {
       plugin.api.setBuildContext({
         target: config.target,

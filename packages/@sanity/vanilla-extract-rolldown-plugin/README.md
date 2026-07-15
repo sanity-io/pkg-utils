@@ -51,9 +51,9 @@ its `vanillaExtract` option wires all of that up with the defaults most Sanity l
 
 The extract model is for library builds: from Vite it only makes sense in build-only library
 setups (`build.rolldownOptions.plugins`), not as an application plugin — Vite's dev server never
-runs the output-phase hooks the extraction relies on, so use
-[`@vanilla-extract/vite-plugin`](https://vanilla-extract.style/documentation/integrations/vite/)
-for apps.
+runs the output-phase hooks the extraction relies on. For Vite 8 apps, use
+[`@sanity/vanilla-extract-vite-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-vite-plugin#readme),
+which feeds the CSS through Vite's own pipeline (with HMR and SSR support) instead.
 
 ## Options
 
