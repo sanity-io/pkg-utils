@@ -48,27 +48,17 @@ describe('benchmark configurations', () => {
     )
   })
 
-  describe.each(['official', 'sanity'] as const)('Vite + %s plugin', (plugin) => {
-    test.each(variantCases)(
-      'emits an application and extracted CSS with %s',
-      async (_label, variant) => {
-        const outputDirectory = path.join(
-          generatedRoot,
-          `output/smoke-vite-${plugin}-${variant.slug}`,
-        )
-        await rm(outputDirectory, {recursive: true, force: true})
-        await runViteBuild(fixtureRoot, outputDirectory, plugin, {variant})
-        await assertViteOutput(outputDirectory)
-        // Vite owns minification; downleveling only applies through its CSS minifier, so the
-        // target-only variant is validated as a normal build
-        const css = readCssOutputSync(outputDirectory)
-        if (variant.minify) {
-          expect(css).toContain('#010203')
-        } else {
-          expect(css).toContain('rgb(1, 2, 3)')
-        }
-      },
-      120_000,
-    )
-  })
+  // No variants here: Vite handles minify/target itself, identically for both plugins, so the
+  // benchmark only compares the baseline configuration
+  test.each(['official', 'sanity'] as const)(
+    'Vite + %s plugin emits an application and extracted CSS',
+    async (plugin) => {
+      const outputDirectory = path.join(generatedRoot, `output/smoke-vite-${plugin}`)
+      await rm(outputDirectory, {recursive: true, force: true})
+      await runViteBuild(fixtureRoot, outputDirectory, plugin)
+      await assertViteOutput(outputDirectory)
+      expect(readCssOutputSync(outputDirectory)).toContain('rgb(1, 2, 3)')
+    },
+    120_000,
+  )
 })

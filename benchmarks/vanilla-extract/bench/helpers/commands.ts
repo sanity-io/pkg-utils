@@ -129,10 +129,10 @@ export function runViteBuild(
   fixtureRoot: string,
   outputDirectory: string,
   plugin: VitePluginKind,
-  options: {showWarnings?: boolean; variant?: BuildVariant} = {},
+  options: {showWarnings?: boolean} = {},
 ): Promise<CommandResult> {
   return runPackageBin('vite', 'vite', ['build', '--config', configPaths.vite], {
-    ...buildEnvironment(fixtureRoot, outputDirectory, options.variant),
+    ...buildEnvironment(fixtureRoot, outputDirectory),
     VE_BENCH_LOG_LEVEL: options.showWarnings ? 'warn' : 'silent',
     VE_BENCH_PLUGIN: plugin,
   })

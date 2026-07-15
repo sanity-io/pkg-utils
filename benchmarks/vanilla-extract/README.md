@@ -29,15 +29,17 @@ the Rust-to-JavaScript boundary described in
 [vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)
 visible independently of wall-clock noise.
 
-Every build comparison runs the full variant matrix: baseline (no minify, no target), CSS
+The library-build comparison runs a variant matrix: baseline (no minify, no target), CSS
 minification, syntax downleveling via `target: 'chrome61'`, and minify + target combined. The
 Sanity Rolldown plugin handles minify/target through its own `lightningcss` options; the official
 Rollup plugin has no such options, so those variants add the `lightningcss` post-pass that
 real-world official pipelines (like `@sanity/pkg-utils`'s `optimizeCss`) use — complete pipeline
-against complete pipeline. In the Vite comparison, minify (`oxc` + `lightningcss`) and target
-apply through Vite's own build options, identically for both plugins. The generated styles
-include an `inset` shorthand so the smoke suite can verify that downleveling actually happened
-(chrome61 predates `inset`).
+against complete pipeline. The generated styles include an `inset` shorthand so the smoke suite
+can verify that downleveling actually happened (chrome61 predates `inset`).
+
+The Vite build comparison intentionally skips those variants: Vite handles minify and target
+itself, identically for either plugin, so varying them would only add identical work to both
+sides of the comparison.
 
 Each benchmark process lazy-loads only the plugin under test — the competing implementation is
 never imported into the same process, so module-level state cannot cross-contaminate runs.
@@ -64,16 +66,9 @@ runner and are machine-specific — compare ratios, not absolute numbers.
 
 ### Vite build, 500 TS + 100 CSS modules (5 samples each)
 
-| Variant                  | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
-| ------------------------ | -----------------------------: | ------------------------------------: | ------------------- |
-| No minify, no target     |                      792.66 ms |                             601.33 ms | Sanity 1.32x faster |
-| Minify                   |                      790.95 ms |                             601.92 ms | Sanity 1.31x faster |
-| Target chrome61          |                      800.50 ms |                             608.73 ms | Sanity 1.32x faster |
-| Minify + target chrome61 |                      838.17 ms |                             629.58 ms | Sanity 1.33x faster |
-
-Minify and target costs are dominated by identical Vite-side work in this comparison, so the gap
-stays stable across variants; in the library builds each plugin's own `lightningcss` handling is
-what is being compared.
+| `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
+| -----------------------------: | ------------------------------------: | ------------------- |
+|                      792.66 ms |                             601.33 ms | Sanity 1.32x faster |
 
 ### Vite dev HMR (10 samples each)
 

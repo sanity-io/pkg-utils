@@ -49,9 +49,10 @@ pnpm --filter @benchmarks/vanilla-extract install-browser # once, for the HMR su
 pnpm benchmark:vanilla-extract
 ```
 
-Run it on an idle machine on Node 24 and update all result tables — library build and Vite build
-variants (baseline/minify/target/minify+target), dev HMR, hook-filter stress timings, and the
-hook-entry diagnostic (also written to `benchmarks/vanilla-extract/results/vite-hook-counts.json`).
+Run it on an idle machine on Node 24 and update all result tables — the library-build variant
+matrix (baseline/minify/target/minify+target), the Vite build baseline, dev HMR, hook-filter
+stress timings, and the hook-entry diagnostic (also written to
+`benchmarks/vanilla-extract/results/vite-hook-counts.json`).
 `pnpm --filter @benchmarks/vanilla-extract smoke` validates every build configuration first
 without collecting timings. See `benchmarks/vanilla-extract/README.md` for fixture-size and
 sample-count overrides.
