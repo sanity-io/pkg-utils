@@ -10,9 +10,9 @@ In v5 the benchmark API was rewritten: `bench` is **no longer a top-level import
 ## Defining & Running
 
 ```ts
-import { expect, test } from 'vitest'
+import {expect, test} from 'vitest'
 
-test('parse performance', async ({ bench }) => {
+test('parse performance', async ({bench}) => {
   // bench() registers; .run() executes and returns the result
   const result = await bench('parse', () => {
     const data = JSON.parse('{"key":"value"}')
@@ -36,15 +36,19 @@ Set `benchmark: { enabled: true }` to run them alongside regular tests in a sepa
 ## Comparing Implementations
 
 ```ts
-test('compare parsers', async ({ bench }) => {
+test('compare parsers', async ({bench}) => {
   const result = await bench.compare(
-    bench('JSON.parse', () => { JSON.parse(input) }),
-    bench('custom', { beforeEach: () => reset() }, () => { customParse(input) }),
-    { iterations: 100, time: 1000 }, // shared Tinybench options (last arg)
+    bench('JSON.parse', () => {
+      JSON.parse(input)
+    }),
+    bench('custom', {beforeEach: () => reset()}, () => {
+      customParse(input)
+    }),
+    {iterations: 100, time: 1000}, // shared Tinybench options (last arg)
   )
 
   // Assertion matchers (delta avoids flaky failures)
-  expect(result.get('JSON.parse')).toBeFasterThan(result.get('custom'), { delta: 0.1 })
+  expect(result.get('JSON.parse')).toBeFasterThan(result.get('custom'), {delta: 0.1})
   expect(result.get('custom')).toBeSlowerThan(result.get('JSON.parse'))
 })
 ```
@@ -54,11 +58,11 @@ test('compare parsers', async ({ bench }) => {
 ## Storing & Replaying Baselines
 
 ```ts
-test('compare against baseline', async ({ bench }) => {
+test('compare against baseline', async ({bench}) => {
   await bench.compare(
-    bench('current', { writeResult: './benchmarks/parse.json' }, () => parse(input)),
-    bench.from('previous', './benchmarks/parse.json'),       // reads a stored result, no run
-    bench.from('remote', () => fetch(url).then(r => r.json())),
+    bench('current', {writeResult: './benchmarks/parse.json'}, () => parse(input)),
+    bench.from('previous', './benchmarks/parse.json'), // reads a stored result, no run
+    bench.from('remote', () => fetch(url).then((r) => r.json())),
   )
 })
 ```

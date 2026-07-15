@@ -11,7 +11,7 @@ tsdown can be imported and used programmatically in your Node.js scripts, custom
 ### Simple Build
 
 ```ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 await build({
   entry: ['src/index.ts'],
@@ -23,7 +23,7 @@ await build({
 ### With Options
 
 ```ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 await build({
   entry: ['src/index.ts'],
@@ -43,18 +43,21 @@ await build({
 Main function to run a build.
 
 ```ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 await build(options)
 ```
 
 **Parameters:**
+
 - `options` - Build configuration object (same as config file)
 
 **Returns:**
+
 - `Promise<void>` - Resolves when build completes
 
 **Throws:**
+
 - Build errors if compilation fails
 
 ## Configuration Object
@@ -62,7 +65,7 @@ await build(options)
 All config file options are available:
 
 ```ts
-import { build, defineConfig } from 'tsdown'
+import {build, defineConfig} from 'tsdown'
 
 const config = defineConfig({
   entry: ['src/index.ts'],
@@ -92,7 +95,7 @@ See [Config Reference](option-config-file.md) for all options.
 
 ```ts
 // scripts/build.ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 async function main() {
   console.log('Building library...')
@@ -111,6 +114,7 @@ main().catch(console.error)
 ```
 
 Run with:
+
 ```bash
 tsx scripts/build.ts
 ```
@@ -118,7 +122,7 @@ tsx scripts/build.ts
 ### Multiple Builds
 
 ```ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 // Build main library
 await build({
@@ -141,7 +145,7 @@ await build({
 ### Conditional Build
 
 ```ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -157,7 +161,7 @@ await build({
 ### With Error Handling
 
 ```ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 try {
   await build({
@@ -175,8 +179,8 @@ try {
 ### Automated Workflow
 
 ```ts
-import { build } from 'tsdown'
-import { execSync } from 'child_process'
+import {execSync} from 'child_process'
+import {build} from 'tsdown'
 
 async function release() {
   // Clean
@@ -207,8 +211,8 @@ release().catch(console.error)
 ### Build with Post-Processing
 
 ```ts
-import { build } from 'tsdown'
-import { copyFileSync } from 'fs'
+import {copyFileSync} from 'fs'
+import {build} from 'tsdown'
 
 await build({
   entry: ['src/index.ts'],
@@ -231,7 +235,7 @@ Unfortunately, watch mode is not directly exposed in the programmatic API. Use t
 
 ```ts
 // Use CLI for watch mode
-import { spawn } from 'child_process'
+import {spawn} from 'child_process'
 
 spawn('tsdown', ['--watch'], {
   stdio: 'inherit',
@@ -245,8 +249,8 @@ spawn('tsdown', ['--watch'], {
 
 ```ts
 // gulpfile.js
-import { build } from 'tsdown'
 import gulp from 'gulp'
+import {build} from 'tsdown'
 
 gulp.task('build', async () => {
   await build({
@@ -265,8 +269,8 @@ gulp.task('watch', () => {
 
 ```ts
 // scripts/cli.ts
-import { build } from 'tsdown'
-import { Command } from 'commander'
+import {Command} from 'commander'
+import {build} from 'tsdown'
 
 const program = new Command()
 
@@ -289,7 +293,7 @@ program.parse()
 
 ```ts
 // .github/scripts/build.ts
-import { build } from 'tsdown'
+import {build} from 'tsdown'
 
 const isCI = process.env.CI === 'true'
 
@@ -311,7 +315,7 @@ if (isCI) {
 
 ```ts
 // scripts/build.ts
-import { build, type UserConfig } from 'tsdown'
+import {build, type UserConfig} from 'tsdown'
 
 const config: UserConfig = {
   entry: ['src/index.ts'],
@@ -336,6 +340,7 @@ await build(config)
 ### Import Errors
 
 Ensure tsdown is installed:
+
 ```bash
 pnpm add -D tsdown
 ```
@@ -343,13 +348,15 @@ pnpm add -D tsdown
 ### Type Errors
 
 Import types:
+
 ```ts
-import type { UserConfig } from 'tsdown'
+import type {UserConfig} from 'tsdown'
 ```
 
 ### Build Fails Silently
 
 Add error handling:
+
 ```ts
 try {
   await build(config)
@@ -362,12 +369,17 @@ try {
 ### Options Not Working
 
 Check spelling and types:
+
 ```ts
 // ✅ Correct
-{ format: ['esm', 'cjs'] }
+{
+  format: ['esm', 'cjs']
+}
 
 // ❌ Wrong
-{ formats: ['esm', 'cjs'] }
+{
+  formats: ['esm', 'cjs']
+}
 ```
 
 ## Related

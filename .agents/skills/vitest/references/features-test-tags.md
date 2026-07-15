@@ -5,7 +5,7 @@ description: Label tests with tags to filter runs and apply shared runner option
 
 # Test Tags (4.1+)
 
-Tags label tests so you can filter what runs and apply shared options (timeout, retry) to a *category* of tests that span many files. Reach for tags over projects when the category needs different timeouts/retries (not different pools/environments).
+Tags label tests so you can filter what runs and apply shared options (timeout, retry) to a _category_ of tests that span many files. Reach for tags over projects when the category needs different timeouts/retries (not different pools/environments).
 
 ## Defining Tags
 
@@ -13,13 +13,13 @@ Tags **must be declared in config** — using an undefined tag throws unless `st
 
 ```ts
 // vitest.config.ts
-import { defineConfig } from 'vitest/config'
+import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
   test: {
     tags: [
-      { name: 'frontend', description: 'Frontend tests.' },
-      { name: 'db', description: 'Database queries.', timeout: 60_000 },
+      {name: 'frontend', description: 'Frontend tests.'},
+      {name: 'db', description: 'Database queries.', timeout: 60_000},
       {
         name: 'flaky',
         retry: process.env.CI ? 3 : 0,
@@ -47,13 +47,13 @@ declare module 'vitest' {
 ## Applying Tags
 
 ```ts
-import { describe, test } from 'vitest'
+import {describe, test} from 'vitest'
 
-test('renders homepage', { tags: ['frontend'] }, () => {})
+test('renders homepage', {tags: ['frontend']}, () => {})
 
 // Tags inherit from the parent suite
-describe('API endpoints', { tags: ['backend'] }, () => {
-  test('validates input', { tags: ['validation'] }, () => {
+describe('API endpoints', {tags: ['backend']}, () => {
+  test('validates input', {tags: ['validation']}, () => {
     // has both "backend" (inherited) and "validation"
   })
 })
@@ -73,8 +73,8 @@ test('dashboard renders', () => {})
 When several tags set the same option on a test, `priority` wins first (lower number), then array order. Options on the test itself always win:
 
 ```ts
-test('flaky db test', { tags: ['flaky', 'db'] }) // timeout 30_000 (flaky priority 1), retry 3
-test('override', { tags: ['flaky', 'db'], timeout: 120_000 }) // timeout 120_000, retry 3
+test('flaky db test', {tags: ['flaky', 'db']}) // timeout 30_000 (flaky priority 1), retry 3
+test('override', {tags: ['flaky', 'db'], timeout: 120_000}) // timeout 120_000, retry 3
 ```
 
 ## Filtering by Tag
@@ -98,7 +98,7 @@ Programmatic: pass `tagsFilter: ['frontend and backend']` to `startVitest`/`crea
 Skip expensive setup when no matching tests are scheduled:
 
 ```ts
-import { beforeAll, TestRunner } from 'vitest'
+import {beforeAll, TestRunner} from 'vitest'
 
 beforeAll(async () => {
   if (TestRunner.matchesTags(['db'])) {
