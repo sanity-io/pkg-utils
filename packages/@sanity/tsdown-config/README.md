@@ -159,7 +159,7 @@ export default defineConfig({
 ```
 
 Both `css` and `vanillaExtract` can be enabled in the same config. Use that when a package
-authors styles with vanilla-extract *and* CSS modules (`.module.css`):
+authors styles with vanilla-extract _and_ CSS modules (`.module.css`):
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'
