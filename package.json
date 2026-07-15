@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "benchmark:build": "pnpm --filter @benchmarks/vanilla-extract benchmark:build",
+    "benchmark:vanilla-extract": "pnpm --filter @benchmarks/vanilla-extract benchmark",
+    "benchmark:vite-build": "pnpm --filter @benchmarks/vanilla-extract benchmark:vite-build",
+    "benchmark:vite-hmr": "pnpm --filter @benchmarks/vanilla-extract benchmark:vite-hmr",
+    "benchmark:vite-hooks": "pnpm --filter @benchmarks/vanilla-extract benchmark:vite-hooks",
     "build": "pnpm --filter './packages/@sanity/*' build",
     "check:deps": "knip --dependencies",
     "css-playground:build": "pnpm --filter './css-playground/**' build",

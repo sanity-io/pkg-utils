@@ -1,0 +1,35 @@
+{
+  "name": "@benchmarks/vanilla-extract",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench",
+    "benchmark:build": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench bench/build.bench.ts",
+    "benchmark:prepare": "pnpm build:plugins && tsx scripts/generate-fixtures.ts",
+    "benchmark:versions": "tsx scripts/print-versions.ts",
+    "benchmark:vite-build": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench bench/vite-build.bench.ts",
+    "benchmark:vite-hmr": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench bench/vite-hmr.bench.ts",
+    "benchmark:vite-hooks": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench bench/vite-hook-filter.bench.ts",
+    "build:plugins": "pnpm --filter @sanity/vanilla-extract-rolldown-plugin --filter @sanity/vanilla-extract-vite-plugin --parallel run build",
+    "install-browser": "playwright install chromium",
+    "smoke": "pnpm benchmark:prepare && vitest run test/smoke.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "workspace:*",
+    "@sanity/vanilla-extract-rolldown-plugin": "workspace:*",
+    "@sanity/vanilla-extract-vite-plugin": "workspace:*",
+    "@types/node": "catalog:",
+    "@vanilla-extract/css": "^1.21.1",
+    "@vanilla-extract/rollup-plugin": "^1.5.4",
+    "@vanilla-extract/vite-plugin": "^5.2.4",
+    "playwright": "^1.61.1",
+    "rolldown": "^1.1.5",
+    "rollup": "^4.62.2",
+    "tsx": "^4.23.0",
+    "typescript": "catalog:",
+    "vite": "^8.1.4",
+    "vitest": "catalog:"
+  }
+}
