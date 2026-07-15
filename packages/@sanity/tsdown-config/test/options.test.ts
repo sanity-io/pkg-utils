@@ -66,6 +66,20 @@ describe('outDir option', () => {
   })
 })
 
+describe('clean option', () => {
+  test('is undefined by default, so tsdown cleans outDir before each build', async () => {
+    expect((await defineConfig()).clean).toBeUndefined()
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    expect((await defineConfig({clean: false})).clean).toBe(false)
+    expect((await defineConfig({clean: true})).clean).toBe(true)
+    // Prefer an array of folders over a package.json `"clean": "rimraf …"` script — include
+    // outDir (`dist`) when you still want it cleaned alongside other directories
+    expect((await defineConfig({clean: ['dist', 'coverage']})).clean).toEqual(['dist', 'coverage'])
+  })
+})
+
 describe('sourcemap option', () => {
   test('defaults to true, matching @sanity/pkg-utils', async () => {
     // tsdown itself defaults to false and does not read `sourceMap` from the tsconfig

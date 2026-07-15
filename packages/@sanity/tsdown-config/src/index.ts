@@ -87,6 +87,25 @@ export interface PackageOptions extends Pick<
    */
   platform?: UserConfig['platform']
   /**
+   * Clean directories before each build. Prefer an array of folders over a separate `"clean"`
+   * script in `package.json` (e.g. `rimraf dist coverage`) — tsdown removes them as part of
+   * `tsdown` / `pnpm build`, so packages don't need `rimraf`, a `clean` script, or
+   * `prebuild`/`run-s clean build` wiring.
+   *
+   * - `true` (tsdown's default when left undefined) cleans `outDir` (`'dist'` by default)
+   * - `false` skips cleaning
+   * - a `string[]` replaces that default with the listed paths/globs — include `outDir` (e.g.
+   *   `'dist'`) when you still want it cleaned alongside other folders
+   *
+   * @defaultValue true
+   * @example
+   * ```ts
+   * // Instead of `"clean": "rimraf dist coverage"` in package.json:
+   * clean: ['dist', 'coverage']
+   * ```
+   */
+  clean?: UserConfig['clean']
+  /**
    * tsdown's `exports` option, with defaults suited for publishing Sanity libraries:
    * `enabled: 'local-only'` generates the `exports` map during local builds and skips it in CI
    * (where the committed `package.json` is already up to date). When pnpm is detected,
@@ -153,11 +172,12 @@ export interface PackageOptions extends Pick<
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `tsconfig`, `entry`, `dts`, `define`, `target` and `outDir` are passed through to tsdown
-  // as-is. When left undefined, tsdown keeps its default behavior (`tsconfig` is auto-detected
-  // from the project, `dts` from `package.json`, `define` replaces nothing, `target` applies no
-  // syntax downleveling, and `outDir` defaults to `'dist'`).
-  const {entry, tsconfig, dts, define, target, outDir} = options
+  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir` and `clean` are passed through to
+  // tsdown as-is. When left undefined, tsdown keeps its default behavior (`tsconfig` is
+  // auto-detected from the project, `dts` from `package.json`, `define` replaces nothing,
+  // `target` applies no syntax downleveling, `outDir` defaults to `'dist'`, and `clean`
+  // defaults to `true` — cleaning `outDir` before each build).
+  const {entry, tsconfig, dts, define, target, outDir, clean} = options
   const platform = options.platform ?? 'neutral'
   const sourcemap = options.sourcemap ?? true
   const reactCompiler = options.reactCompiler ?? false
@@ -314,6 +334,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   )
 
   return defineTsdownConfig({
+    clean,
     define,
     deps,
     dts,
