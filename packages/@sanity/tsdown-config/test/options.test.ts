@@ -56,6 +56,16 @@ describe('tsconfig option', () => {
   })
 })
 
+describe('outDir option', () => {
+  test('is undefined by default, so tsdown writes to dist', async () => {
+    expect((await defineConfig()).outDir).toBeUndefined()
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    expect((await defineConfig({outDir: 'lib'})).outDir).toBe('lib')
+  })
+})
+
 describe('sourcemap option', () => {
   test('defaults to true, matching @sanity/pkg-utils', async () => {
     // tsdown itself defaults to false and does not read `sourceMap` from the tsconfig
