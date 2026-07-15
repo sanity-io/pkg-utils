@@ -130,6 +130,56 @@ Two Sanity-flavored defaults diverge from the bare plugins (which match `@tsdown
   case. `target: false` disables lowering entirely, and a user-provided `lightningcss.targets`
   wins over the fallback.
 
+`vanillaExtract` can be combined with the [`css` option](#css) below when a package also uses
+CSS modules (or other `@tsdown/css` features) — the two pipelines write to different files by
+default (`bundle.css` vs `style.css`) and do not interfere with each other.
+
+## css
+
+tsdown's experimental [`css` option](https://tsdown.dev/options/css) is passed through as-is.
+It enables the `@tsdown/css` pipeline for CSS modules, preprocessors, Lightning CSS / PostCSS,
+inject, and related features. Install [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css)
+in the project first — `@sanity/tsdown-config` only forwards the option and does not depend on
+`@tsdown/css` itself:
+
+```sh
+pnpm add --save-dev @tsdown/css
+```
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  css: {
+    inject: true,
+    modules: {localsConvention: 'camelCase'},
+  },
+})
+```
+
+Both `css` and `vanillaExtract` can be enabled in the same config. Use that when a package
+authors styles with vanilla-extract *and* CSS modules (`.module.css`):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  vanillaExtract: true,
+  css: {
+    inject: true,
+    modules: {localsConvention: 'camelCase'},
+  },
+})
+```
+
+vanilla-extract extracts into `dist/bundle.css` by default (with the conditional
+`"./bundle.css"` export when `inject` stays at its Sanity default), while `@tsdown/css` merges
+other CSS — including scoped CSS modules — into `dist/style.css`. See the
+[`InlineConfig.css`](https://tsdown.dev/reference/api/Interface.InlineConfig#css) API reference
+for the full option surface.
+
 ## dts
 
 tsdown's [`dts` option](https://tsdown.dev/options/dts) is passed through as-is. By default tsdown

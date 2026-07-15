@@ -66,6 +66,39 @@ describe('outDir option', () => {
   })
 })
 
+describe('css option', () => {
+  test('is undefined by default', async () => {
+    // tsdown's CSS pipeline stays off unless `@tsdown/css` is installed and `css` is set
+    expect((await defineConfig()).css).toBeUndefined()
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    const css = {inject: true, modules: {localsConvention: 'camelCase' as const}}
+    expect((await defineConfig({css})).css).toEqual(css)
+  })
+
+  test('can be enabled alongside vanillaExtract', async () => {
+    // Both pipelines are independent: `vanillaExtract` adds the plugin, `css` is forwarded
+    // for `@tsdown/css` (CSS modules, etc). The fixture build covers them end-to-end.
+    const config = await defineConfig({
+      vanillaExtract: true,
+      css: {inject: true, modules: {localsConvention: 'camelCase'}},
+    })
+    expect(config.css).toEqual({inject: true, modules: {localsConvention: 'camelCase'}})
+    const {plugins} = config
+    if (!Array.isArray(plugins)) throw new Error('expected plugins array')
+    expect(
+      plugins.some(
+        (plugin) =>
+          !!plugin &&
+          typeof plugin === 'object' &&
+          'name' in plugin &&
+          plugin.name === 'vanilla-extract',
+      ),
+    ).toBe(true)
+  })
+})
+
 describe('sourcemap option', () => {
   test('defaults to true, matching @sanity/pkg-utils', async () => {
     // tsdown itself defaults to false and does not read `sourceMap` from the tsconfig
