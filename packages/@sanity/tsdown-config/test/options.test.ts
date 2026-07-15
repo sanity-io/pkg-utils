@@ -56,6 +56,66 @@ describe('tsconfig option', () => {
   })
 })
 
+describe('sourcemap option', () => {
+  test('defaults to true, matching @sanity/pkg-utils', async () => {
+    // tsdown itself defaults to false and does not read `sourceMap` from the tsconfig
+    expect((await defineConfig()).sourcemap).toBe(true)
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    expect((await defineConfig({sourcemap: false})).sourcemap).toBe(false)
+    expect((await defineConfig({sourcemap: 'inline'})).sourcemap).toBe('inline')
+  })
+})
+
+describe('deps option', () => {
+  test('defaults to neverBundle `/^node:/` when platform is neutral', async () => {
+    expect((await defineConfig()).deps).toEqual({neverBundle: [/^node:/]})
+    expect((await defineConfig({platform: 'neutral'})).deps).toEqual({neverBundle: [/^node:/]})
+  })
+
+  test('does not add `/^node:/` when platform is not neutral', async () => {
+    expect((await defineConfig({platform: 'node'})).deps).toBeUndefined()
+    expect(
+      (await defineConfig({platform: 'node', deps: {skipNodeModulesBundle: true}})).deps,
+    ).toEqual({skipNodeModulesBundle: true})
+  })
+
+  test('appends userland neverBundle entries to the `/^node:/` default', async () => {
+    // tsdown's `mergeConfig` would replace the array; concatenate so per-package externals
+    // (e.g. self-references like `/^sanity(\\/|$)/`) add to the node builtins instead
+    expect(
+      (await defineConfig({deps: {neverBundle: [/^sanity(\/|$)/]}})).deps,
+    ).toEqual({neverBundle: [/^node:/, /^sanity(\/|$)/]})
+    expect(
+      (
+        await defineConfig({
+          deps: {neverBundle: [/^sanity(\/|$)/], skipNodeModulesBundle: true},
+        })
+      ).deps,
+    ).toEqual({
+      neverBundle: [/^node:/, /^sanity(\/|$)/],
+      skipNodeModulesBundle: true,
+    })
+  })
+})
+
+describe('neutral platform resolution', () => {
+  test('restores module/main mainFields for inlined deps without an exports map', async () => {
+    const {inputOptions} = await defineConfig()
+    expect(inputOptions && typeof inputOptions !== 'function' && inputOptions.resolve).toEqual({
+      mainFields: ['module', 'main'],
+    })
+  })
+
+  test('leaves mainFields alone when platform is not neutral', async () => {
+    const {inputOptions} = await defineConfig({platform: 'node'})
+    expect(
+      inputOptions && typeof inputOptions !== 'function' ? inputOptions.resolve : undefined,
+    ).toBeUndefined()
+  })
+})
+
 describe('unexposed options', () => {
   test('lean on tsdown defaults, customizable in userland through `mergeConfig`', async () => {
     // Options not in `PackageOptions` (e.g. `hash`, with its collision-preventing hashed chunk
