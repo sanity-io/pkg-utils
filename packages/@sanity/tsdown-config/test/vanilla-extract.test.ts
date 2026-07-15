@@ -26,10 +26,11 @@ function fileUrl(...segments: string[]): string {
 }
 
 const conditionalCssExport = {
+  types: './dist/bundle-css.d.ts',
   browser: './dist/bundle.css',
   style: './dist/bundle.css',
-  node: './dist/bundle.css.js',
-  default: './dist/bundle.css.js',
+  node: './dist/bundle-css.js',
+  default: './dist/bundle-css.js',
 }
 
 describe('vanilla-extract-library', () => {
@@ -63,15 +64,17 @@ describe('vanilla-extract-library', () => {
   })
 
   test('emits the no-op JS shim and its type declarations', async () => {
-    const [shim, shimDts] = await Promise.all([
-      readFile(path.join(fixtureDir, 'dist/bundle.css.js'), 'utf-8'),
+    const [shim, cssDts, shimDts] = await Promise.all([
+      readFile(path.join(fixtureDir, 'dist/bundle-css.js'), 'utf-8'),
       readFile(path.join(fixtureDir, 'dist/bundle.css.d.ts'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/bundle-css.d.ts'), 'utf-8'),
     ])
 
     // The shim must be free of JS syntax so it parses as both CommonJS and an ES module,
     // regardless of the package `type` (the cjs-library fixture covers this at runtime)
     expect(shim).toContain('No-op shim')
     expect(shim.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
+    expect(cssDts).toContain('export {}')
     expect(shimDts).toContain('export {}')
   })
 
@@ -392,10 +395,11 @@ describe('vanillaExtract option', () => {
     )
 
     expect(result['./styles.css']).toEqual({
+      types: './dist/styles-css.d.ts',
       browser: './dist/styles.css',
       style: './dist/styles.css',
-      node: './dist/styles.css.js',
-      default: './dist/styles.css.js',
+      node: './dist/styles-css.js',
+      default: './dist/styles-css.js',
     })
   })
 

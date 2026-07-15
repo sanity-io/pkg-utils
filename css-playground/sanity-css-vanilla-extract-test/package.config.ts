@@ -7,7 +7,7 @@ export default defineConfig({
   rollup: {
     // With `vanillaExtract: true`, pkg-utils' compat mode (on by default) automatically injects the
     // self-referential `import "sanity-css-vanilla-extract-test/bundle.css"`, emits the
-    // `bundle.css.js` shim, and writes the conditional `./bundle.css` export to package.json.
+    // `bundle-css.js` shim, and writes the conditional `./bundle.css` export to package.json.
     vanillaExtract: true,
   },
 })

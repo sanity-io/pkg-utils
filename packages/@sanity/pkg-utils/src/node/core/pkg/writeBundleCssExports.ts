@@ -2,20 +2,27 @@ import {readFile, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import type {Logger} from '../../logger.ts'
 import {isRecord} from '../isRecord.ts'
+import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
 
 /**
  * Build the conditional CSS export object that vanilla-extract compat mode expects, e.g.
  * ```json
  * {
+ *   "types": "./dist/bundle-css.d.ts",
  *   "browser": "./dist/bundle.css",
  *   "style": "./dist/bundle.css",
- *   "node": "./dist/bundle.css.js",
- *   "default": "./dist/bundle.css.js"
+ *   "node": "./dist/bundle-css.js",
+ *   "default": "./dist/bundle-css.js"
  * }
  * ```
+ * The shim is named `bundle-css.js` (not `bundle.css.js`) so it does not match
+ * vanilla-extract's `cssFileFilter`. An explicit `types` condition (rather than relying on
+ * TypeScript's extension-substitution fallback, which only works when the shim shares the CSS
+ * file's basename, and which TypeScript is deprecating anyway - microsoft/TypeScript#50762)
+ * points resolvers straight at the shim's declaration file.
  */
-function createConditionalCssExport(cssFile: string, shimFile: string) {
-  return {browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
+function createConditionalCssExport(cssFile: string, shimFile: string, shimDtsFile: string) {
+  return {types: shimDtsFile, browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
 }
 
 function hasMatchingExport(value: unknown, expected: Record<string, string>): boolean {
@@ -92,8 +99,9 @@ export async function writeBundleCssExports(options: {
   const distRel = (path.relative(cwd, distPath) || 'dist').split(path.sep).join('/')
   const exportKey = `./${cssName}`
   const cssFile = `./${path.posix.join(distRel, cssName)}`
-  const shimFile = `./${path.posix.join(distRel, `${cssName}.js`)}`
-  const conditionalExport = createConditionalCssExport(cssFile, shimFile)
+  const shimFile = `./${path.posix.join(distRel, cssShimFileName(cssName))}`
+  const shimDtsFile = `./${path.posix.join(distRel, cssShimDtsFileName(cssName))}`
+  const conditionalExport = createConditionalCssExport(cssFile, shimFile, shimDtsFile)
 
   // Only mirror into `publishConfig.exports` when it already exists; never create it here.
   const publishConfig = pkg.publishConfig

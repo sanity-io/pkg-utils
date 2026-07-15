@@ -192,10 +192,11 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
           exports: {
             ...reference,
             './bundle.css': {
+              types: './dist/bundle-css.d.ts',
               browser: './dist/bundle.css',
               style: './dist/bundle.css',
-              node: './dist/bundle.css.js',
-              default: './dist/bundle.css.js',
+              node: './dist/bundle-css.js',
+              default: './dist/bundle-css.js',
             },
           },
         } as unknown as PackageJSON

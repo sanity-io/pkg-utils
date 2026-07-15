@@ -40,10 +40,11 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     expect(pkg.exports['./bundle.css']).toEqual({
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     })
     expect(Object.keys(pkg.exports)).toEqual(['.', './bundle.css', './package.json'])
   })
@@ -55,10 +56,11 @@ describe('writeBundleCssExports', () => {
       exports: {
         '.': {source: './src/index.ts', default: './dist/index.js'},
         './bundle.css': {
+          types: './dist/bundle-css.d.ts',
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
-          node: './dist/bundle.css.js',
-          default: './dist/bundle.css.js',
+          node: './dist/bundle-css.js',
+          default: './dist/bundle-css.js',
         },
         './package.json': './package.json',
       },
@@ -91,10 +93,11 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     expect(pkg.exports['./styles.css']).toEqual({
+      types: './lib/styles-css.d.ts',
       browser: './lib/styles.css',
       style: './lib/styles.css',
-      node: './lib/styles.css.js',
-      default: './lib/styles.css.js',
+      node: './lib/styles-css.js',
+      default: './lib/styles-css.js',
     })
   })
 
@@ -123,10 +126,11 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     const expected = {
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     }
     expect(pkg.exports['./bundle.css']).toEqual(expected)
     expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual(expected)
@@ -193,10 +197,11 @@ describe('writeBundleCssExports', () => {
       exports: {
         '.': {source: './src/index.ts', default: './dist/index.js'},
         './bundle.css': {
+          types: './dist/bundle-css.d.ts',
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
-          node: './dist/bundle.css.js',
-          default: './dist/bundle.css.js',
+          node: './dist/bundle-css.js',
+          default: './dist/bundle-css.js',
         },
         './package.json': './package.json',
       },
@@ -217,19 +222,21 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual({
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     })
   })
 
   test('is idempotent when both exports and publishConfig.exports already match', async () => {
     const conditionalExport = {
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     }
     const cwd = await setupPackage({
       name: 'example',
