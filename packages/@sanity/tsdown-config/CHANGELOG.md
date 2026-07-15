@@ -1,5 +1,11 @@
 # @sanity/tsdown-config
 
+## 0.16.0
+
+### Minor Changes
+
+- [#3038](https://github.com/sanity-io/pkg-utils/pull/3038) [`97c95bc`](https://github.com/sanity-io/pkg-utils/commit/97c95bca88a0e2248896590beaad7af73547309a) Thanks [@stipsan](https://github.com/stipsan)! - Expose tsdown's `outDir` option on `PackageOptions` so packages can write to a non-`dist` directory without `mergeConfig`
+
 ## 0.15.0
 
 ### Minor Changes
