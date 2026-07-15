@@ -33,16 +33,16 @@ const conditionalCssExport = {
 }
 
 describe('vanilla-extract-library', () => {
-  test('extracts and lowers the CSS into bundle.css', async () => {
+  test('extracts, lowers, and minifies the CSS into bundle.css', async () => {
     const bundleCss = await readFile(path.join(fixtureDir, 'dist/bundle.css'), 'utf-8')
 
     // lightningcss processes the CSS (the fixture's chrome61 `target` provides the lowering
-    // targets), normalizing the `rgb(1, 2, 3)` marker in `styles.css.ts` to `#010203` - but
-    // `minify` now matches the `css.minify` default of `@tsdown/css` (false), so the
-    // declarations keep their whitespace
+    // targets), normalizing the `rgb(1, 2, 3)` marker in `styles.css.ts` to `#010203`, and
+    // `@sanity/tsdown-config` defaults `minify` to `true` (unlike the bare plugin, which
+    // matches the `css.minify` default of `@tsdown/css`), so the whitespace is stripped
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
-    expect(bundleCss).toContain('top: 0')
+    expect(bundleCss).toContain('top:0')
 
     // CSS sourcemaps are skipped, aligned with `@tsdown/css`
     // (https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099) and Vite's build
@@ -249,10 +249,11 @@ describe('vanillaExtract CSS target fallback', () => {
   test('resolves browserless targets from @sanity/browserslist-config', async () => {
     // Without any target, the plugin (like `@tsdown/css`) would skip syntax lowering - the
     // config resolves the lowering targets from `@sanity/browserslist-config` instead.
-    // lightningcss processing them is observable through the `rgb(…)` → hex normalization,
-    // while `inset` is kept: the config's modern browsers support it (which also tells the
-    // fallback apart from explicit old targets like chrome61, which flatten it).
-    const css = await buildCssWithConfig({vanillaExtract: true})
+    // `minify` is disabled so lightningcss processing them is only attributable to the
+    // fallback, observable through the `rgb(…)` → hex normalization - while `inset` is kept:
+    // the config's modern browsers support it (which also tells the fallback apart from
+    // explicit old targets like chrome61, which flatten it).
+    const css = await buildCssWithConfig({vanillaExtract: {minify: false}})
     expect(css).toContain('#010203')
     expect(css).not.toContain('rgb(1, 2, 3)')
     expect(css).toContain('inset: 0')
@@ -260,12 +261,16 @@ describe('vanillaExtract CSS target fallback', () => {
 
   test('`target: false` disables CSS syntax lowering entirely', async () => {
     // The explicit off switch skips the browserslist fallback too, at both levels: the
-    // top-level `target` and `vanillaExtract.target`
-    const topLevel = await buildCssWithConfig({target: false, vanillaExtract: true})
+    // top-level `target` and `vanillaExtract.target`. (`minify` is disabled so lightningcss
+    // stays out of the picture entirely - minification alone would also normalize `rgb(…)`.)
+    const topLevel = await buildCssWithConfig({
+      target: false,
+      vanillaExtract: {minify: false},
+    })
     expect(topLevel).toContain('rgb(1, 2, 3)')
     expect(topLevel).toContain('inset: 0')
 
-    const cssLevel = await buildCssWithConfig({vanillaExtract: {target: false}})
+    const cssLevel = await buildCssWithConfig({vanillaExtract: {target: false, minify: false}})
     expect(cssLevel).toContain('rgb(1, 2, 3)')
     expect(cssLevel).toContain('inset: 0')
   })
@@ -278,6 +283,17 @@ describe('vanillaExtract CSS target fallback', () => {
     })
     expect(css).not.toContain('inset:')
     expect(css).toContain('top:')
+  })
+
+  test('minifies the extracted CSS by default, unlike the bare plugin', async () => {
+    // `@sanity/tsdown-config` defaults `minify` to `true` - published Sanity libraries ship
+    // minified CSS - while the bare plugin matches the `css.minify` default of `@tsdown/css`
+    const minified = await buildCssWithConfig({vanillaExtract: true})
+    expect(minified).toContain('padding:8px')
+    expect(minified).not.toContain('padding: 8px')
+
+    const readable = await buildCssWithConfig({vanillaExtract: {minify: false}})
+    expect(readable).toContain('padding: 8px')
   })
 })
 

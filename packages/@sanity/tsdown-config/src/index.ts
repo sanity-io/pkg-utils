@@ -11,12 +11,15 @@ import {
 /**
  * Options for the `vanillaExtract` option — the same options as
  * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`,
- * `lightningcss`, and `inject`, all modeled after the `css` options of `@tsdown/css`), with two
- * Sanity-flavored defaults on top:
+ * `lightningcss`, and `inject`, all modeled after the `css` options of `@tsdown/css`), with
+ * three Sanity-flavored defaults on top:
  *
  * - `inject` defaults to `{nodeCompat: true}` (instead of the plugin's `false`), wiring up the
  *   conditional CSS export pattern that Sanity libraries ship with. Set `inject: true` for a
  *   plain relative CSS import, or `inject: false` to only extract the CSS.
+ * - `minify` defaults to `true` (instead of the plugin's `false`, which matches `css.minify`
+ *   in `@tsdown/css`): published Sanity libraries ship minified CSS. Set `minify: false` for
+ *   readable output.
  * - When the effective CSS syntax lowering target (`target`, falling back to the top-level
  *   `target`) is undefined or names no browsers (e.g. `'node20'`, resolved from
  *   `engines.node`), the lowering targets are resolved from `@sanity/browserslist-config` and
@@ -131,8 +134,8 @@ export interface PackageOptions extends Pick<
   styledComponents?: boolean | StyledComponentsOptions
   /**
    * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate file,
-   * lowered with `lightningcss` for the `@sanity/browserslist-config` targets by default.
-   * Pass `true` to use the defaults, or an object to customize.
+   * minified and lowered with `lightningcss` for the `@sanity/browserslist-config` targets by
+   * default. Pass `true` to use the defaults, or an object to customize.
    *
    * By default (`inject: {nodeCompat: true}`) the plugin also injects the self-referential
    * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
@@ -284,6 +287,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     plugins.push(
       vanillaExtractPlugin({
         inject: {nodeCompat: true},
+        minify: true,
         ...vanillaExtract,
         lightningcss,
       }),
