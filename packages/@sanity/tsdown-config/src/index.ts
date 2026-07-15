@@ -10,11 +10,22 @@ import {
 
 /**
  * Options for the `vanillaExtract` option — the same options as
- * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`, and
- * `inject`, all modeled after the `css` options of `@tsdown/css`), with one different default:
- * `inject` defaults to `{nodeCompat: true}` (instead of the plugin's `false`), wiring up the
- * conditional CSS export pattern that Sanity libraries ship with. Set `inject: true` for a plain
- * relative CSS import, or `inject: false` to only extract the CSS.
+ * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`,
+ * `lightningcss`, and `inject`, all modeled after the `css` options of `@tsdown/css`), with
+ * three Sanity-flavored defaults on top:
+ *
+ * - `inject` defaults to `{nodeCompat: true}` (instead of the plugin's `false`), wiring up the
+ *   conditional CSS export pattern that Sanity libraries ship with. Set `inject: true` for a
+ *   plain relative CSS import, or `inject: false` to only extract the CSS.
+ * - `minify` defaults to `true` (instead of the plugin's `false`, which matches `css.minify`
+ *   in `@tsdown/css`): published Sanity libraries ship minified CSS. Set `minify: false` for
+ *   readable output.
+ * - When the effective CSS syntax lowering target (`target`, falling back to the top-level
+ *   `target`) is undefined or names no browsers (e.g. `'node20'`, resolved from
+ *   `engines.node`), the lowering targets are resolved from `@sanity/browserslist-config` and
+ *   passed through `lightningcss.targets` — where the plugin (like `@tsdown/css`) would skip
+ *   lowering. `target: false` stays the explicit off switch, and a user-provided
+ *   `lightningcss.targets` wins over the fallback.
  * @public
  */
 export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
@@ -122,8 +133,12 @@ export interface PackageOptions extends Pick<
    */
   styledComponents?: boolean | StyledComponentsOptions
   /**
-   * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate,
-   * `lightningcss`-optimized file. Pass `true` to use the defaults, or an object to customize.
+   * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate file,
+   * minified and lowered with `lightningcss`. The lowering targets come from the effective
+   * `target` (`vanillaExtract.target`, falling back to the top-level `target`) when it names
+   * browsers; when it's undefined or browserless (e.g. `'node20'`), they're resolved from
+   * `@sanity/browserslist-config` instead — see {@link PackageVanillaExtractOptions}. Pass
+   * `true` to use the defaults, or an object to customize.
    *
    * By default (`inject: {nodeCompat: true}`) the plugin also injects the self-referential
    * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
@@ -232,18 +247,52 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   }
   if (options.vanillaExtract) {
     // Lazy loaded, like `reactCompiler`, so the CSS toolchain is only paid for when the option is
-    // enabled. The plugin compiles the `.css.ts` files and extracts the CSS into a single
-    // `lightningcss`-optimized file. Its `inject` option is general purpose (and, like
-    // `css.inject` in `@tsdown/css`, disabled by default), so this config supplies the default
-    // most Sanity libraries want: `{nodeCompat: true}` wires up the whole conditional CSS export
-    // pattern - the self-referential CSS import, the no-op JS shim, and the conditional
-    // `./<fileName>` export written through this config's `exports` option (which the plugin's
-    // `tsdownConfig` hook composes into).
-    const {vanillaExtractPlugin} = await import('@sanity/vanilla-extract-tsdown-plugin')
+    // enabled. The plugin compiles the `.css.ts` files and extracts the CSS into a single file.
+    // Its `inject` option is general purpose (and, like `css.inject` in `@tsdown/css`, disabled
+    // by default), so this config supplies the default most Sanity libraries want:
+    // `{nodeCompat: true}` wires up the whole conditional CSS export pattern - the
+    // self-referential CSS import, the no-op JS shim, and the conditional `./<fileName>` export
+    // written through this config's `exports` option (which the plugin's `tsdownConfig` hook
+    // composes into).
+    const {esbuildTargetToLightningCSS, vanillaExtractPlugin} =
+      await import('@sanity/vanilla-extract-tsdown-plugin')
+    const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
+
+    // The plugin follows `@tsdown/css`: without browser targets, CSS syntax lowering is
+    // skipped. The extracted CSS always runs in browsers, so when the effective target
+    // (`vanillaExtract.target`, falling back to the top-level `target`) is undefined or names
+    // no browsers (e.g. `'node20'` - also what tsdown derives from `engines.node`, which
+    // speaks to the JS runtime), this config resolves the lowering targets from
+    // `@sanity/browserslist-config` and passes them through `lightningcss.targets` instead.
+    // `target: false` stays the explicit off switch, and a user-provided
+    // `lightningcss.targets` wins over the fallback.
+    const cssTarget = vanillaExtract.target ?? target
+    let {lightningcss} = vanillaExtract
+    if (
+      cssTarget !== false &&
+      !lightningcss?.targets &&
+      (cssTarget === undefined || !esbuildTargetToLightningCSS(cssTarget))
+    ) {
+      // Lazy loaded as well: `browserslistToTargets` is a pure helper, but `lightningcss` is a
+      // native package that only needs to load when the fallback applies
+      const [{default: browserslist}, {default: browserslistConfig}, {browserslistToTargets}] =
+        await Promise.all([
+          import('browserslist'),
+          import('@sanity/browserslist-config'),
+          import('lightningcss'),
+        ])
+      lightningcss = {
+        ...lightningcss,
+        targets: browserslistToTargets(browserslist(browserslistConfig)),
+      }
+    }
+
     plugins.push(
       vanillaExtractPlugin({
         inject: {nodeCompat: true},
-        ...(options.vanillaExtract === true ? {} : options.vanillaExtract),
+        minify: true,
+        ...vanillaExtract,
+        lightningcss,
       }),
     )
   }

@@ -13,7 +13,7 @@
     "rolldown",
     "rollup"
   ],
-  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsdown-config#readme",
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
@@ -43,8 +43,11 @@
   "dependencies": {
     "@babel/core": "^7.29.7",
     "@rolldown/plugin-babel": "^0.2.3",
+    "@sanity/browserslist-config": "^1.0.5",
     "@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
     "@vitejs/plugin-react": "^6.0.3",
+    "browserslist": "^4.28.6",
+    "lightningcss": "catalog:",
     "package-manager-detector": "^1.7.0",
     "publint": "^0.3.21"
   },
@@ -53,6 +56,7 @@
     "@sanity/tsconfig": "workspace:^",
     "@types/babel__core": "^7.20.5",
     "babel-plugin-react-compiler": "^1.0.0",
+    "rolldown": "^1.1.5",
     "tinyexec": "^1.2.4",
     "tsdown": "catalog:",
     "typescript": "catalog:",

@@ -71,8 +71,11 @@ export default defineConfig({
 ## vanilla-extract
 
 The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
-`.css.ts` files into a separate, `lightningcss`-optimized file (`dist/bundle.css` by default).
-Under the hood it uses [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme),
+`.css.ts` files into a separate file (`dist/bundle.css` by default), minified and lowered with
+`lightningcss` for the
+[`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
+browsers by default. Under the hood it uses
+[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme),
 a tsdown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
 into your project. Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
 
@@ -111,8 +114,21 @@ consumers by adding it to `sideEffects` in `package.json`:
 
 Pass an options object instead of `true` to customize - the options are modeled after the
 [`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
-`target`). Set `inject: true` for a plain relative `import "./bundle.css"` instead of the
-conditional export pattern, or `inject: false` to wire up the import, shim, and export yourself.
+`target`, `lightningcss`). Set `inject: true` for a plain relative `import "./bundle.css"`
+instead of the conditional export pattern, or `inject: false` to wire up the import, shim, and
+export yourself.
+
+Two Sanity-flavored defaults diverge from the bare plugins (which match `@tsdown/css` exactly):
+
+- `minify` defaults to `true` - published Sanity libraries ship minified CSS. Set
+  `minify: false` for readable output.
+- The CSS syntax lowering `target` defaults to tsdown's top-level `target`, and when the
+  effective target is undefined or names no browsers (e.g. `'node20'`, also what tsdown derives
+  from `engines.node` - it speaks to the JS runtime, not the browsers the extracted CSS runs
+  in), the lowering targets are resolved from `@sanity/browserslist-config` and passed through
+  `lightningcss.targets`. The bare plugins (like `@tsdown/css`) would skip lowering in that
+  case. `target: false` disables lowering entirely, and a user-provided `lightningcss.targets`
+  wins over the fallback.
 
 ## dts
 
@@ -148,7 +164,7 @@ export default defineConfig({
 
 ## Isolated declarations
 
-If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsconfig#isolated-declarations-tsconfigjson)
+If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsconfig#isolated-declarations-tsconfigjson)
 preset — which makes tsdown generate the `.d.ts` files with oxc's fast isolated declarations
 transform — annotate the default export of `tsdown.config.ts` with `satisfies Promise<UserConfig>`:
 

@@ -1,25 +1,25 @@
 {
-  "name": "@sanity/vanilla-extract-tsdown-plugin",
-  "version": "0.1.2",
-  "description": "tsdown plugin for vanilla-extract that extracts CSS into a lightningcss-optimized file, modeled after @tsdown/css",
+  "name": "@sanity/vanilla-extract-rolldown-plugin",
+  "version": "0.0.0",
+  "description": "rolldown plugin for vanilla-extract that extracts CSS into a lightningcss-optimized file, modeled after @tsdown/css",
   "keywords": [
     "sanity-io",
     "sanity",
     "vanilla-extract",
-    "tsdown",
     "rolldown",
+    "tsdown",
     "css",
     "lightningcss",
     "plugin"
   ],
-  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme",
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
-    "directory": "packages/@sanity/vanilla-extract-tsdown-plugin"
+    "directory": "packages/@sanity/vanilla-extract-rolldown-plugin"
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
@@ -40,7 +40,8 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@sanity/vanilla-extract-rolldown-plugin": "workspace:^"
+    "@vanilla-extract/integration": "^8.0.10",
+    "lightningcss": "catalog:"
   },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
@@ -54,7 +55,12 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "tsdown": "^0.22.5"
+    "rolldown": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "rolldown": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
