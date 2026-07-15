@@ -3,6 +3,7 @@ import {readFileSync} from 'node:fs'
 import {createRequire} from 'node:module'
 import path from 'node:path'
 import {benchmarkRoot, configPaths} from './paths.ts'
+import type {BuildVariant} from './variants.ts'
 
 const require = createRequire(import.meta.url)
 
@@ -85,34 +86,42 @@ async function runPackageBin(
   return {stderr, stdout}
 }
 
-function buildEnvironment(fixtureRoot: string, outputDirectory: string): NodeJS.ProcessEnv {
+function buildEnvironment(
+  fixtureRoot: string,
+  outputDirectory: string,
+  variant?: BuildVariant,
+): NodeJS.ProcessEnv {
   return {
     VE_BENCH_FIXTURE_ROOT: fixtureRoot,
+    VE_BENCH_MINIFY: variant?.minify ? '1' : '0',
     VE_BENCH_OUTPUT_DIR: outputDirectory,
+    VE_BENCH_TARGET: variant?.target ? variant.target : '',
   }
 }
 
 export function runRollupBuild(
   fixtureRoot: string,
   outputDirectory: string,
+  variant?: BuildVariant,
 ): Promise<CommandResult> {
   return runPackageBin(
     'rollup',
     'rollup',
     ['--config', configPaths.rollup, '--silent'],
-    buildEnvironment(fixtureRoot, outputDirectory),
+    buildEnvironment(fixtureRoot, outputDirectory, variant),
   )
 }
 
 export function runRolldownBuild(
   fixtureRoot: string,
   outputDirectory: string,
+  variant?: BuildVariant,
 ): Promise<CommandResult> {
   return runPackageBin(
     'rolldown',
     'rolldown',
     ['--config', configPaths.rolldown],
-    buildEnvironment(fixtureRoot, outputDirectory),
+    buildEnvironment(fixtureRoot, outputDirectory, variant),
   )
 }
 
@@ -120,11 +129,11 @@ export function runViteBuild(
   fixtureRoot: string,
   outputDirectory: string,
   plugin: VitePluginKind,
-  showWarnings = false,
+  options: {showWarnings?: boolean; variant?: BuildVariant} = {},
 ): Promise<CommandResult> {
   return runPackageBin('vite', 'vite', ['build', '--config', configPaths.vite], {
-    ...buildEnvironment(fixtureRoot, outputDirectory),
-    VE_BENCH_LOG_LEVEL: showWarnings ? 'warn' : 'silent',
+    ...buildEnvironment(fixtureRoot, outputDirectory, options.variant),
+    VE_BENCH_LOG_LEVEL: options.showWarnings ? 'warn' : 'silent',
     VE_BENCH_PLUGIN: plugin,
   })
 }

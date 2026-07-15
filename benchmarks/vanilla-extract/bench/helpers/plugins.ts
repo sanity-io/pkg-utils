@@ -1,10 +1,15 @@
-import {vanillaExtractPlugin as sanityVanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
-import {vanillaExtractPlugin as officialVanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
 import type {Plugin} from 'vite'
 import type {VitePluginKind} from './commands.ts'
 
-export function createVitePlugins(plugin: VitePluginKind): Plugin[] {
-  return plugin === 'official'
-    ? officialVanillaExtractPlugin({identifiers: 'short'})
-    : sanityVanillaExtractPlugin({identifiers: 'short'})
+/**
+ * Lazily imports only the requested plugin package, so a benchmark process never evaluates
+ * (or initializes module-level state of) the competing implementation.
+ */
+export async function createVitePlugins(plugin: VitePluginKind): Promise<Plugin[]> {
+  if (plugin === 'official') {
+    const {vanillaExtractPlugin} = await import('@vanilla-extract/vite-plugin')
+    return vanillaExtractPlugin({identifiers: 'short'})
+  }
+  const {vanillaExtractPlugin} = await import('@sanity/vanilla-extract-vite-plugin')
+  return vanillaExtractPlugin({identifiers: 'short'})
 }

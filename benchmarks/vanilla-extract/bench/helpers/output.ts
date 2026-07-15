@@ -40,6 +40,12 @@ async function assertCssOutput(outputDirectory: string): Promise<void> {
   )
 }
 
+export function readCssOutputSync(outputDirectory: string): string {
+  const cssFiles = listFilesSync(outputDirectory).filter((filePath) => filePath.endsWith('.css'))
+  assert(cssFiles.length > 0, `Expected CSS output in ${outputDirectory}`)
+  return cssFiles.map((filePath) => readFileSync(filePath, 'utf8')).join('\n')
+}
+
 function assertCssOutputSync(outputDirectory: string): void {
   const files = listFilesSync(outputDirectory)
   const cssFiles = files.filter((filePath) => filePath.endsWith('.css'))

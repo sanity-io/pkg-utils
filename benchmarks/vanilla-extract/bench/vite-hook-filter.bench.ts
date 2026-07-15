@@ -39,7 +39,9 @@ for (const fixture of manifest.stress) {
       bench(
         name,
         async () => {
-          lastResult = await runViteBuild(fixturePath(fixture), outputDirectory, plugin, true)
+          lastResult = await runViteBuild(fixturePath(fixture), outputDirectory, plugin, {
+            showWarnings: true,
+          })
         },
         coldBuildOptions('stress', outputDirectory, () => {
           assertViteOutputSync(outputDirectory)

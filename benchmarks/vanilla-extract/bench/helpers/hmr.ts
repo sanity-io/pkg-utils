@@ -61,7 +61,7 @@ export async function startHmrCase(
     clearScreen: false,
     configFile: false,
     logLevel: 'silent',
-    plugins: createVitePlugins(plugin),
+    plugins: await createVitePlugins(plugin),
     server: {
       host: '127.0.0.1',
       port: 0,

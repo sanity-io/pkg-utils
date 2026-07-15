@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=24"
-  },
   "scripts": {
     "benchmark": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench",
     "benchmark:build": "pnpm benchmark:prepare && pnpm benchmark:versions && vitest bench bench/build.bench.ts",
@@ -35,5 +32,8 @@
     "typescript": "catalog:",
     "vite": "^8.1.4",
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

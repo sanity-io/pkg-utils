@@ -86,7 +86,7 @@ async function collectHookCounts(
     clearScreen: false,
     configFile: false,
     logLevel: 'silent',
-    plugins: instrumentPlugins(createVitePlugins(plugin), counts),
+    plugins: instrumentPlugins(await createVitePlugins(plugin), counts),
     build: {
       copyPublicDir: false,
       cssMinify: false,

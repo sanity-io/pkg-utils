@@ -22,6 +22,19 @@ Vite 8 compares:
 - Vite dev HMR for a direct `.css.ts` edit
 - Vite dev HMR for a shared theme edit that invalidates every `.css.ts` importer
 
+Every build comparison runs the full variant matrix: baseline (no minify, no target), CSS
+minification, syntax downleveling via `target: 'chrome61'`, and minify + target combined. The
+Sanity Rolldown plugin handles minify/target through its own `lightningcss` options; the official
+Rollup plugin has no such options, so those variants add the `lightningcss` post-pass that
+real-world official pipelines (like `@sanity/pkg-utils`'s `optimizeCss`) use — complete pipeline
+against complete pipeline. In the Vite comparison, minify (`oxc` + `lightningcss`) and target
+apply through Vite's own build options, identically for both plugins. The generated styles
+include an `inset` shorthand so the smoke suite can verify that downleveling actually happened
+(chrome61 predates `inset`).
+
+Each benchmark process lazy-loads only the plugin under test — the competing implementation is
+never imported into the same process, so module-level state cannot cross-contaminate runs.
+
 The Vite hook-filter suite also holds the number of Vanilla Extract files constant while
 increasing the number of reachable, unrelated TypeScript modules. Its untimed diagnostic counts
 actual JavaScript entries into each plugin's `resolveId`, `load`, and `transform` hooks. This makes

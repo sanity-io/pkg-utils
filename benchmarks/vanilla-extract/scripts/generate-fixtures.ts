@@ -85,6 +85,8 @@ function renderStyleModule(index: number): string {
     `  backgroundColor: '${backgroundColor}',`,
     `  border: '1px solid rgb(${blue}, ${red}, ${green})',`,
     `  padding: '${(index % 8) + 1}px',`,
+    // Lowered to top/right/bottom/left by a chrome61 target, so downleveling is observable
+    `  inset: ${index % 4},`,
     `})`,
     ``,
   ].join('\n')
