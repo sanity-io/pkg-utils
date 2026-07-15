@@ -18,6 +18,9 @@ catalogs:
     '@types/node':
       specifier: ^24.13.3
       version: 24.13.3
+    lightningcss:
+      specifier: ^1.32.0
+      version: 1.32.0
     publint:
       specifier: ^0.3.21
       version: 0.3.21
@@ -680,7 +683,7 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       lightningcss:
-        specifier: ^1.32.0
+        specifier: 'catalog:'
         version: 1.32.0
       mkdirp:
         specifier: ^3.0.1
@@ -788,7 +791,7 @@ importers:
         specifier: ^4.28.6
         version: 4.28.6
       lightningcss:
-        specifier: ^1.32.0
+        specifier: 'catalog:'
         version: 1.32.0
       package-manager-detector:
         specifier: ^1.7.0
@@ -887,7 +890,7 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10
       lightningcss:
-        specifier: ^1.32.0
+        specifier: 'catalog:'
         version: 1.32.0
     devDependencies:
       '@sanity/tsconfig':
