@@ -121,6 +121,10 @@ class NormalizedMap<V> extends Map<string, V> {
   override set(filePath: string, value: V): this {
     return super.set(this.#normalizePath(filePath), value)
   }
+
+  override delete(filePath: string): boolean {
+    return super.delete(this.#normalizePath(filePath))
+  }
 }
 
 /** @public */
@@ -198,8 +202,13 @@ async function createCompilerServer({
   identifiers,
   viteConfig,
   enableFileWatcher,
-}: Required<Pick<CreateCompilerOptions, 'root' | 'identifiers' | 'viteConfig'>> &
-  Pick<CreateCompilerOptions, 'enableFileWatcher'>) {
+  onFileRemoved,
+}: Required<
+  Pick<CreateCompilerOptions, 'root' | 'identifiers' | 'viteConfig' | 'enableFileWatcher'>
+> & {
+  /** Called when the watcher reports a deleted file, so the compiler can prune its caches. */
+  onFileRemoved: (filePath: string) => void
+}) {
   const pkg = getPackageInfo(root)
 
   const server = await createServer({
@@ -277,6 +286,9 @@ async function createCompilerServer({
     })
     server.watcher.on('unlink', (filePath) => {
       invalidateRunnerFile(runner, filePath)
+      // A re-evaluation overwrites the compiler caches on change, but nothing re-evaluates a
+      // deleted module - prune its entries so e.g. `getAllCss()` stops serving its CSS
+      onFileRemoved(filePath)
     })
   }
 
@@ -289,10 +301,8 @@ export function createCompiler({
   identifiers = 'debug',
   cssImportSpecifier = (filePath) => `${filePath}.vanilla.css`,
   viteConfig = {},
-  enableFileWatcher,
+  enableFileWatcher = true,
 }: CreateCompilerOptions): Compiler {
-  const serverPromise = createCompilerServer({root, identifiers, viteConfig, enableFileWatcher})
-
   const processVanillaFileCache = new Map<
     string,
     {lastInvalidationTimestamp: number; result: ProcessedVanillaFile}
@@ -303,6 +313,23 @@ export function createCompiler({
     localClassNames: Set<string>
     composedClassLists: Composition[]
   }>(root)
+
+  const serverPromise = createCompilerServer({
+    root,
+    identifiers,
+    viteConfig,
+    enableFileWatcher,
+    onFileRemoved(filePath) {
+      cssCache.delete(filePath)
+      classRegistrationsByModuleId.delete(filePath)
+      const moduleId = normalizePath(filePath)
+      for (const cacheKey of processVanillaFileCache.keys()) {
+        if (cacheKey.startsWith(`${moduleId}|`)) {
+          processVanillaFileCache.delete(cacheKey)
+        }
+      }
+    },
+  })
 
   return {
     async processVanillaFile(filePath, options = {}) {

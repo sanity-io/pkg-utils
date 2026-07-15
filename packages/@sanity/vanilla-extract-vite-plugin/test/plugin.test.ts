@@ -1,4 +1,4 @@
-import {mkdir, writeFile} from 'node:fs/promises'
+import {mkdir, rm, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {normalizePath} from '@vanilla-extract/integration'
@@ -353,4 +353,34 @@ describe('compiler', () => {
       )
       .toContain('rgb(7, 8, 9)')
   }, 15_000)
+
+  test('prunes the extracted CSS of deleted files', async () => {
+    await writeMutableFixture('rgb(1, 2, 3)')
+    const compiler = createTestCompiler(mutableRoot, true)
+
+    await compiler.processVanillaFile(mutableStylesCssTs)
+    expect(compiler.getCssForFile(mutableStylesCssTs)?.css).toContain('rgb(1, 2, 3)')
+    expect(compiler.getAllCss()).toContain('rgb(1, 2, 3)')
+
+    // Confirm the watcher is live first (a deletion that lands before its initial scan is
+    // missed entirely, and unlike the change test above, a deletion can't be re-triggered)
+    await expect
+      .poll(
+        async () => {
+          await writeMutableFixture('rgb(7, 8, 9)')
+          await compiler.processVanillaFile(mutableStylesCssTs)
+          return compiler.getCssForFile(mutableStylesCssTs)?.css
+        },
+        {interval: 250, timeout: 10_000},
+      )
+      .toContain('rgb(7, 8, 9)')
+
+    // Nothing re-evaluates a deleted module, so the watcher's `unlink` handler must prune the
+    // caches - otherwise `getAllCss()` (which powers `inlineCssInDev`) keeps serving its CSS
+    await rm(mutableStylesCssTs)
+    await expect
+      .poll(() => compiler.getCssForFile(mutableStylesCssTs), {interval: 250, timeout: 10_000})
+      .toBeUndefined()
+    expect(compiler.getAllCss()).not.toContain('rgb(')
+  }, 30_000)
 })
