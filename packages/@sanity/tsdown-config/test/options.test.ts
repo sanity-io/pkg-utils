@@ -98,6 +98,24 @@ describe('deps option', () => {
       skipNodeModulesBundle: true,
     })
   })
+
+  test('composes a userland neverBundle function with the `/^node:/` default', async () => {
+    // Rolldown's ExternalOption array form is string|RegExp only, so a function override is
+    // OR'd with the node builtin check instead of being pushed into an array
+    const neverBundle = (
+      await defineConfig({
+        deps: {
+          neverBundle: (id) => id === 'sanity/_singletons' || id.startsWith('sanity/'),
+        },
+      })
+    ).deps?.neverBundle
+    expect(typeof neverBundle).toBe('function')
+    if (typeof neverBundle !== 'function') throw new Error('expected a function')
+
+    expect(neverBundle('node:fs', undefined, false)).toBe(true)
+    expect(neverBundle('sanity/_singletons', undefined, false)).toBe(true)
+    expect(neverBundle('lodash', undefined, false)).toBe(false)
+  })
 })
 
 describe('neutral platform resolution', () => {
