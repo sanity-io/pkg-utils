@@ -90,7 +90,11 @@ function stringifyExports(
           const importName = serializationParams['importName']
           const args = serializationParams['args']
 
-          if (typeof importPath !== 'string' || typeof importName !== 'string' || !Array.isArray(args)) {
+          if (
+            typeof importPath !== 'string' ||
+            typeof importName !== 'string' ||
+            !Array.isArray(args)
+          ) {
             throw new Error('Invalid function serialization params')
           }
 

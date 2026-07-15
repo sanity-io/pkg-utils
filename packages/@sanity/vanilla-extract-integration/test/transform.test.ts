@@ -12,7 +12,8 @@ export const one = style({});`
 
     const result = await transform({source, filePath, rootPath, packageName, identOption: 'short'})
 
-    expect(result).toBe(`import { setFileScope, endFileScope } from "@vanilla-extract/css/fileScope";
+    expect(result)
+      .toBe(`import { setFileScope, endFileScope } from "@vanilla-extract/css/fileScope";
 setFileScope("src/styles.css.ts", "test-pkg");
 import { style } from '@vanilla-extract/css';
 export const one = style({});

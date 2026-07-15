@@ -2,12 +2,12 @@
 
 A vendored port of [`@vanilla-extract/integration`](https://github.com/vanilla-extract-css/vanilla-extract/tree/master/packages/integration) onto the rolldown toolchain, for the `@sanity/vanilla-extract-*` plugins. Same API for the surface they consume, none of the babel/esbuild machinery:
 
-| Upstream                                                                                | Here                                                                |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `compile()` bundles `.css.ts` graphs with an **esbuild** child compilation               | a **rolldown** child compilation (in-memory, CommonJS, lazy-loaded)  |
+| Upstream                                                                                                        | Here                                                                                                                                |
+| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `compile()` bundles `.css.ts` graphs with an **esbuild** child compilation                                      | a **rolldown** child compilation (in-memory, CommonJS, lazy-loaded)                                                                 |
 | debug IDs injected by **babel** (`@vanilla-extract/babel-plugin-debug-ids` + `@babel/plugin-syntax-typescript`) | an AST pass over [`rolldown/parseAst`](https://rolldown.rs)'s **oxc** AST, spliced by offset so untouched code stays byte-identical |
-| module evaluation via the **`eval`** package                                             | `node:vm.compileFunction` + `node:module.createRequire`              |
-| `find-up`, `dedent`, `mlly` dependencies                                                 | inlined (walk-up loop, plain strings, vendored `detectSyntax` regexes) |
+| module evaluation via the **`eval`** package                                                                    | `node:vm.compileFunction` + `node:module.createRequire`                                                                             |
+| `find-up`, `dedent`, `mlly` dependencies                                                                        | inlined (walk-up loop, plain strings, vendored `detectSyntax` regexes)                                                              |
 
 The only runtime dependencies left are `rolldown` (which the host toolchain — tsdown, Vite 8, or raw rolldown — ships anyway, so it dedupes), `@vanilla-extract/css`, and `javascript-stringify`.
 
@@ -16,14 +16,14 @@ The only runtime dependencies left are `rolldown` (which the host toolchain — 
 ```ts
 import {
   compile, // rolldown child compilation of a .css.ts graph
-  processVanillaFile, // evaluate compiled output into virtual CSS imports + serialized exports
-  transform, // debug IDs + file scope wrapping for a single module
-  serializeVanillaModule,
-  getSourceFromVirtualCssFile,
   cssFileFilter,
-  virtualCssFileFilter,
   getPackageInfo,
+  getSourceFromVirtualCssFile,
   normalizePath,
+  processVanillaFile, // evaluate compiled output into virtual CSS imports + serialized exports
+  serializeVanillaModule,
+  transform, // debug IDs + file scope wrapping for a single module
+  virtualCssFileFilter,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 ```

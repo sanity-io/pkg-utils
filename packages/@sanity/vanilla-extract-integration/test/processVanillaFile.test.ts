@@ -20,9 +20,7 @@ describe('processVanillaFile', () => {
     const output = await processVanillaFile({source, filePath: entryPath, identOption: 'short'})
 
     // One virtual CSS import per .css.ts module in the graph, dependencies first
-    const cssImports = output
-      .split('\n')
-      .filter((line) => line.includes('.vanilla.css?source='))
+    const cssImports = output.split('\n').filter((line) => line.includes('.vanilla.css?source='))
     expect(cssImports).toHaveLength(2)
     expect(cssImports[0]).toContain('theme.css.ts.vanilla.css')
     expect(cssImports[1]).toContain('entry.css.ts.vanilla.css')
