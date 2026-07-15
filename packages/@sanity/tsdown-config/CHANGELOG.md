@@ -1,5 +1,18 @@
 # @sanity/tsdown-config
 
+## 0.15.0
+
+### Minor Changes
+
+- [#3031](https://github.com/sanity-io/pkg-utils/pull/3031) [`944ae4d`](https://github.com/sanity-io/pkg-utils/commit/944ae4d95d1cea3a64aeea1cb794bc5984befeed) Thanks [@stipsan](https://github.com/stipsan)! - Expose tsdown's `sourcemap` and `deps` options on `PackageOptions`, default `sourcemap` to `true` (matching `@sanity/pkg-utils`), and when `platform` is `'neutral'` mark `node:` built-ins external and restore `module`/`main` resolve fallbacks so monorepo wrappers no longer need `mergeConfig` for those
+
+### Patch Changes
+
+- [#3034](https://github.com/sanity-io/pkg-utils/pull/3034) [`86402fa`](https://github.com/sanity-io/pkg-utils/commit/86402fab7fe41dbc955cde8f47588cc9426a513c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- Updated dependencies [[`fb9ba79`](https://github.com/sanity-io/pkg-utils/commit/fb9ba79dfe6a2ef57d65758ed9d8167e419a3350), [`86402fa`](https://github.com/sanity-io/pkg-utils/commit/86402fab7fe41dbc955cde8f47588cc9426a513c)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.1.2
+
 ## 0.14.2
 
 ### Patch Changes
