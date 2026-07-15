@@ -35,6 +35,64 @@ include an `inset` shorthand so the smoke suite can verify that downleveling act
 Each benchmark process lazy-loads only the plugin under test — the competing implementation is
 never imported into the same process, so module-level state cannot cross-contaminate runs.
 
+## Latest results
+
+Keep this section current: re-run the full suite and update the tables whenever the
+`vanilla-extract` dependencies are bumped or any of the `@sanity/vanilla-extract-*` plugins
+change (see [AGENTS.md](../../AGENTS.md)).
+
+Last run: 2026-07-15, full default suite (`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0,
+Linux x64, Intel Xeon; Rollup 4.62.2, Rolldown 1.1.5, Vite 8.1.4, Vitest 4.1.10. Values are mean
+wall-clock milliseconds from that runner and are machine-specific — compare ratios, not absolute
+numbers.
+
+### Library build, 500 TS + 100 CSS modules (5 samples each)
+
+| Variant                  | Rollup + `@vanilla-extract/rollup-plugin` | Rolldown + `@sanity/vanilla-extract-rolldown-plugin` | Relative result    |
+| ------------------------ | ----------------------------------------: | ---------------------------------------------------: | ------------------ |
+| No minify, no target     |                                 582.22 ms |                                             353.50 ms | Sanity 1.65x faster |
+| Minify                   |                                 592.13 ms |                                             351.60 ms | Sanity 1.68x faster |
+| Target chrome61          |                                 575.51 ms |                                             350.17 ms | Sanity 1.64x faster |
+| Minify + target chrome61 |                                 582.83 ms |                                             346.02 ms | Sanity 1.68x faster |
+
+### Vite build, 500 TS + 100 CSS modules (5 samples each)
+
+| Variant                  | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result    |
+| ------------------------ | -----------------------------: | ------------------------------------: | ------------------ |
+| No minify, no target     |                      722.79 ms |                              550.93 ms | Sanity 1.31x faster |
+| Minify                   |                      716.06 ms |                              548.49 ms | Sanity 1.31x faster |
+| Target chrome61          |                      728.38 ms |                              555.78 ms | Sanity 1.31x faster |
+| Minify + target chrome61 |                      726.69 ms |                              565.97 ms | Sanity 1.28x faster |
+
+Minify and target costs are dominated by identical Vite-side work in this comparison, so the gap
+stays stable across variants; in the library builds each plugin's own `lightningcss` handling is
+what is being compared.
+
+### Vite dev HMR (10 samples each)
+
+| Scenario                                | Official plugin | Sanity plugin | Relative result                       |
+| --------------------------------------- | --------------: | ------------: | ------------------------------------- |
+| Single `.css.ts` leaf edit              |        18.61 ms |      18.27 ms | Effectively tied; Sanity 1.02x faster |
+| Shared theme edit, 100 style importers |       155.06 ms |     163.99 ms | Official 1.06x faster                 |
+
+### Hook-filter stress, `vite build` with 1 CSS module (3 samples each)
+
+| Unrelated modules | Official plugin | Sanity plugin | Relative result    |
+| ----------------: | --------------: | ------------: | ------------------ |
+|                 0 |       435.52 ms |     301.75 ms | Sanity 1.44x faster |
+|             1,000 |       450.91 ms |     294.72 ms | Sanity 1.53x faster |
+|             5,000 |       647.04 ms |     442.98 ms | Sanity 1.46x faster |
+
+The untimed hook diagnostic shows why: the official plugin's unfiltered hooks enter JavaScript
+once per module, while the Sanity plugin's native hook filters reject unrelated ids before the
+Rust ↔ JS boundary.
+
+| Unrelated modules | Official `load` / `transform` entries | Sanity `load` / `transform` entries |
+| ----------------: | ------------------------------------: | ----------------------------------: |
+|                 0 |                                 6 / 8 |                               1 / 1 |
+|             1,000 |                         1,006 / 1,008 |                               1 / 1 |
+|             5,000 |                         5,006 / 5,008 |                               1 / 1 |
+
 The Vite hook-filter suite also holds the number of Vanilla Extract files constant while
 increasing the number of reachable, unrelated TypeScript modules. Its untimed diagnostic counts
 actual JavaScript entries into each plugin's `resolveId`, `load`, and `transform` hooks. This makes
