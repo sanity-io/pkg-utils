@@ -67,6 +67,10 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/pkg-utils': workspace:*
+  # Force a single rolldown copy so tsdown (which still depends on ~1.1.5) and
+  # workspace packages typing against 1.2.0 share one Plugin type. Without this,
+  # `tsc` fails with "Excessive stack depth comparing types 'Plugin<any>'".
+  rolldown: 1.2.0
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
