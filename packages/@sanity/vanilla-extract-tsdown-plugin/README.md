@@ -24,6 +24,8 @@ doesn't pull a second bundler into tsdown projects. It also declares
 [plugin hook filters](https://rolldown.rs/apis/plugin-api#plugin-hook-filters), so rolldown skips
 the Rust ↔ JS roundtrip for modules that aren't vanilla-extract related
 ([vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)).
+Head-to-head numbers for the underlying rolldown plugin against the official Rollup pipeline live
+in the [vanilla-extract benchmarks](https://github.com/sanity-io/pkg-utils/tree/main/benchmarks/vanilla-extract#latest-results).
 
 Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; `inject: true`
 injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —

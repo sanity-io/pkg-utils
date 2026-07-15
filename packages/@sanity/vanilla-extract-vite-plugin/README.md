@@ -19,6 +19,10 @@ alternative to
   [`hotUpdate` hook](https://vite.dev/guide/api-environment-plugins#the-hotupdate-hook)**
   instead of the deprecated `handleHotUpdate`.
 
+Head-to-head numbers against `@vanilla-extract/vite-plugin` — `vite build` across minify/target
+variants, dev HMR, and a hook-filter stress sweep — live in the
+[vanilla-extract benchmarks](https://github.com/sanity-io/pkg-utils/tree/main/benchmarks/vanilla-extract#latest-results).
+
 For _libraries_ that ship a single pre-extracted CSS file, use
 [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme)
 (raw rolldown) or

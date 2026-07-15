@@ -102,6 +102,57 @@ importers:
         specifier: 'catalog:'
         version: 4.1.10(@types/node@24.13.3)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
 
+  benchmarks/vanilla-extract:
+    devDependencies:
+      '@sanity/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/tsconfig
+      '@sanity/vanilla-extract-rolldown-plugin':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/vanilla-extract-rolldown-plugin
+      '@sanity/vanilla-extract-vite-plugin':
+        specifier: workspace:*
+        version: link:../../packages/@sanity/vanilla-extract-vite-plugin
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@vanilla-extract/css':
+        specifier: ^1.21.1
+        version: 1.21.1
+      '@vanilla-extract/integration':
+        specifier: ^8.0.10
+        version: 8.0.10
+      '@vanilla-extract/rollup-plugin':
+        specifier: ^1.5.4
+        version: 1.5.4(rollup@4.62.2)
+      '@vanilla-extract/vite-plugin':
+        specifier: ^5.2.4
+        version: 5.2.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))(yaml@2.9.0)
+      lightningcss:
+        specifier: ^1.32.0
+        version: 1.32.0
+      playwright:
+        specifier: ^1.61.1
+        version: 1.61.1
+      rolldown:
+        specifier: ^1.1.5
+        version: 1.1.5
+      rollup:
+        specifier: ^4.62.2
+        version: 4.62.2
+      tsx:
+        specifier: ^4.23.0
+        version: 4.23.0
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vite:
+        specifier: ^8.1.4
+        version: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.10(@types/node@24.13.3)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+
   css-playground/astro:
     devDependencies:
       '@astrojs/react':
@@ -154,7 +205,7 @@ importers:
         version: link:../sanity-css-vanilla-extract-test
       ts-jest:
         specifier: ^29.4.11
-        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3))(typescript@6.0.3)
+        version: 29.4.11(@babel/core@8.0.1)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@8.0.1))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3))(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -14110,49 +14161,6 @@ packages:
       yaml:
         optional: true
 
-  vite@8.1.3:
-    resolution: {integrity: sha512-Ds+gBRbj0lwRO2Y5hwnUBdxSwlAve9LeRyU4sNnAr0ewW0gWF0n5bgXgUzbgZ49MV9BVUAQUFYVcDUcilUExMA==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
-      '@vitejs/devtools': ^0.3.0
-      esbuild: ^0.27.0 || ^0.28.0
-      jiti: '>=1.21.0'
-      less: ^4.0.0
-      sass: ^1.70.0
-      sass-embedded: ^1.70.0
-      stylus: '>=0.54.8'
-      sugarss: ^5.0.0
-      terser: ^5.16.0
-      tsx: ^4.8.1
-      yaml: ^2.4.2
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      '@vitejs/devtools':
-        optional: true
-      esbuild:
-        optional: true
-      jiti:
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
-        optional: true
-
   vite@8.1.4:
     resolution: {integrity: sha512-bTT9PsdWO+MQMNG9ZXIP/qM9wGh37DFxTV/sPq9cFpHr3w4jkgef032PkAL9jAqhk3Nz8NQw3O8n6/xFkqO4QQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -14832,12 +14840,12 @@ snapshots:
       '@astrojs/internal-helpers': 0.10.1
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
-      '@vitejs/plugin-react': 5.2.0(vite@8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+      '@vitejs/plugin-react': 5.2.0(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       devalue: 5.8.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       ultrahtml: 1.6.0
-      vite: 8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@types/node'
       - '@vitejs/devtools'
@@ -15152,20 +15160,44 @@ snapshots:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-bigint@7.8.3(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-import-assertions@7.29.7(@babel/core@7.29.7)':
     dependencies:
@@ -15177,15 +15209,33 @@ snapshots:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-import-attributes@7.29.7(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7)':
     dependencies:
@@ -15202,40 +15252,88 @@ snapshots:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-private-property-in-object@7.14.5(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
+  '@babel/plugin-syntax-private-property-in-object@7.14.5(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
+
   '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@8.0.1)':
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/helper-plugin-utils': 7.29.7
+    optional: true
 
   '@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7)':
     dependencies:
@@ -21880,7 +21978,7 @@ snapshots:
 
   '@vercel/stega@1.1.0': {}
 
-  '@vitejs/plugin-react@5.2.0(vite@8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
+  '@vitejs/plugin-react@5.2.0(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-transform-react-jsx-self': 7.29.7(@babel/core@7.29.7)
@@ -21888,7 +21986,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -22491,8 +22589,8 @@ snapshots:
       ultrahtml: 1.6.0
       unifont: 0.7.4
       unstorage: 1.17.5(aws4fetch@1.0.20)(db0@0.3.4)(ioredis@5.11.1)
-      vite: 8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.4.3
@@ -22583,6 +22681,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  babel-jest@30.4.1(@babel/core@8.0.1):
+    dependencies:
+      '@babel/core': 8.0.1
+      '@jest/transform': 30.4.1
+      '@types/babel__core': 7.20.5
+      babel-plugin-istanbul: 7.0.1
+      babel-preset-jest: 30.4.0(@babel/core@8.0.1)
+      chalk: 4.1.2
+      graceful-fs: 4.2.11
+      slash: 3.0.0
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
+
   babel-plugin-istanbul@7.0.1:
     dependencies:
       '@babel/helper-plugin-utils': 7.29.7
@@ -22664,11 +22776,38 @@ snapshots:
       '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@7.29.7)
       '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@7.29.7)
 
+  babel-preset-current-node-syntax@1.2.0(@babel/core@8.0.1):
+    dependencies:
+      '@babel/core': 8.0.1
+      '@babel/plugin-syntax-async-generators': 7.8.4(@babel/core@8.0.1)
+      '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@8.0.1)
+      '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@8.0.1)
+      '@babel/plugin-syntax-class-static-block': 7.14.5(@babel/core@8.0.1)
+      '@babel/plugin-syntax-import-attributes': 7.29.7(@babel/core@8.0.1)
+      '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@8.0.1)
+      '@babel/plugin-syntax-json-strings': 7.8.3(@babel/core@8.0.1)
+      '@babel/plugin-syntax-logical-assignment-operators': 7.10.4(@babel/core@8.0.1)
+      '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@8.0.1)
+      '@babel/plugin-syntax-numeric-separator': 7.10.4(@babel/core@8.0.1)
+      '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@8.0.1)
+      '@babel/plugin-syntax-optional-catch-binding': 7.8.3(@babel/core@8.0.1)
+      '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@8.0.1)
+      '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@8.0.1)
+      '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@8.0.1)
+    optional: true
+
   babel-preset-jest@30.4.0(@babel/core@7.29.7):
     dependencies:
       '@babel/core': 7.29.7
       babel-plugin-jest-hoist: 30.4.0
       babel-preset-current-node-syntax: 1.2.0(@babel/core@7.29.7)
+
+  babel-preset-jest@30.4.0(@babel/core@8.0.1):
+    dependencies:
+      '@babel/core': 8.0.1
+      babel-plugin-jest-hoist: 30.4.0
+      babel-preset-current-node-syntax: 1.2.0(@babel/core@8.0.1)
+    optional: true
 
   babel-preset-solid@1.9.12(@babel/core@7.29.7)(solid-js@1.9.14):
     dependencies:
@@ -28716,7 +28855,7 @@ snapshots:
 
   ts-brand@0.2.0: {}
 
-  ts-jest@29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3))(typescript@6.0.3):
+  ts-jest@29.4.11(@babel/core@8.0.1)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@8.0.1))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3))(typescript@6.0.3):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
@@ -28730,10 +28869,10 @@ snapshots:
       typescript: 6.0.3
       yargs-parser: 21.1.1
     optionalDependencies:
-      '@babel/core': 7.29.7
+      '@babel/core': 8.0.1
       '@jest/transform': 30.4.1
       '@jest/types': 30.4.1
-      babel-jest: 30.4.1(@babel/core@7.29.7)
+      babel-jest: 30.4.1(@babel/core@8.0.1)
       esbuild: 0.28.1
       jest-util: 30.4.1
 
@@ -29323,22 +29462,6 @@ snapshots:
       tsx: 4.23.0
       yaml: 2.9.0
 
-  vite@8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0):
-    dependencies:
-      lightningcss: 1.32.0
-      picomatch: 4.0.5
-      postcss: 8.5.16
-      rolldown: 1.1.5
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 24.13.3
-      esbuild: 0.28.1
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      terser: 5.48.0
-      tsx: 4.23.0
-      yaml: 2.9.0
-
   vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.32.0
@@ -29354,10 +29477,6 @@ snapshots:
       terser: 5.48.0
       tsx: 4.23.0
       yaml: 2.9.0
-
-  vitefu@1.1.3(vite@8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)):
-    optionalDependencies:
-      vite: 8.1.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
 
   vitefu@1.1.3(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)):
     optionalDependencies:

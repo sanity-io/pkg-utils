@@ -32,6 +32,31 @@ or pnpm/deno/bun are "command not found"), run `nvm use 24` (or open a fresh log
 for that session — `nvm`'s "current" version is sticky per-shell once explicitly set and won't
 retroactively follow later `nvm alias default` changes.
 
+### Vanilla Extract benchmarks must stay current
+
+`benchmarks/vanilla-extract` is an opt-in performance suite comparing the
+`@sanity/vanilla-extract-*` plugins against the official `@vanilla-extract/*` plugins, and its
+README publishes the latest measured results (which the plugin READMEs link to). **Whenever you
+bump any `vanilla-extract` dependency (`@vanilla-extract/*` packages, or the pinned
+`@vanilla-extract/rollup-plugin`/`@vanilla-extract/vite-plugin` dev dependencies of the benchmark
+workspace), or change any of the `@sanity/vanilla-extract-rolldown-plugin`,
+`@sanity/vanilla-extract-tsdown-plugin`, or `@sanity/vanilla-extract-vite-plugin` packages in any
+way, re-run the full suite and update the "Latest results" section of
+`benchmarks/vanilla-extract/README.md`** (tables, run date, and the environment/version line):
+
+```sh
+pnpm --filter @benchmarks/vanilla-extract install-browser # once, for the HMR suite
+pnpm benchmark:vanilla-extract
+```
+
+Run it on an idle machine on Node 24 and update all result tables — the library-build variant
+matrix (baseline/minify/target/minify+target), the Vite build baseline, dev HMR, hook-filter
+stress timings, and the hook-entry diagnostic (also written to
+`benchmarks/vanilla-extract/results/vite-hook-counts.json`).
+`pnpm --filter @benchmarks/vanilla-extract smoke` validates every build configuration first
+without collecting timings. See `benchmarks/vanilla-extract/README.md` for fixture-size and
+sample-count overrides.
+
 ### Testing notes
 
 - `pnpm test` (root) runs a `pretest` hook that cleans+rebuilds `@sanity/pkg-utils` and cleans the

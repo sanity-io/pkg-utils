@@ -1,0 +1,10 @@
+{
+  "extends": "@sanity/tsconfig/strictest",
+  "include": ["bench", "scripts", "test", "vitest.config.ts"],
+  "exclude": [".generated", "results"],
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "rootDir": ".",
+    "types": ["node"]
+  }
+}
