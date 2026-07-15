@@ -35,6 +35,11 @@ export function vanillaExtractPlugin(options: Options = {}): TsdownPlugin {
 
   const plugin = rolldownVanillaExtractPlugin(options)
 
+  // tsdown still depends on rolldown ~1.1.5 while this package (and the wrapped
+  // rolldown plugin) type against 1.2.0; the Plugin shapes are structurally
+  // compatible at runtime but tsc reports "Excessive stack depth comparing
+  // types 'Plugin<any>'" across the two copies.
+  // @ts-expect-error — cross-version rolldown Plugin assignability
   return {
     ...plugin,
 
