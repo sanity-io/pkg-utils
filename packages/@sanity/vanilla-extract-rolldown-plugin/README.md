@@ -10,8 +10,9 @@ the Rust ↔ JS roundtrip for modules that aren't vanilla-extract related
 ([vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)).
 
 The plugin compiles all `.css.ts` modules and extracts their CSS into a single file (`bundle.css`
-by default), optimized and minified with [lightningcss](https://lightningcss.dev), following the
-same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css).
+by default), optionally lowered and minified with [lightningcss](https://lightningcss.dev),
+following the same architecture (and option vocabulary and defaults) as
+[`@tsdown/css`](https://tsdown.dev/options/css).
 
 Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; `inject: true`
 injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —
@@ -72,18 +73,25 @@ vanillaExtractPlugin({
    */
   fileName: 'bundle.css',
   /**
-   * Minify the extracted CSS with lightningcss, like `css.minify` (which defaults to false).
-   * @defaultValue true
+   * Minify the extracted CSS with lightningcss, matching `css.minify`.
+   * @defaultValue false
    */
-  minify: true,
+  minify: false,
   /**
-   * CSS syntax lowering target, in esbuild-style strings like `css.target`. When not
-   * configured — or when the targets don't include any browsers (e.g. `'node20'`, which speaks
-   * to the JS runtime, not the browsers the CSS runs in) — the targets are resolved from
-   * `@sanity/browserslist-config` instead, where `@tsdown/css` would silently skip syntax
-   * lowering. Set to `false` to disable lowering.
+   * CSS syntax lowering target, in esbuild-style strings like `css.target`. Matching
+   * `@tsdown/css`, lowering is skipped when no target is configured, or when the targets
+   * don't include any browsers (e.g. `'node20'`, which speaks to the JS runtime, not the
+   * browsers the CSS runs in). Set to `false` to disable lowering explicitly.
+   * (`@sanity/tsdown-config` layers a `@sanity/browserslist-config` default on top for
+   * browserless targets, through `lightningcss.targets`.)
    */
   target: 'chrome90',
+  /**
+   * Options passed through to lightningcss's `transform()`, like `css.lightningcss`.
+   * `lightningcss.targets` takes precedence over the esbuild-style `target`, while the
+   * plugin-managed fields (`minify`, `cssModules`) win over their lightningcss counterparts.
+   */
+  lightningcss: {errorRecovery: true},
   /**
    * Inject an import of the extracted CSS into the JS output, like `css.inject` (and matching
    * its default of `false`). `true` injects a relative `import "./<fileName>"`;

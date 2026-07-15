@@ -6,7 +6,8 @@ import {
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
 import {createConditionalCssExport, insertCssExport} from './exports.ts'
 
-export type {Options} from '@sanity/vanilla-extract-rolldown-plugin'
+export {esbuildTargetToLightningCSS} from '@sanity/vanilla-extract-rolldown-plugin'
+export type {LightningCSSOptions, Options} from '@sanity/vanilla-extract-rolldown-plugin'
 
 /**
  * A tsdown plugin that compiles vanilla-extract `.css.ts` modules and extracts their CSS into a
@@ -16,7 +17,8 @@ export type {Options} from '@sanity/vanilla-extract-rolldown-plugin'
  * It wraps the rolldown-generic
  * [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme)
  * (compilation, hook filters, single-file extraction, and the `inject` wiring) with the tsdown
- * specifics: the CSS syntax lowering `target` defaults to tsdown's resolved top-level `target`,
+ * specifics: the CSS syntax lowering `target` defaults to tsdown's resolved top-level `target`
+ * (matching `css.target` in `@tsdown/css` — browserless targets like `node20` skip lowering),
  * the self-referential import of `inject.nodeCompat` uses the package name tsdown resolved, and
  * the conditional `"./<fileName>"` export is written to `package.json` through tsdown's
  * [`exports` feature](https://tsdown.dev/options/package-exports) when it's enabled.

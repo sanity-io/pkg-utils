@@ -3,13 +3,15 @@
 A [tsdown](https://tsdown.dev) plugin for [vanilla-extract](https://vanilla-extract.style), built
 for bundling libraries that ship pre-extracted CSS. It wraps the rolldown-generic
 [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme) —
-which compiles all `.css.ts` modules and extracts their CSS into a single
-[lightningcss](https://lightningcss.dev)-optimized file (`bundle.css` by default), following the
-same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css) —
-and adds the tsdown specifics on top:
+which compiles all `.css.ts` modules and extracts their CSS into a single file (`bundle.css` by
+default), optionally lowered and minified with [lightningcss](https://lightningcss.dev),
+following the same architecture (and option vocabulary and defaults) as
+[`@tsdown/css`](https://tsdown.dev/options/css) — and adds the tsdown specifics on top:
 
 - the CSS syntax lowering `target` defaults to tsdown's resolved top-level
-  [`target`](https://tsdown.dev/options/output#target),
+  [`target`](https://tsdown.dev/options/output#target) (and, matching `css.target`, lowering is
+  skipped when the targets name no browsers — e.g. a `node20` target resolved from
+  `engines.node`),
 - the self-referential import injected by `inject: {nodeCompat: true}` uses the package name
   tsdown resolved, and
 - the conditional `"./bundle.css"` export (`browser`/`style` → the real CSS, `node`/`default` →
@@ -79,18 +81,25 @@ vanillaExtractPlugin({
    */
   fileName: 'bundle.css',
   /**
-   * Minify the extracted CSS with lightningcss, like `css.minify` (which defaults to false).
-   * @defaultValue true
+   * Minify the extracted CSS with lightningcss, matching `css.minify`.
+   * @defaultValue false
    */
-  minify: true,
+  minify: false,
   /**
-   * CSS syntax lowering target, in esbuild-style strings like `css.target`. Defaults to tsdown's
-   * top-level `target`. When neither is configured — or when the targets don't include any
-   * browsers (e.g. `'node20'`, which speaks to the JS runtime, not the browsers the CSS runs
-   * in) — the targets are resolved from `@sanity/browserslist-config` instead, where
-   * `@tsdown/css` would silently skip syntax lowering. Set to `false` to disable lowering.
+   * CSS syntax lowering target, in esbuild-style strings like `css.target`. Defaults to
+   * tsdown's resolved top-level `target`. Matching `@tsdown/css`, lowering is skipped when no
+   * target is configured anywhere, or when the targets don't include any browsers (e.g.
+   * `'node20'`, which speaks to the JS runtime, not the browsers the CSS runs in). Set to
+   * `false` to disable lowering explicitly. (`@sanity/tsdown-config` layers a
+   * `@sanity/browserslist-config` default on top for browserless targets.)
    */
   target: 'chrome90',
+  /**
+   * Options passed through to lightningcss's `transform()`, like `css.lightningcss`.
+   * `lightningcss.targets` takes precedence over the esbuild-style `target`, while the
+   * plugin-managed fields (`minify`, `cssModules`) win over their lightningcss counterparts.
+   */
+  lightningcss: {errorRecovery: true},
   /**
    * Inject an import of the extracted CSS into the JS output, like `css.inject` (and matching
    * its default of `false`). `true` injects a relative `import "./<fileName>"`;

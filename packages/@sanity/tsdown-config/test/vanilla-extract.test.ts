@@ -1,10 +1,12 @@
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath, pathToFileURL} from 'node:url'
+import {esbuildTargetToLightningCSS} from '@sanity/vanilla-extract-tsdown-plugin'
+import {rolldown} from 'rolldown'
 import {x} from 'tinyexec'
 import type {TsdownPlugin, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
-import {defineConfig} from '../src/index.ts'
+import {defineConfig, type PackageOptions} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/vanilla-extract-library')
@@ -31,12 +33,16 @@ const conditionalCssExport = {
 }
 
 describe('vanilla-extract-library', () => {
-  test('extracts and minifies the CSS into bundle.css', async () => {
+  test('extracts and lowers the CSS into bundle.css', async () => {
     const bundleCss = await readFile(path.join(fixtureDir, 'dist/bundle.css'), 'utf-8')
 
-    // The `rgb(1, 2, 3)` marker in `styles.css.ts` is minified by lightningcss to `#010203`
+    // lightningcss processes the CSS (the fixture's chrome61 `target` provides the lowering
+    // targets), normalizing the `rgb(1, 2, 3)` marker in `styles.css.ts` to `#010203` - but
+    // `minify` now matches the `css.minify` default of `@tsdown/css` (false), so the
+    // declarations keep their whitespace
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
+    expect(bundleCss).toContain('top: 0')
 
     // CSS sourcemaps are skipped, aligned with `@tsdown/css`
     // (https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099) and Vite's build
@@ -49,9 +55,11 @@ describe('vanilla-extract-library', () => {
     const bundleCss = await readFile(path.join(fixtureDir, 'dist/bundle.css'), 'utf-8')
 
     // The fixture sets `target: 'chrome61'`, which predates the `inset` shorthand used in
-    // `styles.css.ts`, so lightningcss must flatten it into `top`/`right`/`bottom`/`left`
+    // `styles.css.ts`, so lightningcss must flatten it into `top`/`right`/`bottom`/`left`.
+    // This also proves the `@sanity/browserslist-config` fallback stayed out of the way: its
+    // modern browsers would have kept `inset` as-is.
     expect(bundleCss).not.toContain('inset:')
-    expect(bundleCss).toContain('top:0')
+    expect(bundleCss).toContain('top:')
   })
 
   test('emits the no-op JS shim and its type declarations', async () => {
@@ -180,12 +188,13 @@ describe('vanilla-extract-node-target-library', () => {
   )
 
   test('falls back to @sanity/browserslist-config for the node-only `target`', async () => {
-    // The fixture builds with `target: 'node20'` and `minify: false`: a JS-runtime-only target
-    // says nothing about the browsers the extracted CSS runs in, so the CSS syntax lowering
-    // targets fall back to `@sanity/browserslist-config`. lightningcss processing the CSS with
-    // those targets is observable even without minification, as it normalizes the authored
-    // `rgb(1, 2, 3)` to `#010203` - had the node-only target disabled the processing (the way
-    // `@tsdown/css` behaves), the authored form would pass through untouched.
+    // The fixture builds with `target: 'node20'`: a JS-runtime-only target says nothing about
+    // the browsers the extracted CSS runs in, so `@sanity/tsdown-config` resolves the CSS
+    // syntax lowering targets from `@sanity/browserslist-config` and passes them through
+    // `lightningcss.targets`. lightningcss processing the CSS with those targets is observable
+    // even without minification, as it normalizes the authored `rgb(1, 2, 3)` to `#010203` -
+    // had the node-only target skipped the processing (the way the bare plugin and
+    // `@tsdown/css` behave), the authored form would pass through untouched.
     const bundleCss = await readFile(path.join(nodeTargetFixtureDir, 'dist/bundle.css'), 'utf-8')
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
@@ -199,6 +208,76 @@ describe('vanilla-extract-node-target-library', () => {
     const bundleCss = await readFile(path.join(nodeTargetFixtureDir, 'dist/bundle.css'), 'utf-8')
     expect(bundleCss).not.toContain('light-dark(')
     expect(bundleCss).toContain('var(--lightningcss-light')
+  })
+})
+
+/**
+ * Builds the library fixture's `styles.css.ts` with the vanilla-extract plugin exactly as
+ * `defineConfig` wired it up (fallback targets included), returning the extracted CSS. Driving
+ * rolldown directly keeps the target-matrix tests fast - the full tsdown pipeline is covered by
+ * the fixture builds above.
+ */
+async function buildCssWithConfig(options: PackageOptions): Promise<string> {
+  const config = await defineConfig(options)
+  const {plugins} = config
+  if (!Array.isArray(plugins)) expect.unreachable('expected `plugins` to be an array')
+  const plugin = plugins.find(
+    (candidate) =>
+      !!candidate &&
+      typeof candidate === 'object' &&
+      'name' in candidate &&
+      candidate.name === 'vanilla-extract',
+  )
+  if (!plugin) expect.unreachable('expected the vanilla-extract plugin')
+
+  const bundle = await rolldown({
+    input: path.join(fixtureDir, 'src/styles.css.ts'),
+    plugins: [plugin],
+  })
+  try {
+    const {output} = await bundle.generate({format: 'esm'})
+    const asset = output.find((assetOrChunk) => assetOrChunk.fileName === 'bundle.css')
+    if (!asset || asset.type !== 'asset') expect.unreachable('expected a `bundle.css` asset')
+    const {source} = asset
+    return typeof source === 'string' ? source : new TextDecoder().decode(source)
+  } finally {
+    await bundle.close()
+  }
+}
+
+describe('vanillaExtract CSS target fallback', () => {
+  test('resolves browserless targets from @sanity/browserslist-config', async () => {
+    // Without any target, the plugin (like `@tsdown/css`) would skip syntax lowering - the
+    // config resolves the lowering targets from `@sanity/browserslist-config` instead.
+    // lightningcss processing them is observable through the `rgb(…)` → hex normalization,
+    // while `inset` is kept: the config's modern browsers support it (which also tells the
+    // fallback apart from explicit old targets like chrome61, which flatten it).
+    const css = await buildCssWithConfig({vanillaExtract: true})
+    expect(css).toContain('#010203')
+    expect(css).not.toContain('rgb(1, 2, 3)')
+    expect(css).toContain('inset: 0')
+  })
+
+  test('`target: false` disables CSS syntax lowering entirely', async () => {
+    // The explicit off switch skips the browserslist fallback too, at both levels: the
+    // top-level `target` and `vanillaExtract.target`
+    const topLevel = await buildCssWithConfig({target: false, vanillaExtract: true})
+    expect(topLevel).toContain('rgb(1, 2, 3)')
+    expect(topLevel).toContain('inset: 0')
+
+    const cssLevel = await buildCssWithConfig({vanillaExtract: {target: false}})
+    expect(cssLevel).toContain('rgb(1, 2, 3)')
+    expect(cssLevel).toContain('inset: 0')
+  })
+
+  test('a user-provided `lightningcss.targets` wins over the fallback', async () => {
+    // chrome61 predates the `inset` shorthand: it being flattened proves the user's targets
+    // applied instead of the fallback's modern browsers
+    const css = await buildCssWithConfig({
+      vanillaExtract: {lightningcss: {targets: esbuildTargetToLightningCSS('chrome61')}},
+    })
+    expect(css).not.toContain('inset:')
+    expect(css).toContain('top:')
   })
 })
 

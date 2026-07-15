@@ -51,7 +51,7 @@ describe('vanillaExtractPlugin', () => {
     })
     try {
       const {output} = await bundle.generate({format: 'esm'})
-      expect(findAsset(output, 'bundle.css')).toContain('#010203')
+      expect(findAsset(output, 'bundle.css')).toContain('rgb(1, 2, 3)')
     } finally {
       await bundle.close()
     }
@@ -61,7 +61,7 @@ describe('vanillaExtractPlugin', () => {
     // The self-referential import of `inject.nodeCompat` uses the package name tsdown resolved
     // (instead of reading package.json from the working directory), and the CSS syntax lowering
     // target defaults to tsdown's resolved top-level `target`.
-    const plugin = vanillaExtractPlugin({minify: false, inject: {nodeCompat: true}})
+    const plugin = vanillaExtractPlugin({inject: {nodeCompat: true}})
     await plugin.tsdownConfigResolved?.({
       target: ['chrome61'],
       pkg: {name: '@fixtures/host-library'},

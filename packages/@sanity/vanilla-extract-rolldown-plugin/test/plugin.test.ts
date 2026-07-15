@@ -2,7 +2,7 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
 import {describe, expect, test} from 'vitest'
-import {vanillaExtractPlugin, type Options} from '../src/index.ts'
+import {esbuildTargetToLightningCSS, vanillaExtractPlugin, type Options} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
@@ -53,18 +53,29 @@ function findEntryChunk(output: readonly (OutputAsset | OutputChunk)[]): OutputC
 }
 
 describe('vanillaExtractPlugin', () => {
-  test('extracts and minifies the CSS into bundle.css, in import order', async () => {
+  test('extracts the CSS into bundle.css, in import order', async () => {
     const output = await buildFixture()
+    const bundleCss = findAsset(output, 'bundle.css')
+
+    // Like `@tsdown/css` defaults (`minify: false`, no `target`), the CSS keeps its authored
+    // form - lightningcss doesn't run at all
+    expect(bundleCss).toContain('rgb(1, 2, 3)')
+    expect(bundleCss).toContain('rgb(4, 5, 6)')
+    expect(bundleCss).toContain('inset: 0')
+
+    // `index.ts` imports `button.ts` (which imports `button.css.ts`) before `styles.css.ts`, so
+    // the button styles must come first in the extracted bundle
+    expect(bundleCss.indexOf('rgb(4, 5, 6)')).toBeLessThan(bundleCss.indexOf('rgb(1, 2, 3)'))
+  })
+
+  test('minifies the CSS with `minify: true`, like `css.minify` in @tsdown/css', async () => {
+    const output = await buildFixture({minify: true})
     const bundleCss = findAsset(output, 'bundle.css')
 
     // The `rgb(…)` markers in the fixture are minified by lightningcss to hex colors
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).toContain('#040506')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
-
-    // `index.ts` imports `button.ts` (which imports `button.css.ts`) before `styles.css.ts`, so
-    // the button styles must come first in the extracted bundle
-    expect(bundleCss.indexOf('#040506')).toBeLessThan(bundleCss.indexOf('#010203'))
   })
 
   test('does not emit a CSS sourcemap', async () => {
@@ -82,7 +93,7 @@ describe('vanillaExtractPlugin', () => {
     const {code} = findEntryChunk(output)
 
     // The CSS is extracted, but nothing is injected and no shims are emitted
-    expect(findAsset(output, 'bundle.css')).toContain('#010203')
+    expect(findAsset(output, 'bundle.css')).toContain('rgb(1, 2, 3)')
     expect(code).not.toContain('bundle.css')
     expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
     expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
@@ -155,7 +166,7 @@ describe('vanillaExtractPlugin', () => {
   test('respects a custom `fileName`', async () => {
     const output = await buildFixture({fileName: 'styles.css', inject: {nodeCompat: true}})
 
-    expect(findAsset(output, 'styles.css')).toContain('#010203')
+    expect(findAsset(output, 'styles.css')).toContain('rgb(1, 2, 3)')
     expect(findAsset(output, 'styles.css.js')).toContain('No-op shim')
     expect(findAsset(output, 'styles.css.d.ts')).toContain('export {}')
     expect(findEntryChunk(output).code).toContain(
@@ -163,18 +174,10 @@ describe('vanillaExtractPlugin', () => {
     )
   })
 
-  test('keeps the CSS readable when `minify` is false', async () => {
-    const output = await buildFixture({minify: false})
-
-    // lightningcss still runs (applying the syntax lowering targets), but without minification
-    // the declarations keep their whitespace
-    expect(findAsset(output, 'bundle.css')).toContain('padding: 8px')
-  })
-
   test('lowers CSS syntax for esbuild-style `target`s, like `css.target` in @tsdown/css', async () => {
     const [lowered, modern] = await Promise.all([
       buildFixture({target: 'chrome61'}),
-      buildFixture({target: false, minify: false}),
+      buildFixture({target: false}),
     ])
 
     // chrome61 predates the `inset` shorthand, so it is flattened into `top`/`right`/…
@@ -187,19 +190,19 @@ describe('vanillaExtractPlugin', () => {
     expect(findAsset(modern, 'bundle.css')).toContain('rgb(1, 2, 3)')
   })
 
-  test('falls back to @sanity/browserslist-config when the target has no browsers', async () => {
-    // A JS-runtime-only target (e.g. tsdown's common `target: 'node20'`, which says nothing
-    // about the browsers the extracted CSS runs in) falls back to the browserslist defaults
-    // instead of silently skipping syntax lowering the way `@tsdown/css` does. lightningcss
-    // running (with the fallback targets) is observable even without minification: it
-    // normalizes the authored `rgb(1, 2, 3)` to `#010203`, unlike `target: false` above.
-    const output = await buildFixture({target: 'node20', minify: false})
-    expect(findAsset(output, 'bundle.css')).toContain('#010203')
-    expect(findAsset(output, 'bundle.css')).not.toContain('rgb(1, 2, 3)')
+  test('skips syntax lowering for browserless targets, like @tsdown/css', async () => {
+    // A JS-runtime-only target (e.g. tsdown's common `target: 'node20'`, resolved from
+    // `engines.node`) says nothing about the browsers the extracted CSS runs in, so it
+    // converts to no lightningcss targets and syntax lowering is skipped - the same behavior
+    // as `@tsdown/css`. (`@sanity/tsdown-config` layers a `@sanity/browserslist-config`
+    // default on top through `lightningcss.targets`.)
+    const output = await buildFixture({target: 'node20'})
+    expect(findAsset(output, 'bundle.css')).toContain('rgb(1, 2, 3)')
+    expect(findAsset(output, 'bundle.css')).toContain('inset: 0')
 
     // The same applies to a browserless default target provided by a host through the
     // adapter API (e.g. tsdown's resolved top-level `target`)
-    const plugin = vanillaExtractPlugin({minify: false})
+    const plugin = vanillaExtractPlugin()
     plugin.api.setBuildContext({target: ['node20']})
     const bundle = await rolldown({
       input: path.join(fixtureDir, 'index.ts'),
@@ -207,11 +210,34 @@ describe('vanillaExtractPlugin', () => {
     })
     try {
       const {output: inherited} = await bundle.generate({format: 'esm'})
-      expect(findAsset(inherited, 'bundle.css')).toContain('#010203')
-      expect(findAsset(inherited, 'bundle.css')).not.toContain('rgb(1, 2, 3)')
+      expect(findAsset(inherited, 'bundle.css')).toContain('rgb(1, 2, 3)')
+      expect(findAsset(inherited, 'bundle.css')).toContain('inset: 0')
     } finally {
       await bundle.close()
     }
+  })
+
+  test('passes `lightningcss` options through, like `css.lightningcss` in @tsdown/css', async () => {
+    const chrome61Targets = esbuildTargetToLightningCSS('chrome61')
+    expect(chrome61Targets).toBeTruthy()
+
+    // `lightningcss.targets` drives syntax lowering without an esbuild-style `target`…
+    const output = await buildFixture({lightningcss: {targets: chrome61Targets}})
+    expect(findAsset(output, 'bundle.css')).not.toContain('inset:')
+    expect(findAsset(output, 'bundle.css')).toContain('top:')
+
+    // …and takes precedence over the esbuild-style `target`, matching `@tsdown/css`
+    const overridden = await buildFixture({
+      target: false,
+      lightningcss: {targets: chrome61Targets},
+    })
+    expect(findAsset(overridden, 'bundle.css')).not.toContain('inset:')
+
+    // The plugin-managed `minify` option wins over its `lightningcss` counterpart: lightningcss
+    // runs (its serialization normalizes `rgb(…)` to hex), but the output keeps its whitespace
+    const unminified = await buildFixture({lightningcss: {minify: true}})
+    expect(findAsset(unminified, 'bundle.css')).toContain('padding: 8px')
+    expect(findAsset(unminified, 'bundle.css')).toContain('#010203')
   })
 
   test('orders dynamically imported CSS after the statically imported CSS', async () => {
@@ -225,9 +251,9 @@ describe('vanillaExtractPlugin', () => {
     // …and its CSS follows the entry's statically imported CSS, matching execution order (the
     // dynamic chunk only loads later at runtime), regardless of the bundle's iteration order
     const bundleCss = findAsset(output, 'bundle.css')
-    expect(bundleCss).toContain('#010203')
-    expect(bundleCss).toContain('#070809')
-    expect(bundleCss.indexOf('#010203')).toBeLessThan(bundleCss.indexOf('#070809'))
+    expect(bundleCss).toContain('rgb(1, 2, 3)')
+    expect(bundleCss).toContain('rgb(7, 8, 9)')
+    expect(bundleCss.indexOf('rgb(1, 2, 3)')).toBeLessThan(bundleCss.indexOf('rgb(7, 8, 9)'))
   })
 
   test('emits no CSS or shim for style-less builds, unless `nodeCompat` needs them', async () => {
@@ -319,7 +345,7 @@ describe('adapter api', () => {
 
   test('`setBuildContext` provides the default CSS syntax lowering target', async () => {
     // The `target` option still wins over the host default
-    const plugin = vanillaExtractPlugin({minify: false, target: false})
+    const plugin = vanillaExtractPlugin({target: false})
     plugin.api.setBuildContext({target: 'chrome61'})
     const bundle = await rolldown({
       input: path.join(fixtureDir, 'index.ts'),
@@ -334,7 +360,7 @@ describe('adapter api', () => {
 
     // Without the `target` option, the host-provided default applies (chrome61 predates the
     // `inset` shorthand, so it is flattened into `top`/`right`/…)
-    const hostTargeted = vanillaExtractPlugin({minify: false})
+    const hostTargeted = vanillaExtractPlugin()
     hostTargeted.api.setBuildContext({target: 'chrome61'})
     const hostBundle = await rolldown({
       input: path.join(fixtureDir, 'index.ts'),

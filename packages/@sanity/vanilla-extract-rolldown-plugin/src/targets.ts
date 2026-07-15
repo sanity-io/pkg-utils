@@ -33,10 +33,17 @@ function parseVersion(version: string): number | null {
 
 /**
  * Convert esbuild-style target strings (e.g. `'chrome90'`, `'safari16.2'`) into lightningcss
- * `Targets`. Targets that don't map to a browser (e.g. `'node20'`, `'es2022'`) are ignored.
- * @internal
+ * `Targets`, with the same conversion as `css.target` in `@tsdown/css`. Targets that don't map
+ * to a browser (e.g. `'node20'`, `'es2022'`) are ignored — `undefined` is returned when none of
+ * them do, which hosts like `@sanity/tsdown-config` use to detect browserless targets and layer
+ * their own default targets on top.
+ * @public
  */
-export function esbuildTargetToLightningCSS(target: string[]): Targets | undefined {
+export function esbuildTargetToLightningCSS(target: string | string[]): Targets | undefined {
+  return convert(Array.isArray(target) ? target : [target])
+}
+
+function convert(target: string[]): Targets | undefined {
   let targets: Targets | undefined
 
   const targetString = target.join(' ').toLowerCase()

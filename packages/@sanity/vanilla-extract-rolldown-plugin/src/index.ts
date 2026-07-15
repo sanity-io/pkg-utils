@@ -1,5 +1,4 @@
 import path from 'node:path'
-import browserslistConfig from '@sanity/browserslist-config'
 import {
   compile,
   cssFileFilter,
@@ -9,10 +8,22 @@ import {
   virtualCssFileFilter,
   type IdentifierOption,
 } from '@vanilla-extract/integration'
-import browserslist from 'browserslist'
-import {browserslistToTargets, transform, type Targets} from 'lightningcss'
+import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {OutputChunk, Plugin, RenderedChunk} from 'rolldown'
 import {esbuildTargetToLightningCSS} from './targets.ts'
+
+export {esbuildTargetToLightningCSS} from './targets.ts'
+
+/**
+ * Options passed through to [lightningcss](https://lightningcss.dev)'s `transform()`, the same
+ * shape as `css.lightningcss` in [`@tsdown/css`](https://tsdown.dev/options/css). Like there,
+ * `targets` takes precedence over the esbuild-style {@link Options.target | `target`} option,
+ * while the plugin-managed fields (`minify` from the {@link Options.minify | `minify`} option,
+ * and `cssModules`, which vanilla-extract's own scoping makes redundant) win over their
+ * `lightningcss` counterparts.
+ * @public
+ */
+export type LightningCSSOptions = Omit<TransformOptions<CustomAtRules>, 'filename' | 'code'>
 
 /**
  * The default name of the extracted CSS file (the {@link Options.fileName | `fileName`} option).
@@ -45,9 +56,8 @@ export interface Options {
    */
   fileName?: string
   /**
-   * Minify the extracted CSS with `lightningcss`, like `css.minify` in `@tsdown/css`
-   * (which defaults to `false`).
-   * @defaultValue true
+   * Minify the extracted CSS with `lightningcss`, matching `css.minify` in `@tsdown/css`.
+   * @defaultValue false
    */
   minify?: boolean
   /**
@@ -56,13 +66,21 @@ export interface Options {
    * to disable syntax lowering entirely.
    *
    * Defaults to the host-resolved {@link BuildContext.target} when an adapter provides one —
-   * `@sanity/vanilla-extract-tsdown-plugin` forwards tsdown's top-level `target` this way.
-   * When neither is configured — or when the configured targets don't include any browsers
-   * (e.g. `'node20'`, common for libraries, says nothing about the browsers the extracted CSS
-   * runs in) — the targets are resolved from `@sanity/browserslist-config` instead.
-   * (`@tsdown/css` would silently skip syntax lowering in that case.)
+   * `@sanity/vanilla-extract-tsdown-plugin` forwards tsdown's resolved top-level `target` this
+   * way. Matching `@tsdown/css`, syntax lowering is skipped when no target is configured
+   * anywhere, or when the configured targets don't include any browsers (e.g. `'node20'`,
+   * which speaks to the JS runtime, not the browsers the extracted CSS runs in).
+   * `@sanity/tsdown-config` layers its own default on top, resolving browserless targets from
+   * `@sanity/browserslist-config` and passing them through
+   * {@link Options.lightningcss | `lightningcss.targets`}.
    */
   target?: string | string[] | false
+  /**
+   * Options passed through to `lightningcss`'s `transform()`, like `css.lightningcss` in
+   * `@tsdown/css`. `lightningcss.targets` takes precedence over the esbuild-style
+   * {@link Options.target | `target`}.
+   */
+  lightningcss?: LightningCSSOptions
   /**
    * Inject an import of the extracted CSS file into the JS output, like `css.inject` in
    * `@tsdown/css` (and matching its default of `false`):
@@ -126,8 +144,9 @@ export type VanillaExtractPlugin = Plugin<VanillaExtractPluginApi> & {
 
 /**
  * A rolldown plugin that compiles vanilla-extract `.css.ts` modules and extracts their CSS into
- * a single `lightningcss`-optimized file, following the same architecture (and option
- * vocabulary) as `@tsdown/css`. Unlike `@vanilla-extract/rollup-plugin` it doesn't declare
+ * a single file, optionally lowered and minified with `lightningcss` — following the same
+ * architecture (and option vocabulary and defaults) as `@tsdown/css`. Unlike
+ * `@vanilla-extract/rollup-plugin` it doesn't declare
  * `rollup` as a peer dependency, and its `transform`/`resolveId`/`load` hooks declare filters
  * so rolldown skips the Rust ↔ JS roundtrip for modules that aren't vanilla-extract related.
  *
@@ -141,7 +160,8 @@ export type VanillaExtractPlugin = Plugin<VanillaExtractPluginApi> & {
 export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugin {
   const identifiers = options.identifiers ?? 'short'
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
-  const minify = options.minify ?? true
+  const minify = options.minify ?? false
+  const lightningcss = options.lightningcss
   const inject = Boolean(options.inject ?? false)
   /**
    * The conditional CSS export flavor of `inject`: a self-referential bare import specifier
@@ -166,17 +186,16 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
   const styles = new Map<string, string>()
 
   function resolveTargets(): Targets | undefined {
+    // Matching `@tsdown/css`: explicit `lightningcss.targets` win, then the esbuild-style
+    // `target` (the option, falling back to the host-resolved context target) is converted.
+    // Browserless targets (e.g. tsdown's common `target: 'node20'`, which speaks to the JS
+    // runtime) convert to nothing, skipping syntax lowering — `@sanity/tsdown-config` layers
+    // the `@sanity/browserslist-config` default on top through `lightningcss.targets`.
+    if (lightningcss?.targets) return lightningcss.targets
     if (options.target === false) return undefined
     const target = options.target ?? contextTarget
-    if (target !== undefined) {
-      const targets = esbuildTargetToLightningCSS(Array.isArray(target) ? target : [target])
-      if (targets) return targets
-    }
-    // The extracted CSS always runs in browsers, so a target list without any browsers (e.g.
-    // tsdown's common `target: 'node20'`, which speaks to the JS runtime) falls back to
-    // `@sanity/browserslist-config` instead of silently disabling syntax lowering the way
-    // `@tsdown/css` does — `target: false` is the explicit off switch.
-    return browserslistToTargets(browserslist(browserslistConfig))
+    if (target === undefined) return undefined
+    return esbuildTargetToLightningCSS(target)
   }
 
   function resolvePackageName(entryModuleId: string | null): string {
@@ -328,11 +347,17 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       // nothing references an empty CSS file, so it would just be a stray artifact.
       if (!css && !nodeCompat) return
 
+      // Like `@tsdown/css`, lightningcss only runs when it has something to do: syntax
+      // lowering targets, minification, or custom `lightningcss` options
       const targets = resolveTargets()
-      if (css && (targets || minify)) {
+      if (css && (targets || minify || lightningcss)) {
+        // The spread order matches `@tsdown/css`: the plugin-managed fields (`targets` from
+        // the resolved `target`, `minify`, and `cssModules`, which vanilla-extract's own
+        // scoping makes redundant) win over their `lightningcss` counterparts
         const result = transform({
           filename: fileName,
           code: new TextEncoder().encode(css),
+          ...lightningcss,
           minify,
           cssModules: false,
           targets,
