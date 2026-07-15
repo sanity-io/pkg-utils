@@ -51,6 +51,8 @@ export function getAbsoluteId({filePath, root}: {filePath: string; root: string}
     return normalizePath(resolvedId)
   }
 
-  // In SSR mode we can have root-relative paths like `/app/styles.css.ts`.
+  // In SSR mode we can have root-relative paths like `/app/styles.css.ts`. Note that unlike
+  // `posix.resolve`, `posix.join` concatenates even when the second segment starts with `/`:
+  // `posix.join('/root', '/app/styles.css.ts')` is `/root/app/styles.css.ts`.
   return normalizePath(posix.join(root, resolvedId))
 }

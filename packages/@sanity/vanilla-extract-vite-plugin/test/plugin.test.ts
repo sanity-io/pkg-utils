@@ -148,7 +148,9 @@ describe('vite dev', () => {
       configFile: false,
       logLevel: 'silent',
       server: {middlewareMode: true},
-      plugins: [vanillaExtractPlugin({pluginFilter}), markerPlugin],
+      // The marker plugin is nested like a preset would produce - `PluginOption` arrays nest
+      // arbitrarily deep, and forwarding must flatten them fully
+      plugins: [vanillaExtractPlugin({pluginFilter}), [[markerPlugin]]],
     })
     try {
       const transformed = await server.transformRequest('/src/styles.css.ts')

@@ -43,6 +43,15 @@ const isPluginObject = (plugin: PluginOption): plugin is Plugin =>
   typeof plugin === 'object' && plugin !== null && 'name' in plugin
 
 /**
+ * Flattens arbitrarily nested `PluginOption` arrays (presets return plugin groups) into plain
+ * plugin objects; falsy entries and promises are dropped, like upstream.
+ */
+function flattenPluginObjects(option: PluginOption): Plugin[] {
+  if (Array.isArray(option)) return option.flatMap(flattenPluginObjects)
+  return isPluginObject(option) ? [option] : []
+}
+
+/**
  * Decides which of the consumer's Vite plugins are forwarded to the internal compiler server
  * that evaluates the `.css.ts` modules.
  * @public
@@ -152,9 +161,7 @@ export function vanillaExtractPlugin({
     const viteConfig = {
       ...configForCompiler,
       plugins: pluginFilter
-        ? configForCompiler?.plugins
-            ?.flat()
-            .filter(isPluginObject)
+        ? flattenPluginObjects(configForCompiler?.plugins ?? [])
             // Never forward this plugin itself into its own compiler server
             .filter((plugin) => !plugin.name.startsWith(PLUGIN_NAMESPACE))
             .filter((plugin) => pluginFilter({name: plugin.name, mode: config.mode}))
