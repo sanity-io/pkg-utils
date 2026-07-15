@@ -84,9 +84,9 @@ describe('deps option', () => {
   test('appends userland neverBundle entries to the `/^node:/` default', async () => {
     // tsdown's `mergeConfig` would replace the array; concatenate so per-package externals
     // (e.g. self-references like `/^sanity(\\/|$)/`) add to the node builtins instead
-    expect(
-      (await defineConfig({deps: {neverBundle: [/^sanity(\/|$)/]}})).deps,
-    ).toEqual({neverBundle: [/^node:/, /^sanity(\/|$)/]})
+    expect((await defineConfig({deps: {neverBundle: [/^sanity(\/|$)/]}})).deps).toEqual({
+      neverBundle: [/^node:/, /^sanity(\/|$)/],
+    })
     expect(
       (
         await defineConfig({
