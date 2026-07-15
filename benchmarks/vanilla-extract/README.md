@@ -22,6 +22,13 @@ Vite 8 compares:
 - Vite dev HMR for a direct `.css.ts` edit
 - Vite dev HMR for a shared theme edit that invalidates every `.css.ts` importer
 
+The Vite hook-filter suite also holds the number of Vanilla Extract files constant while
+increasing the number of reachable, unrelated TypeScript modules. Its untimed diagnostic counts
+actual JavaScript entries into each plugin's `resolveId`, `load`, and `transform` hooks. This makes
+the Rust-to-JavaScript boundary described in
+[vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)
+visible independently of wall-clock noise.
+
 Every build comparison runs the full variant matrix: baseline (no minify, no target), CSS
 minification, syntax downleveling via `target: 'chrome61'`, and minify + target combined. The
 Sanity Rolldown plugin handles minify/target through its own `lightningcss` options; the official
@@ -41,28 +48,28 @@ Keep this section current: re-run the full suite and update the tables whenever 
 `vanilla-extract` dependencies are bumped or any of the `@sanity/vanilla-extract-*` plugins
 change (see [AGENTS.md](../../AGENTS.md)).
 
-Last run: 2026-07-15, full default suite (`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0,
-Linux x64, Intel Xeon; Rollup 4.62.2, Rolldown 1.1.5, Vite 8.1.4, Vitest 4.1.10. Values are mean
-wall-clock milliseconds from that runner and are machine-specific — compare ratios, not absolute
-numbers.
+Last run: 2026-07-15 (after the `bundle-css.js` shim rename, #3043), full default suite
+(`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0, Linux x64, Intel Xeon; Rollup 4.62.2,
+Rolldown 1.1.5, Vite 8.1.4, Vitest 4.1.10. Values are mean wall-clock milliseconds from that
+runner and are machine-specific — compare ratios, not absolute numbers.
 
 ### Library build, 500 TS + 100 CSS modules (5 samples each)
 
-| Variant                  | Rollup + `@vanilla-extract/rollup-plugin` | Rolldown + `@sanity/vanilla-extract-rolldown-plugin` | Relative result    |
-| ------------------------ | ----------------------------------------: | ---------------------------------------------------: | ------------------ |
-| No minify, no target     |                                 582.22 ms |                                             353.50 ms | Sanity 1.65x faster |
-| Minify                   |                                 592.13 ms |                                             351.60 ms | Sanity 1.68x faster |
-| Target chrome61          |                                 575.51 ms |                                             350.17 ms | Sanity 1.64x faster |
-| Minify + target chrome61 |                                 582.83 ms |                                             346.02 ms | Sanity 1.68x faster |
+| Variant                  | Rollup + `@vanilla-extract/rollup-plugin` | Rolldown + `@sanity/vanilla-extract-rolldown-plugin` | Relative result     |
+| ------------------------ | ----------------------------------------: | ---------------------------------------------------: | ------------------- |
+| No minify, no target     |                                 591.80 ms |                                            363.19 ms | Sanity 1.63x faster |
+| Minify                   |                                 622.98 ms |                                            371.94 ms | Sanity 1.67x faster |
+| Target chrome61          |                                 642.70 ms |                                            376.96 ms | Sanity 1.70x faster |
+| Minify + target chrome61 |                                 653.61 ms |                                            385.33 ms | Sanity 1.70x faster |
 
 ### Vite build, 500 TS + 100 CSS modules (5 samples each)
 
-| Variant                  | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result    |
-| ------------------------ | -----------------------------: | ------------------------------------: | ------------------ |
-| No minify, no target     |                      722.79 ms |                              550.93 ms | Sanity 1.31x faster |
-| Minify                   |                      716.06 ms |                              548.49 ms | Sanity 1.31x faster |
-| Target chrome61          |                      728.38 ms |                              555.78 ms | Sanity 1.31x faster |
-| Minify + target chrome61 |                      726.69 ms |                              565.97 ms | Sanity 1.28x faster |
+| Variant                  | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
+| ------------------------ | -----------------------------: | ------------------------------------: | ------------------- |
+| No minify, no target     |                      792.66 ms |                             601.33 ms | Sanity 1.32x faster |
+| Minify                   |                      790.95 ms |                             601.92 ms | Sanity 1.31x faster |
+| Target chrome61          |                      800.50 ms |                             608.73 ms | Sanity 1.32x faster |
+| Minify + target chrome61 |                      838.17 ms |                             629.58 ms | Sanity 1.33x faster |
 
 Minify and target costs are dominated by identical Vite-side work in this comparison, so the gap
 stays stable across variants; in the library builds each plugin's own `lightningcss` handling is
@@ -70,18 +77,18 @@ what is being compared.
 
 ### Vite dev HMR (10 samples each)
 
-| Scenario                                | Official plugin | Sanity plugin | Relative result                       |
-| --------------------------------------- | --------------: | ------------: | ------------------------------------- |
-| Single `.css.ts` leaf edit              |        18.61 ms |      18.27 ms | Effectively tied; Sanity 1.02x faster |
-| Shared theme edit, 100 style importers |       155.06 ms |     163.99 ms | Official 1.06x faster                 |
+| Scenario                               | Official plugin | Sanity plugin | Relative result       |
+| -------------------------------------- | --------------: | ------------: | --------------------- |
+| Single `.css.ts` leaf edit             |        27.18 ms |      25.73 ms | Sanity 1.06x faster   |
+| Shared theme edit, 100 style importers |       178.44 ms |     195.64 ms | Official 1.10x faster |
 
 ### Hook-filter stress, `vite build` with 1 CSS module (3 samples each)
 
-| Unrelated modules | Official plugin | Sanity plugin | Relative result    |
-| ----------------: | --------------: | ------------: | ------------------ |
-|                 0 |       435.52 ms |     301.75 ms | Sanity 1.44x faster |
-|             1,000 |       450.91 ms |     294.72 ms | Sanity 1.53x faster |
-|             5,000 |       647.04 ms |     442.98 ms | Sanity 1.46x faster |
+| Unrelated modules | Official plugin | Sanity plugin | Relative result     |
+| ----------------: | --------------: | ------------: | ------------------- |
+|                 0 |       463.89 ms |     311.57 ms | Sanity 1.49x faster |
+|             1,000 |       508.41 ms |     331.32 ms | Sanity 1.53x faster |
+|             5,000 |       761.97 ms |     535.87 ms | Sanity 1.42x faster |
 
 The untimed hook diagnostic shows why: the official plugin's unfiltered hooks enter JavaScript
 once per module, while the Sanity plugin's native hook filters reject unrelated ids before the
@@ -92,13 +99,6 @@ Rust ↔ JS boundary.
 |                 0 |                                 6 / 8 |                               1 / 1 |
 |             1,000 |                         1,006 / 1,008 |                               1 / 1 |
 |             5,000 |                         5,006 / 5,008 |                               1 / 1 |
-
-The Vite hook-filter suite also holds the number of Vanilla Extract files constant while
-increasing the number of reachable, unrelated TypeScript modules. Its untimed diagnostic counts
-actual JavaScript entries into each plugin's `resolveId`, `load`, and `transform` hooks. This makes
-the Rust-to-JavaScript boundary described in
-[vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)
-visible independently of wall-clock noise.
 
 ## Running
 
