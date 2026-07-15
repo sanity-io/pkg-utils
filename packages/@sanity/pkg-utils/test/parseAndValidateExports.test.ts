@@ -194,8 +194,8 @@ describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: un
             './bundle.css': {
               browser: './dist/bundle.css',
               style: './dist/bundle.css',
-              node: './dist/bundle.css.js',
-              default: './dist/bundle.css.js',
+              node: './dist/bundle-css.js',
+              default: './dist/bundle-css.js',
             },
           },
         } as unknown as PackageJSON

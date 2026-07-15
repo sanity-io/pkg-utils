@@ -34,8 +34,8 @@ const exportEntrySchema = z
  * ```json
  * "./bundle.css": {
  *   "browser": "./dist/bundle.css",
- *   "node": "./dist/bundle.css.js",
- *   "default": "./dist/bundle.css.js"
+ *   "node": "./dist/bundle-css.js",
+ *   "default": "./dist/bundle-css.js"
  * }
  * ```
  * This lets a package re-add a `import "<pkg>/bundle.css"` statement that resolves to the real CSS

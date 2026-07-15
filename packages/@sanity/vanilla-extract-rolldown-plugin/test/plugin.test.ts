@@ -95,7 +95,7 @@ describe('vanillaExtractPlugin', () => {
     // The CSS is extracted, but nothing is injected and no shims are emitted
     expect(findAsset(output, 'bundle.css')).toContain('rgb(1, 2, 3)')
     expect(code).not.toContain('bundle.css')
-    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle-css.js')).toBe(false)
     expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
 
     // The styles must not be inlined or imported in the JS output either
@@ -116,7 +116,7 @@ describe('vanillaExtractPlugin', () => {
         format === 'cjs' ? `require("./bundle.css");` : `import "./bundle.css";`,
       )
       expect(code).not.toContain(selfReferentialSpecifier)
-      expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.js')).toBe(false)
+      expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle-css.js')).toBe(false)
     },
   )
 
@@ -156,19 +156,23 @@ describe('vanillaExtractPlugin', () => {
 
     // The shim must be free of JS syntax so it parses as both CommonJS and an ES module: the
     // package `type` decides how Node interprets a `.js` file, and the same shim backs the
-    // `node`/`default` conditions for `require()` and `import` alike
-    const shim = findAsset(output, 'bundle.css.js')
+    // `node`/`default` conditions for `require()` and `import` alike. Named `bundle-css.js`
+    // (not `bundle.css.js`) so vanilla-extract's `cssFileFilter` does not match it.
+    const shim = findAsset(output, 'bundle-css.js')
     expect(shim).toContain('No-op shim')
     expect(shim.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
+    // Declarations for both export targets: CSS file + shim
     expect(findAsset(output, 'bundle.css.d.ts')).toContain('export {}')
+    expect(findAsset(output, 'bundle-css.d.ts')).toContain('export {}')
   })
 
   test('respects a custom `fileName`', async () => {
     const output = await buildFixture({fileName: 'styles.css', inject: {nodeCompat: true}})
 
     expect(findAsset(output, 'styles.css')).toContain('rgb(1, 2, 3)')
-    expect(findAsset(output, 'styles.css.js')).toContain('No-op shim')
+    expect(findAsset(output, 'styles-css.js')).toContain('No-op shim')
     expect(findAsset(output, 'styles.css.d.ts')).toContain('export {}')
+    expect(findAsset(output, 'styles-css.d.ts')).toContain('export {}')
     expect(findEntryChunk(output).code).toContain(
       'import "@sanity/vanilla-extract-rolldown-plugin/styles.css";',
     )
@@ -269,9 +273,10 @@ describe('vanillaExtractPlugin', () => {
     // CSS file and its shims are emitted even when empty to keep it resolving
     const withNodeCompat = await buildFixture({inject: {nodeCompat: true}}, 'esm', false, 'no-css')
     expect(withNodeCompat.map((assetOrChunk) => assetOrChunk.fileName).toSorted()).toEqual([
+      'bundle-css.d.ts',
+      'bundle-css.js',
       'bundle.css',
       'bundle.css.d.ts',
-      'bundle.css.js',
       'index.js',
     ])
     expect(findAsset(withNodeCompat, 'bundle.css')).toBe('')

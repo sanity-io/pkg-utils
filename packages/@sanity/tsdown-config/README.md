@@ -97,8 +97,8 @@ automatically:
 
 - injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
   vanilla-extract styles,
-- emits a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`) for runtimes that cannot import
-  `.css` files, and
+- emits a no-op `bundle-css.js` shim (plus `bundle.css.d.ts` / `bundle-css.d.ts`) for runtimes
+  that cannot import `.css` files, and
 - writes the conditional `"./bundle.css"` export to `package.json` (`browser`/`style` → the real
   CSS, `node`/`default` → the shim).
 

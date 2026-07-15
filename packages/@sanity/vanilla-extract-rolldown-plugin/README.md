@@ -18,10 +18,12 @@ Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; 
 injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —
 through rolldown's native magic-string, so sourcemaps stay intact. `inject: {nodeCompat: true}`
 instead injects the self-referential `import "<pkg>/bundle.css"` of the conditional CSS export
-pattern and emits a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`) for the `node`/`default`
-conditions of that export to point at, so the import is harmless in runtimes that cannot import
-`.css` files. Writing the conditional `"./bundle.css"` export to `package.json` is the host
-tool's job — with tsdown, [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme)
+pattern and emits a no-op `bundle-css.js` shim (plus `bundle.css.d.ts` / `bundle-css.d.ts`) for
+the `node`/`default` conditions of that export to point at, so the import is harmless in runtimes
+that cannot import `.css` files. The shim is named with a hyphen (`bundle-css.js`) rather than a
+`.css.js` suffix so it does not match vanilla-extract's `cssFileFilter`. Writing the conditional
+`"./bundle.css"` export to `package.json` is the host tool's job — with tsdown,
+[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme)
 maintains it automatically.
 
 ## Usage

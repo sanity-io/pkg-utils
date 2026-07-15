@@ -28,9 +28,10 @@ Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; 
 injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —
 through rolldown's native magic-string, so sourcemaps stay intact. `inject: {nodeCompat: true}`
 additionally wires up the whole conditional CSS export pattern: the injected import becomes the
-self-referential `import "<pkg>/bundle.css"`, a no-op `bundle.css.js` shim (plus
-`bundle.css.d.ts`) is emitted for the `node`/`default` conditions of the export to point at, so
-the import is harmless in runtimes that cannot import `.css` files, and when tsdown's
+self-referential `import "<pkg>/bundle.css"`, a no-op `bundle-css.js` shim (plus
+`bundle.css.d.ts` / `bundle-css.d.ts`) is emitted for the `node`/`default` conditions of the
+export to point at, so the import is harmless in runtimes that cannot import `.css` files, and
+when tsdown's
 [`exports` feature](https://tsdown.dev/options/package-exports) is enabled, the conditional
 `"./bundle.css"` export is written to `package.json` (`browser`/`style` → the real CSS,
 `node`/`default` → the shim) through the plugin's `tsdownConfig` hook.

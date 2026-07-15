@@ -90,8 +90,8 @@ describe('vanillaExtractPlugin', () => {
 const conditionalCssExport = {
   browser: './dist/bundle.css',
   style: './dist/bundle.css',
-  node: './dist/bundle.css.js',
-  default: './dist/bundle.css.js',
+  node: './dist/bundle-css.js',
+  default: './dist/bundle-css.js',
 }
 
 /** Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. */
@@ -189,8 +189,8 @@ describe('tsdownConfig hook', () => {
       './styles.css': {
         browser: './lib/styles.css',
         style: './lib/styles.css',
-        node: './lib/styles.css.js',
-        default: './lib/styles.css.js',
+        node: './lib/styles-css.js',
+        default: './lib/styles-css.js',
       },
     })
   })

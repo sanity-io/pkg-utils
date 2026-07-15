@@ -42,8 +42,8 @@ describe('writeBundleCssExports', () => {
     expect(pkg.exports['./bundle.css']).toEqual({
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     })
     expect(Object.keys(pkg.exports)).toEqual(['.', './bundle.css', './package.json'])
   })
@@ -57,8 +57,8 @@ describe('writeBundleCssExports', () => {
         './bundle.css': {
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
-          node: './dist/bundle.css.js',
-          default: './dist/bundle.css.js',
+          node: './dist/bundle-css.js',
+          default: './dist/bundle-css.js',
         },
         './package.json': './package.json',
       },
@@ -93,8 +93,8 @@ describe('writeBundleCssExports', () => {
     expect(pkg.exports['./styles.css']).toEqual({
       browser: './lib/styles.css',
       style: './lib/styles.css',
-      node: './lib/styles.css.js',
-      default: './lib/styles.css.js',
+      node: './lib/styles-css.js',
+      default: './lib/styles-css.js',
     })
   })
 
@@ -125,8 +125,8 @@ describe('writeBundleCssExports', () => {
     const expected = {
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     }
     expect(pkg.exports['./bundle.css']).toEqual(expected)
     expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual(expected)
@@ -195,8 +195,8 @@ describe('writeBundleCssExports', () => {
         './bundle.css': {
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
-          node: './dist/bundle.css.js',
-          default: './dist/bundle.css.js',
+          node: './dist/bundle-css.js',
+          default: './dist/bundle-css.js',
         },
         './package.json': './package.json',
       },
@@ -219,8 +219,8 @@ describe('writeBundleCssExports', () => {
     expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual({
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     })
   })
 
@@ -228,8 +228,8 @@ describe('writeBundleCssExports', () => {
     const conditionalExport = {
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     }
     const cwd = await setupPackage({
       name: 'example',

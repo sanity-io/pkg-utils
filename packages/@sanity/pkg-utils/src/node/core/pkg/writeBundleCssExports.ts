@@ -2,6 +2,7 @@ import {readFile, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import type {Logger} from '../../logger.ts'
 import {isRecord} from '../isRecord.ts'
+import {cssShimFileName} from './cssShimFileName.ts'
 
 /**
  * Build the conditional CSS export object that vanilla-extract compat mode expects, e.g.
@@ -9,10 +10,12 @@ import {isRecord} from '../isRecord.ts'
  * {
  *   "browser": "./dist/bundle.css",
  *   "style": "./dist/bundle.css",
- *   "node": "./dist/bundle.css.js",
- *   "default": "./dist/bundle.css.js"
+ *   "node": "./dist/bundle-css.js",
+ *   "default": "./dist/bundle-css.js"
  * }
  * ```
+ * The shim is named `bundle-css.js` (not `bundle.css.js`) so it does not match
+ * vanilla-extract's `cssFileFilter`.
  */
 function createConditionalCssExport(cssFile: string, shimFile: string) {
   return {browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
@@ -92,7 +95,7 @@ export async function writeBundleCssExports(options: {
   const distRel = (path.relative(cwd, distPath) || 'dist').split(path.sep).join('/')
   const exportKey = `./${cssName}`
   const cssFile = `./${path.posix.join(distRel, cssName)}`
-  const shimFile = `./${path.posix.join(distRel, `${cssName}.js`)}`
+  const shimFile = `./${path.posix.join(distRel, cssShimFileName(cssName))}`
   const conditionalExport = createConditionalCssExport(cssFile, shimFile)
 
   // Only mirror into `publishConfig.exports` when it already exists; never create it here.

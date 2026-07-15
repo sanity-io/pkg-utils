@@ -265,8 +265,8 @@ describe('parsePackage', () => {
         './bundle.css': {
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
-          node: './dist/bundle.css.js',
-          default: './dist/bundle.css.js',
+          node: './dist/bundle-css.js',
+          default: './dist/bundle-css.js',
         },
       },
     }
@@ -277,8 +277,8 @@ describe('parsePackage', () => {
     expect(parsed.exports?.['./bundle.css']).toEqual({
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
-      node: './dist/bundle.css.js',
-      default: './dist/bundle.css.js',
+      node: './dist/bundle-css.js',
+      default: './dist/bundle-css.js',
     })
   })
 

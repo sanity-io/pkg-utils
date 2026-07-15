@@ -250,8 +250,8 @@ describe('publishConfig.exports validation', () => {
           './bundle.css': {
             browser: './dist/bundle.css',
             style: './dist/bundle.css',
-            node: './dist/bundle.css.js',
-            default: './dist/bundle.css.js',
+            node: './dist/bundle-css.js',
+            default: './dist/bundle-css.js',
           },
         },
         publishConfig: {
@@ -262,8 +262,8 @@ describe('publishConfig.exports validation', () => {
             './bundle.css': {
               browser: './dist/bundle.css',
               style: './dist/bundle.css',
-              node: './dist/bundle.css.js',
-              default: './dist/bundle.css.js',
+              node: './dist/bundle-css.js',
+              default: './dist/bundle-css.js',
             },
           },
         },
@@ -288,8 +288,8 @@ describe('publishConfig.exports validation', () => {
           './bundle.css': {
             browser: './dist/bundle.css',
             style: './dist/bundle.css',
-            node: './dist/bundle.css.js',
-            default: './dist/bundle.css.js',
+            node: './dist/bundle-css.js',
+            default: './dist/bundle-css.js',
           },
         },
         publishConfig: {
@@ -300,7 +300,7 @@ describe('publishConfig.exports validation', () => {
             './bundle.css': {
               browser: './dist/bundle.css',
               style: './dist/bundle.css',
-              node: './dist/bundle.css.js',
+              node: './dist/bundle-css.js',
               // mismatched: points back at the real CSS instead of the shim
               default: './dist/bundle.css',
             },
