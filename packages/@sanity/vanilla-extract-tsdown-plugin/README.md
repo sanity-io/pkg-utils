@@ -1,17 +1,26 @@
 # @sanity/vanilla-extract-tsdown-plugin
 
 A [tsdown](https://tsdown.dev) plugin for [vanilla-extract](https://vanilla-extract.style), built
-for bundling libraries that ship pre-extracted CSS. Unlike
-[`@vanilla-extract/rollup-plugin`](https://github.com/vanilla-extract-css/vanilla-extract/tree/master/packages/rollup-plugin)
-it doesn't declare `rollup` as a peer dependency, so it doesn't pull a second bundler into tsdown
-projects. It also declares
+for bundling libraries that ship pre-extracted CSS. It wraps the rolldown-generic
+[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme) —
+which compiles all `.css.ts` modules and extracts their CSS into a single
+[lightningcss](https://lightningcss.dev)-optimized file (`bundle.css` by default), following the
+same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css) —
+and adds the tsdown specifics on top:
+
+- the CSS syntax lowering `target` defaults to tsdown's resolved top-level
+  [`target`](https://tsdown.dev/options/output#target),
+- the self-referential import injected by `inject: {nodeCompat: true}` uses the package name
+  tsdown resolved, and
+- the conditional `"./bundle.css"` export (`browser`/`style` → the real CSS, `node`/`default` →
+  the no-op shim) is written to `package.json` through the plugin's `tsdownConfig` hook when
+  tsdown's [`exports` feature](https://tsdown.dev/options/package-exports) is enabled.
+
+Unlike `@vanilla-extract/rollup-plugin` it doesn't declare `rollup` as a peer dependency, so it
+doesn't pull a second bundler into tsdown projects. It also declares
 [plugin hook filters](https://rolldown.rs/apis/plugin-api#plugin-hook-filters), so rolldown skips
 the Rust ↔ JS roundtrip for modules that aren't vanilla-extract related
 ([vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)).
-
-The plugin compiles all `.css.ts` modules and extracts their CSS into a single file (`bundle.css`
-by default), optimized and minified with [lightningcss](https://lightningcss.dev), following the
-same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css).
 
 Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; `inject: true`
 injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —
@@ -46,10 +55,16 @@ prefer its `vanillaExtract` option instead: it uses this plugin under the hood w
 most Sanity libraries want - `inject: {nodeCompat: true}`, and tsdown's `exports` feature already
 enabled so the conditional `"./bundle.css"` export is maintained automatically.
 
+If you're bundling with raw [rolldown](https://rolldown.rs) (or a Vite build-only library setup)
+instead of tsdown, use
+[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme)
+directly - it provides everything except the tsdown config wiring described above.
+
 ## Options
 
-The options are modeled after the [`css` options of `@tsdown/css`](https://tsdown.dev/options/css),
-so they feel familiar in a tsdown config:
+The options are the [`@sanity/vanilla-extract-rolldown-plugin` options](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#options),
+modeled after the [`css` options of `@tsdown/css`](https://tsdown.dev/options/css), so they feel
+familiar in a tsdown config:
 
 ```ts
 vanillaExtractPlugin({
@@ -92,12 +107,3 @@ CSS sourcemaps are not emitted, matching `@tsdown/css` — which
 [intentionally skips them](https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099)
 on the grounds that Vite's build mode doesn't support CSS sourcemaps either
 ([vitejs/vite#2830](https://github.com/vitejs/vite/issues/2830)).
-
-## Acknowledgements
-
-The plugin combines a port of
-[`@vanilla-extract/rollup-plugin`](https://github.com/vanilla-extract-css/vanilla-extract/tree/master/packages/rollup-plugin)
-(MIT licensed, Copyright (c) 2021 SEEK) with the CSS collection and emission architecture of
-[`@tsdown/css`](https://github.com/rolldown/tsdown/tree/main/packages/css) (MIT licensed,
-Copyright (c) 2025-present VoidZero Inc. & Contributors, Copyright (c) 2024 Kevin Deng). The full
-combined license notices are in this package's [LICENSE](./LICENSE) file.

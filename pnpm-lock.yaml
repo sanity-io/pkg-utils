@@ -869,7 +869,7 @@ importers:
         specifier: ^1.21.1
         version: 1.21.1
 
-  packages/@sanity/vanilla-extract-tsdown-plugin:
+  packages/@sanity/vanilla-extract-rolldown-plugin:
     dependencies:
       '@sanity/browserslist-config':
         specifier: ^1.0.5
@@ -883,6 +883,40 @@ importers:
       lightningcss:
         specifier: ^1.32.0
         version: 1.32.0
+    devDependencies:
+      '@sanity/tsconfig':
+        specifier: workspace:^
+        version: link:../tsconfig
+      '@sanity/tsdown-config':
+        specifier: workspace:^
+        version: link:../tsdown-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
+      '@vanilla-extract/css':
+        specifier: ^1.21.1
+        version: 1.21.1
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.21
+      rolldown:
+        specifier: ^1.1.5
+        version: 1.1.5
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.7(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.10(@types/node@24.13.3)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+
+  packages/@sanity/vanilla-extract-tsdown-plugin:
+    dependencies:
+      '@sanity/vanilla-extract-rolldown-plugin':
+        specifier: workspace:^
+        version: link:../vanilla-extract-rolldown-plugin
     devDependencies:
       '@sanity/tsconfig':
         specifier: workspace:^

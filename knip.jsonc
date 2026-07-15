@@ -46,6 +46,11 @@
         "@sanity/pkg-utils",
       ],
     },
+    "packages/@sanity/vanilla-extract-rolldown-plugin": {
+      // The fixtures are rolldown build inputs referenced by path, not imported from the tests
+      "entry": ["test/fixtures/*/index.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+    },
     "packages/@sanity/vanilla-extract-tsdown-plugin": {
       // The fixtures are rolldown build inputs referenced by path, not imported from the tests
       "entry": ["test/fixtures/*/index.ts"],
