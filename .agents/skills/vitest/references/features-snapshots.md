@@ -10,7 +10,7 @@ Snapshot tests capture output and compare against stored references.
 ## Basic Snapshot
 
 ```ts
-import {expect, test} from 'vitest'
+import { expect, test } from 'vitest'
 
 test('snapshot', () => {
   const result = generateOutput()
@@ -36,7 +36,7 @@ Stored directly in test file:
 
 ```ts
 test('inline snapshot', () => {
-  const data = {foo: 'bar'}
+  const data = { foo: 'bar' }
   expect(data).toMatchInlineSnapshot()
 })
 ```
@@ -45,7 +45,7 @@ Vitest updates the test file:
 
 ```ts
 test('inline snapshot', () => {
-  const data = {foo: 'bar'}
+  const data = { foo: 'bar' }
   expect(data).toMatchInlineSnapshot(`
     {
       "foo": "bar",
@@ -83,12 +83,12 @@ Match partial structure:
 
 ```ts
 test('shape snapshot', () => {
-  const data = {
-    id: Math.random(),
+  const data = { 
+    id: Math.random(), 
     created: new Date(),
-    name: 'test',
+    name: 'test' 
   }
-
+  
   expect(data).toMatchSnapshot({
     id: expect.any(Number),
     created: expect.any(Date),
@@ -122,6 +122,48 @@ vitest --update
 # In watch mode, press 'u' to update failed snapshots
 ```
 
+In CI (`process.env.CI`), Vitest **never writes** snapshots: mismatches, missing snapshots, and **obsolete snapshots** (entries no longer matching any test) all fail the run.
+
+## Visual & ARIA Snapshots (Browser Mode)
+
+```ts
+import { expect, test } from 'vitest'
+import { page } from 'vitest/browser' // v4: import from 'vitest/browser'
+
+test('button looks correct', async () => {
+  await expect(page.getByRole('button')).toMatchScreenshot('primary-button')
+})
+
+// ARIA snapshot — assert the accessibility tree (4.1+, experimental)
+test('nav structure', async () => {
+  await expect.element(page.getByRole('navigation')).toMatchAriaInlineSnapshot(`
+    - navigation "Main":
+      - link "Home"
+  `)
+})
+```
+
+## Custom Snapshot Matchers (4.1+)
+
+Build matchers on the composable `Snapshots` helpers from `vitest` (replaces importing from `jest-snapshot`):
+
+```ts
+import { expect, Snapshots } from 'vitest'
+
+const { toMatchSnapshot, toMatchInlineSnapshot } = Snapshots
+
+expect.extend({
+  toMatchTrimmedSnapshot(received: string, length: number) {
+    return toMatchSnapshot.call(this, received.slice(0, length))
+  },
+  toMatchTrimmedInlineSnapshot(received: string, inlineSnapshot?: string) {
+    return toMatchInlineSnapshot.call(this, received.slice(0, 10), inlineSnapshot)
+  },
+})
+```
+
+The inline snapshot string must be the **last** argument. File snapshot matchers must be `async`.
+
 ## Custom Serializers
 
 Add custom snapshot formatting:
@@ -154,8 +196,9 @@ defineConfig({
 defineConfig({
   test: {
     snapshotFormat: {
-      printBasicPrototype: false, // Don't print Array/Object prototypes
+      printBasicPrototype: false, // Don't print Array/Object prototypes (Vitest default)
       escapeString: false,
+      printShadowRoot: true,      // v4 default: custom elements print their shadow root
     },
   },
 })
@@ -166,11 +209,11 @@ defineConfig({
 Use context's expect:
 
 ```ts
-test.concurrent('concurrent 1', async ({expect}) => {
+test.concurrent('concurrent 1', async ({ expect }) => {
   expect(await getData()).toMatchSnapshot()
 })
 
-test.concurrent('concurrent 2', async ({expect}) => {
+test.concurrent('concurrent 2', async ({ expect }) => {
   expect(await getOther()).toMatchSnapshot()
 })
 ```
@@ -199,9 +242,12 @@ defineConfig({
 - Use `toMatchFileSnapshot` for large outputs (HTML, JSON)
 - Inline snapshots auto-update in test file
 - Use context's `expect` for concurrent tests
+- CI fails on obsolete snapshots; clean them with `--update`
+- v4 prints custom-element shadow roots; disable via `snapshotFormat.printShadowRoot: false`
 
-<!--
+<!-- 
 Source references:
 - https://vitest.dev/guide/snapshot.html
 - https://vitest.dev/api/expect.html#tomatchsnapshot
+- https://vitest.dev/guide/browser/aria-snapshots
 -->
