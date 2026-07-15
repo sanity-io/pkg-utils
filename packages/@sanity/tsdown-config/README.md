@@ -212,6 +212,29 @@ export default defineConfig({
 })
 ```
 
+## clean
+
+tsdown's [`clean` option](https://tsdown.dev/options/cleaning) is passed through as-is. When left
+undefined, tsdown defaults to `true` and removes `outDir` (`dist` by default) before each build.
+
+Prefer an **array of folders** over a separate `"clean"` script in `package.json`. That way
+`tsdown` / `pnpm build` clears the directories itself — packages don't need `rimraf`, a `clean`
+script, or `prebuild` / `run-s clean build` wiring:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  // Instead of `"clean": "rimraf dist coverage"` (and running it before build):
+  clean: ['dist', 'coverage'],
+})
+```
+
+A `string[]` replaces tsdown's default (`true` → clean `outDir`), so include `outDir` (usually
+`'dist'`) in the array when you still want it cleaned alongside other folders. Pass `false` to
+skip cleaning entirely.
+
 ## Isolated declarations
 
 If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsconfig#isolated-declarations-tsconfigjson)
