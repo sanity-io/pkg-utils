@@ -99,8 +99,8 @@ automatically:
   vanilla-extract styles,
 - emits a no-op `bundle-css.js` shim (plus `bundle.css.d.ts` / `bundle-css.d.ts`) for runtimes
   that cannot import `.css` files, and
-- writes the conditional `"./bundle.css"` export to `package.json` (`browser`/`style` → the real
-  CSS, `node`/`default` → the shim).
+- writes the conditional `"./bundle.css"` export to `package.json` (`types` → the shim's `.d.ts`,
+  `browser`/`style` → the real CSS, `node`/`default` → the shim).
 
 The result is that `import "<pkg>/bundle.css"` resolves to the real CSS in bundlers/browsers and to
 the no-op shim in Node and similar runtimes. Make sure the extracted CSS survives tree-shaking in

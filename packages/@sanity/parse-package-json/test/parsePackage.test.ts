@@ -263,6 +263,7 @@ describe('parsePackage', () => {
       exports: {
         ...template.exports,
         './bundle.css': {
+          types: './dist/bundle-css.d.ts',
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
           node: './dist/bundle-css.js',
@@ -275,6 +276,7 @@ describe('parsePackage', () => {
 
     // The conditional CSS export must NOT have a `default` computed/added or be otherwise rewritten.
     expect(parsed.exports?.['./bundle.css']).toEqual({
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',

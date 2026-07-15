@@ -1,9 +1,5 @@
 import {describe, expect, test} from 'vitest'
-import {
-  cssFileDtsFileName,
-  cssShimDtsFileName,
-  cssShimFileName,
-} from '../src/cssShimFileName.ts'
+import {cssFileDtsFileName, cssShimDtsFileName, cssShimFileName} from '../src/cssShimFileName.ts'
 
 describe('cssShimFileName', () => {
   test('turns `bundle.css` into `bundle-css.js` (not `bundle.css.js`)', () => {

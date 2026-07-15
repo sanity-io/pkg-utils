@@ -583,6 +583,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distBundleCssShimDts).toContain('export default _default')
     // …and declares the conditional `./bundle.css` export in package.json
     expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',

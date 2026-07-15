@@ -33,6 +33,7 @@ const exportEntrySchema = z
  * Conditional export for a CSS file, e.g.
  * ```json
  * "./bundle.css": {
+ *   "types": "./dist/bundle-css.d.ts",
  *   "browser": "./dist/bundle.css",
  *   "node": "./dist/bundle-css.js",
  *   "default": "./dist/bundle-css.js"

@@ -1,9 +1,10 @@
-import {cssShimFileName} from '@sanity/vanilla-extract-rolldown-plugin'
+import {cssShimDtsFileName, cssShimFileName} from '@sanity/vanilla-extract-rolldown-plugin'
 
 /**
  * Build the conditional CSS export object that the `inject` wiring expects, e.g.
  * ```json
  * {
+ *   "types": "./dist/bundle-css.d.ts",
  *   "browser": "./dist/bundle.css",
  *   "style": "./dist/bundle.css",
  *   "node": "./dist/bundle-css.js",
@@ -11,7 +12,10 @@ import {cssShimFileName} from '@sanity/vanilla-extract-rolldown-plugin'
  * }
  * ```
  * The shim is named `bundle-css.js` (not `bundle.css.js`) so it does not match
- * vanilla-extract's `cssFileFilter`.
+ * vanilla-extract's `cssFileFilter`. An explicit `types` condition (rather than relying on
+ * TypeScript's extension-substitution fallback, which only works when the shim shares the CSS
+ * file's basename, and which TypeScript is deprecating anyway - microsoft/TypeScript#50762)
+ * points resolvers straight at the shim's declaration file.
  * @internal
  */
 export function createConditionalCssExport(
@@ -20,7 +24,8 @@ export function createConditionalCssExport(
 ): Record<string, string> {
   const cssFile = `./${outDir}/${cssFileName}`
   const shimFile = `./${outDir}/${cssShimFileName(cssFileName)}`
-  return {browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
+  const shimDtsFile = `./${outDir}/${cssShimDtsFileName(cssFileName)}`
+  return {types: shimDtsFile, browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
 }
 
 /**

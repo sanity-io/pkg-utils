@@ -171,7 +171,7 @@ export function parseAndValidateExports(options: {
         }
       } else if (isRecord(exportEntry)) {
         // Conditional CSS export, e.g.
-        // "./bundle.css": { "browser": "./dist/bundle.css", "node": "./dist/bundle-css.js", "default": "./dist/bundle-css.js" }
+        // "./bundle.css": { "types": "./dist/bundle-css.d.ts", "browser": "./dist/bundle.css", "node": "./dist/bundle-css.js", "default": "./dist/bundle-css.js" }
         // This lets a package re-add a `import "<pkg>/bundle.css"` that resolves to the real CSS in
         // bundler/browser environments and to a no-op JS shim in CSS-unaware runtimes (e.g. Node).
         // Only the shape is validated here: the targets usually point at generated `dist` files that

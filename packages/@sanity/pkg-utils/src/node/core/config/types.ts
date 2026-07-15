@@ -55,7 +55,8 @@ export interface PkgVanillaExtractOptions extends Omit<VanillaExtractOptions, 'e
      *   import `.css` files — named with a hyphen rather than a `.css.js` suffix so it does not
      *   match vanilla-extract's `cssFileFilter`, and
      * - writes the conditional `"./<name>"` export to `package.json`
-     *   (`browser`/`style` → the real CSS, `node`/`default` → the shim).
+     *   (`types` → the shim's `.d.ts`, `browser`/`style` → the real CSS, `node`/`default` → the
+     *   shim).
      *
      * The result is that `import "<pkg>/<name>"` resolves to the real CSS in bundlers/browsers and
      * to the no-op shim in Node and similar runtimes. Disable it to wire these up yourself.

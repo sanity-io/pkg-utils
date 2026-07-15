@@ -88,6 +88,7 @@ describe('vanillaExtractPlugin', () => {
 })
 
 const conditionalCssExport = {
+  types: './dist/bundle-css.d.ts',
   browser: './dist/bundle.css',
   style: './dist/bundle.css',
   node: './dist/bundle-css.js',
@@ -187,6 +188,7 @@ describe('tsdownConfig hook', () => {
 
     expect(await getCustomExports(config)({}, customExportsContext)).toEqual({
       './styles.css': {
+        types: './lib/styles-css.d.ts',
         browser: './lib/styles.css',
         style: './lib/styles.css',
         node: './lib/styles-css.js',

@@ -26,6 +26,7 @@ function fileUrl(...segments: string[]): string {
 }
 
 const conditionalCssExport = {
+  types: './dist/bundle-css.d.ts',
   browser: './dist/bundle.css',
   style: './dist/bundle.css',
   node: './dist/bundle-css.js',
@@ -394,6 +395,7 @@ describe('vanillaExtract option', () => {
     )
 
     expect(result['./styles.css']).toEqual({
+      types: './dist/styles-css.d.ts',
       browser: './dist/styles.css',
       style: './dist/styles.css',
       node: './dist/styles-css.js',

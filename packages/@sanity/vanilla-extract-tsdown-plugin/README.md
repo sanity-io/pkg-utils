@@ -14,9 +14,10 @@ following the same architecture (and option vocabulary and defaults) as
   `engines.node`),
 - the self-referential import injected by `inject: {nodeCompat: true}` uses the package name
   tsdown resolved, and
-- the conditional `"./bundle.css"` export (`browser`/`style` → the real CSS, `node`/`default` →
-  the no-op shim) is written to `package.json` through the plugin's `tsdownConfig` hook when
-  tsdown's [`exports` feature](https://tsdown.dev/options/package-exports) is enabled.
+- the conditional `"./bundle.css"` export (`types` → the shim's `.d.ts`, `browser`/`style` → the
+  real CSS, `node`/`default` → the no-op shim) is written to `package.json` through the plugin's
+  `tsdownConfig` hook when tsdown's [`exports` feature](https://tsdown.dev/options/package-exports)
+  is enabled.
 
 Unlike `@vanilla-extract/rollup-plugin` it doesn't declare `rollup` as a peer dependency, so it
 doesn't pull a second bundler into tsdown projects. It also declares
@@ -33,8 +34,9 @@ self-referential `import "<pkg>/bundle.css"`, a no-op `bundle-css.js` shim (plus
 export to point at, so the import is harmless in runtimes that cannot import `.css` files, and
 when tsdown's
 [`exports` feature](https://tsdown.dev/options/package-exports) is enabled, the conditional
-`"./bundle.css"` export is written to `package.json` (`browser`/`style` → the real CSS,
-`node`/`default` → the shim) through the plugin's `tsdownConfig` hook.
+`"./bundle.css"` export is written to `package.json` (`types` → the shim's `.d.ts`,
+`browser`/`style` → the real CSS, `node`/`default` → the shim) through the plugin's
+`tsdownConfig` hook.
 
 ## Usage
 

@@ -40,6 +40,7 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     expect(pkg.exports['./bundle.css']).toEqual({
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',
@@ -55,6 +56,7 @@ describe('writeBundleCssExports', () => {
       exports: {
         '.': {source: './src/index.ts', default: './dist/index.js'},
         './bundle.css': {
+          types: './dist/bundle-css.d.ts',
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
           node: './dist/bundle-css.js',
@@ -91,6 +93,7 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     expect(pkg.exports['./styles.css']).toEqual({
+      types: './lib/styles-css.d.ts',
       browser: './lib/styles.css',
       style: './lib/styles.css',
       node: './lib/styles-css.js',
@@ -123,6 +126,7 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     const expected = {
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',
@@ -193,6 +197,7 @@ describe('writeBundleCssExports', () => {
       exports: {
         '.': {source: './src/index.ts', default: './dist/index.js'},
         './bundle.css': {
+          types: './dist/bundle-css.d.ts',
           browser: './dist/bundle.css',
           style: './dist/bundle.css',
           node: './dist/bundle-css.js',
@@ -217,6 +222,7 @@ describe('writeBundleCssExports', () => {
 
     const pkg = await readPkg(cwd)
     expect(pkg.publishConfig?.exports?.['./bundle.css']).toEqual({
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',
@@ -226,6 +232,7 @@ describe('writeBundleCssExports', () => {
 
   test('is idempotent when both exports and publishConfig.exports already match', async () => {
     const conditionalExport = {
+      types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',

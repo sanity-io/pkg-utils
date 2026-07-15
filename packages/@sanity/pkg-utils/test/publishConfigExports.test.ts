@@ -248,6 +248,7 @@ describe('publishConfig.exports validation', () => {
             default: './dist/index.js',
           },
           './bundle.css': {
+            types: './dist/bundle-css.d.ts',
             browser: './dist/bundle.css',
             style: './dist/bundle.css',
             node: './dist/bundle-css.js',
@@ -260,6 +261,7 @@ describe('publishConfig.exports validation', () => {
               default: './dist/index.js',
             },
             './bundle.css': {
+              types: './dist/bundle-css.d.ts',
               browser: './dist/bundle.css',
               style: './dist/bundle.css',
               node: './dist/bundle-css.js',
@@ -286,6 +288,7 @@ describe('publishConfig.exports validation', () => {
             default: './dist/index.js',
           },
           './bundle.css': {
+            types: './dist/bundle-css.d.ts',
             browser: './dist/bundle.css',
             style: './dist/bundle.css',
             node: './dist/bundle-css.js',
