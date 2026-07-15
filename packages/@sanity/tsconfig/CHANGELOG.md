@@ -1,5 +1,11 @@
 # @sanity/tsconfig
 
+## 2.2.1
+
+### Patch Changes
+
+- [#3032](https://github.com/sanity-io/pkg-utils/pull/3032) [`229154b`](https://github.com/sanity-io/pkg-utils/commit/229154b8959194d564667e16940b62b367a85c2a) Thanks [@stipsan](https://github.com/stipsan)! - fix: use a literal `@` instead of the percent-encoded `%40` in the `homepage` links to the `packages/@sanity/*` directories, so the URLs read cleanly in the npm UI (GitHub resolves both forms)
+
 ## 2.2.0
 
 ### Minor Changes

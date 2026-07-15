@@ -1,6 +1,6 @@
-# @sanity/vanilla-extract-tsdown-plugin
+# @sanity/vanilla-extract-rolldown-plugin
 
-## 0.2.0
+## 0.1.0
 
 ### Minor Changes
 
@@ -14,28 +14,3 @@
 - [#3032](https://github.com/sanity-io/pkg-utils/pull/3032) [`229154b`](https://github.com/sanity-io/pkg-utils/commit/229154b8959194d564667e16940b62b367a85c2a) Thanks [@stipsan](https://github.com/stipsan)! - feat: the rolldown-generic core of `@sanity/vanilla-extract-tsdown-plugin` is split into a new package, `@sanity/vanilla-extract-rolldown-plugin`. The new package contains everything that only needs rolldown: the `.css.ts` compilation with plugin hook filters, the single-file `lightningcss`-optimized CSS extraction, and the whole `inject` wiring (the relative import, and the `nodeCompat` self-referential import plus no-op shim emission) — so it can be used from raw rolldown (or Vite build-only library setups via `build.rolldownOptions.plugins`) without depending on tsdown. Its peer dependency is `rolldown` (optional) instead of `tsdown`, and host tools can provide resolved defaults (`target`, `packageName`, `cwd`) through the plugin's `api.setBuildContext()`.
 
   `@sanity/vanilla-extract-tsdown-plugin` is now a thin tsdown adapter over the new package with an unchanged public API: it forwards tsdown's resolved config (the top-level `target` as the default CSS syntax lowering target, the resolved package name for the self-referential import, and `cwd`) through its `tsdownConfigResolved` hook, and keeps writing the conditional `"./<fileName>"` export to `package.json` through `exports.customExports` in its `tsdownConfig` hook when tsdown's `exports` feature is enabled.
-
-### Patch Changes
-
-- Updated dependencies [[`229154b`](https://github.com/sanity-io/pkg-utils/commit/229154b8959194d564667e16940b62b367a85c2a), [`229154b`](https://github.com/sanity-io/pkg-utils/commit/229154b8959194d564667e16940b62b367a85c2a)]:
-  - @sanity/vanilla-extract-rolldown-plugin@0.1.0
-
-## 0.1.2
-
-### Patch Changes
-
-- [#3033](https://github.com/sanity-io/pkg-utils/pull/3033) [`fb9ba79`](https://github.com/sanity-io/pkg-utils/commit/fb9ba79dfe6a2ef57d65758ed9d8167e419a3350) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.6
-
-- [#3034](https://github.com/sanity-io/pkg-utils/pull/3034) [`86402fa`](https://github.com/sanity-io/pkg-utils/commit/86402fab7fe41dbc955cde8f47588cc9426a513c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
-
-## 0.1.1
-
-### Patch Changes
-
-- [#3026](https://github.com/sanity-io/pkg-utils/pull/3026) [`04a6206`](https://github.com/sanity-io/pkg-utils/commit/04a62060a553e40d5d336b1b89e75f44d44bcf79) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.7
-
-## 0.1.0
-
-### Minor Changes
-
-- [#3017](https://github.com/sanity-io/pkg-utils/pull/3017) [`e73018a`](https://github.com/sanity-io/pkg-utils/commit/e73018a313d69ce1d82cef63f650052a1a646f5b) Thanks [@stipsan](https://github.com/stipsan)! - feat: initial release of `@sanity/vanilla-extract-tsdown-plugin`, a tsdown plugin for vanilla-extract that extracts CSS into a single `lightningcss`-optimized file, following the same architecture and option vocabulary (`fileName`, `minify`, `target`, `inject`) as `@tsdown/css`. Like `css.inject`, `inject` is disabled by default and `inject: true` injects a relative CSS import; `inject: {nodeCompat: true}` wires up the whole conditional CSS export pattern instead - the self-referential import, the no-op JS shim, and the conditional `"./<fileName>"` export written to `package.json` through the plugin's `tsdownConfig` hook when tsdown's `exports` feature is enabled. Unlike `@vanilla-extract/rollup-plugin` it doesn't declare `rollup` as a peer dependency, and it declares plugin hook filters ([vanilla-extract#1641](https://github.com/vanilla-extract-css/vanilla-extract/issues/1641)) so rolldown skips the Rust ↔ JS roundtrip for modules that aren't vanilla-extract related
