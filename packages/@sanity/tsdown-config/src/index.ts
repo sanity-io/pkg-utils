@@ -87,6 +87,25 @@ export interface PackageOptions extends Pick<
    */
   platform?: UserConfig['platform']
   /**
+   * Clean directories before each build. Prefer an array of folders over a separate `"clean"`
+   * script in `package.json` (e.g. `rimraf dist coverage`) — tsdown removes them as part of
+   * `tsdown` / `pnpm build`, so packages don't need `rimraf`, a `clean` script, or
+   * `prebuild`/`run-s clean build` wiring.
+   *
+   * - `true` (tsdown's default when left undefined) cleans `outDir` (`'dist'` by default)
+   * - `false` skips cleaning
+   * - a `string[]` replaces that default with the listed paths/globs — include `outDir` (e.g.
+   *   `'dist'`) when you still want it cleaned alongside other folders
+   *
+   * @defaultValue true
+   * @example
+   * ```ts
+   * // Instead of `"clean": "rimraf dist coverage"` in package.json:
+   * clean: ['dist', 'coverage']
+   * ```
+   */
+  clean?: UserConfig['clean']
+  /**
    * tsdown's `exports` option, with defaults suited for publishing Sanity libraries:
    * `enabled: 'local-only'` generates the `exports` map during local builds and skips it in CI
    * (where the committed `package.json` is already up to date). When pnpm is detected,
@@ -114,6 +133,16 @@ export interface PackageOptions extends Pick<
    * would replace the array). Other `deps` fields pass through as-is.
    */
   deps?: UserConfig['deps']
+  /**
+   * tsdown's experimental [`css` option](https://tsdown.dev/options/css) (CSS modules,
+   * preprocessors, Lightning CSS / PostCSS, inject, etc). Passed through as-is — requires
+   * [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) to be installed in the project.
+   * Safe to combine with {@link PackageOptions.vanillaExtract}: vanilla-extract extracts into
+   * `bundle.css` by default, while `@tsdown/css` merges other CSS (including `.module.css`)
+   * into `style.css`, so the two pipelines do not collide.
+   * @see https://tsdown.dev/reference/api/Interface.InlineConfig#css
+   */
+  css?: UserConfig['css']
   /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
@@ -144,6 +173,9 @@ export interface PackageOptions extends Pick<
    * `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the conditional
    * `"./bundle.css"` export to `package.json` - see {@link PackageVanillaExtractOptions}.
    * This is the same feature as `rollup.vanillaExtract` in `@sanity/pkg-utils`.
+   *
+   * Combines with {@link PackageOptions.css}: enable both when a package uses vanilla-extract
+   * alongside CSS modules (or other `@tsdown/css` features).
    * @alpha
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
@@ -153,11 +185,13 @@ export interface PackageOptions extends Pick<
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `tsconfig`, `entry`, `dts`, `define`, `target` and `outDir` are passed through to tsdown
-  // as-is. When left undefined, tsdown keeps its default behavior (`tsconfig` is auto-detected
-  // from the project, `dts` from `package.json`, `define` replaces nothing, `target` applies no
-  // syntax downleveling, and `outDir` defaults to `'dist'`).
-  const {entry, tsconfig, dts, define, target, outDir} = options
+  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir`, `clean` and `css` are passed
+  // through to tsdown as-is. When left undefined, tsdown keeps its default behavior
+  // (`tsconfig` is auto-detected from the project, `dts` from `package.json`, `define`
+  // replaces nothing, `target` applies no syntax downleveling, `outDir` defaults to `'dist'`,
+  // `clean` defaults to `true` — cleaning `outDir` before each build — and `css` stays off
+  // unless `@tsdown/css` is installed and the option is set).
+  const {entry, tsconfig, dts, define, target, outDir, clean, css} = options
   const platform = options.platform ?? 'neutral'
   const sourcemap = options.sourcemap ?? true
   const reactCompiler = options.reactCompiler ?? false
@@ -239,7 +273,12 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       import('@rolldown/plugin-babel'),
       import('@vitejs/plugin-react'),
     ])
+    // `@rolldown/plugin-babel` types against rolldown 1.2.0 while `Rolldown.Plugin`
+    // from tsdown is still rolled from ~1.1.5; structurally compatible at runtime but
+    // tsc reports "Excessive stack depth comparing types 'Plugin<any>'".
+    // @ts-expect-error — cross-version rolldown Plugin assignability
     plugins.push(
+      // @ts-expect-error — cross-version rolldown Plugin assignability
       await pluginBabel({
         presets: [reactCompilerPreset(typeof reactCompiler === 'object' ? reactCompiler : {})],
       }),
@@ -314,6 +353,8 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   )
 
   return defineTsdownConfig({
+    clean,
+    css,
     define,
     deps,
     dts,

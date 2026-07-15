@@ -124,7 +124,7 @@ describe('checkDependencyPlacement', () => {
         dependencies: {
           'react-is': '^18.0.0',
           '@sanity/ui': '^3.0.0',
-          '@sanity/icons': '^3.0.0',
+          '@sanity/icons': '^5.0.0',
           'rxjs': '^7.0.0',
         },
         devDependencies: {'react': '^19.0.0', 'sanity': '^5.0.0', '@types/react': '^19.0.0'},
