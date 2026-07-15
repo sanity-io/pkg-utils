@@ -11,9 +11,9 @@
  * `@sanity/vanilla-extract-rolldown-plugin`), which re-bundles a module's whole dependency
  * graph on every call.
  */
+import {createRequire} from 'node:module'
 import {isAbsolute, join} from 'node:path'
 import type {Adapter} from '@vanilla-extract/css'
-import {transformCss} from '@vanilla-extract/css/transformCss'
 import {
   cssFileFilter,
   getPackageInfo,
@@ -33,6 +33,18 @@ import {lock} from './lock.ts'
 
 type Css = Parameters<Adapter['appendCss']>[0]
 type Composition = Parameters<Adapter['registerComposition']>[0]
+
+/**
+ * `transformCss` is resolved through `@vanilla-extract/integration`'s own dependency on
+ * `@vanilla-extract/css` instead of declaring one here — matching upstream, where only
+ * `@vanilla-extract/compiler` (whose role this module inlines) carries the dependency, while
+ * `@vanilla-extract/vite-plugin` itself doesn't. The css objects it transforms are plain data,
+ * so it doesn't need to be the same copy the evaluated `.css.ts` modules register through.
+ */
+const requireFromIntegration = createRequire(
+  createRequire(import.meta.url).resolve('@vanilla-extract/integration'),
+) as (id: '@vanilla-extract/css/transformCss') => typeof import('@vanilla-extract/css/transformCss')
+const {transformCss} = requireFromIntegration('@vanilla-extract/css/transformCss')
 
 /**
  * The evaluated `.css.ts` modules call `setAdapter(globalThis[...])` (spliced in by the
