@@ -308,7 +308,7 @@ export function createCompiler({
     async processVanillaFile(filePath, options = {}) {
       const {server, runner} = await serverPromise
 
-      filePath = isAbsolute(filePath) ? filePath : join(root, filePath)
+      filePath = normalizePath(isAbsolute(filePath) ? filePath : join(root, filePath))
       const outputCss = options.outputCss ?? true
       const moduleGraph = server.environments.ssr.moduleGraph
 
@@ -343,10 +343,20 @@ export function createCompiler({
           cssByModuleId.set(moduleId, cssByModuleId.get(moduleId) ?? [])
         },
         registerClassName: (className, fileScope) => {
+          if (!fileScope) {
+            throw new Error(
+              'Your version of @vanilla-extract/css must be at least v1.10.0. Please update to a compatible version.',
+            )
+          }
           localClassNames.add(className)
           classRegistrationsByModuleId.get(fileScope.filePath)?.localClassNames.add(className)
         },
         registerComposition: (composedClassList, fileScope) => {
+          if (!fileScope) {
+            throw new Error(
+              'Your version of @vanilla-extract/css must be at least v1.10.0. Please update to a compatible version.',
+            )
+          }
           composedClassLists.push(composedClassList)
           classRegistrationsByModuleId
             .get(fileScope.filePath)
