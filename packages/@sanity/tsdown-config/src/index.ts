@@ -71,7 +71,7 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
  */
 export interface PackageOptions extends Pick<
   UserConfig,
-  'tsconfig' | 'entry' | 'format' | 'dts' | 'define' | 'target' | 'outDir'
+  'tsconfig' | 'entry' | 'format' | 'dts' | 'define' | 'target' | 'outDir' | 'clean'
 > {
   /**
    * @defaultValue 'neutral'
@@ -153,11 +153,12 @@ export interface PackageOptions extends Pick<
  * @public
  */
 export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
-  // `tsconfig`, `entry`, `dts`, `define`, `target` and `outDir` are passed through to tsdown
-  // as-is. When left undefined, tsdown keeps its default behavior (`tsconfig` is auto-detected
-  // from the project, `dts` from `package.json`, `define` replaces nothing, `target` applies no
-  // syntax downleveling, and `outDir` defaults to `'dist'`).
-  const {entry, tsconfig, dts, define, target, outDir} = options
+  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir` and `clean` are passed through to
+  // tsdown as-is. When left undefined, tsdown keeps its default behavior (`tsconfig` is
+  // auto-detected from the project, `dts` from `package.json`, `define` replaces nothing,
+  // `target` applies no syntax downleveling, `outDir` defaults to `'dist'`, and `clean`
+  // defaults to `true`).
+  const {entry, tsconfig, dts, define, target, outDir, clean} = options
   const platform = options.platform ?? 'neutral'
   const sourcemap = options.sourcemap ?? true
   const reactCompiler = options.reactCompiler ?? false
@@ -314,6 +315,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   )
 
   return defineTsdownConfig({
+    clean,
     define,
     deps,
     dts,

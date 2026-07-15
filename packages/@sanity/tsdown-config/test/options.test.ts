@@ -66,6 +66,18 @@ describe('outDir option', () => {
   })
 })
 
+describe('clean option', () => {
+  test('is undefined by default, so tsdown cleans the output directory', async () => {
+    expect((await defineConfig()).clean).toBeUndefined()
+  })
+
+  test('is passed through to tsdown as-is', async () => {
+    expect((await defineConfig({clean: false})).clean).toBe(false)
+    expect((await defineConfig({clean: true})).clean).toBe(true)
+    expect((await defineConfig({clean: ['dist', 'lib']})).clean).toEqual(['dist', 'lib'])
+  })
+})
+
 describe('sourcemap option', () => {
   test('defaults to true, matching @sanity/pkg-utils', async () => {
     // tsdown itself defaults to false and does not read `sourceMap` from the tsconfig

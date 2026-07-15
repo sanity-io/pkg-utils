@@ -162,6 +162,21 @@ export default defineConfig({
 })
 ```
 
+## clean
+
+tsdown's [`clean` option](https://tsdown.dev/options/cleaning) is passed through as-is.
+When left undefined, tsdown cleans the output directory before each build (`true`). Pass
+`false` to keep existing files, or a string array of directories to clean instead of `outDir`:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  clean: false,
+})
+```
+
 ## Isolated declarations
 
 If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsconfig#isolated-declarations-tsconfigjson)
