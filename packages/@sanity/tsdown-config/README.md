@@ -189,6 +189,43 @@ export default defineConfig({
 })
 ```
 
+## sourcemap
+
+tsdown's [`sourcemap` option](https://tsdown.dev/options/output#sourcemap) is forwarded with a
+`true` default (the same as `@sanity/pkg-utils`). tsdown itself defaults to `false` and does not
+read `sourceMap` from the tsconfig:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  sourcemap: false,
+})
+```
+
+## deps
+
+tsdown's [`deps` option](https://tsdown.dev/options/dependencies) is forwarded. When `platform` is
+`'neutral'` (the default), `neverBundle` always includes `/^node:/` so node built-ins stay
+external, and userland `neverBundle` entries are appended rather than replacing that default
+(tsdown's `mergeConfig` would replace the array):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  // Resulting neverBundle: [/^node:/, /^my-package(\/|$)/]
+  deps: {neverBundle: [/^my-package(\/|$)/]},
+})
+```
+
+`'neutral'` also restores `inputOptions.resolve.mainFields: ['module', 'main']` for inlined
+dependencies that ship no `exports` map. Prefer it over `'node'` for packages that also run in
+the browser - `'node'` makes CommonJS-interop emit a module-scope
+`createRequire(import.meta.url)` for inlined CJS deps, which crashes browser-bundled consumers.
+
 ## target
 
 tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
