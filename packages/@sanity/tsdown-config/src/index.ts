@@ -64,6 +64,15 @@ export interface PackageOptions extends Pick<
 > {
   /**
    * @defaultValue 'neutral'
+   *
+   * When left at `'neutral'` (the default), two resolution tweaks compensate for rolldown's
+   * strict neutral defaults: `deps.neverBundle` includes `/^node:/` (node built-ins stay external
+   * so neutral does not warn about them as unresolvable; only node runtimes execute those code
+   * paths), and `inputOptions.resolve.mainFields` falls back to `['module', 'main']` for inlined
+   * dependencies that ship no `exports` map (e.g. `rxjs-etc/operators`). Prefer `'neutral'` over
+   * `'node'` for packages that also run in the browser - `'node'` makes CommonJS-interop emit a
+   * module-scope `createRequire(import.meta.url)` for inlined CJS deps, which crashes
+   * browser-bundled consumers.
    */
   platform?: UserConfig['platform']
   /**
@@ -81,6 +90,19 @@ export interface PackageOptions extends Pick<
    * `{enabled: 'local-only'}` otherwise.
    */
   exports?: UserConfig['exports']
+  /**
+   * Whether to generate source map files. The same default as the `sourcemap` option in
+   * `@sanity/pkg-utils` - tsdown itself defaults to `false` and does not read `sourceMap` from
+   * the tsconfig.
+   * @defaultValue true
+   */
+  sourcemap?: UserConfig['sourcemap']
+  /**
+   * tsdown's `deps` option. When `platform` is `'neutral'` (the default), `neverBundle` always
+   * includes `/^node:/` and userland `neverBundle` entries are appended (tsdown's `mergeConfig`
+   * would replace the array). Other `deps` fields pass through as-is.
+   */
+  deps?: UserConfig['deps']
   /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
@@ -122,15 +144,21 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   // syntax downleveling).
   const {entry, tsconfig, dts, define, target} = options
   const platform = options.platform ?? 'neutral'
+  const sourcemap = options.sourcemap ?? true
   const reactCompiler = options.reactCompiler ?? false
   const styledComponents = options.styledComponents ?? false
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
   const format = options.format ?? 'esm'
+  // When `platform` is `'neutral'`, restore the conventional `module`/`main` fallback that
+  // rolldown's strict neutral defaults drop - needed for inlined deps without an `exports` map.
   const inputOptions = {
     // https://github.com/rolldown/rolldown/blob/main/packages/rolldown/src/options/docs/preserve-entry-signatures.md#strict
     preserveEntrySignatures: 'strict',
     experimental: {attachDebugInfo: 'none'},
+    ...(platform === 'neutral' && {
+      resolve: {mainFields: ['module', 'main']},
+    }),
     ...(styledComponents !== false && {
       transform: {
         plugins: {
@@ -154,7 +182,32 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
         },
       },
     }),
-  } as const satisfies UserConfig['inputOptions']
+  } satisfies UserConfig['inputOptions']
+
+  // `neverBundle` is concatenated (not `mergeConfig`'d) so per-package externals add to the
+  // `/^node:/` default for `platform: 'neutral'` instead of replacing it. Rolldown's
+  // `ExternalOption` array form is `Array<string | RegExp>` only; a function override is composed.
+  const userNeverBundle = options.deps?.neverBundle
+  const nodeBuiltinExternal = platform === 'neutral' ? /^node:/ : undefined
+  const neverBundle: NonNullable<UserConfig['deps']>['neverBundle'] =
+    userNeverBundle == null
+      ? nodeBuiltinExternal && [nodeBuiltinExternal]
+      : nodeBuiltinExternal == null
+        ? userNeverBundle
+        : typeof userNeverBundle === 'function'
+          ? (id, importer, isResolved) =>
+              nodeBuiltinExternal.test(id) || userNeverBundle(id, importer, isResolved)
+          : [
+              nodeBuiltinExternal,
+              ...(Array.isArray(userNeverBundle) ? userNeverBundle : [userNeverBundle]),
+            ]
+  const deps: UserConfig['deps'] =
+    options.deps === undefined && neverBundle === undefined
+      ? undefined
+      : {
+          ...options.deps,
+          ...(neverBundle === undefined ? {} : {neverBundle}),
+        }
 
   // `outputOptions` is left to tsdown's defaults - notably chunk filenames keep tsdown's hashed
   // default (unless userland sets `hash`), which prevents chunk/entry filename collisions
@@ -213,6 +266,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
 
   return defineTsdownConfig({
     define,
+    deps,
     dts,
     entry,
     exports,
@@ -222,6 +276,7 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     plugins,
     publint,
     report,
+    sourcemap,
     target,
     tsconfig,
     minify: {compress: true, codegen: false, mangle: false},
