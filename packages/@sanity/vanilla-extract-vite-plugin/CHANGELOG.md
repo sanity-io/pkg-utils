@@ -1,5 +1,16 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.1.1
+
+### Patch Changes
+
+- [#3046](https://github.com/sanity-io/pkg-utils/pull/3046) [`bfd86fa`](https://github.com/sanity-io/pkg-utils/commit/bfd86fa8bcd52ed01bfc0cd5302376f5ae09088d) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency rolldown to v1.2.0
+
+  Also bumps `@vanilla-extract/vite-plugin` to `^5.2.5` in the benchmark/playground
+  comparison baselines (already-latest `@vanilla-extract/css`, `integration`, and
+  `rollup-plugin` left unchanged). Patch releases for the vanilla-extract plugins
+  republish their READMEs, which link to the refreshed benchmark results.
+
 ## 0.1.0
 
 ### Minor Changes
