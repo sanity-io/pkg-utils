@@ -148,6 +148,20 @@ export default defineConfig({
 })
 ```
 
+## outDir
+
+tsdown's [`outDir` option](https://tsdown.dev/options/output#outdir) is passed through as-is.
+When left undefined, tsdown writes to `dist` (the same default as `@sanity/pkg-utils`):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  outDir: 'lib',
+})
+```
+
 ## Isolated declarations
 
 If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsconfig#isolated-declarations-tsconfigjson)
