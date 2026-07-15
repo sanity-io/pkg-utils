@@ -51,9 +51,24 @@ Keep this section current: re-run the full suite and update the tables whenever 
 change (see [AGENTS.md](../../AGENTS.md)).
 
 Last run: 2026-07-15 (after the `bundle-css.js` shim rename, #3043), full default suite
-(`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0, Linux x64, Intel Xeon; Rollup 4.62.2,
-Rolldown 1.1.5, Vite 8.1.4, Vitest 4.1.10. Values are mean wall-clock milliseconds from that
-runner and are machine-specific — compare ratios, not absolute numbers.
+(`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0, Linux x64, Intel Xeon, **4 cores**;
+Rollup 4.62.2, Rolldown 1.1.5, Vite 8.1.4, Vitest 4.1.10. Values are mean wall-clock
+milliseconds from that runner and are machine-specific — compare ratios, not absolute numbers.
+
+### Core count shifts the build ratios
+
+Rolldown parallelizes its work across cores in Rust, while Rollup's JavaScript pipeline is
+largely single-threaded — so the more cores the machine has, the faster the Rolldown side gets
+relative to Rollup, and the tables below (from a 4-core runner) understate the gap on typical
+developer hardware. The versions table printed with every run includes the core count so results
+stay comparable.
+
+For reference, the same suite on an Apple M4 Max (16 cores, darwin-arm64) measured the library
+build at 2.68x (baseline) and up to ~4x (minify) in favor of Rolldown + the Sanity plugin —
+against 1.63–1.70x on the 4-core runner — while the Vite build ratio stayed put at ~1.30x
+(Vite's pipeline dominates there, identically for both plugins). The high-variance rows of that
+run (rme up to ±70% on the Rollup side) mean the exact multiplier is fuzzy, but the direction is
+consistent: more cores widen the library-build gap.
 
 ### Library build, 500 TS + 100 CSS modules (5 samples each)
 

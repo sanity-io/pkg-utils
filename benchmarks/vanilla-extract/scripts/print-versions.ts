@@ -40,5 +40,8 @@ console.table([
   {component: 'node', version: process.version},
   {component: 'platform', version: `${process.platform}-${process.arch}`},
   {component: 'cpu', version: os.cpus()[0]?.model ?? 'unknown'},
+  // Rolldown parallelizes across cores while Rollup's JS pipeline is largely single-threaded,
+  // so core count meaningfully shifts the relative build results
+  {component: 'cores', version: String(os.availableParallelism())},
   ...versions,
 ])
