@@ -148,7 +148,19 @@ export interface Compiler {
   ): Promise<ProcessedVanillaFile>
   /** The extracted CSS of a previously processed `.css.ts` file, if any. */
   getCssForFile(filePath: string): {filePath: string; css: string} | undefined
-  /** All extracted CSS known to the compiler, e.g. to inline into HTML during dev SSR. */
+  /**
+   * All extracted CSS known to the compiler, e.g. to inline into HTML during dev SSR
+   * (`mode: 'inlineCssInDev'`).
+   *
+   * Ordering contract (matching upstream `@vanilla-extract/compiler`): per-file CSS is
+   * concatenated in first-evaluation order — within a single compilation that follows the
+   * module graph (dependencies before their importers), across compilations it follows the
+   * order the dev server first requested each `.css.ts` module. The order is stable across
+   * recompiles (re-setting a key keeps its Map position). It is a FOUC stopgap, not the
+   * authoritative cascade: the same CSS also loads through Vite's CSS pipeline in module-graph
+   * order, and those later style tags win over the head-prepended inline block for
+   * equal-specificity rules.
+   */
   getAllCss(): string
   /**
    * The transitive importer tree of a file, from the compiler's own module graph (the consuming
