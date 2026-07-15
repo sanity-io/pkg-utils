@@ -72,7 +72,7 @@ export default defineConfig({
 
 The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
 `.css.ts` files into a separate, `lightningcss`-optimized file (`dist/bundle.css` by default).
-Under the hood it uses [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme),
+Under the hood it uses [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme),
 a tsdown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
 into your project. Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
 
@@ -134,7 +134,7 @@ export default defineConfig({
 
 ## Isolated declarations
 
-If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsconfig#isolated-declarations-tsconfigjson)
+If you're using the [`@sanity/tsconfig/isolated-declarations`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsconfig#isolated-declarations-tsconfigjson)
 preset — which makes tsdown generate the `.d.ts` files with oxc's fast isolated declarations
 transform — annotate the default export of `tsdown.config.ts` with `satisfies Promise<UserConfig>`:
 

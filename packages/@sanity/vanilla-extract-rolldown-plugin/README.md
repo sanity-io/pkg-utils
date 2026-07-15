@@ -20,7 +20,7 @@ instead injects the self-referential `import "<pkg>/bundle.css"` of the conditio
 pattern and emits a no-op `bundle.css.js` shim (plus `bundle.css.d.ts`) for the `node`/`default`
 conditions of that export to point at, so the import is harmless in runtimes that cannot import
 `.css` files. Writing the conditional `"./bundle.css"` export to `package.json` is the host
-tool's job — with tsdown, [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme)
+tool's job — with tsdown, [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme)
 maintains it automatically.
 
 ## Usage
@@ -41,11 +41,11 @@ export default defineConfig({
 ```
 
 If you're bundling with [tsdown](https://tsdown.dev), prefer
-[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme):
+[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme):
 it wraps this plugin with tsdown's config hooks, defaulting the CSS syntax lowering `target` to
 tsdown's top-level `target` and writing the conditional `"./bundle.css"` export to `package.json`
 through tsdown's [`exports` feature](https://tsdown.dev/options/package-exports). With
-[`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsdown-config#vanilla-extract),
+[`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#vanilla-extract),
 its `vanillaExtract` option wires all of that up with the defaults most Sanity libraries want.
 
 The extract model is for library builds: from Vite it only makes sense in build-only library

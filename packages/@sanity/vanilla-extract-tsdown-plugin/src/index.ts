@@ -14,7 +14,7 @@ export type {Options} from '@sanity/vanilla-extract-rolldown-plugin'
  * as `@tsdown/css`.
  *
  * It wraps the rolldown-generic
- * [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme)
+ * [`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme)
  * (compilation, hook filters, single-file extraction, and the `inject` wiring) with the tsdown
  * specifics: the CSS syntax lowering `target` defaults to tsdown's resolved top-level `target`,
  * the self-referential import of `inject.nodeCompat` uses the package name tsdown resolved, and

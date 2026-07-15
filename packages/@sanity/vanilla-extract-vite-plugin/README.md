@@ -20,9 +20,9 @@ alternative to
   instead of the deprecated `handleHotUpdate`.
 
 For _libraries_ that ship a single pre-extracted CSS file, use
-[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme)
+[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme)
 (raw rolldown) or
-[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-tsdown-plugin#readme)
+[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme)
 (tsdown) instead — this plugin is for application dev servers and app builds.
 
 ## Usage

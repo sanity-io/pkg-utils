@@ -2,7 +2,7 @@
 
 A [tsdown](https://tsdown.dev) plugin for [vanilla-extract](https://vanilla-extract.style), built
 for bundling libraries that ship pre-extracted CSS. It wraps the rolldown-generic
-[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme) —
+[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme) —
 which compiles all `.css.ts` modules and extracts their CSS into a single
 [lightningcss](https://lightningcss.dev)-optimized file (`bundle.css` by default), following the
 same architecture (and option vocabulary) as [`@tsdown/css`](https://tsdown.dev/options/css) —
@@ -50,19 +50,19 @@ export default defineConfig({
 })
 ```
 
-If you're using [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/tsdown-config#vanilla-extract),
+If you're using [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#vanilla-extract),
 prefer its `vanillaExtract` option instead: it uses this plugin under the hood with the defaults
 most Sanity libraries want - `inject: {nodeCompat: true}`, and tsdown's `exports` feature already
 enabled so the conditional `"./bundle.css"` export is maintained automatically.
 
 If you're bundling with raw [rolldown](https://rolldown.rs) (or a Vite build-only library setup)
 instead of tsdown, use
-[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#readme)
+[`@sanity/vanilla-extract-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#readme)
 directly - it provides everything except the tsdown config wiring described above.
 
 ## Options
 
-The options are the [`@sanity/vanilla-extract-rolldown-plugin` options](https://github.com/sanity-io/pkg-utils/tree/main/packages/%40sanity/vanilla-extract-rolldown-plugin#options),
+The options are the [`@sanity/vanilla-extract-rolldown-plugin` options](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#options),
 modeled after the [`css` options of `@tsdown/css`](https://tsdown.dev/options/css), so they feel
 familiar in a tsdown config:
 
