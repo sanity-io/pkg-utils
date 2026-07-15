@@ -28,11 +28,12 @@ function readPositiveInteger(name: string, fallback: number): number {
 
 export function fixedBenchmarkOptions(
   kind: BenchmarkKind,
-  overrides: Pick<BenchOptions, 'setup' | 'teardown'> = {},
+  overrides: Pick<BenchOptions, 'now' | 'setup' | 'teardown'> = {},
 ): BenchOptions {
   return {
     iterations: readPositiveInteger(environmentNames[kind], defaultIterations[kind]),
     time: 0,
+    throws: true,
     warmupIterations: readPositiveInteger('VE_BENCH_WARMUP_ITERATIONS', 1),
     warmupTime: 0,
     ...overrides,
@@ -42,7 +43,7 @@ export function fixedBenchmarkOptions(
 export function coldBuildOptions(
   kind: Extract<BenchmarkKind, 'build' | 'stress'>,
   outputDirectory: string,
-  teardown: () => Promise<void>,
+  teardown: () => void | Promise<void>,
 ): BenchOptions {
   return fixedBenchmarkOptions(kind, {
     setup: () => rm(outputDirectory, {recursive: true, force: true}),

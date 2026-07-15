@@ -6,8 +6,8 @@ import {benchmarkRoot, configPaths} from './paths.ts'
 
 const require = createRequire(import.meta.url)
 
-interface PackageManifest {
-  bin?: string | Record<string, string>
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
 }
 
 export interface CommandResult {
@@ -19,8 +19,18 @@ export type VitePluginKind = 'official' | 'sanity'
 
 function resolvePackageBin(packageName: string, binName: string): string {
   const packageJsonPath = require.resolve(`${packageName}/package.json`)
-  const manifest = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageManifest
-  const relativeBin = typeof manifest.bin === 'string' ? manifest.bin : manifest.bin?.[binName]
+  const manifest: unknown = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
+  if (!isRecord(manifest)) {
+    throw new Error(`Invalid package manifest at ${packageJsonPath}`)
+  }
+
+  const bin = manifest['bin']
+  const relativeBin =
+    typeof bin === 'string'
+      ? bin
+      : isRecord(bin) && typeof bin[binName] === 'string'
+        ? bin[binName]
+        : undefined
 
   if (!relativeBin) {
     throw new Error(`Could not resolve the ${binName} binary from ${packageJsonPath}`)

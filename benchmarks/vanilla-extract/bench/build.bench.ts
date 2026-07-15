@@ -2,7 +2,7 @@ import path from 'node:path'
 import {bench, describe} from 'vitest'
 import {runRolldownBuild, runRollupBuild} from './helpers/commands.ts'
 import {coldBuildOptions} from './helpers/options.ts'
-import {assertLibraryOutput} from './helpers/output.ts'
+import {assertLibraryOutputSync} from './helpers/output.ts'
 import {fixturePath, generatedRoot, loadFixtureManifest} from './helpers/paths.ts'
 
 const manifest = await loadFixtureManifest()
@@ -15,7 +15,7 @@ describe(`library build (${manifest.representative.plainModules} TS + ${manifest
     async () => {
       await runRollupBuild(fixtureRoot, rollupOutput)
     },
-    coldBuildOptions('build', rollupOutput, () => assertLibraryOutput(rollupOutput)),
+    coldBuildOptions('build', rollupOutput, () => assertLibraryOutputSync(rollupOutput)),
   )
 
   const rolldownOutput = path.join(generatedRoot, 'output/build-rolldown')
@@ -24,6 +24,6 @@ describe(`library build (${manifest.representative.plainModules} TS + ${manifest
     async () => {
       await runRolldownBuild(fixtureRoot, rolldownOutput)
     },
-    coldBuildOptions('build', rolldownOutput, () => assertLibraryOutput(rolldownOutput)),
+    coldBuildOptions('build', rolldownOutput, () => assertLibraryOutputSync(rolldownOutput)),
   )
 })

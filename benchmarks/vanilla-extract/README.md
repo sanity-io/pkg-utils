@@ -31,7 +31,7 @@ visible independently of wall-clock noise.
 
 ## Running
 
-Install dependencies at the repository root, then run:
+Use Node.js 24, install dependencies at the repository root, then run:
 
 ```sh
 pnpm benchmark:vanilla-extract
@@ -97,6 +97,7 @@ All values are optional:
 | `VE_BENCH_STRESS_ITERATIONS` |                  `3` | Samples per hook-filter build case                  |
 | `VE_BENCH_HMR_ITERATIONS`    |                 `10` | Samples per HMR case                                |
 | `VE_BENCH_WARMUP_ITERATIONS` |                  `1` | Untimed warmup samples per case                     |
+| `VE_BENCH_HMR_SETTLE`        |                `250` | Untimed milliseconds between source edits           |
 | `VE_BENCH_HMR_TIMEOUT`       |              `30000` | Milliseconds before an HMR sample fails             |
 
 For a quick wiring check:

@@ -47,7 +47,7 @@ function readStressSizes(): number[] {
     return parsed
   })
 
-  return [...new Set(sizes)].sort((left, right) => left - right)
+  return [...new Set(sizes)].toSorted((left, right) => left - right)
 }
 
 function pad(index: number): string {
@@ -131,6 +131,9 @@ function renderBrowserEntry(): string {
     `window['__vanillaExtractBenchmark'] = runtime`,
     ``,
     `if (import.meta.hot) {`,
+    `  import.meta.hot.accept('./styles.ts', (nextStyles) => {`,
+    `    probe.className = nextStyles?.classNames[0] ?? ''`,
+    `  })`,
     `  import.meta.hot.on('vite:afterUpdate', () => {`,
     `    runtime.updates += 1`,
     `  })`,
@@ -235,6 +238,7 @@ const definitions = [
 await Promise.all(definitions.map((definition) => generateFixture(definition)))
 await writeFile(path.join(generatedRoot, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
 
+// eslint-disable-next-line no-console
 console.log(
   `Generated ${definitions.length} benchmark fixtures in ${path.relative(process.cwd(), generatedRoot)}`,
 )

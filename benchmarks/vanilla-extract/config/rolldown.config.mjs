@@ -1,6 +1,6 @@
 import path from 'node:path'
 import {defineConfig} from 'rolldown'
-import {vanillaExtractPlugin} from '../../../packages/@sanity/vanilla-extract-rolldown-plugin/dist/index.mjs'
+import {vanillaExtractPlugin} from '../.generated/plugins/rolldown-plugin.mjs'
 
 function requiredEnvironmentPath(name) {
   const value = process.env[name]

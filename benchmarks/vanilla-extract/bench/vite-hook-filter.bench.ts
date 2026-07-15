@@ -3,7 +3,7 @@ import {beforeAll, bench, describe} from 'vitest'
 import {runViteBuild, type CommandResult} from './helpers/commands.ts'
 import {runHookDiagnostics} from './helpers/hook-diagnostics.ts'
 import {coldBuildOptions} from './helpers/options.ts'
-import {assertViteOutput} from './helpers/output.ts'
+import {assertViteOutputSync} from './helpers/output.ts'
 import {fixturePath, generatedRoot, loadFixtureManifest} from './helpers/paths.ts'
 
 const manifest = await loadFixtureManifest()
@@ -19,6 +19,7 @@ function surfacePluginTimingWarning(name: string, result: CommandResult | undefi
   if (!output.includes('[PLUGIN_TIMINGS]')) return
 
   surfacedWarnings.add(name)
+  // eslint-disable-next-line no-console
   console.warn(`Rolldown plugin timing diagnostic for ${name}:\n${output.trim()}`)
 }
 
@@ -40,8 +41,8 @@ for (const fixture of manifest.stress) {
         async () => {
           lastResult = await runViteBuild(fixturePath(fixture), outputDirectory, plugin, true)
         },
-        coldBuildOptions('stress', outputDirectory, async () => {
-          await assertViteOutput(outputDirectory)
+        coldBuildOptions('stress', outputDirectory, () => {
+          assertViteOutputSync(outputDirectory)
           surfacePluginTimingWarning(`${fixture.plainModules}/${plugin}`, lastResult)
         }),
       )

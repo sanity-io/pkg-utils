@@ -15,44 +15,60 @@ export interface HookDiagnosticResult extends HookCounts {
   styleModules: number
 }
 
-type UnknownFunction = (this: unknown, ...arguments_: unknown[]) => unknown
-
-function instrumentHook(plugin: Plugin, hookName: HookName, counts: HookCounts): Plugin {
-  const source = plugin as unknown as Record<string, unknown>
-  const hook = source[hookName]
-  if (!hook) return plugin
-
-  const clone = {...source}
-  if (typeof hook === 'function') {
-    const handler = hook as UnknownFunction
-    clone[hookName] = function (this: unknown, ...arguments_: unknown[]) {
-      counts[hookName] += 1
-      return Reflect.apply(handler, this, arguments_)
+function instrumentPlugin(plugin: Plugin, counts: HookCounts): Plugin {
+  const resolveId = plugin.resolveId
+  if (typeof resolveId === 'function') {
+    const wrapped: typeof resolveId = function (...arguments_) {
+      counts.resolveId += 1
+      return resolveId.apply(this, arguments_)
     }
-  } else if (typeof hook === 'object' && 'handler' in hook) {
-    const objectHook = hook as Record<string, unknown>
-    const handler = objectHook['handler']
-    if (typeof handler !== 'function') return plugin
-
-    clone[hookName] = {
-      ...objectHook,
-      handler(this: unknown, ...arguments_: unknown[]) {
-        counts[hookName] += 1
-        return Reflect.apply(handler as UnknownFunction, this, arguments_)
-      },
+    plugin.resolveId = wrapped
+  } else if (resolveId) {
+    const {handler} = resolveId
+    const wrapped: typeof handler = function (...arguments_) {
+      counts.resolveId += 1
+      return handler.apply(this, arguments_)
     }
+    plugin.resolveId = {...resolveId, handler: wrapped}
   }
 
-  return clone as unknown as Plugin
+  const load = plugin.load
+  if (typeof load === 'function') {
+    const wrapped: typeof load = function (...arguments_) {
+      counts.load += 1
+      return load.apply(this, arguments_)
+    }
+    plugin.load = wrapped
+  } else if (load) {
+    const {handler} = load
+    const wrapped: typeof handler = function (...arguments_) {
+      counts.load += 1
+      return handler.apply(this, arguments_)
+    }
+    plugin.load = {...load, handler: wrapped}
+  }
+
+  const transform = plugin.transform
+  if (typeof transform === 'function') {
+    const wrapped: typeof transform = function (...arguments_) {
+      counts.transform += 1
+      return transform.apply(this, arguments_)
+    }
+    plugin.transform = wrapped
+  } else if (transform) {
+    const {handler} = transform
+    const wrapped: typeof handler = function (...arguments_) {
+      counts.transform += 1
+      return handler.apply(this, arguments_)
+    }
+    plugin.transform = {...transform, handler: wrapped}
+  }
+
+  return plugin
 }
 
 function instrumentPlugins(plugins: Plugin[], counts: HookCounts): Plugin[] {
-  return plugins.map((plugin) =>
-    hookNames.reduce(
-      (instrumented, hookName) => instrumentHook(instrumented, hookName, counts),
-      plugin,
-    ),
-  )
+  return plugins.map((plugin) => instrumentPlugin(plugin, counts))
 }
 
 async function collectHookCounts(
@@ -99,7 +115,9 @@ export async function runHookDiagnostics(
     }
   }
 
+  // eslint-disable-next-line no-console
   console.log('JavaScript plugin hook entries (untimed diagnostic)')
+  // eslint-disable-next-line no-console
   console.table(results)
   await mkdir(resultsRoot, {recursive: true})
   await writeFile(

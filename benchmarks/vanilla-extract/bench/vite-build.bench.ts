@@ -2,7 +2,7 @@ import path from 'node:path'
 import {bench, describe} from 'vitest'
 import {runViteBuild} from './helpers/commands.ts'
 import {coldBuildOptions} from './helpers/options.ts'
-import {assertViteOutput} from './helpers/output.ts'
+import {assertViteOutputSync} from './helpers/output.ts'
 import {fixturePath, generatedRoot, loadFixtureManifest} from './helpers/paths.ts'
 
 const manifest = await loadFixtureManifest()
@@ -19,7 +19,7 @@ describe(`vite build (${manifest.representative.plainModules} TS + ${manifest.re
       async () => {
         await runViteBuild(fixtureRoot, outputDirectory, plugin)
       },
-      coldBuildOptions('build', outputDirectory, () => assertViteOutput(outputDirectory)),
+      coldBuildOptions('build', outputDirectory, () => assertViteOutputSync(outputDirectory)),
     )
   }
 })

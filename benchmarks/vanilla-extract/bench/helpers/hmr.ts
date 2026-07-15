@@ -20,21 +20,13 @@ interface BrowserRuntime {
   updates: number
 }
 
-interface PendingUpdate {
-  contents: string
-  expectedColor: string
-  filePath: string
-  nextIndex: number
-  previousUpdates: number
-  scenario: HmrScenario
-}
-
 export interface HmrCase {
   context: BrowserContext
-  currentIndex: Record<HmrScenario, number>
+  currentIndex: Record<HmrScenario, 0 | 1>
+  currentSource: Record<HmrScenario, string>
   fixture: FixtureDescription
+  lastUpdates: number
   page: Page
-  pendingUpdate?: PendingUpdate
   plugin: VitePluginKind
   server: ViteDevServer
 }
@@ -103,12 +95,20 @@ export async function startHmrCase(
     )
 
     const runtime = await readBrowserRuntime(page)
-    assert.equal(runtime?.loads, 1, `${plugin} should load the page exactly once`)
+    assert(runtime, `${plugin} browser runtime did not initialize`)
+    assert.equal(runtime.loads, 1, `${plugin} should load the page exactly once`)
+    const sourceRoot = path.join(root, 'src')
+    const currentSource = {
+      leaf: await readFile(path.join(sourceRoot, 'styles/style-00000.css.ts'), 'utf8'),
+      shared: await readFile(path.join(sourceRoot, 'theme.ts'), 'utf8'),
+    }
 
     return {
       context,
       currentIndex: {leaf: 0, shared: 0},
+      currentSource,
       fixture,
+      lastUpdates: runtime.updates,
       page,
       plugin,
       server,
@@ -120,15 +120,11 @@ export async function startHmrCase(
   }
 }
 
-export async function prepareHmrUpdate(testCase: HmrCase, scenario: HmrScenario): Promise<void> {
-  const runtime = await readBrowserRuntime(testCase.page)
-  assert(runtime?.ready, `${testCase.plugin} browser runtime is not ready`)
-  assert.equal(runtime.loads, 1, `${testCase.plugin} unexpectedly reloaded the page`)
-
+export async function runHmrUpdate(testCase: HmrCase, scenario: HmrScenario): Promise<void> {
   const currentIndex = testCase.currentIndex[scenario]
   const nextIndex = currentIndex === 0 ? 1 : 0
   const filePath = scenarioFilePath(testCase, scenario)
-  const source = await readFile(filePath, 'utf8')
+  const source = testCase.currentSource[scenario]
   const currentColor = colors[scenario][currentIndex]
   const expectedColor = colors[scenario][nextIndex]
   assert(
@@ -136,27 +132,15 @@ export async function prepareHmrUpdate(testCase: HmrCase, scenario: HmrScenario)
     `Expected ${filePath} to contain the current ${scenario} color ${currentColor}`,
   )
 
-  testCase.pendingUpdate = {
-    contents: source.replace(currentColor, expectedColor),
-    expectedColor,
-    filePath,
-    nextIndex,
-    previousUpdates: runtime.updates,
-    scenario,
-  }
-}
-
-export async function runPreparedHmrUpdate(testCase: HmrCase): Promise<void> {
-  const pending = testCase.pendingUpdate
-  if (!pending) throw new Error(`No prepared HMR update for ${testCase.plugin}`)
-  testCase.pendingUpdate = undefined
-  testCase.currentIndex[pending.scenario] = pending.nextIndex
-
-  await writeFile(pending.filePath, pending.contents)
+  const contents = source.replace(currentColor, expectedColor)
+  const previousUpdates = testCase.lastUpdates
+  testCase.currentIndex[scenario] = nextIndex
+  testCase.currentSource[scenario] = contents
+  await writeFile(filePath, contents)
 
   try {
-    await testCase.page.waitForFunction(
-      ({expectedColor, previousUpdates, scenario}) => {
+    const completion = await testCase.page.waitForFunction(
+      (update) => {
         const benchmarkWindow = window as typeof window & {
           __vanillaExtractBenchmark?: BrowserRuntime
         }
@@ -165,32 +149,40 @@ export async function runPreparedHmrUpdate(testCase: HmrCase): Promise<void> {
         if (!runtime || !(probe instanceof HTMLElement)) return false
 
         const style = getComputedStyle(probe)
-        const actualColor = scenario === 'leaf' ? style.backgroundColor : style.color
-        return (
-          runtime.loads === 1 && runtime.updates > previousUpdates && actualColor === expectedColor
-        )
+        const actualColor = update.scenario === 'leaf' ? style.backgroundColor : style.color
+        return runtime.loads === 1 &&
+          runtime.updates > update.previousUpdates &&
+          actualColor === update.expectedColor
+          ? runtime.updates
+          : false
       },
       {
-        expectedColor: pending.expectedColor,
-        previousUpdates: pending.previousUpdates,
-        scenario: pending.scenario,
+        expectedColor,
+        previousUpdates,
+        scenario,
       },
       {
         polling: 10,
         timeout: Number.parseInt(process.env['VE_BENCH_HMR_TIMEOUT'] ?? '30000', 10),
       },
     )
+    const updates = await completion.jsonValue()
+    await completion.dispose()
+    if (typeof updates !== 'number') {
+      throw new Error(`Expected an HMR update count for ${testCase.plugin}`)
+    }
+    testCase.lastUpdates = updates
   } catch (error) {
     const runtime = await readBrowserRuntime(testCase.page).catch(() => undefined)
     const actualColor = await testCase.page
       .locator('#probe')
-      .evaluate((probe, scenario) => {
+      .evaluate((probe, requestedScenario) => {
         const style = getComputedStyle(probe)
-        return scenario === 'leaf' ? style.backgroundColor : style.color
-      }, pending.scenario)
+        return requestedScenario === 'leaf' ? style.backgroundColor : style.color
+      }, scenario)
       .catch(() => 'unavailable')
     throw new Error(
-      `${testCase.plugin} ${pending.scenario} HMR did not settle: expected ${pending.expectedColor}, received ${actualColor}, runtime=${JSON.stringify(runtime)}`,
+      `${testCase.plugin} ${scenario} HMR did not settle: expected ${expectedColor}, received ${actualColor}, runtime=${JSON.stringify(runtime)}`,
       {cause: error},
     )
   }
@@ -198,8 +190,7 @@ export async function runPreparedHmrUpdate(testCase: HmrCase): Promise<void> {
 
 export async function primeHmrCase(testCase: HmrCase): Promise<void> {
   for (const scenario of ['leaf', 'shared'] as const) {
-    await prepareHmrUpdate(testCase, scenario)
-    await runPreparedHmrUpdate(testCase)
+    await runHmrUpdate(testCase, scenario)
   }
 }
 

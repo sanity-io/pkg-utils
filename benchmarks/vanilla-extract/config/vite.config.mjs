@@ -1,7 +1,7 @@
 import path from 'node:path'
 import {vanillaExtractPlugin as officialVanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
 import {defineConfig} from 'vite'
-import {vanillaExtractPlugin as sanityVanillaExtractPlugin} from '../../../packages/@sanity/vanilla-extract-vite-plugin/dist/index.mjs'
+import {vanillaExtractPlugin as sanityVanillaExtractPlugin} from '../.generated/plugins/vite-plugin.mjs'
 
 function requiredEnvironmentPath(name) {
   const value = process.env[name]

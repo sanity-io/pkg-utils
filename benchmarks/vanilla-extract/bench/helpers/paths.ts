@@ -27,6 +27,36 @@ export interface FixtureManifest {
   }
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function isFixtureDescription(value: unknown): value is FixtureDescription {
+  return (
+    isRecord(value) &&
+    typeof value['directory'] === 'string' &&
+    typeof value['plainModules'] === 'number' &&
+    typeof value['styleModules'] === 'number'
+  )
+}
+
+function isFixtureManifest(value: unknown): value is FixtureManifest {
+  if (
+    !isRecord(value) ||
+    value['version'] !== 1 ||
+    !isFixtureDescription(value['representative']) ||
+    !Array.isArray(value['stress']) ||
+    !value['stress'].every(isFixtureDescription)
+  ) {
+    return false
+  }
+
+  const hmr = value['hmr']
+  return (
+    isRecord(hmr) && isFixtureDescription(hmr['official']) && isFixtureDescription(hmr['sanity'])
+  )
+}
+
 export function fixturePath(fixture: FixtureDescription): string {
   return path.join(generatedRoot, fixture.directory)
 }
@@ -34,9 +64,9 @@ export function fixturePath(fixture: FixtureDescription): string {
 export async function loadFixtureManifest(): Promise<FixtureManifest> {
   const manifestPath = path.join(generatedRoot, 'manifest.json')
   const contents = await readFile(manifestPath, 'utf8')
-  const manifest = JSON.parse(contents) as Partial<FixtureManifest>
-  if (manifest.version !== 1 || !manifest.representative || !manifest.stress || !manifest.hmr) {
+  const manifest: unknown = JSON.parse(contents)
+  if (!isFixtureManifest(manifest)) {
     throw new Error(`Invalid fixture manifest at ${manifestPath}; run pnpm benchmark:prepare`)
   }
-  return manifest as FixtureManifest
+  return manifest
 }

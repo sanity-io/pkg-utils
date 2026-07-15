@@ -15,13 +15,17 @@ const packages = [
   'vitest',
 ] as const
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
 async function readPackageVersion(packageName: string): Promise<string> {
   const packageJsonPath = require.resolve(`${packageName}/package.json`)
-  const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8')) as {version?: unknown}
-  if (typeof packageJson.version !== 'string') {
+  const packageJson: unknown = JSON.parse(await readFile(packageJsonPath, 'utf8'))
+  if (!isRecord(packageJson) || typeof packageJson['version'] !== 'string') {
     throw new Error(`Missing version in ${packageJsonPath}`)
   }
-  return packageJson.version
+  return packageJson['version']
 }
 
 const versions = await Promise.all(
@@ -31,6 +35,7 @@ const versions = await Promise.all(
   })),
 )
 
+// eslint-disable-next-line no-console
 console.table([
   {component: 'node', version: process.version},
   {component: 'platform', version: `${process.platform}-${process.arch}`},
