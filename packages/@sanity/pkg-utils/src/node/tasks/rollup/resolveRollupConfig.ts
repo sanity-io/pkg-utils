@@ -196,8 +196,9 @@ export function resolveRollupConfig(
         minify: vanillaExtract.options.minify ?? true,
       }),
     // In compat mode, emit the no-op JS shim that the `node`/`default` conditions of the
-    // `./<css>` export resolve to.
-    vanillaExtract.compatMode && bundleCssShim({fileName: `${vanillaExtractCssName}.js`}),
+    // `./<css>` export resolve to (named `bundle-css.js`, not `bundle.css.js`, so it does not
+    // match vanilla-extract's `cssFileFilter`).
+    vanillaExtract.compatMode && bundleCssShim({cssName: vanillaExtractCssName}),
     (config?.babel?.reactCompiler || enableStyledComponents) &&
       babel({
         babelrc: false,

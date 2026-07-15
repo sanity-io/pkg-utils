@@ -51,9 +51,12 @@ export interface PkgVanillaExtractOptions extends Omit<VanillaExtractOptions, 'e
      * not have to. When enabled, pkg-utils:
      *
      * - injects `import "<pkg-name>/<name>"` into each entry chunk (no manual `rollup.output.intro`),
-     * - emits a no-op `<name>.js` shim for runtimes that cannot import `.css` files, and
+     * - emits a no-op shim (e.g. `bundle-css.js` for `name: "bundle.css"`) for runtimes that cannot
+     *   import `.css` files — named with a hyphen rather than a `.css.js` suffix so it does not
+     *   match vanilla-extract's `cssFileFilter`, and
      * - writes the conditional `"./<name>"` export to `package.json`
-     *   (`browser`/`style` → the real CSS, `node`/`default` → the shim).
+     *   (`types` → the shim's `.d.ts`, `browser`/`style` → the real CSS, `node`/`default` → the
+     *   shim).
      *
      * The result is that `import "<pkg>/<name>"` resolves to the real CSS in bundlers/browsers and
      * to the no-op shim in Node and similar runtimes. Disable it to wire these up yourself.
@@ -235,7 +238,7 @@ export interface PkgConfigOptions {
      * minifying the extracted CSS. Pass `true` to use the defaults, or an object to customize.
      *
      * By default (`extract.compatMode: true`) pkg-utils also injects the self-referential
-     * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
+     * `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the conditional
      * `"./bundle.css"` export to `package.json` - see {@link PkgVanillaExtractOptions}.
      * @alpha
      */

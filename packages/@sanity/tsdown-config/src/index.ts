@@ -141,7 +141,7 @@ export interface PackageOptions extends Pick<
    * `true` to use the defaults, or an object to customize.
    *
    * By default (`inject: {nodeCompat: true}`) the plugin also injects the self-referential
-   * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional
+   * `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the conditional
    * `"./bundle.css"` export to `package.json` - see {@link PackageVanillaExtractOptions}.
    * This is the same feature as `rollup.vanillaExtract` in `@sanity/pkg-utils`.
    * @alpha

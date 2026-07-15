@@ -33,9 +33,10 @@ const exportEntrySchema = z
  * Conditional export for a CSS file, e.g.
  * ```json
  * "./bundle.css": {
+ *   "types": "./dist/bundle-css.d.ts",
  *   "browser": "./dist/bundle.css",
- *   "node": "./dist/bundle.css.js",
- *   "default": "./dist/bundle.css.js"
+ *   "node": "./dist/bundle-css.js",
+ *   "default": "./dist/bundle-css.js"
  * }
  * ```
  * This lets a package re-add a `import "<pkg>/bundle.css"` statement that resolves to the real CSS

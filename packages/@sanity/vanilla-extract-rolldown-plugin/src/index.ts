@@ -10,8 +10,10 @@ import {
 } from '@vanilla-extract/integration'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {OutputChunk, Plugin, RenderedChunk} from 'rolldown'
+import {cssFileDtsFileName, cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
 
+export {cssFileDtsFileName, cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
 export {esbuildTargetToLightningCSS} from './targets.ts'
 
 /**
@@ -90,11 +92,13 @@ export interface Options {
    *   libraries load their CSS automatically.
    * - `{nodeCompat: true}` additionally makes the import safe for runtimes that cannot import
    *   `.css` files: the injected import becomes the self-referential `"<pkg-name>/<fileName>"`
-   *   bare specifier, and a no-op `<fileName>.js` shim (plus a `<fileName>.d.ts` declaration)
-   *   is emitted for the `node`/`default` conditions of the conditional `"./<fileName>"`
-   *   export to point at. Writing that conditional export to `package.json` is the host's
-   *   job — `@sanity/vanilla-extract-tsdown-plugin` maintains it automatically through
-   *   tsdown's [`exports` feature](https://tsdown.dev/options/package-exports).
+   *   bare specifier, and a no-op shim (e.g. `bundle-css.js`, plus `bundle.css.d.ts` /
+   *   `bundle-css.d.ts` declarations) is emitted for the `node`/`default` conditions of the
+   *   conditional `"./<fileName>"` export to point at. The shim is named with a hyphen
+   *   (`bundle-css.js`) rather than a `.css.js` suffix so it does not match vanilla-extract's
+   *   `cssFileFilter`. Writing that conditional export to `package.json` is the host's job —
+   *   `@sanity/vanilla-extract-tsdown-plugin` maintains it automatically through tsdown's
+   *   [`exports` feature](https://tsdown.dev/options/package-exports).
    *
    * `@sanity/tsdown-config` defaults this to `{nodeCompat: true}`.
    * @defaultValue false
@@ -374,18 +378,30 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       this.emitFile({type: 'asset', fileName, source: css})
 
       if (nodeCompat) {
+        const shimFileName = cssShimFileName(fileName)
         this.emitFile({
           type: 'asset',
-          fileName: `${fileName}.js`,
+          fileName: shimFileName,
           // The shim is intentionally free of syntax so it parses as both CommonJS and an ES
           // module: the package `type` decides how Node interprets a `.js` file, and the same
           // shim backs the `node`/`default` conditions for `require()` and `import` alike.
+          // Named `bundle-css.js` (not `bundle.css.js`) so vanilla-extract's `cssFileFilter`
+          // does not treat it as a stylesheet module when a consumer resolves `./bundle.css`.
           source: `// No-op shim for \`${fileName}\`, resolved by the \`node\`/\`default\` conditions of the\n// conditional CSS export so the self-referential import is harmless in runtimes that cannot\n// load \`.css\` files. Intentionally has no JS syntax: it parses as both CommonJS and an ES\n// module, regardless of the package \`type\`.\n`,
+        })
+        // Emit declaration companions for both export targets: `browser`/`style` resolve the
+        // CSS file (`bundle.css` → `bundle.css.d.ts`), while `node`/`default` resolve the shim
+        // (`bundle-css.js` → `bundle-css.d.ts`).
+        const dtsSource = `// Type declarations for \`${fileName}\` and its no-op JS shim.\nexport {}\n`
+        this.emitFile({
+          type: 'asset',
+          fileName: cssFileDtsFileName(fileName),
+          source: dtsSource,
         })
         this.emitFile({
           type: 'asset',
-          fileName: `${fileName}.d.ts`,
-          source: `// Type declarations for \`${fileName}\` and its no-op JS shim.\nexport {}\n`,
+          fileName: cssShimDtsFileName(fileName),
+          source: dtsSource,
         })
       }
     },
