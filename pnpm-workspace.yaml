@@ -49,14 +49,21 @@ minimumReleaseAgeExclude:
   # cross-framework matrix building against current releases.
   - '@astrojs/react'
   # TypeScript 7 (the Go-native compiler) and related toolchain releases that need to be
-  # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts.
+  # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts
+  # and the oxc types shipped with each rolldown release.
   - typescript
   - tsdown
   - rolldown
+  - '@rolldown/*'
+  - '@oxc-project/*'
   - rolldown-plugin-dts
   - yuku-ast
   - yuku-parser
   - yuku-codegen
+  # Vanilla Extract plugins and integration packages tracked by the Sanity
+  # vanilla-extract-* packages and their benchmarks; bump immediately so the
+  # comparison suite and plugin peers stay on current releases.
+  - '@vanilla-extract/*'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
