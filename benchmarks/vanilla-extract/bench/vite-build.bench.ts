@@ -12,7 +12,7 @@ const fixtureRoot = fixturePath(manifest.representative)
 // identically for both plugins, so they would only add identical work to both sides. The
 // library-build benchmark covers the variant matrix where each plugin owns that work.
 // Identifier formatting is varied: the `debug` case runs each plugin's per-module debug-ID
-// source transform (babel in `@vanilla-extract/integration`, an oxc AST pass in
+// source transform (babel in `@vanilla-extract/integration`, a yuku-parser AST pass in
 // `@sanity/vanilla-extract-integration`), which the `short` case skips entirely.
 for (const identifiers of ['short', 'debug'] as const) {
   describe(`vite build, ${identifiers} identifiers (${manifest.representative.plainModules} TS + ${manifest.representative.styleModules} CSS modules)`, () => {

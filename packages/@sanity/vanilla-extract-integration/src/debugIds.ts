@@ -1,10 +1,10 @@
 /**
  * A port of `@vanilla-extract/babel-plugin-debug-ids` (MIT licensed, Copyright (c) 2021 SEEK)
- * off babel and onto the oxc-shaped TS-ESTree AST (as produced by `rolldown/parseAst`, and
- * matched exactly by `yuku-parser`): one recursive walk with an ancestor stack replaces babel's
- * visitor/`findParent` machinery, and the debug IDs are spliced into the source as offset-based
- * insertions instead of a full AST reprint — so output stays byte-identical outside the touched
- * calls, and TypeScript syntax passes through untouched.
+ * off babel and onto the oxc-shaped TS-ESTree AST (as produced by `yuku-parser` — the shipped
+ * backend — and identically by `rolldown/parseAst`): one recursive walk with an ancestor stack
+ * replaces babel's visitor/`findParent` machinery, and the debug IDs are spliced into the
+ * source as offset-based insertions instead of a full AST reprint — so output stays
+ * byte-identical outside the touched calls, and TypeScript syntax passes through untouched.
  *
  * The only upstream behavior intentionally dropped is the special-casing of babel-compiled
  * `createTheme` destructures (`_slicedToArray` shapes): they cannot occur in authored source,
@@ -15,9 +15,9 @@ const packageIdentifiers = new Set(['@vanilla-extract/css', '@vanilla-extract/re
 
 /**
  * The minimal structural shape of the AST nodes this transform inspects. Start/end offsets are
- * UTF-16 code-unit indexes into the source (the convention shared by `rolldown/parseAst` and
- * `yuku-parser`), so plain string slicing applies the insertions safely. The index signature
- * lets the walker recurse through every child without per-node-type knowledge.
+ * UTF-16 code-unit indexes into the source (the convention shared by `yuku-parser` and
+ * `rolldown/parseAst`), so plain string slicing applies the insertions safely. The index
+ * signature lets the walker recurse through every child without per-node-type knowledge.
  */
 type EstreeNode = {
   type: string
@@ -38,7 +38,7 @@ type CallExpressionNode = EstreeNode & {
 
 /**
  * The `Program` root of a parsed module. Structurally satisfied by the return types of both
- * `rolldown/parseAst` and `yuku-parser`, so callers never need to cast.
+ * `yuku-parser` and `rolldown/parseAst`, so callers never need to cast.
  */
 export interface EstreeProgram {
   type: 'Program'
@@ -311,7 +311,7 @@ function walk(node: EstreeNode, ancestors: EstreeNode[], state: WalkState): void
 /**
  * Injects vanilla-extract debug IDs into `source`, guided by its parsed `program`. The program
  * may come from any parser producing the oxc-shaped TS-ESTree AST with UTF-16 offsets
- * (`rolldown/parseAst`, `yuku-parser`); the source is returned unchanged when there is nothing
+ * (`yuku-parser`, `rolldown/parseAst`); the source is returned unchanged when there is nothing
  * to inject.
  * @internal
  */

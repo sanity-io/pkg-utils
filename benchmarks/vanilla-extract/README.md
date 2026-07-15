@@ -41,10 +41,10 @@ an `inset` shorthand so the smoke suite can verify that downleveling actually ha
 The `debug identifiers` variant (also run for the Vite build) exercises the per-module
 debug-ID source transform that `identifiers: 'short'` skips entirely: babel
 (`@vanilla-extract/babel-plugin-debug-ids`) in the official `@vanilla-extract/integration`
-pipeline, an oxc AST pass (`rolldown/parseAst`) in `@sanity/vanilla-extract-integration`.
-Comparing `debug − short` within one side isolates the debug-ID transform cost from everything
-else that differs between the pipelines. Minify/target aren't crossed with `debug`: they run
-after extraction and are orthogonal to the per-module transform being measured.
+pipeline, a `yuku-parser` AST pass in `@sanity/vanilla-extract-integration`. Comparing
+`debug − short` within one side isolates the debug-ID transform cost from everything else that
+differs between the pipelines. Minify/target aren't crossed with `debug`: they run after
+extraction and are orthogonal to the per-module transform being measured.
 
 The Vite build comparison intentionally skips the minify/target variants: Vite handles minify
 and target itself, identically for either plugin, so varying them would only add identical work

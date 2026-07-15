@@ -1,12 +1,13 @@
 {
   "name": "@sanity/vanilla-extract-integration",
   "version": "0.0.0",
-  "description": "Vendored port of @vanilla-extract/integration onto the rolldown toolchain: oxc-parsed debug IDs and a rolldown child compilation instead of babel and esbuild",
+  "description": "Vendored port of @vanilla-extract/integration onto the rolldown toolchain: yuku-parsed debug IDs and a rolldown child compilation instead of babel and esbuild",
   "keywords": [
     "sanity-io",
     "sanity",
     "vanilla-extract",
     "rolldown",
+    "yuku",
     "oxc",
     "css"
   ],
@@ -41,7 +42,8 @@
   "dependencies": {
     "@vanilla-extract/css": "^1.21.1",
     "javascript-stringify": "^2.1.0",
-    "rolldown": "^1.2.0"
+    "rolldown": "^1.2.0",
+    "yuku-parser": "^0.6.1"
   },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
@@ -50,8 +52,7 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:",
-    "yuku-parser": "^0.6.1"
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

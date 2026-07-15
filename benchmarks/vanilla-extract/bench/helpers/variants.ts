@@ -2,9 +2,9 @@
  * The build variant matrix: CSS minification and syntax downleveling (`target`) are toggled
  * independently and combined, since both flow through different code paths in each plugin, and
  * identifier formatting (`short` vs `debug`) is toggled on its own — the `debug` variant runs
- * the debug-ID source transform (babel in `@vanilla-extract/integration`, an oxc AST pass in
- * `@sanity/vanilla-extract-integration`) for every `.css.ts` module, which `short` skips
- * entirely. Minify/target aren't crossed with `debug`: they run after extraction and are
+ * the debug-ID source transform (babel in `@vanilla-extract/integration`, a yuku-parser AST
+ * pass in `@sanity/vanilla-extract-integration`) for every `.css.ts` module, which `short`
+ * skips entirely. Minify/target aren't crossed with `debug`: they run after extraction and are
  * orthogonal to the per-module transform being measured.
  */
 export interface BuildVariant {

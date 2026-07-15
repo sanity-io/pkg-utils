@@ -6,7 +6,7 @@ reproduced in full as required:
   this package is a port of `@vanilla-extract/integration` (and of the debug-ID
   transform of `@vanilla-extract/babel-plugin-debug-ids`) onto the rolldown
   toolchain, replacing its esbuild child compilation with rolldown and its
-  babel AST pass with the oxc AST.
+  babel AST pass with an oxc-shaped AST pass parsed by yuku-parser.
 - mlly (https://github.com/unjs/mlly): the ESM/CJS syntax detection regexes
   are vendored from `mlly`'s `detectSyntax`.
 

@@ -1,8 +1,9 @@
 /**
  * Ported from `@vanilla-extract/integration` (MIT licensed, Copyright (c) 2021 SEEK), with the
  * babel debug-ID pass (`@vanilla-extract/babel-plugin-debug-ids` +
- * `@babel/plugin-syntax-typescript`) replaced by {@link injectDebugIds} over the oxc AST from
- * `rolldown/parseAst`.
+ * `@babel/plugin-syntax-typescript`) replaced by {@link injectDebugIds} over the oxc-shaped
+ * AST from `yuku-parser` (chosen over `rolldown/parseAst` in the bench-off of
+ * `bench/debug-ids.bench.ts`: same AST, ~2x faster parse).
  */
 import {addFileScope} from './addFileScope.ts'
 import {injectDebugIds} from './debugIds.ts'
@@ -31,7 +32,7 @@ function langFromPath(filePath: string): 'js' | 'jsx' | 'ts' | 'tsx' {
  * `identOption` is `'debug'` — `'short'` production builds skip the parse entirely) and wraps
  * the module with its file scope (and optional global adapter binding).
  *
- * The parser is lazy-loaded so the native binding only loads once a module is actually
+ * The parser is lazy-loaded so its native binding only loads once a module is actually
  * transformed with debug identifiers.
  * @public
  */
@@ -46,9 +47,11 @@ export async function transform({
   let code = source
 
   if (identOption === 'debug') {
-    const {parseAst} = await import('rolldown/parseAst')
-    // `preserveParens: false` matches the AST shape babel produced for the upstream plugin
-    const program = parseAst(code, {lang: langFromPath(filePath), preserveParens: false})
+    const {parse} = await import('yuku-parser')
+    // `preserveParens: false` matches the AST shape babel produced for the upstream plugin.
+    // yuku is error-tolerant (it always produces an AST), so syntactically broken sources pass
+    // through best-effort here and fail in the bundler's own parse with its proper diagnostics.
+    const {program} = parse(code, {lang: langFromPath(filePath), preserveParens: false})
     code = injectDebugIds(code, program)
   }
 
