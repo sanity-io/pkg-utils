@@ -1126,23 +1126,24 @@ export {
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+var jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos");
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 function validateApiPerspective(perspective) {
   if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
     throw new TypeError(
@@ -1162,14 +1163,14 @@ exports.validateApiPerspective = validateApiPerspective;
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import "get-it";
 import "rxjs";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
@@ -1187,14 +1188,14 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import "get-it";
 import "rxjs";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
@@ -1213,24 +1214,24 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 function validateApiPerspective(perspective) {
   if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
     throw new TypeError(
@@ -1249,23 +1250,24 @@ export {
 exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+var jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos"), client = require("@sanity/client");
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 Object.defineProperty(exports, "SanityLogo", {
   enumerable: !0,
   get: function() {
@@ -1284,50 +1286,50 @@ exports.RemoveIcon = RemoveIcon;
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 export {
   RemoveIcon,
   SanityLogo,
@@ -1340,23 +1342,24 @@ export {
 exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+var jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos"), client = require("@sanity/client");
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 Object.defineProperty(exports, "SanityLogo", {
   enumerable: !0,
   get: function() {
@@ -1375,50 +1378,50 @@ exports.RemoveIcon = RemoveIcon;
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 export {
   RemoveIcon,
   SanityLogo,
@@ -1463,23 +1466,24 @@ export { ExternalSubpathImport, identity };
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
 ""use strict";
 Object.defineProperty(exports, "__esModule", { value: !0 });
-var jsxRuntime = require("react/jsx-runtime"), react = require("react"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsxRuntime.jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+var jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos"), client = require("@sanity/client");
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 Object.defineProperty(exports, "SanityLogo", {
   enumerable: !0,
   get: function() {
@@ -1498,7 +1502,7 @@ exports.RemoveIcon = RemoveIcon;
 `;
 
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import "@sanity/client/csm";
 import "get-it";
@@ -1506,7 +1510,7 @@ import "rxjs";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
@@ -1524,7 +1528,7 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 `;
 
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"import { ComponentPropsWithRef, ReactElement } from "react";
 import { SanityLogo } from "@sanity/logos";
 import "@sanity/client/csm";
 import "get-it";
@@ -1532,7 +1536,7 @@ import "rxjs";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+declare function RemoveIcon(props: ComponentPropsWithRef<"svg">): ReactElement;
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
@@ -1551,25 +1555,25 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.js 1`] = `
 "import { jsx } from "react/jsx-runtime";
-import { forwardRef } from "react";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx(
-    "svg",
-    {
-      "data-sanity-icon": "remove",
-      width: "1em",
-      height: "1em",
-      viewBox: "0 0 25 25",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      ...props,
-      ref,
-      children: /* @__PURE__ */ jsx("path", { d: "M5 12.5H20", stroke: "currentColor", strokeWidth: 1.2, strokeLinejoin: "round" })
-    }
-  );
-});
+function RemoveIcon(props) {
+  return /* @__PURE__ */ jsx("svg", {
+    "data-sanity-icon": "remove",
+    width: "1em",
+    height: "1em",
+    viewBox: "0 0 25 25",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ...props,
+    children: /* @__PURE__ */ jsx("path", {
+      d: "M5 12.5H20",
+      stroke: "currentColor",
+      strokeWidth: 1.2,
+      strokeLinejoin: "round"
+    })
+  });
+}
 export {
   RemoveIcon,
   SanityLogo,
