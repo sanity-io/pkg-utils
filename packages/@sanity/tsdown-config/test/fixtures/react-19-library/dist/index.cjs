@@ -18,3 +18,5 @@ function Button(t0) {
 	] }), $[1] = children, $[2] = type, $[3] = t3) : t3 = $[3], t3;
 }
 exports.Button = Button;
+
+//# sourceMappingURL=index.cjs.map
