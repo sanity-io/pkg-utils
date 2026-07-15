@@ -259,7 +259,12 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       import('@rolldown/plugin-babel'),
       import('@vitejs/plugin-react'),
     ])
+    // `@rolldown/plugin-babel` types against rolldown 1.2.0 while `Rolldown.Plugin`
+    // from tsdown is still rolled from ~1.1.5; structurally compatible at runtime but
+    // tsc reports "Excessive stack depth comparing types 'Plugin<any>'".
+    // @ts-expect-error — cross-version rolldown Plugin assignability
     plugins.push(
+      // @ts-expect-error — cross-version rolldown Plugin assignability
       await pluginBabel({
         presets: [reactCompilerPreset(typeof reactCompiler === 'object' ? reactCompiler : {})],
       }),
