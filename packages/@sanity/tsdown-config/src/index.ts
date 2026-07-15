@@ -134,8 +134,11 @@ export interface PackageOptions extends Pick<
   styledComponents?: boolean | StyledComponentsOptions
   /**
    * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate file,
-   * minified and lowered with `lightningcss` for the `@sanity/browserslist-config` targets by
-   * default. Pass `true` to use the defaults, or an object to customize.
+   * minified and lowered with `lightningcss`. The lowering targets come from the effective
+   * `target` (`vanillaExtract.target`, falling back to the top-level `target`) when it names
+   * browsers; when it's undefined or browserless (e.g. `'node20'`), they're resolved from
+   * `@sanity/browserslist-config` instead — see {@link PackageVanillaExtractOptions}. Pass
+   * `true` to use the defaults, or an object to customize.
    *
    * By default (`inject: {nodeCompat: true}`) the plugin also injects the self-referential
    * `import "<pkg>/bundle.css"`, emits a `bundle.css.js` shim, and writes the conditional

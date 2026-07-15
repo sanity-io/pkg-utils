@@ -193,6 +193,11 @@ export function vanillaExtractPlugin({
       name: `${PLUGIN_NAMESPACE}-inline-dev-css`,
       apply: (_config, {command}) => command === 'serve' && mode === 'inlineCssInDev',
       transformIndexHtml: () => {
+        // Intentionally no `ensureCompiler()` here: an uninitialized compiler means no
+        // `.css.ts` module has been transformed yet, so a freshly-created one would have no
+        // CSS to inline either. In the dev SSR flows this mode exists for, module evaluation
+        // (during render) precedes the HTML transform, so the CSS is already collected - and
+        // the un-inlined fallback is Vite's own CSS pipeline, not missing styles.
         const allCss = compiler?.getAllCss()
         if (!allCss) return []
         return [
