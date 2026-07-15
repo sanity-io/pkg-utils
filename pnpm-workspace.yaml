@@ -49,17 +49,28 @@ minimumReleaseAgeExclude:
   # cross-framework matrix building against current releases.
   - '@astrojs/react'
   # TypeScript 7 (the Go-native compiler) and related toolchain releases that need to be
-  # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts.
+  # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts
+  # and the oxc types shipped with each rolldown release.
   - typescript
   - tsdown
   - rolldown
+  - '@rolldown/*'
+  - '@oxc-project/*'
   - rolldown-plugin-dts
   - yuku-ast
   - yuku-parser
   - yuku-codegen
+  # Vanilla Extract plugins and integration packages tracked by the Sanity
+  # vanilla-extract-* packages and their benchmarks; bump immediately so the
+  # comparison suite and plugin peers stay on current releases.
+  - '@vanilla-extract/*'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
+  # Force a single rolldown copy so tsdown (which still depends on ~1.1.5) and
+  # workspace packages typing against 1.2.0 share one Plugin type. Without this,
+  # `tsc` fails with "Excessive stack depth comparing types 'Plugin<any>'".
+  rolldown: 1.2.0
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
