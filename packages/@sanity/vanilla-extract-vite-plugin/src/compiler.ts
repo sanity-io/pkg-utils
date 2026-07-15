@@ -159,7 +159,13 @@ export interface Compiler {
     filePath: string,
     transformedVanillaModules: ReadonlySet<string>,
   ): Promise<Set<EnvironmentModuleNode>>
-  /** Invalidates every non-`node_modules` module in the compiler's caches. */
+  /**
+   * Invalidates every non-`node_modules` module in the compiler's module graph and runner
+   * cache, forcing the next {@link Compiler.processVanillaFile} to re-evaluate. The extracted
+   * CSS of previous compilations intentionally stays available (like upstream
+   * `@vanilla-extract/compiler`) until it's replaced by the re-evaluation: already-served
+   * modules keep importing their virtual CSS, so dropping it would break those loads.
+   */
   invalidateAllModules(): Promise<void>
   close(): Promise<void>
 }
@@ -221,8 +227,11 @@ async function createCompilerServer({
     root,
     // Don't include HTML middlewares
     appType: 'custom',
+    // Forward the consumer's server options (e.g. `fs.allow`, needed to evaluate files outside
+    // the workspace root), overriding only what the compiler manages itself: HMR stays off (the
+    // compiler drives its own invalidation), and watching is disabled entirely for builds
     server: {
-      middlewareMode: viteConfig.server?.middlewareMode,
+      ...viteConfig.server,
       hmr: false,
       watch: enableFileWatcher ? viteConfig.server?.watch : null,
     },

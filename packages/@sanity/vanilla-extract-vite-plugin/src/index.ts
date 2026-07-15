@@ -264,7 +264,10 @@ export function vanillaExtractPlugin({
             outputCss: true,
           })
 
-          transformedModules.add(normalizePath(validId))
+          // Store the same absolute id the compiler's module graph uses (`validId` may be
+          // root-relative in SSR or `/@id/`-wrapped), so the `findImporterTree` boundary
+          // check in `hotUpdate` matches
+          transformedModules.add(absoluteId)
 
           const result: TransformResult = {
             code: source,
