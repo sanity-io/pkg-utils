@@ -14,10 +14,10 @@ defineConfig({
   test: {
     // Run files in parallel (default: true)
     fileParallelism: true,
-    
+
     // Max concurrent workers (v4: replaces maxThreads/maxForks; minWorkers removed)
     maxWorkers: 4,
-    
+
     // Pool type: 'forks' (default), 'threads', 'vmForks', 'vmThreads'
     pool: 'forks',
   },
@@ -32,18 +32,18 @@ Run tests within a file in parallel:
 
 ```ts
 // Individual concurrent tests
-test.concurrent('test 1', async ({ expect }) => {
+test.concurrent('test 1', async ({expect}) => {
   expect(await fetch1()).toBe('result')
 })
 
-test.concurrent('test 2', async ({ expect }) => {
+test.concurrent('test 2', async ({expect}) => {
   expect(await fetch2()).toBe('result')
 })
 
 // All tests in suite concurrent
 describe.concurrent('parallel suite', () => {
-  test('test 1', async ({ expect }) => {})
-  test('test 2', async ({ expect }) => {})
+  test('test 1', async ({expect}) => {})
+  test('test 2', async ({expect}) => {})
 })
 ```
 
@@ -58,11 +58,11 @@ describe.concurrent('mostly parallel', () => {
   test('parallel 1', async () => {})
 
   // Opt this test out of inherited concurrency
-  test('must run alone', { concurrent: false }, async () => {})
+  test('must run alone', {concurrent: false}, async () => {})
 })
 
 // Or an entire suite
-describe('sequential suite', { concurrent: false }, () => {
+describe('sequential suite', {concurrent: false}, () => {
   test('first', () => {})
   test('second', () => {})
 })
@@ -120,7 +120,7 @@ jobs:
         shard: [1, 2, 3]
     steps:
       - run: vitest run --shard=${{ matrix.shard }}/3 --reporter=blob
-      
+
   merge:
     needs: test
     steps:
@@ -148,13 +148,13 @@ defineConfig({
     sequence: {
       // Run tests in random order
       shuffle: true,
-      
+
       // Seed for reproducible shuffle
       seed: 12345,
-      
+
       // Hook execution order
       hooks: 'stack', // 'stack', 'list', 'parallel'
-      
+
       // All tests concurrent by default
       concurrent: true,
 
@@ -188,9 +188,9 @@ describe.shuffle('random order', () => {
 ```ts
 defineConfig({
   test: {
-    pool: 'forks',     // 'forks' (default) | 'threads' | 'vmForks' | 'vmThreads'
+    pool: 'forks', // 'forks' (default) | 'threads' | 'vmForks' | 'vmThreads'
     maxWorkers: 8,
-    isolate: true,     // threads/forks only; vm* pools are always isolated
+    isolate: true, // threads/forks only; vm* pools are always isolated
     vmMemoryLimit: '512MB',
   },
 })
@@ -216,7 +216,7 @@ vitest --bail      # Stop on first failure (same as --bail 1)
 - `maxWorkers` (not `maxThreads`/`maxForks`); `poolOptions` removed in v4
 - Sharding splits tests across CI machines; `--merge-reports` combines blob results
 
-<!-- 
+<!--
 Source references:
 - https://vitest.dev/guide/parallelism.html
 - https://vitest.dev/guide/improving-performance.html

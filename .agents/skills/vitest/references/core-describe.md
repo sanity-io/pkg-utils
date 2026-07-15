@@ -10,7 +10,8 @@ Group related tests into suites for organization and shared setup.
 ## Basic Usage
 
 ```ts
-import { describe, expect, test } from 'vitest'
+// Alias: suite
+import {describe, expect, suite, test} from 'vitest'
 
 describe('Math', () => {
   test('adds numbers', () => {
@@ -22,8 +23,6 @@ describe('Math', () => {
   })
 })
 
-// Alias: suite
-import { suite } from 'vitest'
 suite('equivalent to describe', () => {})
 ```
 
@@ -46,7 +45,7 @@ describe('User', () => {
 
 ```ts
 // All tests inherit options
-describe('slow tests', { timeout: 30_000 }, () => {
+describe('slow tests', {timeout: 30_000}, () => {
   test('test 1', () => {}) // 30s timeout
   test('test 2', () => {}) // 30s timeout
 })
@@ -85,8 +84,8 @@ describe.todo('implement later')
 ```ts
 // All tests run in parallel
 describe.concurrent('parallel tests', () => {
-  test('test 1', async ({ expect }) => {})
-  test('test 2', async ({ expect }) => {})
+  test('test 1', async ({expect}) => {})
+  test('test 2', async ({expect}) => {})
 })
 ```
 
@@ -98,7 +97,7 @@ describe.concurrent('parallel tests', () => {
 describe.concurrent('parallel', () => {
   test('concurrent 1', async () => {})
 
-  describe('must be sequential', { concurrent: false }, () => {
+  describe('must be sequential', {concurrent: false}, () => {
     test('step 1', async () => {})
     test('step 2', async () => {})
   })
@@ -115,7 +114,7 @@ describe.shuffle('random order', () => {
 })
 
 // Or with option
-describe('random', { shuffle: true }, () => {})
+describe('random', {shuffle: true}, () => {})
 ```
 
 ## Parameterized Suites
@@ -124,9 +123,9 @@ describe('random', { shuffle: true }, () => {})
 
 ```ts
 describe.each([
-  { name: 'Chrome', version: 100 },
-  { name: 'Firefox', version: 90 },
-])('$name browser', ({ name, version }) => {
+  {name: 'Chrome', version: 100},
+  {name: 'Firefox', version: 90},
+])('$name browser', ({name, version}) => {
   test('has version', () => {
     expect(version).toBeGreaterThan(0)
   })
@@ -165,7 +164,7 @@ describe('Database', () => {
   })
 
   test('insert works', async () => {
-    await db.insert({ name: 'test' })
+    await db.insert({name: 'test'})
     expect(await db.count()).toBe(1)
   })
 })
@@ -189,7 +188,7 @@ describe.only.shuffle('only and shuffled', () => {})
 - Shuffle order depends on `sequence.seed` config
 - `describe.sequential` was removed in v5 — use `{ concurrent: false }`
 
-<!-- 
+<!--
 Source references:
 - https://vitest.dev/api/describe.html
 -->

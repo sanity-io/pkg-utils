@@ -155,6 +155,7 @@ vitest --merge-reports=reports --reporter=junit --reporter=default
 ## Watch Mode Keyboard Shortcuts
 
 In watch mode, press:
+
 - `a` - Run all tests
 - `f` - Run only failed tests
 - `u` - Update snapshots
@@ -171,7 +172,7 @@ In watch mode, press:
 - Filter tests by tag with `--tagsFilter` (tags must be declared in config) — see [features-test-tags](features-test-tags.md)
 - `--merge-reports` and `--reporter=blob` do not work in watch mode
 
-<!-- 
+<!--
 Source references:
 - https://vitest.dev/guide/cli.html
 -->
