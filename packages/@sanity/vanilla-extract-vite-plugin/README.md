@@ -54,10 +54,12 @@ vanillaExtractPlugin({
   identifiers: 'short',
   /**
    * Which of your Vite plugins are re-instantiated inside the compiler server that evaluates
-   * the `.css.ts` modules. By default only `vite-tsconfig-paths` is forwarded - most plugins
-   * don't affect `.css.ts` evaluation, and forwarding them all would run every transform twice.
+   * the `.css.ts` modules. By default no plugins are forwarded (and the filtering work is
+   * skipped entirely) - most plugins don't affect `.css.ts` evaluation, and forwarding them
+   * would run every transform twice. Vite's own options (like `resolve.tsconfigPaths`) still
+   * apply to the compiler server through the forwarded config.
    */
-  pluginFilter: ({name, mode}) => name === 'vite-tsconfig-paths',
+  pluginFilter: ({name, mode}) => name === 'my-css-ts-affecting-plugin',
   /**
    * How the extracted CSS reaches the page during development. 'emitCss' (the default) serves
    * it through Vite's CSS pipeline; 'inlineCssInDev' additionally inlines all extracted CSS
@@ -66,6 +68,32 @@ vanillaExtractPlugin({
    * @defaultValue 'emitCss'
    */
   mode: 'emitCss',
+})
+```
+
+## tsconfig paths
+
+Unlike `@vanilla-extract/vite-plugin`, this plugin does **not** forward the
+`vite-tsconfig-paths` plugin into its compiler server by default. On Vite 8, tsconfig path
+resolution is a built-in feature — prefer enabling
+[`resolve.tsconfigPaths`](https://vite.dev/config/shared-options#resolve-tsconfigpaths) in your
+`vite.config.ts`, which applies to the compiler server automatically (Vite options are forwarded
+as-is, only plugins are filtered):
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  resolve: {tsconfigPaths: true},
+  plugins: [vanillaExtractPlugin()],
+})
+```
+
+If you need the `vite-tsconfig-paths` plugin regardless (e.g. for options the built-in doesn't
+cover), forward it explicitly with a `pluginFilter`:
+
+```ts
+vanillaExtractPlugin({
+  pluginFilter: ({name}) => name === 'vite-tsconfig-paths',
 })
 ```
 

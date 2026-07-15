@@ -69,9 +69,13 @@ export interface Options {
   identifiers?: IdentifierOption
   /**
    * Which of the consumer's Vite plugins are re-instantiated inside the compiler server that
-   * evaluates the `.css.ts` modules. By default only `vite-tsconfig-paths` is forwarded — most
-   * plugins don't affect `.css.ts` evaluation, and forwarding them all would run every
-   * transform twice.
+   * evaluates the `.css.ts` modules. By default **no** plugins are forwarded (and the
+   * filtering work is skipped entirely) — most plugins don't affect `.css.ts` evaluation, and
+   * forwarding them would run every transform twice. Vite's own options (including the
+   * built-in
+   * [`resolve.tsconfigPaths`](https://vite.dev/config/shared-options#resolve-tsconfigpaths),
+   * which replaces the `vite-tsconfig-paths` plugin on Vite 8) still apply to the compiler
+   * server through the forwarded config.
    */
   pluginFilter?: PluginFilter
   /**
@@ -88,11 +92,6 @@ export interface Options {
    */
   mode?: 'emitCss' | 'inlineCssInDev'
 }
-
-// Plugins that we know are compatible with the compiler server and don't need to be filtered out
-const COMPATIBLE_PLUGINS = new Set(['vite-tsconfig-paths'])
-
-const defaultPluginFilter: PluginFilter = ({name}) => COMPATIBLE_PLUGINS.has(name)
 
 /**
  * A Vite 8 plugin that compiles vanilla-extract `.css.ts` modules and feeds their CSS into
@@ -112,7 +111,7 @@ const defaultPluginFilter: PluginFilter = ({name}) => COMPATIBLE_PLUGINS.has(nam
  */
 export function vanillaExtractPlugin({
   identifiers,
-  pluginFilter = defaultPluginFilter,
+  pluginFilter,
   mode = 'emitCss',
 }: Options = {}): Plugin[] {
   let config: ResolvedConfig
@@ -146,14 +145,20 @@ export function vanillaExtractPlugin({
       configForCompiler = config.inlineConfig
     }
 
+    // Without a `pluginFilter`, no consumer plugins are re-instantiated in the compiler
+    // server, and the flatten/filter work is skipped entirely. Vite's own options — including
+    // the built-in `resolve.tsconfigPaths`, which replaces the `vite-tsconfig-paths` plugin on
+    // Vite 8 — still apply through the forwarded config.
     const viteConfig = {
       ...configForCompiler,
-      plugins: configForCompiler?.plugins
-        ?.flat()
-        .filter(isPluginObject)
-        // Never forward this plugin itself into its own compiler server
-        .filter((plugin) => !plugin.name.startsWith(PLUGIN_NAMESPACE))
-        .filter((plugin) => pluginFilter({name: plugin.name, mode: config.mode})),
+      plugins: pluginFilter
+        ? configForCompiler?.plugins
+            ?.flat()
+            .filter(isPluginObject)
+            // Never forward this plugin itself into its own compiler server
+            .filter((plugin) => !plugin.name.startsWith(PLUGIN_NAMESPACE))
+            .filter((plugin) => pluginFilter({name: plugin.name, mode: config.mode}))
+        : undefined,
     }
 
     compiler = createCompiler({

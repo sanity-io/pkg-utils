@@ -2,7 +2,7 @@ import {mkdir, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {normalizePath} from '@vanilla-extract/integration'
-import {build, createServer, type Rollup} from 'vite'
+import {build, createServer, type Plugin, type Rollup} from 'vite'
 import {afterEach, describe, expect, test} from 'vitest'
 import {createCompiler, vanillaExtractPlugin, type Compiler} from '../src/index.ts'
 
@@ -115,6 +115,46 @@ describe('vite dev', () => {
       // The virtual module resolves through Vite's CSS pipeline (served as a JS module in dev)
       const css = await server.transformRequest(virtualImport![1]!)
       expect(css?.code).toContain('rgb(1, 2, 3)')
+    } finally {
+      await server.close()
+    }
+  })
+
+  test.each([
+    // The marker plugin only affects the extracted CSS when it runs inside the compiler
+    // server: the consuming server's `.css.ts` transforms are discarded (the compiler reads
+    // from disk), so a rewritten marker proves the plugin was forwarded - and by default no
+    // plugins are forwarded (the built-in `resolve.tsconfigPaths` replaces the
+    // `vite-tsconfig-paths` plugin upstream forwards on Vite 8)
+    ['forwards no plugins to the compiler server by default', undefined, 'rgb(1, 2, 3)'],
+    [
+      'forwards the plugins a `pluginFilter` selects to the compiler server',
+      ({name}: {name: string}) => name === 'css-marker-rewrite',
+      'rgb(9, 9, 9)',
+    ],
+  ] as const)('%s', async (_title, pluginFilter, expectedColor) => {
+    // Rewrites the colour constant in `theme.ts` (a dependency of `styles.css.ts`), so the
+    // extracted CSS only changes when the plugin runs inside the compiler server
+    const markerPlugin: Plugin = {
+      name: 'css-marker-rewrite',
+      transform(code, id) {
+        const [validId = id] = id.split('?')
+        if (!validId.endsWith('theme.ts')) return null
+        return {code: code.replaceAll('rgb(1, 2, 3)', 'rgb(9, 9, 9)'), map: null}
+      },
+    }
+    const server = await createServer({
+      root: appRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      plugins: [vanillaExtractPlugin({pluginFilter}), markerPlugin],
+    })
+    try {
+      const transformed = await server.transformRequest('/src/styles.css.ts')
+      const virtualImport = transformed?.code.match(/import\s+["']([^"']+\.vanilla\.css[^"']*)["']/)
+      const css = await server.transformRequest(virtualImport![1]!)
+      expect(css?.code).toContain(expectedColor)
     } finally {
       await server.close()
     }
