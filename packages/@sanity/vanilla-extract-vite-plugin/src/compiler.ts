@@ -190,7 +190,10 @@ export interface CreateCompilerOptions {
    * Maps a `.css.ts` file path to the virtual CSS module specifier imported by its compiled JS.
    */
   cssImportSpecifier?: (filePath: string) => string
-  /** Vite config forwarded to the internal compiler server (resolve options, plugins, etc). */
+  /**
+   * Vite config forwarded to the internal compiler server (plugins, aliases, etc). The compiler
+   * always uses Node resolve conditions and main fields because it evaluates modules in Node.
+   */
   viteConfig?: ViteUserConfig
   /**
    * The compiler watches the files it evaluates and invalidates its caches on change. Disable
@@ -254,6 +257,22 @@ async function createCompilerServer({
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
     },
+    // Parent app configs (notably `sanity build`) can enable the `browser` condition. This
+    // server evaluates `.css.ts` modules in Node, where resolving vanilla-extract's browser
+    // runtime would export class names without collecting their CSS through our adapter.
+    resolve: {
+      ...viteConfig.resolve,
+      conditions: ['node', 'import', 'module', 'default'],
+      mainFields: ['module', 'jsnext:main', 'jsnext', 'main'],
+    },
+    ssr: {
+      ...viteConfig.ssr,
+      resolve: {
+        ...viteConfig.ssr?.resolve,
+        conditions: ['node', 'import', 'module', 'default'],
+        externalConditions: ['node', 'import', 'module', 'default'],
+      },
+    },
     // Vite's default SSR externalization applies: project files and linked packages are
     // evaluated through the runner (so they're cached in the module graph), while node_modules
     // dependencies are externalized to real Node imports — required for CJS dependencies,
@@ -280,7 +299,7 @@ async function createCompilerServer({
           // Inject the file scope and the adapter binding: the spliced
           // `setAdapter(globalThis[...])` call binds the project's own copy of
           // `@vanilla-extract/css` to the adapter of the compilation in progress
-          return transform({
+          return await transform({
             source: code,
             rootPath: root,
             filePath: id,
