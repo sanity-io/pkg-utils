@@ -19,6 +19,7 @@ catalog:
 minimumReleaseAge: 4320
 
 minimumReleaseAgeExclude:
+  - '@changesets/*'
   - '@next/*'
   - '@oxlint/*'
   - '@oxlint-tsgolint/*'
