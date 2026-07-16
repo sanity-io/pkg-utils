@@ -48,6 +48,10 @@ const globalAdapterStore = globalThis as typeof globalThis & {
   [GLOBAL_ADAPTER_KEY]?: Adapter
 }
 
+function withoutBrowser(values: string[] | undefined): string[] | undefined {
+  return values?.filter((value) => value !== 'browser')
+}
+
 interface ModuleScanResult {
   cssDeps: string[]
   watchFiles: Set<string>
@@ -191,8 +195,9 @@ export interface CreateCompilerOptions {
    */
   cssImportSpecifier?: (filePath: string) => string
   /**
-   * Vite config forwarded to the internal compiler server (plugins, aliases, etc). The compiler
-   * always uses Node resolve conditions and main fields because it evaluates modules in Node.
+   * Vite config forwarded to the internal compiler server (plugins, aliases, etc). Browser
+   * entries are omitted from resolve conditions and main fields because it evaluates modules
+   * in Node; all other entries are preserved.
    */
   viteConfig?: ViteUserConfig
   /**
@@ -257,20 +262,21 @@ async function createCompilerServer({
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
     },
-    // Parent app configs (notably `sanity build`) can enable the `browser` condition. This
-    // server evaluates `.css.ts` modules in Node, where resolving vanilla-extract's browser
-    // runtime would export class names without collecting their CSS through our adapter.
+    // Parent app configs (notably `sanity build`) can enable the `browser` condition. Omit it
+    // from every resolver the ModuleRunner can use while preserving custom conditions: this
+    // server evaluates `.css.ts` modules in Node, where vanilla-extract's browser runtime would
+    // export class names without collecting their CSS through our adapter.
     resolve: {
       ...viteConfig.resolve,
-      conditions: ['node', 'import', 'module', 'default'],
-      mainFields: ['module', 'jsnext:main', 'jsnext', 'main'],
+      conditions: withoutBrowser(viteConfig.resolve?.conditions),
+      mainFields: withoutBrowser(viteConfig.resolve?.mainFields),
     },
     ssr: {
       ...viteConfig.ssr,
       resolve: {
         ...viteConfig.ssr?.resolve,
-        conditions: ['node', 'import', 'module', 'default'],
-        externalConditions: ['node', 'import', 'module', 'default'],
+        conditions: withoutBrowser(viteConfig.ssr?.resolve?.conditions),
+        externalConditions: withoutBrowser(viteConfig.ssr?.resolve?.externalConditions),
       },
     },
     // Vite's default SSR externalization applies: project files and linked packages are
