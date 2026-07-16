@@ -6,7 +6,7 @@ packages:
   - packages/@sanity/tsdown-config/test/fixtures/**
 
 catalog:
-  '@sanity/client': ^7.23.0
+  '@sanity/client': ^7.23.2
   '@sanity/icons': ^5.1.0
   '@sanity/logos': ^2.2.2
   '@types/node': ^24.13.3
@@ -72,7 +72,7 @@ overrides:
   # Align every rolldown copy on the version vite 8 pins (~1.1.4) so vite, tsdown,
   # rolldown-plugin-dts, the workspace packages, and third-party optional consumers all share
   # one copy (and one Plugin type). Bump when vite updates its pinned rolldown.
-  rolldown: 1.1.5
+  rolldown: 1.2.0
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:

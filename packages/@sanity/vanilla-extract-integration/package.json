@@ -1,6 +1,6 @@
 {
   "name": "@sanity/vanilla-extract-integration",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vendored port of @vanilla-extract/integration onto the rolldown toolchain: yuku-parsed debug IDs and a rolldown child compilation instead of babel and esbuild",
   "keywords": [
     "sanity-io",
@@ -42,8 +42,8 @@
   "dependencies": {
     "@vanilla-extract/css": "^1.21.1",
     "javascript-stringify": "^2.1.0",
-    "rolldown": "~1.1.5",
-    "yuku-parser": "^0.6.1"
+    "rolldown": "~1.2.0",
+    "yuku-parser": "^0.6.4"
   },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
