@@ -43,7 +43,7 @@ pnpm --filter @sanity/vanilla-extract-integration bench
 # corpus size: VE_BENCH_DEBUG_IDS_FILES=2500 pnpm --filter @sanity/vanilla-extract-integration bench
 ```
 
-Last measured (2026-07-15, Node 24.18.0, Linux x64, 4-core Intel Xeon; rolldown 1.2.0, yuku-parser 0.6.1): yuku-parser parses ~2x faster — 57.6ms vs 117.3ms mean per 500-file corpus pass, 270ms vs 576ms at 2500 files (cold import 9.0ms vs 6.6ms). **yuku-parser ships as the production backend** on that win; it's effectively free dependency-wise since the yuku toolchain is already in the install graph of rolldown-based setups (`rolldown-plugin-dts`, used by tsdown and `@sanity/pkg-utils`, parses with it). `rolldown/parseAst` stays in the bench (rolldown is a dependency regardless, for `compile()`) so the comparison remains reproducible as both parsers evolve.
+Last measured (2026-07-16, Node 24.18.0, Linux x64, 4-core Intel Xeon; rolldown 1.1.5, yuku-parser 0.6.1): yuku-parser parses ~2x faster — 59.7ms vs 121.0ms mean per 500-file corpus pass, 278ms vs 593ms at 2500 files (cold import 9.0ms vs 6.6ms). **yuku-parser ships as the production backend** on that win; it's effectively free dependency-wise since the yuku toolchain is already in the install graph of rolldown-based setups (`rolldown-plugin-dts`, used by tsdown and `@sanity/pkg-utils`, parses with it). `rolldown/parseAst` stays in the bench (rolldown is a dependency regardless, for `compile()`) so the comparison remains reproducible as both parsers evolve.
 
 ## License
 

@@ -8,9 +8,9 @@
  * microsecond deltas surface at the scale of a large real-world codebase; a full-corpus pass
  * is one benchmark iteration.
  *
- * Measured 2026-07-15 on Node 24.18.0, Linux x64, 4-core Intel Xeon (rolldown 1.2.0,
- * yuku-parser 0.6.1): yuku-parser is ~2x faster per pass — 57.6ms vs 117.3ms mean over the
- * default 500-file corpus (1.24 MiB), 270ms vs 576ms over a 2500-file corpus; cold import is
+ * Measured 2026-07-16 on Node 24.18.0, Linux x64, 4-core Intel Xeon (rolldown 1.1.5,
+ * yuku-parser 0.6.1): yuku-parser is ~2x faster per pass — 59.7ms vs 121.0ms mean over the
+ * default 500-file corpus (1.24 MiB), 278ms vs 593ms over a 2500-file corpus; cold import is
  * 9.0ms vs 6.6ms. **yuku-parser ships as the production backend** on that 2x parse win — it's
  * effectively free dependency-wise, since the yuku toolchain is already in the install graph
  * transitively (rolldown-plugin-dts, used by tsdown and `@sanity/pkg-utils`, parses with it).
