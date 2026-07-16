@@ -78,8 +78,8 @@ describe('vite build', () => {
       configFile: false,
       logLevel: 'silent',
       plugins: [vanillaExtractPlugin()],
-      // `sanity build` explicitly enables `browser`; the compiler still evaluates `.css.ts`
-      // modules in Node and must not resolve vanilla-extract's browser runtime.
+      // `sanity build` explicitly enables `browser`; the compiler's SSR environment still
+      // native-externalizes vanilla-extract and collects through the injected adapter.
       resolve: {conditions: ['browser', 'module', 'import', 'default']},
       build: {write: false},
     })
@@ -310,7 +310,7 @@ describe('compiler', () => {
     expect(allCss).toContain('rgb(4, 5, 6)')
   })
 
-  test('filters browser resolution from the compiler server', async () => {
+  test('preserves parent resolution options in the compiler server', async () => {
     let compilerConfig: ResolvedConfig | undefined
     const parentConditions = ['browser', 'custom', 'module', 'import', 'default']
     const compiler = createTestCompiler(appRoot, false, {
@@ -339,15 +339,43 @@ describe('compiler', () => {
     expect(compiler.getCssForFile(stylesCssTs)?.css).toContain('rgb(1, 2, 3)')
 
     if (!compilerConfig) expect.unreachable('expected the compiler server config')
-    const expectedConditions = ['custom', 'module', 'import', 'default']
-    expect(compilerConfig.resolve.conditions).toEqual(expectedConditions)
-    expect(compilerConfig.resolve.mainFields).toEqual(['custom', 'module', 'main'])
-    expect(compilerConfig.ssr.resolve?.conditions).toEqual(expectedConditions)
-    expect(compilerConfig.ssr.resolve?.externalConditions).toEqual(expectedConditions)
+    expect(compilerConfig.resolve.conditions).toEqual(parentConditions)
+    expect(compilerConfig.resolve.mainFields).toEqual(['browser', 'custom', 'module', 'main'])
+    expect(compilerConfig.ssr.resolve?.conditions).toEqual(parentConditions)
+    expect(compilerConfig.ssr.resolve?.externalConditions).toEqual(parentConditions)
     const ssrEnvironment = compilerConfig.environments['ssr']
     if (!ssrEnvironment) expect.unreachable('expected the compiler SSR environment')
-    expect(ssrEnvironment.resolve.conditions).toEqual(expectedConditions)
-    expect(ssrEnvironment.resolve.externalConditions).toEqual(expectedConditions)
+    expect(ssrEnvironment.resolve.conditions).toEqual(parentConditions)
+    expect(ssrEnvironment.resolve.externalConditions).toEqual(parentConditions)
+  })
+
+  test('collects CSS when the parent forces SSR dependencies to be inlined', async () => {
+    let compilerConfig: ResolvedConfig | undefined
+    const compiler = createTestCompiler(appRoot, false, {
+      ssr: {noExternal: true},
+      plugins: [
+        {
+          name: 'capture-compiler-config',
+          configResolved(config) {
+            compilerConfig = config
+          },
+        },
+      ],
+    })
+
+    const result = await compiler.processVanillaFile(stylesCssTs)
+
+    expect(result.source).toContain('.vanilla.css')
+    expect(compiler.getCssForFile(stylesCssTs)?.css).toContain('rgb(1, 2, 3)')
+    if (!compilerConfig) expect.unreachable('expected the compiler server config')
+    expect(compilerConfig.environments['ssr']?.resolve.noExternal).toBe(true)
+    expect(compilerConfig.environments['ssr']?.resolve.external).toEqual(
+      expect.arrayContaining([
+        '@vanilla-extract/css',
+        '@vanilla-extract/css/fileScope',
+        '@vanilla-extract/css/adapter',
+      ]),
+    )
   })
 
   test('collects transitive watch files', async () => {

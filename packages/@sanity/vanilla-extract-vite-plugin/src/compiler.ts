@@ -48,8 +48,15 @@ const globalAdapterStore = globalThis as typeof globalThis & {
   [GLOBAL_ADAPTER_KEY]?: Adapter
 }
 
-function withoutBrowser(values: string[] | undefined): string[] | undefined {
-  return values?.filter((value) => value !== 'browser')
+const VANILLA_EXTRACT_EXTERNALS = [
+  '@vanilla-extract/css',
+  '@vanilla-extract/css/fileScope',
+  '@vanilla-extract/css/adapter',
+]
+
+function mergeExternals(...values: (true | string[] | undefined)[]): true | string[] {
+  if (values.includes(true)) return true
+  return [...new Set(values.flatMap((value) => (Array.isArray(value) ? value : [])))]
 }
 
 interface ModuleScanResult {
@@ -195,9 +202,7 @@ export interface CreateCompilerOptions {
    */
   cssImportSpecifier?: (filePath: string) => string
   /**
-   * Vite config forwarded to the internal compiler server (plugins, aliases, etc). Browser
-   * entries are omitted from resolve conditions and main fields because it evaluates modules
-   * in Node; all other entries are preserved.
+   * Vite config forwarded to the internal compiler server (plugins, aliases, etc).
    */
   viteConfig?: ViteUserConfig
   /**
@@ -236,6 +241,11 @@ async function createCompilerServer({
   onFileRemoved: (filePath: string) => void
 }) {
   const pkg = getPackageInfo(root)
+  const compilerExternals = mergeExternals(
+    viteConfig.ssr?.external,
+    viteConfig.environments?.['ssr']?.resolve?.external,
+    VANILLA_EXTRACT_EXTERNALS,
+  )
 
   const server = await createServer({
     ...viteConfig,
@@ -262,21 +272,18 @@ async function createCompilerServer({
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
     },
-    // Parent app configs (notably `sanity build`) can enable the `browser` condition. Omit it
-    // from every resolver the ModuleRunner can use while preserving custom conditions: this
-    // server evaluates `.css.ts` modules in Node, where vanilla-extract's browser runtime would
-    // export class names without collecting their CSS through our adapter.
-    resolve: {
-      ...viteConfig.resolve,
-      conditions: withoutBrowser(viteConfig.resolve?.conditions),
-      mainFields: withoutBrowser(viteConfig.resolve?.mainFields),
-    },
-    ssr: {
-      ...viteConfig.ssr,
-      resolve: {
-        ...viteConfig.ssr?.resolve,
-        conditions: withoutBrowser(viteConfig.ssr?.resolve?.conditions),
-        externalConditions: withoutBrowser(viteConfig.ssr?.resolve?.externalConditions),
+    // `ModuleRunner` only native-imports bare dependencies that its SSR environment marks as
+    // external. This must override a parent `noExternal: true`: returning an absolute
+    // `external: true` id from `resolveId` is too late, because Vite rewrites it to `/@fs/…`
+    // and evaluates it inline.
+    environments: {
+      ...viteConfig.environments,
+      ssr: {
+        ...viteConfig.environments?.['ssr'],
+        resolve: {
+          ...viteConfig.environments?.['ssr']?.resolve,
+          external: compilerExternals,
+        },
       },
     },
     // Vite's default SSR externalization applies: project files and linked packages are

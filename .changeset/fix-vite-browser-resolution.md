@@ -2,4 +2,4 @@
 "@sanity/vanilla-extract-vite-plugin": patch
 ---
 
-fix: preserve extracted CSS when parent Vite configs enable the `browser` resolve condition
+Fix `.css.ts` evaluation when parent Vite configs force SSR dependencies to be inlined
