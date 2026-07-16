@@ -191,6 +191,15 @@ describe('neutral platform resolution', () => {
   })
 })
 
+describe('checks option', () => {
+  test('enables Rolldown circularDependency warnings by default', async () => {
+    // Rolldown itself defaults `checks.circularDependency` to `false`; this config opts in so
+    // import cycles surface as build warnings. Override with mergeConfig if needed.
+    // https://rolldown.rs/reference/InputOptions.checks#circulardependency
+    expect((await defineConfig()).checks).toEqual({circularDependency: true})
+  })
+})
+
 describe('unexposed options', () => {
   test('lean on tsdown defaults, customizable in userland through `mergeConfig`', async () => {
     // Options not in `PackageOptions` (e.g. `hash`, with its collision-preventing hashed chunk

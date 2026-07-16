@@ -359,6 +359,23 @@ export default defineConfig({
 })
 ```
 
+## checks
+
+Rolldown's [`checks.circularDependency`](https://rolldown.rs/reference/InputOptions.checks#circulardependency)
+warning is enabled by default (Rolldown itself defaults it to `false`). Circular imports inflate
+bundle size and can cause execution-order issues, so library builds surface them as warnings.
+
+To turn the warning off, merge over the returned config:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  checks: {circularDependency: false},
+})
+```
+
 ## Everything else: `mergeConfig`
 
 `defineConfig` deliberately only exposes options you're likely to change. For anything else, merge
