@@ -15,6 +15,8 @@ export interface FixtureDescription {
   directory: string
   plainModules: number
   styleModules: number
+  /** `production` modules are sized like real source files; `minimal` keeps near-empty ones. */
+  moduleShape: 'production' | 'minimal'
 }
 
 export interface FixtureManifest {
@@ -38,7 +40,8 @@ function isFixtureDescription(value: unknown): value is FixtureDescription {
     isRecord(value) &&
     typeof value['directory'] === 'string' &&
     typeof value['plainModules'] === 'number' &&
-    typeof value['styleModules'] === 'number'
+    typeof value['styleModules'] === 'number' &&
+    (value['moduleShape'] === 'production' || value['moduleShape'] === 'minimal')
   )
 }
 
