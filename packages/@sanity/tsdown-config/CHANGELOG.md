@@ -1,5 +1,13 @@
 # @sanity/tsdown-config
 
+## 0.19.0
+
+### Minor Changes
+
+- [#3059](https://github.com/sanity-io/pkg-utils/pull/3059) [`b328999`](https://github.com/sanity-io/pkg-utils/commit/b328999836df27ac878c1db8214163b70840cf9a) Thanks [@stipsan](https://github.com/stipsan)! - Enable Rolldown's `checks.circularDependency` warning by default (Rolldown itself defaults it to `false`), so import cycles surface during Sanity library builds. Override with `mergeConfig(..., {checks: {circularDependency: false}})` if needed.
+
+- [#3050](https://github.com/sanity-io/pkg-utils/pull/3050) [`8aa451c`](https://github.com/sanity-io/pkg-utils/commit/8aa451c84675e9c57dc7238525449f48fc7dcf05) Thanks [@stipsan](https://github.com/stipsan)! - Expose tsdown's experimental `css` option on `PackageOptions` and forward it as-is (requires `@tsdown/css` in the project — this package does not depend on it). Safe to combine with `vanillaExtract` for packages that use both vanilla-extract and CSS modules; the pipelines write to `bundle.css` and `style.css` by default and do not collide.
+
 ## 0.18.0
 
 ### Minor Changes
