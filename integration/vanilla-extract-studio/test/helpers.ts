@@ -1,5 +1,6 @@
 import {spawn, type ChildProcess} from 'node:child_process'
 import {readdir, readFile} from 'node:fs/promises'
+import {createRequire} from 'node:module'
 import {createServer} from 'node:net'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
@@ -7,7 +8,15 @@ import {fileURLToPath} from 'node:url'
 export const studioRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export const outputRoot = path.join(studioRoot, 'output')
 
-const sanityBin = path.join(studioRoot, 'node_modules', '.bin', 'sanity')
+/**
+ * The `sanity` CLI entry, resolved to the package's real JS bin script and spawned through
+ * `process.execPath` — the `node_modules/.bin` shims are platform-specific (`sanity` on
+ * POSIX, `sanity.cmd` on Windows).
+ */
+const sanityBinScript = (() => {
+  const packageJsonPath = createRequire(import.meta.url).resolve('sanity/package.json')
+  return path.join(path.dirname(packageJsonPath), 'bin/sanity')
+})()
 
 /** The two implementations under test; `upstream` is the reference for expected output. */
 export type PluginImplementation = 'fork' | 'upstream'
@@ -49,7 +58,7 @@ export function runSanityCommand(
   variantEnv: Record<string, string>,
 ): Promise<SanityCommandResult> {
   return new Promise((resolve, reject) => {
-    const child = spawn(sanityBin, args, {
+    const child = spawn(process.execPath, [sanityBinScript, ...args], {
       cwd: studioRoot,
       env: commandEnv(implementation, variantEnv),
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -172,8 +181,8 @@ export async function startSanityDev(
 ): Promise<DevServerHandle> {
   const port = await findFreePort()
   const child: ChildProcess = spawn(
-    sanityBin,
-    ['dev', '--host', '127.0.0.1', '--port', String(port)],
+    process.execPath,
+    [sanityBinScript, 'dev', '--host', '127.0.0.1', '--port', String(port)],
     {
       cwd: studioRoot,
       env: commandEnv(implementation, variantEnv),
