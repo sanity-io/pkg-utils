@@ -243,9 +243,7 @@ function assertIdentifier(className: string, identifiers: IdentifierMode): void 
 function assertBuildVariant(artifact: BuildArtifact, variant: BuildVariant): void {
   assertIdentifier(artifact.className, variant.identifiers)
   expect(artifact.stylesheetLinkCount).toBeGreaterThan(0)
-  expect(artifact.markerColor).toBe(
-    variant.cssMinify || variant.cssTarget === 'chrome61' ? 'hex' : 'rgb',
-  )
+  expect(artifact.markerColor).toBe(variant.cssMinify ? 'hex' : 'rgb')
 
   if (variant.cssTarget === 'chrome61') {
     expect(artifact.declarations).not.toContain('inset:0')
@@ -290,12 +288,14 @@ function findSchemaMarker(value: unknown): string | undefined {
 async function extractSchema(plugin: PluginKind, identifiers: IdentifierMode): Promise<unknown> {
   const outputPath = path.join(temporaryRoot, 'schema', `${identifiers}-${plugin}.json`)
   await mkdir(path.dirname(outputPath), {recursive: true})
+  // The CLI joins `--path` to the Studio root rather than resolving an absolute path.
+  const outputArgument = path.relative(fixtureRoot, outputPath)
   await runSanity(
     [
       'schemas',
       'extract',
       '--path',
-      outputPath,
+      outputArgument,
       '--workspace',
       'default',
       '--enforce-required-fields',
