@@ -310,18 +310,18 @@ describe('compiler', () => {
     expect(allCss).toContain('rgb(4, 5, 6)')
   })
 
-  test('forces Node resolution in the compiler server', async () => {
+  test('filters browser resolution from the compiler server', async () => {
     let compilerConfig: ResolvedConfig | undefined
-    const browserConditions = ['browser', 'module', 'import', 'default']
+    const parentConditions = ['browser', 'custom', 'module', 'import', 'default']
     const compiler = createTestCompiler(appRoot, false, {
       resolve: {
-        conditions: browserConditions,
-        mainFields: ['browser', 'module', 'main'],
+        conditions: parentConditions,
+        mainFields: ['browser', 'custom', 'module', 'main'],
       },
       ssr: {
         resolve: {
-          conditions: browserConditions,
-          externalConditions: browserConditions,
+          conditions: parentConditions,
+          externalConditions: parentConditions,
         },
       },
       plugins: [
@@ -339,15 +339,13 @@ describe('compiler', () => {
     expect(compiler.getCssForFile(stylesCssTs)?.css).toContain('rgb(1, 2, 3)')
 
     if (!compilerConfig) expect.unreachable('expected the compiler server config')
-    expect(compilerConfig.resolve.conditions).toEqual(['node', 'import', 'module', 'default'])
-    expect(compilerConfig.resolve.mainFields).toEqual(['module', 'jsnext:main', 'jsnext', 'main'])
-    expect(compilerConfig.ssr.resolve?.conditions).toEqual(['node', 'import', 'module', 'default'])
-    expect(compilerConfig.ssr.resolve?.externalConditions).toEqual([
-      'node',
-      'import',
-      'module',
-      'default',
-    ])
+    const expectedConditions = ['custom', 'module', 'import', 'default']
+    expect(compilerConfig.resolve.conditions).toEqual(expectedConditions)
+    expect(compilerConfig.resolve.mainFields).toEqual(['custom', 'module', 'main'])
+    expect(compilerConfig.ssr.resolve?.conditions).toEqual(expectedConditions)
+    expect(compilerConfig.ssr.resolve?.externalConditions).toEqual(expectedConditions)
+    expect(compilerConfig.environments.ssr.resolve.conditions).toEqual(expectedConditions)
+    expect(compilerConfig.environments.ssr.resolve.externalConditions).toEqual(expectedConditions)
   })
 
   test('collects transitive watch files', async () => {
