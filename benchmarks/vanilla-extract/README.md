@@ -83,15 +83,16 @@ developer hardware. The versions table printed with every run includes the core 
 stay comparable.
 
 For cross-hardware reference, the same suite (same versions, rolldown 1.1.5) run on an Apple
-M4 Max (16 cores, darwin-arm64, 2026-07-16) measured: library build 1.83x (baseline),
-1.42–1.55x (minify/target variants), and 1.99x (debug identifiers) in favor of Rolldown + the
-Sanity plugin; Vite build 1.37x/1.53x (short/debug identifiers); dev HMR 1.13x/1.17x in the
-Sanity plugin's favor (high variance, rme up to ±18%); hook-filter stress 1.51–1.71x. With the
-Sanity side's child compilations now on rolldown, the ratios land in a similar 1.4–2x band on
-both runners — absolute per-sample times are dominated by process spawn and I/O rather than
-core count, so the pre-vendoring observation that more cores widen the library-build gap
-(2.68x on the M4 Max vs 1.6x on the 4-core runner, when the Sanity side still compiled with
-esbuild) no longer applies to the current pipeline.
+M4 Max (16 cores, darwin-arm64, 2026-07-16) measured: library build 1.59–1.63x
+(short-identifier variants) and 1.90x (debug identifiers) in favor of Rolldown + the Sanity
+plugin; Vite build 1.36x/1.47x (short/debug identifiers) and 1.43x on the kitchen-sink case
+(1,553ms vs 1,087ms); dev HMR 1.01–1.15x in the Sanity plugin's favor (high variance, rme up
+to ±27%); hook-filter stress 1.36–1.59x. With the Sanity side's child compilations now on
+rolldown, the ratios land in a similar 1.4–2x band on both runners — absolute per-sample times
+are dominated by process spawn and I/O rather than core count, so the pre-vendoring
+observation that more cores widen the library-build gap (2.68x on the M4 Max vs 1.6x on the
+4-core runner, when the Sanity side still compiled with esbuild) no longer applies to the
+current pipeline.
 
 ### Library build, 500 TS + 100 CSS modules (5 samples each)
 
