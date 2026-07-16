@@ -1,11 +1,17 @@
 ---
 '@sanity/vanilla-extract-vite-plugin': patch
+'@sanity/vanilla-extract-integration': patch
 ---
 
-fix: extract CSS when the parent Vite config enables the `browser` resolve condition
+fix: keep Node resolution when evaluating `.css.ts` (Studio build / schema extract)
 
-The compiler server now strips `browser` from forwarded resolve conditions and mainFields
-(`resolve`, `ssr.resolve`, and `environments.ssr.resolve`) when evaluating `.css.ts` modules,
-while keeping the parent's other conditions. Without this, configs like `sanity build` could
-resolve the browser build of `@vanilla-extract/css`, emit class names without rules, and drop
-virtual `.vanilla.css` imports from production bundles.
+`@sanity/vanilla-extract-vite-plugin`: the compiler server strips `browser` from forwarded
+resolve conditions/mainFields (`resolve`, `ssr.resolve`, `environments.ssr.resolve`) and never
+forwards parent `ssr.noExternal: true`. Vite's `ModuleRunner` cannot evaluate inlined CJS
+(unlike upstream's `vite-node` + `noExternal: true`), which caused `module is not defined`
+during `sanity schema extract` / TypeGen; inheriting `browser` conditions dropped extracted
+CSS in `sanity build`.
+
+`@sanity/vanilla-extract-integration`: pin rolldown `resolve` to esbuild's `platform: 'node'`
+defaults (`mainFields: ['main', 'module']`, `conditionNames: ['module']`, no `browser` alias
+fields) so dual-shipped packages resolve the same way as before the esbuild → rolldown swap.

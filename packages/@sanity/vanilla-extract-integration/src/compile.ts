@@ -44,6 +44,16 @@ export async function compile({
     input: [filePath],
     cwd,
     platform: 'node',
+    // Pin esbuild `platform: 'node'` resolve defaults explicitly so a future rolldown change
+    // (or accidental `browser` condition) cannot pull browser builds of dual-shipped packages
+    // into the `.css.ts` evaluation graph. Matches `@vanilla-extract/integration`'s esbuild
+    // path: mainFields `main`/`module` (no `browser`), bundler `module` condition, no
+    // package.json `browser` field remapping.
+    resolve: {
+      mainFields: ['main', 'module'],
+      conditionNames: ['module'],
+      aliasFields: [],
+    },
     external: [/^@vanilla-extract($|\/)/],
     logLevel: 'silent',
     plugins: [

@@ -214,18 +214,29 @@ type ResolveConditionFields = {
   conditions?: string[]
   externalConditions?: string[]
   mainFields?: string[]
+  noExternal?: unknown
 }
 
-/** Forwards resolve fields with `browser` stripped from any list the parent set. */
-function withoutBrowserResolveFields<T extends ResolveConditionFields>(resolve: T): T {
+/**
+ * Forwards resolve fields with `browser` stripped and `noExternal` cleared.
+ *
+ * Upstream `@vanilla-extract/compiler` sets `ssr.noExternal: true` because `vite-node` can
+ * evaluate inlined CJS. Vite's native `ModuleRunner` cannot (`module is not defined` on
+ * packages like `picocolors`). Parent `noExternal` must never reach the compiler — including
+ * when Vite 8 has folded it into `environments.ssr.resolve.noExternal`.
+ */
+function sanitizeCompilerResolve<T extends ResolveConditionFields>(resolve: T): T {
+  const {noExternal: _noExternal, ...rest} = resolve
   return {
-    ...resolve,
-    ...(resolve.conditions ? {conditions: withoutBrowser(resolve.conditions)} : undefined),
-    ...(resolve.externalConditions
-      ? {externalConditions: withoutBrowser(resolve.externalConditions)}
+    ...rest,
+    ...(rest.conditions ? {conditions: withoutBrowser(rest.conditions)} : undefined),
+    ...(rest.externalConditions
+      ? {externalConditions: withoutBrowser(rest.externalConditions)}
       : undefined),
-    ...(resolve.mainFields ? {mainFields: withoutBrowser(resolve.mainFields)} : undefined),
-  }
+    ...(rest.mainFields ? {mainFields: withoutBrowser(rest.mainFields)} : undefined),
+    // Force default node_modules externalization for ModuleRunner
+    noExternal: [],
+  } as T
 }
 
 /** Invalidates the runner's evaluated modules for a changed file, and their importers. */
@@ -282,39 +293,24 @@ async function createCompilerServer({
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
     },
-    // Strip `browser` from every resolve-condition surface the parent may have set. Vite 8
-    // merges `resolve` / `ssr.resolve` / `environments.ssr.resolve`, so filtering only the
-    // top-level list still leaves `browser` in the SSR environment's merged conditions.
-    ...(viteConfig.resolve
-      ? {resolve: withoutBrowserResolveFields(viteConfig.resolve)}
-      : undefined),
-    ...(viteConfig.ssr
-      ? {
-          ssr: {
-            ...viteConfig.ssr,
-            ...(viteConfig.ssr.resolve
-              ? {resolve: withoutBrowserResolveFields(viteConfig.ssr.resolve)}
-              : undefined),
-          },
-        }
-      : undefined),
-    ...(viteConfig.environments?.['ssr']
-      ? {
-          environments: {
-            ...viteConfig.environments,
-            ssr: {
-              ...viteConfig.environments['ssr'],
-              ...(viteConfig.environments['ssr'].resolve
-                ? {
-                    resolve: withoutBrowserResolveFields(
-                      viteConfig.environments['ssr'].resolve,
-                    ),
-                  }
-                : undefined),
-            },
-          },
-        }
-      : undefined),
+    // Sanitize every resolve-condition surface the parent may have set:
+    // - strip `browser` (Vite 8 merges resolve / ssr.resolve / environments.ssr.resolve)
+    // - force `noExternal: []` so ModuleRunner never inlines CJS (unlike upstream's
+    //   vite-node + `ssr.noExternal: true`)
+    resolve: sanitizeCompilerResolve(viteConfig.resolve ?? {}),
+    ssr: {
+      ...viteConfig.ssr,
+      // Top-level `ssr.noExternal` must not reach the compiler server
+      noExternal: [],
+      resolve: sanitizeCompilerResolve(viteConfig.ssr?.resolve ?? {}),
+    },
+    environments: {
+      ...viteConfig.environments,
+      ssr: {
+        ...viteConfig.environments?.['ssr'],
+        resolve: sanitizeCompilerResolve(viteConfig.environments?.['ssr']?.resolve ?? {}),
+      },
+    },
     // Vite's default SSR externalization applies: project files and linked packages are
     // evaluated through the runner (so they're cached in the module graph), while node_modules
     // dependencies are externalized to real Node imports — required for CJS dependencies,

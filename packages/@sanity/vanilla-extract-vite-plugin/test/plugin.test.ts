@@ -368,7 +368,7 @@ describe('compiler', () => {
           configResolved(config) {
             compilerResolveConditions = config.resolve.conditions
             compilerSsrConditions = config.ssr.resolve?.conditions
-            compilerEnvSsrConditions = config.environments['ssr']?.resolve.conditions
+            compilerEnvSsrConditions = config.environments['ssr']?.resolve?.conditions
             compilerMainFields = config.resolve.mainFields
           },
         },
