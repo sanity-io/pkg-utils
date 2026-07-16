@@ -61,12 +61,15 @@ function createTestCompiler(root: string, enableFileWatcher = false): Compiler {
 }
 
 describe('vite build', () => {
-  test('feeds the extracted CSS through Vite’s CSS pipeline', async () => {
+  test('extracts CSS when the parent enables the browser resolve condition', async () => {
     const result = await build({
       root: appRoot,
       configFile: false,
       logLevel: 'silent',
       plugins: [vanillaExtractPlugin()],
+      // `sanity build` explicitly enables `browser`; the compiler still evaluates `.css.ts`
+      // modules in Node and must not resolve vanilla-extract's browser runtime.
+      resolve: {conditions: ['browser', 'module', 'import', 'default']},
       build: {write: false},
     })
     const {output} = Array.isArray(result) ? result[0]! : (result as Rollup.RollupOutput)
