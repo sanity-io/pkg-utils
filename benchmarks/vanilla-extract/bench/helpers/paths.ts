@@ -20,6 +20,8 @@ export interface FixtureDescription {
 export interface FixtureManifest {
   version: 1
   representative: FixtureDescription
+  /** App-scale graph for the kitchen-sink vite build case (debug ids, css minify + target). */
+  heavy: FixtureDescription
   stress: FixtureDescription[]
   hmr: {
     official: FixtureDescription
@@ -45,6 +47,7 @@ function isFixtureManifest(value: unknown): value is FixtureManifest {
     !isRecord(value) ||
     value['version'] !== 1 ||
     !isFixtureDescription(value['representative']) ||
+    !isFixtureDescription(value['heavy']) ||
     !Array.isArray(value['stress']) ||
     !value['stress'].every(isFixtureDescription)
   ) {

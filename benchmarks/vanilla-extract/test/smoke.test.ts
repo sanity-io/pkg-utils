@@ -26,6 +26,20 @@ function assertLibraryVariantCss(outputDirectory: string, variant: BuildVariant)
   } else {
     expect(css).toMatch(/inset\s*:/)
   }
+  assertIdentifierFormat(css, variant.identifiers)
+}
+
+/**
+ * With `debug` identifiers, the injected debug IDs (derived from the fixtures'
+ * `export const className… = style(…)` declarations) must appear in the generated class
+ * names; with `short`, class names are bare hashes and the export names never surface.
+ */
+function assertIdentifierFormat(css: string, identifiers: BuildVariant['identifiers']): void {
+  if (identifiers === 'debug') {
+    expect(css).toMatch(/className\d+__/)
+  } else {
+    expect(css).not.toContain('className')
+  }
 }
 
 const variantCases = buildVariants.map((variant) => [variant.label, variant] as const)
@@ -48,16 +62,23 @@ describe('benchmark configurations', () => {
     )
   })
 
-  // No variants here: Vite handles minify/target itself, identically for both plugins, so the
-  // benchmark only compares the baseline configuration
-  test.each(['official', 'sanity'] as const)(
-    'Vite + %s plugin emits an application and extracted CSS',
-    async (plugin) => {
-      const outputDirectory = path.join(generatedRoot, `output/smoke-vite-${plugin}`)
+  // No minify/target variants here: Vite handles those itself, identically for both plugins.
+  // Identifier formatting is varied, matching the benchmark matrix.
+  test.each([
+    ['official', 'short'],
+    ['official', 'debug'],
+    ['sanity', 'short'],
+    ['sanity', 'debug'],
+  ] as const)(
+    'Vite + %s plugin emits an application and extracted CSS with %s identifiers',
+    async (plugin, identifiers) => {
+      const outputDirectory = path.join(generatedRoot, `output/smoke-vite-${plugin}-${identifiers}`)
       await rm(outputDirectory, {recursive: true, force: true})
-      await runViteBuild(fixtureRoot, outputDirectory, plugin)
+      await runViteBuild(fixtureRoot, outputDirectory, plugin, {identifiers})
       await assertViteOutput(outputDirectory)
-      expect(readCssOutputSync(outputDirectory)).toContain('rgb(1, 2, 3)')
+      const css = readCssOutputSync(outputDirectory)
+      expect(css).toContain('rgb(1, 2, 3)')
+      assertIdentifierFormat(css, identifiers)
     },
     120_000,
   )

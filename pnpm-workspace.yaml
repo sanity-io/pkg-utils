@@ -69,6 +69,10 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/pkg-utils': workspace:*
+  # Align every rolldown copy on the version vite 8 pins (~1.1.4) so vite, tsdown,
+  # rolldown-plugin-dts, the workspace packages, and third-party optional consumers all share
+  # one copy (and one Plugin type). Bump when vite updates its pinned rolldown.
+  rolldown: 1.1.5
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
