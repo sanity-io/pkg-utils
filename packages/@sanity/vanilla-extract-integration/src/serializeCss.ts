@@ -27,12 +27,16 @@ export async function serializeCss(source: string): Promise<string> {
 
 /**
  * Reverses {@link serializeCss}.
+ *
+ * The flag can only ever be the first character (`#` is not in the base64url alphabet), so
+ * this checks and strips the prefix — a tightening of upstream's `indexOf`/`replace`, with
+ * identical behavior for every string {@link serializeCss} can produce.
  * @internal
  */
 export async function deserializeCss(source: string): Promise<string> {
-  if (source.indexOf(compressionFlag) > -1) {
+  if (source.startsWith(compressionFlag)) {
     const decompressedSource = await unzip(
-      Buffer.from(source.replace(compressionFlag, ''), 'base64url'),
+      Buffer.from(source.slice(compressionFlag.length), 'base64url'),
     )
     return decompressedSource.toString('utf-8')
   }

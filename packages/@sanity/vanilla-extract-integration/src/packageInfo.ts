@@ -46,11 +46,12 @@ const packageInfoCache = new Map<string, PackageInfo>()
 
 /**
  * Resolves the nearest `package.json` with a `name` field, walking up from `cwd` (and past
- * nameless `package.json` files). Results are cached per starting directory.
+ * nameless `package.json` files). Results are cached per starting directory (normalized, so
+ * relative and absolute spellings of the same directory share an entry).
  * @public
  */
 export function getPackageInfo(cwd?: string | null): PackageInfo {
-  const resolvedCwd = cwd ?? process.cwd()
+  const resolvedCwd = path.resolve(cwd ?? process.cwd())
   const cachedValue = packageInfoCache.get(resolvedCwd)
 
   if (cachedValue) {

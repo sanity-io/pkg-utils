@@ -9,7 +9,7 @@ A vendored port of [`@vanilla-extract/integration`](https://github.com/vanilla-e
 | module evaluation via the **`eval`** package                                                                    | `node:vm.compileFunction` + `node:module.createRequire`                                                                       |
 | `find-up`, `dedent`, `mlly` dependencies                                                                        | inlined (walk-up loop, plain strings, vendored `detectSyntax` regexes)                                                        |
 
-The only runtime dependencies left are `rolldown` (which the host toolchain — tsdown, Vite 8, or raw rolldown — ships anyway, so it dedupes), `yuku-parser` (already transitive in rolldown-based toolchains through `rolldown-plugin-dts`), `@vanilla-extract/css`, and `javascript-stringify`.
+The only runtime dependencies left are `rolldown` (which the host toolchain — tsdown, Vite 8, or raw rolldown — ships anyway; the wide `^1.1.5` range lets package managers reuse the host's copy when its version satisfies it, though hosts pinning older minors can still resolve a second copy), `yuku-parser` (already transitive in rolldown-based toolchains through `rolldown-plugin-dts`), `@vanilla-extract/css`, and `javascript-stringify`.
 
 ## API
 

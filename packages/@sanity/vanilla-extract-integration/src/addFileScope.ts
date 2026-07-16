@@ -33,6 +33,10 @@ export function addFileScope({
   const normalizedPath = normalizePath(path.relative(rootPath, filePath))
   const {hasESM, isMixed} = detectSyntax(source)
 
+  // Keying on the module specifier (not on a `setFileScope(` call) is deliberate, matching
+  // upstream: a source that already imports the fileScope module cannot be wrapped again — the
+  // injected `import { setFileScope, endFileScope }` would duplicate its bindings and turn the
+  // module into a syntax error. An import without a call is out of contract and passes through.
   if (source.includes('@vanilla-extract/css/fileScope')) {
     source = source.replace(
       /setFileScope\(((\n|.)*?)\)/,
