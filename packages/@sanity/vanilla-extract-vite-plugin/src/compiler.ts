@@ -214,7 +214,11 @@ type ResolveConditionFields = {
   conditions?: string[]
   externalConditions?: string[]
   mainFields?: string[]
-  noExternal?: unknown
+  noExternal?: string | true | RegExp | (string | RegExp)[]
+}
+
+type SanitizedCompilerResolve = Omit<ResolveConditionFields, 'noExternal'> & {
+  noExternal: []
 }
 
 /**
@@ -225,18 +229,13 @@ type ResolveConditionFields = {
  * packages like `picocolors`). Parent `noExternal` must never reach the compiler — including
  * when Vite 8 has folded it into `environments.ssr.resolve.noExternal`.
  */
-function sanitizeCompilerResolve<T extends ResolveConditionFields>(resolve: T): T {
-  const {noExternal: _noExternal, ...rest} = resolve
-  return {
-    ...rest,
-    ...(rest.conditions ? {conditions: withoutBrowser(rest.conditions)} : undefined),
-    ...(rest.externalConditions
-      ? {externalConditions: withoutBrowser(rest.externalConditions)}
-      : undefined),
-    ...(rest.mainFields ? {mainFields: withoutBrowser(rest.mainFields)} : undefined),
-    // Force default node_modules externalization for ModuleRunner
-    noExternal: [],
-  } as T
+function sanitizeCompilerResolve(resolve: ResolveConditionFields): SanitizedCompilerResolve {
+  const {noExternal: _noExternal, conditions, externalConditions, mainFields, ...rest} = resolve
+  const sanitized: SanitizedCompilerResolve = {...rest, noExternal: []}
+  if (conditions) sanitized.conditions = withoutBrowser(conditions)
+  if (externalConditions) sanitized.externalConditions = withoutBrowser(externalConditions)
+  if (mainFields) sanitized.mainFields = withoutBrowser(mainFields)
+  return sanitized
 }
 
 /** Invalidates the runner's evaluated modules for a changed file, and their importers. */
