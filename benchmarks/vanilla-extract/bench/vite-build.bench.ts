@@ -7,6 +7,7 @@ import {fixturePath, generatedRoot, loadFixtureManifest} from './helpers/paths.t
 
 const manifest = await loadFixtureManifest()
 const fixtureRoot = fixturePath(manifest.representative)
+const heavyFixtureRoot = fixturePath(manifest.heavy)
 
 // No minify/target variants here: in the Vite comparison those are handled by Vite itself,
 // identically for both plugins, so they would only add identical work to both sides. The
@@ -33,3 +34,27 @@ for (const identifiers of ['short', 'debug'] as const) {
     }
   })
 }
+
+// The kitchen-sink case: an app-scale module graph built with dev-default debug identifiers
+// and a production CSS pipeline (minify + chrome61 lowering, handled by Vite identically for
+// both plugins) — the scenario where the per-module debug-ID transform dominates the plugin's
+// share of the build.
+describe(`vite build, kitchen sink: debug identifiers, css minify + target chrome61 (${manifest.heavy.plainModules} TS + ${manifest.heavy.styleModules} CSS modules)`, () => {
+  for (const plugin of ['official', 'sanity'] as const) {
+    const outputDirectory = path.join(generatedRoot, `output/vite-build-${plugin}-heavy`)
+    const packageName =
+      plugin === 'official' ? '@vanilla-extract/vite-plugin' : '@sanity/vanilla-extract-vite-plugin'
+
+    bench(
+      `Vite 8 + ${packageName}`,
+      async () => {
+        await runViteBuild(heavyFixtureRoot, outputDirectory, plugin, {
+          identifiers: 'debug',
+          cssMinify: true,
+          cssTarget: 'chrome61',
+        })
+      },
+      coldBuildOptions('build', outputDirectory, () => assertViteOutputSync(outputDirectory)),
+    )
+  }
+})

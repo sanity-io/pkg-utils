@@ -130,10 +130,18 @@ export function runViteBuild(
   fixtureRoot: string,
   outputDirectory: string,
   plugin: VitePluginKind,
-  options: {showWarnings?: boolean; identifiers?: 'short' | 'debug'} = {},
+  options: {
+    showWarnings?: boolean
+    identifiers?: 'short' | 'debug'
+    /** Vite's own `build.cssMinify` / `build.cssTarget`, identical work for both plugins. */
+    cssMinify?: boolean
+    cssTarget?: string
+  } = {},
 ): Promise<CommandResult> {
   return runPackageBin('vite', 'vite', ['build', '--config', configPaths.vite], {
     ...buildEnvironment(fixtureRoot, outputDirectory),
+    VE_BENCH_CSS_MINIFY: options.cssMinify ? '1' : '0',
+    VE_BENCH_CSS_TARGET: options.cssTarget ?? '',
     VE_BENCH_IDENTIFIERS: options.identifiers ?? 'short',
     VE_BENCH_LOG_LEVEL: options.showWarnings ? 'warn' : 'silent',
     VE_BENCH_PLUGIN: plugin,

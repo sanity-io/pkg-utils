@@ -48,7 +48,11 @@ extraction and are orthogonal to the per-module transform being measured.
 
 The Vite build comparison intentionally skips the minify/target variants: Vite handles minify
 and target itself, identically for either plugin, so varying them would only add identical work
-to both sides of the comparison.
+to both sides of the comparison. The exception is the kitchen-sink case, which builds an
+app-scale graph (5,000 unrelated TS modules + 500 `.css.ts` modules by default) with
+dev-default debug identifiers and a production CSS pipeline (`build.cssMinify` +
+`build.cssTarget: 'chrome61'`) — the scenario where the per-module debug-ID transform dominates
+the plugin's share of the build.
 
 Each benchmark process lazy-loads only the plugin under test — the competing implementation is
 never imported into the same process, so module-level state cannot cross-contaminate runs.
@@ -109,6 +113,12 @@ per `.css.ts` module, so the gap scales with style-module count.
 | ----------- | -----------------------------: | ------------------------------------: | ------------------- |
 | Short       |                      726.20 ms |                             511.28 ms | Sanity 1.42x faster |
 | Debug       |                      866.99 ms |                             541.99 ms | Sanity 1.60x faster |
+
+### Vite build kitchen sink, 5,000 TS + 500 CSS modules, debug identifiers, css minify + target chrome61 (5 samples each)
+
+| `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
+| -----------------------------: | ------------------------------------: | ------------------- |
+|                    2,382.40 ms |                           1,734.15 ms | Sanity 1.37x faster |
 
 ### Vite dev HMR (10 samples each)
 
@@ -196,6 +206,8 @@ All values are optional:
 | ---------------------------- | -------------------: | --------------------------------------------------- |
 | `VE_BENCH_MODULES`           |                `500` | Ordinary modules in the representative graph        |
 | `VE_BENCH_STYLES`            |                `100` | `.css.ts` modules in the representative graph       |
+| `VE_BENCH_HEAVY_MODULES`     |               `5000` | Ordinary modules in the kitchen-sink graph          |
+| `VE_BENCH_HEAVY_STYLES`      |                `500` | `.css.ts` modules in the kitchen-sink graph         |
 | `VE_BENCH_HMR_MODULES`       | representative value | Ordinary modules loaded by each HMR server          |
 | `VE_BENCH_HMR_STYLES`        | representative value | `.css.ts` importers invalidated by shared-theme HMR |
 | `VE_BENCH_STRESS_SIZES`      |        `0,1000,5000` | Ordinary-module counts in the hook-filter sweep     |

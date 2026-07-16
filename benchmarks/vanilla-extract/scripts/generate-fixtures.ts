@@ -17,6 +17,8 @@ interface FixtureDefinition {
 interface FixtureManifest {
   version: 1
   representative: FixtureDefinition
+  /** App-scale graph for the kitchen-sink vite build case (debug ids, css minify + target). */
+  heavy: FixtureDefinition
   stress: FixtureDefinition[]
   hmr: {
     official: FixtureDefinition
@@ -199,6 +201,8 @@ async function generateFixture(definition: FixtureDefinition): Promise<void> {
 
 const representativePlainModules = readInteger('VE_BENCH_MODULES', 500, 0)
 const representativeStyleModules = readInteger('VE_BENCH_STYLES', 100, 1)
+const heavyPlainModules = readInteger('VE_BENCH_HEAVY_MODULES', 5000, 0)
+const heavyStyleModules = readInteger('VE_BENCH_HEAVY_STYLES', 500, 1)
 const hmrPlainModules = readInteger('VE_BENCH_HMR_MODULES', representativePlainModules, 0)
 const hmrStyleModules = readInteger('VE_BENCH_HMR_STYLES', representativeStyleModules, 1)
 
@@ -208,6 +212,11 @@ const manifest: FixtureManifest = {
     directory: 'representative',
     plainModules: representativePlainModules,
     styleModules: representativeStyleModules,
+  },
+  heavy: {
+    directory: 'heavy',
+    plainModules: heavyPlainModules,
+    styleModules: heavyStyleModules,
   },
   stress: readStressSizes().map((plainModules) => ({
     directory: `stress-${plainModules}`,
@@ -233,6 +242,7 @@ await mkdir(generatedRoot, {recursive: true})
 
 const definitions = [
   manifest.representative,
+  manifest.heavy,
   ...manifest.stress,
   manifest.hmr.official,
   manifest.hmr.sanity,
