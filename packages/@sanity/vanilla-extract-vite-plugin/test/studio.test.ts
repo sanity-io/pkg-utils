@@ -3,7 +3,6 @@ import {readFileSync} from 'node:fs'
 import {mkdir, mkdtemp, readdir, readFile, rm} from 'node:fs/promises'
 import {createRequire} from 'node:module'
 import {createServer} from 'node:net'
-import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {afterAll, beforeAll, describe, expect, test} from 'vitest'
 
@@ -375,7 +374,11 @@ async function runDev(plugin: PluginKind, identifiers: IdentifierMode): Promise<
 
 describe.sequential('Sanity Studio integration parity', () => {
   beforeAll(async () => {
-    temporaryRoot = await mkdtemp(path.join(tmpdir(), 'vanilla-extract-sanity-studio-'))
+    // Sanity joins `schemas extract --path` to the Studio root. Keep artifacts on that root's
+    // drive so Windows does not turn `path.relative()` into an absolute cross-drive path.
+    const artifactsRoot = path.join(fixtureRoot, '.sanity')
+    await mkdir(artifactsRoot, {recursive: true})
+    temporaryRoot = await mkdtemp(path.join(artifactsRoot, 'vanilla-extract-studio-'))
   })
 
   afterAll(async () => {
