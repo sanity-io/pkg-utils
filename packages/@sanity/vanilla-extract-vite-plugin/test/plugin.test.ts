@@ -2,7 +2,14 @@ import {mkdir, rm, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {normalizePath} from '@sanity/vanilla-extract-integration'
-import {build, createServer, type Plugin, type Rollup} from 'vite'
+import {
+  build,
+  createServer,
+  type Plugin,
+  type ResolvedConfig,
+  type Rollup,
+  type UserConfig,
+} from 'vite'
 import {afterEach, describe, expect, test} from 'vitest'
 import {createCompiler, vanillaExtractPlugin, type Compiler} from '../src/index.ts'
 
@@ -54,8 +61,12 @@ afterEach(async () => {
   await Promise.all(compilersToClose.splice(0).map((compiler) => compiler.close()))
 })
 
-function createTestCompiler(root: string, enableFileWatcher = false): Compiler {
-  const compiler = createCompiler({root, identifiers: 'debug', enableFileWatcher})
+function createTestCompiler(
+  root: string,
+  enableFileWatcher = false,
+  viteConfig?: UserConfig,
+): Compiler {
+  const compiler = createCompiler({root, identifiers: 'debug', enableFileWatcher, viteConfig})
   compilersToClose.push(compiler)
   return compiler
 }
@@ -297,6 +308,56 @@ describe('compiler', () => {
     const allCss = compiler.getAllCss()
     expect(allCss).toContain('rgb(1, 2, 3)')
     expect(allCss).toContain('rgb(4, 5, 6)')
+  })
+
+  test('forces Node resolution in the compiler server', async () => {
+    let compilerConfig: ResolvedConfig | undefined
+    const browserConditions = ['browser', 'module', 'import', 'default']
+    const compiler = createTestCompiler(appRoot, false, {
+      resolve: {
+        conditions: browserConditions,
+        mainFields: ['browser', 'module', 'main'],
+      },
+      ssr: {
+        resolve: {
+          conditions: browserConditions,
+          externalConditions: browserConditions,
+        },
+      },
+      plugins: [
+        {
+          name: 'capture-compiler-config',
+          configResolved(config) {
+            compilerConfig = config
+          },
+        },
+      ],
+    })
+
+    const result = await compiler.processVanillaFile(stylesCssTs)
+    expect(result.source).toContain('.vanilla.css')
+    expect(compiler.getCssForFile(stylesCssTs)?.css).toContain('rgb(1, 2, 3)')
+
+    if (!compilerConfig) expect.unreachable('expected the compiler server config')
+    expect(compilerConfig.resolve.conditions).toEqual(['node', 'import', 'module', 'default'])
+    expect(compilerConfig.resolve.mainFields).toEqual([
+      'module',
+      'jsnext:main',
+      'jsnext',
+      'main',
+    ])
+    expect(compilerConfig.ssr.resolve?.conditions).toEqual([
+      'node',
+      'import',
+      'module',
+      'default',
+    ])
+    expect(compilerConfig.ssr.resolve?.externalConditions).toEqual([
+      'node',
+      'import',
+      'module',
+      'default',
+    ])
   })
 
   test('collects transitive watch files', async () => {
