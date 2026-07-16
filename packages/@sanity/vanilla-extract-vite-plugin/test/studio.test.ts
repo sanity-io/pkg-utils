@@ -300,7 +300,13 @@ async function getFreePort(): Promise<number> {
     throw new Error('Could not allocate a TCP port')
   }
   await new Promise<void>((resolve, reject) => {
-    server.close((error) => (error ? reject(error) : resolve()))
+    server.close((error) => {
+      if (error) {
+        reject(error)
+        return
+      }
+      resolve()
+    })
   })
   return address.port
 }
