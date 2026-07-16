@@ -344,8 +344,10 @@ describe('compiler', () => {
     expect(compilerConfig.resolve.mainFields).toEqual(['custom', 'module', 'main'])
     expect(compilerConfig.ssr.resolve?.conditions).toEqual(expectedConditions)
     expect(compilerConfig.ssr.resolve?.externalConditions).toEqual(expectedConditions)
-    expect(compilerConfig.environments.ssr.resolve.conditions).toEqual(expectedConditions)
-    expect(compilerConfig.environments.ssr.resolve.externalConditions).toEqual(expectedConditions)
+    const ssrEnvironment = compilerConfig.environments['ssr']
+    if (!ssrEnvironment) expect.unreachable('expected the compiler SSR environment')
+    expect(ssrEnvironment.resolve.conditions).toEqual(expectedConditions)
+    expect(ssrEnvironment.resolve.externalConditions).toEqual(expectedConditions)
   })
 
   test('collects transitive watch files', async () => {
