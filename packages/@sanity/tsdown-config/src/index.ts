@@ -353,6 +353,11 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   )
 
   return defineTsdownConfig({
+    // Rolldown defaults `circularDependency` to `false`; enable it so Sanity library builds
+    // surface import cycles (bigger bundles / execution-order hazards) as warnings.
+    // Override via `mergeConfig(..., {checks: {circularDependency: false}})`.
+    // https://rolldown.rs/reference/InputOptions.checks#circulardependency
+    checks: {circularDependency: true},
     clean,
     css,
     define,
