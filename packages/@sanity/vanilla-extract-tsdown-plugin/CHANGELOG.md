@@ -1,5 +1,14 @@
 # @sanity/vanilla-extract-tsdown-plugin
 
+## 0.2.3
+
+### Patch Changes
+
+- [#3058](https://github.com/sanity-io/pkg-utils/pull/3058) [`685f9c6`](https://github.com/sanity-io/pkg-utils/commit/685f9c6015ba69c9efcb201745a395bf663088b4) Thanks [@stipsan](https://github.com/stipsan)! - Align every rolldown copy on the version vite 8 pins (`1.1.5`, via a pnpm override and `~1.1.5`/`1.1.5` ranges) so vite, tsdown, rolldown-plugin-dts, and the workspace packages all share one copy — and one `Plugin` type, making the cross-version `@ts-expect-error` suppressions from [#3051](https://github.com/sanity-io/pkg-utils/issues/3051) unnecessary. To be bumped when vite updates its pinned rolldown.
+
+- Updated dependencies [[`685f9c6`](https://github.com/sanity-io/pkg-utils/commit/685f9c6015ba69c9efcb201745a395bf663088b4)]:
+  - @sanity/vanilla-extract-rolldown-plugin@0.2.0
+
 ## 0.2.2
 
 ### Patch Changes
