@@ -12,6 +12,6 @@ forwards parent `ssr.noExternal: true`. Vite's `ModuleRunner` cannot evaluate in
 during `sanity schema extract` / TypeGen; inheriting `browser` conditions dropped extracted
 CSS in `sanity build`.
 
-`@sanity/vanilla-extract-integration`: pin rolldown `resolve` to esbuild's `platform: 'node'`
-defaults (`mainFields: ['main', 'module']`, `conditionNames: ['module']`, no `browser` alias
-fields) so dual-shipped packages resolve the same way as before the esbuild → rolldown swap.
+`@sanity/vanilla-extract-integration`: pin rolldown `resolve.mainFields` / `aliasFields` to the
+`platform: 'node'` defaults (no `browser` mainField or package.json `browser` remapping) so
+dual-shipped packages keep resolving the Node build after the esbuild → rolldown swap.
