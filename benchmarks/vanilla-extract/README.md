@@ -100,11 +100,11 @@ developer hardware. The versions table printed with every run includes the core 
 stay comparable.
 
 For cross-hardware reference, an Apple M4 Max (16 cores, darwin-arm64, 2026-07-16, same
-versions but the earlier near-empty fixture modules — predating the production-shaped fixtures
-the tables below use) measured: library build 1.59–1.63x (short-identifier variants) and 1.90x
-(debug identifiers) in favor of Rolldown + the Sanity plugin; Vite build 1.36x/1.47x
-(short/debug identifiers) and 1.43x on the kitchen-sink case; dev HMR 1.01–1.15x in the Sanity
-plugin's favor (high variance, rme up to ±27%); hook-filter stress 1.36–1.59x.
+versions and the same production-shaped fixtures as the tables below) measured: library build
+2.02–2.18x (short-identifier variants) and 2.47x (debug identifiers, 798ms vs 323ms) in favor
+of Rolldown + the Sanity plugin; Vite build 1.28x/1.58x (short/debug identifiers) and 1.48x on
+the kitchen-sink case (2,757ms vs 1,862ms); dev HMR a wash (1.12x Sanity on leaf edits, 1.05x
+official on theme edits, rme up to ±20%); hook-filter stress 1.37–1.71x.
 
 ### Library build, 500 TS + 100 CSS modules (5 samples each)
 
