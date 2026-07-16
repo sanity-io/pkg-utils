@@ -1,0 +1,10 @@
+{
+  "extends": "@sanity/tsconfig/strictest",
+  "include": ["src", "test", "sanity.cli.ts", "sanity.config.ts", "vitest.config.ts"],
+  "exclude": ["output", "dist", ".sanity"],
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "rootDir": ".",
+    "types": ["node"]
+  }
+}

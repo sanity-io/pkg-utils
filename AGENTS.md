@@ -6,13 +6,17 @@ This is the `@sanity/pkg-utils` monorepo: a pnpm workspace containing a build/to
 authoring npm packages (`packages/@sanity/pkg-utils`, wraps rolldown/rollup + API Extractor),
 supporting packages (`tsdown-config`, `tsconfig`, `parse-package-json`, the
 `vanilla-extract-*-plugin` packages), a `playground/*` fixture suite (~30 packages exercising
-build/typecheck scenarios), and a `css-playground/*` fixture suite (~20 packages verifying the
-conditional `bundle.css` export pattern across many frameworks/runtimes). There is **no
-long-running application/database** in this repo — it's a CLI/build-tool product; "running the
-product" means running its build/lint/test/typecheck commands (see root `package.json` `scripts`
-and `.github/workflows/main.yml` for the canonical commands, e.g. `pnpm build`, `pnpm lint`,
-`pnpm typecheck`, `pnpm test`, `pnpm knip`, `pnpm playground:build`/`:typecheck`,
-`pnpm css-playground:build`/`:test`; `css-playground/README.md` documents that suite in detail).
+build/typecheck scenarios), a `css-playground/*` fixture suite (~20 packages verifying the
+conditional `bundle.css` export pattern across many frameworks/runtimes), and an
+`integration/*` suite (a real Sanity Studio fixture comparing
+`@sanity/vanilla-extract-vite-plugin` against upstream `@vanilla-extract/vite-plugin` through
+the `sanity` CLI). There is **no long-running application/database** in this repo — it's a
+CLI/build-tool product; "running the product" means running its build/lint/test/typecheck
+commands (see root `package.json` `scripts` and `.github/workflows/main.yml` for the canonical
+commands, e.g. `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm knip`,
+`pnpm playground:build`/`:typecheck`, `pnpm css-playground:build`/`:test`,
+`pnpm integration:test`; `css-playground/README.md` and
+`integration/vanilla-extract-studio/README.md` document those suites in detail).
 
 ### Node version matters (tsdown requires Node ^22.18.0 || >=24.11.0)
 
@@ -77,3 +81,12 @@ sample-count overrides.
   `rgb(1, 2, 3)`, and writes a screenshot to `css-playground/verify/screenshots/`. See
   `css-playground/README.md` for the full manual/automated visual-verification workflow (dev
   servers for individual consumers, e.g. `pnpm --filter @css-playground/vite dev`).
+- `pnpm integration:test` runs `integration/vanilla-extract-studio`: a real Sanity Studio
+  fixture driven through `sanity dev`, `sanity build`, and `sanity schema extract` with
+  `@sanity/vanilla-extract-vite-plugin` and with upstream `@vanilla-extract/vite-plugin` as the
+  reference — the fork's CSS/class-name/schema output must match upstream exactly across
+  identifier (`short`/`debug`/custom prefix), `build.cssMinify`, and `build.cssTarget`
+  variants. **Run it whenever `@sanity/vanilla-extract-vite-plugin` or
+  `@sanity/vanilla-extract-integration` changes.** The suite spawns the CLI without `NODE_ENV`
+  on purpose (that's what reproduces GH-3073); it needs no Sanity auth/network. Takes ~2 min
+  (sequential CLI runs).

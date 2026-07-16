@@ -229,8 +229,32 @@ async function createCompilerServer({
 }) {
   const pkg = getPackageInfo(root)
 
+  // The compiler evaluates `.css.ts` modules in Node, so its module resolution must stay
+  // Node-shaped regardless of what the consuming app's config says — `ssr` and `environments`
+  // are deliberately not forwarded (destructured off), and the resolve conditions are pinned:
+  //
+  // - `ssr.resolve.externalConditions` must prefer the `module` (ESM) builds of externalized
+  //   dependencies. Vite's default (`['node', 'module-sync']`) falls through to the `default`
+  //   (CJS) exports of the `@vanilla-extract/*` packages, whose wrappers pick their dev or
+  //   prod build off `NODE_ENV` at first load. A CLI host (e.g. `sanity build`) typically
+  //   imports this plugin before `vite build` flips `NODE_ENV` to `production`, so the host
+  //   and the module runner would otherwise load two different copies of
+  //   `@vanilla-extract/css/adapter` — the evaluated modules then bind the compilation
+  //   adapter to one copy while `style()` appends CSS through the other (the mock adapter),
+  //   silently dropping all CSS while the class-name exports keep working.
+  // - The parent `ssr` options must not leak in: `ssr.noExternal: true` (set e.g. by the
+  //   `sanity schema extract` worker) would inline CJS dependencies, which Vite's native
+  //   `ModuleRunner` (unlike the legacy `vite-node`) cannot evaluate, and
+  //   `ssr.target: 'webworker'` would flip the SSR environment to browser-leaning resolution.
+  //
+  // Covered end-to-end by the `@integration/vanilla-extract-studio` suite, which compares
+  // `sanity dev` / `sanity build` / `sanity schema extract` output against
+  // `@vanilla-extract/vite-plugin`.
+  const {ssr: _ssr, environments: _environments, ...inheritedViteConfig} = viteConfig
+  const nodeResolveConditions = ['node', 'import', 'module', 'default']
+
   const server = await createServer({
-    ...viteConfig,
+    ...inheritedViteConfig,
     // The compiler server should not rewrite imported asset URLs within vanilla-extract
     // stylesheets. Doing so interferes with Vite's resolution and bundling of these assets at
     // build time.
@@ -253,6 +277,17 @@ async function createCompilerServer({
     },
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
+    },
+    resolve: {
+      ...viteConfig.resolve,
+      conditions: nodeResolveConditions,
+      mainFields: ['module', 'jsnext:main', 'jsnext', 'main'],
+    },
+    ssr: {
+      resolve: {
+        conditions: nodeResolveConditions,
+        externalConditions: nodeResolveConditions,
+      },
     },
     // Vite's default SSR externalization applies: project files and linked packages are
     // evaluated through the runner (so they're cached in the module graph), while node_modules

@@ -16,6 +16,8 @@
     "css-playground:test": "pnpm --filter './css-playground/**' test",
     "css-playground:typecheck": "pnpm --filter './css-playground/**' typecheck",
     "format": "prettier --write --cache --ignore-unknown . && oxlint --type-aware --fix --quiet",
+    "integration:test": "pnpm --filter './integration/**' test",
+    "integration:typecheck": "pnpm --filter './integration/**' typecheck",
     "knip": "knip",
     "lint": "oxlint --type-aware",
     "playground:build": "pnpm --filter './playground/**' build",

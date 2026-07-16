@@ -82,6 +82,24 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=8192
 
+  integration:
+    runs-on: ubuntu-latest
+    name: Sanity Studio integration tests
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - run: pnpm install
+      - run: pnpm integration:typecheck
+      # Runs the studio fixture through `sanity dev` / `sanity build` / `sanity schema extract`
+      # with @sanity/vanilla-extract-vite-plugin and with @vanilla-extract/vite-plugin as the
+      # reference, comparing output across the identifier/cssMinify/cssTarget matrix.
+      - run: pnpm integration:test
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+
   test:
     runs-on: ${{ matrix.platform }}
     name: Node.js ${{ matrix.node-version }} / ${{ matrix.platform }}
