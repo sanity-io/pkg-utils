@@ -340,18 +340,8 @@ describe('compiler', () => {
 
     if (!compilerConfig) expect.unreachable('expected the compiler server config')
     expect(compilerConfig.resolve.conditions).toEqual(['node', 'import', 'module', 'default'])
-    expect(compilerConfig.resolve.mainFields).toEqual([
-      'module',
-      'jsnext:main',
-      'jsnext',
-      'main',
-    ])
-    expect(compilerConfig.ssr.resolve?.conditions).toEqual([
-      'node',
-      'import',
-      'module',
-      'default',
-    ])
+    expect(compilerConfig.resolve.mainFields).toEqual(['module', 'jsnext:main', 'jsnext', 'main'])
+    expect(compilerConfig.ssr.resolve?.conditions).toEqual(['node', 'import', 'module', 'default'])
     expect(compilerConfig.ssr.resolve?.externalConditions).toEqual([
       'node',
       'import',
