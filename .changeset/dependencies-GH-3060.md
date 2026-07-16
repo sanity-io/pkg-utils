@@ -1,5 +1,4 @@
 ---
-"@benchmarks/vanilla-extract": patch
 "@sanity/pkg-utils": patch
 ---
 
