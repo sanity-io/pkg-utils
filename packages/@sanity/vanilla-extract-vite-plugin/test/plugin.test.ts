@@ -54,8 +54,12 @@ afterEach(async () => {
   await Promise.all(compilersToClose.splice(0).map((compiler) => compiler.close()))
 })
 
-function createTestCompiler(root: string, enableFileWatcher = false): Compiler {
-  const compiler = createCompiler({root, identifiers: 'debug', enableFileWatcher})
+function createTestCompiler(
+  root: string,
+  enableFileWatcher = false,
+  viteConfig?: Parameters<typeof createCompiler>[0]['viteConfig'],
+): Compiler {
+  const compiler = createCompiler({root, identifiers: 'debug', enableFileWatcher, viteConfig})
   compilersToClose.push(compiler)
   return compiler
 }
@@ -90,6 +94,54 @@ describe('vite build', () => {
     )
     if (!html || html.type !== 'asset') expect.unreachable('expected the index.html asset')
     expect(String(html.source)).toMatch(/<link rel="stylesheet"[^>]+\.css/)
+  })
+
+  // Regression for https://github.com/sanity-io/pkg-utils/issues/3073: `sanity build` enables
+  // the `browser` resolve condition on the parent Vite config. The compiler must not inherit
+  // that when evaluating `.css.ts` — otherwise `@vanilla-extract/css` resolves to its browser
+  // build, class names still export, and the CSS bundle stays empty.
+  test('still extracts CSS when the parent config enables the browser resolve condition', async () => {
+    const result = await build({
+      root: appRoot,
+      configFile: false,
+      logLevel: 'silent',
+      plugins: [vanillaExtractPlugin()],
+      resolve: {
+        conditions: ['browser', 'module', 'import', 'default'],
+        mainFields: ['browser', 'module', 'jsnext:main', 'jsnext', 'main'],
+      },
+      ssr: {
+        resolve: {
+          conditions: ['browser', 'module', 'import', 'default'],
+          externalConditions: ['browser', 'module', 'import', 'default'],
+        },
+      },
+      environments: {
+        client: {
+          resolve: {
+            conditions: ['browser', 'module', 'import', 'default'],
+          },
+        },
+        ssr: {
+          resolve: {
+            conditions: ['browser', 'module', 'import', 'default'],
+            externalConditions: ['browser', 'module', 'import', 'default'],
+          },
+        },
+      },
+      build: {write: false},
+    })
+    const {output} = Array.isArray(result) ? result[0]! : (result as Rollup.RollupOutput)
+
+    const css = findCssAsset(output)
+    expect(containsBoxMarker(css)).toBe(true)
+    expect(css.includes('rgb(4, 5, 6)') || css.includes('#040506')).toBe(true)
+
+    const entry = output.find(
+      (assetOrChunk) => assetOrChunk.type === 'chunk' && assetOrChunk.isEntry,
+    )
+    if (!entry || entry.type !== 'chunk') expect.unreachable('expected an entry chunk')
+    expect(entry.code).toContain('className')
   })
 })
 
@@ -280,6 +332,61 @@ describe('compiler', () => {
     // Unchanged module: the memoized result object itself is returned
     const second = await compiler.processVanillaFile(stylesCssTs)
     expect(second).toBe(first)
+  })
+
+  test('forces Node resolve conditions on the compiler server when the parent enables browser', async () => {
+    // Vite 8 merges `resolve` / `ssr.resolve` / `environments.ssr.resolve` conditions, so the
+    // compiler must override all three (a top-level-only override still leaves `browser` in the
+    // SSR environment's merged list).
+    let compilerResolveConditions: readonly string[] | undefined
+    let compilerSsrConditions: readonly string[] | undefined
+    let compilerEnvSsrConditions: readonly string[] | undefined
+
+    const compiler = createTestCompiler(appRoot, false, {
+      resolve: {
+        conditions: ['browser', 'module', 'import', 'default'],
+        mainFields: ['browser', 'module', 'jsnext:main', 'jsnext', 'main'],
+      },
+      ssr: {
+        resolve: {
+          conditions: ['browser', 'module', 'import', 'default'],
+          externalConditions: ['browser', 'module', 'import', 'default'],
+        },
+      },
+      environments: {
+        ssr: {
+          resolve: {
+            conditions: ['browser', 'module', 'import', 'default'],
+            externalConditions: ['browser', 'module', 'import', 'default'],
+          },
+        },
+      },
+      plugins: [
+        {
+          name: 'capture-compiler-resolve-conditions',
+          configResolved(config) {
+            compilerResolveConditions = config.resolve.conditions
+            compilerSsrConditions = config.ssr.resolve?.conditions
+            compilerEnvSsrConditions = config.environments['ssr']?.resolve.conditions
+          },
+        },
+      ],
+    })
+
+    const {source} = await compiler.processVanillaFile(stylesCssTs)
+    expect(source).toContain('export var box')
+    expect(source).toContain('.vanilla.css')
+    expect(compiler.getCssForFile(stylesCssTs)?.css).toContain('rgb(1, 2, 3)')
+
+    for (const conditions of [
+      compilerResolveConditions,
+      compilerSsrConditions,
+      compilerEnvSsrConditions,
+    ]) {
+      expect(conditions).toBeTruthy()
+      expect(conditions).toContain('node')
+      expect(conditions).not.toContain('browser')
+    }
   })
 
   test('exposes the extracted CSS per file and in aggregate', async () => {

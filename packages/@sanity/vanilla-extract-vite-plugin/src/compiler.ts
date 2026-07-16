@@ -200,6 +200,11 @@ export interface CreateCompilerOptions {
   enableFileWatcher?: boolean
 }
 
+/** Resolve conditions the compiler server must use when evaluating `.css.ts` in Node. */
+const compilerResolveConditions = ['node', 'import', 'module', 'default'] as const
+/** `mainFields` without `browser`, matching Node resolution for the compiler server. */
+const compilerMainFields = ['module', 'jsnext:main', 'jsnext', 'main'] as const
+
 /** Invalidates the runner's evaluated modules for a changed file, and their importers. */
 function invalidateRunnerFile(runner: ModuleRunner, filePath: string): void {
   const seen = new Set<EvaluatedModuleNode>()
@@ -253,6 +258,39 @@ async function createCompilerServer({
     },
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
+    },
+    // Parent app configs (notably `sanity build`) often enable the `browser` resolve
+    // condition. The compiler evaluates `.css.ts` in Node via `ModuleRunner`; resolving the
+    // browser build of `@vanilla-extract/css` makes `style()` use the runtime/inject adapter
+    // path, so `appendCss` never reaches our cssCache and virtual `.vanilla.css` imports are
+    // omitted (class names still export, CSS rules do not).
+    //
+    // Vite 8 merges `resolve` / `ssr.resolve` / `environments.ssr.resolve` conditions, so a
+    // top-level override alone is not enough when the parent sets environment-specific
+    // `browser` conditions — override all three.
+    resolve: {
+      ...viteConfig.resolve,
+      conditions: [...compilerResolveConditions],
+      mainFields: [...compilerMainFields],
+    },
+    ssr: {
+      ...viteConfig.ssr,
+      resolve: {
+        ...viteConfig.ssr?.resolve,
+        conditions: [...compilerResolveConditions],
+        externalConditions: [...compilerResolveConditions],
+      },
+    },
+    environments: {
+      ...viteConfig.environments,
+      ssr: {
+        ...viteConfig.environments?.['ssr'],
+        resolve: {
+          ...viteConfig.environments?.['ssr']?.resolve,
+          conditions: [...compilerResolveConditions],
+          externalConditions: [...compilerResolveConditions],
+        },
+      },
     },
     // Vite's default SSR externalization applies: project files and linked packages are
     // evaluated through the runner (so they're cached in the module graph), while node_modules
