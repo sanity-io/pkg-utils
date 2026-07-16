@@ -30,16 +30,29 @@ the Rust-to-JavaScript boundary described in
 visible independently of wall-clock noise.
 
 The library-build comparison runs a variant matrix: baseline (no minify, no target), CSS
-minification, syntax downleveling via `target: 'chrome61'`, and minify + target combined. The
-Sanity Rolldown plugin handles minify/target through its own `lightningcss` options; the official
-Rollup plugin has no such options, so those variants add the `lightningcss` post-pass that
-real-world official pipelines (like `@sanity/pkg-utils`'s `optimizeCss`) use — complete pipeline
-against complete pipeline. The generated styles include an `inset` shorthand so the smoke suite
-can verify that downleveling actually happened (chrome61 predates `inset`).
+minification, syntax downleveling via `target: 'chrome61'`, minify + target combined, and
+debug identifiers. The Sanity Rolldown plugin handles minify/target through its own
+`lightningcss` options; the official Rollup plugin has no such options, so those variants add
+the `lightningcss` post-pass that real-world official pipelines (like `@sanity/pkg-utils`'s
+`optimizeCss`) use — complete pipeline against complete pipeline. The generated styles include
+an `inset` shorthand so the smoke suite can verify that downleveling actually happened
+(chrome61 predates `inset`).
 
-The Vite build comparison intentionally skips those variants: Vite handles minify and target
-itself, identically for either plugin, so varying them would only add identical work to both
-sides of the comparison.
+The `debug identifiers` variant (also run for the Vite build) exercises the per-module
+debug-ID source transform that `identifiers: 'short'` skips entirely: babel
+(`@vanilla-extract/babel-plugin-debug-ids`) in the official `@vanilla-extract/integration`
+pipeline, a `yuku-parser` AST pass in `@sanity/vanilla-extract-integration`. Comparing
+`debug − short` within one side isolates the debug-ID transform cost from everything else that
+differs between the pipelines. Minify/target aren't crossed with `debug`: they run after
+extraction and are orthogonal to the per-module transform being measured.
+
+The Vite build comparison intentionally skips the minify/target variants: Vite handles minify
+and target itself, identically for either plugin, so varying them would only add identical work
+to both sides of the comparison. The exception is the kitchen-sink case, which builds an
+app-scale graph (5,000 unrelated TS modules + 500 `.css.ts` modules by default) with
+dev-default debug identifiers and a production CSS pipeline (`build.cssMinify` +
+`build.cssTarget: 'chrome61'`) — the scenario where the per-module debug-ID transform dominates
+the plugin's share of the build.
 
 Each benchmark process lazy-loads only the plugin under test — the competing implementation is
 never imported into the same process, so module-level state cannot cross-contaminate runs.
@@ -50,11 +63,16 @@ Keep this section current: re-run the full suite and update the tables whenever 
 `vanilla-extract` dependencies are bumped or any of the `@sanity/vanilla-extract-*` plugins
 change (see [AGENTS.md](../../AGENTS.md)).
 
-Last run: 2026-07-15 (after rolldown 1.2.0 + `@vanilla-extract/vite-plugin` 5.2.5), full
-default suite (`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0, Linux x64, Intel Xeon,
-**4 cores**; Rollup 4.62.2, Rolldown 1.2.0, Vite 8.1.4, Vitest 4.1.10. Values are mean
-wall-clock milliseconds from that runner and are machine-specific — compare ratios, not
-absolute numbers.
+Last run: 2026-07-16 (after vendoring `@vanilla-extract/integration` onto rolldown as
+`@sanity/vanilla-extract-integration` — the library-build compile path swapped its esbuild
+child compilation for rolldown, and debug IDs swapped babel for a `yuku-parser` AST pass —
+adding the `debug identifiers` variant to this suite, and aligning every rolldown copy on the
+1.1.5 that vite 8 pins), full default suite (`pnpm benchmark:vanilla-extract`) on Node.js
+24.18.0, Linux x64, Intel Xeon, **4 cores**; Rollup 4.62.2, Rolldown 1.1.5, Vite 8.1.4,
+Vitest 4.1.10, yuku-parser 0.6.1. Values are mean wall-clock milliseconds from that runner and
+are machine-specific — compare ratios, not absolute numbers. (For the future rolldown bump:
+the same suite on rolldown 1.2.0 measured the Sanity library build ~15% faster still, ~232 ms
+baseline — expect the gap below to widen again when vite updates its pinned rolldown.)
 
 ### Core count shifts the build ratios
 
@@ -64,42 +82,59 @@ relative to Rollup, and the tables below (from a 4-core runner) understate the g
 developer hardware. The versions table printed with every run includes the core count so results
 stay comparable.
 
-For reference, the same suite on an Apple M4 Max (16 cores, darwin-arm64) measured the library
-build at 2.68x (baseline) and up to ~4x (minify) in favor of Rolldown + the Sanity plugin —
-against 1.56–1.67x on the 4-core runner — while the Vite build ratio stayed put at ~1.33x
-(Vite's pipeline dominates there, identically for both plugins). The high-variance rows of that
-run (rme up to ±70% on the Rollup side) mean the exact multiplier is fuzzy, but the direction is
-consistent: more cores widen the library-build gap.
+For cross-hardware reference, the same suite (same versions, rolldown 1.1.5) run on an Apple
+M4 Max (16 cores, darwin-arm64, 2026-07-16) measured: library build 1.59–1.63x
+(short-identifier variants) and 1.90x (debug identifiers) in favor of Rolldown + the Sanity
+plugin; Vite build 1.36x/1.47x (short/debug identifiers) and 1.43x on the kitchen-sink case
+(1,553ms vs 1,087ms); dev HMR 1.01–1.15x in the Sanity plugin's favor (high variance, rme up
+to ±27%); hook-filter stress 1.36–1.59x. With the Sanity side's child compilations now on
+rolldown, the ratios land in a similar 1.4–2x band on both runners — absolute per-sample times
+are dominated by process spawn and I/O rather than core count, so the pre-vendoring
+observation that more cores widen the library-build gap (2.68x on the M4 Max vs 1.6x on the
+4-core runner, when the Sanity side still compiled with esbuild) no longer applies to the
+current pipeline.
 
 ### Library build, 500 TS + 100 CSS modules (5 samples each)
 
 | Variant                  | Rollup + `@vanilla-extract/rollup-plugin` | Rolldown + `@sanity/vanilla-extract-rolldown-plugin` | Relative result     |
 | ------------------------ | ----------------------------------------: | ---------------------------------------------------: | ------------------- |
-| No minify, no target     |                                 564.73 ms |                                            361.82 ms | Sanity 1.56x faster |
-| Minify                   |                                 585.24 ms |                                            351.26 ms | Sanity 1.67x faster |
-| Target chrome61          |                                 589.43 ms |                                            359.83 ms | Sanity 1.64x faster |
-| Minify + target chrome61 |                                 584.48 ms |                                            349.79 ms | Sanity 1.67x faster |
+| No minify, no target     |                                 559.88 ms |                                            277.50 ms | Sanity 2.02x faster |
+| Minify                   |                                 587.51 ms |                                            272.58 ms | Sanity 2.16x faster |
+| Target chrome61          |                                 591.72 ms |                                            295.51 ms | Sanity 2.00x faster |
+| Minify + target chrome61 |                                 574.88 ms |                                            277.05 ms | Sanity 2.07x faster |
+| Debug identifiers        |                                 700.34 ms |                                            296.44 ms | Sanity 2.36x faster |
+
+Debug identifiers cost each pipeline `debug − baseline`: **+140.5 ms** for the official
+babel-based transform, **+18.9 ms** for the Sanity `yuku-parser` pass — the transform runs once
+per `.css.ts` module, so the gap scales with style-module count.
 
 ### Vite build, 500 TS + 100 CSS modules (5 samples each)
 
+| Identifiers | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
+| ----------- | -----------------------------: | ------------------------------------: | ------------------- |
+| Short       |                      726.20 ms |                             511.28 ms | Sanity 1.42x faster |
+| Debug       |                      866.99 ms |                             541.99 ms | Sanity 1.60x faster |
+
+### Vite build kitchen sink, 5,000 TS + 500 CSS modules, debug identifiers, css minify + target chrome61 (5 samples each)
+
 | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
 | -----------------------------: | ------------------------------------: | ------------------- |
-|                      763.76 ms |                             574.69 ms | Sanity 1.33x faster |
+|                    2,382.40 ms |                           1,734.15 ms | Sanity 1.37x faster |
 
 ### Vite dev HMR (10 samples each)
 
 | Scenario                               | Official plugin | Sanity plugin | Relative result       |
 | -------------------------------------- | --------------: | ------------: | --------------------- |
-| Single `.css.ts` leaf edit             |        20.87 ms |      22.05 ms | Official 1.06x faster |
-| Shared theme edit, 100 style importers |       160.02 ms |     169.27 ms | Official 1.06x faster |
+| Single `.css.ts` leaf edit             |        23.80 ms |      21.92 ms | Sanity 1.09x faster   |
+| Shared theme edit, 100 style importers |       164.05 ms |     173.90 ms | Official 1.06x faster |
 
 ### Hook-filter stress, `vite build` with 1 CSS module (3 samples each)
 
 | Unrelated modules | Official plugin | Sanity plugin | Relative result     |
 | ----------------: | --------------: | ------------: | ------------------- |
-|                 0 |       440.96 ms |     282.81 ms | Sanity 1.56x faster |
-|             1,000 |       446.41 ms |     290.02 ms | Sanity 1.54x faster |
-|             5,000 |       629.44 ms |     434.07 ms | Sanity 1.45x faster |
+|                 0 |       438.03 ms |     251.35 ms | Sanity 1.74x faster |
+|             1,000 |       467.72 ms |     255.48 ms | Sanity 1.83x faster |
+|             5,000 |       645.62 ms |     417.63 ms | Sanity 1.55x faster |
 
 The untimed hook diagnostic shows why: the official plugin's unfiltered hooks enter JavaScript
 once per module, while the Sanity plugin's native hook filters reject unrelated ids before the
@@ -172,6 +207,8 @@ All values are optional:
 | ---------------------------- | -------------------: | --------------------------------------------------- |
 | `VE_BENCH_MODULES`           |                `500` | Ordinary modules in the representative graph        |
 | `VE_BENCH_STYLES`            |                `100` | `.css.ts` modules in the representative graph       |
+| `VE_BENCH_HEAVY_MODULES`     |               `5000` | Ordinary modules in the kitchen-sink graph          |
+| `VE_BENCH_HEAVY_STYLES`      |                `500` | `.css.ts` modules in the kitchen-sink graph         |
 | `VE_BENCH_HMR_MODULES`       | representative value | Ordinary modules loaded by each HMR server          |
 | `VE_BENCH_HMR_STYLES`        | representative value | `.css.ts` importers invalidated by shared-theme HMR |
 | `VE_BENCH_STRESS_SIZES`      |        `0,1000,5000` | Ordinary-module counts in the hook-filter sweep     |

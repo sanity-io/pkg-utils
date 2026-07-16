@@ -3,7 +3,7 @@
  * (MIT licensed, Copyright (c) 2021 SEEK).
  */
 import {posix} from 'node:path'
-import {normalizePath} from '@vanilla-extract/integration'
+import {normalizePath} from '@sanity/vanilla-extract-integration'
 
 // Vite wraps module ids that aren't valid browser import specifiers with
 // `/@id/` in dev mode. The leading slash is sometimes already stripped.

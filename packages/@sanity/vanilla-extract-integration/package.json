@@ -1,0 +1,66 @@
+{
+  "name": "@sanity/vanilla-extract-integration",
+  "version": "0.0.0",
+  "description": "Vendored port of @vanilla-extract/integration onto the rolldown toolchain: yuku-parsed debug IDs and a rolldown child compilation instead of babel and esbuild",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "vanilla-extract",
+    "rolldown",
+    "yuku",
+    "oxc",
+    "css"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-integration#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/vanilla-extract-integration"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "bench": "vitest bench",
+    "build": "tsdown",
+    "prepack": "pnpm build",
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@vanilla-extract/css": "^1.21.1",
+    "javascript-stringify": "^2.1.0",
+    "rolldown": "~1.1.5",
+    "yuku-parser": "^0.6.1"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "workspace:^",
+    "@sanity/tsdown-config": "workspace:^",
+    "@types/node": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    }
+  }
+}

@@ -7,13 +7,11 @@
  *
  * `.css.ts` modules are evaluated through an internal Vite dev server, so results are cached in
  * its module graph across rebuilds and invalidated per-file on change — unlike the per-file
- * esbuild `compile()` of `@vanilla-extract/integration` (used for one-shot library builds by
- * `@sanity/vanilla-extract-rolldown-plugin`), which re-bundles a module's whole dependency
- * graph on every call.
+ * rolldown `compile()` of `@sanity/vanilla-extract-integration` (used for one-shot library
+ * builds by `@sanity/vanilla-extract-rolldown-plugin`), which re-bundles a module's whole
+ * dependency graph on every call.
  */
 import {isAbsolute, join} from 'node:path'
-import type {Adapter} from '@vanilla-extract/css'
-import {transformCss} from '@vanilla-extract/css/transformCss'
 import {
   cssFileFilter,
   getPackageInfo,
@@ -21,7 +19,9 @@ import {
   serializeVanillaModule,
   transform,
   type IdentifierOption,
-} from '@vanilla-extract/integration'
+} from '@sanity/vanilla-extract-integration'
+import type {Adapter} from '@vanilla-extract/css'
+import {transformCss} from '@vanilla-extract/css/transformCss'
 import {
   createServer,
   createServerModuleRunner,
