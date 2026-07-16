@@ -97,8 +97,8 @@ describe('vite build', () => {
   })
 
   // Regression for https://github.com/sanity-io/pkg-utils/issues/3073: `sanity build` enables
-  // the `browser` resolve condition on the parent Vite config. The compiler must not inherit
-  // that when evaluating `.css.ts` — otherwise `@vanilla-extract/css` resolves to its browser
+  // the `browser` resolve condition on the parent Vite config. The compiler must strip that
+  // when evaluating `.css.ts` — otherwise `@vanilla-extract/css` resolves to its browser
   // build, class names still export, and the CSS bundle stays empty.
   test('still extracts CSS when the parent config enables the browser resolve condition', async () => {
     const result = await build({
@@ -334,30 +334,31 @@ describe('compiler', () => {
     expect(second).toBe(first)
   })
 
-  test('forces Node resolve conditions on the compiler server when the parent enables browser', async () => {
-    // Vite 8 merges `resolve` / `ssr.resolve` / `environments.ssr.resolve` conditions, so the
-    // compiler must override all three (a top-level-only override still leaves `browser` in the
-    // SSR environment's merged list).
+  test('strips browser from compiler resolve conditions but forwards other parent conditions', async () => {
+    // Vite 8 merges `resolve` / `ssr.resolve` / `environments.ssr.resolve` conditions, so
+    // `browser` must be filtered from all three (a top-level-only filter still leaves it in the
+    // SSR environment's merged list). Custom conditions like `development` stay forwarded.
     let compilerResolveConditions: readonly string[] | undefined
     let compilerSsrConditions: readonly string[] | undefined
     let compilerEnvSsrConditions: readonly string[] | undefined
+    let compilerMainFields: readonly string[] | undefined
 
     const compiler = createTestCompiler(appRoot, false, {
       resolve: {
-        conditions: ['browser', 'module', 'import', 'default'],
+        conditions: ['browser', 'development', 'module', 'import', 'default'],
         mainFields: ['browser', 'module', 'jsnext:main', 'jsnext', 'main'],
       },
       ssr: {
         resolve: {
-          conditions: ['browser', 'module', 'import', 'default'],
-          externalConditions: ['browser', 'module', 'import', 'default'],
+          conditions: ['browser', 'development', 'module', 'import', 'default'],
+          externalConditions: ['browser', 'development', 'module', 'import', 'default'],
         },
       },
       environments: {
         ssr: {
           resolve: {
-            conditions: ['browser', 'module', 'import', 'default'],
-            externalConditions: ['browser', 'module', 'import', 'default'],
+            conditions: ['browser', 'development', 'module', 'import', 'default'],
+            externalConditions: ['browser', 'development', 'module', 'import', 'default'],
           },
         },
       },
@@ -368,6 +369,7 @@ describe('compiler', () => {
             compilerResolveConditions = config.resolve.conditions
             compilerSsrConditions = config.ssr.resolve?.conditions
             compilerEnvSsrConditions = config.environments['ssr']?.resolve.conditions
+            compilerMainFields = config.resolve.mainFields
           },
         },
       ],
@@ -384,9 +386,12 @@ describe('compiler', () => {
       compilerEnvSsrConditions,
     ]) {
       expect(conditions).toBeTruthy()
-      expect(conditions).toContain('node')
+      expect(conditions).toContain('development')
+      expect(conditions).toContain('module')
       expect(conditions).not.toContain('browser')
     }
+    expect(compilerMainFields).toContain('module')
+    expect(compilerMainFields).not.toContain('browser')
   })
 
   test('exposes the extracted CSS per file and in aggregate', async () => {

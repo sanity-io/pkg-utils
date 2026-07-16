@@ -200,10 +200,33 @@ export interface CreateCompilerOptions {
   enableFileWatcher?: boolean
 }
 
-/** Resolve conditions the compiler server must use when evaluating `.css.ts` in Node. */
-const compilerResolveConditions = ['node', 'import', 'module', 'default'] as const
-/** `mainFields` without `browser`, matching Node resolution for the compiler server. */
-const compilerMainFields = ['module', 'jsnext:main', 'jsnext', 'main'] as const
+/**
+ * Drops the `browser` export condition / mainField. The compiler evaluates `.css.ts` in Node
+ * via `ModuleRunner`; packages like `@vanilla-extract/css` ship a browser build that takes the
+ * runtime/inject adapter path, so forwarding `browser` makes `appendCss` miss our cssCache
+ * (class names still export, CSS rules do not). Other parent conditions are kept as-is.
+ */
+function withoutBrowser(values: readonly string[]): string[] {
+  return values.filter((value) => value !== 'browser')
+}
+
+type ResolveConditionFields = {
+  conditions?: string[]
+  externalConditions?: string[]
+  mainFields?: string[]
+}
+
+/** Forwards resolve fields with `browser` stripped from any list the parent set. */
+function withoutBrowserResolveFields<T extends ResolveConditionFields>(resolve: T): T {
+  return {
+    ...resolve,
+    ...(resolve.conditions ? {conditions: withoutBrowser(resolve.conditions)} : undefined),
+    ...(resolve.externalConditions
+      ? {externalConditions: withoutBrowser(resolve.externalConditions)}
+      : undefined),
+    ...(resolve.mainFields ? {mainFields: withoutBrowser(resolve.mainFields)} : undefined),
+  }
+}
 
 /** Invalidates the runner's evaluated modules for a changed file, and their importers. */
 function invalidateRunnerFile(runner: ModuleRunner, filePath: string): void {
@@ -259,39 +282,39 @@ async function createCompilerServer({
     build: {
       assetsInlineLimit: viteConfig.build?.assetsInlineLimit,
     },
-    // Parent app configs (notably `sanity build`) often enable the `browser` resolve
-    // condition. The compiler evaluates `.css.ts` in Node via `ModuleRunner`; resolving the
-    // browser build of `@vanilla-extract/css` makes `style()` use the runtime/inject adapter
-    // path, so `appendCss` never reaches our cssCache and virtual `.vanilla.css` imports are
-    // omitted (class names still export, CSS rules do not).
-    //
-    // Vite 8 merges `resolve` / `ssr.resolve` / `environments.ssr.resolve` conditions, so a
-    // top-level override alone is not enough when the parent sets environment-specific
-    // `browser` conditions — override all three.
-    resolve: {
-      ...viteConfig.resolve,
-      conditions: [...compilerResolveConditions],
-      mainFields: [...compilerMainFields],
-    },
-    ssr: {
-      ...viteConfig.ssr,
-      resolve: {
-        ...viteConfig.ssr?.resolve,
-        conditions: [...compilerResolveConditions],
-        externalConditions: [...compilerResolveConditions],
-      },
-    },
-    environments: {
-      ...viteConfig.environments,
-      ssr: {
-        ...viteConfig.environments?.['ssr'],
-        resolve: {
-          ...viteConfig.environments?.['ssr']?.resolve,
-          conditions: [...compilerResolveConditions],
-          externalConditions: [...compilerResolveConditions],
-        },
-      },
-    },
+    // Strip `browser` from every resolve-condition surface the parent may have set. Vite 8
+    // merges `resolve` / `ssr.resolve` / `environments.ssr.resolve`, so filtering only the
+    // top-level list still leaves `browser` in the SSR environment's merged conditions.
+    ...(viteConfig.resolve
+      ? {resolve: withoutBrowserResolveFields(viteConfig.resolve)}
+      : undefined),
+    ...(viteConfig.ssr
+      ? {
+          ssr: {
+            ...viteConfig.ssr,
+            ...(viteConfig.ssr.resolve
+              ? {resolve: withoutBrowserResolveFields(viteConfig.ssr.resolve)}
+              : undefined),
+          },
+        }
+      : undefined),
+    ...(viteConfig.environments?.['ssr']
+      ? {
+          environments: {
+            ...viteConfig.environments,
+            ssr: {
+              ...viteConfig.environments['ssr'],
+              ...(viteConfig.environments['ssr'].resolve
+                ? {
+                    resolve: withoutBrowserResolveFields(
+                      viteConfig.environments['ssr'].resolve,
+                    ),
+                  }
+                : undefined),
+            },
+          },
+        }
+      : undefined),
     // Vite's default SSR externalization applies: project files and linked packages are
     // evaluated through the runner (so they're cached in the module graph), while node_modules
     // dependencies are externalized to real Node imports — required for CJS dependencies,
