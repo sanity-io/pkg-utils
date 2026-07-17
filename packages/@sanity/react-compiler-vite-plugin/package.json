@@ -1,0 +1,74 @@
+{
+  "name": "@sanity/react-compiler-vite-plugin",
+  "version": "0.0.0",
+  "description": "Vite plugin that opts allow-listed Sanity API surfaces (defineConfig/defineType components, PortableText component maps) into React Compiler memoization with 'use memo' directives",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "react-compiler",
+    "react",
+    "vite",
+    "vite-plugin",
+    "memoization",
+    "plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/react-compiler-vite-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/react-compiler-vite-plugin"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "pnpm build",
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@sanity/react-compiler-integration": "workspace:^"
+  },
+  "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@sanity/tsconfig": "workspace:^",
+    "@sanity/tsdown-config": "workspace:^",
+    "@types/node": "catalog:",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "publint": "catalog:",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "^8.1.5",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "vite": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    }
+  }
+}
