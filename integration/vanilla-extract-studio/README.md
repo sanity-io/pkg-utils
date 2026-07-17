@@ -23,14 +23,26 @@ Commands, each across the shared option matrix in `test/variants.ts`:
 - **`sanity dev`** (`test/dev.test.ts`) — identifier variants. Requests the transformed
   `.css.ts` modules over HTTP like the browser would, follows their virtual `.vanilla.css`
   imports, and compares served CSS and exported class names.
+- **`sanity dev` with `unstable_bundledDev`** (`test/bundled-dev.test.ts`) — Vite's
+  experimental bundled dev mode, where node_modules files run through the plugin pipeline
+  (no dep optimizer) and dynamic imports are compiled on demand at first request. The test
+  compares the bundled entry's class names, then registers an HMR client and requests the
+  on-demand compile of the `React.lazy` chunk behind `PlainCssJsInput`, which pulls in both a
+  real `.css.ts` and `plain-css-js-dependency` — a node_modules fixture package (installed
+  through the `file:` protocol so pnpm copies it into node_modules) mimicking
+  `@bynder/compact-view`: not built with vanilla-extract, but shipping a plain JS
+  `Styles.css.js` whose name matches vanilla-extract's `cssFileFilter`. Processing that
+  module used to hang the fork's compiler and crash the dev server, forcing the workaround
+  in [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553); the compiled
+  patch must match upstream's byte for byte, no workaround required.
 - **`sanity schema extract`** (`test/schema-extract.test.ts`) — identifier variants. The
   fixture schema embeds the generated class names in a field description, so the extracted
   schema doubles as identifier output; the command also exercises `.css.ts` evaluation inside
   the CLI's `ssr.noExternal: true` worker environment.
 
 The studio fixture is this package itself: `sanity.cli.ts` selects the plugin implementation
-and options through `VE_PLUGIN` / `VE_IDENTIFIERS` / `VE_CSS_MINIFY` / `VE_CSS_TARGET`
-environment variables set by the tests.
+and options through `VE_PLUGIN` / `VE_IDENTIFIERS` / `VE_CSS_MINIFY` / `VE_CSS_TARGET` /
+`VE_BUNDLED_DEV` environment variables set by the tests.
 
 ## Running
 

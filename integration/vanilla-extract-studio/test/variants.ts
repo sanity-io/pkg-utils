@@ -115,7 +115,7 @@ export function classNameExpectation(
     case 'debug':
       // `<fileName>_<debugId>__<hash>`, where the debug ID is the local binding name
       return {
-        pattern: /^(styles|button)_\w+__[a-z0-9]+$/i,
+        pattern: /^(styles|button|PlainCssJsInput)_\w+__[a-z0-9]+$/i,
         firstClassPrefixes: {
           dialog: 'styles_veStudioDialog__',
           overlay: 'styles_veStudioOverlay__',

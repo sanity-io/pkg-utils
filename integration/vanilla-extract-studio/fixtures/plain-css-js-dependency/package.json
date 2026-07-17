@@ -1,0 +1,8 @@
+{
+  "name": "plain-css-js-dependency",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A fixture dependency mimicking @bynder/compact-view: a package that is not built with vanilla-extract but ships a plain JS module named `Styles.css.js`, which matches vanilla-extract's `cssFileFilter`. Installed through the `file:` protocol so pnpm copies it into node_modules (a real dependency path, not a workspace symlink). Deliberately no `\"type\": \"module\"` despite the ESM syntax, matching the real package's publish.",
+  "main": "index.js",
+  "module": "index.js"
+}
