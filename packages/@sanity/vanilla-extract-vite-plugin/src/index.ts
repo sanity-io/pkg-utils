@@ -252,9 +252,20 @@ export function vanillaExtractPlugin({
       },
 
       buildEnd() {
-        // With the watcher, the compiler outlives individual builds and is closed through the
-        // `closeWatcher` hook instead
-        if (!config.build.watch) {
+        // `buildEnd` fires at different times per pipeline: after a one-shot build, after
+        // every rebuild in watch mode (where the compiler outlives builds and `closeWatcher`
+        // closes it), when the plugin container closes on dev-server shutdown (unbundled
+        // dev) — and, under Vite's experimental bundled dev mode
+        // (`experimental.bundledDev`, e.g. `sanity dev` with `unstable_bundledDev`), already
+        // when the initial in-server bundle finishes, while the server keeps serving and
+        // compiles lazy chunks on demand. Closing the compiler there tears down the
+        // hot-channel invoke listeners its `ModuleRunner` transport depends on, so the next
+        // `processVanillaFile` (the first `.css.ts`-matching module in an on-demand chunk)
+        // would hang in `fetchModule` until the 60s transport timeout and crash the dev
+        // server — see the bundled-dev test of `@integration/vanilla-extract-studio`.
+        const isServingBundledDev =
+          config.command === 'serve' && (config.experimental.bundledDev ?? false)
+        if (!config.build.watch && !isServingBundledDev) {
           void compiler?.close()
         }
       },
