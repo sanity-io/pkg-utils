@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 11.0.10
+
+### Patch Changes
+
+- [#3079](https://github.com/sanity-io/pkg-utils/pull/3079) [`7fb3e17`](https://github.com/sanity-io/pkg-utils/commit/7fb3e177cc81db106bbf3a82872a3e99be10ce1a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown-plugin-dts to v0.27.11
+
 ## 11.0.9
 
 ### Patch Changes
