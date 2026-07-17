@@ -22,6 +22,7 @@ import {DEFAULT_BROWSERSLIST_QUERY} from '../../core/defaults.ts'
 import type {RollupTask, RollupWatchTask} from '../types.ts'
 import {bundleCssShim} from './bundleCssShim.ts'
 import {optimizeCss} from './optimizeCss.ts'
+import {reactCompilerSurfaces} from './reactCompilerSurfaces.ts'
 
 // Type guard to filter out falsy values
 function isTruthy<T>(value: T | false | null | undefined | 0 | ''): value is T {
@@ -199,6 +200,10 @@ export function resolveRollupConfig(
     // `./<css>` export resolve to (named `bundle-css.js`, not `bundle.css.js`, so it does not
     // match vanilla-extract's `cssFileFilter`).
     vanillaExtract.compatMode && bundleCssShim({cssName: vanillaExtractCssName}),
+    // Must run before the babel() plugin below: it injects the `'use memo'` opt-in directives
+    // that `babel-plugin-react-compiler` then acts on
+    Boolean(config?.babel?.reactCompilerSurfaces) &&
+      reactCompilerSurfaces(config?.reactCompilerSurfacesOptions),
     (config?.babel?.reactCompiler || enableStyledComponents) &&
       babel({
         babelrc: false,

@@ -1,12 +1,20 @@
 import type {PluginItem as BabelPluginItem} from '@babel/core'
 import type {OptimizeLodashOptions} from '@optimize-lodash/rollup-plugin'
 import type {PkgExports} from '@sanity/parse-package-json'
+import type {AnnotateOptions} from '@sanity/react-compiler-integration'
 import type {Options as VanillaExtractOptions} from '@vanilla-extract/rollup-plugin'
 import type {PluginOptions as ReactCompilerOptions} from 'babel-plugin-react-compiler'
 import type {NormalizedOutputOptions, Plugin as RollupPlugin, TreeshakingOptions} from 'rollup'
 import type {StrictOptions} from '../../strict.ts'
 
 export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
+
+/**
+ * Options for the `babel.reactCompilerSurfaces` feature: the surfaces annotated by
+ * `@sanity/react-compiler-integration` (`filename` is resolved per module by the build).
+ * @alpha
+ */
+export type ReactCompilerSurfacesOptions = Omit<AnnotateOptions, 'filename'>
 
 /** @public */
 export type PkgFormat = 'commonjs' | 'esm'
@@ -102,6 +110,16 @@ export interface PkgConfigOptions {
     plugins?: BabelPluginItem[] | null | undefined
     /** @alpha */
     reactCompiler?: boolean
+    /**
+     * Runs the `@sanity/react-compiler-integration` transform before the React Compiler:
+     * allow-listed Sanity API surfaces (`defineConfig`/`defineType` component slots, `use*`
+     * hook props, PortableText component maps) are opted into compilation with `'use memo'`
+     * directives, so the object-property components and hooks the compiler's `infer` mode
+     * never sees get memoized too. Meant to be combined with `babel.reactCompiler` (on its
+     * own it only injects inert directives). Configure the annotated surfaces through
+     * `reactCompilerSurfacesOptions`.
+     * @alpha */
+    reactCompilerSurfaces?: boolean
     /** @alpha */
     styledComponents?:
       | boolean
@@ -139,6 +157,12 @@ export interface PkgConfigOptions {
    * To enable it set `babel.reactCompiler` to `true`
    * @beta */
   reactCompilerOptions?: Partial<ReactCompilerOptions>
+  /**
+   * Configure the surfaces annotated by `babel.reactCompilerSurfaces` — the same options as
+   * `@sanity/react-compiler-integration`'s `annotateReactCompilerSurfaces` (minus `filename`,
+   * which is per-module).
+   * @alpha */
+  reactCompilerSurfacesOptions?: ReactCompilerSurfacesOptions
   bundles?: PkgBundle[]
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>

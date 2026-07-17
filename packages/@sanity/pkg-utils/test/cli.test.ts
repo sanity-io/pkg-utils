@@ -505,6 +505,24 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
   })
 
+  test('should build `react-compiler-surfaces` package', async () => {
+    const project = await spawnProject('react-compiler-surfaces')
+    const stdout = await project.run('build')
+
+    expect(stdout).toContain('./src/index.ts → ./dist/index.d.ts')
+    expect(stdout).toContain('./src/index.ts → ./dist/index.js')
+
+    const distIndexJs = await project.readFile('dist/index.js')
+    // The PortableText components object is invisible to React Compiler's `infer` mode: the
+    // `babel.reactCompilerSurfaces` option injects the `'use memo'` opt-in (still visible in
+    // the output), and the compiler memoizes the components in place
+    expect(distIndexJs).toContain('"use memo"')
+    expect(distIndexJs).toContain('react/compiler-runtime')
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+
+    expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+  })
+
   test('should build `css-export` package', async () => {
     const project = await spawnProject('css-export')
     const stdout = await project.run('build')

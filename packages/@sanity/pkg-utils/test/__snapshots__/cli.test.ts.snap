@@ -713,6 +713,468 @@ export {
 "
 `;
 
+exports[`cli > should build \`react-compiler-surfaces\` package > ./dist/index.d.ts 1`] = `
+"import {ToolkitPortableTextList} from '@portabletext/toolkit'
+import {
+  ArbitraryTypedObject,
+  PortableTextBlock,
+  PortableTextBlockStyle,
+  PortableTextListItemBlock,
+  PortableTextListItemType,
+  TypedObject,
+} from '@portabletext/types'
+import {ComponentType, ReactNode} from 'react'
+
+declare type CustomPortableTextType<B extends TypedObject> = Exclude<
+  B,
+  {
+    _type: 'block'
+  }
+>
+
+declare type CustomPortableTextTypeName<B extends TypedObject> = TypeName<CustomPortableTextType<B>>
+
+declare type LooseRecord<K extends string, V> = Record<string, V> & {[P in K]?: V}
+
+/**
+ * Function that renders any node that might appear in a portable text array or block,
+ * including virtual "toolkit"-nodes like lists and nested spans
+ */
+declare type NodeRenderer = <T extends TypedObject>(options: Serializable<T>) => ReactNode
+
+/**
+ * React component type for rendering portable text blocks (paragraphs, headings, blockquotes etc)
+ */
+declare type PortableTextBlockComponent = PortableTextComponent<PortableTextBlock>
+
+declare type PortableTextBlockComponentFor<B extends TypedObject> =
+  PortableTextBlockType<B> extends never
+    ? PortableTextBlockComponent
+    : PortableTextComponent<PortableTextBlockType<B>>
+
+declare type PortableTextBlockComponents<B extends TypedObject> =
+  string extends PortableTextBlockStyleName<B>
+    ? LooseRecord<PortableTextBlockStyle, PortableTextBlockComponent | undefined>
+    : PortableTextBlockStyleName<B> extends never
+      ? LooseRecord<PortableTextBlockStyle, PortableTextBlockComponent | undefined>
+      : Record<string, PortableTextComponent<any> | undefined> & {
+          [Style in PortableTextBlockStyleName<B>]?: PortableTextComponent<
+            PortableTextBlockForStyle<B, Style>
+          >
+        }
+
+declare type PortableTextBlockForListItem<B extends TypedObject, ListItem extends string> =
+  PortableTextBlockType<B> extends infer Block
+    ? Block extends TypedObject
+      ? Omit<Block, 'listItem'> & {
+          listItem: Extract<
+            Block extends {
+              listItem?: infer Item
+            }
+              ? Item
+              : never,
+            ListItem
+          >
+        }
+      : never
+    : never
+
+declare type PortableTextBlockForStyle<B extends TypedObject, Style extends string> =
+  PortableTextBlockType<B> extends infer Block
+    ? Block extends TypedObject
+      ? Omit<Block, 'style'> & {
+          style?: Extract<
+            Block extends {
+              style?: infer S
+            }
+              ? S
+              : never,
+            Style
+          >
+        }
+      : never
+    : never
+
+declare type PortableTextBlockStyleName<B extends TypedObject> =
+  PortableTextBlockType<B> extends {
+    style?: infer Style
+  }
+    ? NonNullable<Style> extends string
+      ? NonNullable<Style>
+      : never
+    : never
+
+declare type PortableTextBlockType<B extends TypedObject> = Extract<
+  B,
+  {
+    _type: 'block'
+  }
+>
+
+/**
+ * Generic type for portable text rendering components that takes blocks/inline blocks
+ *
+ * @template N Node types we expect to be rendering (\`PortableTextBlock\` should usually be part of this)
+ */
+declare type PortableTextComponent<N> = ComponentType<PortableTextComponentProps<N>>
+
+/**
+ * Props received by most Portable Text components
+ *
+ * @template T Type of data this component will receive in its \`value\` property
+ */
+declare interface PortableTextComponentProps<T> {
+  /**
+   * Data associated with this portable text node, eg the raw JSON value of a block/type
+   */
+  value: T
+  /**
+   * Index within its parent
+   */
+  index: number
+  /**
+   * Whether or not this node is "inline" - ie as a child of a text block,
+   * alongside text spans, or a block in and of itself.
+   */
+  isInline: boolean
+  /**
+   * React child nodes of this block/component
+   */
+  children?: ReactNode
+  /**
+   * Function used to render any node that might appear in a portable text array or block,
+   * including virtual "toolkit"-nodes like lists and nested spans. You will rarely need
+   * to use this.
+   */
+  renderNode: NodeRenderer
+}
+
+/**
+ * Object defining the different React components to use for rendering various aspects
+ * of Portable Text and user-provided types, where only the overrides needs to be provided.
+ */
+declare type PortableTextComponents<B extends TypedObject = any> = Partial<
+  PortableTextReactComponents<B>
+>
+
+/**
+ * Object-property components React Compiler's \`infer\` mode never compiles on its own — the
+ * \`babel.reactCompilerSurfaces\` option annotates them with \`'use memo'\` so the compiler
+ * memoizes them in place.
+ * @public
+ */
+export declare const portableTextComponents: PortableTextComponents
+
+/**
+ * React component type for rendering (virtual, not part of the spec) portable text lists
+ */
+declare type PortableTextListComponent = PortableTextComponent<ReactPortableTextList>
+
+declare type PortableTextListComponentFor<B extends TypedObject> =
+  PortableTextListItemName<B> extends never
+    ? PortableTextListComponent
+    : PortableTextComponent<PortableTextListForItem<PortableTextListItemName<B>>>
+
+declare type PortableTextListComponents<B extends TypedObject> =
+  string extends PortableTextListItemName<B>
+    ? LooseRecord<PortableTextListItemType, PortableTextListComponent | undefined>
+    : PortableTextListItemName<B> extends never
+      ? Record<string, PortableTextComponent<any> | undefined>
+      : Record<string, PortableTextComponent<any> | undefined> & {
+          [ListItem in PortableTextListItemName<B>]?: PortableTextComponent<
+            PortableTextListForItem<ListItem>
+          >
+        }
+
+declare type PortableTextListForItem<ListItem extends string> =
+  ReactPortableTextList extends infer List
+    ? List extends ReactPortableTextList
+      ? Omit<List, 'listItem'> & {
+          listItem: ListItem
+        }
+      : never
+    : never
+
+/**
+ * React component type for rendering portable text list items
+ */
+declare type PortableTextListItemComponent = PortableTextComponent<PortableTextListItemBlock>
+
+declare type PortableTextListItemComponentFor<B extends TypedObject> =
+  PortableTextListItemName<B> extends never
+    ? PortableTextListItemComponent
+    : PortableTextComponent<PortableTextBlockForListItem<B, PortableTextListItemName<B>>>
+
+declare type PortableTextListItemComponents<B extends TypedObject> =
+  string extends PortableTextListItemName<B>
+    ? LooseRecord<PortableTextListItemType, PortableTextListItemComponent | undefined>
+    : PortableTextListItemName<B> extends never
+      ? Record<string, PortableTextComponent<any> | undefined>
+      : Record<string, PortableTextComponent<any> | undefined> & {
+          [ListItem in PortableTextListItemName<B>]?: PortableTextComponent<
+            PortableTextBlockForListItem<B, ListItem>
+          >
+        }
+
+declare type PortableTextListItemName<B extends TypedObject> =
+  PortableTextBlockType<B> extends {
+    listItem?: infer ListItem
+  }
+    ? NonNullable<ListItem> extends string
+      ? NonNullable<ListItem>
+      : never
+    : never
+
+/**
+ * React component type for rendering portable text marks and/or decorators
+ *
+ * @template M The mark type we expect
+ */
+declare type PortableTextMarkComponent<M extends TypedObject = any> = ComponentType<
+  PortableTextMarkComponentProps<M>
+>
+
+/**
+ * Props received by Portable Text mark rendering components
+ *
+ * @template M Shape describing the data associated with this mark, if it is an annotation
+ */
+declare interface PortableTextMarkComponentProps<M extends TypedObject = ArbitraryTypedObject> {
+  /**
+   * Mark definition, eg the actual data of the annotation. If the mark is a simple decorator, this will be \`undefined\`
+   */
+  value?: M
+  /**
+   * Text content of this mark
+   */
+  text: string
+  /**
+   * Key for this mark. The same key can be used amongst multiple text spans within the same block, so don't rely on this for React keys.
+   */
+  markKey?: string
+  /**
+   * Type of mark - ie value of \`_type\` in the case of annotations, or the name of the decorator otherwise - eg \`em\`, \`italic\`.
+   */
+  markType: string
+  /**
+   * React child nodes of this mark
+   */
+  children: ReactNode
+  /**
+   * Function used to render any node that might appear in a portable text array or block,
+   * including virtual "toolkit"-nodes like lists and nested spans. You will rarely need
+   * to use this.
+   */
+  renderNode: NodeRenderer
+}
+
+declare type PortableTextMarkComponents<B extends TypedObject> =
+  string extends PortableTextMarkTypeName<B>
+    ? Record<string, PortableTextMarkComponent | undefined>
+    : PortableTextMarkTypeName<B> extends never
+      ? Record<string, PortableTextMarkComponent | undefined>
+      : Record<string, PortableTextMarkComponent | undefined> & {
+          [Type in PortableTextMarkTypeName<B>]?: PortableTextMarkComponent<
+            Extract<
+              PortableTextMarkType<B>,
+              {
+                _type: Type
+              }
+            >
+          >
+        }
+
+declare type PortableTextMarkType<B extends TypedObject> =
+  PortableTextBlockType<B> extends {
+    markDefs?: infer MarkDefs
+  }
+    ? NonNullable<MarkDefs> extends readonly (infer MarkDef)[]
+      ? Extract<MarkDef, TypedObject>
+      : never
+    : never
+
+declare type PortableTextMarkTypeName<B extends TypedObject> = TypeName<PortableTextMarkType<B>>
+
+/**
+ * Object definining the different React components to use for rendering various aspects
+ * of Portable Text and user-provided types.
+ */
+declare interface PortableTextReactComponents<B extends TypedObject = any> {
+  /**
+   * Object of React components that renders different types of objects that might appear
+   * both as part of the blocks array, or as inline objects _inside_ of a block,
+   * alongside text spans.
+   *
+   * Use the \`isInline\` property to check whether or not this is an inline object or a block
+   *
+   * The object has the shape \`{typeName: ReactComponent}\`, where \`typeName\` is the value set
+   * in individual \`_type\` attributes.
+   */
+  types: PortableTextTypeComponents<B>
+  /**
+   * Object of React components that renders different types of marks that might appear in spans.
+   *
+   * The object has the shape \`{markName: ReactComponent}\`, where \`markName\` is the value set
+   * in individual \`_type\` attributes, values being stored in the parent blocks \`markDefs\`.
+   */
+  marks: PortableTextMarkComponents<B>
+  /**
+   * Object of React components that renders blocks with different \`style\` properties.
+   *
+   * The object has the shape \`{styleName: ReactComponent}\`, where \`styleName\` is the value set
+   * in individual \`style\` attributes on blocks.
+   *
+   * Can also be set to a single React component, which would handle block styles of _any_ type.
+   */
+  block: PortableTextBlockComponents<B> | PortableTextBlockComponentFor<B>
+  /**
+   * Object of React components used to render lists of different types (bulleted vs numbered,
+   * for instance, which by default is \`<ul>\` and \`<ol>\`, respectively)
+   *
+   * There is no actual "list" node type in the Portable Text specification, but a series of
+   * list item blocks with the same \`level\` and \`listItem\` properties will be grouped into a
+   * virtual one inside of this library.
+   *
+   * Can also be set to a single React component, which would handle lists of _any_ type.
+   */
+  list: PortableTextListComponents<B> | PortableTextListComponentFor<B>
+  /**
+   * Object of React components used to render different list item styles.
+   *
+   * The object has the shape \`{listItemType: ReactComponent}\`, where \`listItemType\` is the value
+   * set in individual \`listItem\` attributes on blocks.
+   *
+   * Can also be set to a single React component, which would handle list items of _any_ type.
+   */
+  listItem: PortableTextListItemComponents<B> | PortableTextListItemComponentFor<B>
+  /**
+   * Component to use for rendering "hard breaks", eg \`\\n\` inside of text spans
+   * Will by default render a \`<br />\`. Pass \`false\` to render as-is (\`\\n\`)
+   */
+  hardBreak: ComponentType | false
+  /**
+   * React component used when encountering a mark type there is no registered component for
+   * in the \`components.marks\` prop.
+   */
+  unknownMark: PortableTextMarkComponent
+  /**
+   * React component used when encountering an object type there is no registered component for
+   * in the \`components.types\` prop.
+   */
+  unknownType: PortableTextComponent<UnknownNodeType>
+  /**
+   * React component used when encountering a block style there is no registered component for
+   * in the \`components.block\` prop. Only used if \`components.block\` is an object.
+   */
+  unknownBlockStyle: PortableTextComponent<PortableTextBlock>
+  /**
+   * React component used when encountering a list style there is no registered component for
+   * in the \`components.list\` prop. Only used if \`components.list\` is an object.
+   */
+  unknownList: PortableTextComponent<ReactPortableTextList>
+  /**
+   * React component used when encountering a list item style there is no registered component for
+   * in the \`components.listItem\` prop. Only used if \`components.listItem\` is an object.
+   */
+  unknownListItem: PortableTextComponent<PortableTextListItemBlock>
+}
+
+declare type PortableTextTypeComponent<V extends TypedObject = any> = ComponentType<
+  PortableTextTypeComponentProps<V>
+>
+
+/**
+ * Props received by any user-defined type in the input array that is not a text block
+ *
+ * @template T Type of data this component will receive in its \`value\` property
+ */
+declare type PortableTextTypeComponentProps<T> = Omit<PortableTextComponentProps<T>, 'children'>
+
+declare type PortableTextTypeComponents<B extends TypedObject> =
+  string extends CustomPortableTextTypeName<B>
+    ? Record<string, PortableTextTypeComponent | undefined>
+    : CustomPortableTextTypeName<B> extends never
+      ? Record<string, PortableTextTypeComponent | undefined>
+      : Record<string, PortableTextTypeComponent | undefined> & {
+          [Type in CustomPortableTextTypeName<B>]?: PortableTextTypeComponent<
+            Extract<
+              CustomPortableTextType<B>,
+              {
+                _type: Type
+              }
+            >
+          >
+        }
+
+/**
+ * A virtual "list" node for Portable Text - not strictly part of Portable Text,
+ * but generated by this library to ease the rendering of lists in HTML etc
+ */
+declare type ReactPortableTextList = ToolkitPortableTextList
+
+declare interface Serializable<T> {
+  node: T
+  index: number
+  isInline: boolean
+  renderNode: NodeRenderer
+}
+
+declare type TypeName<T> = T extends {
+  _type: infer Name
+}
+  ? Name extends string
+    ? Name
+    : never
+  : never
+
+/**
+ * Any node type that we can't identify - eg it has an \`_type\`,
+ * but we don't know anything about its other properties
+ */
+declare type UnknownNodeType =
+  | {
+      _type: string
+      [key: string]: unknown
+    }
+  | TypedObject
+
+export {}
+"
+`;
+
+exports[`cli > should build \`react-compiler-surfaces\` package > ./dist/index.js 1`] = `
+"import { jsx } from "react/jsx-runtime";
+import { c } from "react/compiler-runtime";
+const portableTextComponents = {
+  types: {
+    image: (t0) => {
+      "use memo";
+      const $ = c(2), {
+        value
+      } = t0, t1 = value;
+      let t2;
+      return $[0] !== t1.imageUrl ? (t2 = /* @__PURE__ */ jsx("img", { src: t1.imageUrl }), $[0] = t1.imageUrl, $[1] = t2) : t2 = $[1], t2;
+    }
+  },
+  marks: {
+    link: (t0) => {
+      "use memo";
+      const $ = c(4), {
+        children,
+        value
+      } = t0, rel = value?.href.startsWith("/") ? void 0 : "noreferrer noopener", t1 = value?.href;
+      let t2;
+      return $[0] !== children || $[1] !== rel || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("a", { href: t1, rel, children }), $[0] = children, $[1] = rel, $[2] = t1, $[3] = t2) : t2 = $[3], t2;
+    }
+  }
+};
+export {
+  portableTextComponents
+};
+//# sourceMappingURL=index.js.map
+"
+`;
+
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
 "import { jsx, jsxs } from "react/jsx-runtime";
 import { c } from "react-compiler-runtime";
