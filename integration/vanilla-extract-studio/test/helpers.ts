@@ -275,7 +275,13 @@ export async function compileLazyChunk(
   const clientId = `integration-test-${Math.random().toString(36).slice(2)}`
   const socket = new WebSocket(`ws://127.0.0.1:${server.port}/?token=${wsToken}`, 'vite-hmr')
   try {
-    const connected = new Promise<void>((resolve, reject) => {
+    // The server greets every accepted client with `{"type":"connected"}`, so waiting for it
+    // also covers the open handshake. Time-boxed so an unresponsive server (or a rejected
+    // `wsToken`) fails the test instead of hanging it until the suite timeout.
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Timed out waiting for the HMR WebSocket connection greeting'))
+      }, 30_000)
       socket.addEventListener('message', (event) => {
         const message: unknown = JSON.parse(String(event.data))
         if (
@@ -284,21 +290,24 @@ export async function compileLazyChunk(
           'type' in message &&
           message.type === 'connected'
         ) {
+          clearTimeout(timeout)
           resolve()
         }
       })
-      socket.addEventListener('error', () => reject(new Error('HMR WebSocket connection failed')))
-    })
-    await new Promise<void>((resolve, reject) => {
-      socket.addEventListener('open', () => resolve())
-      socket.addEventListener('error', () => reject(new Error('HMR WebSocket connection failed')))
+      socket.addEventListener('error', () => {
+        clearTimeout(timeout)
+        reject(new Error('HMR WebSocket connection failed'))
+      })
+      socket.addEventListener('close', () => {
+        clearTimeout(timeout)
+        reject(new Error('HMR WebSocket closed before the connection greeting'))
+      })
     })
     socket.send(
       JSON.stringify({type: 'custom', event: 'vite:module-loaded', data: {modules: [], clientId}}),
     )
     // The client registration the module-loaded event triggers is processed asynchronously;
     // give it a beat before requesting a compile on its behalf
-    await connected
     await new Promise((resolve) => setTimeout(resolve, 250))
 
     const url = `/@vite/lazy?id=${encodeURIComponent(lazyModuleId)}&clientId=${clientId}`

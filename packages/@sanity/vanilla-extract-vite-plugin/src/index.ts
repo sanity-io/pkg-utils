@@ -264,7 +264,7 @@ export function vanillaExtractPlugin({
         // would hang in `fetchModule` until the 60s transport timeout and crash the dev
         // server — see the bundled-dev test of `@integration/vanilla-extract-studio`.
         const isServingBundledDev =
-          config.command === 'serve' && (config.experimental.bundledDev ?? false)
+          config.command === 'serve' && (config.experimental?.bundledDev ?? false)
         if (!config.build.watch && !isServingBundledDev) {
           void compiler?.close()
         }
