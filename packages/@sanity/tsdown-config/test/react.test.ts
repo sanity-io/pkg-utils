@@ -32,6 +32,25 @@ describe('reactCompiler option', () => {
   })
 })
 
+describe('reactCompilerSurfaces option', () => {
+  test('is disabled by default', async () => {
+    expect(getPluginNames(await defineConfig({reactCompiler: true}))).toEqual([
+      '@rolldown/plugin-babel',
+    ])
+  })
+
+  test('adds the surfaces plugin before the React Compiler babel plugin', async () => {
+    expect(
+      getPluginNames(await defineConfig({reactCompiler: true, reactCompilerSurfaces: true})),
+    ).toEqual(['sanity-react-compiler-surfaces', '@rolldown/plugin-babel'])
+    expect(
+      getPluginNames(
+        await defineConfig({reactCompiler: {target: '19'}, reactCompilerSurfaces: {}}),
+      ),
+    ).toEqual(['sanity-react-compiler-surfaces', '@rolldown/plugin-babel'])
+  })
+})
+
 describe('react-19-library', () => {
   test('applies the React Compiler to esm and cjs output', async () => {
     const [distIndexJs, distIndexCjs] = await Promise.all([
@@ -47,6 +66,22 @@ describe('react-19-library', () => {
 
     expect(distIndexCjs).toContain('require("react/compiler-runtime")')
     expect(distIndexCjs).toContain('react.memo_cache_sentinel')
+  })
+
+  test('memoizes annotated surface components with `reactCompilerSurfaces`', async () => {
+    const [distIndexJs, distIndexCjs] = await Promise.all([
+      readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/index.cjs'), 'utf-8'),
+    ])
+
+    for (const output of [distIndexJs, distIndexCjs]) {
+      // The `marks.link` component in `portableText.tsx` is an object-property function the
+      // compiler's `infer` mode never compiles on its own: the surfaces plugin injected the
+      // `'use memo'` opt-in (still visible in the output), and the compiler memoized it in
+      // place with a cache keyed on its props (`rel` is derived state unique to that component)
+      expect(output).toContain('use memo')
+      expect(output).toMatch(/\$\[\d\] !== rel/)
+    }
   })
 
   test('replaces `define` globals at build time', async () => {

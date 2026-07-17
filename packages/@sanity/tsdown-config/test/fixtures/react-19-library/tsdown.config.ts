@@ -5,5 +5,6 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   platform: 'neutral',
   reactCompiler: {target: '19'},
+  reactCompilerSurfaces: true,
   define: {'process.env.NODE_ENV': JSON.stringify('production')},
 })
