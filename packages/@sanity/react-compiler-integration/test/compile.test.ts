@@ -124,10 +124,12 @@ export default defineConfig({
     expect(annotated).not.toBeNull()
 
     type Config = {form: {components: {input: React.ComponentType<Record<string, unknown>>}}}
-    const original = evaluateWithReactCompiler(source, 'sanity.config.js')
-      .default as unknown as Config
-    const compiled = evaluateWithReactCompiler(annotated!.code, 'sanity.config.js')
-      .default as unknown as Config
+    const original = evaluateWithReactCompiler(source, 'sanity.config.js')[
+      'default'
+    ] as unknown as Config
+    const compiled = evaluateWithReactCompiler(annotated!.code, 'sanity.config.js')[
+      'default'
+    ] as unknown as Config
 
     const {createElement} = require('react') as typeof import('react')
     const {renderToStaticMarkup} = require('react-dom/server') as typeof import('react-dom/server')

@@ -13,10 +13,9 @@ describe('reactCompilerSurfacesPlugin', () => {
   })
 
   test('the transform annotates surface modules', async () => {
-    const plugin = reactCompilerSurfacesPlugin() as {
-      transform: {
-        handler: (this: unknown, code: string, id: string) => Promise<{code: string} | undefined>
-      }
+    const plugin = reactCompilerSurfacesPlugin()
+    const transform = plugin.transform as unknown as {
+      handler: (this: unknown, code: string, id: string) => Promise<{code: string} | undefined>
     }
     const source = `
 import {defineType} from 'sanity'
@@ -27,14 +26,10 @@ export const myType = defineType({
   components: {input: (props) => props.renderDefault(props)},
 })
 `
-    const result = await plugin.transform.handler.call(undefined, source, '/src/schema.ts')
+    const result = await transform.handler.call(undefined, source, '/src/schema.ts')
     expect(result?.code).toContain(`'use memo'`)
 
-    const untouched = await plugin.transform.handler.call(
-      undefined,
-      `export const foo = 1`,
-      '/src/foo.ts',
-    )
+    const untouched = await transform.handler.call(undefined, `export const foo = 1`, '/src/foo.ts')
     expect(untouched).toBeUndefined()
   })
 })

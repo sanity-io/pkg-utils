@@ -48,6 +48,26 @@
         "@sanity/pkg-utils",
       ],
     },
+    "packages/@sanity/react-compiler-integration": {
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": [
+        // Loaded by babel from a string plugin id in the compile tests, not imported
+        "@babel/plugin-transform-modules-commonjs",
+      ],
+    },
+    "packages/@sanity/react-compiler-rolldown-plugin": {
+      // The fixture is a rolldown build input referenced by path, not imported from the tests
+      "entry": ["test/fixtures/*/src/index.tsx"],
+      "project": ["src/**/*.ts", "test/**/*.{ts,tsx}"],
+    },
+    "packages/@sanity/react-compiler-tsdown-plugin": {
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+    },
+    "packages/@sanity/react-compiler-vite-plugin": {
+      // The fixture app is a vite build input referenced by path, not imported from the tests
+      "entry": ["test/fixtures/*/src/main.tsx"],
+      "project": ["src/**/*.ts", "test/**/*.{ts,tsx}"],
+    },
     "packages/@sanity/vanilla-extract-integration": {
       // The fixtures are rolldown build inputs referenced by path, not imported from the tests,
       // and the bench harness is run explicitly via `vitest bench`
