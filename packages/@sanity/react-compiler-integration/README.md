@@ -23,7 +23,11 @@ export default defineConfig({
     components: {
       // Never compiled: an anonymous arrow in an object property
       input: (props) =>
-        props.schemaType?.name === 'string' ? <CustomStringInput {...props} /> : props.renderDefault(props),
+        props.schemaType?.name === 'string' ? (
+          <CustomStringInput {...props} />
+        ) : (
+          props.renderDefault(props)
+        ),
     },
   },
 })
@@ -31,7 +35,7 @@ export default defineConfig({
 
 The compiler can't lift this restriction itself: it has no way to know whether a function in
 an arbitrary object is rendered as a component or invoked as a plain call (where the injected
-memo cache — a hook — would break). Sanity tooling *does* know its own API surfaces, so it can
+memo cache — a hook — would break). Sanity tooling _does_ know its own API surfaces, so it can
 maintain the allow-list the compiler can't.
 
 Any function carrying a `'use memo'` directive is compiled regardless of position — inline,
@@ -59,11 +63,11 @@ bundler's own chain. It returns `null` when nothing needs to change.
 
 ## Built-in surfaces
 
-| Surface | Anchors | Annotated |
-| --- | --- | --- |
-| `sanity-config` | `defineConfig` / `definePlugin` from `sanity` (module scope; workspace arrays and `definePlugin(() => ({…}))` factories are followed) | `form.components.*`, `studio.components.*`, and any `use*`-named function prop anywhere in the config — including inside plugin-factory arguments like `assist({fieldActions: {useFieldActions}})` |
-| `sanity-schema` | `defineType` / `defineField` / `defineArrayMember` from `sanity` or `@sanity/types` | `components.{input,field,item,preview,block,inlineBlock,annotation,diff}` at any nesting depth (inline fields behind `fields`/`of` arrays included) |
-| `portabletext` | Object literals typed `PortableTextComponents` / `PortableTextReactComponents` from `@portabletext/react` (via `: T`, `satisfies T`, or `as T`) | Every function-valued member, to a depth of two (`types.*`, `marks.*`, `block.*`, `list.*`, `listItem.*`, and top-level slots like `hardBreak`) |
+| Surface         | Anchors                                                                                                                                         | Annotated                                                                                                                                                                                          |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sanity-config` | `defineConfig` / `definePlugin` from `sanity` (module scope; workspace arrays and `definePlugin(() => ({…}))` factories are followed)           | `form.components.*`, `studio.components.*`, and any `use*`-named function prop anywhere in the config — including inside plugin-factory arguments like `assist({fieldActions: {useFieldActions}})` |
+| `sanity-schema` | `defineType` / `defineField` / `defineArrayMember` from `sanity` or `@sanity/types`                                                             | `components.{input,field,item,preview,block,inlineBlock,annotation,diff}` at any nesting depth (inline fields behind `fields`/`of` arrays included)                                                |
+| `portabletext`  | Object literals typed `PortableTextComponents` / `PortableTextReactComponents` from `@portabletext/react` (via `: T`, `satisfies T`, or `as T`) | Every function-valued member, to a depth of two (`types.*`, `marks.*`, `block.*`, `list.*`, `listItem.*`, and top-level slots like `hardBreak`)                                                    |
 
 Custom surfaces can be passed through the `surfaces` option — see the `Surface` type.
 

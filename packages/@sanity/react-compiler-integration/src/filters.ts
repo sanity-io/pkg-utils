@@ -2,19 +2,19 @@ import type {Surface} from './surfaces.ts'
 
 /**
  * Matches the module ids the transform should consider: JS/TS sources (including the `m`/`c`
- * flavors), tolerating id queries (`?v=…` and friends). Virtual (`\0`-prefixed) modules never
- * match.
+ * flavors), tolerating id queries (`?v=…` and friends).
  * @public
  */
-export const transformIdFilter: RegExp = /^[^\0].*\.[cm]?[jt]sx?(?:$|\?)/
+export const transformIdFilter: RegExp = /\.[cm]?[jt]sx?(?:$|\?)/
 
 /**
  * Matches ids that must never be transformed: anything inside `node_modules` (published
  * libraries pre-compile with their own toolchain; the surfaces annotation is for authored
- * source).
+ * source), and virtual (`\u0000`-prefixed) plugin modules.
  * @public
  */
-export const excludeIdFilter: RegExp = /[\\/]node_modules[\\/]/
+// eslint-disable-next-line no-control-regex -- the `\u0000` prefix is rollup's virtual-module marker
+export const excludeIdFilter: RegExp = /^\u0000|[\\/]node_modules[\\/]/
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

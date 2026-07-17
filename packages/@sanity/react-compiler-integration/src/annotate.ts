@@ -214,10 +214,11 @@ function buildImportTables(
       // The imported name is either an identifier (`import {defineConfig}`) or a string
       // literal (`import {'defineConfig' as dc}`)
       const imported = childNode(specifier, 'imported')
+      const importedLiteral = imported?.['value']
       const importedName = isIdentifier(imported)
         ? imported.name
-        : typeof imported?.['value'] === 'string'
-          ? (imported['value'] as string)
+        : typeof importedLiteral === 'string'
+          ? importedLiteral
           : undefined
       if (importedName === undefined) continue
 
@@ -283,8 +284,8 @@ function propertyKeyName(property: EstreeNode): string | undefined {
   if (property['computed'] === true) return undefined
   const key = childNode(property, 'key')
   if (isIdentifier(key)) return key.name
-  if (key?.type === 'Literal' && typeof key['value'] === 'string') return key['value'] as string
-  return undefined
+  const literal = key?.type === 'Literal' ? key['value'] : undefined
+  return typeof literal === 'string' ? literal : undefined
 }
 
 interface WalkState {
@@ -375,8 +376,7 @@ function walkSurfaceValue(
       const propertyValue = unwrapExpression(rawValue)
 
       if (isFunctionExpressionNode(propertyValue)) {
-        const pathMatch =
-          !insideCall && matchesPatterns(compiled.patterns, [...path, key])
+        const pathMatch = !insideCall && matchesPatterns(compiled.patterns, [...path, key])
         const hookMatch = compiled.surface.hookProps === true && hookNamePattern.test(key)
         if (pathMatch || hookMatch) annotateFunction(state, property, propertyValue)
         continue

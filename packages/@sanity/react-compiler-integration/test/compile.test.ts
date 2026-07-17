@@ -4,6 +4,7 @@
  * the compiled components render byte-identical markup to their uncompiled originals.
  */
 import {createRequire} from 'node:module'
+import vm from 'node:vm'
 import {transformSync} from '@babel/core'
 import {describe, expect, test} from 'vitest'
 import {annotateReactCompilerSurfaces} from '../src/index.ts'
@@ -41,11 +42,12 @@ function evaluateWithReactCompiler(source: string, filename: string): Record<str
     if (id === 'sanity') return {defineConfig: (config: unknown) => config}
     return require(id)
   }
-  new Function('require', 'module', 'exports', result.code)(
-    requireShim,
-    moduleShim,
-    moduleShim.exports,
-  )
+  vm.runInNewContext(result.code, {
+    require: requireShim,
+    module: moduleShim,
+    exports: moduleShim.exports,
+    process,
+  })
   return moduleShim.exports
 }
 
@@ -128,16 +130,11 @@ export default defineConfig({
       .default as unknown as Config
 
     const {createElement} = require('react') as typeof import('react')
-    const {renderToStaticMarkup} =
-      require('react-dom/server') as typeof import('react-dom/server')
+    const {renderToStaticMarkup} = require('react-dom/server') as typeof import('react-dom/server')
 
     const props = {href: 'https://sanity.io', label: 'Sanity'}
-    const originalHtml = renderToStaticMarkup(
-      createElement(original.form.components.input, props),
-    )
-    const compiledHtml = renderToStaticMarkup(
-      createElement(compiled.form.components.input, props),
-    )
+    const originalHtml = renderToStaticMarkup(createElement(original.form.components.input, props))
+    const compiledHtml = renderToStaticMarkup(createElement(compiled.form.components.input, props))
 
     expect(compiledHtml).toBe(originalHtml)
     expect(originalHtml).toBe('<a href="https://sanity.io" rel="noreferrer noopener">Sanity</a>')

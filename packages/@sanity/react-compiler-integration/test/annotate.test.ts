@@ -280,7 +280,9 @@ export const components: PortableTextComponents = {
 `)
     expect(annotation!.annotated).toBe(4)
     expect(annotation!.code).toContain(`link: ({children, value}) => {'use memo';`)
-    expect(annotation!.code).toContain(`'strike-through': ({children}) => {'use memo';return (<s>{children}</s>);}`)
+    expect(annotation!.code).toContain(
+      `'strike-through': ({children}) => {'use memo';return (<s>{children}</s>);}`,
+    )
 
     const satisfies = await annotate(`
 import type {PortableTextComponents} from '@portabletext/react'
