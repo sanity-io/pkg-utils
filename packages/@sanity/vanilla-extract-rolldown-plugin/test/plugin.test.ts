@@ -96,7 +96,7 @@ describe('vanillaExtractPlugin', () => {
     expect(findAsset(output, 'bundle.css')).toContain('rgb(1, 2, 3)')
     expect(code).not.toContain('bundle.css')
     expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle-css.js')).toBe(false)
-    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle-css.d.ts')).toBe(false)
 
     // The styles must not be inlined or imported in the JS output either
     expect(code).not.toContain('.vanilla.css')
@@ -161,9 +161,9 @@ describe('vanillaExtractPlugin', () => {
     const shim = findAsset(output, 'bundle-css.js')
     expect(shim).toContain('No-op shim')
     expect(shim.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
-    // Declarations for both export targets: CSS file + shim
-    expect(findAsset(output, 'bundle.css.d.ts')).toContain('export {}')
+    // Declaration for the export's `types` target (the shim); no separate CSS `.d.ts`
     expect(findAsset(output, 'bundle-css.d.ts')).toContain('export {}')
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'bundle.css.d.ts')).toBe(false)
   })
 
   test('respects a custom `fileName`', async () => {
@@ -171,8 +171,8 @@ describe('vanillaExtractPlugin', () => {
 
     expect(findAsset(output, 'styles.css')).toContain('rgb(1, 2, 3)')
     expect(findAsset(output, 'styles-css.js')).toContain('No-op shim')
-    expect(findAsset(output, 'styles.css.d.ts')).toContain('export {}')
     expect(findAsset(output, 'styles-css.d.ts')).toContain('export {}')
+    expect(output.some((assetOrChunk) => assetOrChunk.fileName === 'styles.css.d.ts')).toBe(false)
     expect(findEntryChunk(output).code).toContain(
       'import "@sanity/vanilla-extract-rolldown-plugin/styles.css";',
     )
@@ -276,7 +276,6 @@ describe('vanillaExtractPlugin', () => {
       'bundle-css.d.ts',
       'bundle-css.js',
       'bundle.css',
-      'bundle.css.d.ts',
       'index.js',
     ])
     expect(findAsset(withNodeCompat, 'bundle.css')).toBe('')

@@ -7,9 +7,8 @@ import {cssShimDtsFileName, cssShimFileName} from '../../core/pkg/cssShimFileNam
  * `import "<pkg>/<css>"` resolves to a harmless module in runtimes that cannot import `.css`
  * files, instead of throwing `Error: Unknown file extension ".css"`.
  *
- * Matching `.d.ts` declarations are emitted for both export targets:
- * - `<css>.d.ts` for the extracted CSS file (`browser` / `style` conditions)
- * - `<css-shim>.d.ts` (e.g. `bundle-css.d.ts`) for the JS shim (`node` / `default` conditions)
+ * A matching `.d.ts` declaration is emitted for the shim (`bundle-css.d.ts`); the conditional
+ * `./<css>` export's `types` condition points at it, so a separate `<css>.d.ts` is unnecessary.
  *
  * The shim is named `bundle-css.js` rather than `bundle.css.js` so it does not match
  * vanilla-extract's `cssFileFilter` (`/\.css\.(js|…)$/`).
@@ -28,11 +27,6 @@ export function bundleCssShim(options: {cssName: string}): Plugin {
         type: 'asset',
         fileName: shimFileName,
         source: `// No-op shim for \`${cssName}\` in runtimes that cannot import \`.css\` files directly.\nexport default ""\n`,
-      })
-      this.emitFile({
-        type: 'asset',
-        fileName: `${cssName}.d.ts`,
-        source: `// Type declarations for \`${cssName}\` and its no-op JS shim.\ndeclare const _default: string\nexport default _default\n`,
       })
       this.emitFile({
         type: 'asset',
