@@ -63,10 +63,9 @@ describe('vanilla-extract-library', () => {
     expect(bundleCss).toContain('top:')
   })
 
-  test('emits the no-op JS shim and its type declarations', async () => {
-    const [shim, cssDts, shimDts] = await Promise.all([
+  test('emits the no-op JS shim and its type declaration', async () => {
+    const [shim, shimDts] = await Promise.all([
       readFile(path.join(fixtureDir, 'dist/bundle-css.js'), 'utf-8'),
-      readFile(path.join(fixtureDir, 'dist/bundle.css.d.ts'), 'utf-8'),
       readFile(path.join(fixtureDir, 'dist/bundle-css.d.ts'), 'utf-8'),
     ])
 
@@ -74,8 +73,10 @@ describe('vanilla-extract-library', () => {
     // regardless of the package `type` (the cjs-library fixture covers this at runtime)
     expect(shim).toContain('No-op shim')
     expect(shim.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
-    expect(cssDts).toContain('export {}')
+    // The conditional export's `types` condition points at the shim's `.d.ts`; a separate
+    // `bundle.css.d.ts` for the CSS file itself is unnecessary.
     expect(shimDts).toContain('export {}')
+    await expect(readFile(path.join(fixtureDir, 'dist/bundle.css.d.ts'), 'utf-8')).rejects.toThrow()
   })
 
   test('injects the self-referential CSS import into the entry chunks', async () => {

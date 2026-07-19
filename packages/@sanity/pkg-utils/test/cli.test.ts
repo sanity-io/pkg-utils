@@ -552,7 +552,6 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
       distIndexDts,
       distBundleCss,
       distBundleCssShim,
-      distBundleCssDts,
       distBundleCssShimDts,
       pkg,
     ] = await Promise.all([
@@ -561,7 +560,6 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
       project.readFile('dist/index.d.ts'),
       project.readFile('dist/bundle.css'),
       project.readFile('dist/bundle-css.js'),
-      project.readFile('dist/bundle.css.d.ts'),
       project.readFile('dist/bundle-css.d.ts'),
       project.readFile('package.json'),
     ])
@@ -576,11 +574,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     // …emits a no-op JS shim for CSS-unaware runtimes (named `bundle-css.js`, not
     // `bundle.css.js`, so vanilla-extract's `cssFileFilter` does not match it)
     expect(distBundleCssShim).toContain('export default ""')
-    // …emits matching `.d.ts` files for both the CSS and shim export targets
-    expect(distBundleCssDts).toContain('declare const _default: string')
-    expect(distBundleCssDts).toContain('export default _default')
+    // …emits the shim's `.d.ts` (the conditional export's `types` target); no separate
+    // `bundle.css.d.ts` is needed
     expect(distBundleCssShimDts).toContain('declare const _default: string')
     expect(distBundleCssShimDts).toContain('export default _default')
+    await expect(project.readFile('dist/bundle.css.d.ts')).rejects.toThrow()
     // …and declares the conditional `./bundle.css` export in package.json
     expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
       types: './dist/bundle-css.d.ts',

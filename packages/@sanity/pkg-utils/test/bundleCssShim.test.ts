@@ -24,17 +24,16 @@ describe('bundleCssShim', () => {
     expect(shim?.source).toContain('export default ""')
   })
 
-  test('emits `.d.ts` companions for both the CSS file and the shim', () => {
+  test('emits a single `.d.ts` for the shim (the export `types` target)', () => {
     const emitted = runGenerateBundle('bundle.css')
-    const cssDts = emitted.find((file) => file.fileName === 'bundle.css.d.ts')
     const shimDts = emitted.find((file) => file.fileName === 'bundle-css.d.ts')
-    expect(cssDts).toBeDefined()
     expect(shimDts).toBeDefined()
-    for (const dts of [cssDts, shimDts]) {
-      expect(dts?.type).toBe('asset')
-      expect(dts?.source).toContain('declare const _default: string')
-      expect(dts?.source).toContain('export default _default')
-    }
+    expect(shimDts?.type).toBe('asset')
+    expect(shimDts?.source).toContain('declare const _default: string')
+    expect(shimDts?.source).toContain('export default _default')
+    // The conditional export's `types` condition points at the shim's `.d.ts`, so a separate
+    // `bundle.css.d.ts` for the CSS file itself is unnecessary.
+    expect(emitted.some((file) => file.fileName === 'bundle.css.d.ts')).toBe(false)
   })
 
   test('respects a custom css name', () => {
@@ -42,7 +41,6 @@ describe('bundleCssShim', () => {
     expect(emitted.map((file) => file.fileName).toSorted()).toEqual([
       'styles-css.d.ts',
       'styles-css.js',
-      'styles.css.d.ts',
     ])
   })
 })
