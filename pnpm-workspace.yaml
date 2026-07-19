@@ -68,6 +68,7 @@ minimumReleaseAgeExclude:
   # vanilla-extract-* packages and their benchmarks; bump immediately so the
   # comparison suite and plugin peers stay on current releases.
   - '@vanilla-extract/*'
+  - verkit
 
 overrides:
   '@sanity/pkg-utils': workspace:*
