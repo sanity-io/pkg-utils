@@ -244,6 +244,15 @@ export function vanillaExtractPlugin({
         server.watcher.on('unlink', (file) => {
           transformedModules.delete(normalizePath(file))
         })
+        // Close the compiler (and with it its internal Vite server and file watcher) when the
+        // dev server shuts down. This is the only shutdown signal under bundled dev mode,
+        // where `buildEnd` must not close the compiler (see below) and environment close
+        // skips the plugin container; without it the lingering handles keep the process
+        // alive after `server.close()`. In unbundled dev `buildEnd` also fires on shutdown —
+        // closing twice is harmless.
+        server.httpServer?.once('close', () => {
+          void compiler?.close()
+        })
       },
 
       async buildStart() {

@@ -70,14 +70,16 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/pkg-utils': workspace:*
-  # Align every rolldown copy on the version vite 8 pins (~1.1.4) so vite, tsdown,
-  # rolldown-plugin-dts, the workspace packages, and third-party optional consumers all share
-  # one copy (and one Plugin type). Bump when vite updates its pinned rolldown.
+  # Align every rolldown copy except vite's own (see the scoped override below) on one
+  # version — currently the 1.2.0 that tsdown pins — so tsdown, rolldown-plugin-dts, the
+  # workspace packages, and third-party optional consumers all share one copy (and one
+  # Plugin type).
   rolldown: 1.2.0
-  # ...except vite itself: its bundled-dev NAPI glue tracks the rolldown DevEngine API of the
-  # version it pins, and rolldown 1.2.0 changed that API (`registerModules` removed,
+  # vite is the exception: its bundled-dev NAPI glue tracks the rolldown DevEngine API of the
+  # version it pins (~1.1.5), and rolldown 1.2.0 changed that API (`registerModules` removed,
   # `compileEntry` returns an object instead of code), which crashes `sanity dev` with
-  # `unstable_bundledDev` on every lazy chunk request. Drop when vite pins rolldown >=1.2.
+  # `unstable_bundledDev` on every lazy chunk request. Merge this back into the override
+  # above when vite pins rolldown >=1.2.
   'vite>rolldown': ~1.1.5
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
