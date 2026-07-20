@@ -1,5 +1,11 @@
 # @sanity/vanilla-extract-integration
 
+## 0.1.5
+
+### Patch Changes
+
+- [#3106](https://github.com/sanity-io/pkg-utils/pull/3106) [`f180e02`](https://github.com/sanity-io/pkg-utils/commit/f180e022908ad555756e013b20cb589a34703954) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `lightningcss` to `^1.33.0` and `yuku-parser` to `^0.7.0`.
+
 ## 0.1.4
 
 ### Patch Changes
