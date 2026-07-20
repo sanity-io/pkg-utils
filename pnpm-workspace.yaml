@@ -50,6 +50,7 @@ minimumReleaseAgeExclude:
   # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
   # cross-framework matrix building against current releases.
   - '@astrojs/react'
+  - astro
   # TypeScript 7 (the Go-native compiler) and related toolchain releases that need to be
   # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts
   # and the oxc types shipped with each rolldown release.
