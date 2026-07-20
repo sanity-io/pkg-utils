@@ -86,7 +86,14 @@ sample-count overrides.
   `@sanity/vanilla-extract-vite-plugin` and with upstream `@vanilla-extract/vite-plugin` as the
   reference — the fork's CSS/class-name/schema output must match upstream exactly across
   identifier (`short`/`debug`/custom prefix), `build.cssMinify`, and `build.cssTarget`
-  variants. **Run it whenever `@sanity/vanilla-extract-vite-plugin` or
-  `@sanity/vanilla-extract-integration` changes.** The suite spawns the CLI without `NODE_ENV`
-  on purpose (that's what reproduces GH-3073); it needs no Sanity auth/network. Takes ~2 min
-  (sequential CLI runs).
+  variants, plus a `sanity dev` `unstable_bundledDev` (Vite bundled dev mode) case that
+  on-demand-compiles a lazy chunk containing a plain non-vanilla-extract `Styles.css.js`
+  node_modules dependency (the sanity-io/plugins#1553 scenario). **Run it whenever
+  `@sanity/vanilla-extract-vite-plugin` or `@sanity/vanilla-extract-integration` changes.**
+  The suite spawns the CLI without `NODE_ENV` on purpose (that's what reproduces GH-3073); it
+  needs no Sanity auth/network. Takes ~2.5 min (sequential CLI runs). Note: `rolldown` resolves
+  naturally (no pnpm override): vite keeps the version it pins (currently ~1.1.5) while tsdown
+  and the workspace packages share the ~1.2.0 they declare. Do not add a workspace-wide
+  `rolldown` override — forcing vite's internal copy off its pinned version breaks its
+  bundled-dev NAPI glue (`DevEngine.registerModules`/`compileEntry` API drift) and crashes
+  every lazy chunk request under `unstable_bundledDev`.

@@ -56,6 +56,11 @@ export default defineCliConfig({
     projectId: process.env['SANITY_STUDIO_PROJECT_ID'] || 'ppsg7ml5',
     dataset: process.env['SANITY_STUDIO_DATASET'] || 'test',
   },
+  // Vite's experimental bundled dev mode (`sanity dev` serves a Rolldown-bundled module graph
+  // with on-demand chunk compilation instead of unbundled per-module ESM). Node_modules files
+  // go through the plugin pipeline in this mode — including `plain-css-js-dependency`'s
+  // fake `Styles.css.js` — instead of being pre-bundled away by the dep optimizer.
+  unstable_bundledDev: process.env['VE_BUNDLED_DEV'] === 'true',
   vite: {
     plugins: [resolvePlugin()],
     build: resolveCssBuildOptions(),
