@@ -1,5 +1,41 @@
 # @sanity/pkg-utils
 
+## 11.0.13
+
+### Patch Changes
+
+- [#3106](https://github.com/sanity-io/pkg-utils/pull/3106) [`f180e02`](https://github.com/sanity-io/pkg-utils/commit/f180e022908ad555756e013b20cb589a34703954) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `lightningcss` to `^1.33.0` and `yuku-parser` to `^0.7.0`.
+
+## 11.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`aac3364`](https://github.com/sanity-io/pkg-utils/commit/aac3364216b6c0f3d361d4068da0224c3335ab0f)]:
+  - @sanity/parse-package-json@2.2.9
+
+## 11.0.11
+
+### Patch Changes
+
+- [#3090](https://github.com/sanity-io/pkg-utils/pull/3090) [`6519cff`](https://github.com/sanity-io/pkg-utils/commit/6519cff18da823f7acf2fae52e28c702173664ea) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.58.10
+
+- [#3091](https://github.com/sanity-io/pkg-utils/pull/3091) [`a62e5c2`](https://github.com/sanity-io/pkg-utils/commit/a62e5c28a40ec706a64956bbba93bbe2a30fdd48) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency globby to ^16.2.2
+
+- [#3092](https://github.com/sanity-io/pkg-utils/pull/3092) [`ef426fb`](https://github.com/sanity-io/pkg-utils/commit/ef426fbadabfa5d5febbd92c0749f2313814b532) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency pretty-bytes to ^7.1.1
+
+- [#3093](https://github.com/sanity-io/pkg-utils/pull/3093) [`abfc898`](https://github.com/sanity-io/pkg-utils/commit/abfc8987cf2dd87da190f6ba7d0b8d6edcb9726f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown-plugin-dts to v0.27.12
+
+- [#3097](https://github.com/sanity-io/pkg-utils/pull/3097) [`80f965e`](https://github.com/sanity-io/pkg-utils/commit/80f965edd6420971da4eba0537510f8a1dfa9148) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.58.11
+
+- [#3086](https://github.com/sanity-io/pkg-utils/pull/3086) [`b900be5`](https://github.com/sanity-io/pkg-utils/commit/b900be54f65dcfb4fabe2636b4a0380b01330209) Thanks [@stipsan](https://github.com/stipsan)! - Stop emitting a redundant `bundle.css.d.ts` alongside the vanilla-extract CSS shim.
+
+  The conditional `./bundle.css` export already has an explicit `types` condition pointing at `bundle-css.d.ts`, so TypeScript never needs a sibling declaration for the CSS file itself. Compat mode now emits only that one declaration (plus `bundle-css.js` and `bundle.css`).
+
+  `cssFileDtsFileName` is no longer exported from `@sanity/vanilla-extract-rolldown-plugin` (0.x breaking API change → minor).
+
+- Updated dependencies [[`412881b`](https://github.com/sanity-io/pkg-utils/commit/412881b552f8c5315c12d961da903b4836581646)]:
+  - @sanity/parse-package-json@2.2.8
+
 ## 11.0.10
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @sanity/vanilla-extract-integration
 
+## 0.1.5
+
+### Patch Changes
+
+- [#3106](https://github.com/sanity-io/pkg-utils/pull/3106) [`f180e02`](https://github.com/sanity-io/pkg-utils/commit/f180e022908ad555756e013b20cb589a34703954) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `lightningcss` to `^1.33.0` and `yuku-parser` to `^0.7.0`.
+
+## 0.1.4
+
+### Patch Changes
+
+- [#3096](https://github.com/sanity-io/pkg-utils/pull/3096) [`aac3364`](https://github.com/sanity-io/pkg-utils/commit/aac3364216b6c0f3d361d4068da0224c3335ab0f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.12
+
+## 0.1.3
+
+### Patch Changes
+
+- [#3089](https://github.com/sanity-io/pkg-utils/pull/3089) [`412881b`](https://github.com/sanity-io/pkg-utils/commit/412881b552f8c5315c12d961da903b4836581646) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.11
+
 ## 0.1.2
 
 ### Patch Changes

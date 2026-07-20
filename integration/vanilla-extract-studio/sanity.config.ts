@@ -1,6 +1,17 @@
+import {lazy} from 'react'
 import {defineConfig, defineField, defineType} from 'sanity'
 import {veStudioButton} from './src/button.css'
 import {veStudioDialog, veStudioOverlay} from './src/styles.css'
+
+/**
+ * A lazily-loaded input consuming `plain-css-js-dependency`: a node_modules package that ships
+ * a plain (non-vanilla-extract) `Styles.css.js` module whose name matches vanilla-extract's
+ * `cssFileFilter`, mirroring how `sanity-plugin-bynder-input` lazy-loads a modal that imports
+ * `@bynder/compact-view` (sanity-io/plugins#1553). Under `sanity dev` with
+ * `unstable_bundledDev` the import becomes a chunk compiled on demand, which is where the
+ * vanilla-extract compiler used to hang on the plain `.css.js` module.
+ */
+const PlainCssJsInput = lazy(() => import('./src/PlainCssJsInput'))
 
 /**
  * The schema embeds the generated class names as a string-literal list option (which
@@ -22,6 +33,7 @@ const veStyledDocument = defineType({
       options: {
         list: [`dialog:${veStudioDialog} overlay:${veStudioOverlay} button:${veStudioButton}`],
       },
+      components: {input: PlainCssJsInput},
     }),
   ],
 })

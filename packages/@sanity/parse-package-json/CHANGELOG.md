@@ -1,5 +1,17 @@
 # @sanity/parse-package-json
 
+## 2.2.9
+
+### Patch Changes
+
+- [#3096](https://github.com/sanity-io/pkg-utils/pull/3096) [`aac3364`](https://github.com/sanity-io/pkg-utils/commit/aac3364216b6c0f3d361d4068da0224c3335ab0f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.12
+
+## 2.2.8
+
+### Patch Changes
+
+- [#3089](https://github.com/sanity-io/pkg-utils/pull/3089) [`412881b`](https://github.com/sanity-io/pkg-utils/commit/412881b552f8c5315c12d961da903b4836581646) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.11
+
 ## 2.2.7
 
 ### Patch Changes
