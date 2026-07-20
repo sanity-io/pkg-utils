@@ -8,7 +8,7 @@ import {reactCompilerSurfacesPlugin} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const appRoot = path.resolve(__dirname, 'fixtures/app')
-const sanityStub = path.join(appRoot, 'src/sanity-stub.ts')
+const sanityStub = path.resolve(__dirname, 'fixtures/sanity-stub.ts')
 
 /**
  * Mirrors how the Sanity CLI enables the React Compiler on Vite 8 (`reactCompiler` in

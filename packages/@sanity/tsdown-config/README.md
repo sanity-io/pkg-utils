@@ -47,22 +47,25 @@ export default defineConfig({
 
 The compiler's `infer` mode never compiles object-property functions — the
 component-in-an-object patterns Sanity APIs are built on (`defineConfig` / `defineType`
-component slots, `use*` hook props, PortableText component maps) are invisible to it. The
-`reactCompilerSurfaces` option runs
-[`@sanity/react-compiler-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/react-compiler-tsdown-plugin#readme)
-before the compiler, opting those allow-listed surfaces in with `'use memo'` directives:
+component slots, `use*` hook props, PortableText component maps) are invisible to it.
+[`@sanity/react-compiler-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/react-compiler-rolldown-plugin#readme)
+opts those allow-listed surfaces in with `'use memo'` directives. It only annotates, so it
+runs independently of this config — the one rule is that it must come **before** the React
+Compiler pass, which `mergeConfig` guarantees by prepending it to the `plugins` array:
 
 ```ts
-export default defineConfig({
-  tsconfig: 'tsconfig.dist.json',
-  reactCompiler: {target: '19'},
-  reactCompilerSurfaces: true,
-})
-```
+import {reactCompilerSurfacesPlugin} from '@sanity/react-compiler-rolldown-plugin'
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
 
-Pass an object to customize the annotated surfaces (see
-[`@sanity/react-compiler-integration`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/react-compiler-integration#readme)
-for the built-in allow-list and the safety model).
+export default mergeConfig(
+  {plugins: [reactCompilerSurfacesPlugin()]},
+  await defineConfig({
+    tsconfig: 'tsconfig.dist.json',
+    reactCompiler: {target: '19'},
+  }),
+)
+```
 
 ## styled-components
 

@@ -9,7 +9,6 @@ export type {
   PkgBundle,
   PkgExports,
   PkgRuleLevel,
-  ReactCompilerSurfacesOptions,
   TSDocCustomTag,
   PkgConfigOptions,
 } from './core/config/types.ts'

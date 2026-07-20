@@ -1,4 +1,3 @@
-import type {Options as ReactCompilerSurfacesPluginOptions} from '@sanity/react-compiler-tsdown-plugin'
 import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
 import {detect} from 'package-manager-detector/detect'
@@ -66,13 +65,6 @@ export interface StyledComponentsOptions {
  * @public
  */
 export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
-
-/**
- * Options for the `reactCompilerSurfaces` option, the same options as
- * `@sanity/react-compiler-tsdown-plugin` (`surfaces`, `include`, `exclude`).
- * @public
- */
-export type ReactCompilerSurfacesOptions = ReactCompilerSurfacesPluginOptions
 
 /**
  * @public
@@ -162,17 +154,6 @@ export interface PackageOptions extends Pick<
    */
   reactCompiler?: boolean | ReactCompilerOptions
   /**
-   * Runs `@sanity/react-compiler-tsdown-plugin` before the React Compiler: allow-listed Sanity
-   * API surfaces (`defineConfig`/`defineType` component slots, `use*` hook props, PortableText
-   * component maps) are opted into compilation with `'use memo'` directives, so the
-   * object-property components and hooks the compiler's `infer` mode never sees get memoized
-   * too. Pass `true` to annotate the built-in surfaces, or an options object to customize.
-   * Meant to be combined with {@link PackageOptions.reactCompiler | `reactCompiler`} (on its
-   * own it only injects inert directives).
-   * @defaultValue false
-   */
-  reactCompilerSurfaces?: boolean | ReactCompilerSurfacesOptions
-  /**
    * Applies the `styled-components` transform (`displayName`, `componentId`, CSS minification, etc)
    * with the same defaults as the `babel: {styledComponents: true}` option in `@sanity/pkg-utils`.
    * Unlike `@sanity/pkg-utils` it doesn't use `babel-plugin-styled-components`, but oxc's native port of it,
@@ -214,7 +195,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   const platform = options.platform ?? 'neutral'
   const sourcemap = options.sourcemap ?? true
   const reactCompiler = options.reactCompiler ?? false
-  const reactCompilerSurfaces = options.reactCompilerSurfaces ?? false
   const styledComponents = options.styledComponents ?? false
   const report = {gzip: false} as const satisfies UserConfig['report']
   const publint = true
@@ -282,17 +262,6 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   // default (unless userland sets `hash`), which prevents chunk/entry filename collisions
   // (https://github.com/sanity-io/ui/issues/2262).
   const plugins: Rolldown.Plugin[] = []
-  if (reactCompilerSurfaces !== false) {
-    // Must run before the React Compiler babel plugin below: it injects the `'use memo'`
-    // opt-in directives the compiler then acts on. Lazy loaded, like `reactCompiler`, so the
-    // annotation toolchain is only paid for when the option is enabled.
-    const {reactCompilerSurfacesPlugin} = await import('@sanity/react-compiler-tsdown-plugin')
-    plugins.push(
-      reactCompilerSurfacesPlugin(
-        typeof reactCompilerSurfaces === 'object' ? reactCompilerSurfaces : {},
-      ),
-    )
-  }
   if (reactCompiler !== false) {
     // Follows the official tsdown recipe for the React Compiler:
     // https://tsdown.dev/recipes/react-support#enabling-react-compiler

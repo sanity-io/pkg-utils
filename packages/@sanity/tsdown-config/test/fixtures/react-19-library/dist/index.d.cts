@@ -469,8 +469,8 @@ interface Serializable<T> {
 type ReactPortableTextList = ToolkitPortableTextList;
 /**
  * Object-property components React Compiler's `infer` mode never compiles on its own — the
- * `reactCompilerSurfaces` option annotates them with `'use memo'` so the compiler memoizes
- * them in place.
+ * `@sanity/react-compiler-rolldown-plugin` pre-pass annotates them with `'use memo'` so the
+ * compiler memoizes them in place.
  */
 declare const portableTextComponents: PortableTextComponents;
 export { Button, portableTextComponents };

@@ -1,7 +1,7 @@
 {
   "name": "@sanity/react-compiler-rolldown-plugin",
   "version": "0.0.0",
-  "description": "rolldown plugin that opts allow-listed Sanity API surfaces (defineConfig/defineType components, PortableText component maps) into React Compiler memoization with 'use memo' directives",
+  "description": "rolldown plugin (Vite and tsdown compatible) that opts allow-listed Sanity API surfaces (defineConfig/defineType components, PortableText component maps) into React Compiler memoization with 'use memo' directives",
   "keywords": [
     "sanity-io",
     "sanity",
@@ -9,6 +9,8 @@
     "react",
     "rolldown",
     "tsdown",
+    "vite",
+    "vite-plugin",
     "memoization",
     "plugin"
   ],
@@ -40,22 +42,29 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@sanity/react-compiler-integration": "workspace:^"
+    "magic-string": "^0.30.21",
+    "yuku-parser": "^0.6.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.29.7",
     "@portabletext/react": "^6.2.0",
     "@rolldown/plugin-babel": "^0.2.3",
     "@sanity/tsconfig": "workspace:^",
     "@sanity/tsdown-config": "workspace:^",
+    "@types/babel__core": "^7.20.5",
     "@types/node": "catalog:",
     "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
     "publint": "catalog:",
     "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "rolldown": "~1.2.0",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "^8.1.5",
     "vitest": "catalog:"
   },
   "peerDependencies": {

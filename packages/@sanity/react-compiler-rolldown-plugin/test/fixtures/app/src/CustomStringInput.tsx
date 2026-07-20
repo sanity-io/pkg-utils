@@ -1,4 +1,5 @@
-import type {StubInputProps} from './sanity-stub.ts'
+// Resolves to the shared fixture stub (Vite alias + tsconfig paths); the type import is erased
+import type {StubInputProps} from 'sanity'
 
 export function CustomStringInput(props: StubInputProps): React.JSX.Element {
   return (
