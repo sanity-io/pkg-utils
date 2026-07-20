@@ -51,6 +51,7 @@ minimumReleaseAgeExclude:
   # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
   # cross-framework matrix building against current releases.
   - '@astrojs/react'
+  - astro
   # TypeScript 7 (the Go-native compiler) and related toolchain releases that need to be
   # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts
   # and the oxc types shipped with each rolldown release.
@@ -74,10 +75,6 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/pkg-utils': workspace:*
-  # Align every rolldown copy on the version vite 8 pins (~1.1.4) so vite, tsdown,
-  # rolldown-plugin-dts, the workspace packages, and third-party optional consumers all share
-  # one copy (and one Plugin type). Bump when vite updates its pinned rolldown.
-  rolldown: 1.2.0
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:

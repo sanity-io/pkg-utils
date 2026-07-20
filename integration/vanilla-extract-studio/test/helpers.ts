@@ -171,6 +171,15 @@ export interface DevServerHandle {
   stop: () => Promise<void>
 }
 
+export interface StartSanityDevOptions {
+  /**
+   * Runs `sanity dev` with `unstable_bundledDev` (Vite's experimental bundled dev mode): the
+   * studio is served as a Rolldown-bundled module graph with on-demand-compiled lazy chunks
+   * instead of unbundled per-module ESM. Readiness is probed through the bundled entry.
+   */
+  bundledDev?: boolean
+}
+
 /**
  * Starts `sanity dev` and waits until it serves transformed modules. Always `stop()` the
  * handle (the tests do so in `finally` blocks) so no dev server outlives its test.
@@ -178,6 +187,7 @@ export interface DevServerHandle {
 export async function startSanityDev(
   implementation: PluginImplementation,
   variantEnv: Record<string, string>,
+  {bundledDev = false}: StartSanityDevOptions = {},
 ): Promise<DevServerHandle> {
   const port = await findFreePort()
   const child: ChildProcess = spawn(
@@ -185,7 +195,10 @@ export async function startSanityDev(
     [sanityBinScript, 'dev', '--host', '127.0.0.1', '--port', String(port)],
     {
       cwd: studioRoot,
-      env: commandEnv(implementation, variantEnv),
+      env: {
+        ...commandEnv(implementation, variantEnv),
+        ...(bundledDev ? {VE_BUNDLED_DEV: 'true'} : {}),
+      },
       stdio: ['ignore', 'pipe', 'pipe'],
     },
   )
@@ -216,14 +229,17 @@ export async function startSanityDev(
     clearTimeout(killTimer)
   }
 
-  // Readiness: the dev server responds to a module transform request
+  // Readiness: the dev server responds with transformed studio code — a module transform
+  // request in the default unbundled mode, the bundled entry chunk in bundled dev mode
+  // (fetching it awaits the initial in-server bundle)
+  const readinessPath = bundledDev ? '/assets/index.js' : '/src/styles.css.ts'
   const deadline = Date.now() + 120_000
   for (;;) {
     if (exited) {
       throw new Error(`sanity dev exited before becoming ready\n${output}`)
     }
     try {
-      const code = await fetchText('/src/styles.css.ts')
+      const code = await fetchText(readinessPath)
       if (code.includes('veStudioDialog')) break
     } catch {
       // not ready yet
@@ -236,6 +252,78 @@ export async function startSanityDev(
   }
 
   return {port, output: () => output, fetchText, stop}
+}
+
+/**
+ * Requests the on-demand compilation of a bundled-dev lazy chunk the way the browser runtime
+ * does: lazy `import()`s in the served bundle load a stub chunk whose body fetches
+ * `/@vite/lazy?id=<module id>&clientId=<id>`, compiling the chunk on first request. The
+ * `clientId` must belong to a registered client, so this helper first announces one over the
+ * HMR WebSocket (`vite:module-loaded`, like the Rolldown browser runtime on startup) using
+ * the `wsToken` embedded in the served entry chunk.
+ */
+export async function compileLazyChunk(
+  server: DevServerHandle,
+  entryCode: string,
+  lazyModuleId: string,
+): Promise<string> {
+  const wsToken = entryCode.match(/wsToken = "([^"]+)"/)?.[1]
+  if (!wsToken) {
+    throw new Error('No wsToken found in the served entry chunk')
+  }
+
+  const clientId = `integration-test-${Math.random().toString(36).slice(2)}`
+  const socket = new WebSocket(`ws://127.0.0.1:${server.port}/?token=${wsToken}`, 'vite-hmr')
+  try {
+    // The server greets every accepted client with `{"type":"connected"}`, so waiting for it
+    // also covers the open handshake. Time-boxed so an unresponsive server (or a rejected
+    // `wsToken`) fails the test instead of hanging it until the suite timeout.
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Timed out waiting for the HMR WebSocket connection greeting'))
+      }, 30_000)
+      socket.addEventListener('message', (event) => {
+        const message: unknown = JSON.parse(String(event.data))
+        if (
+          typeof message === 'object' &&
+          message !== null &&
+          'type' in message &&
+          message.type === 'connected'
+        ) {
+          clearTimeout(timeout)
+          resolve()
+        }
+      })
+      socket.addEventListener('error', () => {
+        clearTimeout(timeout)
+        reject(new Error('HMR WebSocket connection failed'))
+      })
+      socket.addEventListener('close', () => {
+        clearTimeout(timeout)
+        reject(new Error('HMR WebSocket closed before the connection greeting'))
+      })
+    })
+    socket.send(
+      JSON.stringify({type: 'custom', event: 'vite:module-loaded', data: {modules: [], clientId}}),
+    )
+    // The client registration the module-loaded event triggers is processed asynchronously;
+    // give it a beat before requesting a compile on its behalf
+    await new Promise((resolve) => setTimeout(resolve, 250))
+
+    const url = `/@vite/lazy?id=${encodeURIComponent(lazyModuleId)}&clientId=${clientId}`
+    const response = await fetch(`http://127.0.0.1:${server.port}${url}`, {
+      // The regression this exists for is a hang: the compile deadlocks until the module
+      // runner's 60s transport timeout, then crashes the dev server. Outlive the timeout so
+      // the failure surfaces as the server's error output instead of a client-side abort.
+      signal: AbortSignal.timeout(90_000),
+    })
+    if (!response.ok) {
+      throw new Error(`GET ${url} responded with ${response.status}`)
+    }
+    return await response.text()
+  } finally {
+    socket.close()
+  }
 }
 
 /** The virtual `.vanilla.css` module specifiers imported by a transformed `.css.ts` module. */
