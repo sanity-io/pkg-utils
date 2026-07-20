@@ -83,14 +83,16 @@ Last run: 2026-07-19 (on the merge of two changes that had each been benchmarked
 the `@sanity/vanilla-extract-vite-plugin` bundled-dev fix — the compiler is no longer closed
 by the mid-serve `buildEnd` of `experimental.bundledDev` and is instead closed on dev-server
 shutdown, a lifecycle change with no expected steady-state cost, and none observed — together
-with scoping vite's own rolldown copy back to the 1.1.5 it pins via the `vite>rolldown`
+with letting vite resolve the rolldown version it pins instead of the workspace-wide
 override, and the removal of the redundant `bundle.css.d.ts` emission from the rolldown CSS
 shim), full default suite (`pnpm benchmark:vanilla-extract`) on Node.js 24.18.0, Linux x64,
 Intel Xeon, **4 cores**; Rollup 4.62.2, Rolldown 1.2.0 (library builds) / 1.1.5 (inside
 Vite), Vite 8.1.5, Vitest 4.1.10, yuku-parser 0.6.5. Values are mean wall-clock milliseconds
 from that runner and are machine-specific — compare ratios, not absolute numbers. (Ratios
 match both parents' runs within run-to-run noise: library build 2.8–3.3x, Vite build
-1.2–1.6x, HMR ~parity, hook-filter 1.6–1.8x.)
+1.2–1.6x, HMR ~parity, hook-filter 1.6–1.8x. The rolldown overrides were subsequently removed
+entirely in favor of natural resolution; the effective versions — 1.2.0 for library builds,
+1.1.5 inside Vite — are identical, so these results remain current.)
 
 ### Core count shifts the build ratios
 

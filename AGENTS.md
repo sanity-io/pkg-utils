@@ -91,7 +91,9 @@ sample-count overrides.
   node_modules dependency (the sanity-io/plugins#1553 scenario). **Run it whenever
   `@sanity/vanilla-extract-vite-plugin` or `@sanity/vanilla-extract-integration` changes.**
   The suite spawns the CLI without `NODE_ENV` on purpose (that's what reproduces GH-3073); it
-  needs no Sanity auth/network. Takes ~2.5 min (sequential CLI runs). Note: `pnpm-workspace.yaml`
-  scopes vite's own `rolldown` dependency to the version vite pins (`vite>rolldown` override) —
-  the workspace-wide `rolldown: 1.2.0` override otherwise breaks vite's bundled-dev NAPI glue
-  and crashes every lazy chunk request.
+  needs no Sanity auth/network. Takes ~2.5 min (sequential CLI runs). Note: `rolldown` resolves
+  naturally (no pnpm override): vite keeps the version it pins (currently ~1.1.5) while tsdown
+  and the workspace packages share the ~1.2.0 they declare. Do not add a workspace-wide
+  `rolldown` override — forcing vite's internal copy off its pinned version breaks its
+  bundled-dev NAPI glue (`DevEngine.registerModules`/`compileEntry` API drift) and crashes
+  every lazy chunk request under `unstable_bundledDev`.
