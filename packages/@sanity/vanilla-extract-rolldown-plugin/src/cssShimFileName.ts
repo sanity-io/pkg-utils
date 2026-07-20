@@ -15,20 +15,10 @@ export function cssShimFileName(cssFileName: string): string {
 
 /**
  * The `.d.ts` companion for {@link cssShimFileName}. `bundle.css` → `bundle-css.d.ts`.
- * Emitted alongside {@link cssFileDtsFileName} so both the `browser`/`style` (`bundle.css`)
- * and `node`/`default` (`bundle-css.js`) export targets resolve a declaration file.
+ * The conditional `./<css>` export's `types` condition points at this file.
  *
  * @public
  */
 export function cssShimDtsFileName(cssFileName: string): string {
   return `${cssFileName.replace(/\.css$/, '-css')}.d.ts`
-}
-
-/**
- * The `.d.ts` companion for the extracted CSS file itself. `bundle.css` → `bundle.css.d.ts`.
- *
- * @public
- */
-export function cssFileDtsFileName(cssFileName: string): string {
-  return `${cssFileName}.d.ts`
 }
