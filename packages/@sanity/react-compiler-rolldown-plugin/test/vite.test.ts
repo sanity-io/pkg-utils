@@ -2,7 +2,7 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import babel from '@rolldown/plugin-babel'
 import react, {reactCompilerPreset} from '@vitejs/plugin-react'
-import {build, createServer, type InlineConfig, type Rollup} from 'vite'
+import {build, createServer, type InlineConfig, type Plugin, type Rollup} from 'vite'
 import {describe, expect, test} from 'vitest'
 import {reactCompilerSurfacesPlugin} from '../src/index.ts'
 
@@ -22,7 +22,10 @@ function viteConfig(withSurfaces: boolean): InlineConfig {
     logLevel: 'silent',
     resolve: {alias: {sanity: sanityStub}},
     plugins: [
-      ...(withSurfaces ? [reactCompilerSurfacesPlugin()] : []),
+      // The narrower rolldown plugin shape is runtime-compatible with Vite 8 (rolldown-vite),
+      // but comparing it structurally against Vite's recursive `PluginOption` union blows
+      // TypeScript's instantiation depth, so widen it to Vite's `Plugin` explicitly
+      ...(withSurfaces ? [reactCompilerSurfacesPlugin() as Plugin] : []),
       react(),
       babel({presets: [reactCompilerPreset({target: '19'})]}),
     ],
