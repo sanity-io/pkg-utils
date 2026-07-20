@@ -2,4 +2,4 @@
 '@sanity/pkg-utils': patch
 ---
 
-fix the deprecated transitive `@types/parse-path` stub by replacing `git-url-parse` with a small local git URL parser used by `pkg init`.
+Move `git-url-parse` to `devDependencies` so it is inlined into the CLI bundle and consumers no longer pull in its deprecated transitive `@types/parse-path` stub.
