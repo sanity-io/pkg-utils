@@ -1,5 +1,18 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.2.4
+
+### Patch Changes
+
+- [#3096](https://github.com/sanity-io/pkg-utils/pull/3096) [`aac3364`](https://github.com/sanity-io/pkg-utils/commit/aac3364216b6c0f3d361d4068da0224c3335ab0f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.12
+
+- [#3085](https://github.com/sanity-io/pkg-utils/pull/3085) [`900431f`](https://github.com/sanity-io/pkg-utils/commit/900431f065bf1359ebce66c47c6c8a41d11b6071) Thanks [@stipsan](https://github.com/stipsan)! - Keep the compiler alive while serving under Vite's experimental bundled dev mode (`experimental.bundledDev`, e.g. `sanity dev` with `unstable_bundledDev`). The `buildEnd` hook fires there as soon as the initial in-server bundle finishes — while the server keeps serving and compiles lazy chunks on demand — and closing the compiler at that point tore down the hot-channel invoke listeners its module runner depends on. The first `.css.ts`-matching module in an on-demand chunk (such as `@bynder/compact-view`'s plain `Styles.css.js`, see [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553)) then hung `processVanillaFile` until the 60s transport timeout and crashed the dev server with `Failed to compile lazy entry … transport invoke timed out`. No workaround plugin is needed anymore for packages that ship plain (non-vanilla-extract) `*.css.js` modules.
+
+  The compiler is instead closed when the dev server itself shuts down (the http server's `close` event), so its internal Vite server and file watcher no longer outlive `server.close()` and keep the process alive.
+
+- Updated dependencies [[`aac3364`](https://github.com/sanity-io/pkg-utils/commit/aac3364216b6c0f3d361d4068da0224c3335ab0f)]:
+  - @sanity/vanilla-extract-integration@0.1.4
+
 ## 0.2.3
 
 ### Patch Changes

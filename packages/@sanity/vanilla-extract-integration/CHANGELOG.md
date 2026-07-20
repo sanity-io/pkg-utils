@@ -1,5 +1,11 @@
 # @sanity/vanilla-extract-integration
 
+## 0.1.4
+
+### Patch Changes
+
+- [#3096](https://github.com/sanity-io/pkg-utils/pull/3096) [`aac3364`](https://github.com/sanity-io/pkg-utils/commit/aac3364216b6c0f3d361d4068da0224c3335ab0f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.12
+
 ## 0.1.3
 
 ### Patch Changes
