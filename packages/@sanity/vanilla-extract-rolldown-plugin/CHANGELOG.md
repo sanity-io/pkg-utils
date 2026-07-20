@@ -1,5 +1,22 @@
 # @sanity/vanilla-extract-rolldown-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- [#3086](https://github.com/sanity-io/pkg-utils/pull/3086) [`b900be5`](https://github.com/sanity-io/pkg-utils/commit/b900be54f65dcfb4fabe2636b4a0380b01330209) Thanks [@stipsan](https://github.com/stipsan)! - Stop emitting a redundant `bundle.css.d.ts` alongside the vanilla-extract CSS shim.
+
+  The conditional `./bundle.css` export already has an explicit `types` condition pointing at `bundle-css.d.ts`, so TypeScript never needs a sibling declaration for the CSS file itself. Compat mode now emits only that one declaration (plus `bundle-css.js` and `bundle.css`).
+
+  `cssFileDtsFileName` is no longer exported from `@sanity/vanilla-extract-rolldown-plugin` (0.x breaking API change → minor).
+
+### Patch Changes
+
+- [#3089](https://github.com/sanity-io/pkg-utils/pull/3089) [`412881b`](https://github.com/sanity-io/pkg-utils/commit/412881b552f8c5315c12d961da903b4836581646) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.11
+
+- Updated dependencies [[`412881b`](https://github.com/sanity-io/pkg-utils/commit/412881b552f8c5315c12d961da903b4836581646)]:
+  - @sanity/vanilla-extract-integration@0.1.3
+
 ## 0.2.2
 
 ### Patch Changes
