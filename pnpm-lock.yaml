@@ -25,8 +25,8 @@ catalogs:
       specifier: ^0.3.21
       version: 0.3.21
     tsdown:
-      specifier: ^0.22.11
-      version: 0.22.11
+      specifier: ^0.22.12
+      version: 0.22.12
     typescript:
       specifier: 7.0.2
       version: 7.0.2
@@ -95,7 +95,7 @@ importers:
         version: 2.1.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -691,7 +691,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -908,7 +908,7 @@ importers:
         version: link:../tsconfig
       '@tsdown/css':
         specifier: 0.22.9
-        version: 0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.11)(tsx@4.23.1)(yaml@2.9.0)
+        version: 0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -923,7 +923,7 @@ importers:
         version: 1.2.4
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -979,7 +979,7 @@ importers:
     devDependencies:
       '@tsdown/css':
         specifier: 0.22.9
-        version: 0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.11)(tsx@4.23.1)(yaml@2.9.0)
+        version: 0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
       '@vanilla-extract/css':
         specifier: ^1.21.1
         version: 1.21.1
@@ -1025,7 +1025,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1062,7 +1062,7 @@ importers:
         version: 1.2.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1096,7 +1096,7 @@ importers:
         version: 1.2.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1127,7 +1127,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -13906,14 +13906,14 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
-  tsdown@0.22.11:
-    resolution: {integrity: sha512-BERdQpqAltv3vYGC0pE4n+mRGPIN91T/on+Ud73bYRkbptknelFm27tJgBBUz4RJ5d3VNeVH90HfjBo1Ouj8yQ==}
+  tsdown@0.22.12:
+    resolution: {integrity: sha512-IzGRfGwSsufXJWOcQ0tmECKMG/dbxhUwDOySTS7JE1AM8pkB9+bpcTPs8bTxxSNrSvGocSczrBlOh97tZObq9Q==}
     engines: {node: ^22.18.0 || >=24.11.0}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
-      '@tsdown/css': 0.22.11
-      '@tsdown/exe': 0.22.11
+      '@tsdown/css': 0.22.12
+      '@tsdown/exe': 0.22.12
       '@vitejs/devtools': '*'
       publint: ^0.3.8
       tsx: '*'
@@ -14396,6 +14396,10 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  verkit@0.1.2:
+    resolution: {integrity: sha512-WqkT8n3hqizuCu71W3bUzf5fjBmkbXcudsehe/NbxA8PgqoKnSOY5K0Ba2ckg1qaRaSpSz7as/n9K1R9JXjQKg==}
+    engines: {node: '>=18.12.0'}
 
   vfile-location@5.0.3:
     resolution: {integrity: sha512-5yXvWDEgqeiYiBe1lbxYF7UMAIm/IcopxMHrMQDq3nvKcjPKIhZklUKL+AE7J7uApI4kwe2snsK+eI6UTj9EHg==}
@@ -22430,12 +22434,12 @@ snapshots:
 
   '@tsconfig/node20@20.1.9': {}
 
-  '@tsdown/css@0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.11)(tsx@4.23.1)(yaml@2.9.0)':
+  '@tsdown/css@0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)':
     dependencies:
       lightningcss: 1.32.0
       postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.19)(tsx@4.23.1)(yaml@2.9.0)
       rolldown: 1.2.0
-      tsdown: 0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+      tsdown: 0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
     optionalDependencies:
       postcss: 8.5.19
     transitivePeerDependencies:
@@ -30083,7 +30087,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.22.11(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2):
+  tsdown@0.22.12(@tsdown/css@0.22.9)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -30100,8 +30104,9 @@ snapshots:
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
+      verkit: 0.1.2
     optionalDependencies:
-      '@tsdown/css': 0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.11)(tsx@4.23.1)(yaml@2.9.0)
+      '@tsdown/css': 0.22.9(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
       publint: 0.3.21
       tsx: 4.23.1
       typescript: 7.0.2
@@ -30551,6 +30556,8 @@ snapshots:
   validate-npm-package-name@7.0.2: {}
 
   vary@1.1.2: {}
+
+  verkit@0.1.2: {}
 
   vfile-location@5.0.3:
     dependencies:

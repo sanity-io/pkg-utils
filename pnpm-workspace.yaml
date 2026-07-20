@@ -13,7 +13,7 @@ catalog:
   '@types/node': ^24.13.3
   lightningcss: ^1.32.0
   publint: ^0.3.21
-  tsdown: ^0.22.11
+  tsdown: ^0.22.12
   typescript: 7.0.2
   vitest: ^4.1.10
 
@@ -69,6 +69,7 @@ minimumReleaseAgeExclude:
   # vanilla-extract-* packages and their benchmarks; bump immediately so the
   # comparison suite and plugin peers stay on current releases.
   - '@vanilla-extract/*'
+  - verkit
 
 overrides:
   '@sanity/pkg-utils': workspace:*
