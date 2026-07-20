@@ -13,7 +13,7 @@ catalog:
   '@types/node': ^24.13.3
   lightningcss: ^1.32.0
   publint: ^0.3.21
-  tsdown: ^0.22.9
+  tsdown: ^0.22.11
   typescript: 7.0.2
   vitest: ^4.1.10
 
@@ -63,6 +63,8 @@ minimumReleaseAgeExclude:
   - yuku-ast
   - yuku-parser
   - yuku-codegen
+  - '@yuku-toolchain/types'
+  - obug
   # Vanilla Extract plugins and integration packages tracked by the Sanity
   # vanilla-extract-* packages and their benchmarks; bump immediately so the
   # comparison suite and plugin peers stay on current releases.
