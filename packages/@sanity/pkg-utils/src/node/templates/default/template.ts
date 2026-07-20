@@ -3,10 +3,10 @@ import {resolve} from 'node:path'
 import type {PackageJSON} from '@sanity/parse-package-json'
 import prettierConfig from '@sanity/prettier-config'
 import {getLatestVersion} from 'get-latest-version'
-import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
 import {format, type Config as PrettierConfig} from 'prettier'
 import {isRecord} from '../../core/isRecord.ts'
+import {parseGitUrl} from '../../core/parseGitUrl.ts'
 import {defineTemplateOption} from '../../core/template/define.ts'
 import {type PkgTemplate, type PkgTemplateFile} from '../../core/template/types.ts'
 
@@ -25,7 +25,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
           if (!v) return true
 
           try {
-            gitUrlParse(v)
+            parseGitUrl(v)
 
             return true
           } catch {
@@ -35,9 +35,7 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         parse: (v) => {
           if (!v) return null
 
-          const result = gitUrlParse(v)
-
-          return {source: result.source, owner: result.owner, name: result.name}
+          return parseGitUrl(v)
         },
       }),
       defineTemplateOption({
