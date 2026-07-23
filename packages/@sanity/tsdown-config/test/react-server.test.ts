@@ -113,14 +113,14 @@ describe('reactCompiler.reactServer option', () => {
     expect(reactServer.publint).toBe(false)
   })
 
-  test('react-server entries sit next to the compiled ones with `.server` inserted', async () => {
+  test('react-server entries sit next to the compiled ones with `.react-server` inserted', async () => {
     const [compiled, reactServer] = await defineDualConfig()
 
-    // tsdown's default extension for the format/package type, with `.server` inserted
-    expect(outExtension(reactServer, 'es', 'module')).toEqual({js: '.server.js'})
-    expect(outExtension(reactServer, 'cjs', 'module')).toEqual({js: '.server.cjs'})
-    expect(outExtension(reactServer, 'es', 'commonjs')).toEqual({js: '.server.mjs'})
-    expect(outExtension(reactServer, 'cjs', 'commonjs')).toEqual({js: '.server.js'})
+    // tsdown's default extension for the format/package type, with `.react-server` inserted
+    expect(outExtension(reactServer, 'es', 'module')).toEqual({js: '.react-server.js'})
+    expect(outExtension(reactServer, 'cjs', 'module')).toEqual({js: '.react-server.cjs'})
+    expect(outExtension(reactServer, 'es', 'commonjs')).toEqual({js: '.react-server.mjs'})
+    expect(outExtension(reactServer, 'cjs', 'commonjs')).toEqual({js: '.react-server.js'})
 
     // The compiled variant keeps tsdown's default naming
     expect(compiled.outExtensions).toBeUndefined()
@@ -137,7 +137,7 @@ describe('reactCompiler.reactServer option', () => {
       customExportsContext({es: ['index.js']}),
     )
     expect(result).toEqual({
-      '.': {'react-server': './dist/index.server.js', 'default': './dist/index.js'},
+      '.': {'react-server': './dist/index.react-server.js', 'default': './dist/index.js'},
       './package.json': './package.json',
     })
     expect(Object.keys(result['.'])).toEqual(['react-server', 'default'])
@@ -160,8 +160,8 @@ describe('reactCompiler.reactServer option', () => {
     expect(result['.']).toEqual({
       'types': './dist/index.d.ts',
       'react-server': {
-        import: './dist/index.server.js',
-        require: './dist/index.server.cjs',
+        import: './dist/index.react-server.js',
+        require: './dist/index.react-server.cjs',
       },
       'import': './dist/index.js',
       'require': './dist/index.cjs',
@@ -192,8 +192,8 @@ describe('reactCompiler.reactServer option', () => {
       customExportsContext({es: ['index.js', 'theme.js']}),
     )
     expect(result).toEqual({
-      '.': {'react-server': './dist/index.server.js', 'default': './dist/index.js'},
-      './theme': {'react-server': './dist/theme.server.js', 'default': './dist/theme.js'},
+      '.': {'react-server': './dist/index.react-server.js', 'default': './dist/index.js'},
+      './theme': {'react-server': './dist/theme.react-server.js', 'default': './dist/theme.js'},
       // The conditional CSS export of `vanillaExtract` names no entry chunks - untouched
       './bundle.css': conditionalCssExport,
       './package.json': './package.json',
@@ -223,7 +223,7 @@ describe('reactCompiler.reactServer option', () => {
       customExportsContext({es: ['index.js']}),
     )
     expect(Object.keys(result['.'])).toEqual(['@sanity/source', 'react-server', 'default'])
-    expect(result['.']).toMatchObject({'react-server': './dist/index.server.js'})
+    expect(result['.']).toMatchObject({'react-server': './dist/index.react-server.js'})
   })
 
   test('composes with a pre-existing `customExports`', async () => {
@@ -236,7 +236,7 @@ describe('reactCompiler.reactServer option', () => {
         customExportsContext({es: ['index.js']}),
       ),
     ).toEqual({
-      '.': {'react-server': './dist/index.server.js', 'default': './dist/index.js'},
+      '.': {'react-server': './dist/index.react-server.js', 'default': './dist/index.js'},
       // The record form applies first, like tsdown itself applies it - and `worker.js` names
       // no entry chunk, so it passes through untouched
       './worker.js': './dist/worker.js',
@@ -251,7 +251,7 @@ describe('reactCompiler.reactServer option', () => {
         customExportsContext({es: ['index.js']}),
       ),
     ).toEqual({
-      '.': {'react-server': './dist/index.server.js', 'default': './dist/index.js'},
+      '.': {'react-server': './dist/index.react-server.js', 'default': './dist/index.js'},
       './worker.js': './dist/worker.js',
     })
   })
@@ -261,7 +261,7 @@ describe('react-server-library', () => {
   test('applies the React Compiler only to the compiled output', async () => {
     const [distIndexJs, distIndexServerJs] = await Promise.all([
       readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
-      readFile(path.join(fixtureDir, 'dist/index.server.js'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/index.react-server.js'), 'utf-8'),
     ])
 
     // The compiled output is auto-memoized with the memo cache provided by
@@ -286,7 +286,7 @@ describe('react-server-library', () => {
     // `publishConfig.exports` resolves `react-server` to the uncompiled build, everything
     // else to the compiled one
     expect(pkg.publishConfig.exports['.']).toEqual({
-      'react-server': './dist/index.server.js',
+      'react-server': './dist/index.react-server.js',
       'default': './dist/index.js',
     })
     expect(Object.keys(pkg.publishConfig.exports['.'])).toEqual(['react-server', 'default'])
@@ -303,7 +303,7 @@ describe('react-server-library', () => {
     // The compiled variant's declarations serve both entries - TypeScript resolves types
     // through the `default` condition
     await expect(
-      readFile(path.join(fixtureDir, 'dist/index.server.d.ts'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/index.react-server.d.ts'), 'utf-8'),
     ).rejects.toMatchObject({code: 'ENOENT'})
   })
 })

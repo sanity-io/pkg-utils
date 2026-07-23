@@ -64,8 +64,8 @@ export default defineConfig({
 
 Every entry is built twice from the same source, and the only difference is that React Compiler
 auto-memoization is applied to the non-`react-server` output. The uncompiled build lands next to
-the compiled one with `.server` inserted before the extension (`dist/index.js` ↔
-`dist/index.server.js`), only the compiled build emits the `.d.ts` files (TypeScript resolves
+the compiled one with `.react-server` inserted before the extension (`dist/index.js` ↔
+`dist/index.react-server.js`), only the compiled build emits the `.d.ts` files (TypeScript resolves
 types through the `default` condition), and — when the [`exports` feature](#exports) is enabled —
 every entry export gains a `react-server` condition:
 
@@ -73,7 +73,7 @@ every entry export gains a `react-server` condition:
 {
   "exports": {
     ".": {
-      "react-server": "./dist/index.server.js",
+      "react-server": "./dist/index.react-server.js",
       "default": "./dist/index.js"
     }
   }
@@ -81,7 +81,7 @@ every entry export gains a `react-server` condition:
 ```
 
 React Server Components resolve the uncompiled build, everything else (client components, SSR,
-plain Node) resolves the compiled one. The `.server.` files never become export subpaths of
+plain Node) resolves the compiled one. The `.react-server.` files never become export subpaths of
 their own.
 
 Nothing is stripped from either output, so pair `reactServer` with deleting manual

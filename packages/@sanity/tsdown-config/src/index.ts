@@ -70,12 +70,12 @@ export interface StyledComponentsOptions {
  */
 export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions> & {
   /**
-   * Also emit an uncompiled build of every entry (`<name>.server.js` next to `<name>.js`),
+   * Also emit an uncompiled build of every entry (`<name>.react-server.js` next to `<name>.js`),
    * wired to the `react-server` export condition in `package.json`:
    *
    * ```json
    * ".": {
-   *   "react-server": "./dist/index.server.js",
+   *   "react-server": "./dist/index.react-server.js",
    *   "default": "./dist/index.js"
    * }
    * ```
@@ -445,7 +445,7 @@ async function resolvePackageConfig(
     if (variant === 'default' && exports) {
       // The compiled variant owns `exports` generation for the dual build, so the
       // `react-server` conditions are composed into its `customExports`: every entry export
-      // gains a `react-server` condition pointing at the `.server.` sibling that the
+      // gains a `react-server` condition pointing at the `.react-server.` sibling that the
       // `react-server` variant emits.
       exports = withReactServerExports(exports)
     }
@@ -467,8 +467,8 @@ async function resolvePackageConfig(
     format,
     inputOptions,
     outDir,
-    // The `react-server` variant writes its files next to the compiled ones, with `.server`
-    // inserted before tsdown's default extension (`index.js` ↔ `index.server.js`). Hashed
+    // The `react-server` variant writes its files next to the compiled ones, with `.react-server`
+    // inserted before tsdown's default extension (`index.js` ↔ `index.react-server.js`). Hashed
     // chunk filenames get the suffix too, so the two variants' chunks never collide in the
     // shared `outDir`.
     outExtensions: isReactServer ? reactServerOutExtensions : undefined,
@@ -485,9 +485,9 @@ async function resolvePackageConfig(
 
 /**
  * The `outExtensions` of the `react-server` variant: tsdown's default extension for the
- * format and package type (see `resolveJsOutputExtension` in tsdown), with `.server` inserted
- * so the variant's entries sit next to the compiled ones (`index.js` ↔ `index.server.js`,
- * `index.cjs` ↔ `index.server.cjs`, and `.mjs` accordingly for CommonJS packages).
+ * format and package type (see `resolveJsOutputExtension` in tsdown), with `.react-server` inserted
+ * so the variant's entries sit next to the compiled ones (`index.js` ↔ `index.react-server.js`,
+ * `index.cjs` ↔ `index.react-server.cjs`, and `.mjs` accordingly for CommonJS packages).
  */
 const reactServerOutExtensions: NonNullable<UserConfig['outExtensions']> = ({
   format,
@@ -496,11 +496,11 @@ const reactServerOutExtensions: NonNullable<UserConfig['outExtensions']> = ({
   js:
     format === 'cjs'
       ? pkgType === 'module'
-        ? '.server.cjs'
-        : '.server.js'
+        ? '.react-server.cjs'
+        : '.react-server.js'
       : pkgType === 'module'
-        ? '.server.js'
-        : '.server.mjs',
+        ? '.react-server.js'
+        : '.react-server.mjs',
 })
 
 type ExportsOptions = Extract<NonNullable<UserConfig['exports']>, object>
@@ -556,9 +556,9 @@ const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
 
 /**
  * Inserts a `react-server` condition into every entry export of an `exports`-shaped map,
- * pointing at the `.server.` sibling emitted by the `react-server` variant — e.g.
+ * pointing at the `.react-server.` sibling emitted by the `react-server` variant — e.g.
  * `"./dist/index.js"` becomes
- * `{"react-server": "./dist/index.server.js", "default": "./dist/index.js"}`.
+ * `{"react-server": "./dist/index.react-server.js", "default": "./dist/index.js"}`.
  *
  * Entries are recognized by matching path leaves against the compiled variant's entry chunk
  * filenames, so non-entry exports (`./package.json`, the conditional `./bundle.css` export of
@@ -568,7 +568,7 @@ const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
  */
 function addReactServerConditions(exportsMap: ExportsMap, chunks: ChunksByFormat): ExportsMap {
   // Entry JS chunk filenames of the compiled variant; the `react-server` variant's files sit
-  // next to them with `.server` inserted before the extension
+  // next to them with `.react-server` inserted before the extension
   const entryFileNames: string[] = []
   for (const [format, formatChunks] of Object.entries(chunks)) {
     // Only `es` and `cjs` chunks become package exports (mirroring tsdown's own generation)
@@ -632,7 +632,7 @@ function withReactServerCondition(
   return next
 }
 
-/** `./dist/index.js` → `./dist/index.server.js` (and `.mjs`/`.cjs` accordingly). */
+/** `./dist/index.js` → `./dist/index.react-server.js` (and `.mjs`/`.cjs` accordingly). */
 function toServerFile(file: string): string {
-  return file.replace(RE_JS_FILE, '.server.$1')
+  return file.replace(RE_JS_FILE, '.react-server.$1')
 }
