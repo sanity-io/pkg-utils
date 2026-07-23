@@ -7,8 +7,6 @@
  */
 import type {Targets} from 'lightningcss'
 
-const TARGET_REGEX = /([a-z]+)(\d+(?:\.\d+){0,2})/g
-
 const ESBUILD_LIGHTNINGCSS_MAPPING: Record<string, keyof Targets> = {
   chrome: 'chrome',
   edge: 'edge',
@@ -47,12 +45,21 @@ function convert(target: string[]): Targets | undefined {
   let targets: Targets | undefined
 
   const targetString = target.join(' ').toLowerCase()
-  const matches = [...targetString.matchAll(TARGET_REGEX)]
+  const entries = targetString.split(/[\s,]+/)
 
-  for (const match of matches) {
-    const [, name, version] = match
-    const browser = name === undefined ? undefined : ESBUILD_LIGHTNINGCSS_MAPPING[name]
-    if (!browser || version === undefined) {
+  for (const entry of entries) {
+    if (entry.length === 0) {
+      continue
+    }
+    const index = entry.search(/\d/)
+    if (index <= 0 || index >= entry.length) {
+      continue
+    }
+
+    const name = entry.slice(0, index)
+    const version = entry.slice(index)
+    const browser = ESBUILD_LIGHTNINGCSS_MAPPING[name]
+    if (!browser || !isVersionString(version)) {
       continue
     }
 
@@ -66,4 +73,27 @@ function convert(target: string[]): Targets | undefined {
   }
 
   return targets
+}
+
+function isVersionString(version: string): boolean {
+  if (version.startsWith('.') || version.endsWith('.')) {
+    return false
+  }
+
+  let lastWasDot = false
+  for (const char of version) {
+    if (char === '.') {
+      if (lastWasDot) {
+        return false
+      }
+      lastWasDot = true
+      continue
+    }
+    if (char < '0' || char > '9') {
+      return false
+    }
+    lastWasDot = false
+  }
+
+  return true
 }
