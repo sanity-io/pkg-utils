@@ -94,7 +94,7 @@ importers:
         version: 2.1.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -207,8 +207,8 @@ importers:
         specifier: workspace:*
         version: link:../sanity-css-vanilla-extract-test
       ts-jest:
-        specifier: ^29.4.11
-        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@26.1.1))(typescript@6.0.3)
+        specifier: ^29.4.12
+        version: 29.4.12(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@26.1.1))(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -693,7 +693,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -925,7 +925,7 @@ importers:
         version: 1.2.4
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1027,7 +1027,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1064,7 +1064,7 @@ importers:
         version: 1.2.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1098,7 +1098,7 @@ importers:
         version: 1.2.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1129,7 +1129,7 @@ importers:
         version: 0.3.21
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -13118,25 +13118,6 @@ packages:
     engines: {node: 20 || >=22}
     hasBin: true
 
-  rolldown-plugin-dts@0.27.12:
-    resolution: {integrity: sha512-DJg5ELVEdLAVhirvtak7GS4nbNvBzLNAtYL1M8hLghDURBFKU2MwEH6ncHibYs6khq1NaRQ97iFMiHvzw+WoSw==}
-    engines: {node: ^22.18.0 || >=24.11.0}
-    peerDependencies:
-      '@typescript/native-preview': '*'
-      '@volar/typescript': ~2.4.0
-      rolldown: ^1.0.0
-      typescript: ^5.0.0 || ^6.0.0 || ~7.0.0
-      vue-tsc: ~3.2.0 || ~3.3.0
-    peerDependenciesMeta:
-      '@typescript/native-preview':
-        optional: true
-      '@volar/typescript':
-        optional: true
-      typescript:
-        optional: true
-      vue-tsc:
-        optional: true
-
   rolldown-plugin-dts@0.27.13:
     resolution: {integrity: sha512-DeVZJbbB0ajp5q6vABqC8ZCJzxftlxbiV60Bk96GFdQaysGVpgTTVjQu0lUt4Lb+aRCtejfOixtQKDRol7IuVQ==}
     engines: {node: ^22.18.0 || >=24.11.0}
@@ -13916,8 +13897,8 @@ packages:
   ts-brand@0.2.0:
     resolution: {integrity: sha512-H5uo7OqMvd91D2EefFmltBP9oeNInNzWLAZUSt6coGDn8b814Eis6SnEtzyXORr9ccEb38PfzyiRVDacdkycSQ==}
 
-  ts-jest@29.4.11:
-    resolution: {integrity: sha512-IrFl7l9AuB/qrNw5quqvAv/hmKMb8dhWOH4jQOGo0Oq8tCeo1O86/iTFG1FaRimgUkF13l4PcepO8ATFT6Ns4g==}
+  ts-jest@29.4.12:
+    resolution: {integrity: sha512-Ov6ClY53Fflh6BGAnY2DlTq1hYDrTycz2PVTXBWFW2CU+9zrEqAp9fWdGXl42EXO5RLSFAcAZ2JFKbP+zBTFfw==}
     engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -22559,7 +22540,7 @@ snapshots:
       lightningcss: 1.33.0
       postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.19)(tsx@4.23.1)(yaml@2.9.0)
       rolldown: 1.2.0
-      tsdown: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+      tsdown: 0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
     optionalDependencies:
       postcss: 8.5.19
     transitivePeerDependencies:
@@ -22747,7 +22728,7 @@ snapshots:
 
   '@types/prompts@2.4.9':
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.1.1
       kleur: 3.0.3
 
   '@types/qs@6.15.1': {}
@@ -24941,7 +24922,7 @@ snapshots:
 
   eval@0.1.8:
     dependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.1.1
       require-like: 0.1.2
 
   event-source-polyfill@1.0.31: {}
@@ -28870,20 +28851,6 @@ snapshots:
       glob: 13.0.6
       package-json-from-dist: 1.0.1
 
-  rolldown-plugin-dts@0.27.12(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2):
-    dependencies:
-      dts-resolver: 3.0.0(oxc-resolver@11.24.2)
-      get-tsconfig: 5.0.0-beta.5
-      obug: 2.1.4
-      rolldown: 1.2.0
-      yuku-ast: 0.7.2
-      yuku-codegen: 0.7.2
-      yuku-parser: 0.7.2
-    optionalDependencies:
-      typescript: 7.0.2
-    transitivePeerDependencies:
-      - oxc-resolver
-
   rolldown-plugin-dts@0.27.13(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
@@ -30163,7 +30130,7 @@ snapshots:
 
   ts-brand@0.2.0: {}
 
-  ts-jest@29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@26.1.1))(typescript@6.0.3):
+  ts-jest@29.4.12(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(esbuild@0.28.1)(jest-util@30.4.1)(jest@30.4.2(@types/node@26.1.1))(typescript@6.0.3):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
@@ -30190,7 +30157,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2):
+  tsdown@0.22.12(@tsdown/css@0.22.12)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -30201,7 +30168,7 @@ snapshots:
       obug: 2.1.4
       picomatch: 4.0.5
       rolldown: 1.2.0
-      rolldown-plugin-dts: 0.27.12(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2)
+      rolldown-plugin-dts: 0.27.13(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2)
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
