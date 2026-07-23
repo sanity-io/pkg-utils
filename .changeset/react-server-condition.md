@@ -19,6 +19,7 @@ React Server Components refuse to load React Compiler output (`react/compiler-ru
 {
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "react-server": "./dist/index.react-server.js",
       "default": "./dist/index.js"
     }

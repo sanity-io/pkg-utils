@@ -65,14 +65,17 @@ export default defineConfig({
 Every entry is built twice from the same source, and the only difference is that React Compiler
 auto-memoization is applied to the non-`react-server` output. The uncompiled build lands next to
 the compiled one with `.react-server` inserted before the extension (`dist/index.js` ↔
-`dist/index.react-server.js`), only the compiled build emits the `.d.ts` files (TypeScript resolves
-types through the `default` condition), and — when the [`exports` feature](#exports) is enabled —
-every entry export gains a `react-server` condition:
+`dist/index.react-server.js`), only the compiled build emits the `.d.ts` files, and — when the
+[`exports` feature](#exports) is enabled — every entry export gains a `react-server` condition,
+with a `types` condition specified before it (the `.react-server.` files have no declaration
+siblings, so the explicit `types` condition points every resolution mode — including consumers
+with `react-server` in their `customConditions` — at the compiled build's declarations):
 
 ```json
 {
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "react-server": "./dist/index.react-server.js",
       "default": "./dist/index.js"
     }

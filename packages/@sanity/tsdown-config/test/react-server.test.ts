@@ -131,16 +131,37 @@ describe('reactCompiler.reactServer option', () => {
     const customExports = getCustomExports(compiled)
 
     // The pure-ESM publish shape: a bare-string entry export becomes a conditional export
-    // with `react-server` resolving before `default`
+    // with `types` specified before `react-server` (the `.react-server.` file has no
+    // declaration sibling - the compiled build's declarations serve every resolution mode),
+    // and `react-server` resolving before `default`
     const result = await customExports(
       {'.': './dist/index.js', './package.json': './package.json'},
+      customExportsContext({es: ['index.js', 'index.d.ts']}),
+    )
+    expect(result).toEqual({
+      '.': {
+        'types': './dist/index.d.ts',
+        'react-server': './dist/index.react-server.js',
+        'default': './dist/index.js',
+      },
+      './package.json': './package.json',
+    })
+    expect(Object.keys(result['.'])).toEqual(['types', 'react-server', 'default'])
+  })
+
+  test('omits the types condition when no declarations are emitted', async () => {
+    const [compiled] = await defineDualConfig()
+    const customExports = getCustomExports(compiled)
+
+    // Without declaration chunks (`dts: false` packages) there is no `types` file to point
+    // at, and the entry keeps the plain dual shape
+    const result = await customExports(
+      {'.': './dist/index.js'},
       customExportsContext({es: ['index.js']}),
     )
     expect(result).toEqual({
       '.': {'react-server': './dist/index.react-server.js', 'default': './dist/index.js'},
-      './package.json': './package.json',
     })
-    expect(Object.keys(result['.'])).toEqual(['react-server', 'default'])
   })
 
   test('nests import/require under react-server for dual-format entries', async () => {
@@ -166,9 +187,35 @@ describe('reactCompiler.reactServer option', () => {
       'import': './dist/index.js',
       'require': './dist/index.cjs',
     })
-    // Conditions match in order: `types` stays first, `react-server` comes right before the
-    // runtime conditions
+    // Conditions match in order: an already-present `types` stays first (and is left alone),
+    // `react-server` comes right before the runtime conditions
     expect(Object.keys(result['.'])).toEqual(['types', 'react-server', 'import', 'require'])
+  })
+
+  test('nests format-matched types under react-server for dual-format entries', async () => {
+    const [compiled] = await defineDualConfig()
+    const customExports = getCustomExports(compiled)
+
+    // Without a top-level `types` condition, dual-format entries rely on TypeScript's
+    // adjacent-file lookup (`index.js` ↔ `index.d.ts`, `index.cjs` ↔ `index.d.cts`) - which
+    // cannot work for the declaration-less `.react-server.` files. A single top-level
+    // `types` file can't serve both resolution modes either, so each format nests its own
+    // `types` under the `react-server` condition instead
+    const result = await customExports(
+      {'.': {import: './dist/index.js', require: './dist/index.cjs'}},
+      customExportsContext({
+        es: ['index.js', 'index.d.ts'],
+        cjs: ['index.cjs', 'index.d.cts'],
+      }),
+    )
+    expect(result['.']).toEqual({
+      'react-server': {
+        import: {types: './dist/index.d.ts', default: './dist/index.react-server.js'},
+        require: {types: './dist/index.d.cts', default: './dist/index.react-server.cjs'},
+      },
+      'import': './dist/index.js',
+      'require': './dist/index.cjs',
+    })
   })
 
   test('covers every entry, and leaves non-entry exports untouched', async () => {
@@ -284,12 +331,18 @@ describe('react-server-library', () => {
     expect(pkg.exports['.']).toBe('./src/index.ts')
 
     // `publishConfig.exports` resolves `react-server` to the uncompiled build, everything
-    // else to the compiled one
+    // else to the compiled one - with `types` specified before `react-server`, since the
+    // `.react-server.` file has no declaration sibling for adjacent-file lookup
     expect(pkg.publishConfig.exports['.']).toEqual({
+      'types': './dist/index.d.ts',
       'react-server': './dist/index.react-server.js',
       'default': './dist/index.js',
     })
-    expect(Object.keys(pkg.publishConfig.exports['.'])).toEqual(['react-server', 'default'])
+    expect(Object.keys(pkg.publishConfig.exports['.'])).toEqual([
+      'types',
+      'react-server',
+      'default',
+    ])
 
     // The react-server files never become export subpaths of their own
     expect(Object.keys(pkg.exports)).toEqual(['.', './package.json'])

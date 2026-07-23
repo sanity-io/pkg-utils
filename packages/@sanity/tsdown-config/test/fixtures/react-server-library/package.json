@@ -27,6 +27,7 @@
   "publishConfig": {
     "exports": {
       ".": {
+        "types": "./dist/index.d.ts",
         "react-server": "./dist/index.react-server.js",
         "default": "./dist/index.js"
       },

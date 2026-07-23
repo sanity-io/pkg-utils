@@ -75,6 +75,7 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions> & {
    *
    * ```json
    * ".": {
+   *   "types": "./dist/index.d.ts",
    *   "react-server": "./dist/index.react-server.js",
    *   "default": "./dist/index.js"
    * }
@@ -271,10 +272,11 @@ async function resolvePackageConfig(
   const {entry, tsconfig, define, target, outDir, css} = options
   const isReactServer = variant === 'react-server'
   // The `react-server` variant skips d.ts generation (the compiled variant's declarations
-  // serve both entries — TypeScript resolves types through the `default` condition), never
-  // cleans (tsdown collects the clean paths of all configs and cleans once, before either
-  // variant emits, so the compiled variant's `clean` already covers the run), and skips
-  // `publint` (it runs once, from the compiled variant, after both builds finish).
+  // serve both entries — a `types` condition specified before `react-server` points every
+  // resolution mode at them), never cleans (tsdown collects the clean paths of all configs
+  // and cleans once, before either variant emits, so the compiled variant's `clean` already
+  // covers the run), and skips `publint` (it runs once, from the compiled variant, after
+  // both builds finish).
   const dts = isReactServer ? false : options.dts
   const clean = isReactServer ? false : options.clean
   const publint = !isReactServer
@@ -558,7 +560,14 @@ const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
  * Inserts a `react-server` condition into every entry export of an `exports`-shaped map,
  * pointing at the `.react-server.` sibling emitted by the `react-server` variant — e.g.
  * `"./dist/index.js"` becomes
- * `{"react-server": "./dist/index.react-server.js", "default": "./dist/index.js"}`.
+ * `{"types": "./dist/index.d.ts", "react-server": "./dist/index.react-server.js", "default": "./dist/index.js"}`.
+ *
+ * The `react-server` variant emits no `.d.ts` siblings, so TypeScript's adjacent-file lookup
+ * cannot resolve types for `./dist/index.react-server.js` — a `types` condition pointing at
+ * the compiled variant's declarations is specified before `react-server` instead (conditions
+ * match in order, so it covers every resolution mode). It's only added when the declarations
+ * actually exist among the compiled variant's chunks, and an already-present `types`
+ * condition is left in place.
  *
  * Entries are recognized by matching path leaves against the compiled variant's entry chunk
  * filenames, so non-entry exports (`./package.json`, the conditional `./bundle.css` export of
@@ -567,24 +576,36 @@ const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
  * with `exports: false` — so they don't become export subpaths of their own.
  */
 function addReactServerConditions(exportsMap: ExportsMap, chunks: ChunksByFormat): ExportsMap {
-  // Entry JS chunk filenames of the compiled variant; the `react-server` variant's files sit
-  // next to them with `.react-server` inserted before the extension
+  // Entry JS and declaration chunk filenames of the compiled variant; the `react-server`
+  // variant's files sit next to the entries with `.react-server` inserted before the extension
   const entryFileNames: string[] = []
+  const dtsFileNames = new Set<string>()
   for (const [format, formatChunks] of Object.entries(chunks)) {
     // Only `es` and `cjs` chunks become package exports (mirroring tsdown's own generation)
     if (format !== 'es' && format !== 'cjs') continue
     for (const chunk of formatChunks) {
-      if (chunk.type === 'chunk' && chunk.isEntry && RE_JS_FILE.test(chunk.fileName)) {
+      if (chunk.type !== 'chunk') continue
+      if (chunk.isEntry && RE_JS_FILE.test(chunk.fileName)) {
         entryFileNames.push(chunk.fileName)
+      } else if (RE_DTS_FILE.test(chunk.fileName)) {
+        dtsFileNames.add(chunk.fileName)
       }
     }
   }
   const isEntryFile = (value: unknown): value is string =>
     typeof value === 'string' && entryFileNames.some((fileName) => value.endsWith(`/${fileName}`))
+  // The `types` file for an entry export path, when the compiled variant emitted it
+  const dtsFor = (value: string): string | undefined => {
+    const entryFileName = entryFileNames.find((fileName) => value.endsWith(`/${fileName}`))
+    if (entryFileName === undefined || !dtsFileNames.has(toDtsFile(entryFileName))) {
+      return undefined
+    }
+    return toDtsFile(value)
+  }
 
   const result: ExportsMap = {}
   for (const [key, value] of Object.entries(exportsMap as Record<string, unknown>)) {
-    result[key] = withReactServerCondition(value, isEntryFile)
+    result[key] = withReactServerCondition(value, isEntryFile, dtsFor)
   }
   return result
 }
@@ -592,11 +613,18 @@ function addReactServerConditions(exportsMap: ExportsMap, chunks: ChunksByFormat
 function withReactServerCondition(
   value: unknown,
   isEntryFile: (value: unknown) => value is string,
+  dtsFor: (value: string) => string | undefined,
 ): unknown {
   // A bare-string entry export (e.g. the pure-ESM publish shape `".": "./dist/index.js"`)
-  // becomes a conditional export with `react-server` resolving first
+  // becomes a conditional export, with `types` specified before `react-server` so type
+  // resolution never reaches the declaration-less `.react-server.` file
   if (isEntryFile(value)) {
-    return {'react-server': toServerFile(value), 'default': value}
+    const types = dtsFor(value)
+    return {
+      ...(types === undefined ? {} : {types}),
+      'react-server': toServerFile(value),
+      'default': value,
+    }
   }
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return value
   const conditions = Object.entries(value)
@@ -606,13 +634,26 @@ function withReactServerCondition(
   )
   const [firstMatch] = matched
   if (!firstMatch) return value
-  // A single runtime file maps to a plain path; a dual-format entry nests its `import` and
-  // `require` files under the `react-server` condition
+  const hasTypes = conditions.some(([condition]) => condition === 'types')
+  // A single runtime file maps to a plain path (with a `types` condition inserted ahead of
+  // `react-server` below, unless one is already specified). A dual-format entry nests its
+  // `import` and `require` files under the `react-server` condition, each with its own
+  // format-matched `types` — a single top-level `types` file cannot serve both resolution
+  // modes, which is also why tsdown's own dual-format output relies on adjacent-file lookup.
+  const missingTypes = hasTypes ? undefined : dtsFor(firstMatch[1])
   const serverTarget =
     matched.length === 1
       ? toServerFile(firstMatch[1])
       : Object.fromEntries(
-          matched.map(([condition, target]) => [condition, toServerFile(target)]),
+          matched.map(([condition, target]) => {
+            const types = hasTypes ? undefined : dtsFor(target)
+            return [
+              condition,
+              types === undefined
+                ? toServerFile(target)
+                : {types, default: toServerFile(target)},
+            ]
+          }),
         )
   // Conditions match in order, so `react-server` is inserted right before the first runtime
   // condition (`import`/`require`/`default`), keeping `types` and custom development
@@ -621,6 +662,9 @@ function withReactServerCondition(
   let inserted = false
   for (const [condition, target] of conditions) {
     if (!inserted && RUNTIME_CONDITIONS.has(condition)) {
+      if (matched.length === 1 && missingTypes !== undefined) {
+        next['types'] = missingTypes
+      }
       next['react-server'] = serverTarget
       inserted = true
     }
@@ -632,7 +676,17 @@ function withReactServerCondition(
   return next
 }
 
+/** Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks. */
+const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
+
 /** `./dist/index.js` → `./dist/index.react-server.js` (and `.mjs`/`.cjs` accordingly). */
 function toServerFile(file: string): string {
   return file.replace(RE_JS_FILE, '.react-server.$1')
+}
+
+/** `./dist/index.js` → `./dist/index.d.ts` (`.mjs` → `.d.mts`, `.cjs` → `.d.cts`). */
+function toDtsFile(file: string): string {
+  return file.replace(RE_JS_FILE, (extension) =>
+    extension === '.mjs' ? '.d.mts' : extension === '.cjs' ? '.d.cts' : '.d.ts',
+  )
 }
