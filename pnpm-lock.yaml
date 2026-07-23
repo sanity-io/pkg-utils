@@ -909,8 +909,8 @@ importers:
         specifier: workspace:^
         version: link:../tsconfig
       '@tsdown/css':
-        specifier: 0.22.12
-        version: 0.22.12(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
+        specifier: 0.22.13
+        version: 0.22.13(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -925,7 +925,7 @@ importers:
         version: 1.2.4
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.12(@tsdown/css@0.22.12)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+        version: 0.22.12(@tsdown/css@0.22.13)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -980,8 +980,8 @@ importers:
   packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-css-modules-library:
     devDependencies:
       '@tsdown/css':
-        specifier: 0.22.12
-        version: 0.22.12(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
+        specifier: 0.22.13
+        version: 0.22.13(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
       '@vanilla-extract/css':
         specifier: ^1.21.1
         version: 1.21.1
@@ -7691,6 +7691,28 @@ packages:
       sass: '*'
       sass-embedded: '*'
       tsdown: 0.22.12
+    peerDependenciesMeta:
+      postcss:
+        optional: true
+      postcss-import:
+        optional: true
+      postcss-modules:
+        optional: true
+      sass:
+        optional: true
+      sass-embedded:
+        optional: true
+
+  '@tsdown/css@0.22.13':
+    resolution: {integrity: sha512-4Ehe/ys/1EXEgzk0ijt/AUxxM8UCEFmErq8+wWscBCceDwDMW7L4hbt4l9xixwjv+0V8friwRt67UKWAwtXxog==}
+    engines: {node: ^22.18.0 || >=24.11.0}
+    peerDependencies:
+      postcss: ^8.4.0
+      postcss-import: ^16.0.0
+      postcss-modules: ^6.0.0
+      sass: '*'
+      sass-embedded: '*'
+      tsdown: 0.22.13
     peerDependenciesMeta:
       postcss:
         optional: true
@@ -22566,6 +22588,20 @@ snapshots:
       - jiti
       - tsx
       - yaml
+    optional: true
+
+  '@tsdown/css@0.22.13(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)':
+    dependencies:
+      lightningcss: 1.33.0
+      postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.19)(tsx@4.23.1)(yaml@2.9.0)
+      rolldown: 1.2.0
+      tsdown: 0.22.12(@tsdown/css@0.22.13)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2)
+    optionalDependencies:
+      postcss: 8.5.19
+    transitivePeerDependencies:
+      - jiti
+      - tsx
+      - yaml
 
   '@tufjs/canonical-json@2.0.0': {}
 
@@ -30209,6 +30245,34 @@ snapshots:
       verkit: 0.1.2
     optionalDependencies:
       '@tsdown/css': 0.22.12(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
+      publint: 0.3.21
+      tsx: 4.23.1
+      typescript: 7.0.2
+    transitivePeerDependencies:
+      - '@typescript/native-preview'
+      - '@volar/typescript'
+      - oxc-resolver
+      - vue-tsc
+
+  tsdown@0.22.12(@tsdown/css@0.22.13)(oxc-resolver@11.24.2)(publint@0.3.21)(tsx@4.23.1)(typescript@7.0.2):
+    dependencies:
+      ansis: 4.3.1
+      cac: 7.0.0
+      defu: 6.1.7
+      empathic: 2.0.1
+      hookable: 6.1.1
+      import-without-cache: 0.4.0
+      obug: 2.1.4
+      picomatch: 4.0.5
+      rolldown: 1.2.0
+      rolldown-plugin-dts: 0.27.12(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2)
+      tinyexec: 1.2.4
+      tinyglobby: 0.2.17
+      tree-kill: 1.2.2
+      unconfig-core: 7.5.0
+      verkit: 0.1.2
+    optionalDependencies:
+      '@tsdown/css': 0.22.13(jiti@2.7.0)(postcss@8.5.19)(tsdown@0.22.12)(tsx@4.23.1)(yaml@2.9.0)
       publint: 0.3.21
       tsx: 4.23.1
       typescript: 7.0.2
