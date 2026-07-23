@@ -550,7 +550,7 @@ function withReactServerExports(
 const RE_JS_FILE = /\.(m?js|cjs)$/
 
 /** The conditions tsdown generates that resolve at runtime, in contrast to `types` etc. */
-const RUNTIME_CONDITIONS = ['import', 'require', 'default']
+const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
 
 /**
  * Inserts a `react-server` condition into every entry export of an `exports`-shaped map,
@@ -600,7 +600,7 @@ function withReactServerCondition(
   const conditions = Object.entries(value)
   const matched = conditions.filter(
     (entry): entry is [string, string] =>
-      RUNTIME_CONDITIONS.includes(entry[0]) && isEntryFile(entry[1]),
+      RUNTIME_CONDITIONS.has(entry[0]) && isEntryFile(entry[1]),
   )
   const [firstMatch] = matched
   if (!firstMatch) return value
@@ -618,7 +618,7 @@ function withReactServerCondition(
   const next: Record<string, unknown> = {}
   let inserted = false
   for (const [condition, target] of conditions) {
-    if (!inserted && RUNTIME_CONDITIONS.includes(condition)) {
+    if (!inserted && RUNTIME_CONDITIONS.has(condition)) {
       next['react-server'] = serverTarget
       inserted = true
     }

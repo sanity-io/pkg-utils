@@ -32,15 +32,14 @@ export function PortableText(props: {
 }): JSX.Element {
   const {value, components: overrides} = props
   const components = {...defaultComponents, ...overrides}
-  const blocks = value.map((block) => {
-    const lines = block.text.split('\n')
-    return (
+  const blocks = value.map((block) =>
+    block.text === '' ? (
+      <components.hardBreak key={block._key} />
+    ) : (
       <components.block key={block._key} style={block.style ?? 'normal'}>
-        {lines.flatMap((line, index) =>
-          index === 0 ? [line] : [<components.hardBreak key={`break-${index}`} />, line],
-        )}
+        {block.text.split('\n').join(' ')}
       </components.block>
-    )
-  })
+    ),
+  )
   return <>{blocks}</>
 }
