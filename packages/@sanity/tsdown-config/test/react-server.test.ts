@@ -2,8 +2,8 @@ import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import type {UserConfig} from 'tsdown'
-import {describe, expect, test} from 'vitest'
-import {defineConfig} from '../src/index.ts'
+import {describe, expect, expectTypeOf, test} from 'vitest'
+import {defineConfig, type ReactCompilerOptions} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/react-server-library')
@@ -91,6 +91,31 @@ describe('reactCompiler.reactServer option', () => {
       expect(config.exports).not.toHaveProperty('customExports')
       expect(config.outExtensions).toBeUndefined()
     }
+  })
+
+  test('narrows the return type per overload', async () => {
+    // Literal `reactServer: true` resolves to the two variants
+    const dual = defineConfig({reactCompiler: {target: '19', reactServer: true}})
+    expectTypeOf(dual).toEqualTypeOf<Promise<UserConfig[]>>()
+
+    // Without `reactServer` (or with a literal `false`) the config stays a single build
+    expectTypeOf(defineConfig()).toEqualTypeOf<Promise<UserConfig>>()
+    expectTypeOf(defineConfig({reactCompiler: true})).toEqualTypeOf<Promise<UserConfig>>()
+    const single = defineConfig({reactCompiler: {target: '19'}})
+    expectTypeOf(single).toEqualTypeOf<Promise<UserConfig>>()
+    const explicitlyOff = defineConfig({reactCompiler: {target: '19', reactServer: false}})
+    expectTypeOf(explicitlyOff).toEqualTypeOf<Promise<UserConfig>>()
+
+    // When `reactServer` is widened to `boolean` (e.g. a `ReactCompilerOptions`-typed
+    // variable), TypeScript can't tell which shape resolves - the return type is the union,
+    // so callers have to check `Array.isArray` instead of wrongly assuming a single config
+    const widenedOptions: ReactCompilerOptions = {target: '19', reactServer: true}
+    const widened = defineConfig({reactCompiler: widenedOptions})
+    expectTypeOf(widened).toEqualTypeOf<Promise<UserConfig | UserConfig[]>>()
+
+    // ...and at runtime the widened call indeed resolves to the dual build
+    expect(await widened).toHaveLength(2)
+    await Promise.all([dual, single, explicitlyOff])
   })
 
   test('resolves the compiled and react-server variants', async () => {

@@ -223,11 +223,29 @@ export interface PackageOptions extends Pick<
 }
 
 /**
+ * With `reactCompiler.reactServer` the config resolves to two tsdown configs: the compiled
+ * `default` variant and the uncompiled `react-server` variant.
  * @public
  */
 export function defineConfig(
   options: PackageOptions & {reactCompiler: ReactCompilerOptions & {reactServer: true}},
 ): Promise<UserConfig[]>
+/**
+ * Without `reactCompiler.reactServer` the config resolves to a single tsdown config.
+ * @public
+ */
+export function defineConfig(
+  options: PackageOptions & {reactCompiler: ReactCompilerOptions & {reactServer?: false}},
+): Promise<UserConfig>
+/**
+ * When TypeScript can't tell whether `reactCompiler.reactServer` is set (a widened `boolean`,
+ * e.g. through a `ReactCompilerOptions`-typed variable), the config resolves to either shape —
+ * check `Array.isArray` on the result.
+ * @public
+ */
+export function defineConfig(
+  options: PackageOptions & {reactCompiler: ReactCompilerOptions},
+): Promise<UserConfig | UserConfig[]>
 /**
  * @public
  */
