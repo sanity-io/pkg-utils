@@ -62,4 +62,23 @@ describe('styled-components-library', () => {
       expect(output).toContain('`cursor:pointer;border-radius:2px;padding:0;`')
     }
   })
+
+  test('keeps inner function names, so React DevTools can read `Function.name`', async () => {
+    const [distIndexJs, distIndexCjs] = await Promise.all([
+      readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/index.cjs'), 'utf-8'),
+    ])
+
+    for (const output of [distIndexJs, distIndexCjs]) {
+      // The default minify (`compress: {keepNames}`) preserves the otherwise-unreferenced
+      // inner name in `forwardRef(function IconButton(…) {…})` - without `keepNames` the
+      // compress pass strips it to `forwardRef(function(…) {…})`, leaving the component
+      // anonymous in React DevTools wherever the dist runs unminified (e.g. every consumer's
+      // dev server). The name is the tree-shakeable alternative to a top-level
+      // `IconButton.displayName = '…'` assignment (https://github.com/sanity-io/ui/pull/2435).
+      // The CJS output calls it as `(0, react.forwardRef)(function IconButton(…)`, hence the
+      // optional `)` in the pattern
+      expect(output).toMatch(/forwardRef\)?\(function IconButton\(/)
+    }
+  })
 })
