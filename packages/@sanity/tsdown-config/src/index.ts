@@ -241,15 +241,17 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
   const neverBundle: NonNullable<UserConfig['deps']>['neverBundle'] =
     userNeverBundle == null
       ? nodeBuiltinExternal && [nodeBuiltinExternal]
-      : nodeBuiltinExternal == null
+        : nodeBuiltinExternal == null || userNeverBundle === true
         ? userNeverBundle
         : typeof userNeverBundle === 'function'
-          ? (id, importer, isResolved) =>
-              nodeBuiltinExternal.test(id) || userNeverBundle(id, importer, isResolved)
-          : [
-              nodeBuiltinExternal,
-              ...(Array.isArray(userNeverBundle) ? userNeverBundle : [userNeverBundle]),
-            ]
+            ? (id, importer, isResolved) =>
+                nodeBuiltinExternal.test(id) || userNeverBundle(id, importer, isResolved)
+            : Array.isArray(userNeverBundle)
+              ? [nodeBuiltinExternal, ...userNeverBundle]
+            : [
+                nodeBuiltinExternal,
+                userNeverBundle,
+              ]
   const deps: UserConfig['deps'] =
     options.deps === undefined && neverBundle === undefined
       ? undefined
