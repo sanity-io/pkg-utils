@@ -13,8 +13,8 @@ catalogs:
       specifier: ^5.1.0
       version: 5.1.0
     '@sanity/logos':
-      specifier: ^2.2.2
-      version: 2.2.2
+      specifier: ^2.2.4
+      version: 2.2.4
     '@types/node':
       specifier: ^24.13.3
       version: 24.13.3
@@ -1402,7 +1402,7 @@ importers:
         version: 5.1.0(react@19.2.8)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.2(react@19.2.8)
+        version: 2.2.4(react@19.2.8)
 
   playground/ts-rolldown-bundle-peer-dependency:
     dependencies:
@@ -1418,7 +1418,7 @@ importers:
         version: 5.1.0(react@19.2.8)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.2(react@19.2.8)
+        version: 2.2.4(react@19.2.8)
 
   playground/ts-rolldown-bundle-prod-dependency:
     dependencies:
@@ -1430,7 +1430,7 @@ importers:
         version: 5.1.0(react@19.2.8)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.2(react@19.2.8)
+        version: 2.2.4(react@19.2.8)
       react:
         specifier: '*'
         version: 19.2.8
@@ -1451,7 +1451,7 @@ importers:
         version: 5.1.0(react@19.2.8)
       '@sanity/logos':
         specifier: 'catalog:'
-        version: 2.2.2(react@19.2.8)
+        version: 2.2.4(react@19.2.8)
       react:
         specifier: '*'
         version: 19.2.8
@@ -6952,6 +6952,10 @@ packages:
     resolution: {integrity: sha512-2TjYEvOftD0v7ukx3Csdh9QIu44P2z7NDJtlC3qITJRYV36J7R6Vfd3trVhFnN77/7CZrGjqngrtohv8VqO5nw==}
     engines: {node: '>=18.0.0'}
 
+  '@sanity/color@3.0.7':
+    resolution: {integrity: sha512-cFy8VlD4yfosgyFI0zL+SSPvc0r8oLxw0EoykmT8AgUDqJoHan6rewva5RdQura+GDKZNJE4W16cbLeROmo3Ag==}
+    engines: {node: '>=18.0.0'}
+
   '@sanity/comlink@4.0.1':
     resolution: {integrity: sha512-vdGOd6sxNjqTo2H3Q3L2/Gepy+cDBiQ1mr9ck7c/A9o4NnmBLoDliifsNHIwgNwBUz37oH4+EIz/lIjNy8hSew==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -7026,6 +7030,12 @@ packages:
 
   '@sanity/logos@2.2.2':
     resolution: {integrity: sha512-KIWFL7nYEOINXIzaTF9aVhd481hFF/ak+SRnpgksYuJXlo2hbY/UoEJBz6KhsEP5dfO/NwqG82QrkwzLvd6izA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: ^18.3 || ^19.0.0-0
+
+  '@sanity/logos@2.2.4':
+    resolution: {integrity: sha512-gKZKSltgFNA8dYX7dyys9kAuzthGLyhsk1yb9Jpdm3TNU75dQQLE3M75Da0vEvWRiAeK9p+fjO8lFur1jEk48A==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^18.3 || ^19.0.0-0
@@ -21350,6 +21360,8 @@ snapshots:
 
   '@sanity/color@3.0.6': {}
 
+  '@sanity/color@3.0.7': {}
+
   '@sanity/comlink@4.0.1':
     dependencies:
       rxjs: 7.8.2
@@ -21452,6 +21464,11 @@ snapshots:
   '@sanity/logos@2.2.2(react@19.2.8)':
     dependencies:
       '@sanity/color': 3.0.6
+      react: 19.2.8
+
+  '@sanity/logos@2.2.4(react@19.2.8)':
+    dependencies:
+      '@sanity/color': 3.0.7
       react: 19.2.8
 
   '@sanity/media-library-types@1.6.0': {}
