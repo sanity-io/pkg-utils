@@ -7,7 +7,7 @@
  */
 import type {Targets} from 'lightningcss'
 
-const TARGET_REGEX = /([a-z]+)(\d+(?:\.\d+)*)/g
+const TARGET_REGEX = /([a-z]+)(\d+(?:\.\d+){0,2})/g
 
 const ESBUILD_LIGHTNINGCSS_MAPPING: Record<string, keyof Targets> = {
   chrome: 'chrome',
