@@ -5,7 +5,7 @@
 The default `minify` compress pass now preserves function and class names
 (`compress: {keepNames: {function: true, class: true}}`, previously `compress: true`).
 
-The compress pass otherwise strips otherwise-unreferenced names - most notably the inner name
+The compress pass strips otherwise-unreferenced names - most notably the inner name
 in `forwardRef(function Button(…) {…})`, which React DevTools reads via `Function.name`. That
 name is the tree-shakeable alternative to a top-level `Button.displayName = '…'` assignment (a
 side effect that pins unused components into consumer bundles, see
