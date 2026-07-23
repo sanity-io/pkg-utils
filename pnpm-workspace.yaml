@@ -12,7 +12,7 @@ catalog:
   '@sanity/logos': ^2.2.4
   '@types/node': ^24.13.3
   lightningcss: ^1.33.0
-  publint: ^0.3.21
+  publint: ^0.3.22
   tsdown: ^0.22.13
   typescript: 7.0.2
   vitest: ^4.1.10
@@ -79,6 +79,8 @@ minimumReleaseAgeExclude:
   # comparison suite and plugin peers stay on current releases.
   - '@vanilla-extract/*'
   - verkit
+  - publint
+  - '@publint/*'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
