@@ -52,7 +52,7 @@ function convert(target: string[]): Targets | undefined {
       continue
     }
     const index = entry.search(/\d/)
-    if (index <= 0 || index >= entry.length) {
+    if (index <= 0) {
       continue
     }
 
