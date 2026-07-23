@@ -1,9 +1,11 @@
+import path from 'node:path'
 import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
 import {detect} from 'package-manager-detector/detect'
 import {
   defineConfig as defineTsdownConfig,
   mergeConfig,
+  type PackageJsonWithPath,
   type Rolldown,
   type UserConfig,
 } from 'tsdown'
@@ -511,8 +513,6 @@ type CustomExportsFunction = Extract<
   (...args: never[]) => unknown
 >
 type ExportsMap = Parameters<CustomExportsFunction>[0]
-type ChunksByFormat = Parameters<CustomExportsFunction>[1]['chunks']
-
 /**
  * Wires the `react-server` conditions into tsdown's `exports` feature by composing into
  * `exports.customExports` (the same composition `@sanity/vanilla-extract-tsdown-plugin` uses
@@ -545,7 +545,7 @@ function withReactServerExports(
         : previousCustomExports
           ? {...exportsMap, ...previousCustomExports}
           : exportsMap
-    return addReactServerConditions(base, context.chunks)
+    return addReactServerConditions(base, context)
   }
   return exportsOptions
 }
@@ -569,38 +569,48 @@ const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
  * actually exist among the compiled variant's chunks, and an already-present `types`
  * condition is left in place.
  *
- * Entries are recognized by matching path leaves against the compiled variant's entry chunk
- * filenames, so non-entry exports (`./package.json`, the conditional `./bundle.css` export of
- * `vanillaExtract`, `devExports` source paths like `./src/index.ts`) pass through untouched.
- * The `react-server` files themselves never enter the map — the `react-server` variant builds
- * with `exports: false` — so they don't become export subpaths of their own.
+ * Entries are recognized by comparing export targets against the compiled variant's entry
+ * chunks — reconstructed in the exact `./<outDir relative to the package root>/<fileName>`
+ * form tsdown writes into the exports map, so entries that share a leaf name (`index.js` vs
+ * `features/index.js`) can never shadow each other, and non-entry exports (`./package.json`,
+ * the conditional `./bundle.css` export of `vanillaExtract`, `devExports` source paths like
+ * `./src/index.ts`) pass through untouched. The `react-server` files themselves never enter
+ * the map — the `react-server` variant builds with `exports: false` — so they don't become
+ * export subpaths of their own.
  */
-function addReactServerConditions(exportsMap: ExportsMap, chunks: ChunksByFormat): ExportsMap {
-  // Entry JS and declaration chunk filenames of the compiled variant; the `react-server`
-  // variant's files sit next to the entries with `.react-server` inserted before the extension
-  const entryFileNames: string[] = []
-  const dtsFileNames = new Set<string>()
-  for (const [format, formatChunks] of Object.entries(chunks)) {
+function addReactServerConditions(
+  exportsMap: ExportsMap,
+  context: Parameters<CustomExportsFunction>[1],
+): ExportsMap {
+  // tsdown always resolves the package with its path here: its own exports generation reads
+  // `packageJsonPath` unconditionally from the same object it passes to `customExports` -
+  // only the declared context type is the plain `PackageJson` shape.
+  const pkg: Partial<PackageJsonWithPath> = context.pkg
+  const pkgRoot = path.dirname(pkg.packageJsonPath ?? 'package.json')
+  // Export targets of the compiled variant's entry JS and declaration chunks; the
+  // `react-server` variant's files sit next to the entries with `.react-server` inserted
+  // before the extension
+  const entryFiles = new Set<string>()
+  const dtsFiles = new Set<string>()
+  for (const [format, formatChunks] of Object.entries(context.chunks)) {
     // Only `es` and `cjs` chunks become package exports (mirroring tsdown's own generation)
     if (format !== 'es' && format !== 'cjs') continue
     for (const chunk of formatChunks) {
       if (chunk.type !== 'chunk') continue
+      const target = exportTarget(pkgRoot, chunk.outDir, chunk.fileName)
       if (chunk.isEntry && RE_JS_FILE.test(chunk.fileName)) {
-        entryFileNames.push(chunk.fileName)
+        entryFiles.add(target)
       } else if (RE_DTS_FILE.test(chunk.fileName)) {
-        dtsFileNames.add(chunk.fileName)
+        dtsFiles.add(target)
       }
     }
   }
   const isEntryFile = (value: unknown): value is string =>
-    typeof value === 'string' && entryFileNames.some((fileName) => value.endsWith(`/${fileName}`))
-  // The `types` file for an entry export path, when the compiled variant emitted it
+    typeof value === 'string' && entryFiles.has(value)
+  // The `types` file for an entry export target, when the compiled variant emitted it
   const dtsFor = (value: string): string | undefined => {
-    const entryFileName = entryFileNames.find((fileName) => value.endsWith(`/${fileName}`))
-    if (entryFileName === undefined || !dtsFileNames.has(toDtsFile(entryFileName))) {
-      return undefined
-    }
-    return toDtsFile(value)
+    const dtsFile = toDtsFile(value)
+    return dtsFiles.has(dtsFile) ? dtsFile : undefined
   }
 
   const result: ExportsMap = {}
@@ -608,6 +618,15 @@ function addReactServerConditions(exportsMap: ExportsMap, chunks: ChunksByFormat
     result[key] = withReactServerCondition(value, isEntryFile, dtsFor)
   }
   return result
+}
+
+/**
+ * Mirrors tsdown's own `join` for exports targets:
+ * `./<outDir relative to the package root>/<fileName>`, with POSIX separators.
+ */
+function exportTarget(pkgRoot: string, outDir: string, fileName: string): string {
+  const outDirRelative = path.relative(pkgRoot, outDir).replaceAll('\\', '/')
+  return `${outDirRelative ? `./${outDirRelative}` : '.'}/${fileName.replaceAll('\\', '/')}`
 }
 
 function withReactServerCondition(

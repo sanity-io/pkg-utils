@@ -149,6 +149,37 @@ describe('reactCompiler.reactServer option', () => {
     expect(Object.keys(result['.'])).toEqual(['types', 'react-server', 'default'])
   })
 
+  test('matches entry exports exactly, never by leaf name', async () => {
+    const [compiled] = await defineDualConfig()
+    const customExports = getCustomExports(compiled)
+
+    // `index.js` and `features/index.js` share a leaf name: export targets are compared as
+    // full `./<outDir>/<fileName>` strings, so the declaration existence check runs against
+    // each entry's own `.d.ts` (only the root entry has one here - no `types` condition is
+    // invented for `./features`), and a non-entry file that merely ends in an entry's
+    // filename passes through untouched
+    const result = await customExports(
+      {
+        '.': './dist/index.js',
+        './features': './dist/features/index.js',
+        './not-an-entry': './dist/vendored/index.js',
+      },
+      customExportsContext({es: ['index.js', 'features/index.js', 'index.d.ts']}),
+    )
+    expect(result).toEqual({
+      '.': {
+        'types': './dist/index.d.ts',
+        'react-server': './dist/index.react-server.js',
+        'default': './dist/index.js',
+      },
+      './features': {
+        'react-server': './dist/features/index.react-server.js',
+        'default': './dist/features/index.js',
+      },
+      './not-an-entry': './dist/vendored/index.js',
+    })
+  })
+
   test('omits the types condition when no declarations are emitted', async () => {
     const [compiled] = await defineDualConfig()
     const customExports = getCustomExports(compiled)
