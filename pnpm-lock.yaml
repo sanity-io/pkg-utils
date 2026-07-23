@@ -1318,8 +1318,8 @@ importers:
   playground/sanity-plugin-with-styled-components:
     dependencies:
       '@sanity/ui':
-        specifier: ^3.3.5
-        version: 3.3.6(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        specifier: ^3.4.3
+        version: 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       react-compiler-runtime:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.8)
@@ -6837,6 +6837,10 @@ packages:
     resolution: {integrity: sha512-cFy8VlD4yfosgyFI0zL+SSPvc0r8oLxw0EoykmT8AgUDqJoHan6rewva5RdQura+GDKZNJE4W16cbLeROmo3Ag==}
     engines: {node: '>=18.0.0'}
 
+  '@sanity/color@3.0.7':
+    resolution: {integrity: sha512-cFy8VlD4yfosgyFI0zL+SSPvc0r8oLxw0EoykmT8AgUDqJoHan6rewva5RdQura+GDKZNJE4W16cbLeROmo3Ag==}
+    engines: {node: '>=18.0.0'}
+
   '@sanity/comlink@4.0.1':
     resolution: {integrity: sha512-vdGOd6sxNjqTo2H3Q3L2/Gepy+cDBiQ1mr9ck7c/A9o4NnmBLoDliifsNHIwgNwBUz37oH4+EIz/lIjNy8hSew==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -6883,6 +6887,12 @@ packages:
     engines: {node: '>=22.12'}
     peerDependencies:
       react: ^19
+
+  '@sanity/icons@5.2.1':
+    resolution: {integrity: sha512-P5gY1HRungh4RgCcypdIpu/SKoTwRBTttpbHntZjdW1MO3MK6xEOs+pbAzSARyhh22OcN9PkBBEYk2FL34BvfQ==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@sanity/id-utils@1.0.0':
     resolution: {integrity: sha512-2sb7tbdMDuUuVyocJPKG0gZBiOML/ovCe+mJiLrv1j69ODOfa2LfUjDVR+dRw/A/+XuxoJSSP8ebG7NiwTOgIA==}
@@ -7002,6 +7012,15 @@ packages:
 
   '@sanity/ui@3.3.6':
     resolution: {integrity: sha512-3QDH9NXev6ssVk293rgDsUvsUHm5/phdWyi/QUyNI4cDEavmrHMOF8LKxRjKvD6clcQ2FRLLRSoyhSdvCaXYhg==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+    peerDependencies:
+      react: ^18 || >=19.0.0-0
+      react-dom: ^18 || >=19.0.0-0
+      react-is: ^18 || >=19.0.0-0
+      styled-components: ^5.2 || ^6
+
+  '@sanity/ui@3.4.3':
+    resolution: {integrity: sha512-NJvU9Y0Xuguo5XEurkaiVL4HBOx0R18lWlRM87WajEFfQFLBcIbZ4y9JNMnmYv7lYFO8JVbr5a3Xhruo0sO4og==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       react: ^18 || >=19.0.0-0
@@ -21372,6 +21391,8 @@ snapshots:
 
   '@sanity/color@3.0.7': {}
 
+  '@sanity/color@3.0.7': {}
+
   '@sanity/comlink@4.0.1':
     dependencies:
       rxjs: 7.8.2
@@ -21427,6 +21448,10 @@ snapshots:
     dependencies:
       react: 19.2.8
 
+  '@sanity/icons@5.2.1(react@19.2.8)':
+    dependencies:
+      react: 19.2.8
+
   '@sanity/id-utils@1.0.0':
     dependencies:
       '@sanity/uuid': 3.0.3
@@ -21460,7 +21485,7 @@ snapshots:
     dependencies:
       '@sanity/icons': 5.1.0(react@19.2.8)
       '@sanity/types': 6.5.0(@types/react@19.2.17)
-      '@sanity/ui': 3.3.6(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@sanity/ui': 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       lodash-es: 4.18.1
       react: 19.2.8
       react-is: 19.2.8
@@ -21746,6 +21771,24 @@ snapshots:
       '@juggle/resize-observer': 3.4.0
       '@sanity/color': 3.0.7
       '@sanity/icons': 3.8.0(react@19.2.8)
+      csstype: 3.2.3
+      motion: 12.42.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react: 19.2.8
+      react-compiler-runtime: 1.0.0(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
+      react-is: 19.2.8
+      react-refractor: 4.0.0(react@19.2.8)
+      styled-components: 6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      use-effect-event: 2.0.3(react@19.2.8)
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+
+  '@sanity/ui@3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@juggle/resize-observer': 3.4.0
+      '@sanity/color': 3.0.7
+      '@sanity/icons': 5.2.1(react@19.2.8)
       csstype: 3.2.3
       motion: 12.42.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
