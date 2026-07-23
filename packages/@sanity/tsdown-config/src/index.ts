@@ -62,9 +62,40 @@ export interface StyledComponentsOptions {
  * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
  * dependency, required to use `reactCompiler`) is installed, and always match the installed
  * version of the compiler.
+ *
+ * On top of the compiler's own options, `reactServer` opts into the dual React Server
+ * Components build — it's handled by this config and never forwarded to
+ * `babel-plugin-react-compiler`.
  * @public
  */
-export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions>
+export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions> & {
+  /**
+   * Also emit an uncompiled build of every entry (`<name>.server.js` next to `<name>.js`),
+   * wired to the `react-server` export condition in `package.json`:
+   *
+   * ```json
+   * ".": {
+   *   "react-server": "./dist/index.server.js",
+   *   "default": "./dist/index.js"
+   * }
+   * ```
+   *
+   * React Server Components refuse to load React Compiler output (`react/compiler-runtime`
+   * throws in the `react-server` environment), so a library that ships compiled code
+   * publishes two entrypoints: the compiled one (the `default` condition) and an uncompiled
+   * one (the `react-server` condition) — see
+   * https://github.com/facebook/react/issues/31702.
+   *
+   * Both builds come from the same source, and the only difference is that React Compiler
+   * auto-memoization is applied to the non-`react-server` output; nothing is stripped from
+   * either output. Pair it with deleting manual `useMemo`/`useCallback` calls from the
+   * source: server components stop paying for memoization that can never pay off (they
+   * render exactly once), and client components get the compiler's finer-grained
+   * memoization instead.
+   * @defaultValue false
+   */
+  reactServer?: boolean
+}
 
 /**
  * @public
@@ -150,6 +181,11 @@ export interface PackageOptions extends Pick<
    * This is the same feature as the `babel: {reactCompiler: true}` and `reactCompilerOptions`
    * options in `@sanity/pkg-utils`. Unlike `styledComponents` there's no oxc native port of the
    * React Compiler yet, so `babel-plugin-react-compiler` needs to be installed.
+   *
+   * The options object also accepts `reactServer: true` (an option of this config, not the
+   * compiler), which additionally emits an uncompiled build of every entry wired to the
+   * `react-server` export condition, for libraries that render in React Server Components —
+   * see {@link ReactCompilerOptions.reactServer}.
    * @defaultValue false
    */
   reactCompiler?: boolean | ReactCompilerOptions
@@ -184,20 +220,69 @@ export interface PackageOptions extends Pick<
 /**
  * @public
  */
-export async function defineConfig(options: PackageOptions = {}): Promise<UserConfig> {
+export function defineConfig(
+  options: PackageOptions & {reactCompiler: ReactCompilerOptions & {reactServer: true}},
+): Promise<UserConfig[]>
+/**
+ * @public
+ */
+export function defineConfig(options?: PackageOptions): Promise<UserConfig>
+/**
+ * @public
+ */
+export async function defineConfig(
+  options: PackageOptions = {},
+): Promise<UserConfig | UserConfig[]> {
+  const reactCompiler = options.reactCompiler ?? false
+  // `reactCompiler.reactServer` opts into the dual React Server Components build: the same
+  // config twice, where the only difference is that React Compiler auto-memoization is applied
+  // to the non-`react-server` variant. Both variants build in one `tsdown` run — tsdown builds
+  // the configs in parallel, cleans the shared `outDir` once before either variant emits, and
+  // runs `exports` generation and `publint` per `package.json` only after every build for that
+  // package has finished (so the `react-server` files exist by the time they're validated).
+  if (typeof reactCompiler === 'object' && reactCompiler.reactServer === true) {
+    return Promise.all([
+      resolvePackageConfig(options, 'default'),
+      resolvePackageConfig(options, 'react-server'),
+    ])
+  }
+  return resolvePackageConfig(options, 'standalone')
+}
+
+/**
+ * The build variants {@link defineConfig} produces: the classic single build
+ * (`'standalone'`), or — with `reactCompiler.reactServer` — the compiled `'default'` variant
+ * and the uncompiled `'react-server'` variant of the dual React Server Components build.
+ */
+type PackageConfigVariant = 'standalone' | 'default' | 'react-server'
+
+async function resolvePackageConfig(
+  options: PackageOptions,
+  variant: PackageConfigVariant,
+): Promise<UserConfig> {
   // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir`, `clean` and `css` are passed
   // through to tsdown as-is. When left undefined, tsdown keeps its default behavior
   // (`tsconfig` is auto-detected from the project, `dts` from `package.json`, `define`
   // replaces nothing, `target` applies no syntax downleveling, `outDir` defaults to `'dist'`,
   // `clean` defaults to `true` — cleaning `outDir` before each build — and `css` stays off
   // unless `@tsdown/css` is installed and the option is set).
-  const {entry, tsconfig, dts, define, target, outDir, clean, css} = options
+  const {entry, tsconfig, define, target, outDir, css} = options
+  const isReactServer = variant === 'react-server'
+  // The `react-server` variant skips d.ts generation (the compiled variant's declarations
+  // serve both entries — TypeScript resolves types through the `default` condition), never
+  // cleans (tsdown collects the clean paths of all configs and cleans once, before either
+  // variant emits, so the compiled variant's `clean` already covers the run), and skips
+  // `publint` (it runs once, from the compiled variant, after both builds finish).
+  const dts = isReactServer ? false : options.dts
+  const clean = isReactServer ? false : options.clean
+  const publint = !isReactServer
   const platform = options.platform ?? 'neutral'
   const sourcemap = options.sourcemap ?? true
-  const reactCompiler = options.reactCompiler ?? false
+  // The React Compiler is what the `react-server` variant exists to avoid: compiled output
+  // loads `react/compiler-runtime`, which throws in the `react-server` environment.
+  const reactCompiler = isReactServer ? false : (options.reactCompiler ?? false)
   const styledComponents = options.styledComponents ?? false
   const report = {gzip: false} as const satisfies UserConfig['report']
-  const publint = true
   const format = options.format ?? 'esm'
   // When `platform` is `'neutral'`, restore the conventional `module`/`main` fallback that
   // rolldown's strict neutral defaults drop - needed for inlined deps without an `exports` map.
@@ -273,9 +358,13 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
       import('@rolldown/plugin-babel'),
       import('@vitejs/plugin-react'),
     ])
+    // `reactServer` belongs to this config, not the compiler — drop it before handing the
+    // options over to the babel preset.
+    const {reactServer: _reactServer, ...reactCompilerOptions} =
+      typeof reactCompiler === 'object' ? reactCompiler : {}
     plugins.push(
       await pluginBabel({
-        presets: [reactCompilerPreset(typeof reactCompiler === 'object' ? reactCompiler : {})],
+        presets: [reactCompilerPreset(reactCompilerOptions)],
       }),
     )
   }
@@ -331,21 +420,34 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     )
   }
 
-  const packageManager = await detect({cwd: process.cwd()})
-  // tsdown's `exports` feature is enabled with Sanity-flavored defaults, and userland values
-  // apply with tsdown's own `mergeConfig` semantics: an object deep-merges over the defaults,
-  // anything else (`false`, a CI condition) replaces them.
-  const {exports} = mergeConfig(
-    {
-      exports: {
-        enabled: 'local-only',
-        // Only opt in by default when pnpm is detected: support for replacing package fields
-        // from `publishConfig` is not reliable across package managers.
-        ...(packageManager?.name === 'pnpm' && {devExports: true}),
+  // The `react-server` variant does not participate in `exports` generation: its files are
+  // wired in through the compiled variant's `react-server` conditions instead of becoming
+  // export subpaths of their own.
+  let exports: UserConfig['exports'] = false
+  if (!isReactServer) {
+    const packageManager = await detect({cwd: process.cwd()})
+    // tsdown's `exports` feature is enabled with Sanity-flavored defaults, and userland values
+    // apply with tsdown's own `mergeConfig` semantics: an object deep-merges over the defaults,
+    // anything else (`false`, a CI condition) replaces them.
+    ;({exports} = mergeConfig(
+      {
+        exports: {
+          enabled: 'local-only',
+          // Only opt in by default when pnpm is detected: support for replacing package fields
+          // from `publishConfig` is not reliable across package managers.
+          ...(packageManager?.name === 'pnpm' && {devExports: true}),
+        },
       },
-    },
-    {exports: options.exports},
-  )
+      {exports: options.exports},
+    ))
+    if (variant === 'default' && exports) {
+      // The compiled variant owns `exports` generation for the dual build, so the
+      // `react-server` conditions are composed into its `customExports`: every entry export
+      // gains a `react-server` condition pointing at the `.server.` sibling that the
+      // `react-server` variant emits.
+      exports = withReactServerExports(exports)
+    }
+  }
 
   return defineTsdownConfig({
     // Rolldown defaults `circularDependency` to `false`; enable it so Sanity library builds
@@ -363,6 +465,11 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     format,
     inputOptions,
     outDir,
+    // The `react-server` variant writes its files next to the compiled ones, with `.server`
+    // inserted before tsdown's default extension (`index.js` ↔ `index.server.js`). Hashed
+    // chunk filenames get the suffix too, so the two variants' chunks never collide in the
+    // shared `outDir`.
+    outExtensions: isReactServer ? reactServerOutExtensions : undefined,
     platform,
     plugins,
     publint,
@@ -372,4 +479,158 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     tsconfig,
     minify: {compress: true, codegen: false, mangle: false},
   })
+}
+
+/**
+ * The `outExtensions` of the `react-server` variant: tsdown's default extension for the
+ * format and package type (see `resolveJsOutputExtension` in tsdown), with `.server` inserted
+ * so the variant's entries sit next to the compiled ones (`index.js` ↔ `index.server.js`,
+ * `index.cjs` ↔ `index.server.cjs`, and `.mjs` accordingly for CommonJS packages).
+ */
+const reactServerOutExtensions: NonNullable<UserConfig['outExtensions']> = ({
+  format,
+  pkgType,
+}) => ({
+  js:
+    format === 'cjs'
+      ? pkgType === 'module'
+        ? '.server.cjs'
+        : '.server.js'
+      : pkgType === 'module'
+        ? '.server.js'
+        : '.server.mjs',
+})
+
+type ExportsOptions = Extract<NonNullable<UserConfig['exports']>, object>
+type CustomExportsFunction = Extract<
+  NonNullable<ExportsOptions['customExports']>,
+  (...args: never[]) => unknown
+>
+type ExportsMap = Parameters<CustomExportsFunction>[0]
+type ChunksByFormat = Parameters<CustomExportsFunction>[1]['chunks']
+
+/**
+ * Wires the `react-server` conditions into tsdown's `exports` feature by composing into
+ * `exports.customExports` (the same composition `@sanity/vanilla-extract-tsdown-plugin` uses
+ * for its conditional CSS export): a pre-existing `customExports` applies first — both its
+ * function and record forms, mirroring how tsdown itself applies them — and the
+ * `react-server` conditions are inserted into the result. The composed function runs for both
+ * the local `exports` map and `publishConfig.exports`; with `devExports` the local map points
+ * at source files, which the entry-file matching leaves untouched (source resolves for every
+ * condition in development, which is correct — uncompiled source is exactly what the
+ * `react-server` condition ships).
+ */
+function withReactServerExports(
+  exportsOption: Exclude<NonNullable<UserConfig['exports']>, false>,
+): ExportsOptions {
+  // Normalize the `boolean | CIOption | object` forms of the `exports` option into the
+  // object form, preserving the enabled-ness (`true` and bare CI conditions mean enabled)
+  const exportsOptions: ExportsOptions =
+    exportsOption === true
+      ? {}
+      : typeof exportsOption === 'string'
+        ? {enabled: exportsOption}
+        : exportsOption
+  const previousCustomExports = exportsOptions.customExports
+  exportsOptions.customExports = async (exportsMap, context) => {
+    // Apply a pre-existing `customExports` first (both its function and record forms,
+    // mirroring how tsdown itself applies them), then insert the `react-server` conditions
+    const base =
+      typeof previousCustomExports === 'function'
+        ? await previousCustomExports(exportsMap, context)
+        : previousCustomExports
+          ? {...exportsMap, ...previousCustomExports}
+          : exportsMap
+    return addReactServerConditions(base, context.chunks)
+  }
+  return exportsOptions
+}
+
+/** Matches the JS output extensions tsdown emits for `es`/`cjs` chunks. */
+const RE_JS_FILE = /\.(m?js|cjs)$/
+
+/** The conditions tsdown generates that resolve at runtime, in contrast to `types` etc. */
+const RUNTIME_CONDITIONS = ['import', 'require', 'default']
+
+/**
+ * Inserts a `react-server` condition into every entry export of an `exports`-shaped map,
+ * pointing at the `.server.` sibling emitted by the `react-server` variant — e.g.
+ * `"./dist/index.js"` becomes
+ * `{"react-server": "./dist/index.server.js", "default": "./dist/index.js"}`.
+ *
+ * Entries are recognized by matching path leaves against the compiled variant's entry chunk
+ * filenames, so non-entry exports (`./package.json`, the conditional `./bundle.css` export of
+ * `vanillaExtract`, `devExports` source paths like `./src/index.ts`) pass through untouched.
+ * The `react-server` files themselves never enter the map — the `react-server` variant builds
+ * with `exports: false` — so they don't become export subpaths of their own.
+ */
+function addReactServerConditions(exportsMap: ExportsMap, chunks: ChunksByFormat): ExportsMap {
+  // Entry JS chunk filenames of the compiled variant; the `react-server` variant's files sit
+  // next to them with `.server` inserted before the extension
+  const entryFileNames: string[] = []
+  for (const [format, formatChunks] of Object.entries(chunks)) {
+    // Only `es` and `cjs` chunks become package exports (mirroring tsdown's own generation)
+    if (format !== 'es' && format !== 'cjs') continue
+    for (const chunk of formatChunks) {
+      if (chunk.type === 'chunk' && chunk.isEntry && RE_JS_FILE.test(chunk.fileName)) {
+        entryFileNames.push(chunk.fileName)
+      }
+    }
+  }
+  const isEntryFile = (value: unknown): value is string =>
+    typeof value === 'string' && entryFileNames.some((fileName) => value.endsWith(`/${fileName}`))
+
+  const result: ExportsMap = {}
+  for (const [key, value] of Object.entries(exportsMap as Record<string, unknown>)) {
+    result[key] = withReactServerCondition(value, isEntryFile)
+  }
+  return result
+}
+
+function withReactServerCondition(
+  value: unknown,
+  isEntryFile: (value: unknown) => value is string,
+): unknown {
+  // A bare-string entry export (e.g. the pure-ESM publish shape `".": "./dist/index.js"`)
+  // becomes a conditional export with `react-server` resolving first
+  if (isEntryFile(value)) {
+    return {'react-server': toServerFile(value), 'default': value}
+  }
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return value
+  const conditions = Object.entries(value)
+  const matched = conditions.filter(
+    (entry): entry is [string, string] =>
+      RUNTIME_CONDITIONS.includes(entry[0]) && isEntryFile(entry[1]),
+  )
+  const [firstMatch] = matched
+  if (!firstMatch) return value
+  // A single runtime file maps to a plain path; a dual-format entry nests its `import` and
+  // `require` files under the `react-server` condition
+  const serverTarget =
+    matched.length === 1
+      ? toServerFile(firstMatch[1])
+      : Object.fromEntries(
+          matched.map(([condition, target]) => [condition, toServerFile(target)]),
+        )
+  // Conditions match in order, so `react-server` is inserted right before the first runtime
+  // condition (`import`/`require`/`default`), keeping `types` and custom development
+  // conditions (`devExports`) ahead of it
+  const next: Record<string, unknown> = {}
+  let inserted = false
+  for (const [condition, target] of conditions) {
+    if (!inserted && RUNTIME_CONDITIONS.includes(condition)) {
+      next['react-server'] = serverTarget
+      inserted = true
+    }
+    next[condition] = target
+  }
+  if (!inserted) {
+    next['react-server'] = serverTarget
+  }
+  return next
+}
+
+/** `./dist/index.js` → `./dist/index.server.js` (and `.mjs`/`.cjs` accordingly). */
+function toServerFile(file: string): string {
+  return file.replace(RE_JS_FILE, '.server.$1')
 }
