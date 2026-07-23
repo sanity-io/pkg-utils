@@ -1,0 +1,7 @@
+{
+  "extends": ["@sanity/tsconfig/strictest", "@sanity/tsconfig/isolated-declarations"],
+  "include": ["./src"],
+  "compilerOptions": {
+    "rootDir": "."
+  }
+}
