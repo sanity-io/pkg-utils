@@ -298,7 +298,7 @@ export default defineConfig({
 
 ## minify
 
-tsdown's [`minify` option](https://tsdown.dev/options/output#minify) defaults to compression
+@sanity/tsdown-config sets tsdown's [`minify` option](https://tsdown.dev/options/output#minify) to compression
 only, with function and class names preserved:
 
 ```ts
