@@ -372,6 +372,20 @@ export async function defineConfig(options: PackageOptions = {}): Promise<UserCo
     sourcemap,
     target,
     tsconfig,
-    minify: {compress: true, codegen: false, mangle: false},
+    // Compress the output (constant folding, dead code elimination) without mangling
+    // identifiers or stripping whitespace: consumers' production builds minify `node_modules`
+    // again anyway, so full minification here would only hurt debuggability, not final app
+    // bundle sizes. `keepNames` preserves the function and class names the compress pass
+    // would otherwise strip as unreferenced - e.g. the inner name in
+    // `forwardRef(function Button(…) {…})`, which React DevTools reads via `Function.name`.
+    // That name is the tree-shakeable alternative to a top-level `Button.displayName = '…'`
+    // assignment (a side effect that pins unused components into consumer bundles, see
+    // https://github.com/sanity-io/ui/pull/2435), and names stripped at publish time are
+    // unrecoverable in userland.
+    minify: {
+      compress: {keepNames: {function: true, class: true}},
+      codegen: false,
+      mangle: false,
+    },
   })
 }
