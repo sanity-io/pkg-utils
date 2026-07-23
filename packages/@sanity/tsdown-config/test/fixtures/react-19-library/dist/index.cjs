@@ -17,6 +17,20 @@ function Button(t0) {
 		bar
 	] }), $[1] = children, $[2] = type, $[3] = t3) : t3 = $[3], t3;
 }
-exports.Button = Button;
+/**
+* Object-property components React Compiler's `infer` mode never compiles on its own — the
+* `@sanity/react-compiler-rolldown-plugin` pre-pass annotates them with `'use memo'` so the
+* compiler memoizes them in place.
+*/
+const portableTextComponents = { marks: { link: (t0) => {
+	"use memo";
+	let $ = (0, react_compiler_runtime.c)(4), { children, value } = t0, rel = value?.href.startsWith("/") ? void 0 : "noreferrer noopener", t1 = value?.href, t2;
+	return $[0] !== children || $[1] !== rel || $[2] !== t1 ? (t2 = /* @__PURE__ */ (0, react_jsx_runtime.jsx)("a", {
+		href: t1,
+		rel,
+		children
+	}), $[0] = children, $[1] = rel, $[2] = t1, $[3] = t2) : t2 = $[3], t2;
+} } };
+exports.Button = Button, exports.portableTextComponents = portableTextComponents;
 
 //# sourceMappingURL=index.cjs.map

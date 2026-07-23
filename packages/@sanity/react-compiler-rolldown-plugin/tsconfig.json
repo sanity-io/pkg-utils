@@ -1,0 +1,10 @@
+{
+  "extends": "@sanity/tsconfig/strictest",
+  "exclude": ["**/dist/**"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "sanity": ["./test/fixtures/sanity-stub.ts"]
+    }
+  }
+}

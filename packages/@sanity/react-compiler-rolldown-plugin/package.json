@@ -1,26 +1,27 @@
 {
-  "name": "@sanity/tsdown-config",
-  "version": "0.19.6",
-  "description": "Shared configuration for tsdown",
+  "name": "@sanity/react-compiler-rolldown-plugin",
+  "version": "0.0.0",
+  "description": "rolldown plugin (Vite and tsdown compatible) that opts allow-listed Sanity API surfaces (defineConfig/defineType components, PortableText component maps) into React Compiler memoization with 'use memo' directives",
   "keywords": [
     "sanity-io",
     "sanity",
-    "npm",
-    "build",
-    "bundling",
-    "utilities",
-    "tsdown",
+    "react-compiler",
+    "react",
     "rolldown",
-    "rollup"
+    "tsdown",
+    "vite",
+    "vite-plugin",
+    "memoization",
+    "plugin"
   ],
-  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme",
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/react-compiler-rolldown-plugin#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
-    "directory": "packages/@sanity/tsdown-config"
+    "directory": "packages/@sanity/react-compiler-rolldown-plugin"
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
@@ -41,36 +42,36 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@babel/core": "^7.29.7",
-    "@rolldown/plugin-babel": "^0.2.3",
-    "@sanity/browserslist-config": "^1.0.5",
-    "@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
-    "@vitejs/plugin-react": "^6.0.3",
-    "browserslist": "^4.28.6",
-    "lightningcss": "catalog:",
-    "package-manager-detector": "^1.7.0",
-    "publint": "^0.3.21"
+    "magic-string": "^0.30.21",
+    "yuku-parser": "^0.7.0"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "workspace:^",
-    "@sanity/react-compiler-rolldown-plugin": "workspace:^",
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.29.7",
+    "@portabletext/react": "^6.2.0",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@sanity/tsconfig": "workspace:^",
-    "@tsdown/css": "0.22.12",
+    "@sanity/tsdown-config": "workspace:^",
     "@types/babel__core": "^7.20.5",
+    "@types/node": "catalog:",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
+    "publint": "catalog:",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "rolldown": "~1.2.0",
-    "tinyexec": "^1.2.4",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "^8.1.5",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "babel-plugin-react-compiler": "*",
-    "tsdown": "^0.22.5",
-    "typescript": "6.x || 7.x"
+    "rolldown": "^1.0.0"
   },
   "peerDependenciesMeta": {
-    "babel-plugin-react-compiler": {
+    "rolldown": {
       "optional": true
     }
   },

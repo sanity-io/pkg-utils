@@ -32,6 +32,26 @@ describe('reactCompiler option', () => {
   })
 })
 
+describe('reactCompilerSurfacesPlugin recipe', () => {
+  test('mergeConfig prepends the surfaces plugin before the React Compiler babel plugin', async () => {
+    // The documented way to combine @sanity/react-compiler-rolldown-plugin with this config:
+    // prepending through mergeConfig satisfies the plugin's one ordering rule (it must run
+    // before the compiler's babel pass, so the compiler sees the injected directives)
+    const [{reactCompilerSurfacesPlugin}, {mergeConfig}] = await Promise.all([
+      import('@sanity/react-compiler-rolldown-plugin'),
+      import('tsdown'),
+    ])
+    const config = mergeConfig(
+      {plugins: [reactCompilerSurfacesPlugin()]},
+      await defineConfig({reactCompiler: {target: '19'}}),
+    )
+    expect(getPluginNames(config)).toEqual([
+      'sanity-react-compiler-surfaces',
+      '@rolldown/plugin-babel',
+    ])
+  })
+})
+
 describe('react-19-library', () => {
   test('applies the React Compiler to esm and cjs output', async () => {
     const [distIndexJs, distIndexCjs] = await Promise.all([
@@ -47,6 +67,22 @@ describe('react-19-library', () => {
 
     expect(distIndexCjs).toContain('require("react/compiler-runtime")')
     expect(distIndexCjs).toContain('react.memo_cache_sentinel')
+  })
+
+  test('memoizes annotated surface components with the surfaces plugin prepended', async () => {
+    const [distIndexJs, distIndexCjs] = await Promise.all([
+      readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/index.cjs'), 'utf-8'),
+    ])
+
+    for (const output of [distIndexJs, distIndexCjs]) {
+      // The `marks.link` component in `portableText.tsx` is an object-property function the
+      // compiler's `infer` mode never compiles on its own: the surfaces plugin injected the
+      // `'use memo'` opt-in (still visible in the output), and the compiler memoized it in
+      // place with a cache keyed on its props (`rel` is derived state unique to that component)
+      expect(output).toContain('use memo')
+      expect(output).toMatch(/\$\[\d\] !== rel/)
+    }
   })
 
   test('replaces `define` globals at build time', async () => {

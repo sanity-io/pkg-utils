@@ -43,6 +43,30 @@ export default defineConfig({
 })
 ```
 
+### React Compiler surfaces
+
+The compiler's `infer` mode never compiles object-property functions — the
+component-in-an-object patterns Sanity APIs are built on (`defineConfig` / `defineType`
+component slots, `use*` hook props, PortableText component maps) are invisible to it.
+[`@sanity/react-compiler-rolldown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/react-compiler-rolldown-plugin#readme)
+opts those allow-listed surfaces in with `'use memo'` directives. It only annotates, so it
+runs independently of this config — the one rule is that it must come **before** the React
+Compiler pass, which `mergeConfig` guarantees by prepending it to the `plugins` array:
+
+```ts
+import {reactCompilerSurfacesPlugin} from '@sanity/react-compiler-rolldown-plugin'
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(
+  {plugins: [reactCompilerSurfacesPlugin()]},
+  await defineConfig({
+    tsconfig: 'tsconfig.dist.json',
+    reactCompiler: {target: '19'},
+  }),
+)
+```
+
 ## styled-components
 
 If your package uses `styled-components`, enable the same `styledComponents` transform that `@sanity/pkg-utils` has:
