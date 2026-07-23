@@ -3,8 +3,8 @@ import {resolve} from 'node:path'
 import type {PackageJSON} from '@sanity/parse-package-json'
 import prettierConfig from '@sanity/prettier-config'
 import {getLatestVersion} from 'get-latest-version'
-import gitUrlParse from 'git-url-parse'
 import {outdent} from 'outdent'
+import parseGithubUrl from 'parse-github-url'
 import {format, type Config as PrettierConfig} from 'prettier'
 import {isRecord} from '../../core/isRecord.ts'
 import {defineTemplateOption} from '../../core/template/define.ts'
@@ -24,20 +24,24 @@ export const defaultTemplate: PkgTemplate = async ({cwd, logger, packagePath}) =
         validate: (v) => {
           if (!v) return true
 
-          try {
-            gitUrlParse(v)
+          const result = parseGithubUrl(v)
 
-            return true
-          } catch {
+          if (!result?.host || !result.owner || !result.name) {
             return 'invalid git url'
           }
+
+          return true
         },
         parse: (v) => {
           if (!v) return null
 
-          const result = gitUrlParse(v)
+          const result = parseGithubUrl(v)
 
-          return {source: result.source, owner: result.owner, name: result.name}
+          if (!result?.host || !result.owner || !result.name) {
+            throw new Error('invalid git url')
+          }
+
+          return {source: result.host, owner: result.owner, name: result.name}
         },
       }),
       defineTemplateOption({
