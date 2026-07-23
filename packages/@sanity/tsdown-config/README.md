@@ -296,6 +296,42 @@ export default defineConfig({
 })
 ```
 
+## minify
+
+tsdown's [`minify` option](https://tsdown.dev/options/output#minify) defaults to compression
+only, with function and class names preserved:
+
+```ts
+{
+  compress: {keepNames: {function: true, class: true}},
+  mangle: false,
+  codegen: false,
+}
+```
+
+Consumers' production builds minify `node_modules` again anyway, so mangling identifiers or
+stripping whitespace in the published dist would not shrink final app bundles - it would only
+hurt debuggability. The compress pass still applies constant folding and dead code elimination
+(e.g. evaluating [`define`](#define)d branches away), and `keepNames` stops it from stripping
+otherwise-unreferenced function/class names such as the inner name in
+`forwardRef(function Button(…) {…})`. React DevTools reads that name via `Function.name` - the
+tree-shakeable alternative to a top-level `Button.displayName = '…'` assignment, which is a side
+effect that pins unused components into consumer bundles
+([sanity-io/ui#2435](https://github.com/sanity-io/ui/pull/2435)). Names stripped at publish time
+are unrecoverable in userland, while keeping them costs a fraction of a kilobyte.
+
+Override it by merging over the returned config, like [everything else](#everything-else-mergeconfig):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  // e.g. drop the names again for the smallest possible dist:
+  minify: {compress: true},
+})
+```
+
 ## deps
 
 tsdown's [`deps` option](https://tsdown.dev/options/dependencies) is forwarded. When `platform` is
