@@ -2,7 +2,7 @@
 '@sanity/tsdown-config': minor
 ---
 
-Add `reactServer` to the `reactCompiler` options, for libraries that render in React Server Components:
+Add `reactServer` to the `reactCompiler` options, for libraries that render in React Server Components. It's experimental (`@alpha`) and not covered by semver: it can change behavior or be removed entirely in a minor version.
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'

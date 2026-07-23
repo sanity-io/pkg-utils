@@ -52,7 +52,8 @@ render exactly once. The React team's guidance for libraries that ship compiled 
 the client, and an uncompiled one under the `react-server` export condition.
 
 The `reactServer` option of `reactCompiler` (an option of this config, never forwarded to the
-compiler) bakes that pattern in:
+compiler) bakes that pattern in. It's experimental (`@alpha`) and not covered by semver: it can
+change behavior or be removed entirely in a minor version.
 
 ```ts
 export default defineConfig({

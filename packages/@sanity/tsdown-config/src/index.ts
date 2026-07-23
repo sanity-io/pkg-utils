@@ -93,6 +93,8 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions> & {
    * render exactly once), and client components get the compiler's finer-grained
    * memoization instead.
    * @defaultValue false
+   * @alpha This option is experimental and not covered by semver: it can change behavior or
+   * be removed entirely in a minor version.
    */
   reactServer?: boolean
 }
