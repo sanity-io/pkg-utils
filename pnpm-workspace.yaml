@@ -79,6 +79,8 @@ minimumReleaseAgeExclude:
   # comparison suite and plugin peers stay on current releases.
   - '@vanilla-extract/*'
   - verkit
+  - publint
+  - '@publint/*'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
