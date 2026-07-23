@@ -43,6 +43,62 @@ export default defineConfig({
 })
 ```
 
+### React Server Components (`reactServer`)
+
+React Server Components refuse to load React Compiler output — `react/compiler-runtime` throws
+in the `react-server` environment, since memoization can never pay off for components that
+render exactly once. The React team's guidance for libraries that ship compiled code is to
+[publish two entrypoints](https://github.com/facebook/react/issues/31702): the compiled one for
+the client, and an uncompiled one under the `react-server` export condition.
+
+The `reactServer` option of `reactCompiler` (an option of this config, never forwarded to the
+compiler) bakes that pattern in:
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: {target: '19', reactServer: true},
+})
+```
+
+Every entry is built twice from the same source, and the only difference is that React Compiler
+auto-memoization is applied to the non-`react-server` output. The uncompiled build lands next to
+the compiled one with `.server` inserted before the extension (`dist/index.js` ↔
+`dist/index.server.js`), only the compiled build emits the `.d.ts` files (TypeScript resolves
+types through the `default` condition), and — when the [`exports` feature](#exports) is enabled —
+every entry export gains a `react-server` condition:
+
+```json
+{
+  "exports": {
+    ".": {
+      "react-server": "./dist/index.server.js",
+      "default": "./dist/index.js"
+    }
+  }
+}
+```
+
+React Server Components resolve the uncompiled build, everything else (client components, SSR,
+plain Node) resolves the compiled one. The `.server.` files never become export subpaths of
+their own.
+
+Nothing is stripped from either output, so pair `reactServer` with deleting manual
+`useMemo`/`useCallback` calls from the source: server components stop paying for memoization
+that cannot pay off, and client components get the compiler's finer-grained auto-memoization
+instead of the hand-written hooks.
+
+`reactServer` is meant for isomorphic libraries that render in both worlds without a
+`'use client'` directive (pure renderers like `@portabletext/react`). Client-only packages that
+ship `'use client'` don't need it — they always load through the `default` condition anyway.
+Also note the general dual-entrypoint caveat: the two conditions are two module instances, so
+module-scope identity (e.g. `createContext`) is not shared between server and client trees —
+which is exactly the boundary React draws for such libraries anyway.
+
+With `reactServer` the config resolves to two tsdown configs, so the
+[isolated declarations annotation](#isolated-declarations) becomes
+`satisfies Promise<UserConfig[]>`.
+
 ## styled-components
 
 If your package uses `styled-components`, enable the same `styledComponents` transform that `@sanity/pkg-utils` has:
@@ -252,6 +308,8 @@ Without the annotation, type-checking `tsdown.config.ts` with the `@sanity/tscon
 enable `declaration`) fails with TS2883 in pnpm projects: the inferred type of the default export
 can only be named through `@sanity/tsdown-config`'s own copy of `tsdown`, which isn't portable.
 `satisfies Promise<UserConfig>` names the type through your own `tsdown` dependency instead.
+With [`reactCompiler.reactServer`](#react-server-components-reactserver) the config resolves to
+two tsdown configs, so the annotation becomes `satisfies Promise<UserConfig[]>`.
 
 Keep the `isolated-declarations` preset scoped to the tsconfig that tsdown builds with (e.g. a
 `tsconfig.dist.json` that only includes `./src`). If `isolatedDeclarations` covers
