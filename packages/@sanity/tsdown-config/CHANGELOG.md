@@ -1,5 +1,74 @@
 # @sanity/tsdown-config
 
+## 0.21.0
+
+### Minor Changes
+
+- [#3143](https://github.com/sanity-io/pkg-utils/pull/3143) [`4a7b12d`](https://github.com/sanity-io/pkg-utils/commit/4a7b12d98bd9de1b0c7d497fe17150fdfad2acc0) Thanks [@stipsan](https://github.com/stipsan)! - Add `reactServer` to the `reactCompiler` options, for libraries that render in React Server Components. It's experimental (`@alpha`) and not covered by semver: it can change behavior or be removed entirely in a minor version.
+
+  ```ts
+  import {defineConfig} from '@sanity/tsdown-config'
+
+  export default defineConfig({
+    tsconfig: 'tsconfig.dist.json',
+    reactCompiler: {target: '19', reactServer: true},
+  })
+  ```
+
+  React Server Components refuse to load React Compiler output (`react/compiler-runtime` throws in the `react-server` environment), so libraries that ship compiled code are expected to [publish two entrypoints](https://github.com/facebook/react/issues/31702). `reactServer: true` bakes that pattern in: every entry is built twice from the same source, and the only difference is that React Compiler auto-memoization is applied to the non-`react-server` output. The uncompiled build lands next to the compiled one (`dist/index.js` ↔ `dist/index.react-server.js`), and when the `exports` feature is enabled every entry export gains a `react-server` condition:
+
+  ```json
+  {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "react-server": "./dist/index.react-server.js",
+        "default": "./dist/index.js"
+      }
+    }
+  }
+  ```
+
+  Nothing is stripped from either output, so pair it with deleting manual `useMemo`/`useCallback` calls from the source: server components stop paying for memoization that cannot pay off (they render exactly once), and client components get the compiler's finer-grained auto-memoization instead.
+
+### Patch Changes
+
+- [#3131](https://github.com/sanity-io/pkg-utils/pull/3131) [`3dcad6c`](https://github.com/sanity-io/pkg-utils/commit/3dcad6c7c26da677a87fe5875f9feb43e0af975e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vitejs/plugin-react to ^6.0.4
+
+## 0.20.0
+
+### Minor Changes
+
+- [#3122](https://github.com/sanity-io/pkg-utils/pull/3122) [`4d1d32f`](https://github.com/sanity-io/pkg-utils/commit/4d1d32f0bd57a3a23008b477c2407ca9eb215c9b) Thanks [@stipsan](https://github.com/stipsan)! - The default `minify` compress pass now preserves function and class names
+  (`compress: {keepNames: {function: true, class: true}}`, previously `compress: true`).
+
+  The compress pass strips otherwise-unreferenced names - most notably the inner name
+  in `forwardRef(function Button(…) {…})`, which React DevTools reads via `Function.name`. That
+  name is the tree-shakeable alternative to a top-level `Button.displayName = '…'` assignment (a
+  side effect that pins unused components into consumer bundles, see
+  [sanity-io/ui#2435](https://github.com/sanity-io/ui/pull/2435)), and once stripped at publish
+  time it is unrecoverable in userland. Keeping the names costs a fraction of a kilobyte in the
+  published dist and nothing in final app bundles - consumers' production builds minify
+  `node_modules` again anyway (and can opt into their own `keepNames`/`keep_fnames` for readable
+  production profiling, which only works if the library kept the names in the first place).
+
+  Packages that already apply this override on top of `defineConfig` (like `@sanity/ui`) can
+  remove it. To restore the previous behavior, merge over the returned config:
+
+  ```ts
+  import {defineConfig} from '@sanity/tsdown-config'
+  import {mergeConfig} from 'tsdown'
+
+  export default mergeConfig(await defineConfig(), {minify: {compress: true}})
+  ```
+
+### Patch Changes
+
+- [#3113](https://github.com/sanity-io/pkg-utils/pull/3113) [`dceee04`](https://github.com/sanity-io/pkg-utils/commit/dceee045e2115f89784ba01acd8a6861ec8da579) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.13
+
+- Updated dependencies [[`dceee04`](https://github.com/sanity-io/pkg-utils/commit/dceee045e2115f89784ba01acd8a6861ec8da579)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.9
+
 ## 0.19.6
 
 ### Patch Changes

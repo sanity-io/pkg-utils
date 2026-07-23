@@ -43,6 +43,66 @@ export default defineConfig({
 })
 ```
 
+### React Server Components (`reactServer`)
+
+React Server Components refuse to load React Compiler output — `react/compiler-runtime` throws
+in the `react-server` environment, since memoization can never pay off for components that
+render exactly once. The React team's guidance for libraries that ship compiled code is to
+[publish two entrypoints](https://github.com/facebook/react/issues/31702): the compiled one for
+the client, and an uncompiled one under the `react-server` export condition.
+
+The `reactServer` option of `reactCompiler` (an option of this config, never forwarded to the
+compiler) bakes that pattern in. It's experimental (`@alpha`) and not covered by semver: it can
+change behavior or be removed entirely in a minor version.
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: {target: '19', reactServer: true},
+})
+```
+
+Every entry is built twice from the same source, and the only difference is that React Compiler
+auto-memoization is applied to the non-`react-server` output. The uncompiled build lands next to
+the compiled one with `.react-server` inserted before the extension (`dist/index.js` ↔
+`dist/index.react-server.js`), only the compiled build emits the `.d.ts` files, and — when the
+[`exports` feature](#exports) is enabled — every entry export gains a `react-server` condition,
+with a `types` condition specified before it (the `.react-server.` files have no declaration
+siblings, so the explicit `types` condition points every resolution mode — including consumers
+with `react-server` in their `customConditions` — at the compiled build's declarations):
+
+```json
+{
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "react-server": "./dist/index.react-server.js",
+      "default": "./dist/index.js"
+    }
+  }
+}
+```
+
+React Server Components resolve the uncompiled build, everything else (client components, SSR,
+plain Node) resolves the compiled one. The `.react-server.` files never become export subpaths of
+their own.
+
+Nothing is stripped from either output, so pair `reactServer` with deleting manual
+`useMemo`/`useCallback` calls from the source: server components stop paying for memoization
+that cannot pay off, and client components get the compiler's finer-grained auto-memoization
+instead of the hand-written hooks.
+
+`reactServer` is meant for isomorphic libraries that render in both worlds without a
+`'use client'` directive (pure renderers like `@portabletext/react`). Client-only packages that
+ship `'use client'` don't need it — they always load through the `default` condition anyway.
+Also note the general dual-entrypoint caveat: the two conditions are two module instances, so
+module-scope identity (e.g. `createContext`) is not shared between server and client trees —
+which is exactly the boundary React draws for such libraries anyway.
+
+With `reactServer` the config resolves to two tsdown configs, so the
+[isolated declarations annotation](#isolated-declarations) becomes
+`satisfies Promise<UserConfig[]>`.
+
 ## styled-components
 
 If your package uses `styled-components`, enable the same `styledComponents` transform that `@sanity/pkg-utils` has:
@@ -252,6 +312,8 @@ Without the annotation, type-checking `tsdown.config.ts` with the `@sanity/tscon
 enable `declaration`) fails with TS2883 in pnpm projects: the inferred type of the default export
 can only be named through `@sanity/tsdown-config`'s own copy of `tsdown`, which isn't portable.
 `satisfies Promise<UserConfig>` names the type through your own `tsdown` dependency instead.
+With [`reactCompiler.reactServer`](#react-server-components-reactserver) the config resolves to
+two tsdown configs, so the annotation becomes `satisfies Promise<UserConfig[]>`.
 
 Keep the `isolated-declarations` preset scoped to the tsconfig that tsdown builds with (e.g. a
 `tsconfig.dist.json` that only includes `./src`). If `isolatedDeclarations` covers
@@ -293,6 +355,42 @@ import {defineConfig} from '@sanity/tsdown-config'
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   sourcemap: false,
+})
+```
+
+## minify
+
+@sanity/tsdown-config sets tsdown's [`minify` option](https://tsdown.dev/options/output#minify) to compression
+only, with function and class names preserved:
+
+```ts
+{
+  compress: {keepNames: {function: true, class: true}},
+  mangle: false,
+  codegen: false,
+}
+```
+
+Consumers' production builds minify `node_modules` again anyway, so mangling identifiers or
+stripping whitespace in the published dist would not shrink final app bundles - it would only
+hurt debuggability. The compress pass still applies constant folding and dead code elimination
+(e.g. evaluating [`define`](#define)d branches away), and `keepNames` stops it from stripping
+otherwise-unreferenced function/class names such as the inner name in
+`forwardRef(function Button(…) {…})`. React DevTools reads that name via `Function.name` - the
+tree-shakeable alternative to a top-level `Button.displayName = '…'` assignment, which is a side
+effect that pins unused components into consumer bundles
+([sanity-io/ui#2435](https://github.com/sanity-io/ui/pull/2435)). Names stripped at publish time
+are unrecoverable in userland, while keeping them costs a fraction of a kilobyte.
+
+Override it by merging over the returned config, like [everything else](#everything-else-mergeconfig):
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  // e.g. drop the names again for the smallest possible dist:
+  minify: {compress: true},
 })
 ```
 
