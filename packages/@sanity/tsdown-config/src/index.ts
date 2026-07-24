@@ -524,10 +524,7 @@ async function resolvePackageConfig(
  * so the variant's entries sit next to the compiled ones (`index.js` ↔ `index.react-server.js`,
  * `index.cjs` ↔ `index.react-server.cjs`, and `.mjs` accordingly for CommonJS packages).
  */
-const reactServerOutExtensions: NonNullable<UserConfig['outExtensions']> = ({
-  format,
-  pkgType,
-}) => ({
+const reactServerOutExtensions: NonNullable<UserConfig['outExtensions']> = ({format, pkgType}) => ({
   js:
     format === 'cjs'
       ? pkgType === 'module'
@@ -679,8 +676,7 @@ function withReactServerCondition(
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return value
   const conditions = Object.entries(value)
   const matched = conditions.filter(
-    (entry): entry is [string, string] =>
-      RUNTIME_CONDITIONS.has(entry[0]) && isEntryFile(entry[1]),
+    (entry): entry is [string, string] => RUNTIME_CONDITIONS.has(entry[0]) && isEntryFile(entry[1]),
   )
   const [firstMatch] = matched
   if (!firstMatch) return value
@@ -699,9 +695,7 @@ function withReactServerCondition(
             const types = hasTypes ? undefined : dtsFor(target)
             return [
               condition,
-              types === undefined
-                ? toServerFile(target)
-                : {types, default: toServerFile(target)},
+              types === undefined ? toServerFile(target) : {types, default: toServerFile(target)},
             ]
           }),
         )
