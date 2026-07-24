@@ -1,5 +1,18 @@
 # @sanity/pkg-utils
 
+## 11.0.15
+
+### Patch Changes
+
+- [#3132](https://github.com/sanity-io/pkg-utils/pull/3132) [`e400791`](https://github.com/sanity-io/pkg-utils/commit/e400791579aaf1fe04f81ee8ff79b5d6218a0ea8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.7
+
+- [#3159](https://github.com/sanity-io/pkg-utils/pull/3159) [`8268f1d`](https://github.com/sanity-io/pkg-utils/commit/8268f1de074d2329be93a04d6084e7456d66db82) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency prettier to ^3.9.6
+
+- [#3110](https://github.com/sanity-io/pkg-utils/pull/3110) [`b0bde1b`](https://github.com/sanity-io/pkg-utils/commit/b0bde1b0d39cc64f7d1886990e782ce20d57dbd2) Thanks [@stipsan](https://github.com/stipsan)! - Replace `git-url-parse` with zero-dependency `parse-github-url` (as a `devDependency`, inlined into the CLI bundle) so consumers no longer pull in the deprecated transitive `@types/parse-path` stub.
+
+- Updated dependencies [[`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31), [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538)]:
+  - @sanity/parse-package-json@2.2.11
+
 ## 11.0.14
 
 ### Patch Changes
