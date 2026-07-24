@@ -19,68 +19,58 @@ catalog:
 
 minimumReleaseAge: 4320
 
+# Exact-version exemptions for currently locked versions that are younger than the release-age
+# gate. Each entry stops being needed (and can be removed) once the version is older than
+# minimumReleaseAge; new entries are only needed when a dependency bump wants a fresh release.
 minimumReleaseAgeExclude:
-  - '@changesets/*'
-  - '@microsoft/api-extractor'
-  - '@next/*'
-  - '@oxlint/*'
-  - '@oxlint-tsgolint/*'
-  - '@portabletext/*'
-  - '@rollup/*'
-  - '@tanstack/*'
-  - '@sanity/*'
-  - '@types/*'
-  - '@typescript/*'
-  - '@vite/*'
-  - '@vitejs/*'
-  - '@vitest/*'
-  - '@yuku-codegen/*'
-  - '@yuku-parser/*'
-  - csstype
-  - groq
-  - groq-js
-  - next
-  - oxlint
-  - oxlint-tsgolint
-  - react
-  - react-dom
-  - react-is
-  - rollup
-  - sanity
-  - lightningcss
-  - lightningcss-*
-  - vite
-  - vitest
-  - ts-jest
-  - browserslist
-  - baseline-browser-mapping
-  # Dev-only framework deps used exclusively by the css-playground smoke tests. These are not
-  # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
-  # cross-framework matrix building against current releases.
-  - '@astrojs/react'
-  - astro
-  # TypeScript 7 (the Go-native compiler) and related toolchain releases that need to be
-  # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts
-  # and the oxc types shipped with each rolldown release.
-  - typescript
-  - tsdown
-  - '@tsdown/*'
-  - rolldown
-  - '@rolldown/*'
-  - '@oxc-project/*'
-  - rolldown-plugin-dts
-  - yuku-ast
-  - yuku-parser
-  - yuku-codegen
-  - '@yuku-toolchain/types'
-  - obug
-  # Vanilla Extract plugins and integration packages tracked by the Sanity
-  # vanilla-extract-* packages and their benchmarks; bump immediately so the
-  # comparison suite and plugin peers stay on current releases.
-  - '@vanilla-extract/*'
-  - verkit
-  - publint
-  - '@publint/*'
+  - '@next/env@16.2.11'
+  - '@next/swc-darwin-arm64@16.2.11'
+  - '@next/swc-darwin-x64@16.2.11'
+  - '@next/swc-linux-arm64-gnu@16.2.11'
+  - '@next/swc-linux-arm64-musl@16.2.11'
+  - '@next/swc-linux-x64-gnu@16.2.11'
+  - '@next/swc-linux-x64-musl@16.2.11'
+  - '@next/swc-win32-arm64-msvc@16.2.11'
+  - '@next/swc-win32-x64-msvc@16.2.11'
+  - '@oxlint-tsgolint/darwin-arm64@7.0.2001'
+  - '@oxlint-tsgolint/darwin-x64@7.0.2001'
+  - '@oxlint-tsgolint/linux-arm64@7.0.2001'
+  - '@oxlint-tsgolint/linux-x64@7.0.2001'
+  - '@oxlint-tsgolint/win32-arm64@7.0.2001'
+  - '@oxlint-tsgolint/win32-x64@7.0.2001'
+  - '@portabletext/sanity-bridge@3.2.3'
+  - '@publint/pack@0.1.6'
+  - '@sanity/color@3.0.7'
+  - '@sanity/icons@5.2.1'
+  - '@sanity/logos@2.2.4'
+  - '@sanity/ui@3.4.3'
+  - '@tsdown/css@0.22.13'
+  - '@vitejs/plugin-react@6.0.4'
+  - '@yuku-parser/binding-darwin-arm64@0.8.0'
+  - '@yuku-parser/binding-darwin-x64@0.8.0'
+  - '@yuku-parser/binding-freebsd-x64@0.8.0'
+  - '@yuku-parser/binding-linux-arm-gnu@0.8.0'
+  - '@yuku-parser/binding-linux-arm-musl@0.8.0'
+  - '@yuku-parser/binding-linux-arm64-gnu@0.8.0'
+  - '@yuku-parser/binding-linux-arm64-musl@0.8.0'
+  - '@yuku-parser/binding-linux-x64-gnu@0.8.0'
+  - '@yuku-parser/binding-linux-x64-musl@0.8.0'
+  - '@yuku-parser/binding-win32-arm64@0.8.0'
+  - '@yuku-parser/binding-win32-x64@0.8.0'
+  - '@yuku-toolchain/types@0.8.0'
+  - baseline-browser-mapping@2.11.1
+  - browserslist@4.28.7
+  - next@16.2.11
+  - oxlint-tsgolint@7.0.2001
+  - publint@0.3.22
+  - react@19.2.8
+  - react-dom@19.2.8
+  - react-is@19.2.8
+  - rolldown-plugin-dts@0.27.13
+  - ts-jest@29.4.12
+  - tsdown@0.22.13
+  - yuku-ast@0.8.0
+  - yuku-parser@0.8.0
 
 overrides:
   '@sanity/pkg-utils': workspace:*
