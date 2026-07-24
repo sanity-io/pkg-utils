@@ -17,70 +17,25 @@ catalog:
   typescript: 7.0.2
   vitest: ^4.1.10
 
-minimumReleaseAge: 4320
+# The pnpm v11 default (1 day)
+minimumReleaseAge: 1440
 
+# Exact-version exemptions for the locked versions that pnpm otherwise rejects against the
+# release-age gate during resolution. Each entry expires naturally (and can be removed) once
+# the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
+# a release fresher than the gate.
 minimumReleaseAgeExclude:
-  - '@changesets/*'
-  - '@microsoft/api-extractor'
-  - '@next/*'
-  - '@oxlint/*'
-  - '@oxlint-tsgolint/*'
-  - '@portabletext/*'
-  - '@rollup/*'
-  - '@tanstack/*'
-  - '@sanity/*'
-  - '@types/*'
-  - '@typescript/*'
-  - '@vite/*'
-  - '@vitejs/*'
-  - '@vitest/*'
-  - '@yuku-codegen/*'
-  - '@yuku-parser/*'
-  - csstype
-  - groq
-  - groq-js
-  - next
-  - oxlint
-  - oxlint-tsgolint
-  - react
-  - react-dom
-  - react-is
-  - rollup
-  - sanity
-  - lightningcss
-  - lightningcss-*
-  - vite
-  - vitest
-  - ts-jest
-  - browserslist
-  - baseline-browser-mapping
-  # Dev-only framework deps used exclusively by the css-playground smoke tests. These are not
-  # shipped, so the supply-chain release-age delay does not apply; pin the latest to keep the
-  # cross-framework matrix building against current releases.
-  - '@astrojs/react'
-  - astro
-  # TypeScript 7 (the Go-native compiler) and related toolchain releases that need to be
-  # consumed immediately, including the yuku AST toolchain used by rolldown-plugin-dts
-  # and the oxc types shipped with each rolldown release.
-  - typescript
-  - tsdown
-  - '@tsdown/*'
-  - rolldown
-  - '@rolldown/*'
-  - '@oxc-project/*'
-  - rolldown-plugin-dts
-  - yuku-ast
-  - yuku-parser
-  - yuku-codegen
-  - '@yuku-toolchain/types'
-  - obug
-  # Vanilla Extract plugins and integration packages tracked by the Sanity
-  # vanilla-extract-* packages and their benchmarks; bump immediately so the
-  # comparison suite and plugin peers stay on current releases.
-  - '@vanilla-extract/*'
-  - verkit
-  - publint
-  - '@publint/*'
+  - '@yuku-parser/binding-darwin-arm64@0.8.0'
+  - '@yuku-parser/binding-darwin-x64@0.8.0'
+  - '@yuku-parser/binding-freebsd-x64@0.8.0'
+  - '@yuku-parser/binding-linux-arm-gnu@0.8.0'
+  - '@yuku-parser/binding-linux-arm-musl@0.8.0'
+  - '@yuku-parser/binding-linux-arm64-gnu@0.8.0'
+  - '@yuku-parser/binding-linux-arm64-musl@0.8.0'
+  - '@yuku-parser/binding-linux-x64-gnu@0.8.0'
+  - '@yuku-parser/binding-linux-x64-musl@0.8.0'
+  - '@yuku-parser/binding-win32-arm64@0.8.0'
+  - '@yuku-parser/binding-win32-x64@0.8.0'
 
 overrides:
   '@sanity/pkg-utils': workspace:*
