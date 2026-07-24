@@ -200,6 +200,22 @@ describe('checks option', () => {
   })
 })
 
+describe('minify default', () => {
+  test('compresses with keepNames, without mangling or codegen minification', async () => {
+    // Consumers' production builds minify `node_modules` again anyway, so the dist only gets
+    // the compress pass — with `keepNames`, since the inner name in patterns like
+    // `forwardRef(function Button(…) {…})` is what React DevTools shows via `Function.name`
+    // (the tree-shakeable alternative to top-level `displayName` assignments, see
+    // https://github.com/sanity-io/ui/pull/2435). Names stripped at publish time are
+    // unrecoverable in userland.
+    expect((await defineConfig()).minify).toEqual({
+      compress: {keepNames: {function: true, class: true}},
+      codegen: false,
+      mangle: false,
+    })
+  })
+})
+
 describe('unexposed options', () => {
   test('lean on tsdown defaults, customizable in userland through `mergeConfig`', async () => {
     // Options not in `PackageOptions` (e.g. `hash`, with its collision-preventing hashed chunk
