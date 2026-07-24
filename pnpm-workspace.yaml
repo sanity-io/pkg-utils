@@ -13,7 +13,7 @@ catalog:
   '@types/node': ^24.13.3
   lightningcss: ^1.33.0
   publint: ^0.3.22
-  tsdown: ^0.22.13
+  tsdown: ^0.22.14
   typescript: 7.0.2
   vitest: ^4.1.10
 
@@ -25,6 +25,7 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  - '@tsdown/css@0.22.14'
   - '@yuku-parser/binding-darwin-arm64@0.8.0'
   - '@yuku-parser/binding-darwin-x64@0.8.0'
   - '@yuku-parser/binding-freebsd-x64@0.8.0'
@@ -36,6 +37,8 @@ minimumReleaseAgeExclude:
   - '@yuku-parser/binding-linux-x64-musl@0.8.0'
   - '@yuku-parser/binding-win32-arm64@0.8.0'
   - '@yuku-parser/binding-win32-x64@0.8.0'
+  - tsdown@0.22.14
+  - verkit@0.3.0
 
 overrides:
   '@sanity/pkg-utils': workspace:*
