@@ -69,8 +69,13 @@ function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
   return false
 }
 
-function containsExportCondition(value: unknown, condition: string): boolean {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+/** @internal */
+export function containsExportCondition(value: unknown, condition: string): boolean {
+  if (Array.isArray(value)) {
+    return value.some((nestedValue) => containsExportCondition(nestedValue, condition))
+  }
+
+  if (typeof value !== 'object' || value === null) {
     return false
   }
 
@@ -243,21 +248,20 @@ export async function loadPkgWithReporting(options: {
 
     // A published `development` condition is unsafe even when strict mode is disabled: Vite,
     // Turbopack, and other tools may select it outside the package's source monorepo.
-    const hasDevelopmentCondition = Object.values(pkg.exports ?? {}).some((exp) =>
-      containsExportCondition(exp, 'development'),
-    )
+    const hasDevelopmentCondition = containsExportCondition(pkg.exports, 'development')
 
     // validate publishConfig.exports
     if ((strict || hasDevelopmentCondition) && pkg.exports && Object.keys(pkg.exports).length > 0) {
       // Check if exports contains source, development, or monorepo conditions
-      const hasSourceOrDevelopment = Object.entries(pkg.exports).some(([, exp]) => {
-        if (typeof exp === 'string') return false
-        if (containsExportCondition(exp, 'development')) return true
-        if (typeof exp === 'object' && 'svelte' in exp) return false
-        return Boolean(exp.source || exp.monorepo)
-      })
+      const hasUnpublishedCondition =
+        hasDevelopmentCondition ||
+        Object.entries(pkg.exports).some(([, exp]) => {
+          if (typeof exp === 'string') return false
+          if (typeof exp === 'object' && 'svelte' in exp) return false
+          return Boolean(exp.source || exp.monorepo)
+        })
 
-      if (hasSourceOrDevelopment) {
+      if (hasUnpublishedCondition) {
         if (!pkg.publishConfig?.exports) {
           if (hasDevelopmentCondition) {
             shouldError = true
@@ -281,7 +285,10 @@ export async function loadPkgWithReporting(options: {
           const publishExports = pkg.publishConfig.exports
 
           for (const [exportPath, publishExp] of Object.entries(publishExports)) {
-            if (containsExportCondition(publishExp, 'development')) {
+            if (
+              exportPath === 'development' ||
+              containsExportCondition(publishExp, 'development')
+            ) {
               shouldError = true
               logger.error(
                 `publishConfig.exports["${exportPath}"]: should not contain the \`development\` condition; it must be filtered out before publishing`,

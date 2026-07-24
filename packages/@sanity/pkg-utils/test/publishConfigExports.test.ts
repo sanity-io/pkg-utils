@@ -2,10 +2,23 @@ import {mkdirSync, rmSync, writeFileSync} from 'node:fs'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {describe, expect, test} from 'vitest'
-import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
+import {
+  containsExportCondition,
+  loadPkgWithReporting,
+} from '../src/node/core/pkg/loadPkgWithReporting'
 import {writeBundleCssExports} from '../src/node/core/pkg/writeBundleCssExports'
 import {createLogger} from '../src/node/logger'
 import {parseStrictOptions} from '../src/node/strict'
+
+describe('containsExportCondition', () => {
+  test.each([
+    ['top-level condition maps', {development: './src/index.ts'}],
+    ['nested condition maps', {import: {development: './src/index.ts'}}],
+    ['fallback arrays', [{import: './dist/index.js'}, {development: './src/index.ts'}]],
+  ])('finds development in %s', (_name, value) => {
+    expect(containsExportCondition(value, 'development')).toBe(true)
+  })
+})
 
 describe('publishConfig.exports validation', () => {
   const testDir = join(tmpdir(), 'pkg-utils-test-publishconfig')
@@ -123,6 +136,30 @@ describe('publishConfig.exports validation', () => {
               development: './src/index.ts',
               default: './dist/index.js',
             },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+      {strict: false, strictOptions: {noPublishConfigExports: 'off'}},
+    )
+  })
+
+  test('should hard fail when development is nested in an export condition', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            browser: {
+              source: './src/index.ts',
+              development: './src/index.ts',
+              import: './dist/index.js',
+            },
+            default: './dist/index.js',
           },
         },
         files: ['dist'],
