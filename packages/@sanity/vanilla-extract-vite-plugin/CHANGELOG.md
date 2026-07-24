@@ -1,5 +1,14 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.2.6
+
+### Patch Changes
+
+- [#3113](https://github.com/sanity-io/pkg-utils/pull/3113) [`dceee04`](https://github.com/sanity-io/pkg-utils/commit/dceee045e2115f89784ba01acd8a6861ec8da579) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.13
+
+- Updated dependencies [[`dceee04`](https://github.com/sanity-io/pkg-utils/commit/dceee045e2115f89784ba01acd8a6861ec8da579), [`d37e63c`](https://github.com/sanity-io/pkg-utils/commit/d37e63cf2af8cab20a493aadde08a30a9a927f2c)]:
+  - @sanity/vanilla-extract-integration@0.1.6
+
 ## 0.2.5
 
 ### Patch Changes

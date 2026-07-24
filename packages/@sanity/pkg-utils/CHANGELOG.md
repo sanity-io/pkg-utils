@@ -1,5 +1,16 @@
 # @sanity/pkg-utils
 
+## 11.0.14
+
+### Patch Changes
+
+- [#3117](https://github.com/sanity-io/pkg-utils/pull/3117) [`de74a1e`](https://github.com/sanity-io/pkg-utils/commit/de74a1e9890d9182809291a7533c134d4cb4879e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown-plugin-dts to v0.27.13
+
+- [#3129](https://github.com/sanity-io/pkg-utils/pull/3129) [`40cc93d`](https://github.com/sanity-io/pkg-utils/commit/40cc93d7b6e21559870fba2d0b7424babe4baa7a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.58.12
+
+- Updated dependencies [[`dceee04`](https://github.com/sanity-io/pkg-utils/commit/dceee045e2115f89784ba01acd8a6861ec8da579)]:
+  - @sanity/parse-package-json@2.2.10
+
 ## 11.0.13
 
 ### Patch Changes
