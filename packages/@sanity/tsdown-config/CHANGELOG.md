@@ -1,5 +1,20 @@
 # @sanity/tsdown-config
 
+## 0.21.1
+
+### Patch Changes
+
+- [#3132](https://github.com/sanity-io/pkg-utils/pull/3132) [`e400791`](https://github.com/sanity-io/pkg-utils/commit/e400791579aaf1fe04f81ee8ff79b5d6218a0ea8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.7
+
+- [#3133](https://github.com/sanity-io/pkg-utils/pull/3133) [`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.22
+
+- [#3158](https://github.com/sanity-io/pkg-utils/pull/3158) [`eaa211f`](https://github.com/sanity-io/pkg-utils/commit/eaa211fdac3dfd3abb749bae796e5f2213003294) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency package-manager-detector to ^1.8.0
+
+- [#3154](https://github.com/sanity-io/pkg-utils/pull/3154) [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency tsdown to ^0.22.14
+
+- Updated dependencies [[`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31), [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.10
+
 ## 0.21.0
 
 ### Minor Changes
