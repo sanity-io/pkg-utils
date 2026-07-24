@@ -145,6 +145,33 @@ describe('publishConfig.exports validation', () => {
     )
   })
 
+  test('should hard fail when publishConfig.exports introduces development', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              development: './src/index.ts',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+      {strict: false, strictOptions: {noPublishConfigExports: 'off'}},
+    )
+  })
+
   test('should hard fail when development is nested in an export condition', async () => {
     await testPackage(
       {

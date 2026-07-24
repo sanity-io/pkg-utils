@@ -250,6 +250,15 @@ export async function loadPkgWithReporting(options: {
     // Turbopack, and other tools may select it outside the package's source monorepo.
     const hasDevelopmentCondition = containsExportCondition(pkg.exports, 'development')
 
+    for (const [exportPath, publishExp] of Object.entries(pkg.publishConfig?.exports ?? {})) {
+      if (exportPath === 'development' || containsExportCondition(publishExp, 'development')) {
+        shouldError = true
+        logger.error(
+          `publishConfig.exports["${exportPath}"]: should not contain the \`development\` condition; it must be filtered out before publishing`,
+        )
+      }
+    }
+
     // validate publishConfig.exports
     if ((strict || hasDevelopmentCondition) && pkg.exports && Object.keys(pkg.exports).length > 0) {
       // Check if exports contains source, development, or monorepo conditions
@@ -283,18 +292,6 @@ export async function loadPkgWithReporting(options: {
         } else {
           // Validate publishConfig.exports structure
           const publishExports = pkg.publishConfig.exports
-
-          for (const [exportPath, publishExp] of Object.entries(publishExports)) {
-            if (
-              exportPath === 'development' ||
-              containsExportCondition(publishExp, 'development')
-            ) {
-              shouldError = true
-              logger.error(
-                `publishConfig.exports["${exportPath}"]: should not contain the \`development\` condition; it must be filtered out before publishing`,
-              )
-            }
-          }
 
           // Check that all keys in exports exist in publishConfig.exports
           for (const exportPath of Object.keys(pkg.exports)) {
