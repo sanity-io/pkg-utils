@@ -1,5 +1,14 @@
 # @sanity/pkg-utils
 
+## 11.0.15
+
+### Patch Changes
+
+- [#3132](https://github.com/sanity-io/pkg-utils/pull/3132) [`e400791`](https://github.com/sanity-io/pkg-utils/commit/e400791579aaf1fe04f81ee8ff79b5d6218a0ea8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.7
+
+- Updated dependencies [[`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31)]:
+  - @sanity/parse-package-json@2.2.11
+
 ## 11.0.14
 
 ### Patch Changes
