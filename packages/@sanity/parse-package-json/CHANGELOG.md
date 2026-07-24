@@ -1,5 +1,11 @@
 # @sanity/parse-package-json
 
+## 2.2.11
+
+### Patch Changes
+
+- [#3133](https://github.com/sanity-io/pkg-utils/pull/3133) [`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.22
+
 ## 2.2.10
 
 ### Patch Changes
