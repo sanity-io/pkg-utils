@@ -69,6 +69,16 @@ function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
   return false
 }
 
+function containsExportCondition(value: unknown, condition: string): boolean {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return false
+  }
+
+  return Object.entries(value).some(
+    ([key, nestedValue]) => key === condition || containsExportCondition(nestedValue, condition),
+  )
+}
+
 /** @alpha */
 export async function loadPkgWithReporting(options: {
   pkgPath: string
@@ -231,29 +241,53 @@ export async function loadPkgWithReporting(options: {
       }
     }
 
+    // A published `development` condition is unsafe even when strict mode is disabled: Vite,
+    // Turbopack, and other tools may select it outside the package's source monorepo.
+    const hasDevelopmentCondition = Object.values(pkg.exports ?? {}).some((exp) =>
+      containsExportCondition(exp, 'development'),
+    )
+
     // validate publishConfig.exports
-    if (strict && pkg.exports && Object.keys(pkg.exports).length > 0) {
+    if ((strict || hasDevelopmentCondition) && pkg.exports && Object.keys(pkg.exports).length > 0) {
       // Check if exports contains source, development, or monorepo conditions
       const hasSourceOrDevelopment = Object.entries(pkg.exports).some(([, exp]) => {
         if (typeof exp === 'string') return false
+        if (containsExportCondition(exp, 'development')) return true
         if (typeof exp === 'object' && 'svelte' in exp) return false
-        return Boolean(exp.source || exp.development || exp.monorepo)
+        return Boolean(exp.source || exp.monorepo)
       })
 
       if (hasSourceOrDevelopment) {
         if (!pkg.publishConfig?.exports) {
-          const msg =
-            'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source`, `development`, or `monorepo` condition that points to code that cannot be used by the resolver. ' +
-            'See https://tsdown.dev/options/package-exports#dev-exports for more information.'
-          if (strictOptions.noPublishConfigExports === 'error') {
+          if (hasDevelopmentCondition) {
             shouldError = true
-            logger.error(msg)
+            logger.error(
+              'package.json: `publishConfig.exports` is required when `exports` contains a `development` condition. It must define the published export map without `development`; otherwise tools such as Vite and Turbopack can resolve development-only source files from the published package. ' +
+                'See https://tsdown.dev/options/package-exports#dev-exports for more information.',
+            )
           } else if (strictOptions.noPublishConfigExports !== 'off') {
-            logger.warn(msg)
+            const msg =
+              'package.json: `publishConfig.exports` is missing. Adding it helps avoid publishing to npm with the `source` or `monorepo` condition that points to code that cannot be used by the resolver. ' +
+              'See https://tsdown.dev/options/package-exports#dev-exports for more information.'
+            if (strictOptions.noPublishConfigExports === 'error') {
+              shouldError = true
+              logger.error(msg)
+            } else {
+              logger.warn(msg)
+            }
           }
         } else {
           // Validate publishConfig.exports structure
           const publishExports = pkg.publishConfig.exports
+
+          for (const [exportPath, publishExp] of Object.entries(publishExports)) {
+            if (containsExportCondition(publishExp, 'development')) {
+              shouldError = true
+              logger.error(
+                `publishConfig.exports["${exportPath}"]: should not contain the \`development\` condition; it must be filtered out before publishing`,
+              )
+            }
+          }
 
           // Check that all keys in exports exist in publishConfig.exports
           for (const exportPath of Object.keys(pkg.exports)) {
@@ -335,13 +369,6 @@ export async function loadPkgWithReporting(options: {
               shouldError = true
               logger.error(
                 `publishConfig.exports["${exportPath}"]: should not contain the \`source\` condition`,
-              )
-            }
-
-            if ('development' in publishExp) {
-              shouldError = true
-              logger.error(
-                `publishConfig.exports["${exportPath}"]: should not contain the \`development\` condition`,
               )
             }
 

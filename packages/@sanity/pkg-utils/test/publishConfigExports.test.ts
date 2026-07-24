@@ -10,13 +10,14 @@ import {parseStrictOptions} from '../src/node/strict'
 describe('publishConfig.exports validation', () => {
   const testDir = join(tmpdir(), 'pkg-utils-test-publishconfig')
 
-  async function testPackage(
-    pkg: any,
-    shouldFail: boolean,
-    // Optional hook to mutate the package on disk after it is written but before validation, e.g. to
-    // run `writeBundleCssExports` (which is what a real build does between load and check).
-    beforeValidate?: (cwd: string) => Promise<void>,
-  ) {
+  interface TestPackageOptions {
+    beforeValidate?: (cwd: string) => Promise<void>
+    strict?: boolean
+    strictOptions?: unknown
+  }
+
+  async function testPackage(pkg: any, shouldFail: boolean, options: TestPackageOptions = {}) {
+    const {beforeValidate, strict = true, strictOptions = {}} = options
     const testPath = join(testDir, Math.random().toString(36).substring(7))
     mkdirSync(testPath, {recursive: true})
     const pkgPath = join(testPath, 'package.json')
@@ -49,8 +50,8 @@ describe('publishConfig.exports validation', () => {
       await loadPkgWithReporting({
         pkgPath,
         logger,
-        strict: true,
-        strictOptions: parseStrictOptions({}),
+        strict,
+        strictOptions: parseStrictOptions(strictOptions),
       })
 
       if (shouldFail) {
@@ -76,6 +77,85 @@ describe('publishConfig.exports validation', () => {
       expect(exitCalled).toBe(false)
     }
   }
+
+  test.each([
+    {strict: true, strictOptions: {noPublishConfigExports: 'warn'}},
+    {strict: false, strictOptions: {noPublishConfigExports: 'off'}},
+  ])(
+    'should hard fail when development is not filtered out and strict is $strict',
+    async ({strict, strictOptions}) => {
+      await testPackage(
+        {
+          name: 'test-pkg',
+          version: '1.0.0',
+          license: 'MIT',
+          type: 'module',
+          exports: {
+            '.': {
+              development: './src/index.ts',
+              default: './dist/index.js',
+            },
+          },
+          files: ['dist'],
+        },
+        true,
+        {strict, strictOptions},
+      )
+    },
+  )
+
+  test('should hard fail when publishConfig.exports retains development', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            development: './src/index.ts',
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              development: './src/index.ts',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+      {strict: false, strictOptions: {noPublishConfigExports: 'off'}},
+    )
+  })
+
+  test('should pass without strict mode when publishConfig.exports filters development', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            development: './src/index.ts',
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': './dist/index.js',
+          },
+        },
+        files: ['dist'],
+      },
+      false,
+      {strict: false, strictOptions: {noPublishConfigExports: 'off'}},
+    )
+  })
 
   test('should fail when publishConfig.exports default value differs from exports default', async () => {
     await testPackage(
@@ -344,13 +424,15 @@ describe('publishConfig.exports validation', () => {
         files: ['dist'],
       },
       false,
-      async (cwd) => {
-        await writeBundleCssExports({
-          cwd,
-          distPath: join(cwd, 'dist'),
-          cssName: 'bundle.css',
-          logger: createLogger(true),
-        })
+      {
+        beforeValidate: async (cwd) => {
+          await writeBundleCssExports({
+            cwd,
+            distPath: join(cwd, 'dist'),
+            cssName: 'bundle.css',
+            logger: createLogger(true),
+          })
+        },
       },
     )
   })
