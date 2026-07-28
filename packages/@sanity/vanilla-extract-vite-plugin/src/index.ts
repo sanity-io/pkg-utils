@@ -218,9 +218,11 @@ export function vanillaExtractPlugin({
 
     try {
       await compiler.processVanillaFile(fileId, {outputCss: true})
-    } catch {
-      // Not a processable vanilla-extract parent (e.g. an authored `.vanilla.css` file)
-      return null
+    } catch (error) {
+      // Authored `.vanilla.css` files aren't vanilla-extract parents — fall through so Vite
+      // resolves them normally. Real `.css.ts` evaluation/transform errors must surface.
+      if (!cssFileFilter.test(fileId)) return null
+      throw error
     }
 
     return compiler.getCssForFile(fileId)?.css || null

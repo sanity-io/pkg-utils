@@ -148,6 +148,42 @@ describe('vite dev', () => {
     }
   })
 
+  test('rethrows .css.ts evaluation errors on the virtual CSS cache-miss path', async () => {
+    // A syntax/runtime error in the parent must surface when the virtual CSS is requested
+    // before any prior transform — not be swallowed as a soft miss.
+    await mkdir(path.dirname(mutableStylesCssTs), {recursive: true})
+    await writeFile(
+      mutableStylesCssTs,
+      [
+        `import {style} from '@vanilla-extract/css'`,
+        ``,
+        `throw new Error('deliberate css.ts evaluation failure')`,
+        ``,
+        `export const box: string = style({`,
+        `  color: 'red',`,
+        `})`,
+        ``,
+      ].join('\n'),
+    )
+
+    const server = await createServer({
+      root: mutableRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      appType: 'custom',
+      plugins: [vanillaExtractPlugin()],
+    })
+    try {
+      const virtualId = `${normalizePath(mutableStylesCssTs)}.vanilla.css`
+      await expect(server.transformRequest(virtualId)).rejects.toThrow(
+        /deliberate css\.ts evaluation failure/,
+      )
+    } finally {
+      await server.close()
+    }
+  })
+
   test.each([
     // The marker plugin only affects the extracted CSS when it runs inside the compiler
     // server: the consuming server's `.css.ts` transforms are discarded (the compiler reads
