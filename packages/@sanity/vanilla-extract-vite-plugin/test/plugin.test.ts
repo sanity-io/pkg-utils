@@ -42,10 +42,7 @@ const mutableThemeTs = path.join(mutableRoot, 'src/theme.ts')
  */
 async function writeMutableThemeFixture(color: string): Promise<void> {
   await mkdir(path.dirname(mutableStylesCssTs), {recursive: true})
-  await writeFile(
-    mutableThemeTs,
-    [`export const accentColor: string = '${color}'`, ``].join('\n'),
-  )
+  await writeFile(mutableThemeTs, [`export const accentColor: string = '${color}'`, ``].join('\n'))
   await writeFile(
     mutableStylesCssTs,
     [
