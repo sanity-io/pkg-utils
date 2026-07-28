@@ -1,5 +1,16 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.2.8
+
+### Patch Changes
+
+- [#3186](https://github.com/sanity-io/pkg-utils/pull/3186) [`17cfcbe`](https://github.com/sanity-io/pkg-utils/commit/17cfcbe73a4e9f972e74baeb4e8d7a4bb0a960b3) Thanks [@stipsan](https://github.com/stipsan)! - Bump `@vanilla-extract/css` to `^1.21.2` (debug identifiers replace dots with underscores) and `@vanilla-extract/vite-plugin` comparison baselines to `^5.2.6`.
+
+  Also port the upstream vite-plugin virtual-CSS cache-miss fix ([vanilla-extract#1776](https://github.com/vanilla-extract-css/vanilla-extract/pull/1776)): when Vite serves a `.vanilla.css` module without re-running the parent `.css.ts` transform (e.g. 304 Not Modified after a server restart with a warm browser cache), the plugin now processes the parent on demand instead of failing to resolve/load the virtual CSS.
+
+- Updated dependencies [[`17cfcbe`](https://github.com/sanity-io/pkg-utils/commit/17cfcbe73a4e9f972e74baeb4e8d7a4bb0a960b3)]:
+  - @sanity/vanilla-extract-integration@0.1.8
+
 ## 0.2.7
 
 ### Patch Changes

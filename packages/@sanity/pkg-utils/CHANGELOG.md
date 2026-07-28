@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 11.0.17
+
+### Patch Changes
+
+- [#3181](https://github.com/sanity-io/pkg-utils/pull/3181) [`050c10b`](https://github.com/sanity-io/pkg-utils/commit/050c10b531d240ce482431227ca3243bad95ff07) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rollup to ^4.62.3
+
 ## 11.0.16
 
 ### Patch Changes
