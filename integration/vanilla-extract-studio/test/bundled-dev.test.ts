@@ -21,13 +21,19 @@ import {classNameExpectation} from './variants.ts'
  * whose name matches vanilla-extract's `cssFileFilter`, inside a lazily imported modal. The
  * fixture mirrors it with `plain-css-js-dependency` (a `file:` dependency copied into
  * node_modules) consumed by the `React.lazy`-loaded `PlainCssJsInput`, alongside a real
- * `.css.ts` that also only enters the graph through that chunk. Processing the plain
- * `.css.js` module used to hang the fork's compiler until its module runner's 60s transport
- * timeout and then crash the dev server, which that studio worked around with a resolver
- * plugin; upstream handles it without one, and so must the fork.
+ * `.css.ts` that also only enters the graph through that chunk.
+ *
+ * Two failure modes have shown up for that plain `.css.js`:
+ * 1. Closing the compiler on `buildEnd` under bundled Dev hung `processVanillaFile` until the
+ *    60s transport timeout (fixed by keeping the compiler alive for the httpServer lifetime).
+ * 2. Injecting `@vanilla-extract/css/adapter` into the plain module then failing to resolve it
+ *    under pnpm (`Cannot find module '@vanilla-extract/css/adapter'`). The fork now skips
+ *    modules whose source does not reference `@vanilla-extract/`, so the CSS string passes
+ *    through unchanged; upstream still re-serializes it via `processVanillaFile`.
  */
 interface BundledDevOutput {
   classNames: FixtureClassNames
+  lazyClassNames: Record<string, string>
   lazyPatch: string
 }
 
@@ -74,11 +80,11 @@ async function collectBundledDevOutput(
     expect(lazyPatch).toContain(`.${badge} {`)
     expect(lazyPatch).toContain('rgb(7, 8, 9)')
 
-    // The plain (non-vanilla-extract) `Styles.css.js` of the node_modules dependency was
-    // evaluated by the vanilla-extract compiler without hanging it: its CSS string survives
-    // as a JS export, and produces no CSS of its own
+    // The plain (non-vanilla-extract) `Styles.css.js` of the node_modules dependency survives
+    // as a JS CSS-string export and produces no CSS of its own (no hang, no adapter inject)
     expect(lazyPatch).toContain('.plain-css-js-dependency{color:rgb(201, 202, 203)}')
     expect(lazyPatch).not.toContain('Styles.css.js.vanilla.css')
+    expect(lazyPatch).not.toContain('@vanilla-extract/css/adapter')
 
     // The dev server survived the compile (the regression crashed the whole process)
     const entryAfter = await server.fetchText('/assets/index.js')
@@ -90,6 +96,7 @@ async function collectBundledDevOutput(
         overlay: exports['veStudioOverlay']!,
         button: exports['veStudioButton']!,
       },
+      lazyClassNames: lazyExports,
       lazyPatch,
     }
   } finally {
@@ -98,8 +105,8 @@ async function collectBundledDevOutput(
 }
 
 describe('sanity dev (bundled dev mode)', () => {
-  test('fork output matches the upstream reference, including on-demand chunks with a plain .css.js dependency', async () => {
-    // The upstream plugin is the reference for expected output
+  test('fork matches upstream VE output and survives plain .css.js in on-demand chunks', async () => {
+    // The upstream plugin is the reference for vanilla-extract class names / CSS
     const upstream = await collectBundledDevOutput('upstream')
 
     // Dev servers run in development mode, so plugin-default identifiers resolve to `debug`
@@ -112,6 +119,10 @@ describe('sanity dev (bundled dev mode)', () => {
 
     const fork = await collectBundledDevOutput('fork')
     expect(fork.classNames).toEqual(upstream.classNames)
-    expect(fork.lazyPatch).toBe(upstream.lazyPatch)
+    // Real VE modules in the lazy chunk must match upstream; the plain Styles.css.js region
+    // intentionally diverges (fork leaves the original export alone, upstream re-serializes)
+    expect(fork.lazyClassNames).toEqual(upstream.lazyClassNames)
+    expect(fork.lazyPatch).toContain(`.${fork.lazyClassNames['veStudioLazyBadge']} {`)
+    expect(fork.lazyPatch).toContain('rgb(7, 8, 9)')
   })
 })
