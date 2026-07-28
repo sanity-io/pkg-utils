@@ -120,6 +120,34 @@ describe('vite dev', () => {
     }
   })
 
+  test('serves virtual CSS without a prior parent transform', async () => {
+    // Intentionally skip transforming the parent `.css.ts` first — this is the cache-miss path
+    // that used to leave resolveId/load with nothing to serve (e.g. Vite 304 revalidation after
+    // a dev-server restart with a warm browser cache). Ported from upstream
+    // `@vanilla-extract/vite-plugin` 5.2.6 (vanilla-extract#1776).
+    const server = await createServer({
+      root: appRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      appType: 'custom',
+      plugins: [vanillaExtractPlugin()],
+    })
+    try {
+      const virtualId = `${normalizePath(stylesCssTs)}.vanilla.css`
+      const result = await server.transformRequest(virtualId)
+
+      expect(result).not.toBeNull()
+      expect(result?.code).toContain('rgb(1, 2, 3)')
+
+      // Second request hits the warm cache path
+      const second = await server.transformRequest(virtualId)
+      expect(second?.code).toBe(result?.code)
+    } finally {
+      await server.close()
+    }
+  })
+
   test.each([
     // The marker plugin only affects the extracted CSS when it runs inside the compiler
     // server: the consuming server's `.css.ts` transforms are discarded (the compiler reads
