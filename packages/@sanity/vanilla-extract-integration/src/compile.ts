@@ -7,7 +7,7 @@
  * The upstream `esbuildOptions` passthrough is intentionally dropped: it leaked the esbuild API
  * into the public surface, and no consumer in this repository ever passed it.
  */
-import {cssFileFilter} from './filters.ts'
+import {cssFileFilter, isVanillaExtractSource} from './filters.ts'
 import {getPackageInfo} from './packageInfo.ts'
 import {transform} from './transform.ts'
 import type {IdentifierOption} from './types.ts'
@@ -52,6 +52,9 @@ export async function compile({
         transform: {
           filter: {id: cssFileFilter},
           handler(code, id) {
+            // Plain `*.css.js` modules (e.g. `@bynder/compact-view`'s `Styles.css.js`) match
+            // the filter by name but are not vanilla-extract — leave them alone
+            if (!isVanillaExtractSource(code)) return null
             const [validId = id] = id.split('?')
             return transform({
               source: code,

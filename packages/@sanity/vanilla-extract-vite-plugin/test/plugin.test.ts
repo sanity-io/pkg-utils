@@ -107,6 +107,12 @@ describe('vite build', () => {
     if (!entry || entry.type !== 'chunk') expect.unreachable('expected an entry chunk')
     expect(entry.code).toContain('className')
     expect(entry.code).not.toContain('rgb(1, 2, 3)')
+    // Plain Styles.css.js (filename matches cssFileFilter but is not VE) passes through
+    // unchanged — no adapter injection, no .vanilla.css. Regression for the
+    // `@bynder/compact-view` / `Cannot find module '@vanilla-extract/css/adapter'` build failure.
+    expect(entry.code).toContain('.plain-css-js-fixture{color:rgb(201, 202, 203)}')
+    expect(entry.code).not.toContain('@vanilla-extract/css/adapter')
+    expect(entry.code).not.toContain('Styles.css.js.vanilla.css')
 
     // Vite links the CSS from the HTML entry - the extract never leaves its pipeline
     const html = output.find(
@@ -139,6 +145,27 @@ describe('vite dev', () => {
       // The virtual module resolves through Vite's CSS pipeline (served as a JS module in dev)
       const css = await server.transformRequest(virtualImport![1]!)
       expect(css?.code).toContain('rgb(1, 2, 3)')
+    } finally {
+      await server.close()
+    }
+  })
+
+  test('leaves plain Styles.css.js modules unprocessed', async () => {
+    // Filename matches cssFileFilter but the module is not vanilla-extract (same shape as
+    // `@bynder/compact-view`'s Styles.css.js). Must not inject `@vanilla-extract/css/adapter`.
+    const server = await createServer({
+      root: appRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      plugins: [vanillaExtractPlugin()],
+    })
+    try {
+      const transformed = await server.transformRequest('/src/Styles.css.js')
+      expect(transformed?.code).toContain('.plain-css-js-fixture{color:rgb(201, 202, 203)}')
+      expect(transformed?.code).not.toContain('@vanilla-extract/css/adapter')
+      expect(transformed?.code).not.toContain('@vanilla-extract/css/fileScope')
+      expect(transformed?.code).not.toContain('.vanilla.css')
     } finally {
       await server.close()
     }

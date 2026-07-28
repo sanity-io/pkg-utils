@@ -4,6 +4,7 @@ import {
   cssFileFilter,
   getPackageInfo,
   getSourceFromVirtualCssFile,
+  isVanillaExtractSource,
   processVanillaFile,
   virtualCssFileFilter,
   type IdentifierOption,
@@ -240,6 +241,10 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
     transform: {
       filter: {id: cssFileFilter},
       async handler(_code, id) {
+        // Plain `*.css.js` modules (e.g. `@bynder/compact-view`'s `Styles.css.js`) match the
+        // filter by name but are not vanilla-extract — leave them alone
+        if (!isVanillaExtractSource(_code)) return null
+
         const [filePath = id] = id.split('?')
 
         const {source, watchFiles} = await compile({
