@@ -192,6 +192,45 @@ export function vanillaExtractPlugin({
     return compilerReady
   }
 
+  /**
+   * Virtual `*.vanilla.css` modules are only populated after the parent `.css.ts` has been
+   * `processVanillaFile`'d. That normally happens in `transform`, but Vite can serve the parent
+   * without re-running `transform` (notably 304 Not Modified after a server restart with a warm
+   * browser cache), leaving the compiler CSS cache empty when the virtual module is requested.
+   * On miss, process the parent so virtual CSS is self-sufficient.
+   *
+   * Ported from `@vanilla-extract/vite-plugin` 5.2.6
+   * ([vanilla-extract#1776](https://github.com/vanilla-extract-css/vanilla-extract/pull/1776)).
+   * Adapted for this fork's soft-read `getCssForFile` (returns `undefined` on miss instead of
+   * throwing).
+   *
+   * Always goes through {@link Compiler.processVanillaFile} for real `.css.ts` parents rather
+   * than short-circuiting on a warm `getCssForFile` hit: `processVanillaFile` is
+   * invalidation-aware and refreshes the CSS cache when a shared dependency changed. After a
+   * cache-miss populate the parent was never `transform`ed in the consuming server (so
+   * `addWatchFile` never wired dependency edits back to a retransform), and returning the
+   * stale cache entry would keep serving outdated virtual CSS across HMR.
+   */
+  const ensureCssForVirtualId = async (absoluteVirtualId: string): Promise<string | null> => {
+    const fileId = virtualIdToFileId(absoluteVirtualId)
+
+    // Authored `.vanilla.css` files aren't vanilla-extract parents — don't spin up the compiler
+    // for them. Only serve if a previous compilation already put CSS in the cache.
+    if (!cssFileFilter.test(fileId)) {
+      if (!compiler) return null
+      return compiler.getCssForFile(fileId)?.css || null
+    }
+
+    await ensureCompiler()
+    if (!compiler) return null
+
+    await compiler.processVanillaFile(fileId, {outputCss: true})
+    // Same absolute id the `transform` path records, so `hotUpdate`'s `findImporterTree`
+    // boundary check matches after a cache-miss populate
+    transformedModules.add(fileId)
+    return compiler.getCssForFile(fileId)?.css || null
+  }
+
   return [
     {
       name: `${PLUGIN_NAMESPACE}-inline-dev-css`,
@@ -361,16 +400,13 @@ export function vanillaExtractPlugin({
 
       resolveId: {
         filter: {id: VIRTUAL_CSS_ID_FILTER},
-        handler(source) {
+        async handler(source) {
           const [validId = source, query] = source.split('?')
-          if (!isVirtualId(validId) || !compiler) return undefined
+          if (!isVirtualId(validId)) return undefined
 
           const absoluteId = getAbsoluteId({filePath: validId, root: config.root})
-
-          // The only valid scenario for missing CSS is a file authored with the `.vanilla.css`
-          // extension (or a module that produced no CSS); fall through to normal resolution
-          const cssEntry = compiler.getCssForFile(virtualIdToFileId(absoluteId))
-          if (!cssEntry?.css) return undefined
+          const css = await ensureCssForVirtualId(absoluteId)
+          if (!css) return undefined
 
           // Keep the original query string for HMR
           return absoluteId + (query ? `?${query}` : '')
@@ -379,17 +415,17 @@ export function vanillaExtractPlugin({
 
       load: {
         filter: {id: VIRTUAL_CSS_ID_FILTER},
-        handler(id) {
+        async handler(id) {
           const [validId = id] = id.split('?')
-          if (!isVirtualId(validId) || !compiler) return undefined
+          if (!isVirtualId(validId)) return undefined
 
           const absoluteId = getAbsoluteId({filePath: validId, root: config.root})
-          const cssEntry = compiler.getCssForFile(virtualIdToFileId(absoluteId))
-          if (!cssEntry) return undefined
+          const css = await ensureCssForVirtualId(absoluteId)
+          if (!css) return undefined
 
           // Vite's CSS pipeline owns the module from here (PostCSS, minification,
           // code-splitting, HMR style injection)
-          return cssEntry.css
+          return css
         },
       },
     },
