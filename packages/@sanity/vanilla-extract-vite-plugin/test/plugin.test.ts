@@ -33,6 +33,33 @@ async function writeMutableFixture(color: string): Promise<void> {
   )
 }
 
+const mutableThemeTs = path.join(mutableRoot, 'src/theme.ts')
+
+/**
+ * Mutable fixture whose `.css.ts` imports a plain theme module — used to assert that shared
+ * dependency edits refresh virtual CSS even when the parent was only populated via the
+ * cache-miss path (no prior `transform`).
+ */
+async function writeMutableThemeFixture(color: string): Promise<void> {
+  await mkdir(path.dirname(mutableStylesCssTs), {recursive: true})
+  await writeFile(
+    mutableThemeTs,
+    [`export const accentColor: string = '${color}'`, ``].join('\n'),
+  )
+  await writeFile(
+    mutableStylesCssTs,
+    [
+      `import {style} from '@vanilla-extract/css'`,
+      `import {accentColor} from './theme.ts'`,
+      ``,
+      `export const box: string = style({`,
+      `  color: accentColor,`,
+      `})`,
+      ``,
+    ].join('\n'),
+  )
+}
+
 /** Matches either the authored `rgb(1, 2, 3)` marker or its minified `#010203` form. */
 function containsBoxMarker(css: string): boolean {
   return css.includes('rgb(1, 2, 3)') || css.includes('#010203')
@@ -179,6 +206,45 @@ describe('vite dev', () => {
       await expect(server.transformRequest(virtualId)).rejects.toThrow(
         /deliberate css\.ts evaluation failure/,
       )
+    } finally {
+      await server.close()
+    }
+  })
+
+  test('refreshes virtual CSS after a shared dependency edit on the cache-miss path', async () => {
+    // Populate CSS only via ensureCss (no parent transform), then edit the plain theme module
+    // the `.css.ts` imports. Without re-running processVanillaFile on later loads, the warm
+    // getCssForFile short-circuit would keep serving the pre-edit colour.
+    await writeMutableThemeFixture('rgb(1, 2, 3)')
+
+    const server = await createServer({
+      root: mutableRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      appType: 'custom',
+      plugins: [vanillaExtractPlugin()],
+    })
+    try {
+      const virtualId = `${normalizePath(mutableStylesCssTs)}.vanilla.css`
+      const first = await server.transformRequest(virtualId)
+      expect(first?.code).toContain('rgb(1, 2, 3)')
+
+      // The compiler's internal watcher invalidates the runner/module graph; re-touch while
+      // polling so a write that lands before the initial scan isn't missed.
+      await expect
+        .poll(
+          async () => {
+            await writeFile(
+              mutableThemeTs,
+              [`export const accentColor: string = 'rgb(7, 8, 9)'`, ``].join('\n'),
+            )
+            const next = await server.transformRequest(virtualId)
+            return next?.code
+          },
+          {interval: 250, timeout: 10_000},
+        )
+        .toContain('rgb(7, 8, 9)')
     } finally {
       await server.close()
     }

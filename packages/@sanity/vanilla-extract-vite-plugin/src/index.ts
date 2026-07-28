@@ -203,28 +203,31 @@ export function vanillaExtractPlugin({
    * ([vanilla-extract#1776](https://github.com/vanilla-extract-css/vanilla-extract/pull/1776)).
    * Adapted for this fork's soft-read `getCssForFile` (returns `undefined` on miss instead of
    * throwing).
+   *
+   * Always goes through {@link Compiler.processVanillaFile} for real `.css.ts` parents rather
+   * than short-circuiting on a warm `getCssForFile` hit: `processVanillaFile` is
+   * invalidation-aware and refreshes the CSS cache when a shared dependency changed. After a
+   * cache-miss populate the parent was never `transform`ed in the consuming server (so
+   * `addWatchFile` never wired dependency edits back to a retransform), and returning the
+   * stale cache entry would keep serving outdated virtual CSS across HMR.
    */
   const ensureCssForVirtualId = async (absoluteVirtualId: string): Promise<string | null> => {
+    const fileId = virtualIdToFileId(absoluteVirtualId)
+
+    // Authored `.vanilla.css` files aren't vanilla-extract parents — don't spin up the compiler
+    // for them. Only serve if a previous compilation already put CSS in the cache.
+    if (!cssFileFilter.test(fileId)) {
+      if (!compiler) return null
+      return compiler.getCssForFile(fileId)?.css || null
+    }
+
     await ensureCompiler()
     if (!compiler) return null
 
-    const fileId = virtualIdToFileId(absoluteVirtualId)
-    const cached = compiler.getCssForFile(fileId)
-    if (cached) {
-      // Present for this compiler lifetime (possibly empty — modules that register CSS objects
-      // which transform to nothing). Empty CSS must not be emitted as a virtual module.
-      return cached.css || null
-    }
-
-    try {
-      await compiler.processVanillaFile(fileId, {outputCss: true})
-    } catch (error) {
-      // Authored `.vanilla.css` files aren't vanilla-extract parents — fall through so Vite
-      // resolves them normally. Real `.css.ts` evaluation/transform errors must surface.
-      if (!cssFileFilter.test(fileId)) return null
-      throw error
-    }
-
+    await compiler.processVanillaFile(fileId, {outputCss: true})
+    // Same absolute id the `transform` path records, so `hotUpdate`'s `findImporterTree`
+    // boundary check matches after a cache-miss populate
+    transformedModules.add(fileId)
     return compiler.getCssForFile(fileId)?.css || null
   }
 
