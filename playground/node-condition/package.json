@@ -29,5 +29,19 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "node": {
+          "import": "./dist/index.node.js",
+          "require": "./dist/index.node.cjs"
+        },
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

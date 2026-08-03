@@ -313,5 +313,4 @@ describe('publishConfig.exports validation', () => {
       true,
     )
   })
-
 })

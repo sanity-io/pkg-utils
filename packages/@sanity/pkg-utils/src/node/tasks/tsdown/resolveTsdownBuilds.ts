@@ -199,8 +199,13 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   // and publint see the other builds' files on disk.
   for (const key of draftsByBuild.keys()) {
     if (key === 'canonical') continue
+    const bundleRuntime = key.startsWith('bundles:') ? key.slice('bundles:'.length) : undefined
     const runtime: PkgRuntime =
-      key === 'browser' ? 'browser' : key === 'node' ? 'node' : key.startsWith('bundles:') ? (key.slice('bundles:'.length) as PkgRuntime) : ctx.runtime
+      key === 'browser' || bundleRuntime === 'browser'
+        ? 'browser'
+        : key === 'node' || bundleRuntime === 'node'
+          ? 'node'
+          : ctx.runtime
     const build = toBuild(key, runtime, false)
     if (build) builds.push(build)
   }

@@ -5,12 +5,8 @@ import Leaf from './leaf'
 export default function IndexPage(): React.JSX.Element {
   return (
     <div>
-      <div>
-        path={index.path}, format={index.format}, runtime={index.runtime}
-      </div>
-      <div>
-        path={extra.path}, format={extra.format}, runtime={extra.runtime}
-      </div>
+      <div>runtime={index.runtime}</div>
+      <div>runtime={extra.runtime}</div>
       <Leaf />
     </div>
   )

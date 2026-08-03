@@ -2,10 +2,8 @@
 export const fileEnding: RegExp = /\.[mc]?js$/
 /** @internal */
 export const defaultEnding = '.js'
-/** @internal */
-export const mjsEnding = '.mjs'
-/** @internal */
-export const cjsEnding = '.cjs'
+const mjsEnding = '.mjs'
+const cjsEnding = '.cjs'
 
 /** @internal */
 export interface PkgExtMap {
@@ -26,11 +24,4 @@ export const pkgExtMap: PkgExtMap = {
     commonjs: cjsEnding,
     esm: defaultEnding,
   },
-}
-
-/** `./dist/index.js` -> `./dist/index.d.ts` (`.mjs` -> `.d.mts`, `.cjs` -> `.d.cts`). @internal */
-export function toDtsFile(file: string): string {
-  return file.replace(fileEnding, (extension) =>
-    extension === '.mjs' ? '.d.mts' : extension === '.cjs' ? '.d.cts' : '.d.ts',
-  )
 }

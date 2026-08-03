@@ -1,5 +1,5 @@
 import path from 'node:path'
-import {defineConfig, type ReactCompilerOptions} from '@sanity/tsdown-config'
+import {defineConfig} from '@sanity/tsdown-config'
 import {mergeConfig, type InlineConfig, type UserConfig} from 'tsdown'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {pkgExtMap} from '../../core/pkg/pkgExt.ts'
@@ -31,10 +31,7 @@ export async function resolveTsdownConfig(
   const {config, cwd, distPath, pkg} = ctx
 
   const reactCompiler = config?.reactCompiler
-  if (
-    typeof reactCompiler === 'object' &&
-    (reactCompiler as ReactCompilerOptions).reactServer === true
-  ) {
+  if (typeof reactCompiler === 'object' && reactCompiler.reactServer === true) {
     throw new Error(
       [
         'package.config.ts: `reactCompiler.reactServer` is not supported by `pkg build` — the',
@@ -51,9 +48,13 @@ export async function resolveTsdownConfig(
   }
 
   const formats = new Set(build.entries.flatMap((buildEntry) => buildEntry.formats))
-  const format = [...(formats.has('esm') ? ['esm' as const] : []), ...(formats.has('commonjs') ? ['cjs' as const] : [])]
+  const format = [
+    ...(formats.has('esm') ? ['esm' as const] : []),
+    ...(formats.has('commonjs') ? ['cjs' as const] : []),
+  ]
 
-  const platform = build.runtime === 'node' ? 'node' : build.runtime === 'browser' ? 'browser' : 'neutral'
+  const platform =
+    build.runtime === 'node' ? 'node' : build.runtime === 'browser' ? 'browser' : 'neutral'
 
   // Build-time constants: `PKG_RUNTIME` is per build (the whole point of the variant builds),
   // `PKG_VERSION` reads the environment override first, like v11. pkg-utils' own build skips

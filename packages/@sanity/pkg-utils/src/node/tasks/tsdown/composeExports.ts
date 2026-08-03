@@ -70,13 +70,14 @@ export function createExportsComposer(
 
     // 3. Follow the hand-written key order; append generated extras (e.g. `./package.json`
     //    when it wasn't hand-written) at the end.
-    for (const exportPath of Object.keys(pkg.exports || {})) {
+    const handwrittenRaw: Record<string, unknown> = pkg.exports || {}
+    for (const exportPath of Object.keys(handwrittenRaw)) {
       if (exportPath in remapped) {
         result[exportPath] = reconcile(exportPath, remapped[exportPath])
       } else {
         // Hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
         // entries) pass through untouched.
-        result[exportPath] = (pkg.exports as ExportsMap)[exportPath]
+        result[exportPath] = handwrittenRaw[exportPath]
       }
     }
     for (const [exportPath, value] of Object.entries(remapped)) {

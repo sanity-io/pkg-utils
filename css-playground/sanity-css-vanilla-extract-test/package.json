@@ -10,7 +10,6 @@
   "exports": {
     ".": {
       "source": "./src/index.tsx",
-      "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./bundle.css": {
@@ -23,6 +22,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -54,10 +54,7 @@
   },
   "publishConfig": {
     "exports": {
-      ".": {
-        "import": "./dist/index.js",
-        "default": "./dist/index.js"
-      },
+      ".": "./dist/index.js",
       "./bundle.css": {
         "types": "./dist/bundle-css.d.ts",
         "browser": "./dist/bundle.css",

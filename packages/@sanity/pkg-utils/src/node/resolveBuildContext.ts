@@ -115,17 +115,20 @@ export async function resolveBuildContext(options: {
 
   // Map `external` onto tsdown's `deps`: additions over the default (dependencies + peers)
   // become `neverBundle`, defaults filtered out by the callback pattern become `alwaysBundle`
-  // (tsdown auto-externalizes dependencies/peers, so only the diff needs expressing). The
-  // package's own name always stays external, so self-referencing imports (e.g. the injected
-  // `import "<pkg>/bundle.css"`) never resolve into the bundle.
-  const neverBundleAdditions: (string | RegExp)[] = external.filter(
-    (name) => !parsedExternal.includes(name),
-  )
-  neverBundleAdditions.push(new RegExp(`^${escapeRegExp(pkg.name)}(/|$)`))
-  const alwaysBundleAdditions = parsedExternal.filter((name) => !external.includes(name))
+  // (tsdown auto-externalizes dependencies/peers, so only the diff needs expressing). The v11
+  // `external` semantics were subpath-aware (`name` also matched `name/subpath`), so package
+  // names map to `^name(/|$)` patterns. The package's own name always stays external, so
+  // self-referencing imports (e.g. the injected `import "<pkg>/bundle.css"`) never resolve
+  // into the bundle.
+  const packagePattern = (name: string) => new RegExp(`^${escapeRegExp(name)}(/|$)`)
+  const neverBundleAdditions: (string | RegExp)[] = external
+    .filter((name) => !parsedExternal.includes(name))
+    .map(packagePattern)
+  neverBundleAdditions.push(packagePattern(pkg.name))
+  const alwaysBundleNames = parsedExternal.filter((name) => !external.includes(name))
   const deps = mergeDeps(config?.deps, {
     neverBundle: neverBundleAdditions,
-    alwaysBundle: alwaysBundleAdditions,
+    alwaysBundle: alwaysBundleNames.map(packagePattern),
   })
 
   // Packages whose types are inlined into the emitted declarations, used by the api-extractor
@@ -138,7 +141,7 @@ export async function resolveBuildContext(options: {
   )
   const bundledPackages = [
     ...bundledDependencies,
-    ...alwaysBundleAdditions,
+    ...alwaysBundleNames,
     ...(Array.isArray(config?.deps?.alwaysBundle)
       ? config.deps.alwaysBundle.filter((entry): entry is string => typeof entry === 'string')
       : typeof config?.deps?.alwaysBundle === 'string'
@@ -222,7 +225,7 @@ type DepsConfig = NonNullable<import('tsdown').UserConfig['deps']>
  */
 function mergeDeps(
   configDeps: DepsConfig | undefined,
-  additions: {neverBundle: (string | RegExp)[]; alwaysBundle: string[]},
+  additions: {neverBundle: (string | RegExp)[]; alwaysBundle: (string | RegExp)[]},
 ): DepsConfig | undefined {
   const userNeverBundle = configDeps?.neverBundle
   let neverBundle: DepsConfig['neverBundle']

@@ -1115,6 +1115,9 @@ importers:
       '@babel/plugin-transform-object-rest-spread':
         specifier: ^7.29.7
         version: 7.29.7(@babel/core@7.29.7)
+      '@rolldown/plugin-babel':
+        specifier: ^0.2.3
+        version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.0)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.23.4)(yaml@2.9.0))
 
   playground/browser-bundle: {}
 
@@ -1125,32 +1128,6 @@ importers:
   playground/default-export: {}
 
   playground/dummy-commonjs: {}
-
-  playground/dummy-lodash:
-    dependencies:
-      lodash:
-        specifier: ^4.18.1
-        version: 4.18.1
-    devDependencies:
-      '@types/lodash':
-        specifier: ^4.17.24
-        version: 4.17.25
-
-  playground/dummy-lodash-es:
-    dependencies:
-      lodash:
-        specifier: ^4.18.1
-        version: 4.18.1
-      lodash-es:
-        specifier: ^4.18.1
-        version: 4.18.1
-    devDependencies:
-      '@types/lodash':
-        specifier: ^4.17.24
-        version: 4.17.25
-      '@types/lodash-es':
-        specifier: ^4.17.12
-        version: 4.17.12
 
   playground/dummy-module: {}
 
@@ -7360,12 +7337,6 @@ packages:
 
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
-
-  '@types/lodash-es@4.17.12':
-    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
-
-  '@types/lodash@4.17.25':
-    resolution: {integrity: sha512-+K1NIO8I+F9/wNulfVvu23QYd0Pe9/OCqRrim4NoYIf1VoEDL90Ve4ClzpyqBLc7NpGGWRvYNCKZ1BE/Jpf8dQ==}
 
   '@types/markdown-it@14.1.2':
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
@@ -22159,12 +22130,6 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/linkify-it@5.0.0': {}
-
-  '@types/lodash-es@4.17.12':
-    dependencies:
-      '@types/lodash': 4.17.25
-
-  '@types/lodash@4.17.25': {}
 
   '@types/markdown-it@14.1.2':
     dependencies:

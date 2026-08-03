@@ -1,13 +1,17 @@
-import {existsSync} from 'node:fs'
+import {existsSync, readFileSync, writeFileSync} from 'node:fs'
 import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
 import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
+import {isRecord} from './core/isRecord.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {createLogger, type Logger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
 import {createSpinner} from './spinner.ts'
-import {resolveTsdownBuilds, type TsdownBuild as TsdownBuildDef} from './tasks/tsdown/resolveTsdownBuilds.ts'
+import {
+  resolveTsdownBuilds,
+  type TsdownBuild as TsdownBuildDef,
+} from './tasks/tsdown/resolveTsdownBuilds.ts'
 import {resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
 
 const RE_TS_SOURCE = /\.[cm]?tsx?$/
@@ -100,6 +104,10 @@ export async function build(options: {
 
       const bundles = await tsdownBuild(inlineConfig)
 
+      if (buildDef.canonical) {
+        restoreAuthoredTypes(ctx)
+      }
+
       spinner.complete()
       ctx.logger.log()
 
@@ -129,7 +137,10 @@ function buildTaskName(buildDef: TsdownBuildDef): string {
  * Prints `<pkg>: <source> → <output>` for every entry chunk (JS and `.d.ts`) that tsdown
  * emitted, mirroring the per-file output of previous majors.
  */
-function printBuildOutputs(ctx: {cwd: string; logger: Logger; pkg: {name: string}}, bundles: TsdownBundle[]): void {
+function printBuildOutputs(
+  ctx: {cwd: string; logger: Logger; pkg: {name: string}},
+  bundles: TsdownBundle[],
+): void {
   const {cwd, logger, pkg} = ctx
   const lines = new Set<string>()
 
@@ -149,16 +160,43 @@ function printBuildOutputs(ctx: {cwd: string; logger: Logger; pkg: {name: string
     }
   }
 
-  for (const line of Array.from(lines).sort()) {
+  for (const line of Array.from(lines).toSorted()) {
     logger.log(line)
   }
+}
+
+/**
+ * tsdown's exports generation rewrites the top-level `types` field alongside `main`/`module`
+ * when the `legacy` fields are maintained, preferring the CJS declarations (`.d.cts`) for
+ * dual-format packages. The hand-written value is authoritative here (the Sanity convention
+ * points `types` at the ESM `.d.ts`), so it is restored after the canonical build.
+ */
+function restoreAuthoredTypes(ctx: {cwd: string; pkg: {types?: string | undefined}}): void {
+  const authoredTypes = ctx.pkg.types
+  if (!authoredTypes) return
+
+  const pkgPath = path.resolve(ctx.cwd, 'package.json')
+  let text: string
+  try {
+    text = readFileSync(pkgPath, 'utf8')
+  } catch {
+    return
+  }
+  const json: unknown = JSON.parse(text)
+  if (!isRecord(json) || json['types'] === authoredTypes) return
+  json['types'] = authoredTypes
+
+  const indent = /^([ \t]+)\S/m.exec(text)?.[1] ?? 2
+  let output = JSON.stringify(json, null, indent)
+  if (text.endsWith('\n')) output += '\n'
+  writeFileSync(pkgPath, output, 'utf8')
 }
 
 /**
  * pkg-utils owns its own experience: `tsdown.config.*` files are never loaded in pkg-utils
  * mode (`package.config.ts` is the sole config source), so their presence is worth a warning.
  */
-export function warnAboutTsdownConfigFiles(cwd: string, logger: Logger): void {
+function warnAboutTsdownConfigFiles(cwd: string, logger: Logger): void {
   const candidates = [
     'tsdown.config.ts',
     'tsdown.config.mts',
