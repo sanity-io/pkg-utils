@@ -627,6 +627,19 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
   })
 
+  test('should build with `--emitDeclarationOnly` emitting declarations only', async () => {
+    const project = await spawnProject('ts')
+    const stdout = await project.run('build:types')
+
+    expect(stdout).toContain('ts: ./src/index.ts → ./dist/index.d.ts')
+    expect(stdout).not.toContain('→ ./dist/index.js')
+
+    // A types-only build emits declaration files only (the CJS pass emits its JS regardless
+    // of `dts.emitDtsOnly`, so everything else is removed afterwards)
+    const files = await fs.readdir(path.resolve(project.cwd, 'dist'))
+    expect(files.filter((file) => !/\.d\.[mc]?ts(\.map)?$/.test(file))).toEqual([])
+  })
+
   test('should build with `--quiet` flag suppressing output', async () => {
     const project = await spawnProject('ts')
     const stdout = await project.run('build:quiet')

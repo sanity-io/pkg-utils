@@ -1,4 +1,4 @@
-import {existsSync, readFileSync, writeFileSync} from 'node:fs'
+import {existsSync, readFileSync, rmSync, writeFileSync} from 'node:fs'
 import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
 import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
@@ -104,6 +104,13 @@ export async function build(options: {
 
       const bundles = await tsdownBuild(inlineConfig)
 
+      if (ctx.emitDeclarationOnly) {
+        // `dts.emitDtsOnly` suppresses the JS chunks of the ES pass, but the CJS pass emits
+        // its JS regardless (only its extra dts pass runs the dts plugin) — a types-only
+        // build removes everything that is not a declaration file
+        removeNonDeclarationOutputs(bundles)
+      }
+
       if (buildDef.canonical) {
         restoreAuthoredTypes(ctx)
       }
@@ -133,12 +140,25 @@ function buildTaskName(buildDef: TsdownBuildDef): string {
   return `build ${buildDef.key} (${formats.join(', ') || 'types'})`
 }
 
+const RE_DTS_OUTPUT = /\.d\.[mc]?ts(\.map)?$/
+
+/** Removes every emitted file that is not a declaration file (or its sourcemap). */
+function removeNonDeclarationOutputs(bundles: TsdownBundle[]): void {
+  for (const bundle of bundles) {
+    for (const chunk of bundle.chunks) {
+      if (RE_DTS_OUTPUT.test(chunk.fileName)) continue
+      rmSync(path.join(chunk.outDir, chunk.fileName), {force: true})
+      rmSync(path.join(chunk.outDir, `${chunk.fileName}.map`), {force: true})
+    }
+  }
+}
+
 /**
  * Prints `<pkg>: <source> → <output>` for every entry chunk (JS and `.d.ts`) that tsdown
  * emitted, mirroring the per-file output of previous majors.
  */
 function printBuildOutputs(
-  ctx: {cwd: string; logger: Logger; pkg: {name: string}},
+  ctx: {cwd: string; emitDeclarationOnly: boolean; logger: Logger; pkg: {name: string}},
   bundles: TsdownBundle[],
 ): void {
   const {cwd, logger, pkg} = ctx
@@ -147,6 +167,7 @@ function printBuildOutputs(
   for (const bundle of bundles) {
     for (const chunk of bundle.chunks) {
       if (chunk.type !== 'chunk' || !chunk.isEntry || !chunk.facadeModuleId) continue
+      if (ctx.emitDeclarationOnly && !RE_DTS_OUTPUT.test(chunk.fileName)) continue
       const source = `./${path
         .relative(cwd, chunk.facadeModuleId)
         .replaceAll('\\', '/')
