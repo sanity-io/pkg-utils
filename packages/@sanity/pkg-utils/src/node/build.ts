@@ -1,16 +1,16 @@
+import {existsSync} from 'node:fs'
 import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
-import {rimraf} from 'rimraf'
+import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
-import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
-import {createLogger} from './logger.ts'
+import {createLogger, type Logger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
-import {resolveBuildTasks} from './resolveBuildTasks.ts'
 import {createSpinner} from './spinner.ts'
-import {buildTaskHandlers} from './tasks/index.ts'
-import {type BuildTask, type TaskHandler} from './tasks/types.ts'
+import {resolveTsdownBuilds, type TsdownBuild as TsdownBuildDef} from './tasks/tsdown/resolveTsdownBuilds.ts'
+import {resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
+
+const RE_TS_SOURCE = /\.[cm]?tsx?$/
 
 /**
  * Build the distribution files of a npm package.
@@ -72,58 +72,110 @@ export async function build(options: {
   })
 
   if (clean) {
-    if (!quiet) {
-      logger.log(
-        `Deleting the \`dist\` folder: './${path.relative(cwd, ctx.distPath)}' before building...`,
-      )
-    }
-    await rimraf(ctx.distPath)
+    logger.warn(
+      '`--clean` is deprecated: the `dist` folder is cleaned before every build now. Set `clean: false` in package.config.ts to opt out.',
+    )
   }
 
-  const buildTasks = resolveBuildTasks(ctx)
+  warnAboutTsdownConfigFiles(cwd, logger)
 
-  for (const task of buildTasks) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript can't infer the correct handler type from discriminated union
-    const handler = buildTaskHandlers[task.type] as TaskHandler<BuildTask>
-    const taskName = handler.name(ctx, task)
+  const builds = resolveTsdownBuilds(ctx)
 
+  let first = true
+  for (const buildDef of builds) {
+    // A types-only run skips builds without TypeScript sources entirely
+    if (
+      ctx.emitDeclarationOnly &&
+      !buildDef.entries.some((entry) => RE_TS_SOURCE.test(entry.source))
+    ) {
+      continue
+    }
+
+    const taskName = buildTaskName(buildDef)
     const spinner = createSpinner(taskName, quiet)
 
     try {
-      const result = await handler.exec(ctx, task).toPromise()
+      const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {clean: first})
+      first = false
+
+      const bundles = await tsdownBuild(inlineConfig)
 
       spinner.complete()
       ctx.logger.log()
 
-      handler.complete(ctx, task, result)
+      printBuildOutputs(ctx, bundles)
+      ctx.logger.log()
     } catch (err) {
       spinner.error()
 
       if (err instanceof Error) {
-        const RE_CWD = new RegExp(cwd, 'g')
+        const RE_CWD = new RegExp(escapeRegExp(cwd), 'g')
 
-        ctx.logger.error(err.message.replace(RE_CWD, '.'))
+        ctx.logger.error((err.stack || err.message).replace(RE_CWD, '.'))
         ctx.logger.log()
       }
-
-      handler.error(ctx, task, err)
 
       process.exit(1)
     }
   }
+}
 
-  // In vanilla-extract compat mode, make sure package.json declares the conditional `./<css>`
-  // export that the injected `import "<pkg>/<css>"` resolves through.
-  const vanillaExtract = resolveVanillaExtract(config)
-  if (vanillaExtract.compatMode) {
-    await writeBundleCssExports({
-      cwd,
-      distPath: ctx.distPath,
-      cssName: resolveVanillaExtractCssName(vanillaExtract.options, {
-        compatMode: true,
-        runtime: '*',
-      }),
-      logger,
-    })
+function buildTaskName(buildDef: TsdownBuildDef): string {
+  const formats = Array.from(new Set(buildDef.entries.flatMap((entry) => entry.formats)))
+  return `build ${buildDef.key} (${formats.join(', ') || 'types'})`
+}
+
+/**
+ * Prints `<pkg>: <source> → <output>` for every entry chunk (JS and `.d.ts`) that tsdown
+ * emitted, mirroring the per-file output of previous majors.
+ */
+function printBuildOutputs(ctx: {cwd: string; logger: Logger; pkg: {name: string}}, bundles: TsdownBundle[]): void {
+  const {cwd, logger, pkg} = ctx
+  const lines = new Set<string>()
+
+  for (const bundle of bundles) {
+    for (const chunk of bundle.chunks) {
+      if (chunk.type !== 'chunk' || !chunk.isEntry || !chunk.facadeModuleId) continue
+      const source = `./${path
+        .relative(cwd, chunk.facadeModuleId)
+        .replaceAll('\\', '/')
+        // the dts chunks facade the fake `.d.ts` module ids of rolldown-plugin-dts; print the
+        // actual `.ts` source instead
+        .replace(/\.d\.([mc]?)ts$/, '.$1ts')}`
+      const output = `./${path
+        .relative(cwd, path.join(chunk.outDir, chunk.fileName))
+        .replaceAll('\\', '/')}`
+      lines.add(`${pkg.name}: ${source} \u2192 ${output}`)
+    }
   }
+
+  for (const line of Array.from(lines).sort()) {
+    logger.log(line)
+  }
+}
+
+/**
+ * pkg-utils owns its own experience: `tsdown.config.*` files are never loaded in pkg-utils
+ * mode (`package.config.ts` is the sole config source), so their presence is worth a warning.
+ */
+export function warnAboutTsdownConfigFiles(cwd: string, logger: Logger): void {
+  const candidates = [
+    'tsdown.config.ts',
+    'tsdown.config.mts',
+    'tsdown.config.cts',
+    'tsdown.config.js',
+    'tsdown.config.mjs',
+    'tsdown.config.cjs',
+    'tsdown.config.json',
+  ]
+  const found = candidates.find((candidate) => existsSync(path.resolve(cwd, candidate)))
+  if (found) {
+    logger.warn(
+      `found \`${found}\`, which @sanity/pkg-utils does not load — \`package.config.ts\` is the only config source of \`pkg build\`. Either migrate the package fully to tsdown (and drop @sanity/pkg-utils), or move the configuration into \`package.config.ts\`.`,
+    )
+  }
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }

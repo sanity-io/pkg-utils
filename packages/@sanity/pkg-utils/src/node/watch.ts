@@ -1,16 +1,16 @@
-import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
 import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
+import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
-import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
-import {resolveWatchTasks} from './resolveWatchTasks.ts'
-import {watchTaskHandlers} from './tasks/index.ts'
-import {type TaskHandler, type WatchTask} from './tasks/types.ts'
+import {resolveTsdownBuilds} from './tasks/tsdown/resolveTsdownBuilds.ts'
+import {resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
+
+const asyncDispose: typeof Symbol.asyncDispose =
+  Symbol.asyncDispose || Symbol.for('Symbol.asyncDispose')
 
 /** @public */
 export async function watch(options: {
@@ -26,16 +26,21 @@ export async function watch(options: {
   const {watchConfigFiles} = await import('./watchConfigFiles.ts')
   const configFiles$ = await watchConfigFiles({cwd, logger})
 
-  const taskSubscriptions: Subscription[] = []
+  // Every rebuild of the waterfall holds tsdown watchers (one per platform build); they are
+  // disposed when the config files change (the waterfall restarts) or the signal aborts.
+  let bundles: TsdownBundle[] = []
+  const disposeBundles = async () => {
+    const disposing = bundles
+    bundles = []
+    for (const bundle of disposing) {
+      await bundle[asyncDispose]()
+    }
+  }
 
   const ctx$ = configFiles$.pipe(
-    switchMap(async (configFiles) => {
-      const files = configFiles.map((f) => path.relative(cwd, f))
-
-      const packageJsonPath = files.find((f) => f === 'package.json')
-
+    switchMap(async () => {
       const pkgPath = findPkgPath({cwd})
-      if (!packageJsonPath || !pkgPath) {
+      if (!pkgPath) {
         throw new Error('missing package.json', {cause: {cwd}})
       }
 
@@ -49,52 +54,30 @@ export async function watch(options: {
     }),
   )
 
-  const ctxSubscription = ctx$.subscribe(async (ctx) => {
-    // Unsubscribe previous task subscriptions when config changes trigger a new context
-    for (const sub of taskSubscriptions) {
-      sub.unsubscribe()
-    }
-    taskSubscriptions.length = 0
+  const ctxSubscription: Subscription = ctx$.subscribe(async (ctx) => {
+    try {
+      await disposeBundles()
 
-    // Keep the conditional `./<css>` export in package.json in sync with the injected
-    // `import "<pkg>/<css>"` for watch builds too (idempotent, so it won't loop).
-    const vanillaExtract = resolveVanillaExtract(ctx.config)
-    if (vanillaExtract.compatMode) {
-      await writeBundleCssExports({
-        cwd,
-        distPath: ctx.distPath,
-        cssName: resolveVanillaExtractCssName(vanillaExtract.options, {
-          compatMode: true,
-          runtime: '*',
-        }),
-        logger,
-      })
-    }
+      const builds = resolveTsdownBuilds(ctx)
 
-    const watchTasks = resolveWatchTasks(ctx)
+      let first = true
+      for (const buildDef of builds) {
+        const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {
+          clean: first,
+          watch: true,
+        })
+        first = false
 
-    for (const task of watchTasks) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript can't infer the correct handler type from discriminated union
-      const handler = watchTaskHandlers[task.type] as TaskHandler<WatchTask, unknown>
-      const result$ = handler.exec(ctx, task)
+        bundles.push(...(await tsdownBuild(inlineConfig)))
+      }
 
-      const sub = result$.subscribe({
-        error: (err) => {
-          ctx.logger.error(err)
-          ctx.logger.log()
+      logger.success(`${ctx.pkg.name}: watching for file changes\u2026`)
+      logger.log()
+    } catch (err) {
+      ctx.logger.error(err)
+      ctx.logger.log()
 
-          process.exit(1)
-        },
-        next: (result) => {
-          handler.complete(ctx, task, result)
-        },
-        complete: () => {
-          ctx.logger.success(handler.name(ctx, task))
-          ctx.logger.log()
-        },
-      })
-
-      taskSubscriptions.push(sub)
+      process.exit(1)
     }
   })
 
@@ -102,11 +85,8 @@ export async function watch(options: {
     signal.addEventListener(
       'abort',
       () => {
-        for (const sub of taskSubscriptions) {
-          sub.unsubscribe()
-        }
-        taskSubscriptions.length = 0
         ctxSubscription.unsubscribe()
+        void disposeBundles()
       },
       {once: true},
     )

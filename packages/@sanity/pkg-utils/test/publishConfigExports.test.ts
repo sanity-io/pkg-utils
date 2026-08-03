@@ -3,7 +3,6 @@ import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
-import {writeBundleCssExports} from '../src/node/core/pkg/writeBundleCssExports'
 import {createLogger} from '../src/node/logger'
 import {parseStrictOptions} from '../src/node/strict'
 
@@ -315,43 +314,4 @@ describe('publishConfig.exports validation', () => {
     )
   })
 
-  // Regression test: a vanilla-extract build adds the `./bundle.css` export to `exports` via
-  // `writeBundleCssExports` and then runs the strict `--check`. If the export is not mirrored into
-  // `publishConfig.exports`, the check fails with "missing export path". This asserts the build +
-  // check stays green for packages that declare `publishConfig.exports`.
-  test('should pass after writeBundleCssExports mirrors the css export into publishConfig.exports', async () => {
-    await testPackage(
-      {
-        name: 'test-pkg',
-        version: '1.0.0',
-        license: 'MIT',
-        type: 'module',
-        exports: {
-          '.': {
-            source: './src/index.ts',
-            default: './dist/index.js',
-          },
-          './package.json': './package.json',
-        },
-        publishConfig: {
-          exports: {
-            '.': {
-              default: './dist/index.js',
-            },
-            './package.json': './package.json',
-          },
-        },
-        files: ['dist'],
-      },
-      false,
-      async (cwd) => {
-        await writeBundleCssExports({
-          cwd,
-          distPath: join(cwd, 'dist'),
-          cssName: 'bundle.css',
-          logger: createLogger(true),
-        })
-      },
-    )
-  })
 })

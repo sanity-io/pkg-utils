@@ -3,10 +3,9 @@ import {resolve as resolvePath} from 'node:path'
 import {parseExports, type PackageJSON} from '@sanity/parse-package-json'
 import type {Logger} from '../../logger.ts'
 import type {StrictOptions} from '../../strict.ts'
-import {defaultEnding, fileEnding} from '../../tasks/dts/getTargetPaths.ts'
 import type {PkgExport} from '../config/types.ts'
 import {isRecord} from '../isRecord.ts'
-import {pkgExtMap} from './pkgExt.ts'
+import {defaultEnding, fileEnding, pkgExtMap} from './pkgExt.ts'
 import {validateExports} from './validateExports.ts'
 
 // Type guard to filter out falsy values

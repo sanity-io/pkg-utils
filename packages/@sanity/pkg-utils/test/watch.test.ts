@@ -4,140 +4,68 @@ import {loadConfig} from '../src/node/core/config/loadConfig'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
 import {createLogger} from '../src/node/logger'
 import {resolveBuildContext} from '../src/node/resolveBuildContext'
-import {resolveWatchTasks} from '../src/node/resolveWatchTasks'
+import {resolveTsdownBuilds} from '../src/node/tasks/tsdown/resolveTsdownBuilds'
 import {watch} from '../src/node/watch'
 import {spawnProject} from './env/spawnProject'
 
+async function resolveProjectBuilds(projectCwd: string) {
+  const logger = createLogger(true) // quiet mode
+  const pkgPath = findPkgPath({cwd: projectCwd})!
+  const config = await loadConfig({cwd: projectCwd, pkgPath})
+  const {parseStrictOptions} = await import('../src/node/strict')
+  const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
+  const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
+  const tsconfig = config?.tsconfig || 'tsconfig.json'
+
+  const ctx = await resolveBuildContext({
+    config,
+    cwd: projectCwd,
+    logger,
+    pkg,
+    strict: false,
+    tsconfig,
+  })
+  return resolveTsdownBuilds(ctx)
+}
+
 describe.skipIf(process.platform === 'win32')('watch functionality', () => {
-  test('resolveWatchTasks should generate correct tasks for TypeScript project', async () => {
+  test('resolves the build waterfall for a TypeScript project', async () => {
     const project = await spawnProject('ts')
-    const cwd = project.cwd
-    const logger = createLogger(true) // quiet mode
-    const pkgPath = findPkgPath({cwd})!
-    const config = await loadConfig({cwd, pkgPath})
-    const {parseStrictOptions} = await import('../src/node/strict')
-    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-    const tsconfig = config?.tsconfig || 'tsconfig.json'
+    const builds = await resolveProjectBuilds(project.cwd)
 
-    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-    const watchTasks = resolveWatchTasks(ctx)
-
-    // Should have at least a DTS watch task and a JS watch task for TS projects
-    expect(watchTasks.length).toBeGreaterThan(0)
-
-    const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
-    const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-
-    expect(dtsTask).toBeDefined()
-    expect(jsTask).toBeDefined()
-
-    if (dtsTask && dtsTask.type === 'watch:dts') {
-      expect(dtsTask.entries).toBeDefined()
-      expect(Array.isArray(dtsTask.entries)).toBe(true)
-      expect(dtsTask.entries.length).toBeGreaterThan(0)
-
-      // Check structure of DTS entries
-      const entry = dtsTask.entries[0]
-      expect(entry).toBeDefined()
-      expect(entry).toHaveProperty('exportPath')
-      expect(entry).toHaveProperty('importId')
-      expect(entry).toHaveProperty('sourcePath')
-      expect(entry).toHaveProperty('targetPaths')
-      if (entry) {
-        expect(Array.isArray(entry.targetPaths)).toBe(true)
-      }
-    }
-
-    if (jsTask && jsTask.type === 'watch:js') {
-      expect(jsTask.entries).toBeDefined()
-      expect(Array.isArray(jsTask.entries)).toBe(true)
-      expect(jsTask.entries.length).toBeGreaterThan(0)
-
-      // Check structure of JS entries
-      const entry = jsTask.entries[0]
-      expect(entry).toHaveProperty('path')
-      expect(entry).toHaveProperty('source')
-      expect(entry).toHaveProperty('output')
-    }
+    expect(builds.length).toBeGreaterThan(0)
+    const canonical = builds.at(-1)
+    expect(canonical?.canonical).toBe(true)
+    expect(canonical?.entries.length).toBeGreaterThan(0)
+    expect(canonical?.entries[0]).toHaveProperty('alias')
+    expect(canonical?.entries[0]).toHaveProperty('source')
+    expect(canonical?.entries[0]).toHaveProperty('formats')
   })
 
-  test('resolveWatchTasks should generate correct tasks for JavaScript project', async () => {
+  test('resolves the build waterfall for a JavaScript project', async () => {
     const project = await spawnProject('js')
-    const cwd = project.cwd
-    const logger = createLogger(true) // quiet mode
-    const pkgPath = findPkgPath({cwd})!
-    const config = await loadConfig({cwd, pkgPath})
-    const {parseStrictOptions} = await import('../src/node/strict')
-    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-    const tsconfig = config?.tsconfig || 'tsconfig.json'
+    const builds = await resolveProjectBuilds(project.cwd)
 
-    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-    const watchTasks = resolveWatchTasks(ctx)
-
-    // JS projects should have watch:js tasks but no watch:dts tasks
-    expect(watchTasks.length).toBeGreaterThan(0)
-
-    const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-    expect(jsTask).toBeDefined()
-
-    // Should not have DTS tasks for pure JS projects
-    const dtsTask = watchTasks.find((task) => task.type === 'watch:dts')
-    expect(dtsTask).toBeUndefined()
+    expect(builds.length).toBeGreaterThan(0)
+    expect(builds.at(-1)?.canonical).toBe(true)
   })
 
-  test('resolveWatchTasks should handle multi-export projects correctly', async () => {
+  test('resolves multi-export projects into one canonical build with multiple entries', async () => {
     const project = await spawnProject('multi-export')
-    const cwd = project.cwd
-    const logger = createLogger(true)
-    const pkgPath = findPkgPath({cwd})!
-    const config = await loadConfig({cwd, pkgPath})
-    const {parseStrictOptions} = await import('../src/node/strict')
-    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-    const tsconfig = config?.tsconfig || 'tsconfig.json'
+    const builds = await resolveProjectBuilds(project.cwd)
 
-    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-    const watchTasks = resolveWatchTasks(ctx)
-
-    expect(watchTasks.length).toBeGreaterThan(0)
-
-    const jsTask = watchTasks.find((task) => task.type === 'watch:js')
-    expect(jsTask).toBeDefined()
-
-    if (jsTask && jsTask.type === 'watch:js') {
-      // Multi-export projects should have multiple entries
-      expect(jsTask.entries.length).toBeGreaterThan(1)
-
-      // Each entry should have correct structure
-      jsTask.entries.forEach((entry) => {
-        expect(entry).toHaveProperty('path')
-        expect(entry).toHaveProperty('source')
-        expect(entry).toHaveProperty('output')
-      })
-    }
+    const canonical = builds.at(-1)
+    expect(canonical?.canonical).toBe(true)
+    expect((canonical?.entries.length ?? 0) > 1).toBe(true)
   })
 
-  test('resolveWatchTasks should handle browser-specific exports', async () => {
+  test('resolves `bundles` with a runtime into their own build', async () => {
     const project = await spawnProject('browser-bundle')
-    const cwd = project.cwd
-    const logger = createLogger(true)
-    const pkgPath = findPkgPath({cwd})!
-    const config = await loadConfig({cwd, pkgPath})
-    const {parseStrictOptions} = await import('../src/node/strict')
-    const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
-    const pkg = await loadPkgWithReporting({pkgPath, logger, strict: false, strictOptions})
-    const tsconfig = config?.tsconfig || 'tsconfig.json'
+    const builds = await resolveProjectBuilds(project.cwd)
 
-    const ctx = await resolveBuildContext({config, cwd, logger, pkg, strict: false, tsconfig})
-    const watchTasks = resolveWatchTasks(ctx)
-
-    expect(watchTasks.length).toBeGreaterThan(0)
-
-    // Should have watch tasks
-    const jsTasks = watchTasks.filter((task) => task.type === 'watch:js')
-    expect(jsTasks.length).toBeGreaterThan(0)
+    expect(builds.length).toBeGreaterThan(1)
+    expect(builds.some((build) => !build.canonical)).toBe(true)
+    expect(builds.at(-1)?.canonical).toBe(true)
   })
 
   test(
