@@ -87,8 +87,13 @@ export async function resolveTsdownConfig(
   }
 
   // Types are generated with tsdown (rolldown-plugin-dts). `@typescript/native-preview` in
-  // devDependencies auto-enables tsgo, like v11; an explicit `dts.tsgo` wins.
+  // devDependencies auto-enables tsgo, like v11; an explicit `dts.tsgo` wins. Only the object
+  // form spreads: when the `legacyChecks` migration errors are skipped
+  // (`NODE_ENV=production` / `legacyChecks: false`), a leftover v11 string like
+  // `dts: 'rolldown'` must degrade to the default behavior (which is what it meant) instead
+  // of spreading into numeric character keys.
   const hasTsSources = build.entries.some((buildEntry) => RE_TS_SOURCE.test(buildEntry.source))
+  const dtsPassthrough = typeof config?.dts === 'object' ? config.dts : undefined
   const dts =
     hasTsSources && config?.dts !== false
       ? {
@@ -98,7 +103,7 @@ export async function resolveTsdownConfig(
             : {}),
           // Always create dts from scratch, don't reuse contexts from previous builds
           newContext: true,
-          ...(config?.dts === undefined ? {} : config.dts),
+          ...dtsPassthrough,
           ...(ctx.emitDeclarationOnly ? {emitDtsOnly: true} : {}),
         }
       : false
