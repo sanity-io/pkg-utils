@@ -109,7 +109,9 @@ export async function resolveTsdownConfig(
     platform,
     format,
     entry,
-    outDir: path.relative(cwd, distPath) || '.',
+    // POSIX separators: on Windows `path.relative` yields backslashes, which would leak into
+    // generated `package.json` export targets (e.g. the conditional vanilla-extract export)
+    outDir: path.relative(cwd, distPath).replaceAll('\\', '/') || '.',
     target: ctx.target[build.runtime],
     define,
     sourcemap: config?.sourcemap,

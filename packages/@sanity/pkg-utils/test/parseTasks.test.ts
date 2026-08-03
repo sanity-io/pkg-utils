@@ -36,7 +36,7 @@ function createContext(pkg: PackageJSON, config?: BuildContext['config']): Build
       success: vi.fn(),
     },
     pkg,
-    runtime: '*',
+    runtime: config?.runtime ?? '*',
     target: {
       '*': ['chrome102', 'node14'],
       'browser': ['chrome102'],
@@ -208,6 +208,54 @@ test('should resolve `bundles` into their own build', () => {
     {
       key: 'canonical',
       runtime: '*',
+      canonical: true,
+      entries: [
+        {
+          alias: 'index',
+          source: './src/index.ts',
+          exportPath: '.',
+          formats: ['esm'],
+        },
+      ],
+    },
+  ])
+})
+
+test('should keep the `*` runtime of a bundle in a non-`*` runtime package', () => {
+  const pkg: PackageJSON = {
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        import: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+  }
+
+  // A `runtime: '*'` bundle in a `runtime: 'node'` package must build for `'*'` (the neutral
+  // platform), not inherit the package runtime
+  const ctx = createContext(pkg, {
+    runtime: 'node',
+    bundles: [{source: './src/browser-safe.ts', import: './dist/browser-safe.js', runtime: '*'}],
+  })
+  const builds = resolveTsdownBuilds(ctx)
+
+  expect(builds).toEqual([
+    {
+      key: 'bundles:*',
+      runtime: '*',
+      canonical: false,
+      entries: [{alias: 'browser-safe', source: './src/browser-safe.ts', formats: ['esm']}],
+    },
+    {
+      key: 'canonical',
+      runtime: 'node',
       canonical: true,
       entries: [
         {

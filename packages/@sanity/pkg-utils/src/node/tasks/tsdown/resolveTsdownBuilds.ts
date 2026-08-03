@@ -65,9 +65,11 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   }
 
   const draftsByBuild = new Map<string, Map<string, EntryDraft>>()
+  const runtimeByBuild = new Map<string, PkgRuntime>()
 
   const addEntry = (
     buildKey: string,
+    runtime: PkgRuntime,
     entry: {
       source: string
       exportPath?: string | undefined
@@ -75,6 +77,7 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
       require?: string | undefined
     },
   ) => {
+    runtimeByBuild.set(buildKey, runtime)
     const {source, exportPath} = entry
     const aliases = new Set<string>()
     const formats = new Set<PkgFormat>()
@@ -119,7 +122,7 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   let hasRuntimeConditions = false
 
   for (const [exportPath, exp] of exports) {
-    addEntry('canonical', {
+    addEntry('canonical', ctx.runtime, {
       source: exp.source,
       exportPath,
       import: exp.import,
@@ -128,7 +131,7 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
 
     if (exp.browser?.import || exp.browser?.require) {
       hasRuntimeConditions = true
-      addEntry('browser', {
+      addEntry('browser', 'browser', {
         source: exp.browser.source || exp.source,
         exportPath,
         import: exp.browser.import,
@@ -138,7 +141,7 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
 
     if (exp.node?.import || exp.node?.require) {
       hasRuntimeConditions = true
-      addEntry('node', {
+      addEntry('node', 'node', {
         source: exp.node.source || exp.source,
         exportPath,
         import: exp.node.import,
@@ -153,7 +156,7 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   // subpaths of their own.
   for (const bundle of config?.bundles || []) {
     const runtime = bundle.runtime || ctx.runtime
-    addEntry(runtime === ctx.runtime ? 'bundles' : `bundles:${runtime}`, {
+    addEntry(runtime === ctx.runtime ? 'bundles' : `bundles:${runtime}`, runtime, {
       source: bundle.source,
       import: bundle.import,
       require: bundle.require,
@@ -196,17 +199,12 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   }
 
   // Variants and bundles run first; the canonical build runs last so its exports generation
-  // and publint see the other builds' files on disk.
+  // and publint see the other builds' files on disk. Each build's runtime was recorded when
+  // its entries were added, so nothing is re-derived from the build key (a bundle with
+  // `runtime: '*'` in a `runtime: 'node'` package must build for `'*'`/neutral).
   for (const key of draftsByBuild.keys()) {
     if (key === 'canonical') continue
-    const bundleRuntime = key.startsWith('bundles:') ? key.slice('bundles:'.length) : undefined
-    const runtime: PkgRuntime =
-      key === 'browser' || bundleRuntime === 'browser'
-        ? 'browser'
-        : key === 'node' || bundleRuntime === 'node'
-          ? 'node'
-          : ctx.runtime
-    const build = toBuild(key, runtime, false)
+    const build = toBuild(key, runtimeByBuild.get(key) ?? ctx.runtime, false)
     if (build) builds.push(build)
   }
 
