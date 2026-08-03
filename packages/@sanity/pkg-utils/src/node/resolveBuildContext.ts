@@ -220,10 +220,14 @@ type DepsConfig = NonNullable<import('tsdown').UserConfig['deps']>
 
 /**
  * Merges the `deps` additions derived from the deprecated `external` option (and the
- * self-reference external) into the userland `deps` passthrough. Array forms concatenate;
- * a userland function or `true` wins over the derived additions.
+ * self-reference external) into the userland `deps` passthrough. Array forms concatenate, a
+ * userland function is composed with the derived additions (the additions carry pipeline
+ * invariants like the self-reference external, which must survive customization — the same
+ * composition `@sanity/tsdown-config` applies to its `/^node:/` default), and a blanket
+ * `true` (externalize all of `node_modules`) wins as the broadest request.
+ * @internal Exported for tests.
  */
-function mergeDeps(
+export function mergeDeps(
   configDeps: DepsConfig | undefined,
   additions: {neverBundle: (string | RegExp)[]; alwaysBundle: (string | RegExp)[]},
 ): DepsConfig | undefined {
@@ -231,9 +235,14 @@ function mergeDeps(
   let neverBundle: DepsConfig['neverBundle']
   if (userNeverBundle === undefined) {
     neverBundle = additions.neverBundle
-  } else if (typeof userNeverBundle === 'function' || userNeverBundle === true) {
-    // A userland function (or blanket `true`) wins over the derived additions
+  } else if (userNeverBundle === true) {
     neverBundle = userNeverBundle
+  } else if (typeof userNeverBundle === 'function') {
+    const patterns = additions.neverBundle
+    neverBundle = (id, importer, isResolved) =>
+      patterns.some((pattern) =>
+        typeof pattern === 'string' ? pattern === id : pattern.test(id),
+      ) || userNeverBundle(id, importer, isResolved)
   } else if (Array.isArray(userNeverBundle)) {
     neverBundle = [...additions.neverBundle, ...userNeverBundle]
   } else {

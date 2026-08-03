@@ -47,7 +47,25 @@ export async function resolveTsdownConfig(
     entry[buildEntry.alias] = buildEntry.source
   }
 
+  // tsdown's `format` applies to the whole build (and its exports generation composes the
+  // dual `import`/`require` map from both formats' chunks of one build), so the entries'
+  // formats union: every entry is emitted in every format of the build. Mixed per-entry
+  // coverage gets a heads-up — the extra files are emitted, and local exports generation
+  // will declare them.
   const formats = new Set(build.entries.flatMap((buildEntry) => buildEntry.formats))
+  if (formats.size > 1) {
+    const partial = build.entries.filter((buildEntry) => buildEntry.formats.length < formats.size)
+    if (partial.length) {
+      const names = partial
+        .map((buildEntry) =>
+          buildEntry.exportPath ? `exports["${buildEntry.exportPath}"]` : buildEntry.source,
+        )
+        .join(', ')
+      ctx.logger.warn(
+        `${names} declare${partial.length === 1 ? 's' : ''} fewer formats than the rest of the package. tsdown emits every format of a build for every entry, so the missing format is built anyway (and local exports generation will declare it). Declare both \`import\` and \`require\` targets for every subpath — or for none — to keep the exports map unambiguous.`,
+      )
+    }
+  }
   const format = [
     ...(formats.has('esm') ? ['esm' as const] : []),
     ...(formats.has('commonjs') ? ['cjs' as const] : []),
