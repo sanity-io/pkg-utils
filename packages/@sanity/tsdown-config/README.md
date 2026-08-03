@@ -457,6 +457,27 @@ export default defineConfig({
 })
 ```
 
+The package-manager detection behind the `devExports` default only runs when that default can
+still apply - it is skipped when the userland value replaces the defaults (`false`, `true`, a
+bare CI condition) or sets `devExports` explicitly, so those configs behave identically across
+package managers without any filesystem probing.
+
+## cwd
+
+tsdown's `cwd` option is forwarded as-is, and also used for the package-manager detection behind
+the [`exports`](#exports) `devExports` default (instead of `process.cwd()`). Config files can
+leave it unset; set it when driving builds programmatically for a package in another directory,
+e.g. from a monorepo script or a tool composing this config:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+const config = await defineConfig({
+  cwd: '/path/to/package',
+  tsconfig: 'tsconfig.dist.json',
+})
+```
+
 ## checks
 
 Rolldown's [`checks.circularDependency`](https://rolldown.rs/reference/InputOptions.checks#circulardependency)
@@ -488,4 +509,30 @@ export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}),
   // Any tsdown option, e.g. opting out of hashed chunk filenames:
   hash: false,
 })
+```
+
+## Programmatic composition
+
+`defineConfig()` output is a `mergeConfig`-safe base, and that is a supported contract - tools
+like `@sanity/pkg-utils` compose their own opinions over it programmatically. `mergeConfig`
+applies with tsdown's semantics:
+
+- `plugins` (top-level, `inputOptions`, `outputOptions`) are **appended**, so layering your own
+  plugins never clobbers the ones this config sets up (React Compiler, vanilla-extract),
+- plain objects deep-merge over the defaults (e.g. `minify: {mangle: true}` keeps the
+  `compress`/`codegen` defaults), and
+- scalars and non-plugin arrays replace (e.g. `publint: false`, `format: ['esm']`).
+
+Combined with [`cwd`](#cwd), a host can resolve a package-specific config without touching
+`process.cwd()`:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {build, mergeConfig} from 'tsdown'
+
+const config = mergeConfig(await defineConfig({cwd, tsconfig: 'tsconfig.dist.json'}), {
+  // the host's own opinions, e.g. computed targets or extra plugins
+})
+
+await build({...config, config: false})
 ```
