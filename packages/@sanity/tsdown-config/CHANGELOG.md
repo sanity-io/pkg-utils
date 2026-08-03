@@ -1,5 +1,11 @@
 # @sanity/tsdown-config
 
+## 0.21.3
+
+### Patch Changes
+
+- [#3205](https://github.com/sanity-io/pkg-utils/pull/3205) [`6b1d707`](https://github.com/sanity-io/pkg-utils/commit/6b1d7074e1bc277b9e0a54f941c91c8980ddacec) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vitejs/plugin-react to ^6.0.5
+
 ## 0.21.2
 
 ### Patch Changes
