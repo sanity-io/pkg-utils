@@ -1,3 +1,4 @@
+import path from 'node:path'
 import type {PackageJSON} from '@sanity/parse-package-json'
 import {expect, test, vi} from 'vitest'
 import type {BuildContext} from '../src/node/core/contexts/buildContext'
@@ -9,7 +10,10 @@ import {resolveTsdownBuilds} from '../src/node/tasks/tsdown/resolveTsdownBuilds'
 
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
-const cwd = process.cwd()
+// The package root, not `process.cwd()`: the exports validation resolves file-existence
+// checks (the `./styles.css` fixture) against this, and the root-level vitest run (CI) has a
+// different working directory than a package-level run
+const cwd = path.resolve(__dirname, '..')
 
 function createComposer(pkg: PackageJSON) {
   const exports = parseAndValidateExports({
