@@ -72,7 +72,11 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
     'watch function should initialize and clean up with AbortController',
     {retry: process.platform === 'darwin' ? 3 : 0},
     async () => {
-      const project = await spawnProject('js')
+      // A fixture no other test file builds: `watch()` cleans `dist` on startup and rebuilds
+      // it, which races the parallel `cli.test.ts` worker when they share a fixture — publint
+      // packs the package there, and a pack that lands in the cleaned window sees an empty
+      // `dist` and reports every export target as not published.
+      const project = await spawnProject('multi-exports-commonjs')
       const ac = new AbortController()
 
       // This test verifies that watch() can be called and initialized
