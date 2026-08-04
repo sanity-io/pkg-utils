@@ -3,7 +3,9 @@ import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
 import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
+import {isRecord} from './core/isRecord.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
+import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
 import {resolveTsdownBuilds} from './tasks/tsdown/resolveTsdownBuilds.ts'
@@ -64,6 +66,26 @@ export async function watch(options: {
     const runBundles: TsdownBundle[] = []
     try {
       await disposeBundles()
+
+      // Full builds write the conditional `./<css>` export through tsdown's
+      // `exports.customExports` composition, but watch mode disables tsdown's `exports` feature
+      // (a package.json write per rebuild would loop the watcher). Keep the export in sync here
+      // instead, once per context, like v11 — the write is idempotent, so it won't loop.
+      const vanillaExtract = ctx.config?.vanillaExtract
+      if (vanillaExtract) {
+        const veOptions = vanillaExtract === true ? {} : vanillaExtract
+        // `@sanity/tsdown-config` defaults `inject` to `{nodeCompat: true}` (the conditional
+        // CSS export pattern); an explicit user `inject` replaces that default
+        const inject = veOptions.inject ?? {nodeCompat: true}
+        if (isRecord(inject) && inject['nodeCompat']) {
+          await writeBundleCssExports({
+            cwd,
+            distPath: ctx.distPath,
+            cssName: veOptions.fileName || 'bundle.css',
+            logger,
+          })
+        }
+      }
 
       const builds = resolveTsdownBuilds(ctx)
 
