@@ -615,7 +615,8 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
 
   test('should build with `--emitDeclarationOnly` emitting declarations only', async () => {
     const project = await spawnProject('ts')
-    const stdout = await project.run('build:types')
+    await project.run('clean')
+    const stdout = await project.pkg(['build', '--emitDeclarationOnly'])
 
     expect(stdout).toContain('ts: ./src/index.ts → ./dist/index.d.ts')
     expect(stdout).not.toContain('→ ./dist/index.js')

@@ -23,7 +23,6 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "build:quiet": "pkg build --strict --check --clean --quiet",
-    "build:types": "pnpm run clean && pkg build --emitDeclarationOnly",
     "clean": "rimraf dist",
     "typecheck": "tsc"
   },
