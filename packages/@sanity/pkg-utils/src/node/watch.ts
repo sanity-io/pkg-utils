@@ -28,7 +28,12 @@ export async function watch(options: {
 
   // Every rebuild of the waterfall holds tsdown watchers (one per platform build); they are
   // disposed when the config files change (the waterfall restarts) or the signal aborts.
+  // RxJS does not await async subscriber callbacks, so a monotonically increasing run id
+  // guards the rebuilds: only the latest run may publish into `bundles`, and a run that turns
+  // stale mid-flight (a newer config-file event, or the abort signal) disposes the watchers
+  // it created instead of leaking them.
   let bundles: TsdownBundle[] = []
+  let runId = 0
   const disposeBundles = async () => {
     const disposing = bundles
     bundles = []
@@ -55,6 +60,8 @@ export async function watch(options: {
   )
 
   const ctxSubscription: Subscription = ctx$.subscribe(async (ctx) => {
+    const id = ++runId
+    const runBundles: TsdownBundle[] = []
     try {
       await disposeBundles()
 
@@ -62,14 +69,27 @@ export async function watch(options: {
 
       let first = true
       for (const buildDef of builds) {
+        if (id !== runId) break
+
         const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {
           clean: first,
           watch: true,
         })
         first = false
 
-        bundles.push(...(await tsdownBuild(inlineConfig)))
+        runBundles.push(...(await tsdownBuild(inlineConfig)))
       }
+
+      if (id !== runId) {
+        // A newer run (or the abort signal) took over while this rebuild was in flight —
+        // dispose everything this run created instead of publishing it
+        for (const bundle of runBundles) {
+          await bundle[asyncDispose]()
+        }
+        return
+      }
+
+      bundles = runBundles
 
       logger.success(`${ctx.pkg.name}: watching for file changes\u2026`)
       logger.log()
@@ -85,6 +105,7 @@ export async function watch(options: {
     signal.addEventListener(
       'abort',
       () => {
+        runId++
         ctxSubscription.unsubscribe()
         void disposeBundles()
       },
