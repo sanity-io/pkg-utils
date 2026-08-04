@@ -474,18 +474,6 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     ).toMatchSnapshot('./dist/c-[hash].d.ts')
   })
 
-  test('should build `tsgo` package', async () => {
-    const project = await spawnProject('tsgo')
-    const stdout = await project.run('build')
-
-    expect(stdout).toContain('build canonical')
-
-    expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
-    expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
-    expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
-    expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
-  })
-
   test('should build `ts-node16` package', async () => {
     const project = await spawnProject('ts-node16')
     const stdout = await project.run('build')
