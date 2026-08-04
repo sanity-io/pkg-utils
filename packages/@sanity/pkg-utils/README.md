@@ -89,7 +89,7 @@ tsdown's [`clean` option](https://tsdown.dev/options/cleaning), passed through a
 on by default: `true` cleans the `dist` folder before the build, `false` skips cleaning, and a
 `string[]` replaces the default with the listed paths/globs — include `dist` when you still want it
 cleaned alongside other folders (e.g. `clean: ['dist', 'coverage']` replaces a
-`"clean": "rimraf dist coverage"` script).
+`"clean": "rimraf dist coverage"` script). `pkg build --no-clean` skips cleaning for a single run.
 
 #### `define`
 

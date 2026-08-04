@@ -12,7 +12,7 @@
 - **`exports` can't drift** — local builds regenerate the exports map (and `publishConfig.exports`) from the build; CI uses the committed `package.json` as-is.
 - **`pkg check` runs [publint](https://publint.dev)** on the packed package, so it lints what consumers actually install (replaces the esbuild resolution checks). API Extractor stays for TSDoc/release-tag checking only — new `tsdoc` option.
 - **Chunks are content-hashed** — a shared chunk can never take an entry's filename anymore ([sanity-io/ui#2262](https://github.com/sanity-io/ui/issues/2262)). The `_chunks-[format]` folders are gone.
-- **`dist` is cleaned automatically** before every build and on watch rebuilds. Opt out with `clean: false`; the `--clean` flag is a deprecated no-op.
+- **`dist` is cleaned automatically** before every build and on watch rebuilds. Opt out with `clean: false` (config) or `pkg build --no-clean` (one run); the v11 `--clean` flag still parses as a no-op.
 
 ### Breaking: config options
 

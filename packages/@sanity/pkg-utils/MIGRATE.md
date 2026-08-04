@@ -30,7 +30,7 @@ stops with an error that contains these same migration instructions (skipped whe
 | `process.env.PKG_FORMAT`            | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)    |
 | `process.env.PKG_RUNTIME`           | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)    |
 | `process.env.PKG_FILE_PATH`         | [`import.meta.url`](#pkg_file_path)                                 |
-| `pkg build --clean`                 | delete it (cleaning is on by default; opt out with `clean: false`)  |
+| `pkg build --clean`                 | delete it (cleaning is on by default; `--no-clean` skips it)        |
 
 Other behavior changes:
 

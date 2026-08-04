@@ -48,7 +48,9 @@ export async function build(options: {
     emitDeclarationOnly,
     strict = false,
     tsconfig: tsconfigOption,
-    clean = false,
+    // `--no-clean` skips cleaning for this run; `true` (the CLI default — `--clean` still
+    // parses as a no-op for v11 compatibility) defers to the `clean` config option
+    clean = true,
     quiet = false,
   } = options
   const logger = createLogger(quiet)
@@ -75,12 +77,6 @@ export async function build(options: {
     tsconfig,
   })
 
-  if (clean) {
-    logger.warn(
-      '`--clean` is deprecated: the `dist` folder is cleaned before every build now. Set `clean: false` in package.config.ts to opt out.',
-    )
-  }
-
   warnAboutTsdownConfigFiles(cwd, logger)
 
   const builds = resolveTsdownBuilds(ctx)
@@ -99,7 +95,7 @@ export async function build(options: {
     const spinner = createSpinner(taskName, quiet)
 
     try {
-      const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {clean: first})
+      const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {clean: first && clean})
       first = false
 
       const bundles = await tsdownBuild(inlineConfig)

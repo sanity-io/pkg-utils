@@ -23,7 +23,10 @@ export async function resolveTsdownConfig(
   ctx: BuildContext,
   build: TsdownBuild,
   options: {
-    /** Only the first build of the waterfall cleans, so later builds can't wipe earlier output. */
+    /**
+     * Whether this build may clean: only the first build of the waterfall cleans (so later
+     * builds can't wipe earlier output), and `--no-clean` turns it off for the whole run.
+     */
     clean: boolean
     watch?: boolean
   },
