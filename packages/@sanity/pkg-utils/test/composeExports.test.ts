@@ -235,10 +235,7 @@ test('carries hand-written custom conditions over, before the format fallbacks',
     },
     './package.json': './package.json',
   })
-  expect(Object.keys(publish['./worker'] as Record<string, unknown>)).toEqual([
-    'worker',
-    'default',
-  ])
+  expect(Object.keys(publish['./worker'] as Record<string, unknown>)).toEqual(['worker', 'default'])
 })
 
 test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-string publish entries', () => {
