@@ -24,6 +24,8 @@ interface ComposeContext {
  *   re-inserted (tsdown's generator cannot express them; the `browser`/`node` files are built
  *   by the variant builds of the waterfall) — with `source`-like conditions stripped from the
  *   publish variant,
+ * - hand-written custom conditions (`react-server`, `worker`, …) are carried over as authored,
+ *   placed before the `import`/`require`/`default` fallbacks so they can match,
  * - a trailing `default` condition is kept on dual-format entries (tsdown emits bare
  *   `import`/`require` pairs; the Sanity convention always ends with `default`),
  * - hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
@@ -117,10 +119,11 @@ function reconcileEntry(
     exp.node && (exp.node.import || exp.node.require)
       ? pickConditions(exp.node, isPublish)
       : undefined
+  const custom = pickCustomConditions(exp)
 
   // A plain-string publish entry without hand-written conditions to re-insert stays a plain
   // string (e.g. `publishConfig.exports["."] = "./dist/index.js"`)
-  if (typeof generated === 'string' && !exp.types && !browser && !node) {
+  if (typeof generated === 'string' && !exp.types && !browser && !node && custom.length === 0) {
     return generated
   }
 
@@ -138,6 +141,12 @@ function reconcileEntry(
   if (exp.types) next['types'] = exp.types
   if (browser) next['browser'] = browser
   if (node) next['node'] = node
+
+  // Hand-written custom conditions (`react-server`, `worker`, …) aren't built, but they are
+  // the author's: carry them over as authored, before the format fallbacks so they can match.
+  for (const [condition, target] of custom) {
+    next[condition] = target
+  }
 
   if (typeof gen['import'] === 'string' && typeof gen['require'] === 'string') {
     next['import'] = gen['import']
@@ -165,4 +174,29 @@ function pickConditions(
   if (conditions.import) next['import'] = conditions.import
   if (conditions.require) next['require'] = conditions.require
   return next
+}
+
+/** The conditions the pipeline owns (or re-inserts itself) on a build entry. */
+const managedConditions = new Set([
+  'source',
+  'development',
+  'monorepo',
+  'types',
+  'browser',
+  'node',
+  'import',
+  'require',
+  'default',
+])
+
+/**
+ * Hand-written conditions the pipeline knows nothing about (`react-server`, `worker`,
+ * `edge-light`, …), in authored order. `parseExports` spreads the raw entry, so they survive
+ * on the parsed `PkgExport` beyond its typed fields.
+ */
+function pickCustomConditions(exp: PkgExport): [string, unknown][] {
+  return Object.entries(exp).filter(
+    ([condition, target]) =>
+      !managedConditions.has(condition) && !condition.startsWith('_') && target !== undefined,
+  )
 }

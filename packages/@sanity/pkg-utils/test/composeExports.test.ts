@@ -149,6 +149,98 @@ test('reconciles the generated map with hand-written conditions (dev and publish
   })
 })
 
+test('carries hand-written custom conditions over, before the format fallbacks', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    // Custom conditions aren't part of the `PkgExports` typings, but hand-written
+    // `package.json` data is untyped JSON — the parser spreads them through
+    exports: {
+      '.': {
+        'source': './src/index.ts',
+        'types': './dist/index.d.ts',
+        'react-server': './dist/index.react-server.js',
+        'import': './dist/index.js',
+        'require': './dist/index.cjs',
+        'default': './dist/index.js',
+      },
+      './worker': {
+        source: './src/worker.ts',
+        worker: {import: './dist/worker.worker.js'},
+        default: './dist/worker.js',
+      },
+      './package.json': './package.json',
+    } as PackageJSON['exports'],
+  })
+
+  const dev = composer(
+    {
+      '.': {source: './src/index.ts', import: './dist/index.js', require: './dist/index.cjs'},
+      './worker': {source: './src/worker.ts', default: './dist/worker.js'},
+      './package.json': './package.json',
+    },
+    {isPublish: false},
+  )
+
+  expect(dev).toEqual({
+    '.': {
+      'source': './src/index.ts',
+      'types': './dist/index.d.ts',
+      'react-server': './dist/index.react-server.js',
+      'import': './dist/index.js',
+      'require': './dist/index.cjs',
+      'default': './dist/index.js',
+    },
+    './worker': {
+      source: './src/worker.ts',
+      worker: {import: './dist/worker.worker.js'},
+      default: './dist/worker.js',
+    },
+    './package.json': './package.json',
+  })
+  // custom conditions must precede the `import`/`require`/`default` fallbacks to ever match
+  expect(Object.keys(dev['.'] as Record<string, unknown>)).toEqual([
+    'source',
+    'types',
+    'react-server',
+    'import',
+    'require',
+    'default',
+  ])
+
+  const publish = composer(
+    {
+      '.': {import: './dist/index.js', require: './dist/index.cjs'},
+      // a plain-string publish entry must expand when custom conditions have to be re-inserted
+      './worker': './dist/worker.js',
+      './package.json': './package.json',
+    },
+    {isPublish: true},
+  )
+
+  expect(publish).toEqual({
+    '.': {
+      'types': './dist/index.d.ts',
+      'react-server': './dist/index.react-server.js',
+      'import': './dist/index.js',
+      'require': './dist/index.cjs',
+      'default': './dist/index.js',
+    },
+    './worker': {
+      worker: {import: './dist/worker.worker.js'},
+      default: './dist/worker.js',
+    },
+    './package.json': './package.json',
+  })
+  expect(Object.keys(publish['./worker'] as Record<string, unknown>)).toEqual([
+    'worker',
+    'default',
+  ])
+})
+
 test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-string publish entries', () => {
   const composer = createComposer({
     type: 'module',
