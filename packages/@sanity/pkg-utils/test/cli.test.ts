@@ -159,13 +159,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
         project.readFile('dist/index.node.d.ts'),
       ])
 
-    // PKG_RUNTIME is replaced at build time per task; the default-runtime files
-    // get `"*"` and the node sub-condition files get `"node"`. This proves the
-    // new `commonjs:node` / `esm:node` task scheduler branches are active.
-    expect(distIndexJs).toContain('runtime = "*"')
-    expect(distIndexCjs).toContain('runtime = "*"')
-    expect(distNodeJs).toContain('runtime = "node"')
-    expect(distNodeCjs).toContain('runtime = "node"')
+    // PKG_VERSION is replaced at build time in every output
+    expect(distIndexJs).toContain('version = "1.0.0"')
+    expect(distIndexCjs).toContain('version = "1.0.0"')
+    expect(distNodeJs).toContain('version = "1.0.0"')
+    expect(distNodeCjs).toContain('version = "1.0.0"')
 
     // The node-only source uses node:fs and that import should survive into both formats.
     expect(distNodeJs).toContain('node:fs')

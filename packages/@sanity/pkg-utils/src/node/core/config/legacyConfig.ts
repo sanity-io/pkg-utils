@@ -14,6 +14,9 @@
  * mistakes can no longer surface.
  */
 
+const MIGRATION_GUIDE_URL =
+  'https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md'
+
 interface LegacyCheck {
   option: string
   migration: string[]
@@ -143,6 +146,7 @@ export function runLegacyConfigChecks(config: Record<string, unknown>): void {
         '',
         ...migration,
         '',
+        `Full migration guide: ${MIGRATION_GUIDE_URL}`,
         'Set `legacyChecks: false` in package.config.ts to skip this validation (it is also',
         'skipped when NODE_ENV=production).',
       ].join('\n'),
@@ -169,6 +173,7 @@ export function runLegacyConfigChecks(config: Record<string, unknown>): void {
               'checking that runs during `pkg check` — configure it with the `tsdoc` option.',
             ]),
         '',
+        `Full migration guide: ${MIGRATION_GUIDE_URL}`,
         'Set `legacyChecks: false` in package.config.ts to skip this validation (it is also',
         'skipped when NODE_ENV=production).',
       ].join('\n'),

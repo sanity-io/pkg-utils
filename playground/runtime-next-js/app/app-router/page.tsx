@@ -5,8 +5,8 @@ import Leaf from './leaf'
 export default function IndexPage(): React.JSX.Element {
   return (
     <div>
-      <div>runtime={index.runtime}</div>
-      <div>runtime={extra.runtime}</div>
+      <div>version={index.version}</div>
+      <div>version={extra.version}</div>
       <Leaf />
     </div>
   )

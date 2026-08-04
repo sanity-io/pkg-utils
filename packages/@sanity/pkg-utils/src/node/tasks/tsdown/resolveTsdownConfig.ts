@@ -74,12 +74,12 @@ export async function resolveTsdownConfig(
   const platform =
     build.runtime === 'node' ? 'node' : build.runtime === 'browser' ? 'browser' : 'neutral'
 
-  // Build-time constants: `PKG_RUNTIME` is per build (the whole point of the variant builds),
-  // `PKG_VERSION` reads the environment override first, like v11. pkg-utils' own build skips
-  // them so the replacement logic in this very file survives its own bundling.
+  // Build-time constants: `PKG_VERSION` reads the environment override first, like v11.
+  // pkg-utils' own build skips it so the replacement logic in this very file survives its own
+  // bundling. (`PKG_FORMAT`, `PKG_RUNTIME` and `PKG_FILE_PATH` were removed in v12 — see
+  // MIGRATE.md for the `package.json#imports` / `import.meta.url` replacements.)
   const define: Record<string, string> = {}
   if (pkg.name !== '@sanity/pkg-utils') {
-    define['process.env.PKG_RUNTIME'] = JSON.stringify(build.runtime)
     define['process.env.PKG_VERSION'] = JSON.stringify(process.env['PKG_VERSION'] || pkg.version)
   }
   for (const [key, value] of Object.entries(config?.define || {})) {

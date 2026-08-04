@@ -24,8 +24,8 @@ export default function IndexPage(
 
   return (
     <div>
-      <div>runtime={index.runtime}</div>
-      <div>runtime={extra.runtime}</div>
+      <div>version={index.version}</div>
+      <div>version={extra.version}</div>
     </div>
   )
 }

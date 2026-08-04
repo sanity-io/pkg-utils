@@ -2,26 +2,50 @@
 '@sanity/pkg-utils': major
 ---
 
-`@sanity/pkg-utils` now composes [`tsdown`](https://tsdown.dev) + [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme) instead of wrapping rollup for JS, rolldown + rolldown-plugin-dts for `.d.ts`, api-extractor for another `.d.ts` path, and esbuild for `--check` resolution. The hand-written `exports` map stays the input; for every platform build (the default, plus one per `browser`/`node` exports condition) pkg-utils resolves a config from `@sanity/tsdown-config`, layers its opinions over it with tsdown's `mergeConfig` (browserslist-driven syntax targets, `PKG_*` constants, exports reconciliation), and runs tsdown's programmatic `build()` — variants first, the canonical build last. Closes [#2301](https://github.com/sanity-io/pkg-utils/issues/2301).
+**v12: the build now runs on [`tsdown`](https://tsdown.dev)**, composed with [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme) — replacing the old rollup (JS) + rolldown (types) + api-extractor (more types) + esbuild (checks) stack. Your hand-written `exports` map stays the input. Closes [#2301](https://github.com/sanity-io/pkg-utils/issues/2301).
 
-Highlights:
+**Most packages build unchanged.** If yours doesn't, the error tells you exactly what to change — and the full guide is in [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md).
 
-- **~2x faster builds** with a single bundler doing JS and types in one pass.
-- **exports stay in sync**: local builds regenerate the `exports` map from the build (with the `source`-condition development pattern via tsdown's `devExports`) and maintain `publishConfig.exports`; CI uses the committed `package.json` as-is.
-- **publint replaces the esbuild resolution checks** of `pkg check`/`--check`: the package is packed (applying `publishConfig`) and linted the way consumers see it. api-extractor remains as TSDoc/release-tag checking only, configured with the new `tsdoc` option.
-- **tsdown owns cleaning**: `dist` is cleaned before every build by default (the `--clean` flag is a deprecated no-op; opt out with `clean: false`), and watch mode cleans stale chunks on rebuilds.
-- **Shared chunks are content-hashed** (`_chunks-[format]` folders and `rollup.hashChunkFileNames` are gone), so a chunk can never take an entry's filename ([sanity-io/ui#2262](https://github.com/sanity-io/ui/issues/2262)).
-- `tsdown.config.*` files are never loaded by `pkg build` (`package.config.ts` is the sole config source) — a warning points this out when one is found.
+### What you get
 
-Breaking changes (removed options throw an error with copy-pasteable migration instructions, gated by the new `legacyChecks` option, defaulting to `NODE_ENV !== 'production'`):
+- **~2x faster builds** — one bundler does JS + types in one pass.
+- **`exports` can't drift** — local builds regenerate the exports map (and `publishConfig.exports`) from the build; CI uses the committed `package.json` as-is.
+- **`pkg check` runs [publint](https://publint.dev)** on the packed package, so it lints what consumers actually install (replaces the esbuild resolution checks). API Extractor stays for TSDoc/release-tag checking only — new `tsdoc` option.
+- **Chunks are content-hashed** — a shared chunk can never take an entry's filename anymore ([sanity-io/ui#2262](https://github.com/sanity-io/ui/issues/2262)). The `_chunks-[format]` folders are gone.
+- **`dist` is cleaned automatically** before every build and on watch rebuilds. Opt out with `clean: false`; the `--clean` flag is a deprecated no-op.
 
-- `dts: 'api-extractor' | 'rolldown'` — removed; tsdown generates the types. `tsgo` moves to `dts: {tsgo: true}` (the `dts` option is now a tsdown passthrough).
-- `babel.reactCompiler`/`reactCompilerOptions` → top-level `reactCompiler`; `babel.styledComponents` → top-level `styledComponents` (oxc's native port — `babel-plugin-styled-components` can be uninstalled); `babel.plugins` → the new `plugins` option with a self-installed `@rolldown/plugin-babel`.
-- `rollup.vanillaExtract` → top-level `vanillaExtract`; `rollup.plugins` → `plugins` (rolldown plugins; most Rollup plugins are compatible); `rollup.output`/`treeshake`/`experimentalLogSideEffects`/`hashChunkFileNames` have no successor.
-- `rollup.optimizeLodash` and the implicit lodash-import optimization are removed — prefer dropping lodash (see [e18e.dev](https://e18e.dev)) or importing from `lodash-es`.
-- `extract` → `tsdoc` for the retained TSDoc check; `extract.bundledPackages` follows the bundling decisions now (`deps: {alwaysBundle: [...]}`); `extract.checkTypes` has no successor.
-- `external` is deprecated (still functional, mapped onto `deps` with a warning) — use `deps: {neverBundle}` / `deps: {alwaysBundle}`.
-- `jsx`/`jsxFactory`/`jsxFragment`/`jsxImportSource` — configure JSX through `tsconfig.json`.
-- `process.env.PKG_FORMAT` and `process.env.PKG_FILE_PATH` are no longer replaced at build time (`PKG_RUNTIME`/`PKG_VERSION` still are) — use conditional [`package.json#imports`](https://nodejs.org/api/packages.html#imports) and `import.meta.url` instead.
-- **Node 20 support is dropped**: `engines.node` is now `^22.18.0 || >=24.11.0` (matching tsdown; the published output is unaffected). chalk was updated to v6 accordingly.
-- Dependencies: `rollup`, all `@rollup/*` plugins, `rollup-plugin-esbuild`, `@vanilla-extract/rollup-plugin`, `rolldown`, `rolldown-plugin-dts`, `esbuild` and all Babel packages are gone; `tsdown`, `@sanity/tsdown-config` and `publint` are in.
+### Breaking: config options
+
+Removed options **fail the build with copy-pasteable migration instructions** (checks are skipped when `NODE_ENV=production`, or with `legacyChecks: false`):
+
+| v11                                 | v12                                                             |
+| ----------------------------------- | --------------------------------------------------------------- |
+| `dts: 'rolldown'`                   | delete it — it's the default now                                |
+| `dts: 'api-extractor'`              | delete it — tsdown generates the types                          |
+| `tsgo: true`                        | `dts: {tsgo: true}`                                             |
+| `babel: {reactCompiler: true}`      | `reactCompiler: true`                                           |
+| `reactCompilerOptions: {...}`       | `reactCompiler: {...}`                                          |
+| `babel: {styledComponents: true}`   | `styledComponents: true` — oxc-native, uninstall the Babel plugin |
+| `babel: {plugins: [...]}`           | `plugins` + a self-installed `@rolldown/plugin-babel`           |
+| `rollup: {vanillaExtract: true}`    | `vanillaExtract: true`                                          |
+| `rollup: {plugins: [...]}`          | `plugins: [...]` — rolldown plugins; most Rollup plugins work   |
+| `rollup: {optimizeLodash: true}`    | removed — drop lodash or import from `lodash-es`                |
+| `extract: {enabled: false}`         | `tsdoc: false`                                                  |
+| `extract: {rules, customTags}`      | `tsdoc: {rules, customTags}`                                    |
+| `extract: {bundledPackages: [...]}` | `deps: {alwaysBundle: [...]}`                                   |
+| `jsx`, `jsxFactory`, …              | `tsconfig.json` `compilerOptions.jsx` and friends               |
+
+`external` is only **deprecated** — it keeps working (with a warning). Successors: `deps: {neverBundle: [...]}` and `deps: {alwaysBundle: [...]}`. A few niche options have no successor (`rollup.output`, `rollup.treeshake`, `extract.checkTypes`, the implicit lodash optimization) — see [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md).
+
+### Breaking: `PKG_*` constants
+
+Only `process.env.PKG_VERSION` is still replaced at build time.
+
+- `PKG_FORMAT`, `PKG_RUNTIME` → [conditional `package.json#imports`](https://nodejs.org/api/packages.html#imports). More precise, and conditions compose (`require`/`import`, `node`/`browser`/`worker`, `deno`, `react-server`, …). Worked examples: [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md#pkg_format-and-pkg_runtime).
+- `PKG_FILE_PATH` → `import.meta.url`. Works in CJS output too — it's rewritten to `require("url").pathToFileURL(__filename).href`.
+
+### Breaking: environment
+
+- **Node 20 can no longer run builds**: `engines.node` is `^22.18.0 || >=24.11.0` (tsdown's floor). The published output is unaffected.
+- `tsdown.config.*` files are **never** loaded by `pkg build` — `package.config.ts` is the only config source (a warning points this out when one is found).
+- Dependency swap: `rollup` + all `@rollup/*` plugins, `rolldown`, `rolldown-plugin-dts`, `esbuild` and all Babel packages are out; `tsdown`, `@sanity/tsdown-config` and `publint` are in.

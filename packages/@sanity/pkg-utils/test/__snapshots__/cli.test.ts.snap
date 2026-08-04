@@ -36,58 +36,58 @@ export { VERSION };
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
 "/** @public */
-const runtime = "browser";
-export { runtime };
+const version = "1.0.0";
+export { version };
 
 //# sourceMappingURL=extra.browser.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
-"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.runtime = "*";
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.version = "1.0.0";
 
 //# sourceMappingURL=extra.cjs.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
 "/** @public */
-declare const runtime: string;
-export { runtime };
+declare const version: string;
+export { version };
 //# sourceMappingURL=extra.d.ts.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.js 1`] = `
 "/** @public */
-const runtime = "*";
-export { runtime };
+const version = "1.0.0";
+export { version };
 
 //# sourceMappingURL=extra.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
 "/** @public */
-const runtime = "browser";
-export { runtime };
+const version = "1.0.0";
+export { version };
 
 //# sourceMappingURL=index.browser.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
-"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.runtime = "*";
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.version = "1.0.0";
 
 //# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare const runtime: string;
-export { runtime };
+declare const version: string;
+export { version };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.js 1`] = `
 "/** @public */
-const runtime = "*";
-export { runtime };
+const version = "1.0.0";
+export { version };
 
 //# sourceMappingURL=index.js.map"
 `;
@@ -177,22 +177,22 @@ export { plugin };
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.cjs 1`] = `
-"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.runtime = "*";
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.version = "1.0.0";
 
 //# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare const runtime: string;
-export { runtime };
+declare const version: string;
+export { version };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.js 1`] = `
 "/** @public */
-const runtime = "*";
-export { runtime };
+const version = "1.0.0";
+export { version };
 
 //# sourceMappingURL=index.js.map"
 `;
@@ -204,29 +204,29 @@ let node_fs = require("node:fs");
 function readPackageJson(filePath) {
 	return (0, node_fs.readFileSync)(filePath, "utf-8");
 }
-exports.readPackageJson = readPackageJson, exports.runtime = "node";
+exports.readPackageJson = readPackageJson, exports.version = "1.0.0";
 
 //# sourceMappingURL=index.node.cjs.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.d.ts 1`] = `
 "/** @public */
-declare const runtime: string;
+declare const version: string;
 /** @public */
 declare function readPackageJson(filePath: string): string;
-export { readPackageJson, runtime };
+export { readPackageJson, version };
 //# sourceMappingURL=index.node.d.ts.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.js 1`] = `
 "import { readFileSync } from "node:fs";
 /** @public */
-const runtime = "node";
+const version = "1.0.0";
 /** @public */
 function readPackageJson(filePath) {
 	return readFileSync(filePath, "utf-8");
 }
-export { readPackageJson, runtime };
+export { readPackageJson, version };
 
 //# sourceMappingURL=index.node.js.map"
 `;
