@@ -39,7 +39,10 @@ test('a blanket `neverBundle: true` wins as the broadest request', () => {
 const alwaysBundleFn = () => true
 
 test('merges alwaysBundle additions with userland values', () => {
-  const withAdditions = {...additions, alwaysBundle: [/^@sanity\/icons(\/|$)/] as (string | RegExp)[]}
+  const withAdditions = {
+    ...additions,
+    alwaysBundle: [/^@sanity\/icons(\/|$)/] as (string | RegExp)[],
+  }
   expect(mergeDeps(undefined, withAdditions)?.alwaysBundle).toEqual([/^@sanity\/icons(\/|$)/])
   expect(mergeDeps({alwaysBundle: ['some-dep']}, withAdditions)?.alwaysBundle).toEqual([
     /^@sanity\/icons(\/|$)/,
