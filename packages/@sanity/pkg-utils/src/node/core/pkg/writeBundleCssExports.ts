@@ -20,6 +20,9 @@ import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
  * TypeScript's extension-substitution fallback, which only works when the shim shares the CSS
  * file's basename, and which TypeScript is deprecating anyway - microsoft/TypeScript#50762)
  * points resolvers straight at the shim's declaration file.
+ *
+ * Kept in sync with `createConditionalCssExport` in `@sanity/vanilla-extract-tsdown-plugin`,
+ * which writes the same entry through tsdown's `exports.customExports` during full builds.
  */
 function createConditionalCssExport(cssFile: string, shimFile: string, shimDtsFile: string) {
   return {types: shimDtsFile, browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
@@ -70,6 +73,11 @@ function detectIndent(source: string): string | number {
  * Write the conditional `"./<cssName>"` export to `package.json` (used by vanilla-extract compat
  * mode), so userland does not have to maintain it by hand. The write is idempotent: if the export
  * already matches, the file is left untouched.
+ *
+ * Full builds write this entry through tsdown's `exports.customExports` (the
+ * `@sanity/vanilla-extract-tsdown-plugin` composition), but watch mode disables tsdown's
+ * `exports` feature (a `package.json` write per rebuild would loop the watcher) — `pkg watch`
+ * calls this once per context instead, like v11 did.
  *
  * When `publishConfig.exports` is present, the same conditional CSS export is mirrored into it. The
  * conditional CSS export has no `source`/`development`/`monorepo` conditions to strip, so the entry

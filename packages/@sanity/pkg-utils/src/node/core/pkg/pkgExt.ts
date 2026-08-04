@@ -1,4 +1,9 @@
-import {cjsEnding, defaultEnding, mjsEnding} from '../../tasks/dts/getTargetPaths.ts'
+/** Matches the JS output file endings pkg-utils emits (`.js`, `.mjs`, `.cjs`). @internal */
+export const fileEnding: RegExp = /\.[mc]?js$/
+/** @internal */
+export const defaultEnding = '.js'
+const mjsEnding = '.mjs'
+const cjsEnding = '.cjs'
 
 /** @internal */
 export interface PkgExtMap {

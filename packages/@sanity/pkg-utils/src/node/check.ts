@@ -1,13 +1,11 @@
 import path from 'node:path'
 import type {ExtractorMessage} from '@microsoft/api-extractor'
 import {up as findPkgPath} from 'empathic/package'
-import type {BuildFailure, Message} from 'esbuild'
-import {createConsoleSpy} from './consoleSpy.ts'
 import {loadConfig} from './core/config/loadConfig.ts'
-import type {BuildContext} from './core/contexts/index.ts'
+import type {BuildContext} from './core/contexts/buildContext.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {fileExists} from './fileExists.ts'
-import {createLogger, type Logger} from './logger.ts'
+import {createLogger} from './logger.ts'
 import {printPackageTree} from './printPackageTree.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
 import {createSpinner} from './spinner.ts'
@@ -61,41 +59,15 @@ export async function check(options: {
         logger.error(`missing files: ${missingFiles.join(', ')}`)
         process.exit(1)
       }
-
-      // Check if the files are resolved
-      const exportPaths: {require: string[]; import: string[]} = {
-        require: [],
-        import: [],
-      }
-
-      for (const exp of Object.values(ctx.exports || {})) {
-        if (!exp._exported) continue
-        if (exp.require) exportPaths.require.push(exp.require)
-        if (exp.import) exportPaths.import.push(exp.import)
-      }
-
-      const external = [
-        ...Object.keys(pkg.dependencies || {}),
-        ...Object.keys(pkg.devDependencies || {}),
-      ]
-
-      const consoleSpy = createConsoleSpy()
-
-      const checks = []
-      if (exportPaths.import.length) {
-        checks.push(checkExports(exportPaths.import, {cwd, external, format: 'esm', logger}))
-      }
-
-      if (exportPaths.require.length) {
-        checks.push(checkExports(exportPaths.require, {cwd, external, format: 'cjs', logger}))
-      }
-
-      await Promise.all(checks)
-
-      consoleSpy.restore()
     }
 
-    if (ctx.dts === 'rolldown' && ctx.config?.extract?.enabled !== false) {
+    // publint validates that the built package resolves in every runtime/bundler — it packs
+    // the package (which applies `publishConfig`, so the source-condition convention checks
+    // out the way consumers see it) and lints the result. This replaced the bespoke
+    // esbuild-based resolution checks of previous majors.
+    await runPublint(ctx)
+
+    if (ctx.config?.tsdoc !== false) {
       await checkApiExtractorReleaseTags(ctx)
     }
 
@@ -104,7 +76,7 @@ export async function check(options: {
     spinner.error()
 
     if (err instanceof Error) {
-      const RE_CWD = new RegExp(cwd, 'g')
+      const RE_CWD = new RegExp(cwd.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
 
       logger.error((err.stack || err.message).replace(RE_CWD, '.'))
       logger.log()
@@ -114,112 +86,32 @@ export async function check(options: {
   }
 }
 
-async function checkExports(
-  exportPaths: string[],
-  options: {cwd: string; external: string[]; format: 'esm' | 'cjs'; logger: Logger},
-) {
-  const {build} = await import('esbuild')
-  const {cwd, external, format, logger} = options
+async function runPublint(ctx: BuildContext): Promise<void> {
+  const {cwd, logger, strict} = ctx
+  const [{publint}, {formatMessage}] = await Promise.all([
+    import('publint'),
+    import('publint/utils'),
+  ])
 
-  const code = exportPaths
-    .map((id) => (format ? `import('${id}');` : `require('${id}');`))
-    .join('\n')
+  const {messages, pkg} = await publint({pkgDir: cwd, strict})
 
-  try {
-    const esbuildResult = await build({
-      bundle: true,
-      external,
-      format,
-      logLevel: 'silent',
-      // otherwise output maps to stdout as we're using stdin
-      outfile: '/dev/null',
-      platform: 'node',
-      // We're not interested in CSS files that might be imported as a side effect, so we'll treat them as empty
-      loader: {'.css': 'empty'},
-      stdin: {
-        contents: code,
-        loader: 'js',
-        resolveDir: cwd,
-      },
-    })
+  let hasErrors = false
 
-    if (esbuildResult.errors.length > 0) {
-      for (const msg of esbuildResult.errors) {
-        printEsbuildMessage(logger.warn, msg)
-
-        logger.log()
-      }
-
-      process.exit(1)
-    }
-
-    const esbuildWarnings = esbuildResult.warnings.filter((msg) => {
-      return !(msg.detail || msg.text).includes(`does not affect esbuild's own target setting`)
-    })
-
-    for (const msg of esbuildWarnings) {
-      printEsbuildMessage(logger.warn, msg)
-
-      logger.log()
-    }
-  } catch (err) {
-    if (isEsbuildFailure(err)) {
-      const {errors} = err
-
-      for (const msg of errors) {
-        printEsbuildMessage(logger.error, msg)
-
-        logger.log()
-      }
-    } else if (err instanceof Error) {
-      logger.error(err.stack || err.message)
-
-      logger.log()
+  for (const message of messages) {
+    const formatted = formatMessage(message, pkg)
+    if (message.type === 'error') {
+      hasErrors = true
+      logger.error(`publint: ${formatted}`)
+    } else if (message.type === 'warning') {
+      logger.warn(`publint: ${formatted}`)
     } else {
-      logger.error(String(err))
-
-      logger.log()
+      logger.log(`publint: ${formatted}`)
     }
+  }
 
+  if (hasErrors) {
     process.exit(1)
   }
-}
-
-function printEsbuildMessage(log: (...args: unknown[]) => void, msg: Message) {
-  if (msg.location) {
-    log(
-      [
-        `${msg.detail || msg.text}\n`,
-        `${msg.location.line} | ${msg.location.lineText}\n`,
-        `in ./${msg.location.file}:${msg.location.line}:${msg.location.column}`,
-      ].join(''),
-    )
-  } else {
-    log(msg.detail || msg.text)
-  }
-}
-
-function isEsbuildFailure(err: unknown): err is BuildFailure {
-  return (
-    err instanceof Error &&
-    'errors' in err &&
-    Array.isArray(err.errors) &&
-    err.errors.every(isEsbuildMessage) &&
-    'warnings' in err &&
-    Array.isArray(err.warnings) &&
-    err.warnings.every(isEsbuildMessage)
-  )
-}
-
-function isEsbuildMessage(msg: unknown): msg is Message {
-  return (
-    typeof msg === 'object' &&
-    msg !== null &&
-    'text' in msg &&
-    typeof msg.text === 'string' &&
-    'location' in msg &&
-    (msg.location === null || typeof msg.location === 'object')
-  )
 }
 
 async function checkApiExtractorReleaseTags(ctx: BuildContext) {
@@ -237,20 +129,22 @@ async function checkApiExtractorReleaseTags(ctx: BuildContext) {
     import('./printExtractMessages.ts'),
   ])
 
-  const customTags = ctx.config?.extract?.customTags || []
+  const tsdoc = ctx.config?.tsdoc === false ? undefined : ctx.config?.tsdoc
+  const customTags = tsdoc?.customTags || []
   const bundledPackages = ctx.bundledPackages
   const distPath = ctx.distPath
-  const outDir = ctx.ts.config?.options.outDir
-  const rules = ctx.config?.extract?.rules || {}
-
-  if (!outDir) {
-    throw new Error('tsconfig.json is missing `compilerOptions.outDir`')
-  }
+  // api-extractor needs a `compilerOptions.outDir` for its path mapping; tsdown does not, so
+  // fall back to the dist folder when the tsconfig leaves it unset
+  const outDir = ctx.ts.config?.options.outDir ?? distPath
+  const rules = tsdoc?.rules || {}
 
   for (const exp of Object.values(ctx.exports || {})) {
     if (!exp._exported || !exp.default.endsWith('.js')) continue
     const dtsPath = exp.default.replace(/\.js$/, '.d.ts')
     const exportPath = path.resolve(ctx.cwd, dtsPath)
+
+    // JS-only entries emit no declarations; there is nothing to check
+    if (!fileExists(exportPath)) continue
 
     const tsdocConfigFile = await createTSDocConfig({
       customTags,

@@ -1,5 +1,22 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import {describe, expect, test} from 'vitest'
-import {spawnProject} from './env/spawnProject'
+import {spawnProject, type SpawnedProject} from './env/spawnProject'
+
+/**
+ * Finds the single `dist` file matching `pattern` — shared (non-entry) chunks carry a content
+ * hash in their filenames, so tests locate them by prefix instead of a fixed path.
+ */
+async function findDistFile(
+  project: SpawnedProject,
+  pattern: RegExp,
+  dir = 'dist',
+): Promise<string> {
+  const files = await fs.readdir(path.resolve(project.cwd, dir))
+  const matches = files.filter((file) => pattern.test(file))
+  expect(matches, `expected exactly one file matching ${pattern} in ${dir}`).toHaveLength(1)
+  return `${dir}/${matches[0]}`
+}
 
 describe.skipIf(process.platform === 'win32')('cli', () => {
   test('should build `js` package', async () => {
@@ -30,19 +47,19 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
 
     // types
     expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.d.ts')
-    expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.d.ts')
+    expect(stdout).toContain('dummy-module: ./src/extra.ts → ./dist/extra.d.ts')
 
     // commonjs
     expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.cjs')
     expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.browser.cjs')
-    expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.cjs')
-    expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.browser.cjs')
+    expect(stdout).toContain('dummy-module: ./src/extra.ts → ./dist/extra.cjs')
+    expect(stdout).toContain('dummy-module: ./src/extra.ts → ./dist/extra.browser.cjs')
 
     // esm
     expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.js')
     expect(stdout).toContain('dummy-module: ./src/index.ts → ./dist/index.browser.js')
-    expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.js')
-    expect(stdout).toContain('dummy-module/extra: ./src/extra.ts → ./dist/extra.browser.js')
+    expect(stdout).toContain('dummy-module: ./src/extra.ts → ./dist/extra.js')
+    expect(stdout).toContain('dummy-module: ./src/extra.ts → ./dist/extra.browser.js')
 
     expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
     expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
@@ -142,13 +159,11 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
         project.readFile('dist/index.node.d.ts'),
       ])
 
-    // PKG_RUNTIME is replaced at build time per task; the default-runtime files
-    // get `"*"` and the node sub-condition files get `"node"`. This proves the
-    // new `commonjs:node` / `esm:node` task scheduler branches are active.
-    expect(distIndexJs).toContain('runtime = "*"')
-    expect(distIndexCjs).toContain('runtime = "*"')
-    expect(distNodeJs).toContain('runtime = "node"')
-    expect(distNodeCjs).toContain('runtime = "node"')
+    // PKG_VERSION is replaced at build time in every output
+    expect(distIndexJs).toContain('version = "1.0.0"')
+    expect(distIndexCjs).toContain('version = "1.0.0"')
+    expect(distNodeJs).toContain('version = "1.0.0"')
+    expect(distNodeCjs).toContain('version = "1.0.0"')
 
     // The node-only source uses node:fs and that import should survive into both formats.
     expect(distNodeJs).toContain('node:fs')
@@ -187,7 +202,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown-without-extract')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
     expect(stdout).not.toContain('Check tsdoc release tags')
 
     expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
@@ -200,7 +215,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown-bundle-dev-dependency')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
 
     const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
       project.readFile('dist/index.cjs'),
@@ -250,7 +265,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown-bundle-peer-dependency')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
 
     const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
       project.readFile('dist/index.cjs'),
@@ -300,7 +315,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown-bundle-prod-dependency')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
 
     const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
       project.readFile('dist/index.cjs'),
@@ -351,7 +366,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown-external-subpath-import')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
 
     const [distIndexDcts, distIndexDts] = await Promise.all([
       project.readFile('dist/index.d.cts'),
@@ -374,7 +389,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown-inline-types-external-js')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
 
     const [distIndexCjs, distIndexDcts, distIndexJs, distIndexDts] = await Promise.all([
       project.readFile('dist/index.cjs'),
@@ -391,9 +406,12 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     // The `@sanity/client` is a prod dependency, so it should not have inlined JS
     expect(distIndexCjs).not.toContain('Invalid API perspective value')
     expect(distIndexJs).not.toContain('Invalid API perspective value')
-    // Though the types for `@sanity/client` should be inlined as `bundledPackages` is used
-    expect(distIndexDcts).toContain('StackablePerspective')
-    expect(distIndexDts).toContain('StackablePerspective')
+    // Its types are not inlined either: type inlining follows the bundling decisions in v12
+    // (the v11 `extract.bundledPackages` pattern of inlining only the *types* of an external
+    // dependency has no successor), so the declarations import from `@sanity/client` instead
+    expect(distIndexDcts).not.toContain('StackablePerspective')
+    expect(distIndexDts).not.toContain('StackablePerspective')
+    expect(distIndexDts).toContain('@sanity/client')
     // The `SanityLogo` is re-exported from `@sanity/logos`
     expect(distIndexCjs).toContain('SanityLogo')
     expect(distIndexJs).toContain('SanityLogo')
@@ -426,7 +444,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const project = await spawnProject('ts-rolldown')
     const stdout = await project.run('build')
 
-    expect(stdout).toContain('with rolldown')
+    expect(stdout).toContain('build canonical')
 
     expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
     expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
@@ -440,29 +458,20 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(await project.readFile('dist/b.d.cts')).toMatchSnapshot('./dist/b.d.cts')
     expect(await project.readFile('dist/b.js')).toMatchSnapshot('./dist/b.js')
     expect(await project.readFile('dist/b.d.ts')).toMatchSnapshot('./dist/b.d.ts')
-    expect(await project.readFile('dist/_chunks-cjs/c.cjs')).toMatchSnapshot(
-      './dist/_chunks-cjs/c.cjs',
+    // Shared (non-entry) chunks carry a content hash, so they can never take an entry's
+    // filename (https://github.com/sanity-io/ui/issues/2262); entries keep stable names
+    expect(await project.readFile(await findDistFile(project, /^c-[\w-]+\.cjs$/))).toMatchSnapshot(
+      './dist/c-[hash].cjs',
     )
-    expect(await project.readFile('dist/_chunks-es/c.js')).toMatchSnapshot('./dist/_chunks-es/c.js')
-    expect(await project.readFile('dist/_chunks-dts/c.d.cts')).toMatchSnapshot(
-      './dist/_chunks-dts/c.d.cts',
+    expect(await project.readFile(await findDistFile(project, /^c-[\w-]+\.js$/))).toMatchSnapshot(
+      './dist/c-[hash].js',
     )
-    expect(await project.readFile('dist/_chunks-dts/c.d.ts')).toMatchSnapshot(
-      './dist/_chunks-dts/c.d.ts',
-    )
-  })
-
-  test('should build `tsgo` package', async () => {
-    const project = await spawnProject('tsgo')
-    const stdout = await project.run('build')
-
-    expect(stdout).toContain('with rolldown')
-    expect(stdout).toContain('TypeScript 7.0 does not yet have a stable API and is experimental')
-
-    expect(await project.readFile('dist/index.cjs')).toMatchSnapshot('./dist/index.cjs')
-    expect(await project.readFile('dist/index.d.cts')).toMatchSnapshot('./dist/index.d.cts')
-    expect(await project.readFile('dist/index.js')).toMatchSnapshot('./dist/index.js')
-    expect(await project.readFile('dist/index.d.ts')).toMatchSnapshot('./dist/index.d.ts')
+    expect(
+      await project.readFile(await findDistFile(project, /^c-[\w-]+\.d\.cts$/)),
+    ).toMatchSnapshot('./dist/c-[hash].d.cts')
+    expect(
+      await project.readFile(await findDistFile(project, /^c-[\w-]+\.d\.ts$/)),
+    ).toMatchSnapshot('./dist/c-[hash].d.ts')
   })
 
   test('should build `ts-node16` package', async () => {
@@ -518,26 +527,30 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     await project.run('build')
 
     const [distChunksColorInput, distIndexJs, distIndexDts] = await Promise.all([
-      project.readFile('dist/_chunks-es/ColorInput.js'),
+      project.readFile(await findDistFile(project, /^ColorInput-[\w-]+\.js$/)),
       project.readFile('dist/index.js'),
       project.readFile('dist/index.d.ts'),
     ])
 
-    // The ColorInput component should have babel-plugin-styled-components applied, which adds a static `.withConfig` call
+    // The ColorInput component should have the styled-components transform applied (oxc's
+    // native port of `babel-plugin-styled-components`), which adds a static `.withConfig` call
+    // with `displayName` and `componentId`, and minifies the CSS in the template literal
     expect(distChunksColorInput).toContain('.withConfig({')
-    // The tagged template literal is transpiled to a plain call expression with a `/*#__PURE__*/`
-    // annotation, so bundlers can tree-shake unused styled components (pure annotations on tagged
-    // template expressions aren't supported: https://github.com/rollup/rollup/issues/4035)
-    expect(distChunksColorInput).toContain('/* @__PURE__ */ styled.input.attrs({')
-    expect(distChunksColorInput).toContain('})(["')
-    // React Compiler adds a `c` function call
-    expect(distChunksColorInput).toContain('const $ = c(')
-    // The index has a lazy loaded import to the chunk
-    expect(distIndexJs).toContain('lazy(() => import("./_chunks-es/ColorInput.js"))')
+    expect(distChunksColorInput).toContain('displayName: "CustomTextInput"')
+    expect(distChunksColorInput).toContain('componentId:')
+    // Unlike `babel-plugin-styled-components`, the oxc transform keeps the tagged template
+    // literal (transpiling it wouldn't improve tree-shaking, as oxc doesn't add a
+    // `/*#__PURE__*/` annotation to the transpiled call expression either - see
+    // https://github.com/rollup/rollup/issues/4035)
+    expect(distChunksColorInput).toContain('styled.input.attrs({')
+    // React Compiler memoizes the component through its runtime cache
+    expect(distChunksColorInput).toContain('$ = c(')
+    // The index has a lazy loaded import to the (content-hashed) chunk
+    expect(distIndexJs).toMatch(/lazy\(\(\) => import\("\.\/ColorInput-[\w-]+\.js"\)\)/)
     // The index d.ts inlines props that comes from the lazy loaded chunk
     expect(distIndexDts).toContain('interface ColorOptions')
 
-    expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
+    expect(distChunksColorInput).toMatchSnapshot('./dist/ColorInput-[hash].js')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
   })
@@ -555,7 +568,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
       distBundleCssShimDts,
       pkg,
     ] = await Promise.all([
-      project.readFile('dist/_chunks-es/ColorInput.js'),
+      project.readFile(await findDistFile(project, /^ColorInput-[\w-]+\.js$/)),
       project.readFile('dist/index.js'),
       project.readFile('dist/index.d.ts'),
       project.readFile('dist/bundle.css'),
@@ -572,12 +585,12 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     // `vanillaExtract` compat mode injects the self-referential bundle.css import automatically
     expect(distIndexJs).toContain(`import "sanity-plugin-with-vanilla-extract/bundle.css"`)
     // …emits a no-op JS shim for CSS-unaware runtimes (named `bundle-css.js`, not
-    // `bundle.css.js`, so vanilla-extract's `cssFileFilter` does not match it)
-    expect(distBundleCssShim).toContain('export default ""')
+    // `bundle.css.js`, so vanilla-extract's `cssFileFilter` does not match it). The shim has
+    // no JS syntax on purpose: it parses as both CommonJS and an ES module.
+    expect(distBundleCssShim).toContain('No-op shim for `bundle.css`')
     // …emits the shim's `.d.ts` (the conditional export's `types` target); no separate
     // `bundle.css.d.ts` is needed
-    expect(distBundleCssShimDts).toContain('declare const _default: string')
-    expect(distBundleCssShimDts).toContain('export default _default')
+    expect(distBundleCssShimDts).toContain('export {}')
     await expect(project.readFile('dist/bundle.css.d.ts')).rejects.toThrow()
     // …and declares the conditional `./bundle.css` export in package.json
     expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
@@ -587,17 +600,31 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
       node: './dist/bundle-css.js',
       default: './dist/bundle-css.js',
     })
-    // React Compiler adds a `c` function call
-    expect(distChunksColorInput).toContain('const $ = c(')
-    // The index has a lazy loaded import to the chunk
-    expect(distIndexJs).toContain('lazy(() => import("./_chunks-es/ColorInput.js"))')
+    // React Compiler memoizes the component through its runtime cache
+    expect(distChunksColorInput).toContain('$ = c(')
+    // The index has a lazy loaded import to the (content-hashed) chunk
+    expect(distIndexJs).toMatch(/lazy\(\(\) => import\("\.\/ColorInput-[\w-]+\.js"\)\)/)
     // The index d.ts inlines props that comes from the lazy loaded chunk
     expect(distIndexDts).toContain('interface ColorOptions')
 
-    expect(distChunksColorInput).toMatchSnapshot('./dist/_chunks-es/ColorInput.js')
+    expect(distChunksColorInput).toMatchSnapshot('./dist/ColorInput-[hash].js')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
     expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
+  })
+
+  test('should build with `--emitDeclarationOnly` emitting declarations only', async () => {
+    const project = await spawnProject('ts')
+    await project.run('clean')
+    const stdout = await project.pkg(['build', '--emitDeclarationOnly'])
+
+    expect(stdout).toContain('ts: ./src/index.ts → ./dist/index.d.ts')
+    expect(stdout).not.toContain('→ ./dist/index.js')
+
+    // A types-only build emits declaration files only (the CJS pass emits its JS regardless
+    // of `dts.emitDtsOnly`, so everything else is removed afterwards)
+    const files = await fs.readdir(path.resolve(project.cwd, 'dist'))
+    expect(files.filter((file) => !/\.d\.[mc]?ts(\.map)?$/.test(file))).toEqual([])
   })
 
   test('should build with `--quiet` flag suppressing output', async () => {

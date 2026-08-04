@@ -15,7 +15,7 @@
       },
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
-      "default": "./dist/index.mjs"
+      "default": "./dist/index.js"
     },
     "./extra": {
       "source": "./src/extra.ts",
@@ -26,11 +26,12 @@
       },
       "import": "./dist/extra.mjs",
       "require": "./dist/extra.js",
-      "default": "./dist/extra.mjs"
+      "default": "./dist/extra.js"
     },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
@@ -46,5 +47,28 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "browser": {
+          "import": "./dist/index.browser.mjs",
+          "require": "./dist/index.browser.js"
+        },
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./extra": {
+        "browser": {
+          "import": "./dist/extra.browser.mjs",
+          "require": "./dist/extra.browser.js"
+        },
+        "import": "./dist/extra.mjs",
+        "require": "./dist/extra.js",
+        "default": "./dist/extra.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

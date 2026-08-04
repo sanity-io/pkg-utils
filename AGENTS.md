@@ -3,9 +3,11 @@
 ## Cursor Cloud specific instructions
 
 This is the `@sanity/pkg-utils` monorepo: a pnpm workspace containing a build/tooling CLI for
-authoring npm packages (`packages/@sanity/pkg-utils`, wraps rolldown/rollup + API Extractor),
-supporting packages (`tsdown-config`, `tsconfig`, `parse-package-json`, the
-`vanilla-extract-*-plugin` packages), a `playground/*` fixture suite (~30 packages exercising
+authoring npm packages (`packages/@sanity/pkg-utils`, which composes `tsdown` +
+`@sanity/tsdown-config` for JS + `.d.ts` builds, publint for `pkg check`, and API Extractor for
+TSDoc/release-tag checking only), supporting packages (`tsdown-config`, `tsconfig`,
+`parse-package-json`, the `vanilla-extract-*-plugin` packages), a `playground/*` fixture suite
+(~30 packages exercising
 build/typecheck scenarios), a `css-playground/*` fixture suite (~20 packages verifying the
 conditional `bundle.css` export pattern across many frameworks/runtimes), and an
 `integration/*` suite (a real Sanity Studio fixture comparing

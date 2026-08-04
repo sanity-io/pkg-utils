@@ -123,6 +123,17 @@ export interface PackageOptions extends Pick<
    */
   platform?: UserConfig['platform']
   /**
+   * The working directory of the build — forwarded to tsdown's own `cwd` option, and also used
+   * for the package-manager detection that decides the pnpm-gated `devExports` default of the
+   * {@link PackageOptions.exports | `exports`} option (instead of `process.cwd()`).
+   *
+   * Config files can leave it unset; set it when driving builds programmatically for a package
+   * in another directory, e.g. from a monorepo script or a tool composing this config (like
+   * `@sanity/pkg-utils`).
+   * @defaultValue `process.cwd()`
+   */
+  cwd?: UserConfig['cwd']
+  /**
    * Clean directories before each build. Prefer an array of folders over a separate `"clean"`
    * script in `package.json` (e.g. `rimraf dist coverage`) — tsdown removes them as part of
    * `tsdown` / `pnpm build`, so packages don't need `rimraf`, a `clean` script, or
@@ -152,6 +163,11 @@ export interface PackageOptions extends Pick<
    * these defaults (so individual fields can be overridden), while any other value - `false`
    * to disable exports generation, or a bare CI condition (`'ci-only'`/`'local-only'`) -
    * replaces them entirely.
+   *
+   * The package-manager detection behind the `devExports` default reads from
+   * {@link PackageOptions.cwd | `cwd`} and only runs when the default can still apply — it is
+   * skipped when the value replaces the defaults (`false`, `true`, a bare CI condition) or
+   * sets `devExports` explicitly.
    * @defaultValue `{enabled: 'local-only', devExports: true}` for pnpm projects;
    * `{enabled: 'local-only'}` otherwise.
    */
@@ -283,13 +299,14 @@ async function resolvePackageConfig(
   options: PackageOptions,
   variant: PackageConfigVariant,
 ): Promise<UserConfig> {
-  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir`, `clean` and `css` are passed
-  // through to tsdown as-is. When left undefined, tsdown keeps its default behavior
+  // `tsconfig`, `entry`, `dts`, `define`, `target`, `outDir`, `clean`, `css` and `cwd` are
+  // passed through to tsdown as-is. When left undefined, tsdown keeps its default behavior
   // (`tsconfig` is auto-detected from the project, `dts` from `package.json`, `define`
   // replaces nothing, `target` applies no syntax downleveling, `outDir` defaults to `'dist'`,
-  // `clean` defaults to `true` — cleaning `outDir` before each build — and `css` stays off
-  // unless `@tsdown/css` is installed and the option is set).
-  const {entry, tsconfig, define, target, outDir, css} = options
+  // `clean` defaults to `true` — cleaning `outDir` before each build — `css` stays off
+  // unless `@tsdown/css` is installed and the option is set, and `cwd` defaults to
+  // `process.cwd()`).
+  const {entry, tsconfig, define, target, outDir, css, cwd} = options
   const isReactServer = variant === 'react-server'
   // The `react-server` variant skips d.ts generation (the compiled variant's declarations
   // serve both entries — a `types` condition specified before `react-server` points every
@@ -448,7 +465,19 @@ async function resolvePackageConfig(
   // export subpaths of their own.
   let exports: UserConfig['exports'] = false
   if (!isReactServer) {
-    const packageManager = await detect({cwd: process.cwd()})
+    const userExports = options.exports
+    // Package-manager detection exists solely to decide the pnpm-gated `devExports: true`
+    // default, so it only runs when that default can still apply. `false`, `true`, and bare
+    // CI-condition strings replace the defaults entirely (mergeConfig semantics), and an
+    // explicit `devExports` value overrides it — those configs skip the filesystem probing
+    // and behave identically across package managers. Programmatic hosts composing this
+    // config (e.g. `@sanity/pkg-utils` passing `{devExports: 'source'}`) never trigger it.
+    const devExportsDefaultApplies =
+      userExports === undefined ||
+      (typeof userExports === 'object' && userExports.devExports === undefined)
+    const packageManager = devExportsDefaultApplies
+      ? await detect({cwd: cwd ?? process.cwd()})
+      : undefined
     // tsdown's `exports` feature is enabled with Sanity-flavored defaults, and userland values
     // apply with tsdown's own `mergeConfig` semantics: an object deep-merges over the defaults,
     // anything else (`false`, a CI condition) replaces them.
@@ -461,7 +490,7 @@ async function resolvePackageConfig(
           ...(packageManager?.name === 'pnpm' && {devExports: true}),
         },
       },
-      {exports: options.exports},
+      {exports: userExports},
     ))
     if (variant === 'default' && exports) {
       // The compiled variant owns `exports` generation for the dual build, so the
@@ -480,6 +509,7 @@ async function resolvePackageConfig(
     checks: {circularDependency: true},
     clean,
     css,
+    cwd,
     define,
     deps,
     dts,

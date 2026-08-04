@@ -1,756 +1,646 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`cli > should build \`browser-bundle\` package > ./dist/browser.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const runtime = "browser";
-exports.runtime = runtime;
-//# sourceMappingURL=browser.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.runtime = "browser";
+
+//# sourceMappingURL=browser.cjs.map"
 `;
 
 exports[`cli > should build \`browser-bundle\` package > ./dist/browser.js 1`] = `
 "const runtime = "browser";
-export {
-  runtime
-};
-//# sourceMappingURL=browser.js.map
-"
+export { runtime };
+
+//# sourceMappingURL=browser.js.map"
 `;
 
 exports[`cli > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "1.0.0";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.VERSION = "1.0.0";
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
 "/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-"
+declare const VERSION = "1.0.0";
+export { VERSION };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`custom-dist\` package > ./lib/index.js 1`] = `
-"const VERSION = "1.0.0";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
+"/** @public */
+const VERSION = "1.0.0";
+export { VERSION };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.browser.js 1`] = `
-"const format = "esm", runtime = "browser", path = "dist/extra.browser.js";
-export {
-  format,
-  path,
-  runtime
-};
-//# sourceMappingURL=extra.browser.js.map
-"
+"/** @public */
+const version = "1.0.0";
+export { version };
+
+//# sourceMappingURL=extra.browser.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const format = "commonjs", runtime = "*", path = "dist/extra.cjs";
-exports.format = format;
-exports.path = path;
-exports.runtime = runtime;
-//# sourceMappingURL=extra.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.version = "1.0.0";
+
+//# sourceMappingURL=extra.cjs.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
 "/** @public */
-export declare const format: string
-
-/** @public */
-export declare const path: string
-
-/** @public */
-export declare const runtime: string
-
-export {}
-"
+declare const version: string;
+export { version };
+//# sourceMappingURL=extra.d.ts.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.js 1`] = `
-"const format = "esm", runtime = "*", path = "dist/extra.js";
-export {
-  format,
-  path,
-  runtime
-};
-//# sourceMappingURL=extra.js.map
-"
+"/** @public */
+const version = "1.0.0";
+export { version };
+
+//# sourceMappingURL=extra.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.browser.js 1`] = `
-"const format = "esm", runtime = "browser", path = "dist/index.browser.js";
-export {
-  format,
-  path,
-  runtime
-};
-//# sourceMappingURL=index.browser.js.map
-"
+"/** @public */
+const version = "1.0.0";
+export { version };
+
+//# sourceMappingURL=index.browser.js.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const format = "commonjs", runtime = "*", path = "dist/index.cjs";
-exports.format = format;
-exports.path = path;
-exports.runtime = runtime;
-//# sourceMappingURL=index.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.version = "1.0.0";
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-export declare const format: string
-
-/** @public */
-export declare const path: string
-
-/** @public */
-export declare const runtime: string
-
-export {}
-"
+declare const version: string;
+export { version };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.js 1`] = `
-"const format = "esm", runtime = "*", path = "dist/index.js";
-export {
-  format,
-  path,
-  runtime
-};
-//# sourceMappingURL=index.js.map
-"
+"/** @public */
+const version = "1.0.0";
+export { version };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+/** @public */
 function defineConfig(options) {
-  return options;
+	return options;
 }
+/** @public */
 function definePlugin(plugin) {
-  return plugin;
+	return plugin;
 }
-exports.defineConfig = defineConfig;
-exports.definePlugin = definePlugin;
-//# sourceMappingURL=index.cjs.map
-"
+exports.defineConfig = defineConfig, exports.definePlugin = definePlugin;
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
-"/** @public */
-export declare interface Config extends Plugin_2 {
-  plugins?: Plugin_2[]
-}
-
-/** @public */
-export declare function defineConfig(options: Config): Config
-
-/** @public */
-export declare function definePlugin(plugin: Plugin_2): Plugin_2
-
-/** @public */
-declare interface Plugin_2 {
-  name: string
-  options?: PluginOptions
-}
-export {Plugin_2 as Plugin}
-
-declare interface PluginOptions {
+"interface PluginOptions {
   /**
    * @defaultValue true
    */
-  enabled?: boolean
+  enabled?: boolean;
 }
-
-export {}
-"
+/** @public */
+interface Plugin {
+  name: string;
+  options?: PluginOptions;
+}
+/** @public */
+interface Config extends Plugin {
+  plugins?: Plugin[];
+}
+/** @public */
+declare function defineConfig(options: Config): Config;
+/** @public */
+declare function definePlugin(plugin: Plugin): Plugin;
+export { Config, Plugin, defineConfig, definePlugin };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.js 1`] = `
-"function defineConfig(options) {
-  return options;
+"/** @public */
+function defineConfig(options) {
+	return options;
 }
+/** @public */
 function definePlugin(plugin) {
-  return plugin;
+	return plugin;
 }
-export {
-  defineConfig,
-  definePlugin
-};
-//# sourceMappingURL=index.js.map
-"
+export { defineConfig, definePlugin };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var multiExport = require("multi-export");
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let multi_export = require("multi-export");
+/** @public */
 function plugin() {
-  return multiExport.definePlugin({
-    name: "plugin"
-  });
+	return (0, multi_export.definePlugin)({ name: "plugin" });
 }
 exports.plugin = plugin;
-//# sourceMappingURL=plugin.cjs.map
-"
+
+//# sourceMappingURL=plugin.cjs.map"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
-"/** @public */
-export declare function plugin(): Plugin_2
-
+"import { Plugin } from "multi-export";
 /** @public */
-declare interface Plugin_2 {
-  name: string
-  options?: PluginOptions
-}
-
-declare interface PluginOptions {
-  /**
-   * @defaultValue true
-   */
-  enabled?: boolean
-}
-
-export {}
-"
+declare function plugin(): Plugin;
+export { plugin };
+//# sourceMappingURL=plugin.d.ts.map"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.js 1`] = `
 "import { definePlugin } from "multi-export";
+/** @public */
 function plugin() {
-  return definePlugin({
-    name: "plugin"
-  });
+	return definePlugin({ name: "plugin" });
 }
-export {
-  plugin
-};
-//# sourceMappingURL=plugin.js.map
-"
+export { plugin };
+
+//# sourceMappingURL=plugin.js.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const format = "commonjs", runtime = "*";
-exports.format = format;
-exports.runtime = runtime;
-//# sourceMappingURL=index.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.version = "1.0.0";
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-export declare const format: string
-
-/** @public */
-export declare const runtime: string
-
-export {}
-"
+declare const version: string;
+export { version };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.js 1`] = `
-"const format = "esm", runtime = "*";
-export {
-  format,
-  runtime
-};
-//# sourceMappingURL=index.js.map
-"
+"/** @public */
+const version = "1.0.0";
+export { version };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var node_fs = require("node:fs");
-const format = "commonjs", runtime = "node";
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let node_fs = require("node:fs");
+/** @public */
 function readPackageJson(filePath) {
-  return node_fs.readFileSync(filePath, "utf-8");
+	return (0, node_fs.readFileSync)(filePath, "utf-8");
 }
-exports.format = format;
-exports.readPackageJson = readPackageJson;
-exports.runtime = runtime;
-//# sourceMappingURL=index.node.cjs.map
-"
+exports.readPackageJson = readPackageJson, exports.version = "1.0.0";
+
+//# sourceMappingURL=index.node.cjs.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.d.ts 1`] = `
 "/** @public */
-export declare const format: string
-
+declare const version: string;
 /** @public */
-export declare function readPackageJson(filePath: string): string
-
-/** @public */
-export declare const runtime: string
-
-export {}
-"
+declare function readPackageJson(filePath: string): string;
+export { readPackageJson, version };
+//# sourceMappingURL=index.node.d.ts.map"
 `;
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.js 1`] = `
 "import { readFileSync } from "node:fs";
-const format = "esm", runtime = "node";
+/** @public */
+const version = "1.0.0";
+/** @public */
 function readPackageJson(filePath) {
-  return readFileSync(filePath, "utf-8");
+	return readFileSync(filePath, "utf-8");
 }
-export {
-  format,
-  readPackageJson,
-  runtime
-};
-//# sourceMappingURL=index.node.js.map
-"
+export { readPackageJson, version };
+
+//# sourceMappingURL=index.node.js.map"
 `;
 
 exports[`cli > should build \`react-18\` package > ./dist/index.d.ts 1`] = `
-"import {ForwardRefExoticComponent, HTMLProps, RefAttributes} from 'react'
-
+"/** @public */
+declare function App(): React.JSX.Element;
 /** @public */
-export declare function App(): React.JSX.Element
-
-/** @public */
-export declare const Input: ForwardRefExoticComponent<
-  Omit<
-    {
-      label?: React.ReactNode
-    } & HTMLProps<HTMLInputElement>,
-    'ref'
-  > &
-    RefAttributes<HTMLInputElement>
->
-
-export {}
-"
+declare const Input: import("react").ForwardRefExoticComponent<Omit<{
+  label?: React.ReactNode;
+} & import("react").HTMLProps<HTMLInputElement>, "ref"> & import("react").RefAttributes<HTMLInputElement>>;
+export { App, Input };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`react-18\` package > ./dist/index.js 1`] = `
-"import { jsx, jsxs, Fragment } from "react/jsx-runtime";
-import { c } from "react-compiler-runtime";
-import { forwardRef, useId, useRef, useImperativeHandle, useState, useEffect, useDeferredValue, Suspense } from "react";
-const Input = forwardRef(function(props, forwardedRef) {
-  const $ = c(18);
-  let idProp, label, rest;
-  $[0] !== props ? ({
-    label,
-    id: idProp,
-    ...rest
-  } = props, $[0] = props, $[1] = idProp, $[2] = label, $[3] = rest) : (idProp = $[1], label = $[2], rest = $[3]);
-  const _id = useId(), id = idProp || _id, ref = useRef(null);
-  let t0;
-  $[4] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
-  const [focused, setFocused] = useState(!1);
-  let t1, t2;
-  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
-    const controller = new AbortController(), {
-      signal
-    } = controller;
-    return ref.current?.addEventListener("focus", () => setFocused(!0), {
-      signal
-    }), ref.current?.addEventListener("blur", () => setFocused(!1), {
-      signal
-    }), () => controller.abort();
-  }, t2 = [], $[5] = t1, $[6] = t2) : (t1 = $[5], t2 = $[6]), useEffect(t1, t2);
-  let t3;
-  $[7] !== focused || $[8] !== id || $[9] !== label ? (t3 = label && /* @__PURE__ */ jsx("label", { "data-focused": focused ? "" : void 0, htmlFor: id, children: label }), $[7] = focused, $[8] = id, $[9] = label, $[10] = t3) : t3 = $[10];
-  const t4 = focused ? "" : void 0;
-  let t5;
-  $[11] !== id || $[12] !== rest || $[13] !== t4 ? (t5 = /* @__PURE__ */ jsx("input", { ...rest, "data-focused": t4, id, ref }), $[11] = id, $[12] = rest, $[13] = t4, $[14] = t5) : t5 = $[14];
-  let t6;
-  return $[15] !== t3 || $[16] !== t5 ? (t6 = /* @__PURE__ */ jsxs(Fragment, { children: [
-    t3,
-    t5
-  ] }), $[15] = t3, $[16] = t5, $[17] = t6) : t6 = $[17], t6;
-}), allAlbums = [{
-  id: 13,
-  title: "Let It Be",
-  year: 1970
-}, {
-  id: 12,
-  title: "Abbey Road",
-  year: 1969
-}, {
-  id: 11,
-  title: "Yellow Submarine",
-  year: 1969
-}, {
-  id: 10,
-  title: "The Beatles",
-  year: 1968
-}, {
-  id: 9,
-  title: "Magical Mystery Tour",
-  year: 1967
-}, {
-  id: 8,
-  title: "Sgt. Pepper's Lonely Hearts Club Band",
-  year: 1967
-}, {
-  id: 7,
-  title: "Revolver",
-  year: 1966
-}, {
-  id: 6,
-  title: "Rubber Soul",
-  year: 1965
-}, {
-  id: 5,
-  title: "Help!",
-  year: 1965
-}, {
-  id: 4,
-  title: "Beatles For Sale",
-  year: 1964
-}, {
-  id: 3,
-  title: "A Hard Day's Night",
-  year: 1964
-}, {
-  id: 2,
-  title: "With The Beatles",
-  year: 1963
-}, {
-  id: 1,
-  title: "Please Please Me",
-  year: 1963
-}], promises = /* @__PURE__ */ new Map(), cache = /* @__PURE__ */ new Map();
+"import { c } from "react-compiler-runtime";
+import { Suspense, forwardRef, useDeferredValue, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+/** @public */
+const Input = forwardRef(function Input(props, forwardedRef) {
+	let $ = c(18), idProp, label, rest;
+	$[0] === props ? (idProp = $[1], label = $[2], rest = $[3]) : ({label, id: idProp, ...rest} = props, $[0] = props, $[1] = idProp, $[2] = label, $[3] = rest);
+	let _id = useId(), id = idProp || _id, ref = useRef(null), t0;
+	$[4] === Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[4] = t0) : t0 = $[4], useImperativeHandle(forwardedRef, t0);
+	let [focused, setFocused] = useState(!1), t1, t2;
+	$[5] === Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+		let controller = new AbortController(), { signal } = controller;
+		return ref.current?.addEventListener("focus", () => setFocused(!0), { signal }), ref.current?.addEventListener("blur", () => setFocused(!1), { signal }), () => controller.abort();
+	}, t2 = [], $[5] = t1, $[6] = t2) : (t1 = $[5], t2 = $[6]), useEffect(t1, t2);
+	let t3;
+	$[7] !== focused || $[8] !== id || $[9] !== label ? (t3 = label && /* @__PURE__ */ jsx("label", {
+		"data-focused": focused ? "" : void 0,
+		htmlFor: id,
+		children: label
+	}), $[7] = focused, $[8] = id, $[9] = label, $[10] = t3) : t3 = $[10];
+	let t4 = focused ? "" : void 0, t5;
+	$[11] !== id || $[12] !== rest || $[13] !== t4 ? (t5 = /* @__PURE__ */ jsx("input", {
+		...rest,
+		"data-focused": t4,
+		id,
+		ref
+	}), $[11] = id, $[12] = rest, $[13] = t4, $[14] = t5) : t5 = $[14];
+	let t6;
+	return $[15] !== t3 || $[16] !== t5 ? (t6 = /* @__PURE__ */ jsxs(Fragment, { children: [t3, t5] }), $[15] = t3, $[16] = t5, $[17] = t6) : t6 = $[17], t6;
+}), allAlbums = [
+	{
+		id: 13,
+		title: "Let It Be",
+		year: 1970
+	},
+	{
+		id: 12,
+		title: "Abbey Road",
+		year: 1969
+	},
+	{
+		id: 11,
+		title: "Yellow Submarine",
+		year: 1969
+	},
+	{
+		id: 10,
+		title: "The Beatles",
+		year: 1968
+	},
+	{
+		id: 9,
+		title: "Magical Mystery Tour",
+		year: 1967
+	},
+	{
+		id: 8,
+		title: "Sgt. Pepper's Lonely Hearts Club Band",
+		year: 1967
+	},
+	{
+		id: 7,
+		title: "Revolver",
+		year: 1966
+	},
+	{
+		id: 6,
+		title: "Rubber Soul",
+		year: 1965
+	},
+	{
+		id: 5,
+		title: "Help!",
+		year: 1965
+	},
+	{
+		id: 4,
+		title: "Beatles For Sale",
+		year: 1964
+	},
+	{
+		id: 3,
+		title: "A Hard Day's Night",
+		year: 1964
+	},
+	{
+		id: 2,
+		title: "With The Beatles",
+		year: 1963
+	},
+	{
+		id: 1,
+		title: "Please Please Me",
+		year: 1963
+	}
+], promises = /* @__PURE__ */ new Map(), cache = /* @__PURE__ */ new Map();
 function fetchSearchResults(query) {
-  if (cache.has(query))
-    return cache.get(query);
-  if (promises.has(query))
-    throw promises.get(query);
-  const promise = getSearchResults(query.trim().toLowerCase()).then((result) => {
-    cache.set(query, result);
-  });
-  throw promises.set(query, promise), promise;
+	if (cache.has(query)) return cache.get(query);
+	if (promises.has(query)) throw promises.get(query);
+	let promise = getSearchResults(query.trim().toLowerCase()).then((result) => {
+		cache.set(query, result);
+	});
+	throw promises.set(query, promise), promise;
 }
 async function getSearchResults(lowerQuery) {
-  return await new Promise((resolve) => {
-    setTimeout(resolve, 500);
-  }), allAlbums.filter((album) => {
-    const lowerTitle = album.title.toLowerCase();
-    return lowerTitle.startsWith(lowerQuery) || lowerTitle.indexOf(" " + lowerQuery) !== -1;
-  });
+	return await new Promise((resolve) => {
+		setTimeout(resolve, 500);
+	}), allAlbums.filter((album) => {
+		let lowerTitle = album.title.toLowerCase();
+		return lowerTitle.startsWith(lowerQuery) || lowerTitle.indexOf(" " + lowerQuery) !== -1;
+	});
 }
 function SearchResults(t0) {
-  const $ = c(7), {
-    query
-  } = t0;
-  if (query === "")
-    return null;
-  let t1, t2;
-  if ($[0] !== query) {
-    t2 = /* @__PURE__ */ Symbol.for("react.early_return_sentinel");
-    bb0: {
-      const albums = fetchSearchResults(query);
-      if (albums.length === 0) {
-        const t32 = /* @__PURE__ */ jsxs("i", { children: [
-          '"',
-          query,
-          '"'
-        ] });
-        let t4;
-        $[3] !== t32 ? (t4 = /* @__PURE__ */ jsxs("p", { children: [
-          "No matches for ",
-          t32
-        ] }), $[3] = t32, $[4] = t4) : t4 = $[4], t2 = t4;
-        break bb0;
-      }
-      t1 = albums.map(_temp$1);
-    }
-    $[0] = query, $[1] = t1, $[2] = t2;
-  } else
-    t1 = $[1], t2 = $[2];
-  if (t2 !== /* @__PURE__ */ Symbol.for("react.early_return_sentinel"))
-    return t2;
-  let t3;
-  return $[5] !== t1 ? (t3 = /* @__PURE__ */ jsx("ul", { children: t1 }), $[5] = t1, $[6] = t3) : t3 = $[6], t3;
+	let $ = c(7), { query } = t0;
+	if (query === "") return null;
+	let t1, t2;
+	if ($[0] !== query) {
+		t2 = Symbol.for("react.early_return_sentinel");
+		bb0: {
+			let albums = fetchSearchResults(query);
+			if (albums.length === 0) {
+				let t3 = /* @__PURE__ */ jsxs("i", { children: [
+					"\\"",
+					query,
+					"\\""
+				] }), t4;
+				$[3] === t3 ? t4 = $[4] : (t4 = /* @__PURE__ */ jsxs("p", { children: ["No matches for ", t3] }), $[3] = t3, $[4] = t4), t2 = t4;
+				break bb0;
+			}
+			t1 = albums.map(_temp$1);
+		}
+		$[0] = query, $[1] = t1, $[2] = t2;
+	} else t1 = $[1], t2 = $[2];
+	if (t2 !== Symbol.for("react.early_return_sentinel")) return t2;
+	let t3;
+	return $[5] === t1 ? t3 = $[6] : (t3 = /* @__PURE__ */ jsx("ul", { children: t1 }), $[5] = t1, $[6] = t3), t3;
 }
 function _temp$1(album) {
-  return /* @__PURE__ */ jsxs("li", { children: [
-    album.title,
-    " (",
-    album.year,
-    ")"
-  ] }, album.id);
+	return /* @__PURE__ */ jsxs("li", { children: [
+		album.title,
+		" (",
+		album.year,
+		")"
+	] }, album.id);
 }
+/** @public */
 function App() {
-  const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
-  let t0;
-  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
-  let t1;
-  $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
-  let t2;
-  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
-  const t3 = isStale ? 0.5 : 1;
-  let t4;
-  $[4] !== t3 ? (t4 = {
-    opacity: t3
-  }, $[4] = t3, $[5] = t4) : t4 = $[5];
-  let t5;
-  $[6] !== deferredQuery ? (t5 = /* @__PURE__ */ jsx(SearchResults, { query: deferredQuery }), $[6] = deferredQuery, $[7] = t5) : t5 = $[7];
-  let t6;
-  $[8] !== t4 || $[9] !== t5 ? (t6 = /* @__PURE__ */ jsx(Suspense, { fallback: t2, children: /* @__PURE__ */ jsx("div", { style: t4, children: t5 }) }), $[8] = t4, $[9] = t5, $[10] = t6) : t6 = $[10];
-  let t7;
-  return $[11] !== t1 || $[12] !== t6 ? (t7 = /* @__PURE__ */ jsxs(Fragment, { children: [
-    t1,
-    t6
-  ] }), $[11] = t1, $[12] = t6, $[13] = t7) : t7 = $[13], t7;
+	let $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery, t0;
+	$[0] === Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+	let t1;
+	$[1] === query ? t1 = $[2] : (t1 = /* @__PURE__ */ jsx(Input, {
+		label: "Search albums:",
+		value: query,
+		onChange: t0,
+		ref: _temp
+	}), $[1] = query, $[2] = t1);
+	let t2;
+	$[3] === Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+	let t3 = isStale ? .5 : 1, t4;
+	$[4] === t3 ? t4 = $[5] : (t4 = { opacity: t3 }, $[4] = t3, $[5] = t4);
+	let t5;
+	$[6] === deferredQuery ? t5 = $[7] : (t5 = /* @__PURE__ */ jsx(SearchResults, { query: deferredQuery }), $[6] = deferredQuery, $[7] = t5);
+	let t6;
+	$[8] !== t4 || $[9] !== t5 ? (t6 = /* @__PURE__ */ jsx(Suspense, {
+		fallback: t2,
+		children: /* @__PURE__ */ jsx("div", {
+			style: t4,
+			children: t5
+		})
+	}), $[8] = t4, $[9] = t5, $[10] = t6) : t6 = $[10];
+	let t7;
+	return $[11] !== t1 || $[12] !== t6 ? (t7 = /* @__PURE__ */ jsxs(Fragment, { children: [t1, t6] }), $[11] = t1, $[12] = t6, $[13] = t7) : t7 = $[13], t7;
 }
 function _temp(node) {
-  node?.focus();
+	node?.focus();
 }
-export {
-  App,
-  Input
-};
-//# sourceMappingURL=index.js.map
-"
+export { App, Input };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`react-19\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-export declare function App(): React.JSX.Element
-
+declare function App(): React.JSX.Element;
 /** @public */
-export declare function Input(
-  props: {
-    label?: React.ReactNode
-    ref: React.Ref<HTMLInputElement>
-  } & React.HTMLProps<HTMLInputElement>,
-): React.JSX.Element
-
-export {}
-"
+declare function Input(props: {
+  label?: React.ReactNode;
+  ref: React.Ref<HTMLInputElement>;
+} & React.HTMLProps<HTMLInputElement>): React.JSX.Element;
+export { App, Input };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`react-19\` package > ./dist/index.js 1`] = `
-"import { jsx, jsxs, Fragment } from "react/jsx-runtime";
-import { c } from "react/compiler-runtime";
-import { useId, useRef, useImperativeHandle, useState, useEffect, use, useDeferredValue, Suspense } from "react";
+"import { c } from "react/compiler-runtime";
+import { Suspense, use, useDeferredValue, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+/** @public */
 function Input(props) {
-  const $ = c(19);
-  let forwardedRef, idProp, label, rest;
-  $[0] !== props ? ({
-    label,
-    id: idProp,
-    ref: forwardedRef,
-    ...rest
-  } = props, $[0] = props, $[1] = forwardedRef, $[2] = idProp, $[3] = label, $[4] = rest) : (forwardedRef = $[1], idProp = $[2], label = $[3], rest = $[4]);
-  const _id = useId(), id = idProp || _id, ref = useRef(null);
-  let t0;
-  $[5] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
-  const [focused, setFocused] = useState(!1);
-  let t1, t2;
-  $[6] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
-    const controller = new AbortController(), {
-      signal
-    } = controller;
-    return ref.current?.addEventListener("focus", () => setFocused(!0), {
-      signal
-    }), ref.current?.addEventListener("blur", () => setFocused(!1), {
-      signal
-    }), () => controller.abort();
-  }, t2 = [], $[6] = t1, $[7] = t2) : (t1 = $[6], t2 = $[7]), useEffect(t1, t2);
-  let t3;
-  $[8] !== focused || $[9] !== id || $[10] !== label ? (t3 = label && /* @__PURE__ */ jsx("label", { "data-focused": focused ? "" : void 0, htmlFor: id, children: label }), $[8] = focused, $[9] = id, $[10] = label, $[11] = t3) : t3 = $[11];
-  const t4 = focused ? "" : void 0;
-  let t5;
-  $[12] !== id || $[13] !== rest || $[14] !== t4 ? (t5 = /* @__PURE__ */ jsx("input", { ...rest, "data-focused": t4, id, ref }), $[12] = id, $[13] = rest, $[14] = t4, $[15] = t5) : t5 = $[15];
-  let t6;
-  return $[16] !== t3 || $[17] !== t5 ? (t6 = /* @__PURE__ */ jsxs(Fragment, { children: [
-    t3,
-    t5
-  ] }), $[16] = t3, $[17] = t5, $[18] = t6) : t6 = $[18], t6;
+	let $ = c(19), forwardedRef, idProp, label, rest;
+	$[0] === props ? (forwardedRef = $[1], idProp = $[2], label = $[3], rest = $[4]) : ({label, id: idProp, ref: forwardedRef, ...rest} = props, $[0] = props, $[1] = forwardedRef, $[2] = idProp, $[3] = label, $[4] = rest);
+	let _id = useId(), id = idProp || _id, ref = useRef(null), t0;
+	$[5] === Symbol.for("react.memo_cache_sentinel") ? (t0 = () => ref.current, $[5] = t0) : t0 = $[5], useImperativeHandle(forwardedRef, t0);
+	let [focused, setFocused] = useState(!1), t1, t2;
+	$[6] === Symbol.for("react.memo_cache_sentinel") ? (t1 = () => {
+		let controller = new AbortController(), { signal } = controller;
+		return ref.current?.addEventListener("focus", () => setFocused(!0), { signal }), ref.current?.addEventListener("blur", () => setFocused(!1), { signal }), () => controller.abort();
+	}, t2 = [], $[6] = t1, $[7] = t2) : (t1 = $[6], t2 = $[7]), useEffect(t1, t2);
+	let t3;
+	$[8] !== focused || $[9] !== id || $[10] !== label ? (t3 = label && /* @__PURE__ */ jsx("label", {
+		"data-focused": focused ? "" : void 0,
+		htmlFor: id,
+		children: label
+	}), $[8] = focused, $[9] = id, $[10] = label, $[11] = t3) : t3 = $[11];
+	let t4 = focused ? "" : void 0, t5;
+	$[12] !== id || $[13] !== rest || $[14] !== t4 ? (t5 = /* @__PURE__ */ jsx("input", {
+		...rest,
+		"data-focused": t4,
+		id,
+		ref
+	}), $[12] = id, $[13] = rest, $[14] = t4, $[15] = t5) : t5 = $[15];
+	let t6;
+	return $[16] !== t3 || $[17] !== t5 ? (t6 = /* @__PURE__ */ jsxs(Fragment, { children: [t3, t5] }), $[16] = t3, $[17] = t5, $[18] = t6) : t6 = $[18], t6;
 }
-const allAlbums = [{
-  id: 13,
-  title: "Let It Be",
-  year: 1970
-}, {
-  id: 12,
-  title: "Abbey Road",
-  year: 1969
-}, {
-  id: 11,
-  title: "Yellow Submarine",
-  year: 1969
-}, {
-  id: 10,
-  title: "The Beatles",
-  year: 1968
-}, {
-  id: 9,
-  title: "Magical Mystery Tour",
-  year: 1967
-}, {
-  id: 8,
-  title: "Sgt. Pepper's Lonely Hearts Club Band",
-  year: 1967
-}, {
-  id: 7,
-  title: "Revolver",
-  year: 1966
-}, {
-  id: 6,
-  title: "Rubber Soul",
-  year: 1965
-}, {
-  id: 5,
-  title: "Help!",
-  year: 1965
-}, {
-  id: 4,
-  title: "Beatles For Sale",
-  year: 1964
-}, {
-  id: 3,
-  title: "A Hard Day's Night",
-  year: 1964
-}, {
-  id: 2,
-  title: "With The Beatles",
-  year: 1963
-}, {
-  id: 1,
-  title: "Please Please Me",
-  year: 1963
-}], cache = /* @__PURE__ */ new Map();
+const allAlbums = [
+	{
+		id: 13,
+		title: "Let It Be",
+		year: 1970
+	},
+	{
+		id: 12,
+		title: "Abbey Road",
+		year: 1969
+	},
+	{
+		id: 11,
+		title: "Yellow Submarine",
+		year: 1969
+	},
+	{
+		id: 10,
+		title: "The Beatles",
+		year: 1968
+	},
+	{
+		id: 9,
+		title: "Magical Mystery Tour",
+		year: 1967
+	},
+	{
+		id: 8,
+		title: "Sgt. Pepper's Lonely Hearts Club Band",
+		year: 1967
+	},
+	{
+		id: 7,
+		title: "Revolver",
+		year: 1966
+	},
+	{
+		id: 6,
+		title: "Rubber Soul",
+		year: 1965
+	},
+	{
+		id: 5,
+		title: "Help!",
+		year: 1965
+	},
+	{
+		id: 4,
+		title: "Beatles For Sale",
+		year: 1964
+	},
+	{
+		id: 3,
+		title: "A Hard Day's Night",
+		year: 1964
+	},
+	{
+		id: 2,
+		title: "With The Beatles",
+		year: 1963
+	},
+	{
+		id: 1,
+		title: "Please Please Me",
+		year: 1963
+	}
+], cache = /* @__PURE__ */ new Map();
 function fetchSearchResults(query) {
-  return cache.has(query) || cache.set(query, getSearchResults(query.trim().toLowerCase())), cache.get(query);
+	return cache.has(query) || cache.set(query, getSearchResults(query.trim().toLowerCase())), cache.get(query);
 }
 async function getSearchResults(lowerQuery) {
-  return await new Promise((resolve) => {
-    setTimeout(resolve, 500);
-  }), allAlbums.filter((album) => {
-    const lowerTitle = album.title.toLowerCase();
-    return lowerTitle.startsWith(lowerQuery) || lowerTitle.indexOf(" " + lowerQuery) !== -1;
-  });
+	return await new Promise((resolve) => {
+		setTimeout(resolve, 500);
+	}), allAlbums.filter((album) => {
+		let lowerTitle = album.title.toLowerCase();
+		return lowerTitle.startsWith(lowerQuery) || lowerTitle.indexOf(" " + lowerQuery) !== -1;
+	});
 }
 function SearchResults(t0) {
-  const $ = c(8), {
-    query
-  } = t0;
-  if (query === "")
-    return null;
-  let t1;
-  $[0] !== query ? (t1 = fetchSearchResults(query), $[0] = query, $[1] = t1) : t1 = $[1];
-  const albums = use(t1);
-  if (albums.length === 0) {
-    let t22;
-    return $[2] !== query ? (t22 = /* @__PURE__ */ jsxs("p", { children: [
-      "No matches for ",
-      /* @__PURE__ */ jsxs("i", { children: [
-        '"',
-        query,
-        '"'
-      ] })
-    ] }), $[2] = query, $[3] = t22) : t22 = $[3], t22;
-  }
-  let t2;
-  $[4] !== albums ? (t2 = albums.map(_temp$1), $[4] = albums, $[5] = t2) : t2 = $[5];
-  let t3;
-  return $[6] !== t2 ? (t3 = /* @__PURE__ */ jsx("ul", { children: t2 }), $[6] = t2, $[7] = t3) : t3 = $[7], t3;
+	let $ = c(8), { query } = t0;
+	if (query === "") return null;
+	let t1;
+	$[0] === query ? t1 = $[1] : (t1 = fetchSearchResults(query), $[0] = query, $[1] = t1);
+	let albums = use(t1);
+	if (albums.length === 0) {
+		let t2;
+		return $[2] === query ? t2 = $[3] : (t2 = /* @__PURE__ */ jsxs("p", { children: ["No matches for ", /* @__PURE__ */ jsxs("i", { children: [
+			"\\"",
+			query,
+			"\\""
+		] })] }), $[2] = query, $[3] = t2), t2;
+	}
+	let t2;
+	$[4] === albums ? t2 = $[5] : (t2 = albums.map(_temp$1), $[4] = albums, $[5] = t2);
+	let t3;
+	return $[6] === t2 ? t3 = $[7] : (t3 = /* @__PURE__ */ jsx("ul", { children: t2 }), $[6] = t2, $[7] = t3), t3;
 }
 function _temp$1(album) {
-  return /* @__PURE__ */ jsxs("li", { children: [
-    album.title,
-    " (",
-    album.year,
-    ")"
-  ] }, album.id);
+	return /* @__PURE__ */ jsxs("li", { children: [
+		album.title,
+		" (",
+		album.year,
+		")"
+	] }, album.id);
 }
+/** @public */
 function App() {
-  const $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery;
-  let t0;
-  $[0] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
-  let t1;
-  $[1] !== query ? (t1 = /* @__PURE__ */ jsx(Input, { label: "Search albums:", value: query, onChange: t0, ref: _temp }), $[1] = query, $[2] = t1) : t1 = $[2];
-  let t2;
-  $[3] === /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
-  const t3 = isStale ? 0.5 : 1;
-  let t4;
-  $[4] !== t3 ? (t4 = {
-    opacity: t3
-  }, $[4] = t3, $[5] = t4) : t4 = $[5];
-  let t5;
-  $[6] !== deferredQuery ? (t5 = /* @__PURE__ */ jsx(SearchResults, { query: deferredQuery }), $[6] = deferredQuery, $[7] = t5) : t5 = $[7];
-  let t6;
-  $[8] !== t4 || $[9] !== t5 ? (t6 = /* @__PURE__ */ jsx(Suspense, { fallback: t2, children: /* @__PURE__ */ jsx("div", { style: t4, children: t5 }) }), $[8] = t4, $[9] = t5, $[10] = t6) : t6 = $[10];
-  let t7;
-  return $[11] !== t1 || $[12] !== t6 ? (t7 = /* @__PURE__ */ jsxs(Fragment, { children: [
-    t1,
-    t6
-  ] }), $[11] = t1, $[12] = t6, $[13] = t7) : t7 = $[13], t7;
+	let $ = c(14), [query, setQuery] = useState(""), deferredQuery = useDeferredValue(query), isStale = query !== deferredQuery, t0;
+	$[0] === Symbol.for("react.memo_cache_sentinel") ? (t0 = (e) => setQuery(e.currentTarget.value), $[0] = t0) : t0 = $[0];
+	let t1;
+	$[1] === query ? t1 = $[2] : (t1 = /* @__PURE__ */ jsx(Input, {
+		label: "Search albums:",
+		value: query,
+		onChange: t0,
+		ref: _temp
+	}), $[1] = query, $[2] = t1);
+	let t2;
+	$[3] === Symbol.for("react.memo_cache_sentinel") ? (t2 = /* @__PURE__ */ jsx("h2", { children: "Loading..." }), $[3] = t2) : t2 = $[3];
+	let t3 = isStale ? .5 : 1, t4;
+	$[4] === t3 ? t4 = $[5] : (t4 = { opacity: t3 }, $[4] = t3, $[5] = t4);
+	let t5;
+	$[6] === deferredQuery ? t5 = $[7] : (t5 = /* @__PURE__ */ jsx(SearchResults, { query: deferredQuery }), $[6] = deferredQuery, $[7] = t5);
+	let t6;
+	$[8] !== t4 || $[9] !== t5 ? (t6 = /* @__PURE__ */ jsx(Suspense, {
+		fallback: t2,
+		children: /* @__PURE__ */ jsx("div", {
+			style: t4,
+			children: t5
+		})
+	}), $[8] = t4, $[9] = t5, $[10] = t6) : t6 = $[10];
+	let t7;
+	return $[11] !== t1 || $[12] !== t6 ? (t7 = /* @__PURE__ */ jsxs(Fragment, { children: [t1, t6] }), $[11] = t1, $[12] = t6, $[13] = t7) : t7 = $[13], t7;
 }
 function _temp(node) {
-  node?.focus();
+	node?.focus();
 }
-export {
-  App,
-  Input
-};
-//# sourceMappingURL=index.js.map
-"
+export { App, Input };
+
+//# sourceMappingURL=index.js.map"
 `;
 
-exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsx, jsxs } from "react/jsx-runtime";
-import { c } from "react-compiler-runtime";
-import { Text, Stack } from "@sanity/ui";
+exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/ColorInput-[hash].js 1`] = `
+"import { c } from "react-compiler-runtime";
+import { Stack, Text } from "@sanity/ui";
 import { styled } from "styled-components";
-const CustomTextInput = /* @__PURE__ */ styled.input.attrs({
-  type: "color"
-}).withConfig({
-  displayName: "CustomTextInput",
-  componentId: "sc-11pprad-0"
-})(["cursor:pointer;box-sizing:border-box;background:var(--card-border-color);border:0 solid transparent;border-radius:2px;padding:0;appearance:none;margin:0;height:1.6rem;width:8ch;&:hover{box-shadow:0 0 0 2px ", ";}&::-webkit-color-swatch-wrapper{padding:0;}&::-webkit-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px ", ";@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from ", " r g b / 20%);}}&::-moz-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px ", ";@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from ", " r g b / 20%);}}"], ({
-  theme
-}) => theme.sanity.color.card.hovered.border, ({
-  theme
-}) => theme.sanity.color.card.enabled.fg, ({
-  theme
-}) => theme.sanity.color.card.enabled.fg, ({
-  theme
-}) => theme.sanity.color.card.enabled.fg, ({
-  theme
-}) => theme.sanity.color.card.enabled.fg);
+import { jsx, jsxs } from "react/jsx-runtime";
+const CustomTextInput = styled.input.attrs({ type: "color" }).withConfig({
+	displayName: "CustomTextInput",
+	componentId: "sc-ijy29k-0"
+})\`cursor:pointer;box-sizing:border-box;background:var(--card-border-color);border:0 solid transparent;border-radius:2px;padding:0;appearance:none;margin:0;height:1.6rem;width:8ch;&:hover{box-shadow:0 0 0 2px \${({ theme }) => theme.sanity.color.card.hovered.border};}&::-webkit-color-swatch-wrapper{padding:0;}&::-webkit-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({ theme }) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({ theme }) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}&::-moz-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({ theme }) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({ theme }) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}\`;
 function ColorInput(props) {
-  const $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
-  let t2;
-  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx(CustomTextInput, { ...props.elementProps, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
-  let t3;
-  $[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { as: "output", muted: !0, size: 0, htmlFor: props.elementProps.id, children: props.value }), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
-  let t4;
-  return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, { space: 2, children: [
-    t2,
-    t3
-  ] }), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
+	let $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0, t2;
+	$[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx(CustomTextInput, {
+		...props.elementProps,
+		colorspace: t0,
+		alpha: t1
+	}), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
+	let t3;
+	$[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, {
+		as: "output",
+		muted: !0,
+		size: 0,
+		htmlFor: props.elementProps.id,
+		children: props.value
+	}), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
+	let t4;
+	return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, {
+		space: 2,
+		children: [t2, t3]
+	}), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
 }
-export {
-  ColorInput as default
-};
-//# sourceMappingURL=ColorInput.js.map
-"
+export { ColorInput as default };
+
+//# sourceMappingURL=ColorInput-3kj391ks.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
@@ -785,58 +675,65 @@ export { type ColorDefinition, ColorInput, colorInput };
 `;
 
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
-"import { defineType, definePlugin } from "sanity";
+"import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
-  name: colorTypeName,
-  type: "string",
-  title: "Color",
-  components: {
-    input: ColorInput
-  }
-}), colorInput = definePlugin({
-  name: "@sanity/color-input",
-  schema: {
-    types: [colorType]
-  }
+/** @public */
+const ColorInput = lazy(() => import("./ColorInput-3kj391ks.js")), colorInput = definePlugin({
+	name: "@sanity/color-input",
+	schema: { types: [defineType({
+		name: "color",
+		type: "string",
+		title: "Color",
+		components: { input: ColorInput }
+	})] }
 });
-export {
-  ColorInput,
-  colorInput
-};
-//# sourceMappingURL=index.js.map
-"
+export { ColorInput, colorInput };
+
+//# sourceMappingURL=index.js.map"
 `;
 
-exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/_chunks-es/ColorInput.js 1`] = `
-"import { jsx, jsxs } from "react/jsx-runtime";
-import { c } from "react/compiler-runtime";
-import { Text, Root, Stack } from "@sanity/ui";
+exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/ColorInput-[hash].js 1`] = `
+"import { c } from "react/compiler-runtime";
+import { Root, Stack, Text } from "@sanity/ui";
+import { jsx, jsxs } from "react/jsx-runtime";
 var input = "_1n31tph0";
 function ColorInput(props) {
-  const $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0;
-  let t2;
-  $[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", { ...props.elementProps, type: "color", className: input, colorspace: t0, alpha: t1 }), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
-  let t3;
-  $[4] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, { muted: !0, size: 0, children: props.value }), $[4] = props.value, $[5] = t3) : t3 = $[5];
-  let t4;
-  $[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", { htmlFor: props.elementProps.id, children: t3 }), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
-  let t5;
-  return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsx(Root, { as: "div", overflow: "visible", children: /* @__PURE__ */ jsxs(Stack, { gap: 2, children: [
-    t2,
-    t4
-  ] }) }), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
+	let $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0, t2;
+	$[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", {
+		...props.elementProps,
+		type: "color",
+		className: input,
+		colorspace: t0,
+		alpha: t1
+	}), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
+	let t3;
+	$[4] === props.value ? t3 = $[5] : (t3 = /* @__PURE__ */ jsx(Text, {
+		muted: !0,
+		size: 0,
+		children: props.value
+	}), $[4] = props.value, $[5] = t3);
+	let t4;
+	$[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", {
+		htmlFor: props.elementProps.id,
+		children: t3
+	}), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
+	let t5;
+	return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsx(Root, {
+		as: "div",
+		overflow: "visible",
+		children: /* @__PURE__ */ jsxs(Stack, {
+			gap: 2,
+			children: [t2, t4]
+		})
+	}), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
 }
-export {
-  ColorInput as default
-};
-//# sourceMappingURL=ColorInput.js.map
-"
+export { ColorInput as default };
+
+//# sourceMappingURL=ColorInput-rhEnzAiP.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
 "._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y) r g b / 20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y) r g b / 20%)}}
-/*# sourceMappingURL=bundle.css.map*/
 "
 `;
 
@@ -875,159 +772,105 @@ export { type ColorDefinition, ColorInput, colorInput };
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
 "import "sanity-plugin-with-vanilla-extract/bundle.css";
 import "@sanity/ui/css/index.css";
-import { defineType, definePlugin } from "sanity";
+import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
-const ColorInput = lazy(() => import("./_chunks-es/ColorInput.js")), colorTypeName = "color", colorType = defineType({
-  name: colorTypeName,
-  type: "string",
-  title: "Color",
-  components: {
-    input: ColorInput
-  }
-}), colorInput = definePlugin({
-  name: "@sanity/color-input",
-  schema: {
-    types: [colorType]
-  }
+/** @public */
+const ColorInput = lazy(() => import("./ColorInput-rhEnzAiP.js")), colorInput = definePlugin({
+	name: "@sanity/color-input",
+	schema: { types: [defineType({
+		name: "color",
+		type: "string",
+		title: "Color",
+		components: { input: ColorInput }
+	})] }
 });
-export {
-  ColorInput,
-  colorInput
-};
-//# sourceMappingURL=index.js.map
-"
+export { ColorInput, colorInput };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts\` package > ./dist/index.d.ts 1`] = `
 "/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
  * @public
  */
-export declare interface IncludedModuleDummy {
-  field: string
+interface IncludedModuleDummy {
+  field: string;
 }
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
-declare module './module2' {
+/**
+ * @internal
+ */
+interface _Dummy {
+  field: string;
+}
+declare module "./module2" {
   interface IncludedModuleDummy {
-    addedField: string
+    addedField: string;
   }
 }
-//# sourceMappingURL=module1.d.ts.map
-"
+/** @public */
+declare const VERSION = "1.0.0";
+export { IncludedModuleDummy, VERSION, _Dummy };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
 "/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
  * @public
  */
-export declare interface IncludedModuleDummy {
-  field: string
+interface IncludedModuleDummy {
+  field: string;
 }
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
+/**
+ * @internal
+ */
+interface _Dummy {
+  field: string;
+}
 declare module './module2' {
   interface IncludedModuleDummy {
-    addedField: string
+    addedField: string;
   }
 }
-//# sourceMappingURL=module1.d.ts.map
-"
+/** @public */
+declare const VERSION = "1.0.0";
+export { IncludedModuleDummy, VERSION, _Dummy };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
 "/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
  * @public
  */
-export declare interface IncludedModuleDummy {
-  field: string
+interface IncludedModuleDummy {
+  field: string;
 }
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
+/**
+ * @internal
+ */
+interface _Dummy {
+  field: string;
+}
 declare module './module2.js' {
   interface IncludedModuleDummy {
-    addedField: string
+    addedField: string;
   }
 }
-//# sourceMappingURL=module1.d.ts.map
-"
-`;
-
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-cjs/c.cjs 1`] = `
-""use strict";
-exports.c = "c";
-//# sourceMappingURL=c.cjs.map
-"
-`;
-
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.cts 1`] = `
-"/** @public */
-declare const c = "c";
-export { c as t };
-//# sourceMappingURL=c.d.cts.map"
-`;
-
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-dts/c.d.ts 1`] = `
-"/** @public */
-declare const c = "c";
-export { c as t };
-//# sourceMappingURL=c.d.ts.map"
-`;
-
-exports[`cli > should build \`ts-rolldown\` package > ./dist/_chunks-es/c.js 1`] = `
-"const c = "c";
-export {
-  c
-};
-//# sourceMappingURL=c.js.map
-"
+/** @public */
+declare const VERSION = "1.0.0";
+export { IncludedModuleDummy, VERSION, _Dummy };
+//# sourceMappingURL=index.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var c = require("./_chunks-cjs/c.cjs");
-const a = "a";
-exports.c = c.c;
-exports.a = a;
-//# sourceMappingURL=a.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const require_c = require("./c-BvaL5bSQ.cjs");
+exports.a = "a", exports.c = require_c.t;
+
+//# sourceMappingURL=a.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
-"import { t as c } from "./_chunks-dts/c.cjs";
+"import { t as c } from "./c-BCyBvqMe.cjs";
 /** @public */
 declare const a = "a";
 export { a, c };
@@ -1035,7 +878,7 @@ export { a, c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
-"import { t as c } from "./_chunks-dts/c.js";
+"import { t as c } from "./c-BCyBvqMe.js";
 /** @public */
 declare const a = "a";
 export { a, c };
@@ -1043,29 +886,24 @@ export { a, c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
-"import { c } from "./_chunks-es/c.js";
+"import { t as c } from "./c-DrgDdB0B.js";
+/** @public */
 const a = "a";
-export {
-  a,
-  c
-};
-//# sourceMappingURL=a.js.map
-"
+export { a, c };
+
+//# sourceMappingURL=a.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var c = require("./_chunks-cjs/c.cjs");
-const b = "b";
-exports.c = c.c;
-exports.b = b;
-//# sourceMappingURL=b.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const require_c = require("./c-BvaL5bSQ.cjs");
+exports.b = "b", exports.c = require_c.t;
+
+//# sourceMappingURL=b.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
-"import { t as c } from "./_chunks-dts/c.cjs";
+"import { t as c } from "./c-BCyBvqMe.cjs";
 /** @public */
 declare const b = "b";
 export { b, c };
@@ -1073,7 +911,7 @@ export { b, c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
-"import { t as c } from "./_chunks-dts/c.js";
+"import { t as c } from "./c-BCyBvqMe.js";
 /** @public */
 declare const b = "b";
 export { b, c };
@@ -1081,23 +919,51 @@ export { b, c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
-"import { c } from "./_chunks-es/c.js";
+"import { t as c } from "./c-DrgDdB0B.js";
+/** @public */
 const b = "b";
-export {
-  b,
-  c
-};
-//# sourceMappingURL=b.js.map
-"
+export { b, c };
+
+//# sourceMappingURL=b.js.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].cjs 1`] = `
+"Object.defineProperty(exports, "t", {
+	enumerable: !0,
+	get: function() {
+		return "c";
+	}
+});
+
+//# sourceMappingURL=c-BvaL5bSQ.cjs.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].d.cts 1`] = `
+"/** @public */
+declare const c = "c";
+export { c as t };
+//# sourceMappingURL=c-BCyBvqMe.d.cts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].d.ts 1`] = `
+"/** @public */
+declare const c = "c";
+export { c as t };
+//# sourceMappingURL=c-BCyBvqMe.d.ts.map"
+`;
+
+exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].js 1`] = `
+"/** @public */
+const c = "c";
+export { c as t };
+
+//# sourceMappingURL=c-DrgDdB0B.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "0.0.0-development";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.VERSION = "0.0.0-development";
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
@@ -1115,63 +981,81 @@ export { VERSION };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/index.js 1`] = `
-"const VERSION = "0.0.0-development";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
+"/** @public */
+const VERSION = "0.0.0-development";
+export { VERSION };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var react = require("react"), jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos");
+/**
+* @public
+*/
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-function validateApiPerspective(perspective) {
-  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
-    throw new TypeError(
-      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
-    );
+function generateHelpUrl(slug) {
+	return "https://www.sanity.io/help/" + slug;
 }
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-exports.validateApiPerspective = validateApiPerspective;
-//# sourceMappingURL=index.cjs.map
-"
+function once(fn) {
+	let didCall = !1, returnValue;
+	return (...args) => (didCall ||= (returnValue = fn(...args), !0), returnValue);
+}
+const createWarningPrinter = (message) => once((...args) => console.warn(message.join(" "), ...args));
+createWarningPrinter(["Because you set \`withCredentials\` to true, we will override your \`useCdn\`", "setting to be false since (cookie-based) credentials are never set on the CDN"]), createWarningPrinter([
+	"Since you haven't set a value for \`useCdn\`, we will deliver content using our",
+	"global, edge-cached API-CDN. If you wish to have content delivered faster, set",
+	"\`useCdn: false\` to use the Live API. Note: You may incur higher costs using the live API."
+]), createWarningPrinter(["The Sanity client is configured with the \`perspective\` set to \`drafts\` or \`previewDrafts\`, which doesn't support the API-CDN.", "The Live API will be used instead. Set \`useCdn: false\` in your configuration to hide this warning."]), createWarningPrinter(["The \`previewDrafts\` perspective has been renamed to  \`drafts\` and will be removed in a future API version"]), createWarningPrinter(["You have configured Sanity client to use a token in the browser. This may cause unintentional security issues.", \`See \${generateHelpUrl("js-client-browser-token")} for more information and how to hide this warning.\`]), createWarningPrinter(["You have configured Sanity client to use a token, but also provided \`withCredentials: true\`.", "This is no longer supported - only token will be used - remove \`withCredentials: true\`."]), createWarningPrinter(["Using the Sanity client without specifying an API version is deprecated.", \`See \${generateHelpUrl("js-client-api-version")}\`]), createWarningPrinter(["The default export of @sanity/client has been deprecated. Use the named export \`createClient\` instead."]), createWarningPrinter(["You have called \`createVersion()\` with a defined \`document\`. The recommended approach is to provide a \`baseId\` and \`releaseId\` instead."]), createWarningPrinter(["The \`~experimental_resource\` configuration property has been renamed to \`resource\`.", "Please update your client configuration to use \`resource\` instead. Support for \`~experimental_resource\` will be removed in a future version."]);
+function validateApiPerspective(perspective) {
+	if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw")) throw TypeError("Invalid API perspective value: \\"raw\\". The raw-perspective can not be combined with other perspectives");
+}
+exports.RemoveIcon = RemoveIcon, Object.defineProperty(exports, "SanityLogo", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_logos.SanityLogo;
+	}
+}), exports.validateApiPerspective = validateApiPerspective;
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.cts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"/// <reference path="operators/index.d.ts" />
+/// <reference path="testing/index.d.ts" />
+import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
-import "get-it";
-import "rxjs";
 /**
  * @public
  */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+ * Note: This will add Symbol.observable globally for all TypeScript users,
+ * however, we are no longer polyfilling Symbol.observable
+ */
+declare global {
+  interface SymbolConstructor {
+    readonly observable: symbol;
+  }
+}
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
@@ -1189,14 +1073,26 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.d.ts 1`] = `
-"import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
+"/// <reference path="operators/index.d.ts" />
+/// <reference path="testing/index.d.ts" />
+import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
-import "get-it";
-import "rxjs";
+import "stream";
+import "url";
+import "http";
 /**
  * @public
  */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+/**
+ * Note: This will add Symbol.observable globally for all TypeScript users,
+ * however, we are no longer polyfilling Symbol.observable
+ */
+declare global {
+  interface SymbolConstructor {
+    readonly observable: symbol;
+  }
+}
 /** @public */
 declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
 /**
@@ -1217,76 +1113,85 @@ exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./di
 "import { forwardRef } from "react";
 import { jsx } from "react/jsx-runtime";
 import { SanityLogo } from "@sanity/logos";
+/**
+* @public
+*/
 const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+	return /* @__PURE__ */ jsx("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ jsx("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-function validateApiPerspective(perspective) {
-  if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw"))
-    throw new TypeError(
-      'Invalid API perspective value: "raw". The raw-perspective can not be combined with other perspectives'
-    );
+function generateHelpUrl(slug) {
+	return "https://www.sanity.io/help/" + slug;
 }
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
+function once(fn) {
+	let didCall = !1, returnValue;
+	return (...args) => (didCall ||= (returnValue = fn(...args), !0), returnValue);
+}
+const createWarningPrinter = (message) => once((...args) => console.warn(message.join(" "), ...args));
+createWarningPrinter(["Because you set \`withCredentials\` to true, we will override your \`useCdn\`", "setting to be false since (cookie-based) credentials are never set on the CDN"]), createWarningPrinter([
+	"Since you haven't set a value for \`useCdn\`, we will deliver content using our",
+	"global, edge-cached API-CDN. If you wish to have content delivered faster, set",
+	"\`useCdn: false\` to use the Live API. Note: You may incur higher costs using the live API."
+]), createWarningPrinter(["The Sanity client is configured with the \`perspective\` set to \`drafts\` or \`previewDrafts\`, which doesn't support the API-CDN.", "The Live API will be used instead. Set \`useCdn: false\` in your configuration to hide this warning."]), createWarningPrinter(["The \`previewDrafts\` perspective has been renamed to  \`drafts\` and will be removed in a future API version"]), createWarningPrinter(["You have configured Sanity client to use a token in the browser. This may cause unintentional security issues.", \`See \${generateHelpUrl("js-client-browser-token")} for more information and how to hide this warning.\`]), createWarningPrinter(["You have configured Sanity client to use a token, but also provided \`withCredentials: true\`.", "This is no longer supported - only token will be used - remove \`withCredentials: true\`."]), createWarningPrinter(["Using the Sanity client without specifying an API version is deprecated.", \`See \${generateHelpUrl("js-client-api-version")}\`]), createWarningPrinter(["The default export of @sanity/client has been deprecated. Use the named export \`createClient\` instead."]), createWarningPrinter(["You have called \`createVersion()\` with a defined \`document\`. The recommended approach is to provide a \`baseId\` and \`releaseId\` instead."]), createWarningPrinter(["The \`~experimental_resource\` configuration property has been renamed to \`resource\`.", "Please update your client configuration to use \`resource\` instead. Support for \`~experimental_resource\` will be removed in a future version."]);
+function validateApiPerspective(perspective) {
+	if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw")) throw TypeError("Invalid API perspective value: \\"raw\\". The raw-perspective can not be combined with other perspectives");
+}
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var react = require("react"), jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), _sanity_client = require("@sanity/client");
+/**
+* @public
+*/
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
+exports.RemoveIcon = RemoveIcon, Object.defineProperty(exports, "SanityLogo", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_logos.SanityLogo;
+	}
+}), Object.defineProperty(exports, "validateApiPerspective", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_client.validateApiPerspective;
+	}
 });
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./dist/index.d.cts 1`] = `
@@ -1318,70 +1223,69 @@ exports[`cli > should build \`ts-rolldown-bundle-peer-dependency\` package > ./d
 import { jsx } from "react/jsx-runtime";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
 const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+	return /* @__PURE__ */ jsx("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ jsx("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var react = require("react"), jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), _sanity_client = require("@sanity/client");
+/**
+* @public
+*/
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
+exports.RemoveIcon = RemoveIcon, Object.defineProperty(exports, "SanityLogo", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_logos.SanityLogo;
+	}
+}), Object.defineProperty(exports, "validateApiPerspective", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_client.validateApiPerspective;
+	}
 });
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./dist/index.d.cts 1`] = `
@@ -1413,31 +1317,30 @@ exports[`cli > should build \`ts-rolldown-bundle-prod-dependency\` package > ./d
 import { jsx } from "react/jsx-runtime";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
 const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+	return /* @__PURE__ */ jsx("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ jsx("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./dist/index.d.cts 1`] = `
@@ -1473,66 +1376,52 @@ export { ExternalSubpathImport, identity };
 `;
 
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-var react = require("react"), jsxRuntime = require("react/jsx-runtime"), logos = require("@sanity/logos"), client = require("@sanity/client");
-const RemoveIcon = /* @__PURE__ */ react.forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsxRuntime.jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsxRuntime.jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), _sanity_client = require("@sanity/client");
+/**
+* @public
+*/
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-Object.defineProperty(exports, "SanityLogo", {
-  enumerable: !0,
-  get: function() {
-    return logos.SanityLogo;
-  }
+exports.RemoveIcon = RemoveIcon, Object.defineProperty(exports, "SanityLogo", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_logos.SanityLogo;
+	}
+}), Object.defineProperty(exports, "validateApiPerspective", {
+	enumerable: !0,
+	get: function() {
+		return _sanity_client.validateApiPerspective;
+	}
 });
-Object.defineProperty(exports, "validateApiPerspective", {
-  enumerable: !0,
-  get: function() {
-    return client.validateApiPerspective;
-  }
-});
-exports.RemoveIcon = RemoveIcon;
-//# sourceMappingURL=index.cjs.map
-"
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.cts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
-import "@sanity/client/csm";
-import "get-it";
-import "rxjs";
+import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
@@ -1540,25 +1429,11 @@ export { RemoveIcon, SanityLogo, validateApiPerspective };
 exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > ./dist/index.d.ts 1`] = `
 "import { ForwardRefExoticComponent, RefAttributes, SVGProps } from "react";
 import { SanityLogo } from "@sanity/logos";
-import "@sanity/client/csm";
-import "get-it";
-import "rxjs";
+import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
 declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-/** @public */
-declare type ClientPerspective = DeprecatedPreviewDrafts | 'published' | 'drafts' | 'raw' | StackablePerspective[];
-/**
- * @deprecated use 'drafts' instead
- */
-declare type DeprecatedPreviewDrafts = 'previewDrafts';
-/** @public */
-declare type StackablePerspective = ('published' | 'drafts' | string) & {};
-/**
- * @internal - it may have breaking changes in any release
- */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
 export { RemoveIcon, SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
@@ -1568,40 +1443,36 @@ exports[`cli > should build \`ts-rolldown-inline-types-external-js\` package > .
 import { jsx } from "react/jsx-runtime";
 import { SanityLogo } from "@sanity/logos";
 import { validateApiPerspective } from "@sanity/client";
+/**
+* @public
+*/
 const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
-  return /* @__PURE__ */ jsx("svg", {
-    "data-sanity-icon": "remove",
-    width: "1em",
-    height: "1em",
-    viewBox: "0 0 25 25",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    ...props,
-    ref,
-    children: /* @__PURE__ */ jsx("path", {
-      d: "M5 12.5H20",
-      stroke: "currentColor",
-      strokeWidth: 1.2,
-      strokeLinejoin: "round"
-    })
-  });
+	return /* @__PURE__ */ jsx("svg", {
+		"data-sanity-icon": "remove",
+		width: "1em",
+		height: "1em",
+		viewBox: "0 0 25 25",
+		fill: "none",
+		xmlns: "http://www.w3.org/2000/svg",
+		...props,
+		ref,
+		children: /* @__PURE__ */ jsx("path", {
+			d: "M5 12.5H20",
+			stroke: "currentColor",
+			strokeWidth: 1.2,
+			strokeLinejoin: "round"
+		})
+	});
 });
-export {
-  RemoveIcon,
-  SanityLogo,
-  validateApiPerspective
-};
-//# sourceMappingURL=index.js.map
-"
+export { RemoveIcon, SanityLogo, validateApiPerspective };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "1.0.0";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.VERSION = "1.0.0";
+
+//# sourceMappingURL=index.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
@@ -1618,77 +1489,37 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.js 1`] = `
 "const VERSION = "1.0.0";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
+export { VERSION };
+
+//# sourceMappingURL=index.js.map"
 `;
 
 exports[`cli > should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
-"export declare const VERSION = '1.0.0'
-
-export {}
-"
-`;
-
-exports[`cli > should build \`tsgo\` package > ./dist/index.cjs 1`] = `
-""use strict";
-Object.defineProperty(exports, "__esModule", { value: !0 });
-const VERSION = "1.0.0";
-exports.VERSION = VERSION;
-//# sourceMappingURL=index.cjs.map
-"
-`;
-
-exports[`cli > should build \`tsgo\` package > ./dist/index.d.cts 1`] = `
-"/** @public */
-declare const VERSION = "1.0.0";
-export { VERSION };
-//# sourceMappingURL=index.d.cts.map"
-`;
-
-exports[`cli > should build \`tsgo\` package > ./dist/index.d.ts 1`] = `
-"/** @public */
-declare const VERSION = "1.0.0";
+"declare const VERSION = "1.0.0";
 export { VERSION };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
-exports[`cli > should build \`tsgo\` package > ./dist/index.js 1`] = `
-"const VERSION = "1.0.0";
-export {
-  VERSION
-};
-//# sourceMappingURL=index.js.map
-"
-`;
-
 exports[`cli > should build with \`--quiet\` flag suppressing output > ./dist/index.d.ts 1`] = `
 "/**
- * @internal
- */
-export declare interface _Dummy {
-  field: string
-}
-
-/**
  * @public
  */
-export declare interface IncludedModuleDummy {
-  field: string
+interface IncludedModuleDummy {
+  field: string;
 }
-
-/** @public */
-export declare const VERSION = '1.0.0'
-
-export {}
-
-declare module './module2' {
+/**
+ * @internal
+ */
+interface _Dummy {
+  field: string;
+}
+declare module "./module2" {
   interface IncludedModuleDummy {
-    addedField: string
+    addedField: string;
   }
 }
-//# sourceMappingURL=module1.d.ts.map
-"
+/** @public */
+declare const VERSION = "1.0.0";
+export { IncludedModuleDummy, VERSION, _Dummy };
+//# sourceMappingURL=index.d.ts.map"
 `;

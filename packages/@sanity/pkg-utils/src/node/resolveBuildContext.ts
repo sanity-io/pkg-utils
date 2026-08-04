@@ -39,24 +39,6 @@ export async function resolveBuildContext(options: {
   const tsconfig = await loadTSConfig({cwd, tsconfigPath})
   const strictOptions = parseStrictOptions(config?.strictOptions ?? {})
 
-  if (strictOptions.noCheckTypes !== 'off' && tsconfig?.options && config?.dts !== 'rolldown') {
-    if (
-      tsconfig.options.noCheck !== false &&
-      !tsconfig.options.noCheck &&
-      config?.extract?.checkTypes !== false
-    ) {
-      if (strictOptions.noCheckTypes === 'error') {
-        throw new Error(
-          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it. You can set `noCheck: true` in tsconfig.json or set `extract: { checkTypes: false }` in package.config.ts to disable type checking.',
-        )
-      } else {
-        logger.warn(
-          '`noCheck` is not set to `true` in the tsconfig.json file used by `package.config.ts`. This makes generating dts files slower than it needs to be, as it will perform type checking on the dts files while at it. You can set `noCheck: true` in tsconfig.json or set `extract: { checkTypes: false }` in package.config.ts to disable type checking.',
-        )
-      }
-    }
-  }
-
   let browserslist = pkg.browserslist
   if (!browserslist) {
     if (strict && strictOptions.noImplicitBrowsersList !== 'off') {
@@ -125,21 +107,47 @@ export async function resolveBuildContext(options: {
     ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []),
   ]
 
-  // Merge externals if an array is provided, replace if it's a function
+  // The deprecated (grandfathered) `external` option: merge if an array, replace if a function
   const external =
     config && Array.isArray(config.external)
       ? [...parsedExternal, ...config.external]
       : resolveConfigProperty(config?.external, parsedExternal)
-  // Merge bundledPackages with dev deps, replace if it's a function
+
+  // Map `external` onto tsdown's `deps`: additions over the default (dependencies + peers)
+  // become `neverBundle`, defaults filtered out by the callback pattern become `alwaysBundle`
+  // (tsdown auto-externalizes dependencies/peers, so only the diff needs expressing). The v11
+  // `external` semantics were subpath-aware (`name` also matched `name/subpath`), so package
+  // names map to `^name(/|$)` patterns. The package's own name always stays external, so
+  // self-referencing imports (e.g. the injected `import "<pkg>/bundle.css"`) never resolve
+  // into the bundle.
+  const packagePattern = (name: string) => new RegExp(`^${escapeRegExp(name)}(/|$)`)
+  const neverBundleAdditions: (string | RegExp)[] = external
+    .filter((name) => !parsedExternal.includes(name))
+    .map(packagePattern)
+  neverBundleAdditions.push(packagePattern(pkg.name))
+  const alwaysBundleNames = parsedExternal.filter((name) => !external.includes(name))
+  const deps = mergeDeps(config?.deps, {
+    neverBundle: neverBundleAdditions,
+    alwaysBundle: alwaysBundleNames.map(packagePattern),
+  })
+
+  // Packages whose types are inlined into the emitted declarations, used by the api-extractor
+  // TSDoc check: devDependencies that are not external (like v11), plus any string entries of
+  // the `deps.alwaysBundle` passthrough (force-bundled dependencies inline their types too).
   const externalWithTypes = new Set([pkg.name, ...external, ...external.map(transformPackageName)])
   const bundledDependencies = (pkg.devDependencies ? Object.keys(pkg.devDependencies) : []).filter(
     // Do not bundle anything that is marked as external
     (_) => !externalWithTypes.has(_),
   )
-  const bundledPackages =
-    config && Array.isArray(config.extract?.bundledPackages)
-      ? [...bundledDependencies, ...config.extract.bundledPackages]
-      : resolveConfigProperty(config?.extract?.bundledPackages, bundledDependencies)
+  const bundledPackages = [
+    ...bundledDependencies,
+    ...alwaysBundleNames,
+    ...(Array.isArray(config?.deps?.alwaysBundle)
+      ? config.deps.alwaysBundle.filter((entry): entry is string => typeof entry === 'string')
+      : typeof config?.deps?.alwaysBundle === 'string'
+        ? [config.deps.alwaysBundle]
+        : []),
+  ]
 
   const outputPaths = Object.values(exports)
     .flatMap((exportEntry) => {
@@ -188,12 +196,12 @@ export async function resolveBuildContext(options: {
   const ctx: BuildContext = {
     config,
     cwd,
+    deps,
     distPath,
     emitDeclarationOnly,
     exports,
     external,
     bundledPackages,
-    files: [],
     logger,
     pkg,
     runtime: config?.runtime ?? '*',
@@ -203,10 +211,68 @@ export async function resolveBuildContext(options: {
       config: tsconfig,
       configPath: tsconfigPath,
     },
-    dts: config?.dts === 'rolldown' ? 'rolldown' : 'api-extractor',
   }
 
   return ctx
+}
+
+type DepsConfig = NonNullable<import('tsdown').UserConfig['deps']>
+
+/**
+ * Merges the `deps` additions derived from the deprecated `external` option (and the
+ * self-reference external) into the userland `deps` passthrough. Array forms concatenate, a
+ * userland function is composed with the derived additions (the additions carry pipeline
+ * invariants like the self-reference external, which must survive customization — the same
+ * composition `@sanity/tsdown-config` applies to its `/^node:/` default), and a blanket
+ * `true` (externalize all of `node_modules`) wins as the broadest request.
+ * @internal Exported for tests.
+ */
+export function mergeDeps(
+  configDeps: DepsConfig | undefined,
+  additions: {neverBundle: (string | RegExp)[]; alwaysBundle: (string | RegExp)[]},
+): DepsConfig | undefined {
+  const userNeverBundle = configDeps?.neverBundle
+  let neverBundle: DepsConfig['neverBundle']
+  if (userNeverBundle === undefined) {
+    neverBundle = additions.neverBundle
+  } else if (userNeverBundle === true) {
+    neverBundle = userNeverBundle
+  } else if (typeof userNeverBundle === 'function') {
+    const patterns = additions.neverBundle
+    neverBundle = (id, importer, isResolved) =>
+      patterns.some((pattern) =>
+        typeof pattern === 'string' ? pattern === id : pattern.test(id),
+      ) || userNeverBundle(id, importer, isResolved)
+  } else if (Array.isArray(userNeverBundle)) {
+    neverBundle = [...additions.neverBundle, ...userNeverBundle]
+  } else {
+    neverBundle = [...additions.neverBundle, userNeverBundle]
+  }
+
+  const userAlwaysBundle = configDeps?.alwaysBundle
+  let alwaysBundle: DepsConfig['alwaysBundle']
+  if (userAlwaysBundle === undefined) {
+    alwaysBundle = additions.alwaysBundle.length ? additions.alwaysBundle : undefined
+  } else if (typeof userAlwaysBundle === 'function') {
+    // A userland function wins over the derived additions
+    alwaysBundle = userAlwaysBundle
+  } else if (Array.isArray(userAlwaysBundle)) {
+    alwaysBundle = [...additions.alwaysBundle, ...userAlwaysBundle]
+  } else {
+    alwaysBundle = [...additions.alwaysBundle, userAlwaysBundle]
+  }
+
+  const deps: DepsConfig = {
+    ...configDeps,
+    neverBundle,
+    ...(alwaysBundle === undefined ? {} : {alwaysBundle}),
+  }
+
+  return deps
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 function transformPackageName(packageName: string): string {

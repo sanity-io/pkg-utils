@@ -3,14 +3,51 @@ import {expect, test, vi} from 'vitest'
 import type {BuildContext} from '../src/node/core/contexts/buildContext'
 import {parseAndValidateExports} from '../src/node/core/pkg/parseAndValidateExports'
 import {createLogger} from '../src/node/logger'
-import {resolveBuildTasks} from '../src/node/resolveBuildTasks'
 import {parseStrictOptions} from '../src/node/strict'
+import {resolveTsdownBuilds} from '../src/node/tasks/tsdown/resolveTsdownBuilds'
 
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
 const cwd = process.cwd()
 
-test('should parse tasks (type: module)', () => {
+function createContext(pkg: PackageJSON, config?: BuildContext['config']): BuildContext {
+  const exports = parseAndValidateExports({
+    cwd,
+    pkg,
+    strict: true,
+    strictOptions,
+    logger,
+  })
+
+  return {
+    bundledPackages: [],
+    config,
+    cwd: '/test',
+    deps: undefined,
+    distPath: '/test/dist',
+    emitDeclarationOnly: false,
+    exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
+    external: [],
+    logger: {
+      log: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      success: vi.fn(),
+    },
+    pkg,
+    runtime: config?.runtime ?? '*',
+    target: {
+      '*': ['chrome102', 'node14'],
+      'browser': ['chrome102'],
+      'node': ['node14'],
+    },
+    strict: true,
+    ts: {},
+  }
+}
+
+test('should resolve builds (type: module)', () => {
   const pkg: PackageJSON = {
     type: 'module',
     name: 'test',
@@ -39,255 +76,195 @@ test('should parse tasks (type: module)', () => {
     },
   }
 
-  const exports = parseAndValidateExports({
-    cwd,
-    pkg,
-    strict: true,
-    strictOptions,
-    logger,
-  })
+  const ctx = createContext(pkg)
+  const builds = resolveTsdownBuilds(ctx)
 
-  const ctx: BuildContext = {
-    bundledPackages: [],
-    cwd: '/test',
-    distPath: '/test/dist',
-    emitDeclarationOnly: false,
-    exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
-    external: [],
-    files: [],
-    logger: {
-      log: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      success: vi.fn(),
-    },
-    pkg,
-    runtime: '*',
-    target: {
-      '*': ['chrome102', 'node14'],
-      'browser': ['chrome102'],
-      'node': ['node14'],
-    },
-    strict: true,
-    ts: {},
-    dts: 'api-extractor',
-  }
-
-  const tasks = resolveBuildTasks(ctx)
-
-  expect(tasks).toEqual([
+  // Variants first, the canonical (exports-owning) build last
+  expect(builds).toEqual([
     {
-      entries: [
-        {
-          exportPath: '.',
-          importId: 'test',
-          sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.d.ts', './dist/index.d.cts'],
-        },
-        {
-          exportPath: '.',
-          importId: 'test',
-          sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.browser.d.ts', './dist/index.browser.d.cts'],
-        },
-      ],
-      type: 'build:dts',
-    },
-    {
-      type: 'build:js',
-      buildId: 'commonjs:*',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.ts',
-          output: './dist/index.cjs',
-        },
-      ],
-      runtime: '*',
-      format: 'commonjs',
-      target: ['chrome102', 'node14'],
-    },
-    {
-      type: 'build:js',
-      buildId: 'esm:*',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.ts',
-          output: './dist/index.js',
-        },
-      ],
-      runtime: '*',
-      format: 'esm',
-      target: ['chrome102', 'node14'],
-    },
-    {
-      type: 'build:js',
-      buildId: 'commonjs:browser',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.ts',
-          output: './dist/index.browser.cjs',
-        },
-      ],
+      key: 'browser',
       runtime: 'browser',
-      format: 'commonjs',
-      target: ['chrome102'],
-    },
-    {
-      type: 'build:js',
-      buildId: 'esm:browser',
+      canonical: false,
       entries: [
         {
-          path: '.',
+          alias: 'index.browser',
           source: './src/index.ts',
-          output: './dist/index.browser.js',
+          exportPath: '.',
+          formats: ['esm', 'commonjs'],
         },
       ],
-      runtime: 'browser',
-      format: 'esm',
-      target: ['chrome102'],
+    },
+    {
+      key: 'canonical',
+      runtime: '*',
+      canonical: true,
+      entries: [
+        {
+          alias: 'index',
+          source: './src/index.ts',
+          exportPath: '.',
+          formats: ['esm', 'commonjs'],
+        },
+      ],
     },
   ])
+
+  // Scheduling a runtime-conditioned variant build warns about the pattern
+  expect(ctx.logger.warn).toHaveBeenCalledTimes(1)
 })
 
-test('should parse tasks with a `node` sub-condition (type: module)', () => {
+test('should resolve builds (type: commonjs)', () => {
   const pkg: PackageJSON = {
-    type: 'module',
+    type: 'commonjs',
     name: 'test',
     version: '1.0.0',
-    main: './dist/index.cjs',
-    module: './dist/index.js',
+    main: './dist/index.js',
+    module: './dist/index.mjs',
     types: './dist/index.d.ts',
     files: ['dist'],
     exports: {
       '.': {
         source: './src/index.ts',
-        node: {
-          source: './src/index.node.ts',
-          import: './dist/index.node.js',
-          require: './dist/index.node.cjs',
+        import: './dist/index.mjs',
+        require: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './extra': {
+        source: './src/extra.ts',
+        import: './dist/extra.mjs',
+        require: './dist/extra.js',
+        default: './dist/extra.js',
+      },
+      './package.json': './package.json',
+    },
+  }
+
+  const ctx = createContext(pkg)
+  const builds = resolveTsdownBuilds(ctx)
+
+  expect(builds).toEqual([
+    {
+      key: 'canonical',
+      runtime: '*',
+      canonical: true,
+      entries: [
+        {
+          alias: 'index',
+          source: './src/index.ts',
+          exportPath: '.',
+          formats: ['esm', 'commonjs'],
         },
+        {
+          alias: 'extra',
+          source: './src/extra.ts',
+          exportPath: './extra',
+          formats: ['esm', 'commonjs'],
+        },
+      ],
+    },
+  ])
+
+  expect(ctx.logger.warn).not.toHaveBeenCalled()
+})
+
+test('should resolve `bundles` into their own build', () => {
+  const pkg: PackageJSON = {
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
         import: './dist/index.js',
-        require: './dist/index.cjs',
         default: './dist/index.js',
       },
       './package.json': './package.json',
     },
   }
 
-  const exports = parseAndValidateExports({
-    cwd,
-    pkg,
-    strict: true,
-    strictOptions,
-    logger,
+  const ctx = createContext(pkg, {
+    bundles: [
+      {source: './src/cli.ts', import: './dist/cli.js'},
+      {source: './src/worker.ts', import: './dist/worker.js', runtime: 'node'},
+    ],
   })
+  const builds = resolveTsdownBuilds(ctx)
 
-  const ctx: BuildContext = {
-    bundledPackages: [],
-    cwd: '/test',
-    distPath: '/test/dist',
-    emitDeclarationOnly: false,
-    exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
-    external: [],
-    files: [],
-    logger: {
-      log: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      success: vi.fn(),
+  expect(builds).toEqual([
+    {
+      key: 'bundles',
+      runtime: '*',
+      canonical: false,
+      entries: [{alias: 'cli', source: './src/cli.ts', formats: ['esm']}],
     },
-    pkg,
-    runtime: '*',
-    target: {
-      '*': ['chrome102', 'node14'],
-      'browser': ['chrome102'],
-      'node': ['node14'],
+    {
+      key: 'bundles:node',
+      runtime: 'node',
+      canonical: false,
+      entries: [{alias: 'worker', source: './src/worker.ts', formats: ['esm']}],
     },
-    strict: true,
-    ts: {},
-    dts: 'api-extractor',
+    {
+      key: 'canonical',
+      runtime: '*',
+      canonical: true,
+      entries: [
+        {
+          alias: 'index',
+          source: './src/index.ts',
+          exportPath: '.',
+          formats: ['esm'],
+        },
+      ],
+    },
+  ])
+})
+
+test('should keep the `*` runtime of a bundle in a non-`*` runtime package', () => {
+  const pkg: PackageJSON = {
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        import: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
   }
 
-  const tasks = resolveBuildTasks(ctx)
+  // A `runtime: '*'` bundle in a `runtime: 'node'` package must build for `'*'` (the neutral
+  // platform), not inherit the package runtime
+  const ctx = createContext(pkg, {
+    runtime: 'node',
+    bundles: [{source: './src/browser-safe.ts', import: './dist/browser-safe.js', runtime: '*'}],
+  })
+  const builds = resolveTsdownBuilds(ctx)
 
-  expect(tasks).toEqual([
+  expect(builds).toEqual([
     {
-      entries: [
-        {
-          exportPath: '.',
-          importId: 'test',
-          sourcePath: './src/index.ts',
-          targetPaths: ['./dist/index.d.ts', './dist/index.d.cts'],
-        },
-        {
-          exportPath: '.',
-          importId: 'test',
-          sourcePath: './src/index.node.ts',
-          targetPaths: ['./dist/index.node.d.ts', './dist/index.node.d.cts'],
-        },
-      ],
-      type: 'build:dts',
-    },
-    {
-      type: 'build:js',
-      buildId: 'commonjs:*',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.ts',
-          output: './dist/index.cjs',
-        },
-      ],
+      key: 'bundles:*',
       runtime: '*',
-      format: 'commonjs',
-      target: ['chrome102', 'node14'],
+      canonical: false,
+      entries: [{alias: 'browser-safe', source: './src/browser-safe.ts', formats: ['esm']}],
     },
     {
-      type: 'build:js',
-      buildId: 'esm:*',
+      key: 'canonical',
+      runtime: 'node',
+      canonical: true,
       entries: [
         {
-          path: '.',
+          alias: 'index',
           source: './src/index.ts',
-          output: './dist/index.js',
+          exportPath: '.',
+          formats: ['esm'],
         },
       ],
-      runtime: '*',
-      format: 'esm',
-      target: ['chrome102', 'node14'],
-    },
-    {
-      type: 'build:js',
-      buildId: 'commonjs:node',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.node.ts',
-          output: './dist/index.node.cjs',
-        },
-      ],
-      runtime: 'node',
-      format: 'commonjs',
-      target: ['node14'],
-    },
-    {
-      type: 'build:js',
-      buildId: 'esm:node',
-      entries: [
-        {
-          path: '.',
-          source: './src/index.node.ts',
-          output: './dist/index.node.js',
-        },
-      ],
-      runtime: 'node',
-      format: 'esm',
-      target: ['node14'],
     },
   ])
 })
