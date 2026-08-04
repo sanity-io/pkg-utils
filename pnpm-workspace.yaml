@@ -25,6 +25,15 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  - '@next/swc-darwin-arm64@16.3.0'
+  - '@next/swc-darwin-x64@16.3.0'
+  - '@next/swc-linux-arm64-gnu@16.3.0'
+  - '@next/swc-linux-arm64-musl@16.3.0'
+  - '@next/swc-linux-x64-gnu@16.3.0'
+  - '@next/swc-linux-x64-musl@16.3.0'
+  - '@next/swc-win32-arm64-msvc@16.3.0'
+  - '@next/swc-win32-x64-msvc@16.3.0'
+  - next@16.3.0
   - '@tsdown/css@0.22.14'
   - '@yuku-parser/binding-darwin-arm64@0.8.0'
   - '@yuku-parser/binding-darwin-x64@0.8.0'
