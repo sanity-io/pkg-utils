@@ -6,7 +6,7 @@
 
 - [#3221](https://github.com/sanity-io/pkg-utils/pull/3221) [`125080f`](https://github.com/sanity-io/pkg-utils/commit/125080f8b0fb748150422bc4a464f487d804f4db) Thanks [@stipsan](https://github.com/stipsan)! - **v12: the build now runs on [`tsdown`](https://tsdown.dev)**, composed with [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme) — replacing the old rollup (JS) + rolldown (types) + api-extractor (more types) + esbuild (checks) stack. Your hand-written `exports` map stays the input. Closes [#2301](https://github.com/sanity-io/pkg-utils/issues/2301).
 
-  **Most packages build unchanged.** If yours doesn't, the error tells you exactly what to change — and the full guide is in [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md).
+  **Most packages build unchanged.** If yours doesn't, the error tells you exactly what to change — and the full guide is in [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/%40sanity/pkg-utils/MIGRATE.md).
 
   ### What you get
   - **~2x faster builds** — one bundler does JS + types in one pass.
