@@ -45,6 +45,10 @@ tsdown's programmatic `build()`.
 Builds regenerate the `exports` map from the build (with `source` conditions for development, and
 a `source`-less `publishConfig.exports` for publishing) and keep it in sync — including in CI —
 so environments that set `CI=true` without meaning "skip package.json" still behave correctly.
+For conditional entries, generated conditions are materialized in both maps, then the authored
+subpath and condition order of each map is preserved independently on later builds. Plain-string
+entries keep their compact shape. This lets you reorder conditions directly in `package.json`;
+earlier matching conditions take precedence over later ones.
 
 ## Configuration
 
