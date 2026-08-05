@@ -44,7 +44,8 @@ tsdown's programmatic `build()`.
 
 During local builds the `exports` map is regenerated from the build (with `source` conditions for
 development, and a `source`-less `publishConfig.exports` for publishing) and kept in sync; in CI
-the committed `package.json` is used as-is.
+the committed `package.json` is used as-is. The authored subpath and condition order is preserved:
+earlier matching export conditions take precedence over later ones.
 
 ## Configuration
 

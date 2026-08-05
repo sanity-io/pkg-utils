@@ -238,6 +238,86 @@ test('carries hand-written custom conditions over, before the format fallbacks',
   expect(Object.keys(publish['./worker'] as Record<string, unknown>)).toEqual(['worker', 'default'])
 })
 
+test('preserves authored condition order around browser and custom conditions', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    files: ['dist'],
+    exports: {
+      '.': {
+        'source': './src/index.ts',
+        'deno': './dist/index.js',
+        'edge': './dist/index.js',
+        'edge-light': './dist/index.js',
+        'worker': './dist/index.js',
+        'react-server': './dist/index.react-server.js',
+        'browser': {
+          source: './src/index.browser.ts',
+          require: './dist/index.browser.cjs',
+          import: './dist/index.browser.js',
+        },
+        'import': './dist/index.js',
+        'require': './dist/index.cjs',
+        'default': './dist/index.js',
+      },
+      './package.json': './package.json',
+    } as PackageJSON['exports'],
+  })
+
+  const dev = composer(
+    {
+      '.': {source: './src/index.ts', import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: false},
+  )
+  const devEntry = dev['.'] as Record<string, unknown>
+
+  expect(Object.keys(devEntry)).toEqual([
+    'source',
+    'deno',
+    'edge',
+    'edge-light',
+    'worker',
+    'react-server',
+    'browser',
+    'import',
+    'require',
+    'default',
+  ])
+  expect(Object.keys(devEntry['browser'] as Record<string, unknown>)).toEqual([
+    'source',
+    'require',
+    'import',
+  ])
+
+  const publish = composer(
+    {
+      '.': {import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: true},
+  )
+  const publishEntry = publish['.'] as Record<string, unknown>
+
+  expect(Object.keys(publishEntry)).toEqual([
+    'deno',
+    'edge',
+    'edge-light',
+    'worker',
+    'react-server',
+    'browser',
+    'import',
+    'require',
+    'default',
+  ])
+  expect(Object.keys(publishEntry['browser'] as Record<string, unknown>)).toEqual([
+    'require',
+    'import',
+  ])
+})
+
 test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-string publish entries', () => {
   const composer = createComposer({
     type: 'module',
