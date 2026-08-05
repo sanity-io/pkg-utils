@@ -1,5 +1,18 @@
 # @sanity/tsdown-config
 
+## 0.23.0
+
+### Minor Changes
+
+- [#3238](https://github.com/sanity-io/pkg-utils/pull/3238) [`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013) Thanks [@stipsan](https://github.com/stipsan)! - Default `exports.enabled` to `true` instead of `'local-only'`.
+
+  Gating on `CI` via `'local-only'`/`'ci-only'` surprised environments that set `CI=true` without meaning "don't rewrite package.json" (notably Cursor Cloud and GitHub Copilot)
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.13
+
 ## 0.22.0
 
 ### Minor Changes

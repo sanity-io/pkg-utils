@@ -1,5 +1,21 @@
 # @sanity/pkg-utils
 
+## 12.0.1
+
+### Patch Changes
+
+- [#3239](https://github.com/sanity-io/pkg-utils/pull/3239) [`3cd33d4`](https://github.com/sanity-io/pkg-utils/commit/3cd33d41e2f90af3ef732d3151682f6048f8ec81) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.4
+
+- [#3238](https://github.com/sanity-io/pkg-utils/pull/3238) [`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013) Thanks [@stipsan](https://github.com/stipsan)! - Default `exports.enabled` to `true` instead of `'local-only'`.
+
+  Gating on `CI` via `'local-only'`/`'ci-only'` surprised environments that set `CI=true` without meaning "don't rewrite package.json" (notably Cursor Cloud and GitHub Copilot)
+
+- [#3237](https://github.com/sanity-io/pkg-utils/pull/3237) [`7d44739`](https://github.com/sanity-io/pkg-utils/commit/7d447395e5a8b8efaaa56af418bb8b0c74db4094) Thanks [@stipsan](https://github.com/stipsan)! - For conditional entries, materialize generated package export conditions in both `exports` and
+  `publishConfig.exports`, then preserve the user-authored order of each map independently on later
+  builds, including nested runtime conditions. Plain-string entries retain their compact shape.
+- Updated dependencies [[`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013)]:
+  - @sanity/tsdown-config@0.23.0
+
 ## 12.0.0
 
 ### Major Changes
