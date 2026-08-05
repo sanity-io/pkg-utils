@@ -2,5 +2,6 @@
 '@sanity/pkg-utils': patch
 ---
 
-Preserve the authored order of package export conditions, including nested runtime conditions,
-when local builds regenerate `exports` and `publishConfig.exports`.
+Materialize generated package export conditions in both `exports` and `publishConfig.exports`,
+then preserve the user-authored order of each map independently on later builds, including nested
+runtime conditions.

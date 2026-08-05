@@ -25,12 +25,14 @@ interface ComposeContext {
  *   by the variant builds of the waterfall) — with `source`-like conditions stripped from the
  *   publish variant,
  * - all hand-written conditions (`react-server`, `worker`, … included) retain their authored
- *   order, because earlier matching conditions take precedence,
+ *   order in each map independently, because earlier matching conditions take precedence,
+ * - generated conditions are materialized in both `exports` and `publishConfig.exports`, so
+ *   they can be reordered directly in `package.json` and keep that position on later builds,
  * - a trailing `default` condition is kept on dual-format entries (tsdown emits bare
  *   `import`/`require` pairs; the Sanity convention always ends with `default`),
  * - hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
  *   entries) are carried over untouched, and
- * - the hand-written subpath and condition key order is preserved.
+ * - the hand-written subpath and condition key order of each map is preserved.
  * @internal
  */
 export function createExportsComposer(
@@ -63,27 +65,46 @@ export function createExportsComposer(
     // 2. Reconcile each generated entry with its hand-written counterpart.
     const result: ExportsMap = {}
     const handwritten = ctx.exports || {}
-    const handwrittenRaw: Record<string, unknown> = pkg.exports || {}
+    const sourceRaw: ExportsMap = pkg.exports || {}
+    const publishRaw: ExportsMap | undefined = pkg.publishConfig?.exports
+    const authoredRaw = isPublish && publishRaw ? publishRaw : sourceRaw
 
     const reconcile = (exportPath: string, value: unknown): unknown => {
       const exp = handwritten[exportPath]
       if (!exp) return value
-      const raw = handwrittenRaw[exportPath]
+      const raw = authoredRaw[exportPath]
+      const source = sourceRaw[exportPath]
       // A configured exports map is itself authoritative. Otherwise use the raw package entry
-      // so conditions inferred while parsing don't masquerade as hand-written ordering choices.
-      const authored = ctx.config?.exports === undefined && isRecord(raw) ? raw : exp
+      // for the map being generated. Fall back to `exports` when a new publish map/entry is
+      // being generated, so inferred conditions don't masquerade as ordering choices.
+      const authored =
+        ctx.config?.exports === undefined
+          ? isRecord(raw)
+            ? raw
+            : isRecord(source)
+              ? source
+              : exp
+          : exp
       return reconcileEntry(exp, value, {authored, isPublish, type})
     }
 
-    // 3. Follow the hand-written key order; append generated extras (e.g. `./package.json`
-    //    when it wasn't hand-written) at the end.
-    for (const exportPath of Object.keys(handwrittenRaw)) {
+    // 3. Follow the hand-written key order of the map being generated. Source-only passthrough
+    //    subpaths missing from an existing publish map are appended, followed by generated extras.
+    const authoredPaths = Object.keys(authoredRaw)
+    for (const exportPath of Object.keys(sourceRaw)) {
+      if (!Object.prototype.hasOwnProperty.call(authoredRaw, exportPath)) {
+        authoredPaths.push(exportPath)
+      }
+    }
+    for (const exportPath of authoredPaths) {
       if (exportPath in remapped) {
         result[exportPath] = reconcile(exportPath, remapped[exportPath])
       } else {
         // Hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
         // entries) pass through untouched.
-        result[exportPath] = handwrittenRaw[exportPath]
+        result[exportPath] = Object.prototype.hasOwnProperty.call(authoredRaw, exportPath)
+          ? authoredRaw[exportPath]
+          : sourceRaw[exportPath]
       }
     }
     for (const [exportPath, value] of Object.entries(remapped)) {
@@ -105,6 +126,7 @@ function reconcileEntry(
   options: {authored: object; isPublish: boolean; type: 'commonjs' | 'module'},
 ): unknown {
   const {authored, isPublish, type} = options
+  const authoredRecord = isRecord(authored) ? authored : {}
 
   // tsdown's publish variant of a single-format entry is a plain string
   const gen: Record<string, unknown> | undefined =
@@ -115,21 +137,17 @@ function reconcileEntry(
         : undefined
   if (!gen) return generated
 
+  const browserOrder = isRecord(authoredRecord['browser']) ? authoredRecord['browser'] : exp.browser
   const browser =
     exp.browser && (exp.browser.import || exp.browser.require)
-      ? pickConditions(exp.browser, isPublish)
+      ? pickConditions(exp.browser, isPublish, browserOrder ?? exp.browser)
       : undefined
+  const nodeOrder = isRecord(authoredRecord['node']) ? authoredRecord['node'] : exp.node
   const node =
     exp.node && (exp.node.import || exp.node.require)
-      ? pickConditions(exp.node, isPublish)
+      ? pickConditions(exp.node, isPublish, nodeOrder ?? exp.node)
       : undefined
   const custom = pickCustomConditions(exp)
-
-  // A plain-string publish entry without hand-written conditions to re-insert stays a plain
-  // string (e.g. `publishConfig.exports["."] = "./dist/index.js"`)
-  if (typeof generated === 'string' && !exp.types && !browser && !node && custom.length === 0) {
-    return generated
-  }
 
   const next: Record<string, unknown> = {}
 
@@ -149,7 +167,11 @@ function reconcileEntry(
   // Hand-written custom conditions (`react-server`, `worker`, …) aren't built, but they are
   // the author's: carry their targets over, then restore every condition's authored position.
   for (const [condition, target] of custom) {
-    next[condition] = target
+    const authoredTarget = authoredRecord[condition]
+    next[condition] =
+      isRecord(target) && isRecord(authoredTarget)
+        ? preserveConditionOrder(target, authoredTarget)
+        : target
   }
 
   if (typeof gen['import'] === 'string' && typeof gen['require'] === 'string') {
@@ -172,12 +194,13 @@ function reconcileEntry(
 function pickConditions(
   conditions: {source?: string; import?: string; require?: string},
   isPublish: boolean,
+  authored: object = conditions,
 ): Record<string, string> {
   const next: Record<string, string> = {}
   if (!isPublish && conditions.source) next['source'] = conditions.source
   if (conditions.import) next['import'] = conditions.import
   if (conditions.require) next['require'] = conditions.require
-  return preserveConditionOrder(next, conditions)
+  return preserveConditionOrder(next, authored)
 }
 
 /**

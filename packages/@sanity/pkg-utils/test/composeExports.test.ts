@@ -264,6 +264,25 @@ test('preserves authored condition order around browser and custom conditions', 
       },
       './package.json': './package.json',
     } as PackageJSON['exports'],
+    publishConfig: {
+      exports: {
+        '.': {
+          'worker': './dist/index.js',
+          'deno': './dist/index.js',
+          'edge': './dist/index.js',
+          'edge-light': './dist/index.js',
+          'react-server': './dist/index.react-server.js',
+          'browser': {
+            import: './dist/index.browser.js',
+            require: './dist/index.browser.cjs',
+          },
+          'import': './dist/index.js',
+          'require': './dist/index.cjs',
+          'default': './dist/index.js',
+        },
+        './package.json': './package.json',
+      },
+    } as PackageJSON['publishConfig'],
   })
 
   const dev = composer(
@@ -303,10 +322,10 @@ test('preserves authored condition order around browser and custom conditions', 
   const publishEntry = publish['.'] as Record<string, unknown>
 
   expect(Object.keys(publishEntry)).toEqual([
+    'worker',
     'deno',
     'edge',
     'edge-light',
-    'worker',
     'react-server',
     'browser',
     'import',
@@ -314,8 +333,8 @@ test('preserves authored condition order around browser and custom conditions', 
     'default',
   ])
   expect(Object.keys(publishEntry['browser'] as Record<string, unknown>)).toEqual([
-    'require',
     'import',
+    'require',
   ])
 })
 
@@ -333,6 +352,15 @@ test('inserts generated conditions before the authored default fallback', () => 
         default: './dist/index.js',
       },
       './package.json': './package.json',
+    },
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        './package.json': './package.json',
+      },
     },
   })
 
@@ -366,7 +394,7 @@ test('inserts generated conditions before the authored default fallback', () => 
   ])
 })
 
-test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-string publish entries', () => {
+test('keeps single-format shapes, remaps aliases, and materializes publish conditions', () => {
   const composer = createComposer({
     type: 'module',
     name: 'test',
@@ -405,7 +433,8 @@ test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-s
   })
   expect(Object.keys(dev)).toEqual(['.', './feature', './package.json'])
 
-  // Publish: a plain-string entry without hand-written conditions to re-insert stays a string
+  // Publish: tsdown's plain-string single-format entries become explicit `default` conditions,
+  // matching the generated condition in `exports` and making it available for user reordering.
   const publish = composer(
     {
       '.': './dist/index.js',
@@ -416,8 +445,8 @@ test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-s
   )
 
   expect(publish).toEqual({
-    '.': './dist/index.js',
-    './feature': './dist/sub/feature.js',
+    '.': {default: './dist/index.js'},
+    './feature': {default: './dist/sub/feature.js'},
     './package.json': './package.json',
   })
 })
