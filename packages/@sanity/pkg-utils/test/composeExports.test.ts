@@ -243,6 +243,7 @@ test('preserves authored condition order around browser and custom conditions', 
     type: 'module',
     name: 'test',
     version: '1.0.0',
+    types: './dist/index.d.ts',
     files: ['dist'],
     exports: {
       '.': {
