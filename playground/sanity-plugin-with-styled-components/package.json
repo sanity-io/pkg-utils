@@ -47,9 +47,7 @@
   },
   "publishConfig": {
     "exports": {
-      ".": {
-        "default": "./dist/index.js"
-      },
+      ".": "./dist/index.js",
       "./package.json": "./package.json"
     }
   }

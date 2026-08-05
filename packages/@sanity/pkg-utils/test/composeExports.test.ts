@@ -394,7 +394,7 @@ test('inserts generated conditions before the authored default fallback', () => 
   ])
 })
 
-test('keeps single-format shapes, remaps aliases, and materializes publish conditions', () => {
+test('keeps single-format shapes, remaps aliases, and preserves compact publish entries', () => {
   const composer = createComposer({
     type: 'module',
     name: 'test',
@@ -433,8 +433,7 @@ test('keeps single-format shapes, remaps aliases, and materializes publish condi
   })
   expect(Object.keys(dev)).toEqual(['.', './feature', './package.json'])
 
-  // Publish: tsdown's plain-string single-format entries become explicit `default` conditions,
-  // matching the generated condition in `exports` and making it available for user reordering.
+  // Publish: a plain-string entry without extra conditions stays in tsdown's compact shape.
   const publish = composer(
     {
       '.': './dist/index.js',
@@ -445,8 +444,8 @@ test('keeps single-format shapes, remaps aliases, and materializes publish condi
   )
 
   expect(publish).toEqual({
-    '.': {default: './dist/index.js'},
-    './feature': {default: './dist/sub/feature.js'},
+    '.': './dist/index.js',
+    './feature': './dist/sub/feature.js',
     './package.json': './package.json',
   })
 })

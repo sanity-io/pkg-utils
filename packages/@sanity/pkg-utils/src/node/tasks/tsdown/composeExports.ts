@@ -26,8 +26,9 @@ interface ComposeContext {
  *   publish variant,
  * - all hand-written conditions (`react-server`, `worker`, … included) retain their authored
  *   order in each map independently, because earlier matching conditions take precedence,
- * - generated conditions are materialized in both `exports` and `publishConfig.exports`, so
- *   they can be reordered directly in `package.json` and keep that position on later builds,
+ * - generated conditions for conditional entries are materialized in both `exports` and
+ *   `publishConfig.exports`, so they can be reordered directly in `package.json` and keep that
+ *   position on later builds (plain-string entries stay compact),
  * - a trailing `default` condition is kept on dual-format entries (tsdown emits bare
  *   `import`/`require` pairs; the Sanity convention always ends with `default`),
  * - hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
@@ -148,6 +149,12 @@ function reconcileEntry(
       ? pickConditions(exp.node, isPublish, nodeOrder ?? exp.node)
       : undefined
   const custom = pickCustomConditions(exp)
+
+  // Preserve tsdown's compact single-format publish shape unless hand-written conditions need
+  // to be re-inserted. There is no condition ordering to preserve in a plain string entry.
+  if (typeof generated === 'string' && !exp.types && !browser && !node && custom.length === 0) {
+    return generated
+  }
 
   const next: Record<string, unknown> = {}
 
