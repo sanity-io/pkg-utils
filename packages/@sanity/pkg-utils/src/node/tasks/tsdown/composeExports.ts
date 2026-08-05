@@ -186,17 +186,18 @@ function preserveConditionOrder<T>(
 ): Record<string, T> {
   const entries: [string, T][] = []
   const added = new Set<string>()
+  const conditionEntries = Object.entries(conditions)
+  const entriesByCondition = new Map(conditionEntries.map((entry) => [entry[0], entry]))
 
   for (const condition of Object.keys(authored)) {
-    if (condition.startsWith('_') || !Object.prototype.hasOwnProperty.call(conditions, condition)) {
-      continue
-    }
-    entries.push([condition, conditions[condition]])
+    const entry = entriesByCondition.get(condition)
+    if (condition.startsWith('_') || !entry) continue
+    entries.push(entry)
     added.add(condition)
   }
 
-  for (const [condition, target] of Object.entries(conditions)) {
-    if (!added.has(condition)) entries.push([condition, target])
+  for (const entry of conditionEntries) {
+    if (!added.has(entry[0])) entries.push(entry)
   }
 
   return Object.fromEntries(entries)
