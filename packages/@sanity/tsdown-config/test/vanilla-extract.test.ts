@@ -362,7 +362,7 @@ describe('vanillaExtract option', () => {
       expect.unreachable('expected `exports.customExports` to be a function')
     }
     // The config's own exports settings are preserved
-    expect(exportsOption).toMatchObject({enabled: 'local-only', devExports: true})
+    expect(exportsOption).toMatchObject({enabled: true, devExports: true})
 
     const result = await exportsOption.customExports(
       {
