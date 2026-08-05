@@ -1,5 +1,11 @@
 # @sanity/vanilla-extract-integration
 
+## 0.1.10
+
+### Patch Changes
+
+- [#3232](https://github.com/sanity-io/pkg-utils/pull/3232) [`dea08dc`](https://github.com/sanity-io/pkg-utils/commit/dea08dcf8b56bcadf378777c918cd9643777b9a3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency yuku-parser to ^0.8.3
+
 ## 0.1.9
 
 ### Patch Changes
