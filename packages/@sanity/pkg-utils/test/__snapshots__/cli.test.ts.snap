@@ -678,14 +678,14 @@ exports[`cli > should build \`sanity-plugin-with-styled-components\` package > .
 "import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-3kj391ks.js")), colorInput = definePlugin({
+const ColorInput = lazy(() => import("./ColorInput-3kj391ks.js")), colorType = defineType({
+	name: "color",
+	type: "string",
+	title: "Color",
+	components: { input: ColorInput }
+}), colorInput = definePlugin({
 	name: "@sanity/color-input",
-	schema: { types: [defineType({
-		name: "color",
-		type: "string",
-		title: "Color",
-		components: { input: ColorInput }
-	})] }
+	schema: { types: [colorType] }
 });
 export { ColorInput, colorInput };
 
@@ -775,14 +775,14 @@ import "@sanity/ui/css/index.css";
 import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-rhEnzAiP.js")), colorInput = definePlugin({
+const ColorInput = lazy(() => import("./ColorInput-rhEnzAiP.js")), colorType = defineType({
+	name: "color",
+	type: "string",
+	title: "Color",
+	components: { input: ColorInput }
+}), colorInput = definePlugin({
 	name: "@sanity/color-input",
-	schema: { types: [defineType({
-		name: "color",
-		type: "string",
-		title: "Color",
-		components: { input: ColorInput }
-	})] }
+	schema: { types: [colorType] }
 });
 export { ColorInput, colorInput };
 
