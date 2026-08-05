@@ -284,9 +284,7 @@ export async function compileLazyChunk(
     }
   }
   if (!wsToken) {
-    throw new Error(
-      'No wsToken found in the served entry chunk (or its rolldown-runtime sibling)',
-    )
+    throw new Error('No wsToken found in the served entry chunk (or its rolldown-runtime sibling)')
   }
 
   const clientId = `integration-test-${Math.random().toString(36).slice(2)}`
