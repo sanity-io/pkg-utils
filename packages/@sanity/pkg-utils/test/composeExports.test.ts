@@ -319,6 +319,53 @@ test('preserves authored condition order around browser and custom conditions', 
   ])
 })
 
+test('inserts generated conditions before the authored default fallback', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        import: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+  })
+
+  // A mixed-format build can generate a format that this particular entry did not declare.
+  // It has no authored position, so it belongs immediately before the `default` fallback.
+  const dev = composer(
+    {
+      '.': {source: './src/index.ts', import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: false},
+  )
+  expect(Object.keys(dev['.'] as Record<string, unknown>)).toEqual([
+    'source',
+    'import',
+    'require',
+    'default',
+  ])
+
+  const publish = composer(
+    {
+      '.': {import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: true},
+  )
+  expect(Object.keys(publish['.'] as Record<string, unknown>)).toEqual([
+    'import',
+    'require',
+    'default',
+  ])
+})
+
 test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-string publish entries', () => {
   const composer = createComposer({
     type: 'module',
