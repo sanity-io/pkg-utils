@@ -302,8 +302,8 @@ test('preserves independent authored orders around browser and custom conditions
     'worker',
     'react-server',
     'browser',
-    'require',
     'import',
+    'require',
     'default',
   ])
   expect(Object.keys(devEntry['browser'] as Record<string, unknown>)).toEqual([
@@ -328,8 +328,8 @@ test('preserves independent authored orders around browser and custom conditions
     'edge-light',
     'react-server',
     'browser',
-    'import',
     'require',
+    'import',
     'default',
   ])
   expect(Object.keys(publishEntry['browser'] as Record<string, unknown>)).toEqual([
