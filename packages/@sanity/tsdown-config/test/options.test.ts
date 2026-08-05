@@ -229,21 +229,19 @@ describe('unexposed options', () => {
 })
 
 describe('exports option', () => {
-  test('defaults to local-only generation with dev exports', async () => {
-    // `enabled: 'local-only'` generates the `exports` map during local builds and skips it in
-    // CI; `devExports: true` keeps the local `exports` map pointing at source files while
-    // `publishConfig.exports` receives the built files
-    expect((await defineConfig()).exports).toEqual({enabled: 'local-only', devExports: true})
+  test('defaults to always-on generation with dev exports', async () => {
+    // Exports generation always runs (no `'local-only'`/`'ci-only'` gate); `devExports: true`
+    // keeps the local `exports` map pointing at source files while `publishConfig.exports`
+    // receives the built files
+    expect((await defineConfig()).exports).toEqual({devExports: true})
   })
 
   test('merges an object over the defaults', async () => {
     expect((await defineConfig({exports: {all: true}})).exports).toEqual({
-      enabled: 'local-only',
       devExports: true,
       all: true,
     })
     expect((await defineConfig({exports: {devExports: 'source'}})).exports).toEqual({
-      enabled: 'local-only',
       devExports: 'source',
     })
   })

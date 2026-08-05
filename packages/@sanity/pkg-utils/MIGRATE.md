@@ -41,9 +41,9 @@ Other behavior changes:
 - **`pkg check` runs [publint](https://publint.dev)** on the packed package (with
   `publishConfig` applied) instead of the esbuild resolution checks. Fix what it reports — it
   lints what consumers actually install.
-- **Local builds keep `exports` in sync**: the map is regenerated from the build (with the
-  `source`-condition development pattern and a `source`-less `publishConfig.exports`); CI uses
-  the committed `package.json` as-is.
+- **Builds keep `exports` in sync**: the map is regenerated from the build (with the
+  `source`-condition development pattern and a `source`-less `publishConfig.exports`), including
+  in CI — so environments that set `CI=true` without meaning "skip package.json" still behave.
 - `tsdown.config.*` files are **never** loaded by `pkg build` — `package.config.ts` is the only
   config source. For customization beyond the config surface, use `tsdown` +
   `@sanity/tsdown-config` directly.

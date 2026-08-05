@@ -114,10 +114,11 @@ export async function resolveTsdownConfig(
   // Exports generation runs on the canonical build only, with `devExports: 'source'` — the
   // hand-written Sanity convention (`source` conditions in `exports`, a `source`-less
   // `publishConfig.exports`) — and the pkg-utils composer reconciling the generated map with
-  // the hand-written one. tsdown's own `enabled: 'local-only'` default applies: the map is
-  // written during local builds and left alone in CI. A types-only build never rewrites
-  // `package.json`, and neither do watch builds (a rewrite would re-trigger the
-  // `package.json` watcher).
+  // the hand-written one. `@sanity/tsdown-config`'s always-on exports default applies: the map
+  // is rewritten on every build (CI included), so environments that set `CI=true` without
+  // meaning "skip package.json" (Cursor Cloud, …) still keep exports in sync. A types-only
+  // build never rewrites `package.json`, and neither do watch builds (a rewrite would
+  // re-trigger the `package.json` watcher).
   const exports: UserConfig['exports'] =
     build.canonical && !ctx.emitDeclarationOnly && !options.watch
       ? {

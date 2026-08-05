@@ -42,9 +42,9 @@ tsdown's programmatic `build()`.
 `pkg build`. For customizations beyond the options below, use `tsdown` +
 `@sanity/tsdown-config` directly instead.
 
-During local builds the `exports` map is regenerated from the build (with `source` conditions for
-development, and a `source`-less `publishConfig.exports` for publishing) and kept in sync; in CI
-the committed `package.json` is used as-is.
+Builds regenerate the `exports` map from the build (with `source` conditions for development, and
+a `source`-less `publishConfig.exports` for publishing) and keep it in sync — including in CI —
+so environments that set `CI=true` without meaning "skip package.json" still behave correctly.
 
 ## Configuration
 

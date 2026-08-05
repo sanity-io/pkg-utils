@@ -437,8 +437,9 @@ export default defineConfig({
 tsdown's [`exports` option](https://tsdown.dev/options/package-exports) is forwarded with
 different defaults, suited for publishing Sanity libraries:
 
-- `enabled: 'local-only'` - the `exports` map in `package.json` is generated during local builds
-  and skipped in CI, where the committed `package.json` is already up to date, and
+- always on (`true`) - the `exports` map in `package.json` is generated on every build, whether
+  `CI` is set or not. Gating on `'local-only'`/`'ci-only'` surprised environments like Cursor
+  Cloud that set `CI=true` without intending to skip `package.json` rewrites, and
 - `devExports: true` when pnpm is detected - the local `exports` map points at the source files
   (so monorepo siblings and editors resolve them directly), while `publishConfig.exports` receives
   the built files. This default is omitted for other or unknown package managers because they do
