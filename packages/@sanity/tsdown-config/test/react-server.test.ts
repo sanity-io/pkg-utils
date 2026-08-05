@@ -125,8 +125,7 @@ describe('reactCompiler.reactServer option', () => {
     // owns `dts`, `exports` generation and `publint`
     expect(getPluginNames(compiled)).toEqual(['@rolldown/plugin-babel'])
     expect(compiled.publint).toBe(true)
-    expect(compiled.exports).toMatchObject({devExports: true})
-    expect(compiled.exports).not.toHaveProperty('enabled')
+    expect(compiled.exports).toMatchObject({enabled: true, devExports: true})
 
     // The react-server variant builds the same source without the compiler, skips d.ts (the
     // compiled variant's declarations serve both entries), never cleans (the compiled

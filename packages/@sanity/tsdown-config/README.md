@@ -437,7 +437,7 @@ export default defineConfig({
 tsdown's [`exports` option](https://tsdown.dev/options/package-exports) is forwarded with
 different defaults, suited for publishing Sanity libraries:
 
-- always on (`true`) - the `exports` map in `package.json` is generated on every build, whether
+- `enabled: true` - the `exports` map in `package.json` is generated on every build, whether
   `CI` is set or not. Gating on `'local-only'`/`'ci-only'` surprised environments like Cursor
   Cloud that set `CI=true` without intending to skip `package.json` rewrites, and
 - `devExports: true` when pnpm is detected - the local `exports` map points at the source files

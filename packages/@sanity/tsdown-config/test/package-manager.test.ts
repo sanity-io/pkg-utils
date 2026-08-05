@@ -15,6 +15,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
 
     expect((await defineConfig()).exports).toEqual({
+      enabled: true,
       devExports: true,
     })
     expect(mockedDetect).toHaveBeenCalledWith({cwd: process.cwd()})
@@ -27,20 +28,24 @@ describe('devExports default', () => {
   ] as const)('is not enabled when $name is detected', async (packageManager) => {
     mockedDetect.mockResolvedValue(packageManager)
 
-    expect((await defineConfig()).exports).toBe(true)
+    expect((await defineConfig()).exports).toEqual({
+      enabled: true,
+    })
   })
 
   test('is not enabled when no package manager can be detected', async () => {
     mockedDetect.mockResolvedValue(null)
 
-    expect((await defineConfig()).exports).toBe(true)
+    expect((await defineConfig()).exports).toEqual({
+      enabled: true,
+    })
   })
 
   test('still merges other export options when pnpm is not detected', async () => {
     mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
 
-    // Scalar `true` default is replaced by an object overlay (mergeConfig semantics)
     expect((await defineConfig({exports: {all: true}})).exports).toEqual({
+      enabled: true,
       all: true,
     })
   })
@@ -49,6 +54,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
 
     expect((await defineConfig({exports: {devExports: true}})).exports).toEqual({
+      enabled: true,
       devExports: true,
     })
     // An explicit `devExports` makes the pnpm-gated default unreachable, so the detection
@@ -60,6 +66,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
 
     expect((await defineConfig({cwd: '/somewhere/else'})).exports).toEqual({
+      enabled: true,
       devExports: true,
     })
     expect(mockedDetect).toHaveBeenCalledWith({cwd: '/somewhere/else'})

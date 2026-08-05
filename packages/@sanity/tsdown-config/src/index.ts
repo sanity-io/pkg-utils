@@ -154,7 +154,7 @@ export interface PackageOptions extends Pick<
   clean?: UserConfig['clean']
   /**
    * tsdown's `exports` option, with defaults suited for publishing Sanity libraries:
-   * exports generation is always on (`true`), so it runs the same whether `CI` is set or not
+   * `enabled: true` generates the `exports` map on every build, whether `CI` is set or not
    * (GitHub Actions, Cursor Cloud, local shells, …). Relying on `'local-only'`/`'ci-only'`
    * surprised too many environments that set `CI=true` without meaning "don't rewrite
    * package.json". When pnpm is detected, `devExports: true` also keeps the local `exports`
@@ -169,7 +169,8 @@ export interface PackageOptions extends Pick<
    * {@link PackageOptions.cwd | `cwd`} and only runs when the default can still apply — it is
    * skipped when the value replaces the defaults (`false`, `true`, a bare CI condition) or
    * sets `devExports` explicitly.
-   * @defaultValue `{devExports: true}` for pnpm projects; `true` otherwise.
+   * @defaultValue `{enabled: true, devExports: true}` for pnpm projects;
+   * `{enabled: true}` otherwise.
    */
   exports?: UserConfig['exports']
   /**
@@ -483,11 +484,15 @@ async function resolvePackageConfig(
     // anything else (`false`, a CI condition) replaces them.
     ;({exports} = mergeConfig(
       {
-        // Always on: `'local-only'`/`'ci-only'` surprise environments that set `CI=true`
-        // (Cursor Cloud, etc.) without intending to skip package.json rewrites. Only opt into
-        // `devExports` by default when pnpm is detected — support for replacing package fields
-        // from `publishConfig` is not reliable across package managers.
-        exports: packageManager?.name === 'pnpm' ? {devExports: true} : true,
+        exports: {
+          // Always on: `'local-only'`/`'ci-only'` surprise environments that set `CI=true`
+          // (Cursor Cloud, etc.) without intending to skip package.json rewrites. Keep the
+          // object shape so mergeConfig never swaps between a scalar `true` and `{devExports}`.
+          enabled: true,
+          // Only opt in by default when pnpm is detected: support for replacing package fields
+          // from `publishConfig` is not reliable across package managers.
+          ...(packageManager?.name === 'pnpm' && {devExports: true}),
+        },
       },
       {exports: userExports},
     ))
