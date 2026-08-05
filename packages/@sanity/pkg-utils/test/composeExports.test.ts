@@ -238,7 +238,7 @@ test('carries hand-written custom conditions over, before the format fallbacks',
   expect(Object.keys(publish['./worker'] as Record<string, unknown>)).toEqual(['worker', 'default'])
 })
 
-test('preserves authored condition order around browser and custom conditions', () => {
+test('preserves independent authored orders around browser and custom conditions', () => {
   const composer = createComposer({
     type: 'module',
     name: 'test',
@@ -276,8 +276,8 @@ test('preserves authored condition order around browser and custom conditions', 
             import: './dist/index.browser.js',
             require: './dist/index.browser.cjs',
           },
-          'import': './dist/index.js',
           'require': './dist/index.cjs',
+          'import': './dist/index.js',
           'default': './dist/index.js',
         },
         './package.json': './package.json',
@@ -302,8 +302,8 @@ test('preserves authored condition order around browser and custom conditions', 
     'worker',
     'react-server',
     'browser',
-    'import',
     'require',
+    'import',
     'default',
   ])
   expect(Object.keys(devEntry['browser'] as Record<string, unknown>)).toEqual([
