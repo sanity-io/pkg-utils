@@ -238,7 +238,163 @@ test('carries hand-written custom conditions over, before the format fallbacks',
   expect(Object.keys(publish['./worker'] as Record<string, unknown>)).toEqual(['worker', 'default'])
 })
 
-test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-string publish entries', () => {
+test('preserves independent authored orders around browser and custom conditions', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        'source': './src/index.ts',
+        'deno': './dist/index.js',
+        'edge': './dist/index.js',
+        'edge-light': './dist/index.js',
+        'worker': './dist/index.js',
+        'react-server': './dist/index.react-server.js',
+        'browser': {
+          source: './src/index.browser.ts',
+          require: './dist/index.browser.cjs',
+          import: './dist/index.browser.js',
+        },
+        'import': './dist/index.js',
+        'require': './dist/index.cjs',
+        'default': './dist/index.js',
+      },
+      './package.json': './package.json',
+    } as PackageJSON['exports'],
+    publishConfig: {
+      exports: {
+        '.': {
+          'worker': './dist/index.js',
+          'deno': './dist/index.js',
+          'edge': './dist/index.js',
+          'edge-light': './dist/index.js',
+          'react-server': './dist/index.react-server.js',
+          'browser': {
+            import: './dist/index.browser.js',
+            require: './dist/index.browser.cjs',
+          },
+          'require': './dist/index.cjs',
+          'import': './dist/index.js',
+          'default': './dist/index.js',
+        },
+        './package.json': './package.json',
+      },
+    } as PackageJSON['publishConfig'],
+  })
+
+  const dev = composer(
+    {
+      '.': {source: './src/index.ts', import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: false},
+  )
+  const devEntry = dev['.'] as Record<string, unknown>
+
+  expect(Object.keys(devEntry)).toEqual([
+    'source',
+    'deno',
+    'edge',
+    'edge-light',
+    'worker',
+    'react-server',
+    'browser',
+    'import',
+    'require',
+    'default',
+  ])
+  expect(Object.keys(devEntry['browser'] as Record<string, unknown>)).toEqual([
+    'source',
+    'require',
+    'import',
+  ])
+
+  const publish = composer(
+    {
+      '.': {import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: true},
+  )
+  const publishEntry = publish['.'] as Record<string, unknown>
+
+  expect(Object.keys(publishEntry)).toEqual([
+    'worker',
+    'deno',
+    'edge',
+    'edge-light',
+    'react-server',
+    'browser',
+    'require',
+    'import',
+    'default',
+  ])
+  expect(Object.keys(publishEntry['browser'] as Record<string, unknown>)).toEqual([
+    'import',
+    'require',
+  ])
+})
+
+test('inserts generated conditions before the authored default fallback', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        import: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+    publishConfig: {
+      exports: {
+        '.': {
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        './package.json': './package.json',
+      },
+    },
+  })
+
+  // A mixed-format build can generate a format that this particular entry did not declare.
+  // It has no authored position, so it belongs immediately before the `default` fallback.
+  const dev = composer(
+    {
+      '.': {source: './src/index.ts', import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: false},
+  )
+  expect(Object.keys(dev['.'] as Record<string, unknown>)).toEqual([
+    'source',
+    'import',
+    'require',
+    'default',
+  ])
+
+  const publish = composer(
+    {
+      '.': {import: './dist/index.js', require: './dist/index.cjs'},
+      './package.json': './package.json',
+    },
+    {isPublish: true},
+  )
+  expect(Object.keys(publish['.'] as Record<string, unknown>)).toEqual([
+    'import',
+    'require',
+    'default',
+  ])
+})
+
+test('keeps single-format shapes, remaps aliases, and preserves compact publish entries', () => {
   const composer = createComposer({
     type: 'module',
     name: 'test',
@@ -277,7 +433,7 @@ test('keeps single-format shapes, remaps aliased subpaths, and preserves plain-s
   })
   expect(Object.keys(dev)).toEqual(['.', './feature', './package.json'])
 
-  // Publish: a plain-string entry without hand-written conditions to re-insert stays a string
+  // Publish: a plain-string entry without extra conditions stays in tsdown's compact shape.
   const publish = composer(
     {
       '.': './dist/index.js',
