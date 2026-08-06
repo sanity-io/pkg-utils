@@ -213,8 +213,7 @@ The path to the TypeScript configuration file.
 - Type: `boolean | PackageTsdocOptions`
 - Default: `true`
 
-Runs [API Extractor](https://api-extractor.com/) (via
-[`@sanity/tsdown-config`](../tsdown-config#tsdoc)) during `pkg build` and again during
+Runs [API Extractor](https://api-extractor.com/) during `pkg build` and again during
 `pkg check` to check that TSDoc tags are valid and release tags are correct. Set
 `tsdoc: false` to disable it.
 
