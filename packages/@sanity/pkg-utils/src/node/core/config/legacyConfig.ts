@@ -170,7 +170,8 @@ export function runLegacyConfigChecks(config: Record<string, unknown>): void {
           : [
               "`dts: 'api-extractor'` type generation was removed. Types are generated with",
               'tsdown (rolldown-plugin-dts); api-extractor remains as the TSDoc/release-tag',
-              'checking that runs during `pkg check` — configure it with the `tsdoc` option.',
+              'checking that runs during `pkg build`/`pkg check` — configure it with the',
+              '`tsdoc` option.',
             ]),
         '',
         `Full migration guide: ${MIGRATION_GUIDE_URL}`,
