@@ -130,6 +130,17 @@ export async function resolveTsdownConfig(
         }
       : false
 
+  // `@sanity/tsdown-config` defaults `tsdoc` to `false`; pkg-utils keeps the historical
+  // default of enabled (`true`), and forwards an options object (with `bundledPackages` for
+  // API Extractor's type resolution of inlined deps) when the user customized rules/tags.
+  const tsdocOption =
+    config?.tsdoc === false
+      ? false
+      : {
+          ...(typeof config?.tsdoc === 'object' ? config.tsdoc : {}),
+          bundledPackages: ctx.bundledPackages,
+        }
+
   const base = await defineConfig({
     cwd,
     tsconfig: ctx.ts.configPath,
@@ -152,6 +163,9 @@ export async function resolveTsdownConfig(
     reactCompiler: config?.reactCompiler,
     styledComponents: config?.styledComponents,
     vanillaExtract: config?.vanillaExtract,
+    // Types-only builds still emit `.d.ts` files that deserve the check; watch mode skips it
+    // so a failing TSDoc rule doesn't tear down the watcher on every save.
+    tsdoc: options.watch ? false : tsdocOption,
   })
 
   // The hand-written exports define the emitted extensions (`.js`/`.mjs`/`.cjs` per

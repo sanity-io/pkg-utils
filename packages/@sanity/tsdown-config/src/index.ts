@@ -7,8 +7,23 @@ import {
   mergeConfig,
   type PackageJsonWithPath,
   type Rolldown,
+  type RolldownChunk,
   type UserConfig,
 } from 'tsdown'
+import {checkTsdoc} from './tsdoc/checkTsdoc.ts'
+import type {PackageTsdocOptions} from './tsdoc/types.ts'
+
+export {
+  checkTsdoc,
+  type CheckTsdocLogger,
+  type CheckTsdocOptions,
+  type CheckTsdocResult,
+} from './tsdoc/checkTsdoc.ts'
+export type {
+  PackageTsdocCustomTag,
+  PackageTsdocOptions,
+  PackageTsdocRuleLevel,
+} from './tsdoc/types.ts'
 
 /**
  * Options for the `vanillaExtract` option — the same options as
@@ -237,6 +252,14 @@ export interface PackageOptions extends Pick<
    * @alpha
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
+  /**
+   * Runs `@microsoft/api-extractor` after the build (via tsdown's `build:done` hook) to check
+   * that TSDoc tags are valid and release tags are correct. Useful for packages consumed by
+   * TSDoc-based tooling. Off by default — set `tsdoc: true` to enable, or pass an options
+   * object to customize rules and custom tags. `@sanity/pkg-utils` enables it by default.
+   * @defaultValue false
+   */
+  tsdoc?: boolean | PackageTsdocOptions
 }
 
 /**
@@ -324,6 +347,9 @@ async function resolvePackageConfig(
   // loads `react/compiler-runtime`, which throws in the `react-server` environment.
   const reactCompiler = isReactServer ? false : (options.reactCompiler ?? false)
   const styledComponents = options.styledComponents ?? false
+  // The `react-server` variant skips TSDoc checking (it emits no `.d.ts` files — the compiled
+  // variant's declarations serve both entries), matching how it skips `publint`.
+  const tsdoc = isReactServer ? false : (options.tsdoc ?? false)
   const report = {gzip: false} as const satisfies UserConfig['report']
   const format = options.format ?? 'esm'
   // When `platform` is `'neutral'`, restore the conventional `module`/`main` fallback that
@@ -520,6 +546,20 @@ async function resolvePackageConfig(
     entry,
     exports,
     format,
+    // When `tsdoc` is enabled, run API Extractor against the entry `.d.ts` files after the
+    // build. The function form of `hooks` registers via hookable so a later `mergeConfig` that
+    // also uses the function form can compose — an object-form `hooks: {'build:done': …}`
+    // override still replaces this (tsdown's `mergeConfig` replaces functions).
+    ...(tsdoc !== false
+      ? {
+          hooks: createTsdocHooks({
+            tsdoc: tsdoc === true ? {} : tsdoc,
+            tsconfig,
+            outDir,
+            deps,
+          }),
+        }
+      : {}),
     inputOptions,
     outDir,
     // The `react-server` variant writes its files next to the compiled ones, with `.react-server`
@@ -550,6 +590,71 @@ async function resolvePackageConfig(
       mangle: false,
     },
   })
+}
+
+/** Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks. */
+const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
+
+/**
+ * Registers the `build:done` hook that runs {@link checkTsdoc} against every entry `.d.ts`
+ * file the build emitted.
+ */
+function createTsdocHooks(options: {
+  tsdoc: PackageTsdocOptions
+  tsconfig: UserConfig['tsconfig']
+  outDir: UserConfig['outDir']
+  deps: UserConfig['deps']
+}): NonNullable<UserConfig['hooks']> {
+  const {tsdoc, outDir, deps} = options
+  // `tsconfig: false` means "don't use a tsconfig"; fall back to the conventional name so
+  // API Extractor still has a project root. A string path is forwarded as-is.
+  const tsconfigPath =
+    typeof options.tsconfig === 'string' ? options.tsconfig : 'tsconfig.json'
+  const bundledPackages =
+    tsdoc.bundledPackages ??
+    (Array.isArray(deps?.alwaysBundle)
+      ? deps.alwaysBundle.filter((entry): entry is string => typeof entry === 'string')
+      : typeof deps?.alwaysBundle === 'string'
+        ? [deps.alwaysBundle]
+        : undefined)
+
+  return (hooks) => {
+    hooks.hook('build:done', async ({chunks, options: resolved}) => {
+      const entryDtsFiles = entryDtsFilesFromChunks(chunks)
+      if (entryDtsFiles.length === 0) return
+
+      await checkTsdoc({
+        cwd: resolved.cwd,
+        entryDtsFiles,
+        tsconfig: tsconfigPath,
+        outDir: outDir ?? resolved.outDir,
+        bundledPackages,
+        customTags: tsdoc.customTags,
+        rules: tsdoc.rules,
+        logger: {
+          log: (...args) => {
+            resolved.logger.info(...args.map(String))
+          },
+          warn: (...args) => {
+            resolved.logger.warn(...args.map(String))
+          },
+          error: (...args) => {
+            resolved.logger.error(...args.map(String))
+          },
+        },
+      })
+    })
+  }
+}
+
+/** Absolute paths of entry declaration chunks emitted by the build. */
+function entryDtsFilesFromChunks(chunks: RolldownChunk[]): string[] {
+  const files: string[] = []
+  for (const chunk of chunks) {
+    if (chunk.type !== 'chunk' || !chunk.isEntry || !RE_DTS_FILE.test(chunk.fileName)) continue
+    files.push(path.resolve(chunk.outDir, chunk.fileName))
+  }
+  return files
 }
 
 /**
@@ -753,9 +858,6 @@ function withReactServerCondition(
   }
   return next
 }
-
-/** Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks. */
-const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
 
 /** `./dist/index.js` → `./dist/index.react-server.js` (and `.mjs`/`.cjs` accordingly). */
 function toServerFile(file: string): string {

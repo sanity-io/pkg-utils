@@ -310,7 +310,7 @@ importers:
         version: link:../sanity-css-vanilla-extract-test
       tap:
         specifier: ^21.7.5
-        version: 21.7.5(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
+        version: 21.7.5(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -703,12 +703,6 @@ importers:
 
   packages/@sanity/pkg-utils:
     dependencies:
-      '@microsoft/api-extractor':
-        specifier: ^7.58.12
-        version: 7.58.12(@types/node@24.13.3)
-      '@microsoft/tsdoc-config':
-        specifier: ^0.18.1
-        version: 0.18.1
       '@sanity/browserslist-config':
         specifier: ^1.0.5
         version: 1.0.5
@@ -748,9 +742,6 @@ importers:
       globby:
         specifier: ^16.2.2
         version: 16.2.2
-      jsonc-parser:
-        specifier: ^3.3.1
-        version: 3.3.1
       mkdirp:
         specifier: ^3.0.1
         version: 3.0.1
@@ -832,6 +823,12 @@ importers:
       '@babel/core':
         specifier: ^7.29.7
         version: 7.29.7
+      '@microsoft/api-extractor':
+        specifier: ^7.58.12
+        version: 7.58.12(@types/node@26.1.2)
+      '@microsoft/tsdoc-config':
+        specifier: ^0.18.1
+        version: 0.18.1
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.2)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.1)(tsx@4.23.5)(yaml@2.9.0))
@@ -841,12 +838,18 @@ importers:
       '@sanity/vanilla-extract-tsdown-plugin':
         specifier: workspace:^
         version: link:../vanilla-extract-tsdown-plugin
+      '@typescript/typescript6':
+        specifier: ^6.0.2
+        version: 6.0.2
       '@vitejs/plugin-react':
         specifier: ^6.0.5
         version: 6.0.5(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.2)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.1)(tsx@4.23.5)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.1)(tsx@4.23.5)(yaml@2.9.0))
       browserslist:
         specifier: ^4.28.7
         version: 4.28.7
+      jsonc-parser:
+        specifier: ^3.3.1
+        version: 3.3.1
       lightningcss:
         specifier: 'catalog:'
         version: 1.33.0
@@ -16532,14 +16535,14 @@ snapshots:
     dependencies:
       minipass: 7.1.3
 
-  '@isaacs/ts-node-temp-fork-for-pr-2009@10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(typescript@5.9.3)':
+  '@isaacs/ts-node-temp-fork-for-pr-2009@10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(typescript@5.9.3)':
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node14': 14.1.8
       '@tsconfig/node16': 16.1.8
       '@tsconfig/node18': 18.2.6
       '@tsconfig/node20': 20.1.9
-      '@types/node': 24.13.3
+      '@types/node': 26.1.2
       acorn: 8.18.0
       acorn-walk: 8.3.5
       arg: 4.1.3
@@ -16550,14 +16553,14 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.15.47(@swc/helpers@0.5.23)
 
-  '@isaacs/ts-node-temp-fork-for-pr-2009@10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(typescript@6.0.3)':
+  '@isaacs/ts-node-temp-fork-for-pr-2009@10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(typescript@6.0.3)':
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node14': 14.1.8
       '@tsconfig/node16': 16.1.8
       '@tsconfig/node18': 18.2.6
       '@tsconfig/node20': 20.1.9
-      '@types/node': 24.13.3
+      '@types/node': 26.1.2
       acorn: 8.18.0
       acorn-walk: 8.3.5
       arg: 4.1.3
@@ -16990,23 +16993,23 @@ snapshots:
     optionalDependencies:
       markdown-it: 14.3.0
 
-  '@microsoft/api-extractor-model@7.33.10(@types/node@24.13.3)':
+  '@microsoft/api-extractor-model@7.33.10(@types/node@26.1.2)':
     dependencies:
       '@microsoft/tsdoc': 0.16.0
       '@microsoft/tsdoc-config': 0.18.1
-      '@rushstack/node-core-library': 5.23.3(@types/node@24.13.3)
+      '@rushstack/node-core-library': 5.23.3(@types/node@26.1.2)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.58.12(@types/node@24.13.3)':
+  '@microsoft/api-extractor@7.58.12(@types/node@26.1.2)':
     dependencies:
-      '@microsoft/api-extractor-model': 7.33.10(@types/node@24.13.3)
+      '@microsoft/api-extractor-model': 7.33.10(@types/node@26.1.2)
       '@microsoft/tsdoc': 0.16.0
       '@microsoft/tsdoc-config': 0.18.1
-      '@rushstack/node-core-library': 5.23.3(@types/node@24.13.3)
+      '@rushstack/node-core-library': 5.23.3(@types/node@26.1.2)
       '@rushstack/rig-package': 0.7.3
-      '@rushstack/terminal': 0.24.2(@types/node@24.13.3)
-      '@rushstack/ts-command-line': 5.3.12(@types/node@24.13.3)
+      '@rushstack/terminal': 0.24.2(@types/node@26.1.2)
+      '@rushstack/ts-command-line': 5.3.12(@types/node@26.1.2)
       diff: 8.0.4
       minimatch: 10.2.3
       resolve: 1.22.12
@@ -19669,7 +19672,7 @@ snapshots:
 
   '@rspack/lite-tapable@1.1.0': {}
 
-  '@rushstack/node-core-library@5.23.3(@types/node@24.13.3)':
+  '@rushstack/node-core-library@5.23.3(@types/node@26.1.2)':
     dependencies:
       ajv: 8.20.0
       ajv-draft-04: 1.0.0(ajv@8.20.0)
@@ -19680,28 +19683,28 @@ snapshots:
       resolve: 1.22.12
       semver: 7.7.4
     optionalDependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.1.2
 
-  '@rushstack/problem-matcher@0.2.1(@types/node@24.13.3)':
+  '@rushstack/problem-matcher@0.2.1(@types/node@26.1.2)':
     optionalDependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.1.2
 
   '@rushstack/rig-package@0.7.3':
     dependencies:
       jju: 1.4.0
       resolve: 1.22.12
 
-  '@rushstack/terminal@0.24.2(@types/node@24.13.3)':
+  '@rushstack/terminal@0.24.2(@types/node@26.1.2)':
     dependencies:
-      '@rushstack/node-core-library': 5.23.3(@types/node@24.13.3)
-      '@rushstack/problem-matcher': 0.2.1(@types/node@24.13.3)
+      '@rushstack/node-core-library': 5.23.3(@types/node@26.1.2)
+      '@rushstack/problem-matcher': 0.2.1(@types/node@26.1.2)
       supports-color: 8.1.1
     optionalDependencies:
-      '@types/node': 24.13.3
+      '@types/node': 26.1.2
 
-  '@rushstack/ts-command-line@5.3.12(@types/node@24.13.3)':
+  '@rushstack/ts-command-line@5.3.12(@types/node@26.1.2)':
     dependencies:
-      '@rushstack/terminal': 0.24.2(@types/node@24.13.3)
+      '@rushstack/terminal': 0.24.2(@types/node@26.1.2)
       '@types/argparse': 1.0.38
       argparse: 1.0.10
       string-argv: 0.3.2
@@ -21128,19 +21131,19 @@ snapshots:
 
   '@tanstack/virtual-file-routes@1.162.0': {}
 
-  '@tapjs/after-each@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/after-each@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       function-loop: 4.0.0
 
-  '@tapjs/after@3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/after@3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       is-actual-promise: 1.0.2
 
-  '@tapjs/asserts@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@tapjs/asserts@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tapjs/stack': 4.3.3
       is-actual-promise: 1.0.2
       tcompare: 9.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -21149,35 +21152,35 @@ snapshots:
       - react
       - react-dom
 
-  '@tapjs/before-each@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/before-each@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       function-loop: 4.0.0
 
-  '@tapjs/before@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/before@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       is-actual-promise: 1.0.2
 
-  '@tapjs/chdir@3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/chdir@3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  '@tapjs/config@5.6.5(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/config@5.6.5(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       chalk: 5.6.2
       jackspeak: 4.2.3
       polite-json: 5.0.0
       tap-yaml: 4.4.2
       walk-up-path: 4.0.0
 
-  '@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@tapjs/processinfo': 3.1.12
       '@tapjs/stack': 4.3.3
-      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       async-hook-domain: 4.0.1
       diff: 8.0.4
       is-actual-promise: 1.0.2
@@ -21198,33 +21201,33 @@ snapshots:
     dependencies:
       minipass: 7.1.3
 
-  '@tapjs/filter@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/filter@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  '@tapjs/fixture@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/fixture@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       mkdirp: 3.0.1
       rimraf: 6.1.3
 
-  '@tapjs/intercept@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/intercept@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tapjs/stack': 4.3.3
 
-  '@tapjs/mock@4.4.9(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/mock@4.4.9(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tapjs/stack': 4.3.3
       resolve-import: 2.4.0
       walk-up-path: 4.0.0
 
-  '@tapjs/node-serialize@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/node-serialize@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tapjs/error-serdes': 4.3.2
       '@tapjs/stack': 4.3.3
       tap-parser: 18.3.4
@@ -21237,10 +21240,10 @@ snapshots:
       signal-exit: 4.1.0
       uuid: 14.0.1
 
-  '@tapjs/reporter@4.4.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))':
+  '@tapjs/reporter@4.4.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))':
     dependencies:
-      '@tapjs/config': 5.6.5(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/config': 5.6.5(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tapjs/stack': 4.3.3
       chalk: 5.6.2
       ink: 5.2.1(@types/react@19.2.18)(react@18.3.1)
@@ -21261,18 +21264,18 @@ snapshots:
       - react-dom
       - utf-8-validate
 
-  '@tapjs/run@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@tapjs/run@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@isaacs/which': 7.0.4
-      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/before': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/config': 5.6.5(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/before': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/config': 5.6.5(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tapjs/processinfo': 3.1.12
-      '@tapjs/reporter': 4.4.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))
-      '@tapjs/spawn': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/stdin': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/reporter': 4.4.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))
+      '@tapjs/spawn': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/stdin': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       c8: 12.0.0
       chalk: 5.6.2
       chokidar: 4.0.3
@@ -21305,9 +21308,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@tapjs/snapshot@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@tapjs/snapshot@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       is-actual-promise: 1.0.2
       tcompare: 9.3.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       trivial-deferred: 2.0.0
@@ -21315,36 +21318,36 @@ snapshots:
       - react
       - react-dom
 
-  '@tapjs/spawn@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/spawn@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   '@tapjs/stack@4.3.3': {}
 
-  '@tapjs/stdin@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/stdin@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
-  '@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@tapjs/test@4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
-      '@isaacs/ts-node-temp-fork-for-pr-2009': 10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(typescript@5.9.3)
-      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/after-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/asserts': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/before': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/before-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/chdir': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/filter': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/fixture': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/intercept': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/mock': 4.4.9(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/node-serialize': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/snapshot': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/spawn': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/stdin': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/typescript': 3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(typescript@5.9.3)
-      '@tapjs/worker': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@isaacs/ts-node-temp-fork-for-pr-2009': 10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(typescript@5.9.3)
+      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/after-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/asserts': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/before': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/before-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/chdir': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/filter': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/fixture': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/intercept': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/mock': 4.4.9(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/node-serialize': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/snapshot': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/spawn': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/stdin': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/typescript': 3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(typescript@5.9.3)
+      '@tapjs/worker': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       glob: 13.0.6
       jackspeak: 4.2.3
       mkdirp: 3.0.1
@@ -21363,29 +21366,29 @@ snapshots:
       - react
       - react-dom
 
-  '@tapjs/typescript@3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(typescript@5.9.3)':
+  '@tapjs/typescript@3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(typescript@5.9.3)':
     dependencies:
-      '@isaacs/ts-node-temp-fork-for-pr-2009': 10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(typescript@5.9.3)
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@isaacs/ts-node-temp-fork-for-pr-2009': 10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(typescript@5.9.3)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
       - typescript
 
-  '@tapjs/typescript@3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(typescript@6.0.3)':
+  '@tapjs/typescript@3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(typescript@6.0.3)':
     dependencies:
-      '@isaacs/ts-node-temp-fork-for-pr-2009': 10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(typescript@6.0.3)
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@isaacs/ts-node-temp-fork-for-pr-2009': 10.9.7(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(typescript@6.0.3)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
       - typescript
 
-  '@tapjs/worker@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@tapjs/worker@4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   '@tsconfig/node14@14.1.8': {}
 
@@ -28705,27 +28708,27 @@ snapshots:
       yaml: 2.9.0
       yaml-types: 0.4.0(yaml@2.9.0)
 
-  tap@21.7.5(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3):
+  tap@21.7.5(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3):
     dependencies:
-      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/after-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/asserts': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/before': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/before-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/chdir': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/filter': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/fixture': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/intercept': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/mock': 4.4.9(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/node-serialize': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/run': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/snapshot': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/spawn': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/stdin': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
-      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@tapjs/typescript': 3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@24.13.3)(typescript@6.0.3)
-      '@tapjs/worker': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/after': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/after-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/asserts': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/before': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/before-each': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/chdir': 3.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/core': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/filter': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/fixture': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/intercept': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/mock': 4.4.9(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/node-serialize': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/run': 4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/snapshot': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/spawn': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/stdin': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+      '@tapjs/test': 4.4.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@tapjs/typescript': 3.5.11(@swc/core@1.15.47(@swc/helpers@0.5.23))(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/node@26.1.2)(typescript@6.0.3)
+      '@tapjs/worker': 4.3.11(@tapjs/core@4.5.9(@swc/core@1.15.47(@swc/helpers@0.5.23))(@types/node@26.1.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       resolve-import: 2.4.0
     transitivePeerDependencies:
       - '@swc/core'

@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type {ExtractorMessage} from '@microsoft/api-extractor'
+import {checkTsdoc} from '@sanity/tsdown-config'
 import {up as findPkgPath} from 'empathic/package'
 import {loadConfig} from './core/config/loadConfig.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
@@ -115,71 +115,33 @@ async function runPublint(ctx: BuildContext): Promise<void> {
 }
 
 async function checkApiExtractorReleaseTags(ctx: BuildContext) {
-  const [
-    {Extractor, ExtractorConfig},
-    {createApiExtractorConfig},
-    {createTSDocConfig},
-    {getExtractMessagesConfig},
-    {printExtractMessages},
-  ] = await Promise.all([
-    import('@microsoft/api-extractor'),
-    import('./tasks/dts/createApiExtractorConfig.ts'),
-    import('./tasks/dts/createTSDocConfig.ts'),
-    import('./tasks/dts/getExtractMessagesConfig.ts'),
-    import('./printExtractMessages.ts'),
-  ])
-
-  const tsdoc = ctx.config?.tsdoc === false ? undefined : ctx.config?.tsdoc
-  const customTags = tsdoc?.customTags || []
-  const bundledPackages = ctx.bundledPackages
-  const distPath = ctx.distPath
-  // api-extractor needs a `compilerOptions.outDir` for its path mapping; tsdown does not, so
-  // fall back to the dist folder when the tsconfig leaves it unset
-  const outDir = ctx.ts.config?.options.outDir ?? distPath
-  const rules = tsdoc?.rules || {}
+  const tsdoc =
+    ctx.config?.tsdoc === false || ctx.config?.tsdoc === true ? undefined : ctx.config?.tsdoc
+  const entryDtsFiles: string[] = []
 
   for (const exp of Object.values(ctx.exports || {})) {
     if (!exp._exported || !exp.default.endsWith('.js')) continue
     const dtsPath = exp.default.replace(/\.js$/, '.d.ts')
     const exportPath = path.resolve(ctx.cwd, dtsPath)
-
     // JS-only entries emit no declarations; there is nothing to check
     if (!fileExists(exportPath)) continue
-
-    const tsdocConfigFile = await createTSDocConfig({
-      customTags,
-    })
-    const extractorConfig = ExtractorConfig.prepare({
-      configObject: createApiExtractorConfig({
-        bundledPackages,
-        distPath,
-        exportPath,
-        filePath: path.relative(outDir, dtsPath),
-        messages: getExtractMessagesConfig({rules}),
-        projectFolder: ctx.cwd,
-        mainEntryPointFilePath: exportPath,
-        tsconfig: ctx.ts.config!,
-        tsconfigPath: path.resolve(ctx.cwd, ctx.ts.configPath || 'tsconfig.json'),
-        dtsRollupEnabled: false,
-      }),
-      configObjectFullPath: undefined,
-      tsdocConfigFile,
-      packageJsonFullPath: path.resolve(ctx.cwd, 'package.json'),
-    })
-    const messages: ExtractorMessage[] = []
-    // Invoke API Extractor
-    Extractor.invoke(extractorConfig, {
-      // Equivalent to the "--local" command-line parameter
-      localBuild: true,
-      // Equivalent to the "--verbose" command-line parameter
-      showVerboseMessages: true,
-      // handle messages
-      messageCallback(message: ExtractorMessage) {
-        messages.push(message)
-        message.handled = true
-      },
-    })
-
-    printExtractMessages(ctx, messages)
+    entryDtsFiles.push(exportPath)
   }
+
+  if (entryDtsFiles.length === 0) return
+
+  await checkTsdoc({
+    cwd: ctx.cwd,
+    entryDtsFiles,
+    tsconfig: ctx.ts.configPath || 'tsconfig.json',
+    outDir: ctx.ts.config?.options.outDir ?? ctx.distPath,
+    bundledPackages: ctx.bundledPackages,
+    customTags: tsdoc?.customTags,
+    rules: tsdoc?.rules,
+    logger: {
+      log: (...args) => ctx.logger.log(...args),
+      warn: (...args) => ctx.logger.warn(...args),
+      error: (...args) => ctx.logger.error(...args),
+    },
+  })
 }

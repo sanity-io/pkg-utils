@@ -131,9 +131,9 @@ export async function resolveBuildContext(options: {
     alwaysBundle: alwaysBundleNames.map(packagePattern),
   })
 
-  // Packages whose types are inlined into the emitted declarations, used by the api-extractor
-  // TSDoc check: devDependencies that are not external (like v11), plus any string entries of
-  // the `deps.alwaysBundle` passthrough (force-bundled dependencies inline their types too).
+  // Packages whose types are inlined into the emitted declarations, used by the TSDoc check
+  // (`tsdoc.bundledPackages`): devDependencies that are not external (like v11), plus any
+  // string entries of the `deps.alwaysBundle` passthrough (force-bundled deps inline types too).
   const externalWithTypes = new Set([pkg.name, ...external, ...external.map(transformPackageName)])
   const bundledDependencies = (pkg.devDependencies ? Object.keys(pkg.devDependencies) : []).filter(
     // Do not bundle anything that is marked as external

@@ -17,6 +17,25 @@ describe('dts option', () => {
   })
 })
 
+describe('tsdoc option', () => {
+  test('is off by default (unlike @sanity/pkg-utils, which sets it to true)', async () => {
+    // The check is opt-in here; `@sanity/pkg-utils` continues enabling it when composing
+    expect((await defineConfig()).hooks).toBeUndefined()
+    expect((await defineConfig({tsdoc: false})).hooks).toBeUndefined()
+  })
+
+  test('registers a build:done hook when enabled', async () => {
+    expect(typeof (await defineConfig({tsdoc: true})).hooks).toBe('function')
+    expect(
+      typeof (
+        await defineConfig({
+          tsdoc: {rules: {'ae-missing-release-tag': 'off'}},
+        })
+      ).hooks,
+    ).toBe('function')
+  })
+})
+
 describe('define option', () => {
   test('is undefined by default', async () => {
     expect((await defineConfig()).define).toBeUndefined()

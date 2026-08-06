@@ -258,6 +258,38 @@ export default defineConfig({
 })
 ```
 
+## tsdoc
+
+Runs [API Extractor](https://api-extractor.com/) after the build (via tsdown's `build:done` hook)
+to check that TSDoc tags are valid and release tags are correct. Off by default — the same feature
+as the `tsdoc` option in `@sanity/pkg-utils`, which enables it by default. Set `tsdoc: true` to
+enable, or pass an options object to customize rules and custom tags:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  tsdoc: true,
+})
+```
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  tsdoc: {
+    rules: {
+      // do not require internal members to be prefixed with `_`
+      'ae-internal-missing-underscore': 'off',
+    },
+  },
+})
+```
+
+The check runs against every entry `.d.ts` / `.d.mts` / `.d.cts` file the build emitted. It is
+also available programmatically as `checkTsdoc` for hosts that want to run it outside the build
+(e.g. `@sanity/pkg-utils`'s `pkg check`).
+
 ## outDir
 
 tsdown's [`outDir` option](https://tsdown.dev/options/output#outdir) is passed through as-is.

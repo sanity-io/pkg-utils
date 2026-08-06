@@ -1,22 +1,22 @@
 import {ExtractorLogLevel, type IExtractorMessagesConfig} from '@microsoft/api-extractor'
-import type {PkgRuleLevel, PkgTsdocOptions} from '../../core/config/types.ts'
+import type {PackageTsdocOptions, PackageTsdocRuleLevel} from './types.ts'
 
-const LOG_LEVELS: Record<PkgRuleLevel, ExtractorLogLevel> = {
+const LOG_LEVELS: Record<PackageTsdocRuleLevel, ExtractorLogLevel> = {
   error: ExtractorLogLevel.Error,
   info: ExtractorLogLevel.Info,
   off: ExtractorLogLevel.None,
   warn: ExtractorLogLevel.Warning,
 }
 
-/** @alpha */
+/** @internal */
 export function getExtractMessagesConfig(options: {
-  rules: PkgTsdocOptions['rules']
+  rules: PackageTsdocOptions['rules']
   disabled?: boolean
 }): IExtractorMessagesConfig {
   const {rules, disabled = false} = options
 
   function ruleToLogLevel(
-    key: keyof NonNullable<PkgTsdocOptions['rules']>,
+    key: keyof NonNullable<PackageTsdocOptions['rules']>,
     defaultLevel?: ExtractorLogLevel,
   ) {
     const r = rules?.[key]
