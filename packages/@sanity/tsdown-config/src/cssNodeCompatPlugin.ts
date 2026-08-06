@@ -136,7 +136,13 @@ export function cssNodeCompatPlugin(options: CssNodeCompatPluginOptions = {}): T
             : previousCustomExports
               ? {...exportsMap, ...previousCustomExports}
               : exportsMap
-        return insertCssExport(base, `./${mergedFileName}`, cssExport)
+        // Only declare the export when the build actually emitted the CSS file. A package can
+        // enable the pipeline (or have it enabled for it) without any JS-imported CSS, and an
+        // export pointing at a file nobody produced is worse than no export at all.
+        const emitted = Object.values(context.chunks).some((chunks) =>
+          chunks.some((chunk) => chunk.type === 'asset' && chunk.fileName === mergedFileName),
+        )
+        return emitted ? insertCssExport(base, `./${mergedFileName}`, cssExport) : base
       }
       config.exports = exportsOptions
       return undefined
@@ -196,21 +202,11 @@ export function cssNodeCompatPlugin(options: CssNodeCompatPluginOptions = {}): T
     generateBundle: {
       order: 'post',
       handler(_outputOptions, bundle) {
-        if (!exportsCss) return
+        if (!nodeCompat) return
         const cssFileNames = Object.values(bundle)
           .filter((asset) => asset.type === 'asset' && RE_CSS_ASSET.test(asset.fileName))
           .map((asset) => asset.fileName)
 
-        // The export is written into `package.json` at config-resolution time, before any CSS
-        // is known, so in merged mode the CSS file is emitted even when nothing produced CSS -
-        // otherwise the `browser`/`style` conditions would dangle. With `splitting` the file
-        // names follow the chunk names, so there is nothing to declare up front.
-        if (!splitting && !cssFileNames.includes(mergedFileName)) {
-          this.emitFile({type: 'asset', fileName: mergedFileName, source: ''})
-          cssFileNames.push(mergedFileName)
-        }
-
-        if (!nodeCompat) return
         for (const cssFileName of cssFileNames) {
           const shimFileName = cssShimFileName(cssFileName)
           // Another plugin (`@sanity/vanilla-extract-rolldown-plugin` for `bundle.css`) may

@@ -1,4 +1,4 @@
-import type {PackageJSON, PkgExport} from './types.ts'
+import type {PackageJSON, PkgCssExport, PkgExport} from './types.ts'
 
 /** @public */
 export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: string})[] {
@@ -15,6 +15,10 @@ export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: 
   const _exports: (PkgExport & {_path: string})[] = []
 
   for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
+    // `.css` subpaths are stylesheets, not JS entries - their `source` is compiled by the CSS
+    // pipeline instead, and their conditions never carry `import`/`require` targets. See
+    // `parseCssExports`.
+    if (isCssExportPath(exportPath)) continue
     if (isPkgExport(exportEntry)) {
       const exp = {
         _exported: true,
@@ -46,6 +50,44 @@ export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: 
   }
 
   return _exports
+}
+
+/**
+ * The `.css` export subpaths that declare a `source`, i.e. the stylesheets the CSS pipeline
+ * builds into `dist` (as opposed to plain `.css` passthrough exports, which point at a file
+ * that ships as-is, and to the generated conditional CSS exports, which have no `source`).
+ *
+ * The `source` is the entry the CSS pipeline compiles; the emitted stylesheet's path follows
+ * the export subpath, so `"./ui/styles.css"` is built to `<dist>/ui/styles.css`.
+ * @public
+ */
+export function parseCssExports(options: {
+  pkg: PackageJSON
+}): (PkgCssExport & {_path: string})[] {
+  const {pkg} = options
+  if (!pkg.exports) return []
+
+  const cssExports: (PkgCssExport & {_path: string})[] = []
+
+  for (const [exportPath, exportEntry] of Object.entries(pkg.exports)) {
+    if (!isCssExportPath(exportPath)) continue
+    if (!isRecord(exportEntry)) continue
+    // A conditional CSS export is a flat condition -> path map, so the non-string values a
+    // malformed entry might carry are dropped rather than passed along as conditions.
+    const conditions: Record<string, string> = {}
+    for (const [condition, target] of Object.entries(exportEntry)) {
+      if (typeof target === 'string') conditions[condition] = target
+    }
+    const source = conditions['source']
+    if (source === undefined) continue
+    cssExports.push({...conditions, _path: exportPath, source})
+  }
+
+  return cssExports
+}
+
+function isCssExportPath(exportPath: string): boolean {
+  return exportPath.endsWith('.css')
 }
 
 function isPkgExport(value: unknown): value is PkgExport {

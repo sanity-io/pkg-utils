@@ -277,6 +277,12 @@ export async function loadPkgWithReporting(options: {
 
           // Validate each export path
           for (const [exportPath, exp] of Object.entries(pkg.exports)) {
+            // A `.css` subpath with a `source` is a stylesheet built by the CSS pipeline: the
+            // build generates its remaining conditions in both maps, so before the first build
+            // `exports` legitimately holds nothing but the `source` the author wrote.
+            if (exportPath.endsWith('.css') && typeof exp === 'object' && 'source' in exp) {
+              continue
+            }
             if (typeof exp === 'string' || 'svelte' in exp) {
               // For string or svelte exports, publishConfig should match
               const publishExp = publishExports[exportPath]

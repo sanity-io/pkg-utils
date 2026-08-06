@@ -31,6 +31,7 @@ function createComposer(pkg: PackageJSON) {
     deps: undefined,
     distPath: '/test/dist',
     emitDeclarationOnly: false,
+    cssExports: [],
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
     logger: {

@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type {PackageJSON} from '@sanity/parse-package-json'
+import {parseCssExports, type PackageJSON} from '@sanity/parse-package-json'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
 import {resolveConfigProperty} from './core/config/resolveConfigProperty.ts'
 import {type PkgConfigOptions, type PkgExports, type PkgRuntime} from './core/config/types.ts'
@@ -102,6 +102,8 @@ export async function resolveBuildContext(options: {
 
   const exports = resolveConfigProperty(config?.exports, parsedExports)
 
+  const cssExports = parseCssExports({pkg})
+
   const parsedExternal = [
     ...(pkg.dependencies ? Object.keys(pkg.dependencies) : []),
     ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : []),
@@ -200,6 +202,7 @@ export async function resolveBuildContext(options: {
     distPath,
     emitDeclarationOnly,
     exports,
+    cssExports,
     external,
     bundledPackages,
     logger,

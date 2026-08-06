@@ -71,6 +71,9 @@ export async function watch(options: {
       // `exports.customExports` composition, but watch mode disables tsdown's `exports` feature
       // (a package.json write per rebuild would loop the watcher). Keep the export in sync here
       // instead, once per context, like v11 — the write is idempotent, so it won't loop.
+      const cssNames: string[] = []
+      const cssSources: Record<string, string> = {}
+
       const vanillaExtract = ctx.config?.vanillaExtract
       if (vanillaExtract) {
         const veOptions = vanillaExtract === true ? {} : vanillaExtract
@@ -81,15 +84,38 @@ export async function watch(options: {
           exports: {nodeCompat: true},
           ...veOptions,
         })
+        if (nodeCompat) cssNames.push(veOptions.fileName || 'bundle.css')
+      }
+
+      // The `@tsdown/css` pipeline's own exports: the `.css` export subpaths built by the
+      // stylesheet build (whose names follow their subpath), plus the merged `style.css` of
+      // CSS imported from JS. Both are statically known, so watch mode needs no build output.
+      const cssConfig = ctx.config?.css
+      if (cssConfig || ctx.cssExports.length) {
+        const {nodeCompat} = resolveCssExportOptions({
+          inject: true,
+          exports: {nodeCompat: true},
+          ...cssConfig,
+        })
         if (nodeCompat) {
-          await writeBundleCssExports({
-            cwd,
-            distPath: ctx.distPath,
-            cssNames: [veOptions.fileName || 'bundle.css'],
-            logger,
-          })
+          for (const cssExport of ctx.cssExports) {
+            const cssName = cssExport._path.replace(/^\.\//, '')
+            cssNames.push(cssName)
+            cssSources[cssExport._path] = cssExport.source
+          }
+          if (cssConfig && !cssConfig.splitting) {
+            cssNames.push(cssConfig.fileName || 'style.css')
+          }
         }
       }
+
+      await writeBundleCssExports({
+        cwd,
+        distPath: ctx.distPath,
+        cssNames,
+        sources: cssSources,
+        logger,
+      })
 
       const builds = resolveTsdownBuilds(ctx)
 

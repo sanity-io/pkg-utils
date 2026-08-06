@@ -1,6 +1,8 @@
+import path from 'node:path'
 import type {PkgExport} from '../../core/config/types.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {isRecord} from '../../core/isRecord.ts'
+import {createConditionalCssExport} from '../../core/pkg/cssExport.ts'
 import type {TsdownBuild} from './resolveTsdownBuilds.ts'
 
 type ExportsMap = Record<string, unknown>
@@ -42,6 +44,15 @@ export function createExportsComposer(
 ): (exportsMap: ExportsMap, context: ComposeContext) => ExportsMap {
   const {pkg} = ctx
   const type = pkg.type === 'module' ? 'module' : 'commonjs'
+
+  // POSIX separators: on Windows `path.relative` yields backslashes, which must never leak
+  // into generated `package.json` export targets.
+  const distRel = (path.relative(ctx.cwd, ctx.distPath) || 'dist').split(path.sep).join('/')
+  const cssExportPaths = new Set(ctx.cssExports.map((cssExport) => cssExport._path))
+  const cssSources: Record<string, string> = {}
+  for (const cssExport of ctx.cssExports) {
+    cssSources[cssExport._path] = cssExport.source
+  }
 
   // alias -> hand-written subpath, e.g. `index` -> `.`, `sub/feature` -> `./feature`
   const aliasToExportPath = new Map<string, string>()
@@ -100,9 +111,19 @@ export function createExportsComposer(
     for (const exportPath of authoredPaths) {
       if (exportPath in remapped) {
         result[exportPath] = reconcile(exportPath, remapped[exportPath])
+      } else if (cssExportPaths.has(exportPath)) {
+        // A `.css` subpath with a `source` is built by the stylesheet build, which does not
+        // participate in exports generation (its entries are stylesheets, not JS). Its
+        // conditions are materialized here instead, from the export subpath: `./ui/styles.css`
+        // is built to `<dist>/ui/styles.css` with the shim next to it.
+        result[exportPath] = reconcileCssEntry(exportPath, {
+          distRel,
+          source: cssSources[exportPath],
+          isPublish,
+        })
       } else {
-        // Hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
-        // entries) pass through untouched.
+        // Hand-written subpaths that aren't build entries (plain `.css`/`.json` exports,
+        // `svelte` entries) pass through untouched.
         result[exportPath] = Object.prototype.hasOwnProperty.call(authoredRaw, exportPath)
           ? authoredRaw[exportPath]
           : sourceRaw[exportPath]
@@ -115,6 +136,21 @@ export function createExportsComposer(
 
     return result
   }
+}
+
+/**
+ * The conditional CSS export of a `.css` subpath built by the stylesheet build. `source`
+ * resolves at development time, so it is kept in `exports` and stripped from the publish
+ * variant — the same split the build entries get.
+ */
+function reconcileCssEntry(
+  exportPath: string,
+  options: {distRel: string; source: string | undefined; isPublish: boolean},
+): Record<string, string> {
+  const {distRel, source, isPublish} = options
+  const cssName = exportPath.replace(/^\.\//, '')
+  const conditions = createConditionalCssExport(cssName, distRel)
+  return isPublish || source === undefined ? conditions : {source, ...conditions}
 }
 
 /**

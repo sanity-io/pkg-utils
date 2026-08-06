@@ -13,6 +13,29 @@ export { runtime };
 //# sourceMappingURL=browser.js.map"
 `;
 
+exports[`cli > should build \`css-entry\` package > ./dist/ui/styles.css 1`] = `
+".table{color:#010203}
+"
+`;
+
+exports[`cli > should build \`css-import\` package > ./dist/index.js 1`] = `
+"import "css-import/style.css";
+/**
+* The stylesheet is imported here rather than exported as its own subpath, so the build merges
+* it into \`style.css\` and injects the self-referential import into this entry.
+* @public
+*/
+const buttonClassName = "button";
+export { buttonClassName };
+
+//# sourceMappingURL=index.js.map"
+`;
+
+exports[`cli > should build \`css-import\` package > ./dist/style.css 1`] = `
+".button{color:#040506;inset:0}
+"
+`;
+
 exports[`cli > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.VERSION = "1.0.0";
 
