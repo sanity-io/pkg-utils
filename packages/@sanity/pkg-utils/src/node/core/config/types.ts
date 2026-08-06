@@ -54,7 +54,7 @@ export type TSDocCustomTag = PackageTsdocCustomTag
 
 /**
  * Options for the `tsdoc` option: the `@microsoft/api-extractor` powered TSDoc and release-tag
- * checking that runs during `pkg check` (and during `pkg build` via `@sanity/tsdown-config`).
+ * checking that runs during `pkg build` and `pkg check`.
  * @public
  * @deprecated Use `PackageTsdocOptions` from `@sanity/pkg-utils`.
  */
@@ -157,9 +157,9 @@ export interface PkgConfigOptions {
   styledComponents?: boolean | StyledComponentsOptions
   tsconfig?: string
   /**
-   * Runs `@microsoft/api-extractor` (via `@sanity/tsdown-config`) to check that TSDoc tags are
-   * valid and release tags are correct. Enabled during `pkg build` (through the tsdown
-   * `build:done` hook) and again during `pkg check`. Set `tsdoc: false` to disable it.
+   * Runs `@microsoft/api-extractor` to check that TSDoc tags are valid and release tags are
+   * correct. Enabled during `pkg build` and again during `pkg check`. Set `tsdoc: false` to
+   * disable it.
    * @defaultValue true
    */
   tsdoc?: boolean | PackageTsdocOptions
