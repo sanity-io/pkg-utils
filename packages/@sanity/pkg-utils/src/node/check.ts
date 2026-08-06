@@ -118,14 +118,27 @@ async function checkApiExtractorReleaseTags(ctx: BuildContext) {
   const tsdoc =
     ctx.config?.tsdoc === false || ctx.config?.tsdoc === true ? undefined : ctx.config?.tsdoc
   const entryDtsFiles: string[] = []
+  const seen = new Set<string>()
 
   for (const exp of Object.values(ctx.exports || {})) {
-    if (!exp._exported || !exp.default.endsWith('.js')) continue
-    const dtsPath = exp.default.replace(/\.js$/, '.d.ts')
-    const exportPath = path.resolve(ctx.cwd, dtsPath)
-    // JS-only entries emit no declarations; there is nothing to check
-    if (!fileExists(exportPath)) continue
-    entryDtsFiles.push(exportPath)
+    if (!exp._exported) continue
+    // Prefer an explicit `types` condition; otherwise derive declarations from every runtime
+    // file (`.js` → `.d.ts`, `.mjs` → `.d.mts`, `.cjs` → `.d.cts`) so dual-format / fixed-
+    // extension packages are checked the same way as the build-time `tsdoc` hook.
+    const candidates = new Set<string>()
+    if (exp.types) candidates.add(exp.types)
+    for (const js of [exp.default, exp.import, exp.require]) {
+      if (!js) continue
+      const dts = jsFileToDts(js)
+      if (dts) candidates.add(dts)
+    }
+    for (const dtsPath of candidates) {
+      const exportPath = path.resolve(ctx.cwd, dtsPath)
+      // JS-only entries emit no declarations; there is nothing to check
+      if (!fileExists(exportPath) || seen.has(exportPath)) continue
+      seen.add(exportPath)
+      entryDtsFiles.push(exportPath)
+    }
   }
 
   if (entryDtsFiles.length === 0) return
@@ -144,4 +157,13 @@ async function checkApiExtractorReleaseTags(ctx: BuildContext) {
       error: (...args) => ctx.logger.error(...args),
     },
   })
+}
+
+/** `./dist/index.js` → `./dist/index.d.ts` (`.mjs` → `.d.mts`, `.cjs` → `.d.cts`). */
+function jsFileToDts(file: string): string | undefined {
+  if (/\.d\.[mc]?ts$/.test(file)) return file
+  if (file.endsWith('.mjs')) return file.replace(/\.mjs$/, '.d.mts')
+  if (file.endsWith('.cjs')) return file.replace(/\.cjs$/, '.d.cts')
+  if (file.endsWith('.js')) return file.replace(/\.js$/, '.d.ts')
+  return undefined
 }
