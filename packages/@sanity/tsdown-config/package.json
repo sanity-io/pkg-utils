@@ -64,11 +64,15 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
     "tsdown": "^0.22.5",
     "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
+    "@tsdown/css": {
+      "optional": true
+    },
     "babel-plugin-react-compiler": {
       "optional": true
     }

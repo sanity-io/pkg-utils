@@ -1,9 +1,9 @@
+import {resolveCssExportOptions} from '@sanity/tsdown-config'
 import {up as findPkgPath} from 'empathic/package'
 import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
 import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {isRecord} from './core/isRecord.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
@@ -74,14 +74,18 @@ export async function watch(options: {
       const vanillaExtract = ctx.config?.vanillaExtract
       if (vanillaExtract) {
         const veOptions = vanillaExtract === true ? {} : vanillaExtract
-        // `@sanity/tsdown-config` defaults `inject` to `{nodeCompat: true}` (the conditional
-        // CSS export pattern); an explicit user `inject` replaces that default
-        const inject = veOptions.inject ?? {nodeCompat: true}
-        if (isRecord(inject) && inject['nodeCompat']) {
+        // The same defaults `@sanity/tsdown-config` applies, so watch mode and full builds
+        // agree on whether the conditional CSS export pattern is in play
+        const {nodeCompat} = resolveCssExportOptions({
+          inject: true,
+          exports: {nodeCompat: true},
+          ...veOptions,
+        })
+        if (nodeCompat) {
           await writeBundleCssExports({
             cwd,
             distPath: ctx.distPath,
-            cssName: veOptions.fileName || 'bundle.css',
+            cssNames: [veOptions.fileName || 'bundle.css'],
             logger,
           })
         }
