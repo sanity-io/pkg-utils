@@ -124,10 +124,12 @@ export async function writeBundleCssExports(options: {
   }
 
   await writeFile(pkgPath, `${JSON.stringify(pkg, null, detectIndent(source))}\n`)
-  const keys = written.map((key) => `\`exports["${key}"]\``).join(', ')
+  const maps = publishConfigExports ? ['exports', 'publishConfig.exports'] : ['exports']
+  const keys = maps
+    .flatMap((map) => written.map((key) => `\`${map}["${key}"]\``))
+    .join(', ')
+    .replace(/, ([^,]*)$/, written.length * maps.length > 1 ? ' and $1' : '$1')
   logger.log(
-    `Updated package.json: added ${keys}${
-      publishConfigExports ? ' (and their `publishConfig.exports` counterparts)' : ''
-    } for the conditional CSS export pattern`,
+    `Updated package.json: added ${keys} for the conditional CSS export pattern`,
   )
 }
