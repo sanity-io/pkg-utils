@@ -452,20 +452,23 @@ test('keeps single-format shapes, remaps aliases, and preserves compact publish 
 })
 
 test('materializes the conditional export of a `.css` subpath that declares a source', () => {
+  // `PackageJSON['exports']` models the shapes authored by hand; a conditional CSS export is a
+  // flat condition -> path map, which `parsePackage` passes through untouched.
+  const exports = {
+    '.': {source: './src/index.ts', default: './dist/index.js'},
+    // The author writes nothing but the `source`; the build fills in the rest, deriving the
+    // stylesheet path from the subpath itself
+    './styles.css': {source: './test/env/fixture.css'},
+    './package.json': './package.json',
+  } as unknown as PackageJSON['exports']
+
   const composer = createComposer({
     type: 'module',
     name: 'test',
     version: '1.0.0',
     types: './dist/index.d.ts',
     files: ['dist'],
-    exports: {
-      '.': {source: './src/index.ts', default: './dist/index.js'},
-      // The author writes nothing but the `source`; the build fills in the rest, deriving the
-      // stylesheet path from the subpath itself
-      // oxlint-disable-next-line no-unsafe-type-assertion -- a conditional CSS export shape
-      './styles.css': {source: './test/env/fixture.css'} as unknown as string,
-      './package.json': './package.json',
-    },
+    exports,
   })
 
   const generated = {

@@ -8,9 +8,8 @@ import type {
 import type {UserConfig} from 'tsdown'
 import type {StrictOptions} from '../../strict.ts'
 
-export type {PkgCssExport, PkgExport, PkgExports} from '@sanity/parse-package-json'
+export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 export type {
-  CssExportsOptions,
   PackageCssOptions,
   PackageVanillaExtractOptions,
   ReactCompilerOptions,

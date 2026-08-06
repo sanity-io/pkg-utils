@@ -43,7 +43,7 @@ export interface TsdownBuild {
 }
 
 /** The build key of the stylesheet build. */
-export const CSS_BUILD_KEY = 'css'
+const CSS_BUILD_KEY = 'css'
 
 /**
  * Collapses the hand-written `exports` map (+ `bundles`) into the per-platform tsdown build
@@ -240,8 +240,7 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
  * The tsdown entry alias of a `.css` export subpath: the subpath without its leading `./` and
  * `.css` ending, so `@tsdown/css` (with `splitting`) emits the stylesheet at exactly the path
  * the subpath promises — `"./ui/styles.css"` -> alias `ui/styles` -> `dist/ui/styles.css`.
- * @internal
  */
-export function cssEntryAlias(exportPath: string): string {
+function cssEntryAlias(exportPath: string): string {
   return exportPath.replace(/^\.\//, '').replace(/\.css$/, '')
 }

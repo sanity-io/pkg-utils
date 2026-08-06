@@ -226,6 +226,60 @@ Extracts the CSS from [vanilla-extract](https://vanilla-extract.style) `.css.ts`
 `import "<pkg>/bundle.css"`, emits a no-op `bundle-css.js` shim for runtimes that cannot import
 `.css` files, and writes the conditional `"./bundle.css"` export to `package.json`.
 
+#### `css`
+
+- Type: `PackageCssOptions`
+- Default: `undefined`
+
+Enables the [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) pipeline (install it
+first — it is an optional peer dependency) for plain CSS, CSS modules, preprocessors, and
+Lightning CSS / PostCSS. The emitted CSS gets the same minify and lowering settings as
+[`vanillaExtract`](#vanillaextract), and the same conditional CSS export treatment: the
+self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
+`style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
+`package.json`.
+
+### Shipping a stylesheet as its own export subpath
+
+A package can also publish a stylesheet directly, without any JS importing it. Declare a `.css`
+export subpath with a `source` and nothing else:
+
+```json
+{
+  "exports": {
+    ".": {"source": "./src/index.ts", "default": "./dist/index.js"},
+    "./ui/styles.css": {"source": "./src/ui/styles.css"},
+    "./package.json": "./package.json"
+  }
+}
+```
+
+`pkg build` compiles `./src/ui/styles.css` to `dist/ui/styles.css` — the emitted path follows the
+export subpath — and fills in the rest of the conditions:
+
+```json
+"./ui/styles.css": {
+  "source": "./src/ui/styles.css",
+  "types": "./dist/ui/styles-css.d.ts",
+  "browser": "./dist/ui/styles.css",
+  "style": "./dist/ui/styles.css",
+  "node": "./dist/ui/styles-css.js",
+  "default": "./dist/ui/styles-css.js"
+}
+```
+
+Consumers then `import "<pkg>/ui/styles.css"`, which resolves to the stylesheet in bundlers and
+browsers, and to the no-op shim in Node and similar runtimes. This turns on the `@tsdown/css`
+pipeline automatically; set [`css`](#css) explicitly to customize it.
+
+Add the CSS to `sideEffects` in `package.json` so it survives tree-shaking in consumers:
+
+```json
+{
+  "sideEffects": ["*.css"]
+}
+```
+
 ## Migrating to v12
 
 v12 replaced the rollup/rolldown build stack with `tsdown` + `@sanity/tsdown-config`. Most

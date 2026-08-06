@@ -19,6 +19,7 @@ stops with an error that contains these same migration instructions (skipped whe
 | `babel: {styledComponents: true}`   | `styledComponents: true`                                            |
 | `babel: {plugins: [...]}`           | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)       |
 | `rollup: {vanillaExtract: true}`    | `vanillaExtract: true`                                              |
+| `vanillaExtract: {inject: {nodeCompat: true}}` | `vanillaExtract: {inject: true, exports: {nodeCompat: true}}` (deprecated, still works) |
 | `rollup: {plugins: [...]}`          | `plugins: [...]`                                                    |
 | `rollup: {optimizeLodash: ...}`     | removed — see [lodash](#lodash)                                     |
 | `extract: {enabled: false}`         | `tsdoc: false`                                                      |
