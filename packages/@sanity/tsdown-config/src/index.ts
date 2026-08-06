@@ -10,15 +10,8 @@ import {
   type RolldownChunk,
   type UserConfig,
 } from 'tsdown'
-import {checkTsdoc} from './tsdoc/checkTsdoc.ts'
 import type {PackageTsdocOptions} from './tsdoc/types.ts'
 
-export {
-  checkTsdoc,
-  type CheckTsdocLogger,
-  type CheckTsdocOptions,
-  type CheckTsdocResult,
-} from './tsdoc/checkTsdoc.ts'
 export type {
   PackageTsdocCustomTag,
   PackageTsdocOptions,
@@ -596,8 +589,9 @@ async function resolvePackageConfig(
 const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
 
 /**
- * Registers the `build:done` hook that runs {@link checkTsdoc} against every entry `.d.ts`
- * file the build emitted.
+ * Registers the `build:done` hook that runs `checkTsdoc` against every entry `.d.ts` file
+ * the build emitted. The checker is loaded from `./tsdoc` only when the hook runs, so
+ * importing `defineConfig` never pulls in API Extractor.
  */
 function createTsdocHooks(options: {
   tsdoc: PackageTsdocOptions
@@ -623,6 +617,9 @@ function createTsdocHooks(options: {
       const entryDtsFiles = entryDtsFilesFromChunks(chunks)
       if (entryDtsFiles.length === 0) return
 
+      // Lazy-load the `/tsdoc` entry so `@microsoft/api-extractor` and friends stay out of
+      // the root module graph until a build with `tsdoc` enabled actually finishes.
+      const {checkTsdoc} = await import('./tsdoc/index.ts')
       await checkTsdoc({
         cwd: resolved.cwd,
         entryDtsFiles,

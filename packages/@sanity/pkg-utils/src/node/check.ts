@@ -1,5 +1,5 @@
 import path from 'node:path'
-import {checkTsdoc} from '@sanity/tsdown-config'
+import {checkTsdoc} from '@sanity/tsdown-config/tsdoc'
 import {up as findPkgPath} from 'empathic/package'
 import {loadConfig} from './core/config/loadConfig.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'

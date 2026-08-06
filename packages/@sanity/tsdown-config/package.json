@@ -28,6 +28,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./tsdoc": "./src/tsdoc/index.ts",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
@@ -83,6 +84,7 @@
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
+      "./tsdoc": "./dist/tsdoc.mjs",
       "./package.json": "./package.json"
     }
   }

@@ -57,7 +57,7 @@ export interface CheckTsdocResult {
 
 /**
  * Run `@microsoft/api-extractor` against the given entry declaration files to check that TSDoc
- * tags are valid and release tags are correct. Used by the `tsdoc` option on `defineConfig`.
+ * tags are valid and release tags are correct. Import from `@sanity/tsdown-config/tsdoc`.
  * @public
  */
 export async function checkTsdoc(options: CheckTsdocOptions): Promise<CheckTsdocResult> {

@@ -33,6 +33,13 @@ describe('tsdoc option', () => {
       ).hooks,
     ).toBe('function')
   })
+
+  test('exposes checkTsdoc from the /tsdoc subpath, not the root', async () => {
+    await expect(import('@sanity/tsdown-config')).resolves.not.toHaveProperty('checkTsdoc')
+    await expect(import('@sanity/tsdown-config/tsdoc')).resolves.toEqual(
+      expect.objectContaining({checkTsdoc: expect.any(Function)}),
+    )
+  })
 })
 
 describe('define option', () => {
