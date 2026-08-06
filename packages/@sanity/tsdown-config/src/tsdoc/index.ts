@@ -11,8 +11,4 @@ export {
   type CheckTsdocOptions,
   type CheckTsdocResult,
 } from './checkTsdoc.ts'
-export type {
-  PackageTsdocCustomTag,
-  PackageTsdocOptions,
-  PackageTsdocRuleLevel,
-} from './types.ts'
+export type {PackageTsdocCustomTag, PackageTsdocOptions, PackageTsdocRuleLevel} from './types.ts'
