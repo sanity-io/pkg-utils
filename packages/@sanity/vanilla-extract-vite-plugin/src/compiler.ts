@@ -15,6 +15,7 @@ import {isAbsolute, join} from 'node:path'
 import {
   cssFileFilter,
   getPackageInfo,
+  isVanillaExtractSource,
   normalizePath,
   serializeVanillaModule,
   transform,
@@ -312,6 +313,9 @@ async function createCompilerServer({
         name: 'sanity-vanilla-extract-transform',
         async transform(code, id) {
           if (!cssFileFilter.test(id)) return null
+          // Plain `*.css.js` modules match the filter by name but are not vanilla-extract —
+          // leave them alone so evaluation does not inject an unresolvable adapter import
+          if (!isVanillaExtractSource(code)) return null
           // Inject the file scope and the adapter binding: the spliced
           // `setAdapter(globalThis[...])` call binds the project's own copy of
           // `@vanilla-extract/css` to the adapter of the compilation in progress

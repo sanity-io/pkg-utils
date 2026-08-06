@@ -9,7 +9,7 @@
  */
 
 export {compile, type CompileOptions} from './compile.ts'
-export {cssFileFilter, virtualCssFileFilter} from './filters.ts'
+export {cssFileFilter, isVanillaExtractSource, virtualCssFileFilter} from './filters.ts'
 export {getSourceFromVirtualCssFile} from './getSourceFromVirtualCssFile.ts'
 export {normalizePath} from './normalizePath.ts'
 export {getPackageInfo, type PackageInfo} from './packageInfo.ts'

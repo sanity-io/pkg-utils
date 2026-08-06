@@ -5,6 +5,7 @@
  */
 import {
   cssFileFilter,
+  isVanillaExtractSource,
   normalizePath,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
@@ -327,6 +328,11 @@ export function vanillaExtractPlugin({
         async handler(_code, id, options) {
           const [validId = id] = id.split('?')
           if (!cssFileFilter.test(validId)) return null
+          // Plain `*.css.js` modules (e.g. `@bynder/compact-view`'s `Styles.css.js`) match
+          // the filter by name but are not vanilla-extract. Processing them would inject
+          // `@vanilla-extract/css/adapter` and then fail under pnpm when that package cannot
+          // be resolved from the dependency's nested `node_modules`.
+          if (!isVanillaExtractSource(_code)) return null
 
           // `transform` can run before `buildStart` has finished creating the compiler;
           // `ensureCompiler` is memoized, so this is a no-op once the compiler exists

@@ -33,8 +33,10 @@ Commands, each across the shared option matrix in `test/variants.ts`:
   `@bynder/compact-view`: not built with vanilla-extract, but shipping a plain JS
   `Styles.css.js` whose name matches vanilla-extract's `cssFileFilter`. Processing that
   module used to hang the fork's compiler and crash the dev server, forcing the workaround
-  in [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553); the compiled
-  patch must match upstream's byte for byte, no workaround required.
+  in [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553). The fork now
+  also skips plain `*.css.js` modules whose source does not reference `@vanilla-extract/`
+  (upstream still re-serializes them); the test asserts matching VE class names / CSS and
+  that the plain CSS-string export survives without a `.vanilla.css` sidecar.
 - **`sanity schema extract`** (`test/schema-extract.test.ts`) — identifier variants. The
   fixture schema embeds the generated class names in a field description, so the extracted
   schema doubles as identifier output; the command also exercises `.css.ts` evaluation inside
