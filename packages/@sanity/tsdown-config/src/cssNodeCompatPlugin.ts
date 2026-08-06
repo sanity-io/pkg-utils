@@ -191,25 +191,43 @@ export function cssNodeCompatPlugin(options: CssNodeCompatPluginOptions = {}): T
 
     // Emit a no-op JS shim and its declaration file next to every CSS file `@tsdown/css`
     // emitted, for the `node`/`default` and `types` conditions of the export to point at.
-    generateBundle(_outputOptions, bundle) {
-      if (!nodeCompat) return
-      for (const asset of Object.values(bundle)) {
-        if (asset.type !== 'asset' || !RE_CSS_ASSET.test(asset.fileName)) continue
-        const shimFileName = cssShimFileName(asset.fileName)
-        // Another plugin (`@sanity/vanilla-extract-rolldown-plugin` for `bundle.css`) may
-        // already own this CSS file and have emitted its shims.
-        if (bundle[shimFileName]) continue
-        this.emitFile({
-          type: 'asset',
-          fileName: shimFileName,
-          source: cssShimSource(asset.fileName),
-        })
-        this.emitFile({
-          type: 'asset',
-          fileName: cssShimDtsFileName(asset.fileName),
-          source: cssShimDtsSource(asset.fileName),
-        })
-      }
+    // `order: 'post'` is required: tsdown registers the `@tsdown/css` output plugins after the
+    // user plugins, so the CSS assets only exist in the bundle once they have run.
+    generateBundle: {
+      order: 'post',
+      handler(_outputOptions, bundle) {
+        if (!exportsCss) return
+        const cssFileNames = Object.values(bundle)
+          .filter((asset) => asset.type === 'asset' && RE_CSS_ASSET.test(asset.fileName))
+          .map((asset) => asset.fileName)
+
+        // The export is written into `package.json` at config-resolution time, before any CSS
+        // is known, so in merged mode the CSS file is emitted even when nothing produced CSS -
+        // otherwise the `browser`/`style` conditions would dangle. With `splitting` the file
+        // names follow the chunk names, so there is nothing to declare up front.
+        if (!splitting && !cssFileNames.includes(mergedFileName)) {
+          this.emitFile({type: 'asset', fileName: mergedFileName, source: ''})
+          cssFileNames.push(mergedFileName)
+        }
+
+        if (!nodeCompat) return
+        for (const cssFileName of cssFileNames) {
+          const shimFileName = cssShimFileName(cssFileName)
+          // Another plugin (`@sanity/vanilla-extract-rolldown-plugin` for `bundle.css`) may
+          // already own this CSS file and have emitted its shims.
+          if (bundle[shimFileName]) continue
+          this.emitFile({
+            type: 'asset',
+            fileName: shimFileName,
+            source: cssShimSource(cssFileName),
+          })
+          this.emitFile({
+            type: 'asset',
+            fileName: cssShimDtsFileName(cssFileName),
+            source: cssShimDtsSource(cssFileName),
+          })
+        }
+      },
     },
   }
 
