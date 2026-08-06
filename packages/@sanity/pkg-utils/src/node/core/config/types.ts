@@ -12,6 +12,9 @@ import type {StrictOptions} from '../../strict.ts'
 
 export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 export type {
+  PackageTsdocCustomTag,
+  PackageTsdocOptions,
+  PackageTsdocRuleLevel,
   PackageVanillaExtractOptions,
   ReactCompilerOptions,
   StyledComponentsOptions,
@@ -39,15 +42,13 @@ export interface PkgBundle {
 
 /**
  * @public
- * @deprecated Use `PackageTsdocRuleLevel` from `@sanity/tsdown-config` — re-exported here for
- * backwards compatibility.
+ * @deprecated Use `PackageTsdocRuleLevel` from `@sanity/pkg-utils`.
  */
 export type PkgRuleLevel = PackageTsdocRuleLevel
 
 /**
  * @public
- * @deprecated Use `PackageTsdocCustomTag` from `@sanity/tsdown-config` — re-exported here for
- * backwards compatibility.
+ * @deprecated Use `PackageTsdocCustomTag` from `@sanity/pkg-utils`.
  */
 export type TSDocCustomTag = PackageTsdocCustomTag
 
@@ -55,6 +56,7 @@ export type TSDocCustomTag = PackageTsdocCustomTag
  * Options for the `tsdoc` option: the `@microsoft/api-extractor` powered TSDoc and release-tag
  * checking that runs during `pkg check` (and during `pkg build` via `@sanity/tsdown-config`).
  * @public
+ * @deprecated Use `PackageTsdocOptions` from `@sanity/pkg-utils`.
  */
 export type PkgTsdocOptions = PackageTsdocOptions
 
