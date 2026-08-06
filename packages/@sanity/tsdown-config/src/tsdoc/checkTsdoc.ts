@@ -143,10 +143,13 @@ function loadTSConfig(options: {
 }): ReturnType<typeof ts.parseJsonConfigFileContent> | undefined {
   const {cwd, tsconfigPath} = options
   // Resolve a relative name from `cwd` (e.g. `tsconfig.dist.json`); an absolute path is kept.
-  // oxlint-disable-next-line unbound-method
-  const configPath = path.isAbsolute(tsconfigPath)
-    ? tsconfigPath
-    : ts.findConfigFile(cwd, ts.sys.fileExists, tsconfigPath)
+  let configPath: string | undefined
+  if (path.isAbsolute(tsconfigPath)) {
+    configPath = tsconfigPath
+  } else {
+    // oxlint-disable-next-line unbound-method
+    configPath = ts.findConfigFile(cwd, ts.sys.fileExists, tsconfigPath)
+  }
   if (!configPath || !existsSync(configPath)) return undefined
   // oxlint-disable-next-line unbound-method
   const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
