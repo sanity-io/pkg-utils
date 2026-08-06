@@ -602,8 +602,7 @@ function createTsdocHooks(options: {
   const {tsdoc, outDir, deps} = options
   // `tsconfig: false` means "don't use a tsconfig"; fall back to the conventional name so
   // API Extractor still has a project root. A string path is forwarded as-is.
-  const tsconfigPath =
-    typeof options.tsconfig === 'string' ? options.tsconfig : 'tsconfig.json'
+  const tsconfigPath = typeof options.tsconfig === 'string' ? options.tsconfig : 'tsconfig.json'
   const bundledPackages =
     tsdoc.bundledPackages ??
     (Array.isArray(deps?.alwaysBundle)
