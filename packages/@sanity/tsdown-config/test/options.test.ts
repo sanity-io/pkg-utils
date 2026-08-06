@@ -18,8 +18,7 @@ describe('dts option', () => {
 })
 
 describe('tsdoc option', () => {
-  test('is off by default (unlike @sanity/pkg-utils, which sets it to true)', async () => {
-    // The check is opt-in here; `@sanity/pkg-utils` continues enabling it when composing
+  test('is off by default', async () => {
     expect((await defineConfig()).hooks).toBeUndefined()
     expect((await defineConfig({tsdoc: false})).hooks).toBeUndefined()
   })

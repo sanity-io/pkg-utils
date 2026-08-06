@@ -256,7 +256,7 @@ export interface PackageOptions extends Pick<
    * Runs `@microsoft/api-extractor` after the build (via tsdown's `build:done` hook) to check
    * that TSDoc tags are valid and release tags are correct. Useful for packages consumed by
    * TSDoc-based tooling. Off by default — set `tsdoc: true` to enable, or pass an options
-   * object to customize rules and custom tags. `@sanity/pkg-utils` enables it by default.
+   * object to customize rules and custom tags.
    * @defaultValue false
    */
   tsdoc?: boolean | PackageTsdocOptions
