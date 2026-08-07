@@ -54,7 +54,7 @@
     "jsonc-parser": "^3.3.1",
     "lightningcss": "catalog:",
     "package-manager-detector": "^1.8.0",
-    "publint": "^0.3.22"
+    "publint": "^0.3.23"
   },
   "devDependencies": {
     "@sanity/pkg-utils": "workspace:^",
@@ -69,11 +69,15 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
     "tsdown": "^0.22.7",
     "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
+    "@tsdown/css": {
+      "optional": true
+    },
     "babel-plugin-react-compiler": {
       "optional": true
     }

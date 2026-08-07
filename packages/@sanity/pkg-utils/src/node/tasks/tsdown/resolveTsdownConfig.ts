@@ -1,6 +1,7 @@
 import path from 'node:path'
 import {defineConfig} from '@sanity/tsdown-config'
 import {mergeConfig, type InlineConfig, type UserConfig} from 'tsdown'
+import type {PkgConfigOptions} from '../../core/config/types.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {pkgExtMap} from '../../core/pkg/pkgExt.ts'
 import {createExportsComposer} from './composeExports.ts'
@@ -77,6 +78,17 @@ export async function resolveTsdownConfig(
   const platform =
     build.runtime === 'node' ? 'node' : build.runtime === 'browser' ? 'browser' : 'neutral'
 
+  // The `@tsdown/css` pipeline turns on when it's configured, and automatically for a package
+  // that declares a `.css` export subpath with a `source`. The stylesheet build needs
+  // `splitting` so each entry emits its own file at the path its subpath promises; the JS
+  // builds keep `@tsdown/css`'s merged default, so CSS imported from JS lands in a single
+  // `style.css` with one export and one injected import - the `bundle.css` shape of
+  // `vanillaExtract`.
+  const css: PkgConfigOptions['css'] | undefined =
+    config?.css || ctx.cssExports.length
+      ? {...config?.css, ...(build.css ? {splitting: true} : {})}
+      : undefined
+
   // Build-time constants: `PKG_VERSION` reads the environment override first, like v11.
   // pkg-utils' own build skips it so the replacement logic in this very file survives its own
   // bundling. (`PKG_FORMAT`, `PKG_RUNTIME` and `PKG_FILE_PATH` were removed in v12 — see
@@ -95,7 +107,8 @@ export async function resolveTsdownConfig(
   // (`NODE_ENV=production` / `legacyChecks: false`), a leftover v11 string like
   // `dts: 'rolldown'` must degrade to the default behavior (which is what it meant) instead
   // of spreading into numeric character keys.
-  const hasTsSources = build.entries.some((buildEntry) => RE_TS_SOURCE.test(buildEntry.source))
+  const hasTsSources =
+    !build.css && build.entries.some((buildEntry) => RE_TS_SOURCE.test(buildEntry.source))
   const dtsPassthrough = typeof config?.dts === 'object' ? config.dts : undefined
   const dts =
     hasTsSources && config?.dts !== false
@@ -120,7 +133,7 @@ export async function resolveTsdownConfig(
   // build never rewrites `package.json`, and neither do watch builds (a rewrite would
   // re-trigger the `package.json` watcher).
   const exports: UserConfig['exports'] =
-    build.canonical && !ctx.emitDeclarationOnly && !options.watch
+    build.canonical && !ctx.emitDeclarationOnly && !options.watch && !build.css
       ? {
           devExports: 'source',
           customExports: createExportsComposer(ctx, build),
@@ -160,6 +173,7 @@ export async function resolveTsdownConfig(
     dts,
     deps: ctx.deps,
     exports,
+    css,
     reactCompiler: config?.reactCompiler,
     styledComponents: config?.styledComponents,
     vanillaExtract: config?.vanillaExtract,
@@ -185,6 +199,7 @@ export async function resolveTsdownConfig(
     report: false,
     ...(config?.minify === true ? {minify: true} : {}),
     ...(config?.plugins === undefined ? {} : {plugins: config.plugins}),
+    ...(options.watch && css ? {hooks: createWatchCssExportsHook(ctx, css)} : {}),
   })
 
   return {
@@ -192,5 +207,48 @@ export async function resolveTsdownConfig(
     config: false,
     logLevel: 'warn',
     ...(options.watch ? {watch: true} : {}),
+  }
+}
+
+/**
+ * Declares the conditional export of every CSS file a watch rebuild emitted.
+ *
+ * A full build leaves this to `cssNodeCompatPlugin`, which composes into tsdown's
+ * `exports.customExports`. Watch mode turns tsdown's `exports` feature off (a `package.json`
+ * write per rebuild would loop the watcher), so `pkg watch` maintains the exports itself. Most
+ * of them are known before the build and are written once per context in `watch.ts`, but the
+ * merged `style.css` of CSS imported from JS only exists when something actually imports CSS —
+ * declaring it from the config alone would point the export at files nobody produced.
+ *
+ * `build:done` is the only place that knows: in watch mode `build()` resolves before the first
+ * rebuild runs, so the returned bundle's chunks are still empty. The write is idempotent, so
+ * the `package.json` watcher settles after one extra rebuild rather than looping.
+ * @internal
+ */
+function createWatchCssExportsHook(
+  ctx: BuildContext,
+  css: NonNullable<PkgConfigOptions['css']>,
+): NonNullable<UserConfig['hooks']> {
+  // Only the merged mode has a CSS file name to declare up front. With `splitting` the names
+  // follow the chunk names and the export is the host's to wire up, so a full build declares
+  // nothing either.
+  const mergedCssName = css.splitting ? undefined : css.fileName || 'style.css'
+
+  return (hooks) => {
+    hooks.hook('build:done', async ({chunks}) => {
+      if (mergedCssName === undefined) return
+      const emitted = chunks.some(
+        (chunk) => chunk.type === 'asset' && chunk.fileName === mergedCssName,
+      )
+      if (!emitted) return
+
+      const {writeBundleCssExports} = await import('../../core/pkg/writeBundleCssExports.ts')
+      await writeBundleCssExports({
+        cwd: ctx.cwd,
+        distPath: ctx.distPath,
+        cssNames: [mergedCssName],
+        logger: ctx.logger,
+      })
+    })
   }
 }

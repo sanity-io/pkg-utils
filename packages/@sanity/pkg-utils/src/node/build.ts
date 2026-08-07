@@ -114,7 +114,7 @@ export async function build(options: {
       spinner.complete()
       ctx.logger.log()
 
-      printBuildOutputs(ctx, bundles)
+      printBuildOutputs(ctx, bundles, buildDef)
       ctx.logger.log()
     } catch (err) {
       spinner.error()
@@ -154,11 +154,31 @@ function removeNonDeclarationOutputs(bundles: TsdownBundle[]): void {
  * emitted, mirroring the per-file output of previous majors.
  */
 function printBuildOutputs(
-  ctx: {cwd: string; emitDeclarationOnly: boolean; logger: Logger; pkg: {name: string}},
+  ctx: {
+    cwd: string
+    distPath: string
+    emitDeclarationOnly: boolean
+    logger: Logger
+    pkg: {name: string}
+  },
   bundles: TsdownBundle[],
+  buildDef: TsdownBuildDef,
 ): void {
   const {cwd, logger, pkg} = ctx
   const lines = new Set<string>()
+
+  // Stylesheets are emitted as assets, which carry no `facadeModuleId` back to their source,
+  // so the stylesheet build's lines come from its entry map instead.
+  if (buildDef.css) {
+    for (const entry of buildDef.entries) {
+      const output = `./${path
+        .relative(cwd, path.join(ctx.distPath, `${entry.alias}.css`))
+        .replaceAll('\\', '/')}`
+      lines.add(
+        `${pkg.name}: ./${path.relative(cwd, path.resolve(cwd, entry.source)).replaceAll('\\', '/')} \u2192 ${output}`,
+      )
+    }
+  }
 
   for (const bundle of bundles) {
     for (const chunk of bundle.chunks) {

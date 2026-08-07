@@ -152,8 +152,8 @@ export default defineConfig({
 })
 ```
 
-By default (`inject: {nodeCompat: true}`) the conditional CSS export pattern is wired up
-automatically:
+By default (`inject: true` with `exports: {nodeCompat: true}`) the conditional CSS export pattern
+is wired up automatically:
 
 - injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
   vanilla-extract styles,
@@ -174,9 +174,15 @@ consumers by adding it to `sideEffects` in `package.json`:
 
 Pass an options object instead of `true` to customize - the options are modeled after the
 [`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
-`target`, `lightningcss`). Set `inject: true` for a plain relative `import "./bundle.css"`
-instead of the conditional export pattern, or `inject: false` to wire up the import, shim, and
-export yourself.
+`target`, `lightningcss`). `inject` and `exports` are independent: set `exports: true` for a
+plain (browser-only) `"./bundle.css"` export without the shim, `exports: false` for a relative
+`import "./bundle.css"` instead of the export pattern, or `inject: false` to publish the CSS
+without importing it automatically (for packages whose consumers import the subpath themselves).
+
+> [!NOTE]
+> `inject: {nodeCompat: true}` is deprecated. It means `{inject: true, exports: {nodeCompat: true}}`
+> and still works, with a warning: `nodeCompat` configures how the CSS file is published, not how
+> the import is injected, so it moved to `exports`.
 
 Two Sanity-flavored defaults diverge from the bare plugins (which match `@tsdown/css` exactly):
 
@@ -196,11 +202,10 @@ default (`bundle.css` vs `style.css`) and do not interfere with each other.
 
 ## css
 
-tsdown's experimental [`css` option](https://tsdown.dev/options/css) is passed through as-is.
-It enables the `@tsdown/css` pipeline for CSS modules, preprocessors, Lightning CSS / PostCSS,
-inject, and related features. Install [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css)
-in the project first — `@sanity/tsdown-config` only forwards the option and does not depend on
-`@tsdown/css` itself:
+tsdown's experimental [`css` option](https://tsdown.dev/options/css) enables the `@tsdown/css`
+pipeline for plain CSS, CSS modules, preprocessors, and Lightning CSS / PostCSS. Install
+[`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) in the project first — it is an
+optional peer dependency:
 
 ```sh
 pnpm add --save-dev @tsdown/css
@@ -212,11 +217,22 @@ import {defineConfig} from '@sanity/tsdown-config'
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   css: {
-    inject: true,
     modules: {localsConvention: 'camelCase'},
   },
 })
 ```
+
+The options are `@tsdown/css`'s, plus an `exports` option this config implements on top, with the
+same two Sanity-flavored defaults as `vanillaExtract`:
+
+- `exports` defaults to `{nodeCompat: true}`, wiring up the same conditional CSS export pattern:
+  the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
+  `style-css.d.ts` declaration, and the conditional `"./style.css"` export in `package.json`.
+  `@tsdown/css` has no equivalent — its own `inject` emits a relative `import "./style.css"`,
+  which throws in runtimes that cannot load `.css` files. Set `exports: true` for a plain
+  (browser-only) CSS export, or `exports: false` to fall back to the relative injection.
+- `minify` defaults to `true`, and browserless CSS syntax lowering targets fall back to
+  `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
 
 Both `css` and `vanillaExtract` can be enabled in the same config. Use that when a package
 authors styles with vanilla-extract _and_ CSS modules (`.module.css`):
@@ -228,15 +244,14 @@ export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   vanillaExtract: true,
   css: {
-    inject: true,
     modules: {localsConvention: 'camelCase'},
   },
 })
 ```
 
-vanilla-extract extracts into `dist/bundle.css` by default (with the conditional
-`"./bundle.css"` export when `inject` stays at its Sanity default), while `@tsdown/css` merges
-other CSS — including scoped CSS modules — into `dist/style.css`. See the
+vanilla-extract extracts into `dist/bundle.css`, while `@tsdown/css` merges other CSS — including
+scoped CSS modules — into `dist/style.css`. Each pipeline publishes its own conditional export and
+emits its own shim, so they never collide. See the
 [`InlineConfig.css`](https://tsdown.dev/reference/api/Interface.InlineConfig#css) API reference
 for the full option surface.
 

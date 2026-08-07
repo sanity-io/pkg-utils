@@ -181,6 +181,27 @@ export function runLegacyConfigChecks(config: Record<string, unknown>): void {
     )
   }
 
+  // Grandfathered: `inject: {nodeCompat: true}` still works (it means
+  // `{inject: true, exports: {nodeCompat: true}}`), with a nudge toward its successor. The
+  // option configures how the CSS file is published, not how the import is injected.
+  for (const option of ['vanillaExtract', 'css'] as const) {
+    const value = config[option]
+    if (typeof value !== 'object' || value === null) continue
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const inject = (value as {inject?: unknown}).inject
+    if (typeof inject !== 'object' || inject === null) continue
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    if ((inject as {nodeCompat?: unknown}).nodeCompat === undefined) continue
+    // eslint-disable-next-line no-console -- config-load-time deprecation warning
+    console.warn(
+      [
+        `package.config.ts: \`${option}.inject.nodeCompat\` is deprecated. Use`,
+        `\`${option}: {inject: true, exports: {nodeCompat: true}}\` instead — \`nodeCompat\``,
+        'configures the package exports, not the injected import.',
+      ].join('\n'),
+    )
+  }
+
   // Grandfathered: `external` still works (mapped onto tsdown's `deps`), with a nudge toward
   // its successor.
   if (config['external'] !== undefined) {

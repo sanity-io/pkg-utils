@@ -34,7 +34,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 
@@ -70,7 +70,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 
@@ -87,7 +87,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'lib'),
-      cssName: 'styles.css',
+      cssNames: ['styles.css'],
       logger,
     })
 
@@ -120,7 +120,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 
@@ -159,7 +159,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 
@@ -181,7 +181,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 
@@ -216,7 +216,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 
@@ -259,7 +259,7 @@ describe('writeBundleCssExports', () => {
     await writeBundleCssExports({
       cwd,
       distPath: path.join(cwd, 'dist'),
-      cssName: 'bundle.css',
+      cssNames: ['bundle.css'],
       logger,
     })
 

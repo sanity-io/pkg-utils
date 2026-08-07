@@ -3,7 +3,7 @@ import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
 import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {isRecord} from './core/isRecord.ts'
+import {usesCssExportNodeCompat} from './core/pkg/cssExportOptions.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
@@ -71,21 +71,41 @@ export async function watch(options: {
       // `exports.customExports` composition, but watch mode disables tsdown's `exports` feature
       // (a package.json write per rebuild would loop the watcher). Keep the export in sync here
       // instead, once per context, like v11 — the write is idempotent, so it won't loop.
+      const cssNames: string[] = []
+      const cssSources: Record<string, string> = {}
+
       const vanillaExtract = ctx.config?.vanillaExtract
       if (vanillaExtract) {
         const veOptions = vanillaExtract === true ? {} : vanillaExtract
-        // `@sanity/tsdown-config` defaults `inject` to `{nodeCompat: true}` (the conditional
-        // CSS export pattern); an explicit user `inject` replaces that default
-        const inject = veOptions.inject ?? {nodeCompat: true}
-        if (isRecord(inject) && inject['nodeCompat']) {
-          await writeBundleCssExports({
-            cwd,
-            distPath: ctx.distPath,
-            cssName: veOptions.fileName || 'bundle.css',
-            logger,
-          })
+        if (usesCssExportNodeCompat(veOptions)) {
+          cssNames.push(veOptions.fileName || 'bundle.css')
         }
       }
+
+      // The `@tsdown/css` pipeline's own exports: the `.css` export subpaths built by the
+      // stylesheet build. Their file names follow their subpath and a declared entry always
+      // emits, so they are known up front. The merged `style.css` of CSS imported from JS is
+      // not — it only exists once something actually imports CSS — so `resolveTsdownConfig`
+      // declares that one from a `build:done` hook instead, matching what
+      // `cssNodeCompatPlugin` declares in a full build.
+      const cssConfig = ctx.config?.css
+      const cssNodeCompat =
+        (Boolean(cssConfig) || ctx.cssExports.length > 0) &&
+        usesCssExportNodeCompat(cssConfig ?? {})
+      if (cssNodeCompat) {
+        for (const cssExport of ctx.cssExports) {
+          cssNames.push(cssExport._path.replace(/^\.\//, ''))
+          cssSources[cssExport._path] = cssExport.source
+        }
+      }
+
+      await writeBundleCssExports({
+        cwd,
+        distPath: ctx.distPath,
+        cssNames,
+        sources: cssSources,
+        logger,
+      })
 
       const builds = resolveTsdownBuilds(ctx)
 

@@ -48,6 +48,7 @@ function createContext(config: BuildContext['config']): BuildContext {
     deps: undefined,
     distPath: path.join(cwd, 'dist'),
     emitDeclarationOnly: false,
+    cssExports: [],
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
     logger: {
