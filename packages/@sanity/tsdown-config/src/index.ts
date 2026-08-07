@@ -653,9 +653,13 @@ function isDtsCircularDependencyWarning(message: string): boolean {
 /**
  * Composes the userland `suppressWarnings` value with {@link isDtsCircularDependencyWarning}:
  * the two are OR'd, so adding a per-package suppression never drops the declaration-only
- * cycle filter that pairs with this config's `checks.circularDependency` default. The
- * string/`RegExp` matching mirrors tsdown's own (`includes` and `test`, with `lastIndex` reset
- * so a stateful `/g` pattern can't skip messages).
+ * cycle filter that pairs with this config's `checks.circularDependency` default.
+ *
+ * The string/`RegExp` matching mirrors tsdown's own — `includes` and `test`, against the
+ * message exactly as tsdown would see it, so a pattern behaves the same whether it goes
+ * through this option or straight into tsdown's `suppressWarnings`. `lastIndex` is reset for
+ * `/g` and `/y` patterns, which carry it between `test` calls and would otherwise skip
+ * messages (a no-op for other patterns, whose `lastIndex` `test` ignores).
  */
 function resolveSuppressWarnings(
   suppressWarnings: UserConfig['suppressWarnings'],
@@ -668,7 +672,7 @@ function resolveSuppressWarnings(
           (Array.isArray(suppressWarnings) ? suppressWarnings : [suppressWarnings]).some(
             (pattern) => {
               if (typeof pattern === 'string') return message.includes(pattern)
-              pattern.lastIndex = 0
+              if (pattern.global || pattern.sticky) pattern.lastIndex = 0
               return pattern.test(message)
             },
           )

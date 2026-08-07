@@ -321,6 +321,17 @@ describe('suppressWarnings option', () => {
     expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk for "a"')).toBe(true)
     expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk for "b"')).toBe(true)
   })
+
+  test('leaves a non-stateful userland pattern untouched', async () => {
+    // `test` ignores `lastIndex` unless the pattern is global or sticky, so writing to it would
+    // be a no-op that only introduces a failure mode — a frozen RegExp would throw
+    const isSuppressed = await resolveSuppressWarnings({
+      suppressWarnings: Object.freeze(/EMPTY_BUNDLE/),
+    })
+
+    expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk')).toBe(true)
+    expect(isSuppressed('[UNRESOLVED_IMPORT] Could not resolve "foo"')).toBe(false)
+  })
 })
 
 describe('minify default', () => {
