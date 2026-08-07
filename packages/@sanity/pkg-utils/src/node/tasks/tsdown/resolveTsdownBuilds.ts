@@ -201,7 +201,13 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
     formats: ['esm'],
   }))
   if (cssEntries.length) {
-    builds.push({key: CSS_BUILD_KEY, runtime: ctx.runtime, canonical: false, entries: cssEntries, css: true})
+    builds.push({
+      key: CSS_BUILD_KEY,
+      runtime: ctx.runtime,
+      canonical: false,
+      entries: cssEntries,
+      css: true,
+    })
   }
 
   const toBuild = (key: string, runtime: PkgRuntime, canonical: boolean): TsdownBuild | null => {

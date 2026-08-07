@@ -117,15 +117,17 @@ export interface Options {
    * `@sanity/tsdown-config` defaults this to `true`.
    * @defaultValue false
    */
-  inject?: boolean | {
-    /**
-     * @deprecated Use {@link Options.exports | `exports`} instead: `inject: {nodeCompat: true}`
-     * is the same as `{inject: true, exports: {nodeCompat: true}}`. `nodeCompat` configures how
-     * the CSS file is published, not how the import is injected, so it moved to `exports`. An
-     * explicit `exports` option wins over this one.
-     */
-    nodeCompat?: boolean
-  }
+  inject?:
+    | boolean
+    | {
+        /**
+         * @deprecated Use {@link Options.exports | `exports`} instead: `inject: {nodeCompat: true}`
+         * is the same as `{inject: true, exports: {nodeCompat: true}}`. `nodeCompat` configures how
+         * the CSS file is published, not how the import is injected, so it moved to `exports`. An
+         * explicit `exports` option wins over this one.
+         */
+        nodeCompat?: boolean
+      }
   /**
    * Publish the extracted CSS file as the `"./<fileName>"` export subpath of the package, so
    * consumers can `import "<pkg-name>/<fileName>"` — which is also the specifier

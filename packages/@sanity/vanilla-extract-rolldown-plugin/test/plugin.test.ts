@@ -167,7 +167,7 @@ describe('vanillaExtractPlugin', () => {
   })
 
   test('respects a custom `fileName`', async () => {
-      const output = await buildFixture({
+    const output = await buildFixture({
       fileName: 'styles.css',
       inject: true,
       exports: {nodeCompat: true},
@@ -335,9 +335,9 @@ describe('vanillaExtractPlugin', () => {
       expect(findEntryChunk(output).code).toContain(`import "${selfReferentialSpecifier}";`)
       expect(findAsset(output, 'bundle-css.js')).toContain('No-op shim')
       // …and the migration is called out once
-      expect(logs.filter((message) => message.includes('`inject: {nodeCompat: true}`'))).toHaveLength(
-        1,
-      )
+      expect(
+        logs.filter((message) => message.includes('`inject: {nodeCompat: true}`')),
+      ).toHaveLength(1)
     } finally {
       await bundle.close()
     }
