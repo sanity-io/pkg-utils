@@ -253,6 +253,27 @@ export interface PackageOptions extends Pick<
    * @defaultValue false
    */
   tsdoc?: boolean | PackageTsdocOptions
+  /**
+   * tsdown's `suppressWarnings` option: strings (matched with `includes`), regular expressions
+   * (matched with `test`), or a predicate that drop build warnings before they're printed — and
+   * before `failOnWarn` turns them into errors.
+   *
+   * Userland values are **added to** the built-in suppression instead of replacing it (which
+   * `mergeConfig` would do, since it replaces functions): per-package suppressions can't
+   * accidentally undo the declaration-only circular-dependency filter that this config pairs
+   * with its `checks.circularDependency` default. This config always suppresses
+   * `CIRCULAR_DEPENDENCY` warnings whose entire cycle consists of declaration files
+   * (`.d.ts`/`.d.mts`/`.d.cts`) — those come from the declaration bundling pass, where every
+   * import is type-only and erased at runtime, so the cycles are harmless and unavoidable for
+   * mutually referencing public types (e.g. the schema definition types in `@sanity/types`).
+   * Cycles involving a runtime module still warn.
+   *
+   * To drop the built-in suppression instead of adding to it, merge over the returned config —
+   * `mergeConfig(await defineConfig(), {suppressWarnings: () => false})` restores every
+   * warning, including the declaration-only cycles.
+   * @defaultValue undefined — only the built-in declaration-only cycle suppression applies
+   */
+  suppressWarnings?: UserConfig['suppressWarnings']
 }
 
 /**
@@ -526,10 +547,15 @@ async function resolvePackageConfig(
 
   return defineTsdownConfig({
     // Rolldown defaults `circularDependency` to `false`; enable it so Sanity library builds
-    // surface import cycles (bigger bundles / execution-order hazards) as warnings.
+    // surface import cycles (bigger bundles / execution-order hazards) as warnings. The
+    // declaration bundling pass gets the same check, where cycles are type-only and harmless,
+    // so `suppressWarnings` filters those out below.
     // Override via `mergeConfig(..., {checks: {circularDependency: false}})`.
     // https://rolldown.rs/reference/InputOptions.checks#circulardependency
     checks: {circularDependency: true},
+    // Drops the `CIRCULAR_DEPENDENCY` warnings of the declaration bundling pass (userland
+    // patterns are OR'd in, never replacing the built-in filter).
+    suppressWarnings: resolveSuppressWarnings(options.suppressWarnings),
     clean,
     css,
     cwd,
@@ -585,8 +611,69 @@ async function resolvePackageConfig(
   })
 }
 
-/** Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks. */
+/**
+ * Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks — the same
+ * extensions `rolldown-plugin-dts` gives the modules of the declaration bundling pass.
+ */
 const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
+
+/** Strips the SGR color codes rolldown formats warning messages with. */
+// oxlint-disable-next-line eslint/no-control-regex -- matching the ESC of a CSI sequence
+const RE_ANSI_COLOR = /\u001B\[\d*(?:;\d+)*m/g
+
+/** The `CircularDependency` diagnostic of rolldown, ahead of the cycle's ` -> `-joined modules. */
+const CIRCULAR_DEPENDENCY_PREFIX = 'Circular dependency: '
+
+/**
+ * Whether a warning is a `CIRCULAR_DEPENDENCY` warning whose entire cycle consists of
+ * declaration files, e.g.
+ * `Circular dependency: src/exports/index.d.ts -> src/exports/nodes.d.ts -> src/exports/index.d.ts.`
+ *
+ * Those come from the declaration bundling pass: every import between `.d.ts` modules is
+ * type-only and erased at runtime, so the cycle has none of the consequences the check exists
+ * to catch (execution-order hazards, bigger bundles), and it's unavoidable for mutually
+ * referencing public types — see https://github.com/sanity-io/sanity/pull/13753, where 109 of
+ * 136 cycle warnings were declaration-only. A cycle that includes even one runtime module is
+ * left alone.
+ */
+function isDtsCircularDependencyWarning(message: string): boolean {
+  // The message arrives pre-formatted, with a color-coded `[CIRCULAR_DEPENDENCY] ` code prefix
+  // and a trailing newline
+  const plain = message.replace(RE_ANSI_COLOR, '').trim()
+  const cycleStart = plain.indexOf(CIRCULAR_DEPENDENCY_PREFIX)
+  if (cycleStart === -1) return false
+  const modules = plain
+    .slice(cycleStart + CIRCULAR_DEPENDENCY_PREFIX.length)
+    // The trailing period of the diagnostic, never part of a `.d.ts` extension
+    .replace(/\.$/, '')
+    .split(' -> ')
+  return modules.length > 1 && modules.every((module) => RE_DTS_FILE.test(module))
+}
+
+/**
+ * Composes the userland `suppressWarnings` value with {@link isDtsCircularDependencyWarning}:
+ * the two are OR'd, so adding a per-package suppression never drops the declaration-only
+ * cycle filter that pairs with this config's `checks.circularDependency` default. The
+ * string/`RegExp` matching mirrors tsdown's own (`includes` and `test`, with `lastIndex` reset
+ * so a stateful `/g` pattern can't skip messages).
+ */
+function resolveSuppressWarnings(
+  suppressWarnings: UserConfig['suppressWarnings'],
+): (message: string) => boolean {
+  if (suppressWarnings === undefined) return isDtsCircularDependencyWarning
+  const matchesUserPattern =
+    typeof suppressWarnings === 'function'
+      ? suppressWarnings
+      : (message: string): boolean =>
+          (Array.isArray(suppressWarnings) ? suppressWarnings : [suppressWarnings]).some(
+            (pattern) => {
+              if (typeof pattern === 'string') return message.includes(pattern)
+              pattern.lastIndex = 0
+              return pattern.test(message)
+            },
+          )
+  return (message) => isDtsCircularDependencyWarning(message) || matchesUserPattern(message)
+}
 
 /**
  * Registers the `build:done` hook that runs `checkTsdoc` against every entry `.d.ts` file

@@ -891,6 +891,8 @@ importers:
         specifier: 'catalog:'
         version: 4.1.10(@types/node@26.1.2)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.1)(tsx@4.23.5)(yaml@2.9.0))
 
+  packages/@sanity/tsdown-config/test/fixtures/circular-dependency-library: {}
+
   packages/@sanity/tsdown-config/test/fixtures/external-side-effect:
     dependencies:
       dummy-side-effects:

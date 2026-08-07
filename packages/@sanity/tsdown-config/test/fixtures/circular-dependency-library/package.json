@@ -1,0 +1,25 @@
+{
+  "name": "@fixtures/circular-dependency-library",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/exports/index.ts",
+    "./nodes": "./src/exports/nodes.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./nodes": "./dist/nodes.js",
+      "./package.json": "./package.json"
+    }
+  }
+}

@@ -225,6 +225,104 @@ describe('checks option', () => {
   })
 })
 
+/** A `CIRCULAR_DEPENDENCY` warning as rolldown formats it: colored code prefix, trailing dot. */
+function circularWarning(...modules: string[]): string {
+  return `\u001B[33m[CIRCULAR_DEPENDENCY] \u001B[0mCircular dependency: ${modules.join(' -> ')}.\n`
+}
+
+async function resolveSuppressWarnings(
+  options?: Parameters<typeof defineConfig>[0],
+): Promise<(message: string) => boolean> {
+  const {suppressWarnings} = await defineConfig(options)
+  if (typeof suppressWarnings !== 'function') throw new Error('expected a predicate')
+  return suppressWarnings
+}
+
+describe('suppressWarnings option', () => {
+  test('drops circular dependency warnings whose whole cycle is declaration files', async () => {
+    // The declaration bundling pass gets the same `checks.circularDependency`, but every import
+    // between `.d.ts` modules is type-only and erased at runtime, so those cycles carry none of
+    // the hazards the check exists to surface — and they're unavoidable for mutually
+    // referencing public types (https://github.com/sanity-io/sanity/pull/13753)
+    const isSuppressed = await resolveSuppressWarnings()
+
+    expect(
+      isSuppressed(circularWarning('src/index.d.ts', 'src/nodes.d.ts', 'src/index.d.ts')),
+    ).toBe(true)
+    expect(
+      isSuppressed(circularWarning('src/index.d.mts', 'src/nodes.d.mts', 'src/index.d.mts')),
+    ).toBe(true)
+    expect(
+      isSuppressed(circularWarning('src/index.d.cts', 'src/nodes.d.cts', 'src/index.d.cts')),
+    ).toBe(true)
+    // Longer cycles, and the colorless form of the message
+    expect(isSuppressed(circularWarning('a.d.ts', 'b.d.ts', 'c.d.ts', 'd.d.ts', 'a.d.ts'))).toBe(
+      true,
+    )
+    expect(
+      isSuppressed('Circular dependency: src/index.d.ts -> src/nodes.d.ts -> src/index.d.ts.'),
+    ).toBe(true)
+  })
+
+  test('keeps circular dependency warnings that involve a runtime module', async () => {
+    const isSuppressed = await resolveSuppressWarnings()
+
+    expect(isSuppressed(circularWarning('src/a.ts', 'src/b.ts', 'src/a.ts'))).toBe(false)
+    // A single runtime module in the cycle is enough to keep the warning
+    expect(isSuppressed(circularWarning('src/a.d.ts', 'src/b.ts', 'src/a.d.ts'))).toBe(false)
+    expect(isSuppressed(circularWarning('src/a.js', 'src/b.d.ts', 'src/a.js'))).toBe(false)
+    // `.d.ts.map` is a sourcemap, not a declaration module
+    expect(
+      isSuppressed(circularWarning('src/a.d.ts.map', 'src/b.d.ts.map', 'src/a.d.ts.map')),
+    ).toBe(false)
+  })
+
+  test('keeps every other warning', async () => {
+    const isSuppressed = await resolveSuppressWarnings()
+
+    expect(isSuppressed('[UNRESOLVED_IMPORT] Could not resolve "./missing.d.ts"')).toBe(false)
+    expect(isSuppressed('[MIXED_EXPORT] Mixing named and default exports in src/index.d.ts')).toBe(
+      false,
+    )
+    expect(isSuppressed('')).toBe(false)
+  })
+
+  test('adds userland patterns to the built-in suppression instead of replacing it', async () => {
+    // `mergeConfig` would replace the predicate (functions don't merge), which would silently
+    // bring the declaration-only cycle warnings back
+    const dtsCycle = circularWarning('src/index.d.ts', 'src/nodes.d.ts', 'src/index.d.ts')
+    const runtimeCycle = circularWarning('src/a.ts', 'src/b.ts', 'src/a.ts')
+
+    const withString = await resolveSuppressWarnings({suppressWarnings: 'src/a.ts'})
+    expect(withString(dtsCycle)).toBe(true)
+    expect(withString(runtimeCycle)).toBe(true)
+    expect(withString(circularWarning('src/c.ts', 'src/d.ts', 'src/c.ts'))).toBe(false)
+
+    const withRegExps = await resolveSuppressWarnings({
+      suppressWarnings: [/UNRESOLVED_IMPORT/, 'EMPTY_BUNDLE'],
+    })
+    expect(withRegExps(dtsCycle)).toBe(true)
+    expect(withRegExps('[UNRESOLVED_IMPORT] Could not resolve "foo"')).toBe(true)
+    expect(withRegExps('[EMPTY_BUNDLE] Generated an empty chunk')).toBe(true)
+    expect(withRegExps(runtimeCycle)).toBe(false)
+
+    const withPredicate = await resolveSuppressWarnings({
+      suppressWarnings: (message) => message.includes('EMPTY_BUNDLE'),
+    })
+    expect(withPredicate(dtsCycle)).toBe(true)
+    expect(withPredicate('[EMPTY_BUNDLE] Generated an empty chunk')).toBe(true)
+    expect(withPredicate(runtimeCycle)).toBe(false)
+  })
+
+  test('resets a stateful userland pattern, so it matches every message', async () => {
+    // A `/g` (or `/y`) RegExp carries `lastIndex` between `test` calls and would skip messages
+    const isSuppressed = await resolveSuppressWarnings({suppressWarnings: /EMPTY_BUNDLE/g})
+
+    expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk for "a"')).toBe(true)
+    expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk for "b"')).toBe(true)
+  })
+})
+
 describe('minify default', () => {
   test('compresses with keepNames, without mangling or codegen minification', async () => {
     // Consumers' production builds minify `node_modules` again anyway, so the dist only gets
