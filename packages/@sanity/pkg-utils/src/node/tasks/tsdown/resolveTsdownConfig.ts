@@ -199,6 +199,7 @@ export async function resolveTsdownConfig(
     report: false,
     ...(config?.minify === true ? {minify: true} : {}),
     ...(config?.plugins === undefined ? {} : {plugins: config.plugins}),
+    ...(options.watch && css ? {hooks: createWatchCssExportsHook(ctx, css)} : {}),
   })
 
   return {
@@ -206,5 +207,48 @@ export async function resolveTsdownConfig(
     config: false,
     logLevel: 'warn',
     ...(options.watch ? {watch: true} : {}),
+  }
+}
+
+/**
+ * Declares the conditional export of every CSS file a watch rebuild emitted.
+ *
+ * A full build leaves this to `cssNodeCompatPlugin`, which composes into tsdown's
+ * `exports.customExports`. Watch mode turns tsdown's `exports` feature off (a `package.json`
+ * write per rebuild would loop the watcher), so `pkg watch` maintains the exports itself. Most
+ * of them are known before the build and are written once per context in `watch.ts`, but the
+ * merged `style.css` of CSS imported from JS only exists when something actually imports CSS —
+ * declaring it from the config alone would point the export at files nobody produced.
+ *
+ * `build:done` is the only place that knows: in watch mode `build()` resolves before the first
+ * rebuild runs, so the returned bundle's chunks are still empty. The write is idempotent, so
+ * the `package.json` watcher settles after one extra rebuild rather than looping.
+ * @internal
+ */
+function createWatchCssExportsHook(
+  ctx: BuildContext,
+  css: NonNullable<PkgConfigOptions['css']>,
+): NonNullable<UserConfig['hooks']> {
+  // Only the merged mode has a CSS file name to declare up front. With `splitting` the names
+  // follow the chunk names and the export is the host's to wire up, so a full build declares
+  // nothing either.
+  const mergedCssName = css.splitting ? undefined : css.fileName || 'style.css'
+
+  return (hooks) => {
+    hooks.hook('build:done', async ({chunks}) => {
+      if (mergedCssName === undefined) return
+      const emitted = chunks.some(
+        (chunk) => chunk.type === 'asset' && chunk.fileName === mergedCssName,
+      )
+      if (!emitted) return
+
+      const {writeBundleCssExports} = await import('../../core/pkg/writeBundleCssExports.ts')
+      await writeBundleCssExports({
+        cwd: ctx.cwd,
+        distPath: ctx.distPath,
+        cssNames: [mergedCssName],
+        logger: ctx.logger,
+      })
+    })
   }
 }

@@ -88,24 +88,21 @@ export async function watch(options: {
       }
 
       // The `@tsdown/css` pipeline's own exports: the `.css` export subpaths built by the
-      // stylesheet build (whose names follow their subpath), plus the merged `style.css` of
-      // CSS imported from JS. Both are statically known, so watch mode needs no build output.
+      // stylesheet build. Their file names follow their subpath and a declared entry always
+      // emits, so they are known up front. The merged `style.css` of CSS imported from JS is
+      // not — it only exists once something actually imports CSS — so `resolveTsdownConfig`
+      // declares that one from a `build:done` hook instead, matching what
+      // `cssNodeCompatPlugin` declares in a full build.
       const cssConfig = ctx.config?.css
-      if (cssConfig || ctx.cssExports.length) {
-        const {nodeCompat} = resolveCssExportOptions({
-          inject: true,
-          exports: {nodeCompat: true},
-          ...cssConfig,
-        })
-        if (nodeCompat) {
-          for (const cssExport of ctx.cssExports) {
-            const cssName = cssExport._path.replace(/^\.\//, '')
-            cssNames.push(cssName)
-            cssSources[cssExport._path] = cssExport.source
-          }
-          if (cssConfig && !cssConfig.splitting) {
-            cssNames.push(cssConfig.fileName || 'style.css')
-          }
+      const cssNodeCompat =
+        Boolean(cssConfig) || ctx.cssExports.length > 0
+          ? resolveCssExportOptions({inject: true, exports: {nodeCompat: true}, ...cssConfig})
+              .nodeCompat
+          : false
+      if (cssNodeCompat) {
+        for (const cssExport of ctx.cssExports) {
+          cssNames.push(cssExport._path.replace(/^\.\//, ''))
+          cssSources[cssExport._path] = cssExport.source
         }
       }
 
