@@ -1,5 +1,37 @@
 # @sanity/pkg-utils
 
+## 12.1.0
+
+### Minor Changes
+
+- [#3250](https://github.com/sanity-io/pkg-utils/pull/3250) [`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b) Thanks [@stipsan](https://github.com/stipsan)! - Move the conditional CSS export from `inject.nodeCompat` to `exports.nodeCompat`, and give `@tsdown/css` output the same treatment.
+
+  `nodeCompat` configures how the CSS file is published, not how the import is injected, so it moves to a dedicated `exports` option. `inject` and `exports` are now independent: `inject` prepends an import of the CSS to entry chunks, while `exports` publishes it as the `./<fileName>` export subpath (which also makes any injected import self-referential). `exports: true` declares a plain string export for browser-only packages; `exports: {nodeCompat: true}` declares the conditional export and emits the no-op JS shim plus its `.d.ts`. `inject: {nodeCompat: true}` keeps working, normalized to `{inject: true, exports: {nodeCompat: true}}` with a deprecation warning; an explicit `exports` wins over it.
+
+  `@sanity/tsdown-config` gains a `css.exports` option implementing the same pattern on top of `@tsdown/css` (an optional peer dependency), which compiles CSS but has no node-shim concept of its own — its `inject` emits a relative import that throws in runtimes that cannot load `.css` files.
+
+  `@sanity/pkg-utils` gains a `css` option, and builds a `.css` export subpath that declares a `source`:
+
+  ```json
+  "./ui/styles.css": {"source": "./src/ui/styles.css"}
+  ```
+
+  `pkg build` compiles it to `dist/ui/styles.css` with the same minify and lowering settings `vanillaExtract` gets, emits the shim, and fills in the `types`/`browser`/`style`/`node`/`default` conditions. `@sanity/parse-package-json` exposes the new `parseCssExports` for reading those subpaths, and `parseExports` no longer returns them as JS entries.
+
+### Patch Changes
+
+- [#3247](https://github.com/sanity-io/pkg-utils/pull/3247) [`0171fbe`](https://github.com/sanity-io/pkg-utils/commit/0171fbe7f23ef2ed6ecb7c2eaf376030e3a49cea) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.5
+
+- [#3252](https://github.com/sanity-io/pkg-utils/pull/3252) [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.23
+
+- [#3246](https://github.com/sanity-io/pkg-utils/pull/3246) [`c1106f1`](https://github.com/sanity-io/pkg-utils/commit/c1106f18091be74fcd4b2d989fb848c3b5a00445) Thanks [@stipsan](https://github.com/stipsan)! - Move the `tsdoc` feature (API Extractor TSDoc/release-tag checking) from `@sanity/pkg-utils` into `@sanity/tsdown-config`.
+
+  In `@sanity/tsdown-config` the option is `false` by default; set `tsdoc: true` (or an options object) to run the check after the build via tsdown's `build:done` hook. The checker lives at `@sanity/tsdown-config/tsdoc` and is lazy-loaded from the root config, so API Extractor is not part of the default entry's module graph. `@sanity/pkg-utils` continues enabling it by default (`tsdoc: true`) when composing the config, and still runs it during `pkg check` via `checkTsdoc` from `@sanity/tsdown-config/tsdoc`.
+
+- Updated dependencies [[`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b), [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2), [`bc16006`](https://github.com/sanity-io/pkg-utils/commit/bc1600690343a7c3bdedd94928cb77b40f7b93b2), [`c1106f1`](https://github.com/sanity-io/pkg-utils/commit/c1106f18091be74fcd4b2d989fb848c3b5a00445)]:
+  - @sanity/parse-package-json@2.3.0
+  - @sanity/tsdown-config@0.24.0
+
 ## 12.0.1
 
 ### Patch Changes
