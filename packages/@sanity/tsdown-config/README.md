@@ -537,6 +537,8 @@ const config = await defineConfig({
 Rolldown's [`checks.circularDependency`](https://rolldown.rs/reference/InputOptions.checks#circulardependency)
 warning is enabled by default (Rolldown itself defaults it to `false`). Circular imports inflate
 bundle size and can cause execution-order issues, so library builds surface them as warnings.
+Cycles that only exist between declaration files are filtered out - see
+[`suppressWarnings`](#suppresswarnings).
 
 To turn the warning off, merge over the returned config:
 
@@ -546,6 +548,47 @@ import {mergeConfig} from 'tsdown'
 
 export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
   checks: {circularDependency: false},
+})
+```
+
+## suppressWarnings
+
+The `checks.circularDependency` check above also applies to the declaration bundling pass, where
+it reports cycles between the emitted `.d.ts` modules. Those imports are type-only and erased at
+runtime, so the cycles carry none of the hazards the check exists to surface - and they're
+unavoidable for mutually referencing public types, e.g. a `DocumentNode` whose `fields` are
+`FieldNode`s that point back at their `parent` document. In
+[sanity-io/sanity#13753](https://github.com/sanity-io/sanity/pull/13753) 109 of 136 cycle
+warnings were declaration-only, drowning out the 27 real ones.
+
+So `defineConfig` sets tsdown's `suppressWarnings` to drop `CIRCULAR_DEPENDENCY` warnings whose
+**entire** cycle consists of declaration files (`.d.ts`/`.d.mts`/`.d.cts`). A cycle that includes
+even one runtime module still warns.
+
+Adding your own suppressions - strings (matched with `includes`), regular expressions (matched
+with `test`), or a predicate - goes through the `suppressWarnings` option, which is OR'd with the
+built-in one rather than replacing it:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  suppressWarnings: [/EMPTY_BUNDLE/, 'node_modules/some-dep'],
+})
+```
+
+Suppression happens before `failOnWarn` turns warnings into errors, so a suppressed warning never
+fails the build. To drop the built-in suppression instead of adding to it, merge over the returned
+config - `mergeConfig` replaces functions:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  // Restores every warning, including the declaration-only cycles
+  suppressWarnings: () => false,
 })
 ```
 

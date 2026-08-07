@@ -93,3 +93,22 @@ test('the `dts` object passthrough spreads over the defaults', async () => {
 
   expect(inlineConfig.dts).toEqual({newContext: true, tsgo: true, sourcemap: true})
 })
+
+test('inherits the declaration-only circular dependency suppression', async () => {
+  // `checks.circularDependency` comes from `@sanity/tsdown-config`, and so does the
+  // `suppressWarnings` predicate that drops the type-only cycles of the declaration bundling
+  // pass — the pkg-utils `mergeConfig` layer must not replace it
+  const ctx = createContext({})
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const {suppressWarnings} = await resolveTsdownConfig(ctx, build, {clean: false})
+  if (typeof suppressWarnings !== 'function') throw new Error('expected a predicate')
+
+  expect(
+    suppressWarnings('Circular dependency: src/index.d.ts -> src/nodes.d.ts -> src/index.d.ts.'),
+  ).toBe(true)
+  expect(
+    suppressWarnings('Circular dependency: src/index.ts -> src/nodes.ts -> src/index.ts.'),
+  ).toBe(false)
+})
