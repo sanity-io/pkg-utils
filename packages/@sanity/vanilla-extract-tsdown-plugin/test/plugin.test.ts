@@ -58,10 +58,10 @@ describe('vanillaExtractPlugin', () => {
   })
 
   test("`tsdownConfigResolved` forwards tsdown's package name and `target`", async () => {
-    // The self-referential import of `inject.nodeCompat` uses the package name tsdown resolved
-    // (instead of reading package.json from the working directory), and the CSS syntax lowering
-    // target defaults to tsdown's resolved top-level `target`.
-    const plugin = vanillaExtractPlugin({inject: {nodeCompat: true}})
+    // The self-referential import of `exports` uses the package name tsdown resolved (instead
+    // of reading package.json from the working directory), and the CSS syntax lowering target
+    // defaults to tsdown's resolved top-level `target`.
+    const plugin = vanillaExtractPlugin({inject: true, exports: {nodeCompat: true}})
     await plugin.tsdownConfigResolved?.({
       target: ['chrome61'],
       pkg: {name: '@fixtures/host-library'},
@@ -98,7 +98,7 @@ const conditionalCssExport = {
 /** Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. */
 async function runTsdownConfigHook(
   config: UserConfig,
-  options: Options = {inject: {nodeCompat: true}},
+  options: Options = {inject: true, exports: {nodeCompat: true}},
 ): Promise<UserConfig> {
   const plugin = vanillaExtractPlugin(options)
   expect(typeof plugin.tsdownConfig).toBe('function')
@@ -183,7 +183,7 @@ describe('tsdownConfig hook', () => {
   test('respects `fileName` and the configured `outDir`', async () => {
     const config = await runTsdownConfigHook(
       {exports: true, outDir: 'lib'},
-      {fileName: 'styles.css', inject: {nodeCompat: true}},
+      {fileName: 'styles.css', inject: true, exports: {nodeCompat: true}},
     )
 
     expect(await getCustomExports(config)({}, customExportsContext)).toEqual({
@@ -197,13 +197,13 @@ describe('tsdownConfig hook', () => {
     })
   })
 
-  test('leaves the `exports` option untouched when disabled, or without `nodeCompat`', async () => {
+  test('leaves the `exports` option untouched when disabled, or without `exports`', async () => {
     // tsdown's exports feature is opt-in: the conditional export is only written when enabled
     expect((await runTsdownConfigHook({})).exports).toBeUndefined()
     expect((await runTsdownConfigHook({exports: false})).exports).toBe(false)
 
-    // Only the `nodeCompat` flavor of `inject` writes the conditional export: the default and
-    // the plain relative-import flavor leave the `exports` option alone
+    // Only the plugin's own `exports` option writes the CSS export: the default and the plain
+    // relative-import `inject` leave the tsdown `exports` option alone
     const withDefaults = await runTsdownConfigHook({exports: {enabled: 'local-only'}}, {})
     expect(withDefaults.exports).not.toHaveProperty('customExports')
     const withPlainInject = await runTsdownConfigHook(
@@ -211,5 +211,35 @@ describe('tsdownConfig hook', () => {
       {inject: true},
     )
     expect(withPlainInject.exports).not.toHaveProperty('customExports')
+  })
+
+  test('writes a plain string export with `exports: true`', async () => {
+    // Without `nodeCompat` there is no shim, so the subpath is a plain path to the stylesheet -
+    // enough for packages that only ever run in browsers or bundlers
+    const config = await runTsdownConfigHook({exports: {enabled: 'local-only'}}, {exports: true})
+
+    expect(await getCustomExports(config)({}, customExportsContext)).toEqual({
+      './bundle.css': './dist/bundle.css',
+    })
+  })
+
+  test('accepts the deprecated `inject: {nodeCompat: true}` spelling', async () => {
+    // It means `{inject: true, exports: {nodeCompat: true}}`, so it writes the same export
+    const config = await runTsdownConfigHook(
+      {exports: {enabled: 'local-only'}},
+      {inject: {nodeCompat: true}},
+    )
+    expect(await getCustomExports(config)({}, customExportsContext)).toEqual({
+      './bundle.css': conditionalCssExport,
+    })
+
+    // …and an explicit `exports` wins over it
+    const explicit = await runTsdownConfigHook(
+      {exports: {enabled: 'local-only'}},
+      {inject: {nodeCompat: true}, exports: true},
+    )
+    expect(await getCustomExports(explicit)({}, customExportsContext)).toEqual({
+      './bundle.css': './dist/bundle.css',
+    })
   })
 })

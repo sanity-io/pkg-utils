@@ -1,0 +1,56 @@
+{
+  "name": "css-entry",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./ui": {
+      "source": "./src/ui/index.ts",
+      "default": "./dist/ui/index.js"
+    },
+    "./ui/styles.css": {
+      "source": "./src/ui/styles.css",
+      "types": "./dist/ui/styles-css.d.ts",
+      "browser": "./dist/ui/styles.css",
+      "style": "./dist/ui/styles.css",
+      "node": "./dist/ui/styles-css.js",
+      "default": "./dist/ui/styles-css.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "devDependencies": {
+    "@sanity/browserslist-config": "^1.0.5",
+    "@tsdown/css": "^0.22.14"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./ui": "./dist/ui/index.js",
+      "./ui/styles.css": {
+        "types": "./dist/ui/styles-css.d.ts",
+        "browser": "./dist/ui/styles.css",
+        "style": "./dist/ui/styles.css",
+        "node": "./dist/ui/styles-css.js",
+        "default": "./dist/ui/styles-css.js"
+      },
+      "./package.json": "./package.json"
+    }
+  }
+}

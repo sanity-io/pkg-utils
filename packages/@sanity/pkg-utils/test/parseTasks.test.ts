@@ -26,6 +26,7 @@ function createContext(pkg: PackageJSON, config?: BuildContext['config']): Build
     deps: undefined,
     distPath: '/test/dist',
     emitDeclarationOnly: false,
+    cssExports: [],
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
     logger: {

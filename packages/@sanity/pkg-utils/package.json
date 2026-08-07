@@ -100,10 +100,14 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
     "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
+    "@tsdown/css": {
+      "optional": true
+    },
     "babel-plugin-react-compiler": {
       "optional": true
     }

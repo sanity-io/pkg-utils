@@ -28,13 +28,22 @@ export interface TsdownBuildEntry {
  * @internal
  */
 export interface TsdownBuild {
-  /** Stable identifier, e.g. `neutral`, `browser`, `node`, `bundles`. */
+  /** Stable identifier, e.g. `neutral`, `browser`, `node`, `bundles`, `css`. */
   key: string
   runtime: PkgRuntime
   /** The canonical build owns `dist` conventions: exports generation runs here. */
   canonical: boolean
   entries: TsdownBuildEntry[]
+  /**
+   * The stylesheet build: its entries are `.css` files rather than JS, so it emits CSS assets
+   * (one per entry) and no JS at all. It runs on its own because a `.css` entry has nothing to
+   * declare types for, and because its per-entry CSS output needs `css.splitting`.
+   */
+  css?: boolean
 }
+
+/** The build key of the stylesheet build. */
+const CSS_BUILD_KEY = 'css'
 
 /**
  * Collapses the hand-written `exports` map (+ `bundles`) into the per-platform tsdown build
@@ -182,6 +191,19 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
 
   const builds: TsdownBuild[] = []
 
+  // `.css` export subpaths that declare a `source` build in their own pass: their entries are
+  // stylesheets, so the emitted file name follows the export subpath (`./ui/styles.css` ->
+  // `dist/ui/styles.css`) instead of an `import`/`require` target, and `dts` has nothing to do.
+  const cssEntries: TsdownBuildEntry[] = ctx.cssExports.map((cssExport) => ({
+    alias: cssEntryAlias(cssExport._path),
+    source: cssExport.source,
+    exportPath: cssExport._path,
+    formats: ['esm'],
+  }))
+  if (cssEntries.length) {
+    builds.push({key: CSS_BUILD_KEY, runtime: ctx.runtime, canonical: false, entries: cssEntries, css: true})
+  }
+
   const toBuild = (key: string, runtime: PkgRuntime, canonical: boolean): TsdownBuild | null => {
     const drafts = draftsByBuild.get(key)
     if (!drafts || drafts.size === 0) return null
@@ -212,4 +234,13 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   if (canonical) builds.push(canonical)
 
   return builds
+}
+
+/**
+ * The tsdown entry alias of a `.css` export subpath: the subpath without its leading `./` and
+ * `.css` ending, so `@tsdown/css` (with `splitting`) emits the stylesheet at exactly the path
+ * the subpath promises — `"./ui/styles.css"` -> alias `ui/styles` -> `dist/ui/styles.css`.
+ */
+function cssEntryAlias(exportPath: string): string {
+  return exportPath.replace(/^\.\//, '').replace(/\.css$/, '')
 }

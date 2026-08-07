@@ -404,13 +404,22 @@ describe('vanillaExtract option', () => {
     })
   })
 
-  test('skips the conditional CSS export wiring when `inject` is false', async () => {
-    const config = await defineConfig({vanillaExtract: {inject: false}})
+  test('skips the conditional CSS export wiring when `exports` is false', async () => {
+    const config = await defineConfig({vanillaExtract: {exports: false}})
 
-    // The vanilla-extract plugin is still applied (it extracts without injecting)…
+    // The vanilla-extract plugin is still applied (it extracts without publishing the CSS)…
     expect(getPluginNames(config)).toEqual(['vanilla-extract'])
     // …but its `tsdownConfig` hook leaves the exports wiring alone
     await runVanillaExtractConfigHook(config)
     expect(config.exports).not.toHaveProperty('customExports')
+  })
+
+  test('keeps the export wiring when only `inject` is false', async () => {
+    // `inject` and `exports` are independent: a package whose consumers import the stylesheet
+    // subpath themselves still publishes it, it just isn't imported automatically
+    const config = await defineConfig({vanillaExtract: {inject: false}})
+
+    await runVanillaExtractConfigHook(config)
+    expect(config.exports).toHaveProperty('customExports')
   })
 })

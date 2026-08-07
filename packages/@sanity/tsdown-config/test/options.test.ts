@@ -1,3 +1,4 @@
+import type {TsdownPlugin, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {defineConfig} from '../src/index.ts'
 
@@ -111,32 +112,85 @@ describe('css option', () => {
     expect((await defineConfig()).css).toBeUndefined()
   })
 
-  test('is passed through to tsdown as-is', async () => {
-    const css = {inject: true, modules: {localsConvention: 'camelCase' as const}}
-    expect((await defineConfig({css})).css).toEqual(css)
+  test('is forwarded to tsdown with the Sanity defaults applied', async () => {
+    const config = await defineConfig({
+      css: {modules: {localsConvention: 'camelCase' as const}},
+    })
+
+    expect(config.css).toEqual({
+      // Published Sanity libraries ship minified CSS, like `vanillaExtract`
+      minify: true,
+      // `@tsdown/css`'s own injection emits a relative `import "./style.css"`, which throws in
+      // runtimes that cannot load `.css` files - `cssNodeCompatPlugin` injects the
+      // self-referential specifier of the conditional CSS export instead
+      inject: false,
+      // Browserless targets fall back to `@sanity/browserslist-config`, like `vanillaExtract`
+      lightningcss: {targets: expect.any(Object)},
+      modules: {localsConvention: 'camelCase'},
+    })
+    // `exports` is this config's own option, not a `@tsdown/css` one, so it is stripped
+    expect(config.css).not.toHaveProperty('exports')
+    expect(pluginNames(config)).toContain('sanity-css-node-compat')
+  })
+
+  test('respects an explicit `minify` and `target`', async () => {
+    const config = await defineConfig({css: {minify: false, target: 'chrome61'}})
+
+    expect(config.css).toMatchObject({minify: false, target: 'chrome61'})
+    // A target that names browsers is lowered by `@tsdown/css` itself, so no fallback applies
+    expect(config.css).not.toHaveProperty('lightningcss.targets')
   })
 
   test('can be enabled alongside vanillaExtract', async () => {
-    // Both pipelines are independent: `vanillaExtract` adds the plugin, `css` is forwarded
-    // for `@tsdown/css` (CSS modules, etc). The fixture build covers them end-to-end.
+    // Both pipelines are independent: `vanillaExtract` extracts `.css.ts` into `bundle.css`,
+    // `@tsdown/css` handles everything else. The fixture build covers them end-to-end.
     const config = await defineConfig({
       vanillaExtract: true,
-      css: {inject: true, modules: {localsConvention: 'camelCase'}},
+      css: {modules: {localsConvention: 'camelCase'}},
     })
-    expect(config.css).toEqual({inject: true, modules: {localsConvention: 'camelCase'}})
-    const {plugins} = config
-    if (!Array.isArray(plugins)) throw new Error('expected plugins array')
-    expect(
-      plugins.some(
-        (plugin) =>
-          !!plugin &&
-          typeof plugin === 'object' &&
-          'name' in plugin &&
-          plugin.name === 'vanilla-extract',
-      ),
-    ).toBe(true)
+
+    expect(pluginNames(config)).toEqual(
+      expect.arrayContaining(['vanilla-extract', 'sanity-css-node-compat']),
+    )
+  })
+
+  test('writes the conditional CSS export unless `css.exports` is false', async () => {
+    const withExports = await defineConfig({css: {}, exports: true})
+    await runCssConfigHook(withExports)
+    expect(withExports.exports).toHaveProperty('customExports')
+
+    const withoutExports = await defineConfig({css: {exports: false}, exports: true})
+    await runCssConfigHook(withoutExports)
+    expect(withoutExports.exports).not.toHaveProperty('customExports')
   })
 })
+
+function pluginNames(config: UserConfig): string[] {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) throw new Error('expected plugins array')
+  return plugins.flatMap((plugin) =>
+    plugin && typeof plugin === 'object' && 'name' in plugin && typeof plugin.name === 'string'
+      ? [plugin.name]
+      : [],
+  )
+}
+
+/** Runs the node-compat plugin's `tsdownConfig` hook, like tsdown does when it resolves. */
+async function runCssConfigHook(config: UserConfig): Promise<void> {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) expect.unreachable('expected `plugins` to be an array')
+  const plugin: TsdownPlugin | undefined = plugins.find(
+    (candidate): candidate is TsdownPlugin =>
+      !!candidate &&
+      typeof candidate === 'object' &&
+      'name' in candidate &&
+      candidate.name === 'sanity-css-node-compat',
+  )
+  if (!plugin || typeof plugin.tsdownConfig !== 'function') {
+    expect.unreachable('expected the node-compat plugin with a `tsdownConfig` hook')
+  }
+  expect(await plugin.tsdownConfig(config, {})).toBeUndefined() // mutates the config in place
+}
 
 describe('sourcemap option', () => {
   test('defaults to true, matching @sanity/pkg-utils', async () => {

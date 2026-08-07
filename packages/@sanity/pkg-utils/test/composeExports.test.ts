@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type {PackageJSON} from '@sanity/parse-package-json'
+import {parseCssExports, type PackageJSON} from '@sanity/parse-package-json'
 import {expect, test, vi} from 'vitest'
 import type {BuildContext} from '../src/node/core/contexts/buildContext'
 import {parseAndValidateExports} from '../src/node/core/pkg/parseAndValidateExports'
@@ -31,6 +31,7 @@ function createComposer(pkg: PackageJSON) {
     deps: undefined,
     distPath: '/test/dist',
     emitDeclarationOnly: false,
+    cssExports: parseCssExports({pkg}),
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
     logger: {
@@ -447,5 +448,50 @@ test('keeps single-format shapes, remaps aliases, and preserves compact publish 
     '.': './dist/index.js',
     './feature': './dist/sub/feature.js',
     './package.json': './package.json',
+  })
+})
+
+test('materializes the conditional export of a `.css` subpath that declares a source', () => {
+  // `PackageJSON['exports']` models the shapes authored by hand; a conditional CSS export is a
+  // flat condition -> path map, which `parsePackage` passes through untouched.
+  const exports = {
+    '.': {source: './src/index.ts', default: './dist/index.js'},
+    // The author writes nothing but the `source`; the build fills in the rest, deriving the
+    // stylesheet path from the subpath itself
+    './styles.css': {source: './test/env/fixture.css'},
+    './package.json': './package.json',
+  } as unknown as PackageJSON['exports']
+
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports,
+  })
+
+  const generated = {
+    '.': {source: './src/index.ts', default: './dist/index.js'},
+    './package.json': './package.json',
+  }
+
+  // Dev: `source` resolves at development time, so it stays…
+  expect(composer(generated, {isPublish: false})['./styles.css']).toEqual({
+    source: './test/env/fixture.css',
+    types: './dist/styles-css.d.ts',
+    browser: './dist/styles.css',
+    style: './dist/styles.css',
+    node: './dist/styles-css.js',
+    default: './dist/styles-css.js',
+  })
+
+  // …and is stripped from the publish map, like it is for build entries
+  expect(composer(generated, {isPublish: true})['./styles.css']).toEqual({
+    types: './dist/styles-css.d.ts',
+    browser: './dist/styles.css',
+    style: './dist/styles.css',
+    node: './dist/styles-css.js',
+    default: './dist/styles-css.js',
   })
 })

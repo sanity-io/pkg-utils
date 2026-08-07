@@ -1,5 +1,6 @@
 import type {PkgExports} from '@sanity/parse-package-json'
 import type {
+  PackageCssOptions,
   PackageTsdocCustomTag,
   PackageTsdocOptions,
   PackageTsdocRuleLevel,
@@ -12,6 +13,7 @@ import type {StrictOptions} from '../../strict.ts'
 
 export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 export type {
+  PackageCssOptions,
   PackageTsdocCustomTag,
   PackageTsdocOptions,
   PackageTsdocRuleLevel,
@@ -72,6 +74,26 @@ export interface PkgConfigOptions {
    * @defaultValue true
    */
   clean?: UserConfig['clean']
+  /**
+   * Enables the `@tsdown/css` pipeline (requires `@tsdown/css` to be installed): plain CSS,
+   * CSS modules, preprocessors, Lightning CSS / PostCSS. The emitted CSS is minified and
+   * lowered with the same settings as {@link PkgConfigOptions.vanillaExtract | `vanillaExtract`},
+   * and gets the same conditional CSS export treatment — the self-referential
+   * `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its `style-css.d.ts`
+   * declaration, and the conditional `"./style.css"` export written to `package.json`.
+   *
+   * It is enabled automatically (with these defaults) for a package that declares a `.css`
+   * export subpath with a `source`, e.g.
+   *
+   * ```json
+   * "./ui/styles.css": {"source": "./src/ui/styles.css"}
+   * ```
+   *
+   * which builds `./src/ui/styles.css` to `dist/ui/styles.css` and fills in the remaining
+   * export conditions. Set the option explicitly to customize the pipeline.
+   * @alpha
+   */
+  css?: PackageCssOptions
   /** @alpha */
   define?: Record<string, string | number | boolean | undefined | null>
   /**

@@ -1,0 +1,50 @@
+{
+  "name": "css-import",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./style.css": {
+      "types": "./dist/style-css.d.ts",
+      "browser": "./dist/style.css",
+      "style": "./dist/style.css",
+      "node": "./dist/style-css.js",
+      "default": "./dist/style-css.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "devDependencies": {
+    "@sanity/browserslist-config": "^1.0.5",
+    "@tsdown/css": "^0.22.14"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./style.css": {
+        "types": "./dist/style-css.d.ts",
+        "browser": "./dist/style.css",
+        "style": "./dist/style.css",
+        "node": "./dist/style-css.js",
+        "default": "./dist/style-css.js"
+      },
+      "./package.json": "./package.json"
+    }
+  }
+}
