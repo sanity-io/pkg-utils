@@ -18,6 +18,31 @@ describe('dts option', () => {
   })
 })
 
+describe('tsdoc option', () => {
+  test('is off by default', async () => {
+    expect((await defineConfig()).hooks).toBeUndefined()
+    expect((await defineConfig({tsdoc: false})).hooks).toBeUndefined()
+  })
+
+  test('registers a build:done hook when enabled', async () => {
+    expect(typeof (await defineConfig({tsdoc: true})).hooks).toBe('function')
+    expect(
+      typeof (
+        await defineConfig({
+          tsdoc: {rules: {'ae-missing-release-tag': 'off'}},
+        })
+      ).hooks,
+    ).toBe('function')
+  })
+
+  test('exposes checkTsdoc from the /tsdoc subpath, not the root', async () => {
+    await expect(import('@sanity/tsdown-config')).resolves.not.toHaveProperty('checkTsdoc')
+    await expect(import('@sanity/tsdown-config/tsdoc')).resolves.toEqual(
+      expect.objectContaining({checkTsdoc: expect.any(Function)}),
+    )
+  })
+})
+
 describe('define option', () => {
   test('is undefined by default', async () => {
     expect((await defineConfig()).define).toBeUndefined()

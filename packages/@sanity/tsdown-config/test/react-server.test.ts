@@ -130,12 +130,22 @@ describe('reactCompiler.reactServer option', () => {
     // The react-server variant builds the same source without the compiler, skips d.ts (the
     // compiled variant's declarations serve both entries), never cleans (the compiled
     // variant's `clean` covers the run - tsdown cleans once, before either variant emits),
-    // and stays out of `exports` generation and `publint`
+    // and stays out of `exports` generation, `publint`, and `tsdoc`
     expect(getPluginNames(reactServer)).toEqual([])
     expect(reactServer.dts).toBe(false)
     expect(reactServer.clean).toBe(false)
     expect(reactServer.exports).toBe(false)
     expect(reactServer.publint).toBe(false)
+    expect(reactServer.hooks).toBeUndefined()
+  })
+
+  test('tsdoc hook is only on the compiled variant when enabled', async () => {
+    const [compiled, reactServer] = await defineDualConfig({
+      reactCompiler: {target: '19'},
+      tsdoc: true,
+    })
+    expect(typeof compiled.hooks).toBe('function')
+    expect(reactServer.hooks).toBeUndefined()
   })
 
   test('react-server entries sit next to the compiled ones with `.react-server` inserted', async () => {

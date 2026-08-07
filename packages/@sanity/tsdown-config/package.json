@@ -28,6 +28,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./tsdoc": "./src/tsdoc/index.ts",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
@@ -42,11 +43,15 @@
   },
   "dependencies": {
     "@babel/core": "^7.29.7",
+    "@microsoft/api-extractor": "^7.58.12",
+    "@microsoft/tsdoc-config": "^0.18.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@sanity/browserslist-config": "^1.0.5",
     "@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
+    "@typescript/typescript6": "^6.0.2",
     "@vitejs/plugin-react": "^6.0.5",
     "browserslist": "^4.28.7",
+    "jsonc-parser": "^3.3.1",
     "lightningcss": "catalog:",
     "package-manager-detector": "^1.8.0",
     "publint": "^0.3.22"
@@ -83,6 +88,7 @@
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
+      "./tsdoc": "./dist/tsdoc.mjs",
       "./package.json": "./package.json"
     }
   }

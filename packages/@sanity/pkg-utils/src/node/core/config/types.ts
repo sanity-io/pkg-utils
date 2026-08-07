@@ -1,6 +1,9 @@
 import type {PkgExports} from '@sanity/parse-package-json'
 import type {
   PackageCssOptions,
+  PackageTsdocCustomTag,
+  PackageTsdocOptions,
+  PackageTsdocRuleLevel,
   PackageVanillaExtractOptions,
   ReactCompilerOptions,
   StyledComponentsOptions,
@@ -11,6 +14,9 @@ import type {StrictOptions} from '../../strict.ts'
 export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 export type {
   PackageCssOptions,
+  PackageTsdocCustomTag,
+  PackageTsdocOptions,
+  PackageTsdocRuleLevel,
   PackageVanillaExtractOptions,
   ReactCompilerOptions,
   StyledComponentsOptions,
@@ -36,32 +42,25 @@ export interface PkgBundle {
   runtime?: PkgRuntime
 }
 
-/** @public */
-export type PkgRuleLevel = 'error' | 'warn' | 'info' | 'off'
+/**
+ * @public
+ * @deprecated Use `PackageTsdocRuleLevel` from `@sanity/pkg-utils`.
+ */
+export type PkgRuleLevel = PackageTsdocRuleLevel
 
-/** @public */
-export interface TSDocCustomTag {
-  name: string
-  syntaxKind: 'block' | 'modifier'
-  allowMultiple?: boolean
-}
+/**
+ * @public
+ * @deprecated Use `PackageTsdocCustomTag` from `@sanity/pkg-utils`.
+ */
+export type TSDocCustomTag = PackageTsdocCustomTag
 
 /**
  * Options for the `tsdoc` option: the `@microsoft/api-extractor` powered TSDoc and release-tag
- * checking that runs during `pkg check` (and `pkg build --check`).
+ * checking that runs during `pkg build` and `pkg check`.
  * @public
+ * @deprecated Use `PackageTsdocOptions` from `@sanity/pkg-utils`.
  */
-export interface PkgTsdocOptions {
-  customTags?: TSDocCustomTag[]
-  rules?: {
-    'ae-incompatible-release-tags'?: PkgRuleLevel
-    'ae-internal-missing-underscore'?: PkgRuleLevel
-    'ae-missing-release-tag'?: PkgRuleLevel
-    'tsdoc-link-tag-unescaped-text'?: PkgRuleLevel
-    'tsdoc-undefined-tag'?: PkgRuleLevel
-    'tsdoc-unsupported-tag'?: PkgRuleLevel
-  }
-}
+export type PkgTsdocOptions = PackageTsdocOptions
 
 /** @public */
 export interface PkgConfigOptions {
@@ -180,11 +179,12 @@ export interface PkgConfigOptions {
   styledComponents?: boolean | StyledComponentsOptions
   tsconfig?: string
   /**
-   * Runs `@microsoft/api-extractor` during `pkg check` to check that TSDoc tags are valid and
-   * release tags are correct. This is useful for packages that are consumed by TSDoc-based
-   * tooling. It's enabled by default; set `tsdoc: false` to disable it.
+   * Runs `@microsoft/api-extractor` to check that TSDoc tags are valid and release tags are
+   * correct. Enabled during `pkg build` and again during `pkg check`. Set `tsdoc: false` to
+   * disable it.
+   * @defaultValue true
    */
-  tsdoc?: false | PkgTsdocOptions
+  tsdoc?: boolean | PackageTsdocOptions
   /**
    * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS from `.css.ts` files into a
    * separate file (`dist/bundle.css` by default), minified and lowered with `lightningcss`.
