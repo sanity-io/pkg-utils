@@ -61,9 +61,7 @@ export function parseExports(options: {pkg: PackageJSON}): (PkgExport & {_path: 
  * the export subpath, so `"./ui/styles.css"` is built to `<dist>/ui/styles.css`.
  * @public
  */
-export function parseCssExports(options: {
-  pkg: PackageJSON
-}): (PkgCssExport & {_path: string})[] {
+export function parseCssExports(options: {pkg: PackageJSON}): (PkgCssExport & {_path: string})[] {
   const {pkg} = options
   if (!pkg.exports) return []
 

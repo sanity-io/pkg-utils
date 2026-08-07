@@ -12,7 +12,7 @@ const base = {
 // flat condition -> path map, which `parsePackage` passes through untouched.
 const pkgWith = (exports: Record<string, unknown>): PackageJSON =>
   // oxlint-disable-next-line no-unsafe-type-assertion
-  ({...base, exports} as unknown as PackageJSON)
+  ({...base, exports}) as unknown as PackageJSON
 
 describe('parseCssExports', () => {
   test('returns `.css` subpaths that declare a `source`', () => {

@@ -9,29 +9,29 @@ stops with an error that contains these same migration instructions (skipped whe
 
 ## TL;DR
 
-| v11                                 | v12                                                                 |
-| ----------------------------------- | ------------------------------------------------------------------- |
-| `dts: 'rolldown'`                   | delete it (it's the default now)                                    |
-| `dts: 'api-extractor'`              | delete it (types come from tsdown)                                  |
-| `tsgo: true`                        | `dts: {tsgo: true}`                                                 |
-| `babel: {reactCompiler: true}`      | `reactCompiler: true`                                               |
-| `reactCompilerOptions: {...}`       | `reactCompiler: {...}`                                              |
-| `babel: {styledComponents: true}`   | `styledComponents: true`                                            |
-| `babel: {plugins: [...]}`           | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)       |
-| `rollup: {vanillaExtract: true}`    | `vanillaExtract: true`                                              |
+| v11                                            | v12                                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `dts: 'rolldown'`                              | delete it (it's the default now)                                                        |
+| `dts: 'api-extractor'`                         | delete it (types come from tsdown)                                                      |
+| `tsgo: true`                                   | `dts: {tsgo: true}`                                                                     |
+| `babel: {reactCompiler: true}`                 | `reactCompiler: true`                                                                   |
+| `reactCompilerOptions: {...}`                  | `reactCompiler: {...}`                                                                  |
+| `babel: {styledComponents: true}`              | `styledComponents: true`                                                                |
+| `babel: {plugins: [...]}`                      | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)                           |
+| `rollup: {vanillaExtract: true}`               | `vanillaExtract: true`                                                                  |
 | `vanillaExtract: {inject: {nodeCompat: true}}` | `vanillaExtract: {inject: true, exports: {nodeCompat: true}}` (deprecated, still works) |
-| `rollup: {plugins: [...]}`          | `plugins: [...]`                                                    |
-| `rollup: {optimizeLodash: ...}`     | removed — see [lodash](#lodash)                                     |
-| `extract: {enabled: false}`         | `tsdoc: false`                                                      |
-| `extract: {rules, customTags}`      | `tsdoc: {rules, customTags}`                                        |
-| `extract: {bundledPackages: [...]}` | `deps: {alwaysBundle: [...]}` — see [type inlining](#type-inlining) |
-| `external: [...]`                   | `deps: {neverBundle: [...]}` (deprecated, still works)              |
-| `external: (prev) => prev.filter()` | `deps: {alwaysBundle: [...]}` (deprecated, still works)             |
-| `jsx`, `jsxFactory`, …              | `tsconfig.json` `compilerOptions.jsx` and friends                   |
-| `process.env.PKG_FORMAT`            | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)    |
-| `process.env.PKG_RUNTIME`           | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)    |
-| `process.env.PKG_FILE_PATH`         | [`import.meta.url`](#pkg_file_path)                                 |
-| `pkg build --clean`                 | delete it (cleaning is on by default; `--no-clean` skips it)        |
+| `rollup: {plugins: [...]}`                     | `plugins: [...]`                                                                        |
+| `rollup: {optimizeLodash: ...}`                | removed — see [lodash](#lodash)                                                         |
+| `extract: {enabled: false}`                    | `tsdoc: false`                                                                          |
+| `extract: {rules, customTags}`                 | `tsdoc: {rules, customTags}`                                                            |
+| `extract: {bundledPackages: [...]}`            | `deps: {alwaysBundle: [...]}` — see [type inlining](#type-inlining)                     |
+| `external: [...]`                              | `deps: {neverBundle: [...]}` (deprecated, still works)                                  |
+| `external: (prev) => prev.filter()`            | `deps: {alwaysBundle: [...]}` (deprecated, still works)                                 |
+| `jsx`, `jsxFactory`, …                         | `tsconfig.json` `compilerOptions.jsx` and friends                                       |
+| `process.env.PKG_FORMAT`                       | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)                        |
+| `process.env.PKG_RUNTIME`                      | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)                        |
+| `process.env.PKG_FILE_PATH`                    | [`import.meta.url`](#pkg_file_path)                                                     |
+| `pkg build --clean`                            | delete it (cleaning is on by default; `--no-clean` skips it)                            |
 
 Other behavior changes:
 

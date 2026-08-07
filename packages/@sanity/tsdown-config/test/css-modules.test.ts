@@ -45,7 +45,9 @@ describe('vanilla-extract + css modules', () => {
     expect(distIndexJs).toContain(
       'import "@fixtures/vanilla-extract-css-modules-library/bundle.css"',
     )
-    expect(distIndexJs).toContain('import "@fixtures/vanilla-extract-css-modules-library/style.css"')
+    expect(distIndexJs).toContain(
+      'import "@fixtures/vanilla-extract-css-modules-library/style.css"',
+    )
     expect(distIndexJs).not.toMatch(/import\s+["']\.\/style\.css["']/)
 
     // Virtual VE modules and authored colour markers stay out of the JS; the modules map

@@ -129,7 +129,5 @@ export async function writeBundleCssExports(options: {
     .flatMap((map) => written.map((key) => `\`${map}["${key}"]\``))
     .join(', ')
     .replace(/, ([^,]*)$/, written.length * maps.length > 1 ? ' and $1' : '$1')
-  logger.log(
-    `Updated package.json: added ${keys} for the conditional CSS export pattern`,
-  )
+  logger.log(`Updated package.json: added ${keys} for the conditional CSS export pattern`)
 }

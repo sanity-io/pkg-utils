@@ -154,7 +154,13 @@ function removeNonDeclarationOutputs(bundles: TsdownBundle[]): void {
  * emitted, mirroring the per-file output of previous majors.
  */
 function printBuildOutputs(
-  ctx: {cwd: string; distPath: string; emitDeclarationOnly: boolean; logger: Logger; pkg: {name: string}},
+  ctx: {
+    cwd: string
+    distPath: string
+    emitDeclarationOnly: boolean
+    logger: Logger
+    pkg: {name: string}
+  },
   bundles: TsdownBundle[],
   buildDef: TsdownBuildDef,
 ): void {
@@ -168,7 +174,9 @@ function printBuildOutputs(
       const output = `./${path
         .relative(cwd, path.join(ctx.distPath, `${entry.alias}.css`))
         .replaceAll('\\', '/')}`
-      lines.add(`${pkg.name}: ./${path.relative(cwd, path.resolve(cwd, entry.source)).replaceAll('\\', '/')} \u2192 ${output}`)
+      lines.add(
+        `${pkg.name}: ./${path.relative(cwd, path.resolve(cwd, entry.source)).replaceAll('\\', '/')} \u2192 ${output}`,
+      )
     }
   }
 

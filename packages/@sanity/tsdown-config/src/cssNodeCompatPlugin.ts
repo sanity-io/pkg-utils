@@ -115,12 +115,12 @@ export function cssNodeCompatPlugin(options: CssNodeCompatPluginOptions = {}): T
 
       // Normalize the `boolean | CIOption | object` forms of the `exports` option into the
       // object form, preserving the enabled-ness (`true` and bare CI conditions mean enabled)
-      const exportsOptions: Extract<NonNullable<UserConfig['exports']>, object> =
-        exportsOption === true
-          ? {}
-          : typeof exportsOption === 'string'
-            ? {enabled: exportsOption}
-            : exportsOption
+      const exportsOptions: Extract<NonNullable<UserConfig['exports']>, object> = exportsOption ===
+      true
+        ? {}
+        : typeof exportsOption === 'string'
+          ? {enabled: exportsOption}
+          : exportsOption
 
       const configOutDir = config.outDir ?? 'dist'
       const cssExport = nodeCompat
