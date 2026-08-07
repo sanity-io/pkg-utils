@@ -255,9 +255,20 @@ export async function loadPkgWithReporting(options: {
           // Validate publishConfig.exports structure
           const publishExports = pkg.publishConfig.exports
 
+          // A `.css` subpath with a `source` is a stylesheet built by the CSS pipeline, which
+          // fills the subpath into both maps. Until the first build runs, `exports` holds
+          // nothing but the `source` the author wrote and `publishConfig.exports` holds
+          // nothing at all — the documented way to declare one — so it is exempt from the
+          // cross-map checks below.
+          const isBuiltCssExport = (exportPath: string): boolean => {
+            if (!exportPath.endsWith('.css')) return false
+            const exp = pkg.exports?.[exportPath]
+            return typeof exp === 'object' && exp !== null && 'source' in exp
+          }
+
           // Check that all keys in exports exist in publishConfig.exports
           for (const exportPath of Object.keys(pkg.exports)) {
-            if (!(exportPath in publishExports)) {
+            if (!(exportPath in publishExports) && !isBuiltCssExport(exportPath)) {
               shouldError = true
               logger.error(
                 `publishConfig.exports: missing export path "${exportPath}" that exists in exports`,
@@ -277,12 +288,7 @@ export async function loadPkgWithReporting(options: {
 
           // Validate each export path
           for (const [exportPath, exp] of Object.entries(pkg.exports)) {
-            // A `.css` subpath with a `source` is a stylesheet built by the CSS pipeline: the
-            // build generates its remaining conditions in both maps, so before the first build
-            // `exports` legitimately holds nothing but the `source` the author wrote.
-            if (exportPath.endsWith('.css') && typeof exp === 'object' && 'source' in exp) {
-              continue
-            }
+            if (isBuiltCssExport(exportPath)) continue
             if (typeof exp === 'string' || 'svelte' in exp) {
               // For string or svelte exports, publishConfig should match
               const publishExp = publishExports[exportPath]

@@ -21,16 +21,12 @@ export type {
   PackageTsdocRuleLevel,
 } from './tsdoc/types.ts'
 
-export {
-  createConditionalCssExport,
-  createCssExport,
-  cssShimDtsFileName,
-  cssShimDtsSource,
-  cssShimFileName,
-  cssShimSource,
-  insertCssExport,
-  resolveCssExportOptions,
-} from '@sanity/vanilla-extract-tsdown-plugin'
+// Only types are re-exported from the plugin packages: a value re-export would make
+// `@sanity/vanilla-extract-tsdown-plugin` a static import of this entry, pulling the whole
+// vanilla-extract toolchain (the rolldown plugin, `@sanity/vanilla-extract-integration`,
+// `@vanilla-extract/css`, and the native `lightningcss` binary) into every consumer's module
+// graph — including packages with no CSS at all. Everything that needs those helpers loads
+// them through the `await import(...)` calls below.
 export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 
 /**
