@@ -1,5 +1,5 @@
 import path from 'node:path'
-import chalk from 'chalk'
+import {styleText} from 'node:util'
 import treeify from 'treeify'
 import type {PkgExport} from './core/config/types.ts'
 import type {BuildContext} from './core/contexts/buildContext.ts'
@@ -19,17 +19,17 @@ export function printPackageTree(ctx: BuildContext): void {
 
   if (!exports) return
 
-  logger.log(`${chalk.blue(pkg.name)}@${chalk.green(pkg.version)}`)
+  logger.log(`${styleText('blue', pkg.name)}@${styleText('green', pkg.version)}`)
 
   const tree: Record<string, unknown> = {}
 
   if (pkg.type) {
-    tree['type'] = chalk.yellow(pkg.type)
+    tree['type'] = styleText('yellow', pkg.type)
   }
 
   if (pkg.bin) {
     tree['bin'] = Object.fromEntries(
-      Object.entries(pkg.bin).map(([name, file]) => [chalk.cyan(name), fileInfo(file)]),
+      Object.entries(pkg.bin).map(([name, file]) => [styleText('cyan', name), fileInfo(file)]),
     )
   }
 
@@ -37,10 +37,10 @@ export function printPackageTree(ctx: BuildContext): void {
     const info = getFileInfo(cwd, file)
 
     if (!info.size) {
-      return `${chalk.gray(file)} ${chalk.red('does not exist')}`
+      return `${styleText('gray', file)} ${styleText('red', 'does not exist')}`
     }
 
-    return `${chalk.yellow(file)} ${chalk.gray(info.size)}`
+    return `${styleText('yellow', file)} ${styleText('gray', info.size)}`
   }
 
   tree['exports'] = Object.fromEntries(
@@ -87,7 +87,7 @@ export function printPackageTree(ctx: BuildContext): void {
           delete exp.import
         }
 
-        return [chalk.cyan(path.join(pkg.name, exportPath)), exp]
+        return [styleText('cyan', path.join(pkg.name, exportPath)), exp]
       }),
   )
 

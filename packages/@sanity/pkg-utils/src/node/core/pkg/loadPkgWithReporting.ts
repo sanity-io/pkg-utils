@@ -1,5 +1,5 @@
+import {styleText} from 'node:util'
 import {ZodError, type PackageJSON} from '@sanity/parse-package-json'
-import chalk from 'chalk'
 import type {Logger} from '../../logger.ts'
 import type {StrictOptions} from '../../strict.ts'
 import {checkDependencyPlacement} from './dependencyPlacement.ts'
@@ -419,8 +419,8 @@ export async function loadPkgWithReporting(options: {
           logger.error(
             [
               `\`${formatPath(issue.path)}\` `,
-              `in \`./package.json\` must be of type ${chalk.magenta(issue.expected)} `,
-              `(received ${chalk.magenta(issue.received)})`,
+              `in \`./package.json\` must be of type ${styleText('magenta', issue.expected)} `,
+              `(received ${styleText('magenta', issue.received)})`,
             ].join(''),
           )
           continue

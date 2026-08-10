@@ -1,8 +1,8 @@
-import chalk from 'chalk'
+import {styleText} from 'node:util'
 
 export function handleError(err: unknown): void {
   if (err instanceof Error) {
-    console.error(chalk.red('error'), err.stack)
+    console.error(styleText('red', 'error', {stream: process.stderr}), err.stack)
   } else {
     console.error(err)
   }

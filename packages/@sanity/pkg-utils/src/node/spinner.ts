@@ -1,5 +1,5 @@
 // oxlint-disable no-console
-import chalk from 'chalk'
+import {styleText} from 'node:util'
 
 export function createSpinner(
   msg: string,
@@ -12,10 +12,14 @@ export function createSpinner(
   return {
     complete: () => {
       if (!quiet)
-        console.log(`${chalk.green('[success]')} ${chalk.gray(`${Date.now() - startTime}ms`)}`)
+        console.log(
+          `${styleText('green', '[success]')} ${styleText('gray', `${Date.now() - startTime}ms`)}`,
+        )
     },
     error: () => {
-      console.log(`${chalk.red('[error]')} ${chalk.gray(`${Date.now() - startTime}ms`)}`)
+      console.log(
+        `${styleText('red', '[error]')} ${styleText('gray', `${Date.now() - startTime}ms`)}`,
+      )
     },
   }
 }

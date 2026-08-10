@@ -1,5 +1,5 @@
 // oxlint-disable no-console
-import chalk from 'chalk'
+import {styleText} from 'node:util'
 
 /** @alpha */
 export interface Logger {
@@ -17,16 +17,16 @@ export function createLogger(quiet = false): Logger {
       if (!quiet) console.log(...args)
     },
     info: (...args) => {
-      if (!quiet) console.log(chalk.blue('[info]'), ...args)
+      if (!quiet) console.log(styleText('blue', '[info]'), ...args)
     },
     warn: (...args) => {
-      console.log(chalk.yellow('[warning]'), ...args)
+      console.log(styleText('yellow', '[warning]'), ...args)
     },
     error: (...args) => {
-      console.log(chalk.red('[error]'), ...args)
+      console.log(styleText('red', '[error]'), ...args)
     },
     success: (...args) => {
-      if (!quiet) console.log(chalk.green('[success]'), ...args)
+      if (!quiet) console.log(styleText('green', '[success]'), ...args)
     },
   }
 }
