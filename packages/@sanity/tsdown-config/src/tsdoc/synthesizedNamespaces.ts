@@ -35,6 +35,11 @@ const RE_RELATIVE_SPECIFIER = /^\.\.?\//
  * - it is declared as a namespace — in the entry itself, or in a sibling chunk the entry
  *   imports (a wrapper shared by several entries lives in the chunk that owns the module's
  *   declarations)
+ * - that namespace has the synthesized body shape: nothing but `export { … };` specifier lists
+ *   pointing at sibling declarations of the same file. A user-authored namespace declares its
+ *   own members (`declare namespace config_exports { const userValue: string; }`), and those
+ *   members are what the author tags — so it stays checked even when the bundler's
+ *   deconflicting hands it a wrapper-shaped name
  * - the entry does not export the name unaliased: a synthesized wrapper is always re-exported
  *   under the alias of the original namespace re-export (`export { inner_d_exports as inner }`),
  *   while an unaliased export (`export { foo_exports }`, `export declare namespace foo_exports`)
@@ -46,11 +51,11 @@ export function collectSynthesizedNamespaceWrappers(entryDtsFile: string): Set<s
   if (!entry) return new Set()
 
   const unaliasedExports = new Set<string>()
-  const namespaceNames = new Set<string>()
+  const wrapperShapedNames = new Set<string>()
   const chunkFiles = new Set<string>()
 
   for (const statement of entry.statements) {
-    collectNamespaceName(statement, namespaceNames)
+    collectWrapperShapedNamespaceName(statement, wrapperShapedNames)
 
     if (ts.isExportDeclaration(statement)) {
       const {exportClause} = statement
@@ -74,11 +79,13 @@ export function collectSynthesizedNamespaceWrappers(entryDtsFile: string): Set<s
   for (const chunkFile of chunkFiles) {
     const chunk = parseDts(chunkFile)
     if (!chunk) continue
-    for (const statement of chunk.statements) collectNamespaceName(statement, namespaceNames)
+    for (const statement of chunk.statements) {
+      collectWrapperShapedNamespaceName(statement, wrapperShapedNames)
+    }
   }
 
   const wrappers = new Set<string>()
-  for (const name of namespaceNames) {
+  for (const name of wrapperShapedNames) {
     if (RE_WRAPPER_NAME.test(name) && !unaliasedExports.has(name)) wrappers.add(name)
   }
   return wrappers
@@ -94,15 +101,35 @@ function parseDts(filePath: string): ts.SourceFile | undefined {
   )
 }
 
-/** Collects the name of a top-level `declare namespace <Identifier> {…}` statement. */
-function collectNamespaceName(statement: ts.Statement, names: Set<string>): void {
+/**
+ * Collects the name of a top-level `declare namespace <Identifier> {…}` statement whose body has
+ * the shape the declaration bundling pass synthesizes: only `export { … };` specifier lists
+ * naming sibling declarations of the same file, never members of its own. Every namespace
+ * re-export the bundler rewrites comes out that way, whatever the re-exported module holds
+ * (values, types, a default export, further namespace re-exports).
+ */
+function collectWrapperShapedNamespaceName(statement: ts.Statement, names: Set<string>): void {
   if (
-    ts.isModuleDeclaration(statement) &&
-    ts.isIdentifier(statement.name) &&
-    (statement.flags & ts.NodeFlags.Namespace) !== 0
+    !ts.isModuleDeclaration(statement) ||
+    !ts.isIdentifier(statement.name) ||
+    (statement.flags & ts.NodeFlags.Namespace) === 0
   ) {
-    names.add(statement.name.text)
+    return
   }
+
+  const {body} = statement
+  if (!body || !ts.isModuleBlock(body)) return
+
+  const onlyReExportsSiblings = body.statements.every(
+    (member) =>
+      ts.isExportDeclaration(member) &&
+      !member.moduleSpecifier &&
+      member.exportClause !== undefined &&
+      ts.isNamedExports(member.exportClause),
+  )
+  if (!onlyReExportsSiblings) return
+
+  names.add(statement.name.text)
 }
 
 /**

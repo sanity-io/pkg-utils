@@ -277,6 +277,27 @@ describe('collectSynthesizedNamespaceWrappers', () => {
     expect(collectSynthesizedNamespaceWrappers(path.join(dir, 'index.d.ts'))).toEqual(new Set())
   })
 
+  test('ignores a wrapper-named namespace that declares members of its own', async () => {
+    // Only the bundler's `export { … };`-specifier-only body shape is a wrapper; a namespace
+    // with its own members is user-authored, and those members are what the author tags
+    const dir = await spawnDts({
+      'index.d.ts': [
+        'declare namespace config_exports {',
+        '  const userValue: string;',
+        '}',
+        'declare namespace mixed_exports {',
+        '  export { hello };',
+        '  const extra: number;',
+        '}',
+        'declare function hello(): string;',
+        'export { config_exports as config, mixed_exports as mixed };',
+        '',
+      ].join('\n'),
+    })
+
+    expect(collectSynthesizedNamespaceWrappers(path.join(dir, 'index.d.ts'))).toEqual(new Set())
+  })
+
   test('ignores wrapper-named declarations the entry exports directly', async () => {
     const dir = await spawnDts({
       'index.d.ts': [
