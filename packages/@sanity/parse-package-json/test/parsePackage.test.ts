@@ -244,9 +244,10 @@ describe('parsePackage', () => {
             import: './dist/index.node.js',
             default: './dist/index.node-fallback.js',
           },
+          default: './dist/index.js',
         },
       },
-    } satisfies PackageJSON
+    }
 
     expect(parsePackage(pkg).exports?.['.']).toMatchObject({
       browser: {default: './dist/index.browser-fallback.js'},
