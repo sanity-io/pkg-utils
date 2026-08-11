@@ -127,6 +127,15 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
   }
 
   const exports = Object.entries(ctx.exports || {})
+  const packageType = ctx.pkg.type === 'module' ? 'module' : 'commonjs'
+  const resolveRuntimeTargets = (condition: {
+    import?: string
+    require?: string
+    default?: string
+  }) => ({
+    import: condition.import ?? (packageType === 'module' ? condition.default : undefined),
+    require: condition.require ?? (packageType === 'commonjs' ? condition.default : undefined),
+  })
 
   let hasRuntimeConditions = false
 
@@ -138,23 +147,23 @@ export function resolveTsdownBuilds(ctx: BuildContext): TsdownBuild[] {
       require: exp.require,
     })
 
-    if (exp.browser?.import || exp.browser?.require) {
+    const browserTargets = exp.browser && resolveRuntimeTargets(exp.browser)
+    if (exp.browser && browserTargets && (browserTargets.import || browserTargets.require)) {
       hasRuntimeConditions = true
       addEntry('browser', 'browser', {
         source: exp.browser.source || exp.source,
         exportPath,
-        import: exp.browser.import,
-        require: exp.browser.require,
+        ...browserTargets,
       })
     }
 
-    if (exp.node?.import || exp.node?.require) {
+    const nodeTargets = exp.node && resolveRuntimeTargets(exp.node)
+    if (exp.node && nodeTargets && (nodeTargets.import || nodeTargets.require)) {
       hasRuntimeConditions = true
       addEntry('node', 'node', {
         source: exp.node.source || exp.source,
         exportPath,
-        import: exp.node.import,
-        require: exp.node.require,
+        ...nodeTargets,
       })
     }
   }

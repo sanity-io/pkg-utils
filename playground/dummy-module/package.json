@@ -11,7 +11,8 @@
       "browser": {
         "source": "./src/index.ts",
         "import": "./dist/index.browser.js",
-        "require": "./dist/index.browser.cjs"
+        "require": "./dist/index.browser.cjs",
+        "default": "./dist/index.browser.js"
       },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
@@ -22,7 +23,8 @@
       "browser": {
         "source": "./src/extra.ts",
         "import": "./dist/extra.browser.js",
-        "require": "./dist/extra.browser.cjs"
+        "require": "./dist/extra.browser.cjs",
+        "default": "./dist/extra.browser.js"
       },
       "import": "./dist/extra.js",
       "require": "./dist/extra.cjs",
@@ -59,7 +61,8 @@
       ".": {
         "browser": {
           "import": "./dist/index.browser.js",
-          "require": "./dist/index.browser.cjs"
+          "require": "./dist/index.browser.cjs",
+          "default": "./dist/index.browser.js"
         },
         "import": "./dist/index.js",
         "require": "./dist/index.cjs",
@@ -68,7 +71,8 @@
       "./extra": {
         "browser": {
           "import": "./dist/extra.browser.js",
-          "require": "./dist/extra.browser.cjs"
+          "require": "./dist/extra.browser.cjs",
+          "default": "./dist/extra.browser.js"
         },
         "import": "./dist/extra.js",
         "require": "./dist/extra.cjs",

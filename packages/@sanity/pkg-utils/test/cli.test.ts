@@ -149,6 +149,10 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(stdout).toContain('node-condition: ./src/index.node.ts → ./dist/index.node.cjs')
     expect(stdout).toContain('node-condition: ./src/index.node.ts → ./dist/index.node.js')
 
+    const packageJson = JSON.parse(await project.readFile('package.json'))
+    expect(packageJson.exports['.'].node.default).toBe('./dist/index.node.js')
+    expect(packageJson.publishConfig.exports['.'].node.default).toBe('./dist/index.node.js')
+
     const [distIndexJs, distIndexCjs, distNodeJs, distNodeCjs, distIndexDts, distNodeDts] =
       await Promise.all([
         project.readFile('dist/index.js'),

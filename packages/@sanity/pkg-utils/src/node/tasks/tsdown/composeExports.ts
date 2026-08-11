@@ -31,8 +31,9 @@ interface ComposeContext {
  * - generated conditions for conditional entries are materialized in both `exports` and
  *   `publishConfig.exports`, so they can be reordered directly in `package.json` and keep that
  *   position on later builds (plain-string entries stay compact),
- * - a trailing `default` condition is kept on dual-format entries (tsdown emits bare
- *   `import`/`require` pairs; the Sanity convention always ends with `default`),
+ * - a trailing `default` condition is kept on dual-format entries and nested runtime variants
+ *   (tsdown emits bare `import`/`require` pairs; the Sanity convention always ends with
+ *   `default`),
  * - hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
  *   entries) are carried over untouched, and
  * - the hand-written subpath and condition key order of each map is preserved.
@@ -176,13 +177,21 @@ function reconcileEntry(
 
   const browserOrder = isRecord(authoredRecord['browser']) ? authoredRecord['browser'] : exp.browser
   const browser =
-    exp.browser && (exp.browser.import || exp.browser.require)
-      ? pickConditions(exp.browser, isPublish, browserOrder ?? exp.browser)
+    exp.browser && (exp.browser.import || exp.browser.require || exp.browser.default)
+      ? pickConditions(exp.browser, {
+          authored: browserOrder ?? exp.browser,
+          isPublish,
+          type,
+        })
       : undefined
   const nodeOrder = isRecord(authoredRecord['node']) ? authoredRecord['node'] : exp.node
   const node =
-    exp.node && (exp.node.import || exp.node.require)
-      ? pickConditions(exp.node, isPublish, nodeOrder ?? exp.node)
+    exp.node && (exp.node.import || exp.node.require || exp.node.default)
+      ? pickConditions(exp.node, {
+          authored: nodeOrder ?? exp.node,
+          isPublish,
+          type,
+        })
       : undefined
   const custom = pickCustomConditions(exp)
 
@@ -233,16 +242,27 @@ function reconcileEntry(
   return preserveConditionOrder(next, authored)
 }
 
-/** The hand-written `browser`/`node` condition object, minus `source` for the publish map. */
+/**
+ * The hand-written `browser`/`node` condition object, minus `source` for the publish map.
+ * A nested runtime condition must have its own fallback: once a resolver matches `node` or
+ * `browser`, an unmatched module-format condition otherwise backtracks to the outer entry.
+ */
 function pickConditions(
-  conditions: {source?: string; import?: string; require?: string},
-  isPublish: boolean,
-  authored: object = conditions,
+  conditions: {source?: string; import?: string; require?: string; default?: string},
+  options: {
+    authored?: object
+    isPublish: boolean
+    type: 'commonjs' | 'module'
+  },
 ): Record<string, string> {
+  const {authored = conditions, isPublish, type} = options
   const next: Record<string, string> = {}
   if (!isPublish && conditions.source) next['source'] = conditions.source
   if (conditions.import) next['import'] = conditions.import
   if (conditions.require) next['require'] = conditions.require
+  const fallback =
+    conditions.default ?? (type === 'module' ? conditions.import : conditions.require)
+  if (fallback) next['default'] = fallback
   return preserveConditionOrder(next, authored)
 }
 
