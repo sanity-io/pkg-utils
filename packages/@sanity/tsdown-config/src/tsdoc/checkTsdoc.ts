@@ -13,6 +13,7 @@ import ts from '@typescript/typescript6'
 import {createApiExtractorConfig} from './createApiExtractorConfig.ts'
 import {createTSDocConfig} from './createTSDocConfig.ts'
 import {getExtractMessagesConfig} from './getExtractMessagesConfig.ts'
+import {collectSynthesizedNamespaceWrappers} from './synthesizedNamespaces.ts'
 import type {PackageTsdocOptions} from './types.ts'
 
 /** @public */
@@ -88,6 +89,11 @@ export async function checkTsdoc(options: CheckTsdocOptions): Promise<CheckTsdoc
   for (const exportPath of entryDtsFiles) {
     if (!existsSync(exportPath)) continue
 
+    // The declaration bundling pass synthesizes `declare namespace <name>_exports` wrappers
+    // for namespace re-exports and loses the doc comment of the re-export statement, so the
+    // wrappers can never carry a release tag — `ae-missing-release-tag` skips them (their
+    // members are still checked individually). https://github.com/sanity-io/pkg-utils/issues/3281
+    const synthesizedWrappers = collectSynthesizedNamespaceWrappers(exportPath)
     const relativeDtsPath = path.relative(outDir, exportPath)
     const extractorConfig = ExtractorConfig.prepare({
       configObject: createApiExtractorConfig({
@@ -110,8 +116,9 @@ export async function checkTsdoc(options: CheckTsdocOptions): Promise<CheckTsdoc
       localBuild: true,
       showVerboseMessages: true,
       messageCallback(message: ExtractorMessage) {
-        allMessages.push(message)
         message.handled = true
+        if (isSynthesizedNamespaceWrapperMessage(message, synthesizedWrappers)) return
+        allMessages.push(message)
       },
     })
   }
@@ -154,6 +161,27 @@ function loadTSConfig(options: {
   const configFile = ts.readConfigFile(configPath, ts.sys.readFile)
   // Relative `extends`/`include`/`paths` are resolved from the tsconfig's directory, not `cwd`
   return ts.parseJsonConfigFileContent(configFile.config, ts.sys, path.dirname(configPath))
+}
+
+/** The quoted symbol name leading api-extractor's `ae-missing-release-tag` message text. */
+const RE_MISSING_RELEASE_TAG_SYMBOL = /^"([^"]+)" is part of the package's API/
+
+/**
+ * Whether a message is an `ae-missing-release-tag` complaint about a namespace wrapper the
+ * declaration bundling pass synthesized (which userland can never tag). The flagged symbol is
+ * only identifiable through the message text: api-extractor quotes the local name of the
+ * declaration, and attaches no structured properties (its source location maps through
+ * `.d.ts.map` files, often landing on an unrelated source position).
+ */
+function isSynthesizedNamespaceWrapperMessage(
+  message: ExtractorMessage,
+  synthesizedWrappers: Set<string>,
+): boolean {
+  if (synthesizedWrappers.size === 0 || message.messageId !== 'ae-missing-release-tag') {
+    return false
+  }
+  const symbolName = RE_MISSING_RELEASE_TAG_SYMBOL.exec(message.text)?.[1]
+  return symbolName !== undefined && synthesizedWrappers.has(symbolName)
 }
 
 function commonParentDir(files: string[]): string | undefined {
