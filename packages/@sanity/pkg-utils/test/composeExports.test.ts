@@ -221,6 +221,72 @@ test('adds a fallback inside a single-format node condition', () => {
   })
 })
 
+test('preserves default-only runtime conditions', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        browser: {
+          source: './src/index.browser.ts',
+          default: './dist/index.browser.js',
+        },
+        node: {
+          source: './src/index.node.ts',
+          default: './dist/index.node.js',
+        },
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+  })
+
+  expect(
+    composer(
+      {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+        './package.json': './package.json',
+      },
+      {isPublish: false},
+    ),
+  ).toEqual({
+    '.': {
+      source: './src/index.ts',
+      browser: {
+        source: './src/index.browser.ts',
+        default: './dist/index.browser.js',
+      },
+      node: {
+        source: './src/index.node.ts',
+        default: './dist/index.node.js',
+      },
+      default: './dist/index.js',
+    },
+    './package.json': './package.json',
+  })
+
+  expect(
+    composer(
+      {
+        '.': './dist/index.js',
+        './package.json': './package.json',
+      },
+      {isPublish: true},
+    ),
+  ).toEqual({
+    '.': {
+      browser: {default: './dist/index.browser.js'},
+      node: {default: './dist/index.node.js'},
+      default: './dist/index.js',
+    },
+    './package.json': './package.json',
+  })
+})
+
 test('carries hand-written custom conditions over, before the format fallbacks', () => {
   const composer = createComposer({
     type: 'module',

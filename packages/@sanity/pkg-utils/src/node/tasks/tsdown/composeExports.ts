@@ -177,7 +177,7 @@ function reconcileEntry(
 
   const browserOrder = isRecord(authoredRecord['browser']) ? authoredRecord['browser'] : exp.browser
   const browser =
-    exp.browser && (exp.browser.import || exp.browser.require)
+    exp.browser && (exp.browser.import || exp.browser.require || exp.browser.default)
       ? pickConditions(exp.browser, {
           authored: browserOrder ?? exp.browser,
           isPublish,
@@ -186,7 +186,7 @@ function reconcileEntry(
       : undefined
   const nodeOrder = isRecord(authoredRecord['node']) ? authoredRecord['node'] : exp.node
   const node =
-    exp.node && (exp.node.import || exp.node.require)
+    exp.node && (exp.node.import || exp.node.require || exp.node.default)
       ? pickConditions(exp.node, {
           authored: nodeOrder ?? exp.node,
           isPublish,
