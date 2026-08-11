@@ -1,5 +1,15 @@
 # @sanity/pkg-utils
 
+## 12.1.2
+
+### Patch Changes
+
+- [#3282](https://github.com/sanity-io/pkg-utils/pull/3282) [`ef26786`](https://github.com/sanity-io/pkg-utils/commit/ef2678694602bc6054ff8c9317a8c0eb9eeb8d16) Thanks [@stipsan](https://github.com/stipsan)! - Keep a `default` fallback inside generated `browser` and `node` export conditions so resolvers
+  cannot backtrack to the platform-neutral build when their module-format condition is inactive.
+  Allow these nested fallbacks in the public package export types.
+- Updated dependencies [[`ef26786`](https://github.com/sanity-io/pkg-utils/commit/ef2678694602bc6054ff8c9317a8c0eb9eeb8d16)]:
+  - @sanity/parse-package-json@2.3.1
+
 ## 12.1.1
 
 ### Patch Changes
