@@ -638,7 +638,7 @@ import { styled } from "styled-components";
 import { jsx, jsxs } from "react/jsx-runtime";
 const CustomTextInput = styled.input.attrs({ type: "color" }).withConfig({
 	displayName: "CustomTextInput",
-	componentId: "sc-ijy29k-0"
+	componentId: "sc-3mv8r8-0"
 })\`cursor:pointer;box-sizing:border-box;background:var(--card-border-color);border:0 solid transparent;border-radius:2px;padding:0;appearance:none;margin:0;height:1.6rem;width:8ch;&:hover{box-shadow:0 0 0 2px \${({ theme }) => theme.sanity.color.card.hovered.border};}&::-webkit-color-swatch-wrapper{padding:0;}&::-webkit-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({ theme }) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({ theme }) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}&::-moz-color-swatch{padding:0;border:0 solid transparent;border-radius:2px;box-shadow:inset 0 0 0 1px \${({ theme }) => theme.sanity.color.card.enabled.fg};@supports (color:rgb(from white r g b / 20%)){box-shadow:inset 0 0 0 1px rgb(from \${({ theme }) => theme.sanity.color.card.enabled.fg} r g b / 20%);}}\`;
 function ColorInput(props) {
 	let $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0, t2;
@@ -657,17 +657,18 @@ function ColorInput(props) {
 	}), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
 	let t4;
 	return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, {
-		space: 2,
+		gap: 2,
 		children: [t2, t3]
 	}), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
 }
 export { ColorInput as default };
 
-//# sourceMappingURL=ColorInput-3kj391ks.js.map"
+//# sourceMappingURL=ColorInput-jwKTnvie.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
-"import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
+"import "@sanity/ui/styles.css";
+import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
   alpha?: boolean;
   colorspace?: 'limited-srgb' | 'display-p3';
@@ -698,10 +699,11 @@ export { type ColorDefinition, ColorInput, colorInput };
 `;
 
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.js 1`] = `
-"import { definePlugin, defineType } from "sanity";
+"import "@sanity/ui/styles.css";
+import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-3kj391ks.js")), colorType = defineType({
+const ColorInput = lazy(() => import("./ColorInput-jwKTnvie.js")), colorType = defineType({
 	name: "color",
 	type: "string",
 	title: "Color",
