@@ -719,11 +719,11 @@ export { ColorInput, colorInput };
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/ColorInput-[hash].js 1`] = `
 "import { c } from "react/compiler-runtime";
-import { Root, Stack, Text } from "@sanity/ui";
+import { Stack, Text } from "@sanity/ui";
 import { jsx, jsxs } from "react/jsx-runtime";
 var input = "_1n31tph0";
 function ColorInput(props) {
-	let $ = c(12), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0, t2;
+	let $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0, t2;
 	$[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", {
 		...props.elementProps,
 		type: "color",
@@ -732,38 +732,31 @@ function ColorInput(props) {
 		alpha: t1
 	}), $[0] = props.elementProps, $[1] = t0, $[2] = t1, $[3] = t2) : t2 = $[3];
 	let t3;
-	$[4] === props.value ? t3 = $[5] : (t3 = /* @__PURE__ */ jsx(Text, {
+	$[4] !== props.elementProps.id || $[5] !== props.value ? (t3 = /* @__PURE__ */ jsx(Text, {
+		as: "output",
 		muted: !0,
 		size: 0,
-		children: props.value
-	}), $[4] = props.value, $[5] = t3);
-	let t4;
-	$[6] !== props.elementProps.id || $[7] !== t3 ? (t4 = /* @__PURE__ */ jsx("output", {
 		htmlFor: props.elementProps.id,
-		children: t3
-	}), $[6] = props.elementProps.id, $[7] = t3, $[8] = t4) : t4 = $[8];
-	let t5;
-	return $[9] !== t2 || $[10] !== t4 ? (t5 = /* @__PURE__ */ jsx(Root, {
-		as: "div",
-		overflow: "visible",
-		children: /* @__PURE__ */ jsxs(Stack, {
-			gap: 2,
-			children: [t2, t4]
-		})
-	}), $[9] = t2, $[10] = t4, $[11] = t5) : t5 = $[11], t5;
+		children: props.value
+	}), $[4] = props.elementProps.id, $[5] = props.value, $[6] = t3) : t3 = $[6];
+	let t4;
+	return $[7] !== t2 || $[8] !== t3 ? (t4 = /* @__PURE__ */ jsxs(Stack, {
+		gap: 2,
+		children: [t2, t3]
+	}), $[7] = t2, $[8] = t3, $[9] = t4) : t4 = $[9], t4;
 }
 export { ColorInput as default };
 
-//# sourceMappingURL=ColorInput-rhEnzAiP.js.map"
+//# sourceMappingURL=ColorInput-C7Xco6IZ.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--ui-4cxy8h24v);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--ui-4cxy8h26u)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--ui-4cxy8h25y);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y) r g b / 20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--ui-4cxy8h25y) r g b / 20%)}}
+"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--card-border-color);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--card-focus-ring-color)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}}
 "
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.d.ts 1`] = `
-"import "@sanity/ui/css/index.css";
+"import "@sanity/ui/styles.css";
 import { Plugin, StringDefinition, StringInputProps, StringSchemaType } from "sanity";
 interface ColorOptions {
   alpha?: boolean;
@@ -796,11 +789,11 @@ export { type ColorDefinition, ColorInput, colorInput };
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/index.js 1`] = `
 "import "sanity-plugin-with-vanilla-extract/bundle.css";
-import "@sanity/ui/css/index.css";
+import "@sanity/ui/styles.css";
 import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-rhEnzAiP.js")), colorType = defineType({
+const ColorInput = lazy(() => import("./ColorInput-C7Xco6IZ.js")), colorType = defineType({
 	name: "color",
 	type: "string",
 	title: "Color",

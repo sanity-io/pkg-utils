@@ -48,12 +48,6 @@
     {
       "matchPackageNames": ["@typescript/native-preview"],
       "followTag": "beta"
-    },
-    {
-      "description": "The vanilla-extract playground exercises the `@sanity/ui` static channel (`@sanity/ui/css`), which is published under the `static` dist-tag and is not the same line as `latest`",
-      "matchFileNames": ["playground/sanity-plugin-with-vanilla-extract/package.json"],
-      "matchPackageNames": ["@sanity/ui"],
-      "followTag": "static"
     }
   ]
 }
