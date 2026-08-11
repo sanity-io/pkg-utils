@@ -1,10 +1,9 @@
-import {vars} from '@sanity/ui/css'
 import {style} from '@vanilla-extract/css'
 
 export const input = style({
   'cursor': 'pointer',
   'boxSizing': 'border-box',
-  'background': vars.color.border,
+  'background': 'var(--card-border-color)',
   'border': '0 solid transparent',
   'borderRadius': '2px',
   'padding': '0',
@@ -15,7 +14,7 @@ export const input = style({
   'width': '8ch',
 
   ':hover': {
-    boxShadow: `0 0 0 2px ${vars.color.tinted.default.border[3]}`,
+    boxShadow: '0 0 0 2px var(--card-focus-ring-color)',
   },
 
   'selectors': {
@@ -26,10 +25,10 @@ export const input = style({
       'padding': '0',
       'border': '0 solid transparent',
       'borderRadius': '2px',
-      'boxShadow': `inset 0 0 0 1px ${vars.color.fg}`,
+      'boxShadow': 'inset 0 0 0 1px var(--card-fg-color)',
       '@supports': {
         '(color: rgb(from white r g b / 20%))': {
-          boxShadow: `inset 0 0 0 1px rgb(from ${vars.color.fg} r g b / 20%)`,
+          boxShadow: 'inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)',
         },
       },
     },
@@ -37,10 +36,10 @@ export const input = style({
       'padding': '0',
       'border': '0 solid transparent',
       'borderRadius': '2px',
-      'boxShadow': `inset 0 0 0 1px ${vars.color.fg}`,
+      'boxShadow': 'inset 0 0 0 1px var(--card-fg-color)',
       '@supports': {
         '(color: rgb(from white r g b / 20%))': {
-          boxShadow: `inset 0 0 0 1px rgb(from ${vars.color.fg} r g b / 20%)`,
+          boxShadow: 'inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)',
         },
       },
     },

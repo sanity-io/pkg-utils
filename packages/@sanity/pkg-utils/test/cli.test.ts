@@ -664,7 +664,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distChunksColorInput).not.toContain('border:')
     expect(distBundleCss).toContain('border:')
     // The CSS side effectful imports should remain
-    expect(distIndexJs).toContain(`import "@sanity/ui/css/index.css"`)
+    expect(distIndexJs).toContain(`import "@sanity/ui/styles.css"`)
     // `vanillaExtract` compat mode injects the self-referential bundle.css import automatically
     expect(distIndexJs).toContain(`import "sanity-plugin-with-vanilla-extract/bundle.css"`)
     // …emits a no-op JS shim for CSS-unaware runtimes (named `bundle-css.js`, not
