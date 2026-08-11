@@ -73,10 +73,12 @@ test('reconciles the generated map with hand-written conditions (dev and publish
           source: './src/index.browser.ts',
           import: './dist/index.browser.js',
           require: './dist/index.browser.cjs',
+          default: './dist/index.browser.cjs',
         },
         node: {
           import: './dist/index.node.js',
           require: './dist/index.node.cjs',
+          default: './dist/index.node.cjs',
         },
         import: './dist/index.js',
         require: './dist/index.cjs',
@@ -104,10 +106,12 @@ test('reconciles the generated map with hand-written conditions (dev and publish
         source: './src/index.browser.ts',
         import: './dist/index.browser.js',
         require: './dist/index.browser.cjs',
+        default: './dist/index.browser.cjs',
       },
       node: {
         import: './dist/index.node.js',
         require: './dist/index.node.cjs',
+        default: './dist/index.node.cjs',
       },
       import: './dist/index.js',
       require: './dist/index.cjs',
@@ -136,16 +140,149 @@ test('reconciles the generated map with hand-written conditions (dev and publish
       browser: {
         import: './dist/index.browser.js',
         require: './dist/index.browser.cjs',
+        default: './dist/index.browser.cjs',
       },
       node: {
         import: './dist/index.node.js',
         require: './dist/index.node.cjs',
+        default: './dist/index.node.cjs',
       },
       import: './dist/index.js',
       require: './dist/index.cjs',
       default: './dist/index.js',
     },
     './styles.css': './test/env/fixture.css',
+    './package.json': './package.json',
+  })
+})
+
+test('adds a fallback inside a single-format node condition', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        node: {
+          source: './src/index.node.ts',
+          import: './dist/index.node.js',
+        },
+        import: './dist/index.js',
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+  })
+
+  // tsdown collapses a single-format canonical build to `default`, but the nested `node`
+  // variant still needs its own fallback. Otherwise require(esm), whose active conditions are
+  // `node` and `require`, escapes the node branch and resolves the neutral outer `default`.
+  expect(
+    composer(
+      {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+        './package.json': './package.json',
+      },
+      {isPublish: false},
+    ),
+  ).toEqual({
+    '.': {
+      source: './src/index.ts',
+      node: {
+        source: './src/index.node.ts',
+        import: './dist/index.node.js',
+        default: './dist/index.node.js',
+      },
+      default: './dist/index.js',
+    },
+    './package.json': './package.json',
+  })
+
+  expect(
+    composer(
+      {
+        '.': './dist/index.js',
+        './package.json': './package.json',
+      },
+      {isPublish: true},
+    ),
+  ).toEqual({
+    '.': {
+      node: {
+        import: './dist/index.node.js',
+        default: './dist/index.node.js',
+      },
+      default: './dist/index.js',
+    },
+    './package.json': './package.json',
+  })
+})
+
+test('preserves default-only runtime conditions', () => {
+  const composer = createComposer({
+    type: 'module',
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        browser: {
+          source: './src/index.browser.ts',
+          default: './dist/index.browser.js',
+        },
+        node: {
+          source: './src/index.node.ts',
+          default: './dist/index.node.js',
+        },
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+  })
+
+  expect(
+    composer(
+      {
+        '.': {source: './src/index.ts', default: './dist/index.js'},
+        './package.json': './package.json',
+      },
+      {isPublish: false},
+    ),
+  ).toEqual({
+    '.': {
+      source: './src/index.ts',
+      browser: {
+        source: './src/index.browser.ts',
+        default: './dist/index.browser.js',
+      },
+      node: {
+        source: './src/index.node.ts',
+        default: './dist/index.node.js',
+      },
+      default: './dist/index.js',
+    },
+    './package.json': './package.json',
+  })
+
+  expect(
+    composer(
+      {
+        '.': './dist/index.js',
+        './package.json': './package.json',
+      },
+      {isPublish: true},
+    ),
+  ).toEqual({
+    '.': {
+      browser: {default: './dist/index.browser.js'},
+      node: {default: './dist/index.node.js'},
+      default: './dist/index.js',
+    },
     './package.json': './package.json',
   })
 })
@@ -311,6 +448,7 @@ test('preserves independent authored orders around browser and custom conditions
     'source',
     'require',
     'import',
+    'default',
   ])
 
   const publish = composer(
@@ -336,6 +474,7 @@ test('preserves independent authored orders around browser and custom conditions
   expect(Object.keys(publishEntry['browser'] as Record<string, unknown>)).toEqual([
     'import',
     'require',
+    'default',
   ])
 })
 
