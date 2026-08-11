@@ -48,15 +48,6 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/pkg-utils': workspace:*
-  # Keep tsdown's transitive rolldown on the same ~1.2.2 copy as the workspace
-  # packages. Without this, tsdown stays on 1.2.0 while our packages use 1.2.2 and
-  # TypeScript sees incompatible MinimalPluginContext types across the two copies.
-  'tsdown>rolldown': ~1.2.2
-  # vite@8.2 declares rolldown ~1.2.0, which would otherwise resolve to 1.2.2 once
-  # that version is in the graph — but Vite's bundled-dev NAPI glue still expects
-  # the 1.2.0 bindings (missing wsToken / DevEngine API drift on 1.2.2). Keep
-  # vite on 1.2.0 explicitly; do not broaden this to a workspace-wide override.
-  'vite>rolldown': 1.2.0
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
