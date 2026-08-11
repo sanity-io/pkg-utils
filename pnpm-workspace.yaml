@@ -17,6 +17,16 @@ catalog:
   typescript: 7.0.2
   vitest: ^4.1.10
 
+# Lifecycle scripts that must run for native/binary packages (pnpm v11 defaults
+# strictDepBuilds to true, so unlisted packages fail the install).
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  unrs-resolver: true
+
 # The pnpm v11 default (1 day)
 minimumReleaseAge: 1440
 
