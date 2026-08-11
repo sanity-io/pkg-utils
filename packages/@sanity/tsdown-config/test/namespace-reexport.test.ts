@@ -155,6 +155,45 @@ describe('checkTsdoc synthesized wrapper skip', () => {
     await expect(runCheck(dir)).rejects.toThrow(/TSDoc\/release-tag check failed with 1 error/)
   })
 
+  test('still flags a user namespace with a wrapper-like name exported under an alias', async () => {
+    const dir = await spawnDtsProject({
+      'index.d.ts': [
+        'declare namespace config_exports {',
+        '  const userValue: string;',
+        '}',
+        'export { config_exports as config };',
+        '',
+      ].join('\n'),
+    })
+
+    await expect(runCheck(dir)).rejects.toThrow(/TSDoc\/release-tag check failed with 1 error/)
+  })
+
+  test('still flags a deconflicted user namespace that collides with a wrapper', async () => {
+    // Rolldown keeps the wrapper name and adds `$1` to the user namespace after a collision.
+    const dir = await spawnDtsProject({
+      'index.d.ts': [
+        'import { t as inner_d_exports } from "./chunk.js";',
+        'declare namespace inner_d_exports$1 {',
+        '  const userValue: string;',
+        '}',
+        'export { inner_d_exports as inner, inner_d_exports$1 as inner_d_exports };',
+        '',
+      ].join('\n'),
+      'chunk.d.ts': [
+        'declare namespace inner_d_exports {',
+        '  export { hello };',
+        '}',
+        '/** @alpha */',
+        'declare function hello(): string;',
+        'export { inner_d_exports as t };',
+        '',
+      ].join('\n'),
+    })
+
+    await expect(runCheck(dir)).rejects.toThrow(/TSDoc\/release-tag check failed with 1 error/)
+  })
+
   test('still flags untagged non-namespace symbols named like a wrapper', async () => {
     const dir = await spawnDtsProject({
       'index.d.ts': [
