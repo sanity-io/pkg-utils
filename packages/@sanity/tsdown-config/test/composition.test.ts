@@ -28,6 +28,18 @@ describe('programmatic composition via mergeConfig', () => {
     expect(composed.plugins).toEqual([marker])
   })
 
+  test('keeps TSDoc repair when a host adds an input plugin', async () => {
+    const composed = mergeConfig(await defineConfig({dts: true, tsdoc: true}), {
+      inputOptions: {plugins: [marker]},
+    })
+    const {inputOptions} = composed
+    if (!inputOptions || typeof inputOptions === 'function') throw new Error('expected an object')
+    expect(inputOptions.plugins).toEqual([
+      expect.objectContaining({name: 'sanity-namespace-release-tags'}),
+      marker,
+    ])
+  })
+
   test('deep-merges plain objects over the defaults', async () => {
     const composed = mergeConfig(await defineConfig(), {minify: {mangle: true}})
     expect(composed.minify).toEqual({

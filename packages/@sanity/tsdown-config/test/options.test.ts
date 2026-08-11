@@ -41,7 +41,26 @@ describe('tsdoc option', () => {
       expect.objectContaining({checkTsdoc: expect.any(Function)}),
     )
   })
+
+  test('registers namespace release-tag repair only for declaration builds with TSDoc', async () => {
+    expect(inputPlugins(await defineConfig({dts: true, tsdoc: false}))).toBeUndefined()
+    expect(inputPlugins(await defineConfig({dts: false, tsdoc: true}))).toBeUndefined()
+
+    for (const config of [
+      await defineConfig({dts: true, tsdoc: true}),
+      // An omitted dts option lets tsdown enable declarations from package.json.
+      await defineConfig({tsdoc: true}),
+    ]) {
+      expect(inputPlugins(config)).toEqual([
+        expect.objectContaining({name: 'sanity-namespace-release-tags'}),
+      ])
+    }
+  })
 })
+
+function inputPlugins(config: UserConfig) {
+  return typeof config.inputOptions === 'function' ? undefined : config.inputOptions?.plugins
+}
 
 describe('define option', () => {
   test('is undefined by default', async () => {
