@@ -4,7 +4,7 @@ import type ts from '@typescript/typescript6'
 import type {Rolldown} from 'tsdown'
 
 const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
-const RE_NAMESPACE_EXPORT = /\bexport\s*\*\s*as\s+/
+const RE_NAMESPACE_REEXPORT = /\b(?:export\s+(?:type\s+)?\*\s*as|import\s+(?:type\s+)?\*\s*as)\s+/
 const RE_RELEASE_TAG = /@(alpha|beta|internal|public)\b/
 const RELEASE_TAGS = new Set(['alpha', 'beta', 'internal', 'public'])
 
@@ -18,9 +18,10 @@ interface EntrySource {
 
 /**
  * Restores release tags on the namespace declarations that rolldown-plugin-dts synthesizes for
- * `export * as name` declarations. The declaration plugin currently drops the source statement's
- * comments before its `patchTsNamespace` pass, leaving API Extractor to report an unfixable
- * `ae-missing-release-tag` error against the generated `<module>_d_exports` identifier.
+ * `export * as name` and `import * as name; export {name}` declarations. The declaration plugin
+ * currently drops the source statement's comments before its `patchTsNamespace` pass, leaving API
+ * Extractor to report an unfixable `ae-missing-release-tag` error against the generated
+ * `<module>_d_exports` identifier.
  *
  * @internal
  */
@@ -47,7 +48,7 @@ export function namespaceReleaseTagPlugin(): Rolldown.Plugin {
         const sourceText = await readFile(sourcePath, 'utf8').catch(() => undefined)
         if (
           sourceText === undefined ||
-          !RE_NAMESPACE_EXPORT.test(sourceText) ||
+          !RE_NAMESPACE_REEXPORT.test(sourceText) ||
           !RE_RELEASE_TAG.test(sourceText)
         ) {
           return undefined
@@ -139,17 +140,36 @@ function namespaceReleaseTagInsertions(
     true,
   )
   const tagsByExportName = new Map<string, ReleaseTag>()
+  const namespaceImports = new Map<string, ReleaseTag | undefined>()
 
   for (const statement of sourceFile.statements) {
-    if (
-      !typescript.isExportDeclaration(statement) ||
-      !statement.exportClause ||
-      !typescript.isNamespaceExport(statement.exportClause)
-    ) {
+    const namedBindings =
+      typescript.isImportDeclaration(statement) && statement.importClause?.namedBindings
+    if (!namedBindings || !typescript.isNamespaceImport(namedBindings)) continue
+    namespaceImports.set(namedBindings.name.text, getReleaseTag(typescript, statement))
+  }
+
+  for (const statement of sourceFile.statements) {
+    if (!typescript.isExportDeclaration(statement) || !statement.exportClause) continue
+
+    if (typescript.isNamespaceExport(statement.exportClause)) {
+      const releaseTag = getReleaseTag(typescript, statement)
+      if (releaseTag) tagsByExportName.set(statement.exportClause.name.text, releaseTag)
       continue
     }
-    const releaseTag = getReleaseTag(typescript, statement)
-    if (releaseTag) tagsByExportName.set(statement.exportClause.name.text, releaseTag)
+
+    if (statement.moduleSpecifier || !typescript.isNamedExports(statement.exportClause)) continue
+    const exportReleaseTag = getReleaseTag(typescript, statement)
+    for (const specifier of statement.exportClause.elements) {
+      const localName = specifier.propertyName?.text ?? specifier.name.text
+      if (!namespaceImports.has(localName)) continue
+      const importReleaseTag = namespaceImports.get(localName)
+      const releaseTag =
+        exportReleaseTag && importReleaseTag && exportReleaseTag !== importReleaseTag
+          ? undefined
+          : (exportReleaseTag ?? importReleaseTag)
+      if (releaseTag) tagsByExportName.set(specifier.name.text, releaseTag)
+    }
   }
   if (tagsByExportName.size === 0) return []
 

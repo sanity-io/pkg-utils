@@ -37,12 +37,37 @@ describe('namespace re-export release tags', () => {
     },
   )
 
-  test(
-    'does not invent a tag for an untagged namespace re-export',
-    {timeout: 120_000},
-    async () => {
+  test('preserves a tag on imported namespace re-exports', {timeout: 120_000}, async () => {
+    const cases = [
+      {
+        tag: 'beta',
+        index: `/** @beta */\nimport * as inner from './inner'\nexport {inner}\n`,
+      },
+      {
+        tag: 'public',
+        index: `import * as inner from './inner'\n/** @public */\nexport {inner}\n`,
+      },
+    ] as const
+
+    for (const {index, tag} of cases) {
       const fixtureDir = await createFixture({
-        index: `export * as inner from './inner'\n`,
+        index,
+        inner: `/** @${tag} */\nexport function hello(): string {\n  return 'hello'\n}\n`,
+      })
+      await runBuild(fixtureDir)
+      expect(await readFile(path.join(fixtureDir, 'dist/index.d.ts'), 'utf8')).toContain(
+        `/** @${tag} */ declare namespace inner_d_exports`,
+      )
+    }
+  })
+
+  test('does not invent a tag for untagged namespace re-exports', {timeout: 120_000}, async () => {
+    for (const index of [
+      `export * as inner from './inner'\n`,
+      `import * as inner from './inner'\nexport {inner}\n`,
+    ]) {
+      const fixtureDir = await createFixture({
+        index,
         inner: `/** @alpha */\nexport function hello(): string {\n  return 'hello'\n}\n`,
       })
 
@@ -52,8 +77,8 @@ describe('namespace re-export release tags', () => {
       expect(await readFile(path.join(fixtureDir, 'dist/index.d.ts'), 'utf8')).toMatch(
         /^declare namespace inner_d_exports/,
       )
-    },
-  )
+    }
+  })
 
   test('ordinary untagged API still fails', {timeout: 120_000}, async () => {
     const fixtureDir = await createFixture({
