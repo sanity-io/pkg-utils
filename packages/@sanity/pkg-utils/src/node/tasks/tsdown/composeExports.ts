@@ -1,6 +1,8 @@
+import path from 'node:path'
 import type {PkgExport} from '../../core/config/types.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
 import {isRecord} from '../../core/isRecord.ts'
+import {createConditionalCssExport} from '../../core/pkg/cssExport.ts'
 import type {TsdownBuild} from './resolveTsdownBuilds.ts'
 
 type ExportsMap = Record<string, unknown>
@@ -24,13 +26,16 @@ interface ComposeContext {
  *   re-inserted (tsdown's generator cannot express them; the `browser`/`node` files are built
  *   by the variant builds of the waterfall) — with `source`-like conditions stripped from the
  *   publish variant,
- * - hand-written custom conditions (`react-server`, `worker`, …) are carried over as authored,
- *   placed before the `import`/`require`/`default` fallbacks so they can match,
+ * - all hand-written conditions (`react-server`, `worker`, … included) retain their authored
+ *   order in each map independently, because earlier matching conditions take precedence,
+ * - generated conditions for conditional entries are materialized in both `exports` and
+ *   `publishConfig.exports`, so they can be reordered directly in `package.json` and keep that
+ *   position on later builds (plain-string entries stay compact),
  * - a trailing `default` condition is kept on dual-format entries (tsdown emits bare
  *   `import`/`require` pairs; the Sanity convention always ends with `default`),
  * - hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
  *   entries) are carried over untouched, and
- * - the hand-written key order is preserved.
+ * - the hand-written subpath and condition key order of each map is preserved.
  * @internal
  */
 export function createExportsComposer(
@@ -39,6 +44,15 @@ export function createExportsComposer(
 ): (exportsMap: ExportsMap, context: ComposeContext) => ExportsMap {
   const {pkg} = ctx
   const type = pkg.type === 'module' ? 'module' : 'commonjs'
+
+  // POSIX separators: on Windows `path.relative` yields backslashes, which must never leak
+  // into generated `package.json` export targets.
+  const distRel = (path.relative(ctx.cwd, ctx.distPath) || 'dist').split(path.sep).join('/')
+  const cssExportPaths = new Set(ctx.cssExports.map((cssExport) => cssExport._path))
+  const cssSources: Record<string, string> = {}
+  for (const cssExport of ctx.cssExports) {
+    cssSources[cssExport._path] = cssExport.source
+  }
 
   // alias -> hand-written subpath, e.g. `index` -> `.`, `sub/feature` -> `./feature`
   const aliasToExportPath = new Map<string, string>()
@@ -63,23 +77,56 @@ export function createExportsComposer(
     // 2. Reconcile each generated entry with its hand-written counterpart.
     const result: ExportsMap = {}
     const handwritten = ctx.exports || {}
+    const sourceRaw: ExportsMap = pkg.exports || {}
+    const publishRaw: ExportsMap | undefined = pkg.publishConfig?.exports
+    const authoredRaw = isPublish && publishRaw ? publishRaw : sourceRaw
 
     const reconcile = (exportPath: string, value: unknown): unknown => {
       const exp = handwritten[exportPath]
       if (!exp) return value
-      return reconcileEntry(exp, value, {isPublish, type})
+      const raw = authoredRaw[exportPath]
+      const source = sourceRaw[exportPath]
+      // A configured exports map is itself authoritative. Otherwise use the raw package entry
+      // for the map being generated. Fall back to `exports` when a new publish map/entry is
+      // being generated, so inferred conditions don't masquerade as ordering choices.
+      const authored =
+        ctx.config?.exports === undefined
+          ? isRecord(raw)
+            ? raw
+            : isRecord(source)
+              ? source
+              : exp
+          : exp
+      return reconcileEntry(exp, value, {authored, isPublish, type})
     }
 
-    // 3. Follow the hand-written key order; append generated extras (e.g. `./package.json`
-    //    when it wasn't hand-written) at the end.
-    const handwrittenRaw: Record<string, unknown> = pkg.exports || {}
-    for (const exportPath of Object.keys(handwrittenRaw)) {
+    // 3. Follow the hand-written key order of the map being generated. Source-only passthrough
+    //    subpaths missing from an existing publish map are appended, followed by generated extras.
+    const authoredPaths = Object.keys(authoredRaw)
+    for (const exportPath of Object.keys(sourceRaw)) {
+      if (!Object.prototype.hasOwnProperty.call(authoredRaw, exportPath)) {
+        authoredPaths.push(exportPath)
+      }
+    }
+    for (const exportPath of authoredPaths) {
       if (exportPath in remapped) {
         result[exportPath] = reconcile(exportPath, remapped[exportPath])
+      } else if (cssExportPaths.has(exportPath)) {
+        // A `.css` subpath with a `source` is built by the stylesheet build, which does not
+        // participate in exports generation (its entries are stylesheets, not JS). Its
+        // conditions are materialized here instead, from the export subpath: `./ui/styles.css`
+        // is built to `<dist>/ui/styles.css` with the shim next to it.
+        result[exportPath] = reconcileCssEntry(exportPath, {
+          distRel,
+          source: cssSources[exportPath],
+          isPublish,
+        })
       } else {
-        // Hand-written subpaths that aren't build entries (`.css`/`.json` exports, `svelte`
-        // entries) pass through untouched.
-        result[exportPath] = handwrittenRaw[exportPath]
+        // Hand-written subpaths that aren't build entries (plain `.css`/`.json` exports,
+        // `svelte` entries) pass through untouched.
+        result[exportPath] = Object.prototype.hasOwnProperty.call(authoredRaw, exportPath)
+          ? authoredRaw[exportPath]
+          : sourceRaw[exportPath]
       }
     }
     for (const [exportPath, value] of Object.entries(remapped)) {
@@ -92,15 +139,31 @@ export function createExportsComposer(
 }
 
 /**
- * Rebuilds a generated subpath entry in the Sanity condition order, re-inserting the
+ * The conditional CSS export of a `.css` subpath built by the stylesheet build. `source`
+ * resolves at development time, so it is kept in `exports` and stripped from the publish
+ * variant — the same split the build entries get.
+ */
+function reconcileCssEntry(
+  exportPath: string,
+  options: {distRel: string; source: string | undefined; isPublish: boolean},
+): Record<string, string> {
+  const {distRel, source, isPublish} = options
+  const cssName = exportPath.replace(/^\.\//, '')
+  const conditions = createConditionalCssExport(cssName, distRel)
+  return isPublish || source === undefined ? conditions : {source, ...conditions}
+}
+
+/**
+ * Rebuilds a generated subpath entry in its authored condition order, re-inserting the
  * hand-written conditions tsdown's generator cannot express.
  */
 function reconcileEntry(
   exp: PkgExport,
   generated: unknown,
-  options: {isPublish: boolean; type: 'commonjs' | 'module'},
+  options: {authored: object; isPublish: boolean; type: 'commonjs' | 'module'},
 ): unknown {
-  const {isPublish, type} = options
+  const {authored, isPublish, type} = options
+  const authoredRecord = isRecord(authored) ? authored : {}
 
   // tsdown's publish variant of a single-format entry is a plain string
   const gen: Record<string, unknown> | undefined =
@@ -111,18 +174,20 @@ function reconcileEntry(
         : undefined
   if (!gen) return generated
 
+  const browserOrder = isRecord(authoredRecord['browser']) ? authoredRecord['browser'] : exp.browser
   const browser =
     exp.browser && (exp.browser.import || exp.browser.require)
-      ? pickConditions(exp.browser, isPublish)
+      ? pickConditions(exp.browser, isPublish, browserOrder ?? exp.browser)
       : undefined
+  const nodeOrder = isRecord(authoredRecord['node']) ? authoredRecord['node'] : exp.node
   const node =
     exp.node && (exp.node.import || exp.node.require)
-      ? pickConditions(exp.node, isPublish)
+      ? pickConditions(exp.node, isPublish, nodeOrder ?? exp.node)
       : undefined
   const custom = pickCustomConditions(exp)
 
-  // A plain-string publish entry without hand-written conditions to re-insert stays a plain
-  // string (e.g. `publishConfig.exports["."] = "./dist/index.js"`)
+  // Preserve tsdown's compact single-format publish shape unless hand-written conditions need
+  // to be re-inserted. There is no condition ordering to preserve in a plain string entry.
   if (typeof generated === 'string' && !exp.types && !browser && !node && custom.length === 0) {
     return generated
   }
@@ -143,9 +208,13 @@ function reconcileEntry(
   if (node) next['node'] = node
 
   // Hand-written custom conditions (`react-server`, `worker`, …) aren't built, but they are
-  // the author's: carry them over as authored, before the format fallbacks so they can match.
+  // the author's: carry their targets over, then restore every condition's authored position.
   for (const [condition, target] of custom) {
-    next[condition] = target
+    const authoredTarget = authoredRecord[condition]
+    next[condition] =
+      isRecord(target) && isRecord(authoredTarget)
+        ? preserveConditionOrder(target, authoredTarget)
+        : target
   }
 
   if (typeof gen['import'] === 'string' && typeof gen['require'] === 'string') {
@@ -161,19 +230,59 @@ function reconcileEntry(
     }
   }
 
-  return next
+  return preserveConditionOrder(next, authored)
 }
 
 /** The hand-written `browser`/`node` condition object, minus `source` for the publish map. */
 function pickConditions(
   conditions: {source?: string; import?: string; require?: string},
   isPublish: boolean,
+  authored: object = conditions,
 ): Record<string, string> {
   const next: Record<string, string> = {}
   if (!isPublish && conditions.source) next['source'] = conditions.source
   if (conditions.import) next['import'] = conditions.import
   if (conditions.require) next['require'] = conditions.require
-  return next
+  return preserveConditionOrder(next, authored)
+}
+
+/**
+ * Reorders reconciled conditions to match their hand-written order. Conditions generated by
+ * tsdown but absent from the hand-written entry are inserted before its `default` fallback.
+ */
+function preserveConditionOrder<T>(
+  conditions: Record<string, T>,
+  authored: object,
+): Record<string, T> {
+  const entries: [string, T][] = []
+  const added = new Set<string>()
+  const conditionEntries = Object.entries(conditions)
+  const entriesByCondition = new Map(conditionEntries.map((entry) => [entry[0], entry]))
+  const authoredOrder = Object.keys(authored).filter((condition) => !condition.startsWith('_'))
+  const authoredConditions = new Set(authoredOrder)
+
+  const addGeneratedConditions = () => {
+    for (const entry of conditionEntries) {
+      if (!authoredConditions.has(entry[0]) && !added.has(entry[0])) {
+        entries.push(entry)
+        added.add(entry[0])
+      }
+    }
+  }
+
+  for (const condition of authoredOrder) {
+    // A generated condition has no authored position. Keep the explicit `default` as the final
+    // fallback by placing generated conditions immediately before it.
+    if (condition === 'default') addGeneratedConditions()
+    const entry = entriesByCondition.get(condition)
+    if (!entry) continue
+    entries.push(entry)
+    added.add(condition)
+  }
+
+  addGeneratedConditions()
+
+  return Object.fromEntries(entries)
 }
 
 /** The conditions the pipeline owns (or re-inserts itself) on a build entry. */

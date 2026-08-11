@@ -1,3 +1,4 @@
+import type {TsdownPlugin, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {defineConfig} from '../src/index.ts'
 
@@ -14,6 +15,31 @@ describe('dts option', () => {
       sourcemap: true,
       oxc: false,
     })
+  })
+})
+
+describe('tsdoc option', () => {
+  test('is off by default', async () => {
+    expect((await defineConfig()).hooks).toBeUndefined()
+    expect((await defineConfig({tsdoc: false})).hooks).toBeUndefined()
+  })
+
+  test('registers a build:done hook when enabled', async () => {
+    expect(typeof (await defineConfig({tsdoc: true})).hooks).toBe('function')
+    expect(
+      typeof (
+        await defineConfig({
+          tsdoc: {rules: {'ae-missing-release-tag': 'off'}},
+        })
+      ).hooks,
+    ).toBe('function')
+  })
+
+  test('exposes checkTsdoc from the /tsdoc subpath, not the root', async () => {
+    await expect(import('@sanity/tsdown-config')).resolves.not.toHaveProperty('checkTsdoc')
+    await expect(import('@sanity/tsdown-config/tsdoc')).resolves.toEqual(
+      expect.objectContaining({checkTsdoc: expect.any(Function)}),
+    )
   })
 })
 
@@ -86,32 +112,85 @@ describe('css option', () => {
     expect((await defineConfig()).css).toBeUndefined()
   })
 
-  test('is passed through to tsdown as-is', async () => {
-    const css = {inject: true, modules: {localsConvention: 'camelCase' as const}}
-    expect((await defineConfig({css})).css).toEqual(css)
+  test('is forwarded to tsdown with the Sanity defaults applied', async () => {
+    const config = await defineConfig({
+      css: {modules: {localsConvention: 'camelCase' as const}},
+    })
+
+    expect(config.css).toEqual({
+      // Published Sanity libraries ship minified CSS, like `vanillaExtract`
+      minify: true,
+      // `@tsdown/css`'s own injection emits a relative `import "./style.css"`, which throws in
+      // runtimes that cannot load `.css` files - `cssNodeCompatPlugin` injects the
+      // self-referential specifier of the conditional CSS export instead
+      inject: false,
+      // Browserless targets fall back to `@sanity/browserslist-config`, like `vanillaExtract`
+      lightningcss: {targets: expect.any(Object)},
+      modules: {localsConvention: 'camelCase'},
+    })
+    // `exports` is this config's own option, not a `@tsdown/css` one, so it is stripped
+    expect(config.css).not.toHaveProperty('exports')
+    expect(pluginNames(config)).toContain('sanity-css-node-compat')
+  })
+
+  test('respects an explicit `minify` and `target`', async () => {
+    const config = await defineConfig({css: {minify: false, target: 'chrome61'}})
+
+    expect(config.css).toMatchObject({minify: false, target: 'chrome61'})
+    // A target that names browsers is lowered by `@tsdown/css` itself, so no fallback applies
+    expect(config.css).not.toHaveProperty('lightningcss.targets')
   })
 
   test('can be enabled alongside vanillaExtract', async () => {
-    // Both pipelines are independent: `vanillaExtract` adds the plugin, `css` is forwarded
-    // for `@tsdown/css` (CSS modules, etc). The fixture build covers them end-to-end.
+    // Both pipelines are independent: `vanillaExtract` extracts `.css.ts` into `bundle.css`,
+    // `@tsdown/css` handles everything else. The fixture build covers them end-to-end.
     const config = await defineConfig({
       vanillaExtract: true,
-      css: {inject: true, modules: {localsConvention: 'camelCase'}},
+      css: {modules: {localsConvention: 'camelCase'}},
     })
-    expect(config.css).toEqual({inject: true, modules: {localsConvention: 'camelCase'}})
-    const {plugins} = config
-    if (!Array.isArray(plugins)) throw new Error('expected plugins array')
-    expect(
-      plugins.some(
-        (plugin) =>
-          !!plugin &&
-          typeof plugin === 'object' &&
-          'name' in plugin &&
-          plugin.name === 'vanilla-extract',
-      ),
-    ).toBe(true)
+
+    expect(pluginNames(config)).toEqual(
+      expect.arrayContaining(['vanilla-extract', 'sanity-css-node-compat']),
+    )
+  })
+
+  test('writes the conditional CSS export unless `css.exports` is false', async () => {
+    const withExports = await defineConfig({css: {}, exports: true})
+    await runCssConfigHook(withExports)
+    expect(withExports.exports).toHaveProperty('customExports')
+
+    const withoutExports = await defineConfig({css: {exports: false}, exports: true})
+    await runCssConfigHook(withoutExports)
+    expect(withoutExports.exports).not.toHaveProperty('customExports')
   })
 })
+
+function pluginNames(config: UserConfig): string[] {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) throw new Error('expected plugins array')
+  return plugins.flatMap((plugin) =>
+    plugin && typeof plugin === 'object' && 'name' in plugin && typeof plugin.name === 'string'
+      ? [plugin.name]
+      : [],
+  )
+}
+
+/** Runs the node-compat plugin's `tsdownConfig` hook, like tsdown does when it resolves. */
+async function runCssConfigHook(config: UserConfig): Promise<void> {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) expect.unreachable('expected `plugins` to be an array')
+  const plugin: TsdownPlugin | undefined = plugins.find(
+    (candidate): candidate is TsdownPlugin =>
+      !!candidate &&
+      typeof candidate === 'object' &&
+      'name' in candidate &&
+      candidate.name === 'sanity-css-node-compat',
+  )
+  if (!plugin || typeof plugin.tsdownConfig !== 'function') {
+    expect.unreachable('expected the node-compat plugin with a `tsdownConfig` hook')
+  }
+  expect(await plugin.tsdownConfig(config, {})).toBeUndefined() // mutates the config in place
+}
 
 describe('sourcemap option', () => {
   test('defaults to true, matching @sanity/pkg-utils', async () => {
@@ -200,6 +279,115 @@ describe('checks option', () => {
   })
 })
 
+/** A `CIRCULAR_DEPENDENCY` warning as rolldown formats it: colored code prefix, trailing dot. */
+function circularWarning(...modules: string[]): string {
+  return `\u001B[33m[CIRCULAR_DEPENDENCY] \u001B[0mCircular dependency: ${modules.join(' -> ')}.\n`
+}
+
+async function resolveSuppressWarnings(
+  options?: Parameters<typeof defineConfig>[0],
+): Promise<(message: string) => boolean> {
+  const {suppressWarnings} = await defineConfig(options)
+  if (typeof suppressWarnings !== 'function') throw new Error('expected a predicate')
+  return suppressWarnings
+}
+
+describe('suppressWarnings option', () => {
+  test('drops circular dependency warnings whose whole cycle is declaration files', async () => {
+    // The declaration bundling pass gets the same `checks.circularDependency`, but every import
+    // between `.d.ts` modules is type-only and erased at runtime, so those cycles carry none of
+    // the hazards the check exists to surface — and they're unavoidable for mutually
+    // referencing public types (https://github.com/sanity-io/sanity/pull/13753)
+    const isSuppressed = await resolveSuppressWarnings()
+
+    expect(
+      isSuppressed(circularWarning('src/index.d.ts', 'src/nodes.d.ts', 'src/index.d.ts')),
+    ).toBe(true)
+    expect(
+      isSuppressed(circularWarning('src/index.d.mts', 'src/nodes.d.mts', 'src/index.d.mts')),
+    ).toBe(true)
+    expect(
+      isSuppressed(circularWarning('src/index.d.cts', 'src/nodes.d.cts', 'src/index.d.cts')),
+    ).toBe(true)
+    // Longer cycles, and the colorless form of the message
+    expect(isSuppressed(circularWarning('a.d.ts', 'b.d.ts', 'c.d.ts', 'd.d.ts', 'a.d.ts'))).toBe(
+      true,
+    )
+    expect(
+      isSuppressed('Circular dependency: src/index.d.ts -> src/nodes.d.ts -> src/index.d.ts.'),
+    ).toBe(true)
+  })
+
+  test('keeps circular dependency warnings that involve a runtime module', async () => {
+    const isSuppressed = await resolveSuppressWarnings()
+
+    expect(isSuppressed(circularWarning('src/a.ts', 'src/b.ts', 'src/a.ts'))).toBe(false)
+    // A single runtime module in the cycle is enough to keep the warning
+    expect(isSuppressed(circularWarning('src/a.d.ts', 'src/b.ts', 'src/a.d.ts'))).toBe(false)
+    expect(isSuppressed(circularWarning('src/a.js', 'src/b.d.ts', 'src/a.js'))).toBe(false)
+    // `.d.ts.map` is a sourcemap, not a declaration module
+    expect(
+      isSuppressed(circularWarning('src/a.d.ts.map', 'src/b.d.ts.map', 'src/a.d.ts.map')),
+    ).toBe(false)
+  })
+
+  test('keeps every other warning', async () => {
+    const isSuppressed = await resolveSuppressWarnings()
+
+    expect(isSuppressed('[UNRESOLVED_IMPORT] Could not resolve "./missing.d.ts"')).toBe(false)
+    expect(isSuppressed('[MIXED_EXPORT] Mixing named and default exports in src/index.d.ts')).toBe(
+      false,
+    )
+    expect(isSuppressed('')).toBe(false)
+  })
+
+  test('adds userland patterns to the built-in suppression instead of replacing it', async () => {
+    // `mergeConfig` would replace the predicate (functions don't merge), which would silently
+    // bring the declaration-only cycle warnings back
+    const dtsCycle = circularWarning('src/index.d.ts', 'src/nodes.d.ts', 'src/index.d.ts')
+    const runtimeCycle = circularWarning('src/a.ts', 'src/b.ts', 'src/a.ts')
+
+    const withString = await resolveSuppressWarnings({suppressWarnings: 'src/a.ts'})
+    expect(withString(dtsCycle)).toBe(true)
+    expect(withString(runtimeCycle)).toBe(true)
+    expect(withString(circularWarning('src/c.ts', 'src/d.ts', 'src/c.ts'))).toBe(false)
+
+    const withRegExps = await resolveSuppressWarnings({
+      suppressWarnings: [/UNRESOLVED_IMPORT/, 'EMPTY_BUNDLE'],
+    })
+    expect(withRegExps(dtsCycle)).toBe(true)
+    expect(withRegExps('[UNRESOLVED_IMPORT] Could not resolve "foo"')).toBe(true)
+    expect(withRegExps('[EMPTY_BUNDLE] Generated an empty chunk')).toBe(true)
+    expect(withRegExps(runtimeCycle)).toBe(false)
+
+    const withPredicate = await resolveSuppressWarnings({
+      suppressWarnings: (message) => message.includes('EMPTY_BUNDLE'),
+    })
+    expect(withPredicate(dtsCycle)).toBe(true)
+    expect(withPredicate('[EMPTY_BUNDLE] Generated an empty chunk')).toBe(true)
+    expect(withPredicate(runtimeCycle)).toBe(false)
+  })
+
+  test('resets a stateful userland pattern, so it matches every message', async () => {
+    // A `/g` (or `/y`) RegExp carries `lastIndex` between `test` calls and would skip messages
+    const isSuppressed = await resolveSuppressWarnings({suppressWarnings: /EMPTY_BUNDLE/g})
+
+    expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk for "a"')).toBe(true)
+    expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk for "b"')).toBe(true)
+  })
+
+  test('leaves a non-stateful userland pattern untouched', async () => {
+    // `test` ignores `lastIndex` unless the pattern is global or sticky, so writing to it would
+    // be a no-op that only introduces a failure mode — a frozen RegExp would throw
+    const isSuppressed = await resolveSuppressWarnings({
+      suppressWarnings: Object.freeze(/EMPTY_BUNDLE/),
+    })
+
+    expect(isSuppressed('[EMPTY_BUNDLE] Generated an empty chunk')).toBe(true)
+    expect(isSuppressed('[UNRESOLVED_IMPORT] Could not resolve "foo"')).toBe(false)
+  })
+})
+
 describe('minify default', () => {
   test('compresses with keepNames, without mangling or codegen minification', async () => {
     // Consumers' production builds minify `node_modules` again anyway, so the dist only gets
@@ -229,21 +417,21 @@ describe('unexposed options', () => {
 })
 
 describe('exports option', () => {
-  test('defaults to local-only generation with dev exports', async () => {
-    // `enabled: 'local-only'` generates the `exports` map during local builds and skips it in
-    // CI; `devExports: true` keeps the local `exports` map pointing at source files while
-    // `publishConfig.exports` receives the built files
-    expect((await defineConfig()).exports).toEqual({enabled: 'local-only', devExports: true})
+  test('defaults to always-on generation with dev exports', async () => {
+    // `enabled: true` generates the `exports` map on every build (no `'local-only'`/
+    // `'ci-only'` gate); `devExports: true` keeps the local `exports` map pointing at source
+    // files while `publishConfig.exports` receives the built files
+    expect((await defineConfig()).exports).toEqual({enabled: true, devExports: true})
   })
 
   test('merges an object over the defaults', async () => {
     expect((await defineConfig({exports: {all: true}})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: true,
       all: true,
     })
     expect((await defineConfig({exports: {devExports: 'source'}})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: 'source',
     })
   })

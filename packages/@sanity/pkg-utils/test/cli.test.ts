@@ -519,7 +519,90 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     const stdout = await project.run('build')
 
     expect(stdout).toContain('./src/index.js → ./dist/index.js')
-    // @TODO test that styles.css is available as an export from the package
+    // A plain `.css` export subpath (no `source`) ships the file as-is and is left untouched
+    expect(JSON.parse(await project.readFile('package.json')).exports['./css/styles.css']).toBe(
+      './src/css/styles.css',
+    )
+  })
+
+  test('should build `css-entry` package', async () => {
+    const project = await spawnProject('css-entry')
+    const stdout = await project.run('build')
+
+    const [distStylesCss, distStylesShim, distStylesShimDts, pkg] = await Promise.all([
+      project.readFile('dist/ui/styles.css'),
+      project.readFile('dist/ui/styles-css.js'),
+      project.readFile('dist/ui/styles-css.d.ts'),
+      project.readFile('package.json'),
+    ])
+
+    // A `.css` export subpath with a `source` builds through `@tsdown/css`, emitting the
+    // stylesheet at the path its subpath promises
+    expect(stdout).toContain('./src/ui/styles.css → ./dist/ui/styles.css')
+    // …minified, like `vanillaExtract` output
+    expect(distStylesCss).toContain('#010203')
+    expect(distStylesCss).not.toContain('rgb(1, 2, 3)')
+    // The pure-CSS entry leaves no JS chunk behind
+    await expect(project.readFile('dist/ui/styles.js')).rejects.toThrow()
+    // `exports.nodeCompat` emits the no-op JS shim and its declaration file
+    expect(distStylesShim).toContain('No-op shim for `ui/styles.css`')
+    expect(distStylesShimDts).toContain('export {}')
+    // …and fills in the export conditions the author left out, keeping `source` out of the
+    // publish map
+    const {exports: pkgExports, publishConfig} = JSON.parse(pkg)
+    expect(pkgExports['./ui/styles.css']).toEqual({
+      source: './src/ui/styles.css',
+      types: './dist/ui/styles-css.d.ts',
+      browser: './dist/ui/styles.css',
+      style: './dist/ui/styles.css',
+      node: './dist/ui/styles-css.js',
+      default: './dist/ui/styles-css.js',
+    })
+    expect(publishConfig.exports['./ui/styles.css']).toEqual({
+      types: './dist/ui/styles-css.d.ts',
+      browser: './dist/ui/styles.css',
+      style: './dist/ui/styles.css',
+      node: './dist/ui/styles-css.js',
+      default: './dist/ui/styles-css.js',
+    })
+    // The stylesheet is not imported by any JS entry, so nothing is injected
+    expect(await project.readFile('dist/ui/index.js')).not.toMatch(
+      /^\s*import ["'][^"']*styles\.css["']/m,
+    )
+
+    expect(distStylesCss).toMatchSnapshot('./dist/ui/styles.css')
+  })
+
+  test('should build `css-import` package', async () => {
+    const project = await spawnProject('css-import')
+    await project.run('build')
+
+    const [distIndexJs, distStyleCss, distStyleShim, pkg] = await Promise.all([
+      project.readFile('dist/index.js'),
+      project.readFile('dist/style.css'),
+      project.readFile('dist/style-css.js'),
+      project.readFile('package.json'),
+    ])
+
+    // CSS imported from a JS entry merges into a single `style.css`, minified
+    expect(distIndexJs).not.toContain('color:')
+    expect(distStyleCss).toContain('#040506')
+    // `@tsdown/css` would inject a relative `import "./style.css"`, which throws in runtimes
+    // that cannot load `.css` files. `exports.nodeCompat` injects the self-referential
+    // specifier of the conditional export instead.
+    expect(distIndexJs).toContain(`import "css-import/style.css"`)
+    expect(distIndexJs).not.toContain(`import "./style.css"`)
+    expect(distStyleShim).toContain('No-op shim for `style.css`')
+    expect(JSON.parse(pkg).exports['./style.css']).toEqual({
+      types: './dist/style-css.d.ts',
+      browser: './dist/style.css',
+      style: './dist/style.css',
+      node: './dist/style-css.js',
+      default: './dist/style-css.js',
+    })
+
+    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
+    expect(distStyleCss).toMatchSnapshot('./dist/style.css')
   })
 
   test('should build `sanity-plugin-with-styled-components` package', async () => {

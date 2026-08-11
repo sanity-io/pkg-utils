@@ -313,4 +313,37 @@ describe('publishConfig.exports validation', () => {
       true,
     )
   })
+
+  test('should pass when a `.css` subpath declares only its `source`', async () => {
+    // The documented way to ship a stylesheet: the author writes the `source` and the build
+    // fills the remaining conditions into both maps. Before that first build `exports` holds
+    // nothing but the `source` and `publishConfig.exports` holds nothing at all, so the
+    // cross-map checks must not reject it.
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            default: './dist/index.js',
+          },
+          './ui/styles.css': {
+            source: './src/ui/styles.css',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      false,
+    )
+  })
 })

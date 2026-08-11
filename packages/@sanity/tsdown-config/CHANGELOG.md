@@ -1,5 +1,71 @@
 # @sanity/tsdown-config
 
+## 0.24.0
+
+### Minor Changes
+
+- [#3250](https://github.com/sanity-io/pkg-utils/pull/3250) [`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b) Thanks [@stipsan](https://github.com/stipsan)! - Move the conditional CSS export from `inject.nodeCompat` to `exports.nodeCompat`, and give `@tsdown/css` output the same treatment.
+
+  `nodeCompat` configures how the CSS file is published, not how the import is injected, so it moves to a dedicated `exports` option. `inject` and `exports` are now independent: `inject` prepends an import of the CSS to entry chunks, while `exports` publishes it as the `./<fileName>` export subpath (which also makes any injected import self-referential). `exports: true` declares a plain string export for browser-only packages; `exports: {nodeCompat: true}` declares the conditional export and emits the no-op JS shim plus its `.d.ts`. `inject: {nodeCompat: true}` keeps working, normalized to `{inject: true, exports: {nodeCompat: true}}` with a deprecation warning; an explicit `exports` wins over it.
+
+  `@sanity/tsdown-config` gains a `css.exports` option implementing the same pattern on top of `@tsdown/css` (an optional peer dependency), which compiles CSS but has no node-shim concept of its own — its `inject` emits a relative import that throws in runtimes that cannot load `.css` files.
+
+  `@sanity/pkg-utils` gains a `css` option, and builds a `.css` export subpath that declares a `source`:
+
+  ```json
+  "./ui/styles.css": {"source": "./src/ui/styles.css"}
+  ```
+
+  `pkg build` compiles it to `dist/ui/styles.css` with the same minify and lowering settings `vanillaExtract` gets, emits the shim, and fills in the `types`/`browser`/`style`/`node`/`default` conditions. `@sanity/parse-package-json` exposes the new `parseCssExports` for reading those subpaths, and `parseExports` no longer returns them as JS entries.
+
+- [#3253](https://github.com/sanity-io/pkg-utils/pull/3253) [`bc16006`](https://github.com/sanity-io/pkg-utils/commit/bc1600690343a7c3bdedd94928cb77b40f7b93b2) Thanks [@stipsan](https://github.com/stipsan)! - Suppress `CIRCULAR_DEPENDENCY` warnings from the declaration bundling pass by default, and add a `suppressWarnings` option.
+
+  `defineConfig` enables Rolldown's `checks.circularDependency`, which also reports cycles between the emitted `.d.ts` modules. Those imports are type-only and erased at runtime, so the cycles carry none of the hazards the check exists to surface, and they're unavoidable for mutually referencing public types — in [sanity-io/sanity#13753](https://github.com/sanity-io/sanity/pull/13753) 109 of 136 cycle warnings were declaration-only, drowning out the 27 real ones. The config now sets tsdown's `suppressWarnings` to drop warnings whose **entire** cycle consists of declaration files (`.d.ts`/`.d.mts`/`.d.cts`); a cycle that includes even one runtime module still warns. Consumers that filtered these out themselves (like `@repo/tsdown.config` in `sanity-io/sanity`) can drop their own predicate.
+
+  The new `suppressWarnings` option takes tsdown's own value shapes (strings matched with `includes`, regular expressions matched with `test`, or a predicate) and is OR'd with the built-in suppression, so per-package suppressions can't silently undo it. Merging `suppressWarnings` over the returned config still replaces the default entirely (`mergeConfig` replaces functions), which is the escape hatch for restoring every warning: `mergeConfig(await defineConfig(), {suppressWarnings: () => false})`.
+
+  tsdown added `suppressWarnings` in `0.22.7`, so the `tsdown` peer range is raised from `^0.22.5` to `^0.22.7`. On `0.22.5`/`0.22.6` the option is silently ignored (the cycle warnings keep appearing) and the `UserConfig['suppressWarnings']` indexed access in the published declarations does not resolve.
+
+- [#3246](https://github.com/sanity-io/pkg-utils/pull/3246) [`c1106f1`](https://github.com/sanity-io/pkg-utils/commit/c1106f18091be74fcd4b2d989fb848c3b5a00445) Thanks [@stipsan](https://github.com/stipsan)! - Move the `tsdoc` feature (API Extractor TSDoc/release-tag checking) from `@sanity/pkg-utils` into `@sanity/tsdown-config`.
+
+  In `@sanity/tsdown-config` the option is `false` by default; set `tsdoc: true` (or an options object) to run the check after the build via tsdown's `build:done` hook. The checker lives at `@sanity/tsdown-config/tsdoc` and is lazy-loaded from the root config, so API Extractor is not part of the default entry's module graph. `@sanity/pkg-utils` continues enabling it by default (`tsdoc: true`) when composing the config, and still runs it during `pkg check` via `checkTsdoc` from `@sanity/tsdown-config/tsdoc`.
+
+### Patch Changes
+
+- [#3252](https://github.com/sanity-io/pkg-utils/pull/3252) [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.23
+
+- Updated dependencies [[`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b), [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.0
+
+## 0.23.0
+
+### Minor Changes
+
+- [#3238](https://github.com/sanity-io/pkg-utils/pull/3238) [`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013) Thanks [@stipsan](https://github.com/stipsan)! - Default `exports.enabled` to `true` instead of `'local-only'`.
+
+  Gating on `CI` via `'local-only'`/`'ci-only'` surprised environments that set `CI=true` without meaning "don't rewrite package.json" (notably Cursor Cloud and GitHub Copilot)
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.13
+
+## 0.22.0
+
+### Minor Changes
+
+- [#3221](https://github.com/sanity-io/pkg-utils/pull/3221) [`125080f`](https://github.com/sanity-io/pkg-utils/commit/125080f8b0fb748150422bc4a464f487d804f4db) Thanks [@stipsan](https://github.com/stipsan)! - Make `defineConfig` a composable base for programmatic hosts (like the upcoming tsdown-powered `@sanity/pkg-utils`):
+
+  - New `cwd` option: forwarded to tsdown's own `cwd`, and used for the package-manager detection behind the `devExports` default instead of `process.cwd()` — so builds driven programmatically for a package in another directory resolve the right defaults.
+  - Package-manager detection only runs when it can affect the outcome: it exists solely to decide the pnpm-gated `devExports: true` default, so it is skipped when the userland `exports` value replaces the defaults (`false`, `true`, a bare CI condition) or sets `devExports` explicitly. Explicit configs behave identically across package managers, with no filesystem probing.
+  - The composition contract is now documented and covered by tests: `defineConfig()` output is a `mergeConfig`-safe base — `plugins` append (never clobbering the React Compiler / vanilla-extract plugins this config sets up), plain objects deep-merge, and scalars/non-plugin arrays replace.
+  - **Node 20 support is dropped**: `engines.node` is now `^22.18.0 || >=24.11.0`, matching tsdown's own requirement. The previous `>=20.19 <22` range was unachievable in practice — this package only executes inside tsdown's process, which already requires Node `^22.18.0`.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.12
+
 ## 0.21.3
 
 ### Patch Changes

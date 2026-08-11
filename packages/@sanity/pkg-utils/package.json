@@ -1,6 +1,6 @@
 {
   "name": "@sanity/pkg-utils",
-  "version": "11.0.17",
+  "version": "12.1.0",
   "description": "Simple utilities for modern npm packages.",
   "keywords": [
     "sanity-io",
@@ -59,13 +59,11 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "dependencies": {
-    "@microsoft/api-extractor": "^7.58.12",
-    "@microsoft/tsdoc-config": "^0.18.1",
     "@sanity/browserslist-config": "^1.0.5",
     "@sanity/parse-package-json": "workspace:^",
     "@sanity/tsdown-config": "workspace:^",
     "@typescript/typescript6": "^6.0.2",
-    "browserslist": "^4.28.7",
+    "browserslist": "^4.28.8",
     "browserslist-to-esbuild": "2.1.1",
     "cac": "^7.0.0",
     "chalk": "^6.0.0",
@@ -73,18 +71,17 @@
     "empathic": "^2.0.1",
     "find-config": "^1.0.0",
     "get-latest-version": "^6.0.1",
-    "globby": "^16.2.2",
-    "jsonc-parser": "^3.3.1",
+    "globby": "^16.2.3",
     "mkdirp": "^3.0.1",
     "outdent": "^0.8.0",
     "prettier": "^3.9.6",
     "pretty-bytes": "^7.1.1",
     "prompts": "^2.4.2",
-    "publint": "^0.3.22",
+    "publint": "^0.3.23",
     "rxjs": "^7.8.2",
     "treeify": "^1.1.0",
     "tsdown": "catalog:",
-    "tsx": "^4.23.1",
+    "tsx": "^4.23.11",
     "zod": "^4.4.3",
     "zod-validation-error": "^5.0.0"
   },
@@ -103,10 +100,14 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
     "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
+    "@tsdown/css": {
+      "optional": true
+    },
     "babel-plugin-react-compiler": {
       "optional": true
     }

@@ -15,7 +15,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
 
     expect((await defineConfig()).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: true,
     })
     expect(mockedDetect).toHaveBeenCalledWith({cwd: process.cwd()})
@@ -29,7 +29,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue(packageManager)
 
     expect((await defineConfig()).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
     })
   })
 
@@ -37,7 +37,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue(null)
 
     expect((await defineConfig()).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
     })
   })
 
@@ -45,7 +45,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
 
     expect((await defineConfig({exports: {all: true}})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       all: true,
     })
   })
@@ -54,7 +54,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
 
     expect((await defineConfig({exports: {devExports: true}})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: true,
     })
     // An explicit `devExports` makes the pnpm-gated default unreachable, so the detection
@@ -66,7 +66,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
 
     expect((await defineConfig({cwd: '/somewhere/else'})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: true,
     })
     expect(mockedDetect).toHaveBeenCalledWith({cwd: '/somewhere/else'})

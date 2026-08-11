@@ -9,28 +9,29 @@ stops with an error that contains these same migration instructions (skipped whe
 
 ## TL;DR
 
-| v11                                 | v12                                                                 |
-| ----------------------------------- | ------------------------------------------------------------------- |
-| `dts: 'rolldown'`                   | delete it (it's the default now)                                    |
-| `dts: 'api-extractor'`              | delete it (types come from tsdown)                                  |
-| `tsgo: true`                        | `dts: {tsgo: true}`                                                 |
-| `babel: {reactCompiler: true}`      | `reactCompiler: true`                                               |
-| `reactCompilerOptions: {...}`       | `reactCompiler: {...}`                                              |
-| `babel: {styledComponents: true}`   | `styledComponents: true`                                            |
-| `babel: {plugins: [...]}`           | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)       |
-| `rollup: {vanillaExtract: true}`    | `vanillaExtract: true`                                              |
-| `rollup: {plugins: [...]}`          | `plugins: [...]`                                                    |
-| `rollup: {optimizeLodash: ...}`     | removed — see [lodash](#lodash)                                     |
-| `extract: {enabled: false}`         | `tsdoc: false`                                                      |
-| `extract: {rules, customTags}`      | `tsdoc: {rules, customTags}`                                        |
-| `extract: {bundledPackages: [...]}` | `deps: {alwaysBundle: [...]}` — see [type inlining](#type-inlining) |
-| `external: [...]`                   | `deps: {neverBundle: [...]}` (deprecated, still works)              |
-| `external: (prev) => prev.filter()` | `deps: {alwaysBundle: [...]}` (deprecated, still works)             |
-| `jsx`, `jsxFactory`, …              | `tsconfig.json` `compilerOptions.jsx` and friends                   |
-| `process.env.PKG_FORMAT`            | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)    |
-| `process.env.PKG_RUNTIME`           | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)    |
-| `process.env.PKG_FILE_PATH`         | [`import.meta.url`](#pkg_file_path)                                 |
-| `pkg build --clean`                 | delete it (cleaning is on by default; `--no-clean` skips it)        |
+| v11                                            | v12                                                                                     |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `dts: 'rolldown'`                              | delete it (it's the default now)                                                        |
+| `dts: 'api-extractor'`                         | delete it (types come from tsdown)                                                      |
+| `tsgo: true`                                   | `dts: {tsgo: true}`                                                                     |
+| `babel: {reactCompiler: true}`                 | `reactCompiler: true`                                                                   |
+| `reactCompilerOptions: {...}`                  | `reactCompiler: {...}`                                                                  |
+| `babel: {styledComponents: true}`              | `styledComponents: true`                                                                |
+| `babel: {plugins: [...]}`                      | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)                           |
+| `rollup: {vanillaExtract: true}`               | `vanillaExtract: true`                                                                  |
+| `vanillaExtract: {inject: {nodeCompat: true}}` | `vanillaExtract: {inject: true, exports: {nodeCompat: true}}` (deprecated, still works) |
+| `rollup: {plugins: [...]}`                     | `plugins: [...]`                                                                        |
+| `rollup: {optimizeLodash: ...}`                | removed — see [lodash](#lodash)                                                         |
+| `extract: {enabled: false}`                    | `tsdoc: false`                                                                          |
+| `extract: {rules, customTags}`                 | `tsdoc: {rules, customTags}`                                                            |
+| `extract: {bundledPackages: [...]}`            | `deps: {alwaysBundle: [...]}` — see [type inlining](#type-inlining)                     |
+| `external: [...]`                              | `deps: {neverBundle: [...]}` (deprecated, still works)                                  |
+| `external: (prev) => prev.filter()`            | `deps: {alwaysBundle: [...]}` (deprecated, still works)                                 |
+| `jsx`, `jsxFactory`, …                         | `tsconfig.json` `compilerOptions.jsx` and friends                                       |
+| `process.env.PKG_FORMAT`                       | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)                        |
+| `process.env.PKG_RUNTIME`                      | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)                        |
+| `process.env.PKG_FILE_PATH`                    | [`import.meta.url`](#pkg_file_path)                                                     |
+| `pkg build --clean`                            | delete it (cleaning is on by default; `--no-clean` skips it)                            |
 
 Other behavior changes:
 
@@ -41,9 +42,9 @@ Other behavior changes:
 - **`pkg check` runs [publint](https://publint.dev)** on the packed package (with
   `publishConfig` applied) instead of the esbuild resolution checks. Fix what it reports — it
   lints what consumers actually install.
-- **Local builds keep `exports` in sync**: the map is regenerated from the build (with the
-  `source`-condition development pattern and a `source`-less `publishConfig.exports`); CI uses
-  the committed `package.json` as-is.
+- **Builds keep `exports` in sync**: the map is regenerated from the build (with the
+  `source`-condition development pattern and a `source`-less `publishConfig.exports`), including
+  in CI — so environments that set `CI=true` without meaning "skip package.json" still behave.
 - `tsdown.config.*` files are **never** loaded by `pkg build` — `package.config.ts` is the only
   config source. For customization beyond the config surface, use `tsdown` +
   `@sanity/tsdown-config` directly.

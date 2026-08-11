@@ -1,4 +1,4 @@
-import type {PackageJSON} from '@sanity/parse-package-json'
+import type {PackageJSON, PkgCssExport} from '@sanity/parse-package-json'
 import type ts from '@typescript/typescript6'
 import type {UserConfig} from 'tsdown'
 import type {Logger} from '../../logger.ts'
@@ -17,6 +17,11 @@ export interface BuildContext {
   distPath: string
   emitDeclarationOnly: boolean
   exports: PkgExports | undefined
+  /**
+   * The `.css` export subpaths that declare a `source`: stylesheets built by the CSS pipeline,
+   * keyed by export subpath (`./ui/styles.css` -> `<dist>/ui/styles.css`).
+   */
+  cssExports: (PkgCssExport & {_path: string})[]
   external: string[]
   bundledPackages: string[]
   logger: Logger

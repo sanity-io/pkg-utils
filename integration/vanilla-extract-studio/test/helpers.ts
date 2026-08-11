@@ -254,22 +254,50 @@ export async function startSanityDev(
   return {port, output: () => output, fetchText, stop}
 }
 
+/** The HMR WebSocket auth token Vite embeds in the bundled-dev client. */
+function extractWsToken(code: string): string | undefined {
+  return code.match(/wsToken = "([^"]+)"/)?.[1]
+}
+
 /**
  * Requests the on-demand compilation of a bundled-dev lazy chunk the way the browser runtime
  * does: lazy `import()`s in the served bundle load a stub chunk whose body fetches
  * `/@vite/lazy?id=<module id>&clientId=<id>`, compiling the chunk on first request. The
  * `clientId` must belong to a registered client, so this helper first announces one over the
  * HMR WebSocket (`vite:module-loaded`, like the Rolldown browser runtime on startup) using
- * the `wsToken` embedded in the served entry chunk.
+ * the `wsToken` embedded in the HMR client. Vite has moved that token between the served
+ * entry, a sibling `rolldown-runtime-*.js` chunk, and (as of vite ≥8.2.1) the standalone
+ * `/bundledDevClient.mjs` script loaded from the HTML.
  */
 export async function compileLazyChunk(
   server: DevServerHandle,
   entryCode: string,
   lazyModuleId: string,
 ): Promise<string> {
-  const wsToken = entryCode.match(/wsToken = "([^"]+)"/)?.[1]
+  let wsToken = extractWsToken(entryCode)
   if (!wsToken) {
-    throw new Error('No wsToken found in the served entry chunk')
+    // Newer Vite bundled-dev layouts (observed with sanity ≥6.9) place the HMR client in a
+    // separate hashed `rolldown-runtime-*.js` chunk instead of inlining it into the entry.
+    const runtimeHref = entryCode.match(/from\s+["'](\.\/rolldown-runtime-[^"']+)["']/)?.[1]
+    if (runtimeHref) {
+      const runtimeCode = await server.fetchText(`/assets/${runtimeHref.slice(2)}`)
+      wsToken = extractWsToken(runtimeCode)
+    }
+  }
+  if (!wsToken) {
+    // vite ≥8.2.1 serves the HMR client as its own `/bundledDevClient.mjs` module (linked
+    // from the HTML), keeping `wsToken` out of both the entry and the rolldown-runtime chunk.
+    try {
+      const bundledDevClient = await server.fetchText('/bundledDevClient.mjs')
+      wsToken = extractWsToken(bundledDevClient)
+    } catch {
+      // Older Vite layouts don't serve this standalone client module.
+    }
+  }
+  if (!wsToken) {
+    throw new Error(
+      'No wsToken found in the served entry, its rolldown-runtime sibling, or /bundledDevClient.mjs',
+    )
   }
 
   const clientId = `integration-test-${Math.random().toString(36).slice(2)}`

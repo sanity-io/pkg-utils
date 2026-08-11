@@ -2,19 +2,13 @@ import {readFile} from 'node:fs/promises'
 import {createRequire} from 'node:module'
 import {TSDocConfigFile} from '@microsoft/tsdoc-config'
 import {parse} from 'jsonc-parser'
+import type {PackageTsdocCustomTag} from './types.ts'
 
 const require = createRequire(import.meta.url)
 
-/** @public */
-export interface TSDocCustomTag {
-  name: string
-  syntaxKind: 'block' | 'modifier'
-  allowMultiple?: boolean
-}
-
 /** @internal */
 export async function createTSDocConfig(opts: {
-  customTags: TSDocCustomTag[]
+  customTags: PackageTsdocCustomTag[]
 }): Promise<TSDocConfigFile | undefined> {
   const {customTags} = opts
 

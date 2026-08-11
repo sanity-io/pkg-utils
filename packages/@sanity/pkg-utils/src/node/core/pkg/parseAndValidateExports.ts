@@ -180,6 +180,14 @@ export function parseAndValidateExports(options: {
             errors.push(
               `package.json: \`exports[${JSON.stringify(exportPath)}][${JSON.stringify(condition)}]\`: must be a string path.`,
             )
+            continue
+          }
+          // With a `source`, the subpath is a build entry: the stylesheet is compiled by the
+          // CSS pipeline, so unlike the generated conditions the source has to exist now.
+          if (condition === 'source' && !existsSync(resolvePath(cwd, target))) {
+            errors.push(
+              `package.json: \`exports[${JSON.stringify(exportPath)}].source\`: file does not exist.`,
+            )
           }
         }
       } else {

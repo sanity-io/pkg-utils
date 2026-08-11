@@ -10,10 +10,31 @@ import {
 } from '@sanity/vanilla-extract-integration'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {OutputChunk, Plugin, RenderedChunk} from 'rolldown'
-import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
+import {
+  cssShimDtsFileName,
+  cssShimDtsSource,
+  cssShimFileName,
+  cssShimSource,
+} from './cssShimFileName.ts'
+import {
+  DEPRECATED_INJECT_NODE_COMPAT_WARNING,
+  resolveCssExportOptions,
+  type CssExportsOptions,
+} from './exportsOptions.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
 
-export {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
+export {
+  cssShimDtsFileName,
+  cssShimDtsSource,
+  cssShimFileName,
+  cssShimSource,
+} from './cssShimFileName.ts'
+export {
+  DEPRECATED_INJECT_NODE_COMPAT_WARNING,
+  resolveCssExportOptions,
+  type CssExportsOptions,
+  type ResolvedCssExportOptions,
+} from './exportsOptions.ts'
 export {esbuildTargetToLightningCSS} from './targets.ts'
 
 /**
@@ -84,26 +105,52 @@ export interface Options {
    */
   lightningcss?: LightningCSSOptions
   /**
-   * Inject an import of the extracted CSS file into the JS output, like `css.inject` in
-   * `@tsdown/css` (and matching its default of `false`):
+   * Inject an import of the extracted CSS file into every entry chunk that uses
+   * vanilla-extract styles, like `css.inject` in `@tsdown/css` (and matching its default of
+   * `false`), so bundler-consumed libraries load their CSS automatically. In CJS output it is
+   * a `require()` instead of an `import`.
    *
-   * - `true` (or an object) injects a relative `import "./<fileName>"` (or `require()` in CJS
-   *   output) into every entry chunk that uses vanilla-extract styles, so bundler-consumed
-   *   libraries load their CSS automatically.
-   * - `{nodeCompat: true}` additionally makes the import safe for runtimes that cannot import
-   *   `.css` files: the injected import becomes the self-referential `"<pkg-name>/<fileName>"`
-   *   bare specifier, and a no-op shim (e.g. `bundle-css.js`, plus a `bundle-css.d.ts`
-   *   declaration for the export's `types` condition) is emitted for the `node`/`default`
-   *   conditions of the conditional `"./<fileName>"` export to point at. The shim is named with
-   *   a hyphen (`bundle-css.js`) rather than a `.css.js` suffix so it does not match
-   *   vanilla-extract's `cssFileFilter`. Writing that conditional export to `package.json` is
-   *   the host's job — `@sanity/vanilla-extract-tsdown-plugin` maintains it automatically
-   *   through tsdown's [`exports` feature](https://tsdown.dev/options/package-exports).
+   * The injected specifier depends on {@link Options.exports | `exports`}: a relative
+   * `import "./<fileName>"` on its own, or the self-referential `"<pkg-name>/<fileName>"` bare
+   * specifier when the CSS file is published as an export subpath.
+   *
+   * `@sanity/tsdown-config` defaults this to `true`.
+   * @defaultValue false
+   */
+  inject?:
+    | boolean
+    | {
+        /**
+         * @deprecated Use {@link Options.exports | `exports`} instead: `inject: {nodeCompat: true}`
+         * is the same as `{inject: true, exports: {nodeCompat: true}}`. `nodeCompat` configures how
+         * the CSS file is published, not how the import is injected, so it moved to `exports`. An
+         * explicit `exports` option wins over this one.
+         */
+        nodeCompat?: boolean
+      }
+  /**
+   * Publish the extracted CSS file as the `"./<fileName>"` export subpath of the package, so
+   * consumers can `import "<pkg-name>/<fileName>"` — which is also the specifier
+   * {@link Options.inject | `inject`} then uses, instead of a relative path.
+   *
+   * - `true` declares a plain `"./<fileName>": "./<outDir>/<fileName>"` export. Enough for
+   *   packages that only ever run in browsers or bundlers.
+   * - `{nodeCompat: true}` declares a conditional export instead, whose `browser`/`style`
+   *   conditions point at the stylesheet while `node`/`default` point at a no-op JS shim (e.g.
+   *   `bundle-css.js`) emitted next to it, with a `bundle-css.d.ts` declaration for the
+   *   export's `types` condition. That keeps the subpath resolvable in runtimes that cannot
+   *   load `.css` files. The shim is named with a hyphen (`bundle-css.js`) rather than a
+   *   `.css.js` suffix so it does not match vanilla-extract's `cssFileFilter`.
+   *
+   * Writing the export to `package.json` is the host's job — this plugin only emits the files
+   * and picks the injected specifier. `@sanity/vanilla-extract-tsdown-plugin` maintains the
+   * export automatically through tsdown's
+   * [`exports` feature](https://tsdown.dev/options/package-exports).
    *
    * `@sanity/tsdown-config` defaults this to `{nodeCompat: true}`.
    * @defaultValue false
    */
-  inject?: boolean | {nodeCompat?: boolean}
+  exports?: boolean | CssExportsOptions
 }
 
 /**
@@ -116,7 +163,7 @@ export interface Options {
 export interface BuildContext {
   /** Default CSS syntax lowering target(s), used when the `target` option is not set. */
   target?: string | string[] | undefined
-  /** The consumer's package name, for the self-referential import injected by `inject.nodeCompat`. */
+  /** The consumer's package name, for the self-referential import of `exports`. */
   packageName?: string | undefined
   /** The working directory the `.css.ts` modules are compiled from. */
   cwd?: string | undefined
@@ -166,13 +213,12 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
   const minify = options.minify ?? false
   const lightningcss = options.lightningcss
-  const inject = Boolean(options.inject ?? false)
-  /**
-   * The conditional CSS export flavor of `inject`: a self-referential bare import specifier
-   * backed by a no-op shim and a conditional `package.json` export, instead of a relative import.
-   */
-  const nodeCompat =
-    typeof options.inject === 'object' ? (options.inject.nodeCompat ?? false) : false
+  const {
+    inject,
+    exports: exportsCss,
+    nodeCompat,
+    deprecatedInjectNodeCompat,
+  } = resolveCssExportOptions(options)
 
   let cwd = process.cwd()
   /** The host-resolved default for the `target` option (e.g. tsdown's top-level `target`). */
@@ -188,6 +234,8 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
    * `generateBundle`, never from build-wide state.
    */
   const styles = new Map<string, string>()
+
+  let warnedAboutDeprecatedInject = false
 
   function resolveTargets(): Targets | undefined {
     // Matching `@tsdown/css`: explicit `lightningcss.targets` win, then the esbuild-style
@@ -209,7 +257,7 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       packageName ?? getPackageInfo(entryModuleId === null ? cwd : path.dirname(entryModuleId)).name
     if (!name) {
       throw new Error(
-        `[vanilla-extract] Unable to resolve the package name from package.json, which is required by \`inject.nodeCompat\` for the self-referential CSS import. Disable \`nodeCompat\` (or \`inject\`) to wire up the CSS import yourself.`,
+        `[vanilla-extract] Unable to resolve the package name from package.json, which is required by \`exports\` for the self-referential CSS import. Disable \`exports\` (or \`inject\`) to wire up the CSS import yourself.`,
       )
     }
     return name
@@ -224,6 +272,14 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
         if (context.packageName !== undefined) packageName = context.packageName
         if (context.cwd !== undefined) cwd = context.cwd
       },
+    },
+
+    buildStart() {
+      // Hosts run one build per output format with a shared plugin instance, so the
+      // deprecation is reported once instead of once per format.
+      if (!deprecatedInjectNodeCompat || warnedAboutDeprecatedInject) return
+      warnedAboutDeprecatedInject = true
+      this.warn(`[vanilla-extract] ${DEPRECATED_INJECT_NODE_COMPAT_WARNING}`)
     },
 
     // `inject` prepends the CSS import in `renderChunk` through rolldown's native MagicString
@@ -295,8 +351,8 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
     },
 
     // Inject the CSS import into entry chunks that use vanilla-extract styles: relative by
-    // default (like `css.inject` in `@tsdown/css`), or the self-referential bare specifier of
-    // the conditional CSS export pattern with `nodeCompat`
+    // default (like `css.inject` in `@tsdown/css`), or the self-referential bare specifier when
+    // the CSS file is published as an export subpath
     renderChunk(code, chunk, outputOptions, meta) {
       if (!inject || styles.size === 0) return undefined
       // The `.d` name / `.d.ts` file checks skip the chunks of tsdown's d.ts passes — they
@@ -308,7 +364,7 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       if (!chunkHasStyles(chunk, meta.chunks, styles)) return undefined
 
       const specifier = JSON.stringify(
-        nodeCompat
+        exportsCss
           ? `${resolvePackageName(chunk.facadeModuleId)}/${fileName}`
           : relativeImportPath(chunk.fileName, fileName),
       )
@@ -330,7 +386,7 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       return {code: statement + code}
     },
 
-    // Emit the merged CSS file (optimized with lightningcss) and, with `inject.nodeCompat`,
+    // Emit the merged CSS file (optimized with lightningcss) and, with `exports.nodeCompat`,
     // the JS shim
     async generateBundle(_outputOptions, bundle) {
       // tsdown's cjs d.ts pass renders no JS chunks, so skip it instead of re-emitting the
@@ -345,11 +401,11 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
 
       let css = collectCss(chunks, styles)
 
-      // With `nodeCompat`, the conditional `./<fileName>` export (written into `package.json`
-      // by the host at config-resolution time, before any CSS is known) must resolve, so the
-      // CSS file and its shims are emitted even when no styles were extracted. Otherwise
-      // nothing references an empty CSS file, so it would just be a stray artifact.
-      if (!css && !nodeCompat) return
+      // With `exports`, the `./<fileName>` export (written into `package.json` by the host at
+      // config-resolution time, before any CSS is known) must resolve, so the CSS file and its
+      // shims are emitted even when no styles were extracted. Otherwise nothing references an
+      // empty CSS file, so it would just be a stray artifact.
+      if (!css && !exportsCss) return
 
       // Like `@tsdown/css`, lightningcss only runs when it has something to do: syntax
       // lowering targets, minification, or custom `lightningcss` options
@@ -378,23 +434,20 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       this.emitFile({type: 'asset', fileName, source: css})
 
       if (nodeCompat) {
-        const shimFileName = cssShimFileName(fileName)
+        // The shim is intentionally free of syntax so it parses as both CommonJS and an ES
+        // module, and is named `bundle-css.js` (not `bundle.css.js`) so vanilla-extract's
+        // `cssFileFilter` does not treat it as a stylesheet module when a consumer resolves
+        // `./bundle.css`. Its declaration file backs the export's `types` condition, so a
+        // separate `<css>.d.ts` for the CSS file itself is unnecessary.
         this.emitFile({
           type: 'asset',
-          fileName: shimFileName,
-          // The shim is intentionally free of syntax so it parses as both CommonJS and an ES
-          // module: the package `type` decides how Node interprets a `.js` file, and the same
-          // shim backs the `node`/`default` conditions for `require()` and `import` alike.
-          // Named `bundle-css.js` (not `bundle.css.js`) so vanilla-extract's `cssFileFilter`
-          // does not treat it as a stylesheet module when a consumer resolves `./bundle.css`.
-          source: `// No-op shim for \`${fileName}\`, resolved by the \`node\`/\`default\` conditions of the\n// conditional CSS export so the self-referential import is harmless in runtimes that cannot\n// load \`.css\` files. Intentionally has no JS syntax: it parses as both CommonJS and an ES\n// module, regardless of the package \`type\`.\n`,
+          fileName: cssShimFileName(fileName),
+          source: cssShimSource(fileName),
         })
-        // Emit the shim's declaration file; the conditional export's `types` condition points
-        // at it, so a separate `<css>.d.ts` for the CSS file itself is unnecessary.
         this.emitFile({
           type: 'asset',
           fileName: cssShimDtsFileName(fileName),
-          source: `// Type declarations for \`${fileName}\` and its no-op JS shim.\nexport {}\n`,
+          source: cssShimDtsSource(fileName),
         })
       }
     },

@@ -1,5 +1,108 @@
 # @sanity/pkg-utils
 
+## 12.1.0
+
+### Minor Changes
+
+- [#3250](https://github.com/sanity-io/pkg-utils/pull/3250) [`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b) Thanks [@stipsan](https://github.com/stipsan)! - Move the conditional CSS export from `inject.nodeCompat` to `exports.nodeCompat`, and give `@tsdown/css` output the same treatment.
+
+  `nodeCompat` configures how the CSS file is published, not how the import is injected, so it moves to a dedicated `exports` option. `inject` and `exports` are now independent: `inject` prepends an import of the CSS to entry chunks, while `exports` publishes it as the `./<fileName>` export subpath (which also makes any injected import self-referential). `exports: true` declares a plain string export for browser-only packages; `exports: {nodeCompat: true}` declares the conditional export and emits the no-op JS shim plus its `.d.ts`. `inject: {nodeCompat: true}` keeps working, normalized to `{inject: true, exports: {nodeCompat: true}}` with a deprecation warning; an explicit `exports` wins over it.
+
+  `@sanity/tsdown-config` gains a `css.exports` option implementing the same pattern on top of `@tsdown/css` (an optional peer dependency), which compiles CSS but has no node-shim concept of its own — its `inject` emits a relative import that throws in runtimes that cannot load `.css` files.
+
+  `@sanity/pkg-utils` gains a `css` option, and builds a `.css` export subpath that declares a `source`:
+
+  ```json
+  "./ui/styles.css": {"source": "./src/ui/styles.css"}
+  ```
+
+  `pkg build` compiles it to `dist/ui/styles.css` with the same minify and lowering settings `vanillaExtract` gets, emits the shim, and fills in the `types`/`browser`/`style`/`node`/`default` conditions. `@sanity/parse-package-json` exposes the new `parseCssExports` for reading those subpaths, and `parseExports` no longer returns them as JS entries.
+
+### Patch Changes
+
+- [#3247](https://github.com/sanity-io/pkg-utils/pull/3247) [`0171fbe`](https://github.com/sanity-io/pkg-utils/commit/0171fbe7f23ef2ed6ecb7c2eaf376030e3a49cea) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.5
+
+- [#3252](https://github.com/sanity-io/pkg-utils/pull/3252) [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.23
+
+- [#3246](https://github.com/sanity-io/pkg-utils/pull/3246) [`c1106f1`](https://github.com/sanity-io/pkg-utils/commit/c1106f18091be74fcd4b2d989fb848c3b5a00445) Thanks [@stipsan](https://github.com/stipsan)! - Move the `tsdoc` feature (API Extractor TSDoc/release-tag checking) from `@sanity/pkg-utils` into `@sanity/tsdown-config`.
+
+  In `@sanity/tsdown-config` the option is `false` by default; set `tsdoc: true` (or an options object) to run the check after the build via tsdown's `build:done` hook. The checker lives at `@sanity/tsdown-config/tsdoc` and is lazy-loaded from the root config, so API Extractor is not part of the default entry's module graph. `@sanity/pkg-utils` continues enabling it by default (`tsdoc: true`) when composing the config, and still runs it during `pkg check` via `checkTsdoc` from `@sanity/tsdown-config/tsdoc`.
+
+- Updated dependencies [[`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b), [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2), [`bc16006`](https://github.com/sanity-io/pkg-utils/commit/bc1600690343a7c3bdedd94928cb77b40f7b93b2), [`c1106f1`](https://github.com/sanity-io/pkg-utils/commit/c1106f18091be74fcd4b2d989fb848c3b5a00445)]:
+  - @sanity/parse-package-json@2.3.0
+  - @sanity/tsdown-config@0.24.0
+
+## 12.0.1
+
+### Patch Changes
+
+- [#3239](https://github.com/sanity-io/pkg-utils/pull/3239) [`3cd33d4`](https://github.com/sanity-io/pkg-utils/commit/3cd33d41e2f90af3ef732d3151682f6048f8ec81) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.4
+
+- [#3238](https://github.com/sanity-io/pkg-utils/pull/3238) [`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013) Thanks [@stipsan](https://github.com/stipsan)! - Default `exports.enabled` to `true` instead of `'local-only'`.
+
+  Gating on `CI` via `'local-only'`/`'ci-only'` surprised environments that set `CI=true` without meaning "don't rewrite package.json" (notably Cursor Cloud and GitHub Copilot)
+
+- [#3237](https://github.com/sanity-io/pkg-utils/pull/3237) [`7d44739`](https://github.com/sanity-io/pkg-utils/commit/7d447395e5a8b8efaaa56af418bb8b0c74db4094) Thanks [@stipsan](https://github.com/stipsan)! - For conditional entries, materialize generated package export conditions in both `exports` and
+  `publishConfig.exports`, then preserve the user-authored order of each map independently on later
+  builds, including nested runtime conditions. Plain-string entries retain their compact shape.
+- Updated dependencies [[`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013)]:
+  - @sanity/tsdown-config@0.23.0
+
+## 12.0.0
+
+### Major Changes
+
+- [#3221](https://github.com/sanity-io/pkg-utils/pull/3221) [`125080f`](https://github.com/sanity-io/pkg-utils/commit/125080f8b0fb748150422bc4a464f487d804f4db) Thanks [@stipsan](https://github.com/stipsan)! - **v12: the build now runs on [`tsdown`](https://tsdown.dev)**, composed with [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme) — replacing the old rollup (JS) + rolldown (types) + api-extractor (more types) + esbuild (checks) stack. Your hand-written `exports` map stays the input. Closes [#2301](https://github.com/sanity-io/pkg-utils/issues/2301).
+
+  **Most packages build unchanged.** If yours doesn't, the error tells you exactly what to change — and the full guide is in [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/%40sanity/pkg-utils/MIGRATE.md).
+
+  ### What you get
+  - **~2x faster builds** — one bundler does JS + types in one pass.
+  - **`exports` can't drift** — local builds regenerate the exports map (and `publishConfig.exports`) from the build; CI uses the committed `package.json` as-is.
+  - **`pkg check` runs [publint](https://publint.dev)** on the packed package, so it lints what consumers actually install (replaces the esbuild resolution checks). API Extractor stays for TSDoc/release-tag checking only — new `tsdoc` option.
+  - **Chunks are content-hashed** — a shared chunk can never take an entry's filename anymore ([sanity-io/ui#2262](https://github.com/sanity-io/ui/issues/2262)). The `_chunks-[format]` folders are gone.
+  - **`dist` is cleaned automatically** before every build and on watch rebuilds. Opt out with `clean: false` (config) or `pkg build --no-clean` (one run); the v11 `--clean` flag still parses as a no-op.
+
+  ### Breaking: config options
+
+  Removed options **fail the build with copy-pasteable migration instructions** (checks are skipped when `NODE_ENV=production`, or with `legacyChecks: false`):
+
+  | v11                                 | v12                                                               |
+  | ----------------------------------- | ----------------------------------------------------------------- |
+  | `dts: 'rolldown'`                   | delete it — it's the default now                                  |
+  | `dts: 'api-extractor'`              | delete it — tsdown generates the types                            |
+  | `tsgo: true`                        | `dts: {tsgo: true}`                                               |
+  | `babel: {reactCompiler: true}`      | `reactCompiler: true`                                             |
+  | `reactCompilerOptions: {...}`       | `reactCompiler: {...}`                                            |
+  | `babel: {styledComponents: true}`   | `styledComponents: true` — oxc-native, uninstall the Babel plugin |
+  | `babel: {plugins: [...]}`           | `plugins` + a self-installed `@rolldown/plugin-babel`             |
+  | `rollup: {vanillaExtract: true}`    | `vanillaExtract: true`                                            |
+  | `rollup: {plugins: [...]}`          | `plugins: [...]` — rolldown plugins; most Rollup plugins work     |
+  | `rollup: {optimizeLodash: true}`    | removed — drop lodash or import from `lodash-es`                  |
+  | `extract: {enabled: false}`         | `tsdoc: false`                                                    |
+  | `extract: {rules, customTags}`      | `tsdoc: {rules, customTags}`                                      |
+  | `extract: {bundledPackages: [...]}` | `deps: {alwaysBundle: [...]}`                                     |
+  | `jsx`, `jsxFactory`, …              | `tsconfig.json` `compilerOptions.jsx` and friends                 |
+
+  `external` is only **deprecated** — it keeps working (with a warning). Successors: `deps: {neverBundle: [...]}` and `deps: {alwaysBundle: [...]}`. A few niche options have no successor (`rollup.output`, `rollup.treeshake`, `extract.checkTypes`, the implicit lodash optimization) — see [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md).
+
+  ### Breaking: `PKG_*` constants
+
+  Only `process.env.PKG_VERSION` is still replaced at build time.
+
+  - `PKG_FORMAT`, `PKG_RUNTIME` → [conditional `package.json#imports`](https://nodejs.org/api/packages.html#imports). More precise, and conditions compose (`require`/`import`, `node`/`browser`/`worker`, `deno`, `react-server`, …). Worked examples: [MIGRATE.md](https://github.com/sanity-io/pkg-utils/blob/main/packages/@sanity/pkg-utils/MIGRATE.md#pkg_format-and-pkg_runtime).
+  - `PKG_FILE_PATH` → `import.meta.url`. Works in CJS output too — it's rewritten to `require("url").pathToFileURL(__filename).href`.
+
+  ### Breaking: environment
+  - **Node 20 can no longer run builds**: `engines.node` is `^22.18.0 || >=24.11.0` (tsdown's floor). The published output is unaffected.
+  - `tsdown.config.*` files are **never** loaded by `pkg build` — `package.config.ts` is the only config source (a warning points this out when one is found).
+  - Dependency swap: `rollup` + all `@rollup/*` plugins, `rolldown`, `rolldown-plugin-dts`, `esbuild` and all Babel packages are out; `tsdown`, `@sanity/tsdown-config` and `publint` are in.
+
+### Patch Changes
+
+- Updated dependencies [[`125080f`](https://github.com/sanity-io/pkg-utils/commit/125080f8b0fb748150422bc4a464f487d804f4db)]:
+  - @sanity/tsdown-config@0.22.0
+
 ## 11.0.17
 
 ### Patch Changes

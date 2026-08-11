@@ -2,4 +2,4 @@
 "@sanity/vanilla-extract-integration": patch
 ---
 
-fix(deps): update dependency yuku-parser to ^0.8.2
+fix(deps): update dependency yuku-parser to ^0.8.4

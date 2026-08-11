@@ -1,7 +1,7 @@
 import path from 'node:path'
 import type {IConfigFile, IExtractorMessagesConfig} from '@microsoft/api-extractor'
-import type ts from '@typescript/typescript6'
 
+/** @internal */
 export function createApiExtractorConfig(options: {
   bundledPackages?: string[]
   distPath: string
@@ -10,9 +10,12 @@ export function createApiExtractorConfig(options: {
   messages: IExtractorMessagesConfig
   projectFolder: string
   mainEntryPointFilePath: string
-  tsconfig: ts.ParsedCommandLine
+  /**
+   * Only `compilerOptions.paths` is read: when present, API Extractor gets an override that
+   * clears `paths` so self-referencing package imports resolve through `node_modules` instead.
+   */
+  tsconfig: {options: {paths?: unknown}}
   tsconfigPath: string
-  dtsRollupEnabled: boolean
 }): IConfigFile {
   const {
     bundledPackages,
@@ -24,7 +27,6 @@ export function createApiExtractorConfig(options: {
     mainEntryPointFilePath,
     tsconfig,
     tsconfigPath,
-    dtsRollupEnabled,
   } = options
 
   return {
@@ -52,10 +54,9 @@ export function createApiExtractorConfig(options: {
       apiJsonFilePath: path.resolve(distPath, `${exportPath}.api.json`),
     },
     dtsRollup: {
-      enabled: dtsRollupEnabled,
+      // Types come from tsdown; this check only runs API Extractor's TSDoc/release-tag rules
+      enabled: false,
       untrimmedFilePath: path.resolve(distPath, filePath),
-      // betaTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-beta.d.ts')),
-      // publicTrimmedFilePath: path.resolve(distPath, filePath.replace('.d.ts', '-public.d.ts')),
     },
     tsdocMetadata: {
       enabled: false,

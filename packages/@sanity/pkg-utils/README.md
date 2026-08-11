@@ -42,9 +42,13 @@ tsdown's programmatic `build()`.
 `pkg build`. For customizations beyond the options below, use `tsdown` +
 `@sanity/tsdown-config` directly instead.
 
-During local builds the `exports` map is regenerated from the build (with `source` conditions for
-development, and a `source`-less `publishConfig.exports` for publishing) and kept in sync; in CI
-the committed `package.json` is used as-is.
+Builds regenerate the `exports` map from the build (with `source` conditions for development, and
+a `source`-less `publishConfig.exports` for publishing) and keep it in sync — including in CI —
+so environments that set `CI=true` without meaning "skip package.json" still behave correctly.
+For conditional entries, generated conditions are materialized in both maps, then the authored
+subpath and condition order of each map is preserved independently on later builds. Plain-string
+entries keep their compact shape. This lets you reorder conditions directly in `package.json`;
+earlier matching conditions take precedence over later ones.
 
 ## Configuration
 
@@ -206,11 +210,12 @@ The path to the TypeScript configuration file.
 
 #### `tsdoc`
 
-- Type: `false | {customTags?: TSDocCustomTag[]; rules?: {...}}`
-- Default: `undefined` (enabled)
+- Type: `boolean | PackageTsdocOptions`
+- Default: `true`
 
-Runs [API Extractor](https://api-extractor.com/) during `pkg check` to check that TSDoc tags are
-valid and release tags are correct. Set `tsdoc: false` to disable it.
+Runs [API Extractor](https://api-extractor.com/) during `pkg build` and again during
+`pkg check` to check that TSDoc tags are valid and release tags are correct. Set
+`tsdoc: false` to disable it.
 
 #### `vanillaExtract`
 
@@ -221,6 +226,60 @@ Extracts the CSS from [vanilla-extract](https://vanilla-extract.style) `.css.ts`
 `dist/bundle.css` (minified and lowered with `lightningcss`), injects the self-referential
 `import "<pkg>/bundle.css"`, emits a no-op `bundle-css.js` shim for runtimes that cannot import
 `.css` files, and writes the conditional `"./bundle.css"` export to `package.json`.
+
+#### `css`
+
+- Type: `PackageCssOptions`
+- Default: `undefined`
+
+Enables the [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) pipeline (install it
+first — it is an optional peer dependency) for plain CSS, CSS modules, preprocessors, and
+Lightning CSS / PostCSS. The emitted CSS gets the same minify and lowering settings as
+[`vanillaExtract`](#vanillaextract), and the same conditional CSS export treatment: the
+self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
+`style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
+`package.json`.
+
+### Shipping a stylesheet as its own export subpath
+
+A package can also publish a stylesheet directly, without any JS importing it. Declare a `.css`
+export subpath with a `source` and nothing else:
+
+```json
+{
+  "exports": {
+    ".": {"source": "./src/index.ts", "default": "./dist/index.js"},
+    "./ui/styles.css": {"source": "./src/ui/styles.css"},
+    "./package.json": "./package.json"
+  }
+}
+```
+
+`pkg build` compiles `./src/ui/styles.css` to `dist/ui/styles.css` — the emitted path follows the
+export subpath — and fills in the rest of the conditions:
+
+```json
+"./ui/styles.css": {
+  "source": "./src/ui/styles.css",
+  "types": "./dist/ui/styles-css.d.ts",
+  "browser": "./dist/ui/styles.css",
+  "style": "./dist/ui/styles.css",
+  "node": "./dist/ui/styles-css.js",
+  "default": "./dist/ui/styles-css.js"
+}
+```
+
+Consumers then `import "<pkg>/ui/styles.css"`, which resolves to the stylesheet in bundlers and
+browsers, and to the no-op shim in Node and similar runtimes. This turns on the `@tsdown/css`
+pipeline automatically; set [`css`](#css) explicitly to customize it.
+
+Add the CSS to `sideEffects` in `package.json` so it survives tree-shaking in consumers:
+
+```json
+{
+  "sideEffects": ["*.css"]
+}
+```
 
 ## Migrating to v12
 

@@ -1,5 +1,8 @@
 import path from 'node:path'
-import type {Options as VanillaExtractPluginOptions} from '@sanity/vanilla-extract-tsdown-plugin'
+import type {
+  CssExportsOptions,
+  Options as VanillaExtractPluginOptions,
+} from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
 import {detect} from 'package-manager-detector/detect'
 import {
@@ -7,18 +10,35 @@ import {
   mergeConfig,
   type PackageJsonWithPath,
   type Rolldown,
+  type RolldownChunk,
   type UserConfig,
 } from 'tsdown'
+import type {PackageTsdocOptions} from './tsdoc/types.ts'
+
+export type {
+  PackageTsdocCustomTag,
+  PackageTsdocOptions,
+  PackageTsdocRuleLevel,
+} from './tsdoc/types.ts'
+
+// Only types are re-exported from the plugin packages: a value re-export would make
+// `@sanity/vanilla-extract-tsdown-plugin` a static import of this entry, pulling the whole
+// vanilla-extract toolchain (the rolldown plugin, `@sanity/vanilla-extract-integration`,
+// `@vanilla-extract/css`, and the native `lightningcss` binary) into every consumer's module
+// graph — including packages with no CSS at all. Everything that needs those helpers loads
+// them through the `await import(...)` calls below.
+export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
 
 /**
  * Options for the `vanillaExtract` option — the same options as
  * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`,
- * `lightningcss`, and `inject`, all modeled after the `css` options of `@tsdown/css`), with
- * three Sanity-flavored defaults on top:
+ * `lightningcss`, `inject`, and `exports`, all modeled after the `css` options of
+ * `@tsdown/css`), with three Sanity-flavored defaults on top:
  *
- * - `inject` defaults to `{nodeCompat: true}` (instead of the plugin's `false`), wiring up the
- *   conditional CSS export pattern that Sanity libraries ship with. Set `inject: true` for a
- *   plain relative CSS import, or `inject: false` to only extract the CSS.
+ * - `inject` and `exports` default to `true` and `{nodeCompat: true}` (instead of the plugin's
+ *   `false` for both), wiring up the conditional CSS export pattern that Sanity libraries ship
+ *   with. Set `exports: true` for a plain (browser-only) CSS export, `exports: false` for a
+ *   relative CSS import, or `inject: false` to only extract the CSS.
  * - `minify` defaults to `true` (instead of the plugin's `false`, which matches `css.minify`
  *   in `@tsdown/css`): published Sanity libraries ship minified CSS. Set `minify: false` for
  *   readable output.
@@ -31,6 +51,46 @@ import {
  * @public
  */
 export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
+
+/**
+ * Options for the `css` option — tsdown's experimental
+ * [`css` options](https://tsdown.dev/options/css) from `@tsdown/css` (`splitting`, `fileName`,
+ * `target`, `minify`, `lightningcss`, `postcss`, `modules`, `preprocessorOptions`,
+ * `transformer`, `inject`), plus an `exports` option this config implements on top, with two
+ * Sanity-flavored defaults:
+ *
+ * - `exports` defaults to `{nodeCompat: true}`, wiring up the conditional CSS export pattern:
+ *   the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with a
+ *   `style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
+ *   `package.json`. `@tsdown/css` has no equivalent — its `inject` emits a relative
+ *   `import "./style.css"`, which throws in runtimes that cannot load `.css` files. Set
+ *   `exports: true` for a plain (browser-only) CSS export, or `exports: false` to fall back to
+ *   `@tsdown/css`'s relative injection.
+ * - `minify` defaults to `true` (instead of `@tsdown/css`'s `false`): published Sanity
+ *   libraries ship minified CSS. Set `minify: false` for readable output.
+ *
+ * The CSS syntax lowering target resolves exactly like
+ * {@link PackageVanillaExtractOptions | `vanillaExtract`}'s: browserless targets fall back to
+ * `@sanity/browserslist-config` through `lightningcss.targets`.
+ * @public
+ */
+export type PackageCssOptions = NonNullable<UserConfig['css']> & {
+  /**
+   * Publish each emitted CSS file as an export subpath of the package, so consumers can
+   * `import "<pkg-name>/style.css"` — which is also the specifier `inject` then uses, instead
+   * of `@tsdown/css`'s relative path.
+   *
+   * - `true` declares a plain `"./style.css": "./dist/style.css"` export. Enough for packages
+   *   that only ever run in browsers or bundlers.
+   * - `{nodeCompat: true}` declares a conditional export instead, whose `browser`/`style`
+   *   conditions point at the stylesheet while `node`/`default` point at a no-op JS shim
+   *   emitted next to it, with a declaration file for the export's `types` condition. That
+   *   keeps the subpath resolvable in runtimes that cannot load `.css` files.
+   *
+   * @defaultValue `{nodeCompat: true}`
+   */
+  exports?: boolean | CssExportsOptions
+}
 
 /**
  * Options for the `styled-components` transform, the same options as `babel-plugin-styled-components`.
@@ -154,10 +214,11 @@ export interface PackageOptions extends Pick<
   clean?: UserConfig['clean']
   /**
    * tsdown's `exports` option, with defaults suited for publishing Sanity libraries:
-   * `enabled: 'local-only'` generates the `exports` map during local builds and skips it in CI
-   * (where the committed `package.json` is already up to date). When pnpm is detected,
-   * `devExports: true` also keeps the local `exports` map pointing at source files while
-   * `publishConfig.exports` receives the built files.
+   * `enabled: true` generates the `exports` map on every build, whether `CI` is set or not
+   * (GitHub Actions, Cursor Cloud, local shells, …). Relying on `'local-only'`/`'ci-only'`
+   * surprised too many environments that set `CI=true` without meaning "don't rewrite
+   * package.json". When pnpm is detected, `devExports: true` also keeps the local `exports`
+   * map pointing at source files while `publishConfig.exports` receives the built files.
    *
    * Userland values apply with tsdown's `mergeConfig` semantics: an object deep-merges over
    * these defaults (so individual fields can be overridden), while any other value - `false`
@@ -168,8 +229,8 @@ export interface PackageOptions extends Pick<
    * {@link PackageOptions.cwd | `cwd`} and only runs when the default can still apply — it is
    * skipped when the value replaces the defaults (`false`, `true`, a bare CI condition) or
    * sets `devExports` explicitly.
-   * @defaultValue `{enabled: 'local-only', devExports: true}` for pnpm projects;
-   * `{enabled: 'local-only'}` otherwise.
+   * @defaultValue `{enabled: true, devExports: true}` for pnpm projects;
+   * `{enabled: true}` otherwise.
    */
   exports?: UserConfig['exports']
   /**
@@ -187,14 +248,23 @@ export interface PackageOptions extends Pick<
   deps?: UserConfig['deps']
   /**
    * tsdown's experimental [`css` option](https://tsdown.dev/options/css) (CSS modules,
-   * preprocessors, Lightning CSS / PostCSS, inject, etc). Passed through as-is — requires
+   * preprocessors, Lightning CSS / PostCSS, inject, etc), with Sanity-flavored defaults and an
+   * added `exports` option — requires
    * [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) to be installed in the project.
+   *
+   * By default (`exports: {nodeCompat: true}`, `minify: true`) the emitted CSS gets the same
+   * conditional CSS export treatment as {@link PackageOptions.vanillaExtract}: the
+   * self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
+   * `style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
+   * `package.json` — see {@link PackageCssOptions}.
+   *
    * Safe to combine with {@link PackageOptions.vanillaExtract}: vanilla-extract extracts into
    * `bundle.css` by default, while `@tsdown/css` merges other CSS (including `.module.css`)
    * into `style.css`, so the two pipelines do not collide.
    * @see https://tsdown.dev/reference/api/Interface.InlineConfig#css
+   * @alpha
    */
-  css?: UserConfig['css']
+  css?: PackageCssOptions
   /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
@@ -226,16 +296,46 @@ export interface PackageOptions extends Pick<
    * `@sanity/browserslist-config` instead — see {@link PackageVanillaExtractOptions}. Pass
    * `true` to use the defaults, or an object to customize.
    *
-   * By default (`inject: {nodeCompat: true}`) the plugin also injects the self-referential
-   * `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the conditional
-   * `"./bundle.css"` export to `package.json` - see {@link PackageVanillaExtractOptions}.
-   * This is the same feature as `rollup.vanillaExtract` in `@sanity/pkg-utils`.
+   * By default (`inject: true` with `exports: {nodeCompat: true}`) the plugin also injects the
+   * self-referential `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the
+   * conditional `"./bundle.css"` export to `package.json` - see
+   * {@link PackageVanillaExtractOptions}. This is the same feature as `rollup.vanillaExtract`
+   * in `@sanity/pkg-utils`.
    *
    * Combines with {@link PackageOptions.css}: enable both when a package uses vanilla-extract
    * alongside CSS modules (or other `@tsdown/css` features).
    * @alpha
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
+  /**
+   * Runs `@microsoft/api-extractor` after the build (via tsdown's `build:done` hook) to check
+   * that TSDoc tags are valid and release tags are correct. Useful for packages consumed by
+   * TSDoc-based tooling. Off by default — set `tsdoc: true` to enable, or pass an options
+   * object to customize rules and custom tags.
+   * @defaultValue false
+   */
+  tsdoc?: boolean | PackageTsdocOptions
+  /**
+   * tsdown's `suppressWarnings` option: strings (matched with `includes`), regular expressions
+   * (matched with `test`), or a predicate that drop build warnings before they're printed — and
+   * before `failOnWarn` turns them into errors.
+   *
+   * Userland values are **added to** the built-in suppression instead of replacing it (which
+   * `mergeConfig` would do, since it replaces functions): per-package suppressions can't
+   * accidentally undo the declaration-only circular-dependency filter that this config pairs
+   * with its `checks.circularDependency` default. This config always suppresses
+   * `CIRCULAR_DEPENDENCY` warnings whose entire cycle consists of declaration files
+   * (`.d.ts`/`.d.mts`/`.d.cts`) — those come from the declaration bundling pass, where every
+   * import is type-only and erased at runtime, so the cycles are harmless and unavoidable for
+   * mutually referencing public types (e.g. the schema definition types in `@sanity/types`).
+   * Cycles involving a runtime module still warn.
+   *
+   * To drop the built-in suppression instead of adding to it, merge over the returned config —
+   * `mergeConfig(await defineConfig(), {suppressWarnings: () => false})` restores every
+   * warning, including the declaration-only cycles.
+   * @defaultValue undefined — only the built-in declaration-only cycle suppression applies
+   */
+  suppressWarnings?: UserConfig['suppressWarnings']
 }
 
 /**
@@ -306,7 +406,7 @@ async function resolvePackageConfig(
   // `clean` defaults to `true` — cleaning `outDir` before each build — `css` stays off
   // unless `@tsdown/css` is installed and the option is set, and `cwd` defaults to
   // `process.cwd()`).
-  const {entry, tsconfig, define, target, outDir, css, cwd} = options
+  const {entry, tsconfig, define, target, outDir, cwd} = options
   const isReactServer = variant === 'react-server'
   // The `react-server` variant skips d.ts generation (the compiled variant's declarations
   // serve both entries — a `types` condition specified before `react-server` points every
@@ -323,6 +423,9 @@ async function resolvePackageConfig(
   // loads `react/compiler-runtime`, which throws in the `react-server` environment.
   const reactCompiler = isReactServer ? false : (options.reactCompiler ?? false)
   const styledComponents = options.styledComponents ?? false
+  // The `react-server` variant skips TSDoc checking (it emits no `.d.ts` files — the compiled
+  // variant's declarations serve both entries), matching how it skips `publint`.
+  const tsdoc = isReactServer ? false : (options.tsdoc ?? false)
   const report = {gzip: false} as const satisfies UserConfig['report']
   const format = options.format ?? 'esm'
   // When `platform` is `'neutral'`, restore the conventional `module`/`main` fallback that
@@ -411,53 +514,62 @@ async function resolvePackageConfig(
   if (options.vanillaExtract) {
     // Lazy loaded, like `reactCompiler`, so the CSS toolchain is only paid for when the option is
     // enabled. The plugin compiles the `.css.ts` files and extracts the CSS into a single file.
-    // Its `inject` option is general purpose (and, like `css.inject` in `@tsdown/css`, disabled
-    // by default), so this config supplies the default most Sanity libraries want:
-    // `{nodeCompat: true}` wires up the whole conditional CSS export pattern - the
-    // self-referential CSS import, the no-op JS shim, and the conditional `./<fileName>` export
-    // written through this config's `exports` option (which the plugin's `tsdownConfig` hook
-    // composes into).
-    const {esbuildTargetToLightningCSS, vanillaExtractPlugin} =
-      await import('@sanity/vanilla-extract-tsdown-plugin')
+    // Its `inject`/`exports` options are general purpose (and, like `css.inject` in
+    // `@tsdown/css`, disabled by default), so this config supplies the default most Sanity
+    // libraries want: `exports: {nodeCompat: true}` wires up the whole conditional CSS export
+    // pattern - the self-referential CSS import, the no-op JS shim, and the conditional
+    // `./<fileName>` export written through this config's `exports` option (which the plugin's
+    // `tsdownConfig` hook composes into).
+    const [{vanillaExtractPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
+      import('@sanity/vanilla-extract-tsdown-plugin'),
+      import('./cssLoweringTargets.ts'),
+    ])
     const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
 
-    // The plugin follows `@tsdown/css`: without browser targets, CSS syntax lowering is
-    // skipped. The extracted CSS always runs in browsers, so when the effective target
-    // (`vanillaExtract.target`, falling back to the top-level `target`) is undefined or names
-    // no browsers (e.g. `'node20'` - also what tsdown derives from `engines.node`, which
-    // speaks to the JS runtime), this config resolves the lowering targets from
-    // `@sanity/browserslist-config` and passes them through `lightningcss.targets` instead.
-    // `target: false` stays the explicit off switch, and a user-provided
-    // `lightningcss.targets` wins over the fallback.
-    const cssTarget = vanillaExtract.target ?? target
-    let {lightningcss} = vanillaExtract
-    if (
-      cssTarget !== false &&
-      !lightningcss?.targets &&
-      (cssTarget === undefined || !esbuildTargetToLightningCSS(cssTarget))
-    ) {
-      // Lazy loaded as well: `browserslistToTargets` is a pure helper, but `lightningcss` is a
-      // native package that only needs to load when the fallback applies
-      const [{default: browserslist}, {default: browserslistConfig}, {browserslistToTargets}] =
-        await Promise.all([
-          import('browserslist'),
-          import('@sanity/browserslist-config'),
-          import('lightningcss'),
-        ])
-      lightningcss = {
-        ...lightningcss,
-        targets: browserslistToTargets(browserslist(browserslistConfig)),
-      }
-    }
+    const lightningcss = await resolveCssLoweringTargets({
+      cssTarget: vanillaExtract.target,
+      target,
+      lightningcss: vanillaExtract.lightningcss,
+    })
 
     plugins.push(
       vanillaExtractPlugin({
-        inject: {nodeCompat: true},
+        inject: true,
+        exports: {nodeCompat: true},
         minify: true,
         ...vanillaExtract,
         lightningcss,
       }),
     )
+  }
+
+  // `@tsdown/css` compiles CSS but has no node-shim concept, so the `exports` option (and the
+  // plugin implementing it) lives here. Its `exports` key is not a `@tsdown/css` option, so it
+  // is stripped before the rest is handed to tsdown.
+  let css: UserConfig['css']
+  if (options.css) {
+    const {exports: cssExports, ...cssOptions} = options.css
+    const {resolveCssLoweringTargets} = await import('./cssLoweringTargets.ts')
+    const lightningcss = await resolveCssLoweringTargets({
+      cssTarget: cssOptions.target,
+      target,
+      lightningcss: cssOptions.lightningcss,
+    })
+    css = {minify: true, ...cssOptions, lightningcss}
+
+    const {cssNodeCompatPlugin} = await import('./cssNodeCompatPlugin.ts')
+    plugins.push(
+      cssNodeCompatPlugin({
+        fileName: css.fileName,
+        splitting: css.splitting,
+        // `@tsdown/css`'s own `inject` emits a relative import, which throws in runtimes that
+        // cannot load `.css` files; the plugin below injects the self-referential specifier of
+        // the conditional CSS export instead.
+        inject: css.inject ?? true,
+        exports: cssExports ?? {nodeCompat: true},
+      }),
+    )
+    css = {...css, inject: false}
   }
 
   // The `react-server` variant does not participate in `exports` generation: its files are
@@ -484,7 +596,10 @@ async function resolvePackageConfig(
     ;({exports} = mergeConfig(
       {
         exports: {
-          enabled: 'local-only',
+          // Always on: `'local-only'`/`'ci-only'` surprise environments that set `CI=true`
+          // (Cursor Cloud, etc.) without intending to skip package.json rewrites. Keep the
+          // object shape so mergeConfig never swaps between a scalar `true` and `{devExports}`.
+          enabled: true,
           // Only opt in by default when pnpm is detected: support for replacing package fields
           // from `publishConfig` is not reliable across package managers.
           ...(packageManager?.name === 'pnpm' && {devExports: true}),
@@ -503,10 +618,15 @@ async function resolvePackageConfig(
 
   return defineTsdownConfig({
     // Rolldown defaults `circularDependency` to `false`; enable it so Sanity library builds
-    // surface import cycles (bigger bundles / execution-order hazards) as warnings.
+    // surface import cycles (bigger bundles / execution-order hazards) as warnings. The
+    // declaration bundling pass gets the same check, where cycles are type-only and harmless,
+    // so `suppressWarnings` filters those out below.
     // Override via `mergeConfig(..., {checks: {circularDependency: false}})`.
     // https://rolldown.rs/reference/InputOptions.checks#circulardependency
     checks: {circularDependency: true},
+    // Drops the `CIRCULAR_DEPENDENCY` warnings of the declaration bundling pass (userland
+    // patterns are OR'd in, never replacing the built-in filter).
+    suppressWarnings: resolveSuppressWarnings(options.suppressWarnings),
     clean,
     css,
     cwd,
@@ -516,6 +636,20 @@ async function resolvePackageConfig(
     entry,
     exports,
     format,
+    // When `tsdoc` is enabled, run API Extractor against the entry `.d.ts` files after the
+    // build. The function form of `hooks` registers via hookable so a later `mergeConfig` that
+    // also uses the function form can compose — an object-form `hooks: {'build:done': …}`
+    // override still replaces this (tsdown's `mergeConfig` replaces functions).
+    ...(tsdoc !== false
+      ? {
+          hooks: createTsdocHooks({
+            tsdoc: tsdoc === true ? {} : tsdoc,
+            tsconfig,
+            outDir,
+            deps,
+          }),
+        }
+      : {}),
     inputOptions,
     outDir,
     // The `react-server` variant writes its files next to the compiled ones, with `.react-server`
@@ -546,6 +680,139 @@ async function resolvePackageConfig(
       mangle: false,
     },
   })
+}
+
+/**
+ * Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks — the same
+ * extensions `rolldown-plugin-dts` gives the modules of the declaration bundling pass.
+ */
+const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
+
+/** Strips the SGR color codes rolldown formats warning messages with. */
+// oxlint-disable-next-line eslint/no-control-regex -- matching the ESC of a CSI sequence
+const RE_ANSI_COLOR = /\u001B\[\d*(?:;\d+)*m/g
+
+/** The `CircularDependency` diagnostic of rolldown, ahead of the cycle's ` -> `-joined modules. */
+const CIRCULAR_DEPENDENCY_PREFIX = 'Circular dependency: '
+
+/**
+ * Whether a warning is a `CIRCULAR_DEPENDENCY` warning whose entire cycle consists of
+ * declaration files, e.g.
+ * `Circular dependency: src/exports/index.d.ts -> src/exports/nodes.d.ts -> src/exports/index.d.ts.`
+ *
+ * Those come from the declaration bundling pass: every import between `.d.ts` modules is
+ * type-only and erased at runtime, so the cycle has none of the consequences the check exists
+ * to catch (execution-order hazards, bigger bundles), and it's unavoidable for mutually
+ * referencing public types — see https://github.com/sanity-io/sanity/pull/13753, where 109 of
+ * 136 cycle warnings were declaration-only. A cycle that includes even one runtime module is
+ * left alone.
+ */
+function isDtsCircularDependencyWarning(message: string): boolean {
+  // The message arrives pre-formatted, with a color-coded `[CIRCULAR_DEPENDENCY] ` code prefix
+  // and a trailing newline
+  const plain = message.replace(RE_ANSI_COLOR, '').trim()
+  const cycleStart = plain.indexOf(CIRCULAR_DEPENDENCY_PREFIX)
+  if (cycleStart === -1) return false
+  const modules = plain
+    .slice(cycleStart + CIRCULAR_DEPENDENCY_PREFIX.length)
+    // The trailing period of the diagnostic, never part of a `.d.ts` extension
+    .replace(/\.$/, '')
+    .split(' -> ')
+  return modules.length > 1 && modules.every((module) => RE_DTS_FILE.test(module))
+}
+
+/**
+ * Composes the userland `suppressWarnings` value with {@link isDtsCircularDependencyWarning}:
+ * the two are OR'd, so adding a per-package suppression never drops the declaration-only
+ * cycle filter that pairs with this config's `checks.circularDependency` default.
+ *
+ * The string/`RegExp` matching mirrors tsdown's own — `includes` and `test`, against the
+ * message exactly as tsdown would see it, so a pattern behaves the same whether it goes
+ * through this option or straight into tsdown's `suppressWarnings`. `lastIndex` is reset for
+ * `/g` and `/y` patterns, which carry it between `test` calls and would otherwise skip
+ * messages (a no-op for other patterns, whose `lastIndex` `test` ignores).
+ */
+function resolveSuppressWarnings(
+  suppressWarnings: UserConfig['suppressWarnings'],
+): (message: string) => boolean {
+  if (suppressWarnings === undefined) return isDtsCircularDependencyWarning
+  const matchesUserPattern =
+    typeof suppressWarnings === 'function'
+      ? suppressWarnings
+      : (message: string): boolean =>
+          (Array.isArray(suppressWarnings) ? suppressWarnings : [suppressWarnings]).some(
+            (pattern) => {
+              if (typeof pattern === 'string') return message.includes(pattern)
+              if (pattern.global || pattern.sticky) pattern.lastIndex = 0
+              return pattern.test(message)
+            },
+          )
+  return (message) => isDtsCircularDependencyWarning(message) || matchesUserPattern(message)
+}
+
+/**
+ * Registers the `build:done` hook that runs `checkTsdoc` against every entry `.d.ts` file
+ * the build emitted. The checker is loaded from `./tsdoc` only when the hook runs, so
+ * importing `defineConfig` never pulls in API Extractor.
+ */
+function createTsdocHooks(options: {
+  tsdoc: PackageTsdocOptions
+  tsconfig: UserConfig['tsconfig']
+  outDir: UserConfig['outDir']
+  deps: UserConfig['deps']
+}): NonNullable<UserConfig['hooks']> {
+  const {tsdoc, outDir, deps} = options
+  // `tsconfig: false` means "don't use a tsconfig"; fall back to the conventional name so
+  // API Extractor still has a project root. A string path is forwarded as-is.
+  const tsconfigPath = typeof options.tsconfig === 'string' ? options.tsconfig : 'tsconfig.json'
+  const bundledPackages =
+    tsdoc.bundledPackages ??
+    (Array.isArray(deps?.alwaysBundle)
+      ? deps.alwaysBundle.filter((entry): entry is string => typeof entry === 'string')
+      : typeof deps?.alwaysBundle === 'string'
+        ? [deps.alwaysBundle]
+        : undefined)
+
+  return (hooks) => {
+    hooks.hook('build:done', async ({chunks, options: resolved}) => {
+      const entryDtsFiles = entryDtsFilesFromChunks(chunks)
+      if (entryDtsFiles.length === 0) return
+
+      // Lazy-load the `/tsdoc` entry so `@microsoft/api-extractor` and friends stay out of
+      // the root module graph until a build with `tsdoc` enabled actually finishes.
+      const {checkTsdoc} = await import('./tsdoc/index.ts')
+      await checkTsdoc({
+        cwd: resolved.cwd,
+        entryDtsFiles,
+        tsconfig: tsconfigPath,
+        outDir: outDir ?? resolved.outDir,
+        bundledPackages,
+        customTags: tsdoc.customTags,
+        rules: tsdoc.rules,
+        logger: {
+          log: (...args) => {
+            resolved.logger.info(...args.map(String))
+          },
+          warn: (...args) => {
+            resolved.logger.warn(...args.map(String))
+          },
+          error: (...args) => {
+            resolved.logger.error(...args.map(String))
+          },
+        },
+      })
+    })
+  }
+}
+
+/** Absolute paths of entry declaration chunks emitted by the build. */
+function entryDtsFilesFromChunks(chunks: RolldownChunk[]): string[] {
+  const files: string[] = []
+  for (const chunk of chunks) {
+    if (chunk.type !== 'chunk' || !chunk.isEntry || !RE_DTS_FILE.test(chunk.fileName)) continue
+    files.push(path.resolve(chunk.outDir, chunk.fileName))
+  }
+  return files
 }
 
 /**
@@ -749,9 +1016,6 @@ function withReactServerCondition(
   }
   return next
 }
-
-/** Matches the declaration file extensions tsdown emits next to `es`/`cjs` chunks. */
-const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
 
 /** `./dist/index.js` → `./dist/index.react-server.js` (and `.mjs`/`.cjs` accordingly). */
 function toServerFile(file: string): string {

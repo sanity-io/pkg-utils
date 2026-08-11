@@ -58,6 +58,20 @@ describe('programmatic composition via mergeConfig', () => {
     // Untouched defaults survive the merge
     expect(composed.checks).toEqual({circularDependency: true})
   })
+
+  test('replaces the suppressWarnings predicate, the escape hatch for its default', async () => {
+    // Functions don't merge, so merging `suppressWarnings` over the base config is how a host
+    // opts out of the built-in declaration-only cycle suppression (adding to it goes through
+    // the `suppressWarnings` option instead)
+    const dtsCycle = 'Circular dependency: src/index.d.ts -> src/nodes.d.ts -> src/index.d.ts.'
+    const base = await defineConfig()
+    if (typeof base.suppressWarnings !== 'function') throw new Error('expected a predicate')
+    expect(base.suppressWarnings(dtsCycle)).toBe(true)
+
+    const composed = mergeConfig(base, {suppressWarnings: () => false})
+    if (typeof composed.suppressWarnings !== 'function') throw new Error('expected a predicate')
+    expect(composed.suppressWarnings(dtsCycle)).toBe(false)
+  })
 })
 
 describe('cwd option', () => {
