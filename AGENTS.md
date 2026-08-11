@@ -26,7 +26,7 @@ commands, e.g. `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm k
 native TypeScript config-loading; on an older Node it fails with `Failed to import module "unrun"`.
 The sandbox's default system Node (`/exec-daemon/node`, v22.14.0) does **not** satisfy this. Fix:
 Node is managed via `nvm`, with the default alias set to `24` (Node v24.18.0 LTS, "Krypton" —
-matching CI's `node-version: lts/*`) and `pnpm@11.21.0` (matching the root `packageManager` field)
+matching CI's `node-version: lts/*`) and `pnpm@11` (matching the root `packageManager` field)
 installed globally under that Node version. A normal login shell (`bash -l`, which sources
 `~/.bashrc`) picks this up automatically via nvm's own auto-`use`-default-on-source behavior — no
 manual `nvm use` should be necessary. `deno` (`~/.deno/bin`, pinned to v2.9.2 to match CI) and `bun`
