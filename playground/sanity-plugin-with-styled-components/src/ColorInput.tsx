@@ -49,7 +49,7 @@ const CustomTextInput = styled.input.attrs({type: 'color'})`
 
 export default function ColorInput(props: ColorInputProps): React.JSX.Element {
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <CustomTextInput
         {...props.elementProps}
         // @ts-expect-error - these are valid in Safari 18.4 and later

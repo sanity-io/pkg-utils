@@ -1,3 +1,5 @@
+// oxlint-disable-next-line no-unassigned-import
+import '@sanity/ui/styles.css'
 import {definePlugin, type Plugin} from 'sanity'
 import {colorType} from './schema'
 
