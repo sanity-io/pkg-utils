@@ -428,12 +428,22 @@ async function resolvePackageConfig(
   const tsdoc = isReactServer ? false : (options.tsdoc ?? false)
   const report = {gzip: false} as const satisfies UserConfig['report']
   const format = options.format ?? 'esm'
+  // rolldown-plugin-dts synthesizes `declare namespace <name>_d_exports` for namespace
+  // re-exports after the source comments have already been lost. This output plugin runs after
+  // that synthesis and restores an explicitly authored release tag on the generated namespace.
+  // It lives in `inputOptions.plugins` so tsdown also applies it to the separate CJS declaration
+  // pass, where top-level user plugins are intentionally skipped.
+  const namespaceReleaseTags =
+    dts === false
+      ? undefined
+      : (await import('./namespaceReleaseTagPlugin.ts')).namespaceReleaseTagPlugin()
   // When `platform` is `'neutral'`, restore the conventional `module`/`main` fallback that
   // rolldown's strict neutral defaults drop - needed for inlined deps without an `exports` map.
   const inputOptions = {
     // https://github.com/rolldown/rolldown/blob/main/packages/rolldown/src/options/docs/preserve-entry-signatures.md#strict
     preserveEntrySignatures: 'strict',
     experimental: {attachDebugInfo: 'none'},
+    ...(namespaceReleaseTags && {plugins: [namespaceReleaseTags]}),
     ...(platform === 'neutral' && {
       resolve: {mainFields: ['module', 'main']},
     }),
