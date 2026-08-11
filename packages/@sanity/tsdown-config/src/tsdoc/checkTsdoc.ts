@@ -91,8 +91,8 @@ export async function checkTsdoc(options: CheckTsdocOptions): Promise<CheckTsdoc
 
     // The declaration bundling pass synthesizes `declare namespace <name>_exports` wrappers
     // for namespace re-exports and loses the doc comment of the re-export statement, so the
-    // wrappers can never carry a release tag — `ae-missing-release-tag` skips them (their
-    // members are still checked individually). https://github.com/sanity-io/pkg-utils/issues/3281
+    // wrappers can never carry a release tag — `ae-missing-release-tag` skips them.
+    // https://github.com/sanity-io/pkg-utils/issues/3281
     const synthesizedWrappers = collectSynthesizedNamespaceWrappers(exportPath)
     const relativeDtsPath = path.relative(outDir, exportPath)
     const extractorConfig = ExtractorConfig.prepare({
