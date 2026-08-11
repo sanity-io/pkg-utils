@@ -12,6 +12,7 @@ const exportEntrySchema = z
         source: z.string(),
         import: z.optional(z.string()),
         require: z.optional(z.string()),
+        default: z.optional(z.string()),
       }),
     ),
     node: z.optional(
@@ -19,6 +20,7 @@ const exportEntrySchema = z
         source: z.optional(z.string()),
         import: z.optional(z.string()),
         require: z.optional(z.string()),
+        default: z.optional(z.string()),
       }),
     ),
     import: z.optional(z.string()),
