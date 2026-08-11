@@ -478,6 +478,37 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     ).toMatchSnapshot('./dist/c-[hash].d.ts')
   })
 
+  test('should build `ts-namespace-reexport` package', async () => {
+    const project = await spawnProject('ts-namespace-reexport')
+    // The fixture enables `tsdoc: {rules: {'ae-missing-release-tag': 'error'}}`, so the build
+    // (and the `--check` pass) succeeding is the regression assertion: the untaggable
+    // `declare namespace <module>_d_exports` wrappers that the declaration bundler synthesizes
+    // for namespace re-exports are exempt from the rule, while everything else stays checked
+    // (https://github.com/sanity-io/pkg-utils/issues/3281)
+    const stdout = await project.run('build')
+
+    expect(stdout).toContain('build canonical')
+
+    const [distIndexDts, distExtraDts] = await Promise.all([
+      project.readFile('dist/index.d.ts'),
+      project.readFile('dist/extra.d.ts'),
+    ])
+
+    // The wrapper of the namespace both entries re-export lives in a shared hashed chunk; the
+    // wrapper of the `import * as` + `export {}` pattern is declared in the entry itself.
+    // Neither can carry a release tag.
+    expect(distIndexDts).toMatch(/import \{ \w+ as inner_d_exports \} from "\.\/inner-[\w-]+\.js"/)
+    expect(distIndexDts).toContain('declare namespace other_d_exports')
+    expect(distIndexDts).toContain('inner_d_exports as inner')
+    expect(distIndexDts).toContain('other_d_exports as other')
+    // The user symbol colliding with the wrapper name is deconflicted and stays exported
+    expect(distIndexDts).toMatch(/inner_d_exports\$1 as inner_d_exports/)
+    expect(distExtraDts).toContain('inner_d_exports as inner')
+
+    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
+    expect(distExtraDts).toMatchSnapshot('./dist/extra.d.ts')
+  })
+
   test('should build `ts-node16` package', async () => {
     const project = await spawnProject('ts-node16')
     const stdout = await project.run('build')

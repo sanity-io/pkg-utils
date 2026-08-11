@@ -1,0 +1,49 @@
+{
+  "name": "ts-namespace-reexport",
+  "version": "0.0.0-development",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./extra": {
+      "source": "./src/extra.ts",
+      "import": "./dist/extra.js",
+      "require": "./dist/extra.cjs",
+      "default": "./dist/extra.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "clean": "rimraf dist",
+    "typecheck": "tsc"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./extra": {
+        "import": "./dist/extra.js",
+        "require": "./dist/extra.cjs",
+        "default": "./dist/extra.js"
+      },
+      "./package.json": "./package.json"
+    }
+  }
+}
