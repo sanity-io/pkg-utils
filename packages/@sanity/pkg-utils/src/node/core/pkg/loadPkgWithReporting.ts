@@ -6,10 +6,35 @@ import {checkDependencyPlacement} from './dependencyPlacement.ts'
 import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
 
+/** The conditions that only resolve before publishing, and are stripped from the publish map. */
+const devConditions = new Set(['source', 'development', 'monorepo'])
+
+/**
+ * A nested runtime condition (`node`, `browser`) may be condensed to a plain string when `default`
+ * is the only condition left once the dev-only ones are stripped: the resolver treats
+ * `"node": "./dist/index.node.js"` and `"node": {"default": "./dist/index.node.js"}` identically.
+ * This is the same condensation `publishConfig.exports["<subpath>"]` itself allows at entry level.
+ */
+function condenseExportValue(value: unknown): unknown {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return value
+
+  const conditions = Object.entries(value).filter(([condition]) => !devConditions.has(condition))
+  const [first] = conditions
+
+  if (conditions.length === 1 && first?.[0] === 'default' && typeof first[1] === 'string') {
+    return first[1]
+  }
+
+  return value
+}
+
 /**
  * Helper function to recursively compare export values, excluding source, development, and monorepo conditions
  */
-function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
+function areExportValuesEqual(input1: unknown, input2: unknown): boolean {
+  const value1 = condenseExportValue(input1)
+  const value2 = condenseExportValue(input2)
+
   // If both are strings, simple comparison
   if (typeof value1 === 'string' && typeof value2 === 'string') {
     return value1 === value2
@@ -32,12 +57,8 @@ function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
     const obj1 = value1 as Record<string, any>
     const obj2 = value2 as Record<string, any>
 
-    const keys1 = Object.keys(obj1).filter(
-      (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
-    )
-    const keys2 = Object.keys(obj2).filter(
-      (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
-    )
+    const keys1 = Object.keys(obj1).filter((k) => !devConditions.has(k))
+    const keys2 = Object.keys(obj2).filter((k) => !devConditions.has(k))
 
     // Check if they have the same keys
     if (keys1.length !== keys2.length) {
@@ -426,7 +447,13 @@ export async function loadPkgWithReporting(options: {
           continue
         }
 
-        logger.error(issue)
+        // Every other issue carries its own message: report it against the path it was found at,
+        // rather than dumping the raw issue object.
+        logger.error(
+          issue.path.length
+            ? `\`${formatPath(issue.path)}\` in \`./package.json\` is invalid: ${issue.message}`
+            : `\`./package.json\` is invalid: ${issue.message}`,
+        )
       }
     } else {
       logger.error(err)

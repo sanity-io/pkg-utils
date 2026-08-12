@@ -314,6 +314,103 @@ describe('publishConfig.exports validation', () => {
     )
   })
 
+  test('should pass when a nested runtime condition is condensed to a string', async () => {
+    // `"node": "./dist/index.node.js"` is all that is left of `{source, default}` once the
+    // `source` condition is stripped for publishing, and resolves identically to
+    // `{"default": "./dist/index.node.js"}` - the same condensation the entry itself allows.
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            node: {
+              source: './src/index.node.ts',
+              default: './dist/index.node.js',
+            },
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              node: './dist/index.node.js',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      false,
+    )
+  })
+
+  test('should fail when a condensed nested runtime condition points at the wrong file', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            node: {
+              source: './src/index.node.ts',
+              default: './dist/index.node.js',
+            },
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              node: './dist/index.js',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+    )
+  })
+
+  test('should fail when a nested runtime condition is condensed but has more than `default`', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            node: {
+              source: './src/index.node.ts',
+              require: './dist/index.node.cjs',
+              default: './dist/index.node.js',
+            },
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              node: './dist/index.node.js',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+    )
+  })
+
   test('should pass when a `.css` subpath declares only its `source`', async () => {
     // The documented way to ship a stylesheet: the author writes the `source` and the build
     // fills the remaining conditions into both maps. Before that first build `exports` holds

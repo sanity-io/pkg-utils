@@ -101,16 +101,25 @@ export interface PackageJSON {
       | string
       | {
           types?: string
-          browser?: {
-            import?: string
-            require?: string
-            default?: string
-          }
-          node?: {
-            import?: string
-            require?: string
-            default?: string
-          }
+          /**
+           * A runtime condition may be condensed to a plain string when only one target is left to
+           * resolve to: `"browser": "./dist/index.browser.js"` and
+           * `"browser": {"default": "./dist/index.browser.js"}` resolve identically.
+           */
+          browser?:
+            | string
+            | {
+                import?: string
+                require?: string
+                default?: string
+              }
+          node?:
+            | string
+            | {
+                import?: string
+                require?: string
+                default?: string
+              }
           import?: string
           require?: string
           default: string

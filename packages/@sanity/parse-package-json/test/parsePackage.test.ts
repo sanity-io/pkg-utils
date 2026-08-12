@@ -1,5 +1,15 @@
-import {_typoMap, parsePackage, type PackageJSON} from '@sanity/parse-package-json'
+import {_typoMap, parsePackage, ZodError, type PackageJSON} from '@sanity/parse-package-json'
 import {describe, expect, test} from 'vitest'
+
+function issuesOf(input: unknown) {
+  try {
+    parsePackage(input)
+  } catch (err) {
+    if (err instanceof ZodError) return err.issues
+    throw err
+  }
+  return []
+}
 
 describe('parsePackage', () => {
   const template = {
@@ -326,6 +336,28 @@ describe('parsePackage', () => {
     expect(parsed.exports?.['./styles.css']).toBe('./dist/styles.css')
   })
 
+  test('passes a `svelte` entry through untouched', () => {
+    const pkg = {
+      ...template,
+      exports: {
+        ...template.exports,
+        './Component.svelte': {
+          types: './dist/Component.svelte.d.ts',
+          svelte: './dist/Component.svelte',
+          default: './dist/Component.js',
+        },
+      },
+    }
+
+    const parsed = parsePackage(pkg)
+
+    expect(parsed.exports?.['./Component.svelte']).toEqual({
+      types: './dist/Component.svelte.d.ts',
+      svelte: './dist/Component.svelte',
+      default: './dist/Component.js',
+    })
+  })
+
   test('rejects a conditional object export with no `.css` target that is otherwise malformed', () => {
     const pkg = {
       ...template,
@@ -337,6 +369,81 @@ describe('parsePackage', () => {
     }
 
     expect(() => parsePackage(pkg)).toThrow()
+  })
+
+  describe('conditional CSS exports are only expected on `.css` subpaths', () => {
+    test('reports the offending condition for a non-`.css` subpath, not a missing `.css` file', () => {
+      // A `node` condition in `exports` must be an object: the build derives the node variant of
+      // the entry from its `source`. The error must point at the condition that is wrong.
+      const issues = issuesOf({
+        ...template,
+        exports: {
+          ...template.exports,
+          '.': {
+            source: './src/index.ts',
+            node: './dist/index.node.js',
+            default: './dist/index.js',
+          },
+        },
+      })
+
+      expect(issues).toEqual([
+        expect.objectContaining({
+          code: 'invalid_type',
+          expected: 'object',
+          received: 'string',
+          path: ['exports', '.', 'node'],
+        }),
+      ])
+    })
+
+    test('still requires a `.css` target on a conditional `.css` export', () => {
+      const issues = issuesOf({
+        ...template,
+        exports: {
+          ...template.exports,
+          './bundle.css': {node: './dist/bundle-css.js', default: './dist/bundle-css.js'},
+        },
+      })
+
+      expect(issues).toEqual([
+        expect.objectContaining({
+          message: expect.stringContaining('".css" file'),
+          path: ['exports', './bundle.css'],
+        }),
+      ])
+    })
+  })
+
+  describe('publishConfig.exports', () => {
+    test('accepts a runtime condition condensed to a string', () => {
+      // `"node": "./dist/index.node.js"` is what is left of `{source, default}` once the `source`
+      // condition is stripped for publishing - the resolver treats it as `{default: <path>}`.
+      const pkg = {
+        ...template,
+        exports: {
+          ...template.exports,
+          '.': {
+            'source': './src/index.ts',
+            'react-server': './dist/index.js',
+            'node': {source: './src/index.node.ts', default: './dist/index.node.js'},
+            'default': './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              'react-server': './dist/index.js',
+              'node': './dist/index.node.js',
+              'default': './dist/index.js',
+            },
+            './package.json': './package.json',
+          },
+        },
+      }
+
+      expect(() => parsePackage(pkg)).not.toThrow()
+    })
   })
 })
 
