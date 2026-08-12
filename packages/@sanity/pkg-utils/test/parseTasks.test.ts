@@ -114,6 +114,49 @@ test('should resolve builds (type: module)', () => {
   expect(ctx.logger.warn).toHaveBeenCalledTimes(1)
 })
 
+test.each([
+  {type: 'module' as const, format: 'esm' as const},
+  {type: 'commonjs' as const, format: 'commonjs' as const},
+])('uses the package format for default-only runtime builds (type: $type)', ({type, format}) => {
+  const pkg: PackageJSON = {
+    type,
+    name: 'test',
+    version: '1.0.0',
+    types: './dist/index.d.ts',
+    files: ['dist'],
+    exports: {
+      '.': {
+        source: './src/index.ts',
+        browser: {
+          source: './src/index.browser.ts',
+          default: './dist/index.browser.js',
+        },
+        node: {
+          source: './src/index.node.ts',
+          default: './dist/index.node.js',
+        },
+        default: './dist/index.js',
+      },
+      './package.json': './package.json',
+    },
+  }
+
+  const ctx = createContext(pkg)
+  const builds = resolveTsdownBuilds(ctx)
+
+  expect(
+    builds.map(({key, entries}) => ({
+      key,
+      entries: entries.map(({alias, formats}) => ({alias, formats})),
+    })),
+  ).toEqual([
+    {key: 'browser', entries: [{alias: 'index.browser', formats: [format]}]},
+    {key: 'node', entries: [{alias: 'index.node', formats: [format]}]},
+    {key: 'canonical', entries: [{alias: 'index', formats: [format]}]},
+  ])
+  expect(ctx.logger.warn).toHaveBeenCalledTimes(1)
+})
+
 test('should resolve builds (type: commonjs)', () => {
   const pkg: PackageJSON = {
     type: 'commonjs',

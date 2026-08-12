@@ -1,5 +1,28 @@
 # @sanity/pkg-utils
 
+## 12.1.2
+
+### Patch Changes
+
+- [#3282](https://github.com/sanity-io/pkg-utils/pull/3282) [`ef26786`](https://github.com/sanity-io/pkg-utils/commit/ef2678694602bc6054ff8c9317a8c0eb9eeb8d16) Thanks [@stipsan](https://github.com/stipsan)! - Keep a `default` fallback inside generated `browser` and `node` export conditions so resolvers
+  cannot backtrack to the platform-neutral build when their module-format condition is inactive.
+  Allow these nested fallbacks in the public package export types.
+- Updated dependencies [[`ef26786`](https://github.com/sanity-io/pkg-utils/commit/ef2678694602bc6054ff8c9317a8c0eb9eeb8d16)]:
+  - @sanity/parse-package-json@2.3.1
+
+## 12.1.1
+
+### Patch Changes
+
+- [#3271](https://github.com/sanity-io/pkg-utils/pull/3271) [`f489697`](https://github.com/sanity-io/pkg-utils/commit/f489697576bf97a259e0a9a63162b66b5439f1ff) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.8
+
+- [#3272](https://github.com/sanity-io/pkg-utils/pull/3272) [`1b0da52`](https://github.com/sanity-io/pkg-utils/commit/1b0da524faae74df04f32d044e7312f36efb7d0e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency globby to ^16.2.3
+
+- [#3273](https://github.com/sanity-io/pkg-utils/pull/3273) [`e47cf54`](https://github.com/sanity-io/pkg-utils/commit/e47cf54e72a3bea9cc9e3eebe9ea7add502fcfdf) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.11
+
+- Updated dependencies [[`23788f8`](https://github.com/sanity-io/pkg-utils/commit/23788f85919c8d4b511110e5f93494d41506a4e0), [`f489697`](https://github.com/sanity-io/pkg-utils/commit/f489697576bf97a259e0a9a63162b66b5439f1ff)]:
+  - @sanity/tsdown-config@0.24.1
+
 ## 12.1.0
 
 ### Minor Changes

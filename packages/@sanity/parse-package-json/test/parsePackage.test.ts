@@ -227,6 +227,34 @@ describe('parsePackage', () => {
     },
   )
 
+  test('preserves defaults inside nested runtime conditions', () => {
+    const pkg = {
+      ...template,
+      exports: {
+        ...template.exports,
+        '.': {
+          ...template.exports['.'],
+          browser: {
+            source: './src/index.browser.ts',
+            import: './dist/index.browser.js',
+            default: './dist/index.browser-fallback.js',
+          },
+          node: {
+            source: './src/index.node.ts',
+            import: './dist/index.node.js',
+            default: './dist/index.node-fallback.js',
+          },
+          default: './dist/index.js',
+        },
+      },
+    }
+
+    expect(parsePackage(pkg).exports?.['.']).toMatchObject({
+      browser: {default: './dist/index.browser-fallback.js'},
+      node: {default: './dist/index.node-fallback.js'},
+    })
+  })
+
   test.each([
     // @ts-expect-error - this is a test
     {type: 'esm'},

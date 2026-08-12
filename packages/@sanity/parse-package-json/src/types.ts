@@ -6,6 +6,7 @@ export interface PkgExport {
     source: string
     import?: string
     require?: string
+    default?: string
   }
   // electron?: {
   //   node?: string
@@ -15,6 +16,7 @@ export interface PkgExport {
     source?: string
     import?: string
     require?: string
+    default?: string
   }
   types?: string
   source: string
@@ -70,12 +72,14 @@ export interface PackageJSON {
           source: string
           import?: string
           require?: string
+          default?: string
         }
         node?: {
           source?: string
           module?: string
           import?: string
           require?: string
+          default?: string
         }
         module?: string
         import?: string
@@ -100,10 +104,12 @@ export interface PackageJSON {
           browser?: {
             import?: string
             require?: string
+            default?: string
           }
           node?: {
             import?: string
             require?: string
+            default?: string
           }
           import?: string
           require?: string
