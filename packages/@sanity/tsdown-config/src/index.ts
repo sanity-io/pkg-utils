@@ -93,6 +93,38 @@ export type PackageCssOptions = NonNullable<UserConfig['css']> & {
 }
 
 /**
+ * Options for the `bundleAnalyzer` option — the same options as Rolldown's experimental
+ * [`bundleAnalyzerPlugin`](https://rolldown.rs/builtin-plugins/bundle-analyzer)
+ * (`fileName`, `format`).
+ *
+ * When enabled with `true`, defaults to `{format: 'md'}` (an LLM-friendly markdown report)
+ * rather than the plugin's own `'json'` default — that's the report Sanity library builds
+ * want. Pass `{format: 'json'}` for the structured data file visualizers consume.
+ *
+ * The report is emitted into `outDir` (`analyze-data.md` by default) and is **not** a
+ * publishable artifact. Exclude it from `package.json` `files` (e.g.
+ * `"!dist/analyze-data.md"` / `"!lib/analyze-data.md"`) so an accidental analyze build
+ * cannot ship it.
+ * @public
+ * @alpha This option wraps Rolldown's experimental analyzer, whose API may change.
+ */
+export interface PackageBundleAnalyzerOptions {
+  /**
+   * The filename used for the emitted analysis asset. The file is written into the same
+   * output directory as the rest of the bundle.
+   * @defaultValue `'analyze-data.md'` when `format` is `'md'`, `'analyze-data.json'` when
+   * `format` is `'json'`
+   */
+  fileName?: string
+  /**
+   * `'md'` produces an LLM-friendly markdown report (Quick Summary, largest modules, entry
+   * points, dependency chains); `'json'` produces structured data for visualizers.
+   * @defaultValue `'md'`
+   */
+  format?: 'json' | 'md'
+}
+
+/**
  * Options for the `styled-components` transform, the same options as `babel-plugin-styled-components`.
  * @public
  */
@@ -266,6 +298,33 @@ export interface PackageOptions extends Pick<
    */
   css?: PackageCssOptions
   /**
+   * Enables Rolldown's experimental
+   * [`bundleAnalyzerPlugin`](https://rolldown.rs/builtin-plugins/bundle-analyzer)
+   * (`rolldown/experimental`) to emit a report of what the package itself bundles — chunks,
+   * modules, dependency chains — next to the build output. Pass `true` to use the defaults,
+   * or an object to customize.
+   *
+   * Unlike the plugin's own defaults (`format: 'json'`), `true` selects `format: 'md'`: an
+   * LLM-friendly markdown report (`analyze-data.md` in `outDir`). Pass `{format: 'json'}`
+   * for the structured data file visualizers consume. Analysis adds work to the build, so
+   * this stays off by default — typical usage is an env-gated opt-in:
+   *
+   * ```ts
+   * bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true'
+   * ```
+   *
+   * The report is **not** a publishable artifact. Exclude it from `package.json` `files`
+   * (e.g. `"!dist/analyze-data.md"` / `"!lib/analyze-data.md"`) so an accidental analyze
+   * build cannot ship it.
+   *
+   * With {@link ReactCompilerOptions.reactServer | `reactCompiler.reactServer`}, only the
+   * compiled (`default`) variant is analyzed — the `react-server` variant skips it so the
+   * two builds don't overwrite one report.
+   * @defaultValue false
+   * @alpha This option wraps Rolldown's experimental analyzer, whose API may change.
+   */
+  bundleAnalyzer?: boolean | PackageBundleAnalyzerOptions
+  /**
    * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options object
    * to configure the compiler (e.g. `{target: '18'}`).
@@ -423,6 +482,10 @@ async function resolvePackageConfig(
   // loads `react/compiler-runtime`, which throws in the `react-server` environment.
   const reactCompiler = isReactServer ? false : (options.reactCompiler ?? false)
   const styledComponents = options.styledComponents ?? false
+  // The `react-server` variant skips the analyzer so the two parallel builds don't race on
+  // one `analyze-data.md` in the shared `outDir`. The compiled variant is the published
+  // client bundle — that's the report worth reading.
+  const bundleAnalyzer = isReactServer ? false : (options.bundleAnalyzer ?? false)
   // The `react-server` variant skips TSDoc checking (it emits no `.d.ts` files — the compiled
   // variant's declarations serve both entries), matching how it skips `publint`.
   const tsdoc = isReactServer ? false : (options.tsdoc ?? false)
@@ -570,6 +633,19 @@ async function resolvePackageConfig(
       }),
     )
     css = {...css, inject: false}
+  }
+
+  if (bundleAnalyzer !== false) {
+    // Lazy loaded, like `reactCompiler` / `vanillaExtract`, so `rolldown/experimental` is
+    // only paid for when the option is enabled. `true` selects markdown — Rolldown's own
+    // default is JSON, which is worse for humans and coding agents.
+    const {bundleAnalyzerPlugin} = await import('rolldown/experimental')
+    plugins.push(
+      bundleAnalyzerPlugin({
+        format: 'md',
+        ...(typeof bundleAnalyzer === 'object' ? bundleAnalyzer : {}),
+      }),
+    )
   }
 
   // The `react-server` variant does not participate in `exports` generation: its files are

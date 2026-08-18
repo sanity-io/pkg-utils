@@ -84,6 +84,26 @@ export default defineConfig({
 An array of entry points to bundle. This is useful if you want to bundle something that should not
 be exported by the package, e.g. CLI scripts or Node.js workers.
 
+#### `bundleAnalyzer`
+
+- Type: `boolean | PackageBundleAnalyzerOptions`
+- Default: `false`
+
+Enables Rolldown's experimental
+[`bundleAnalyzerPlugin`](https://rolldown.rs/builtin-plugins/bundle-analyzer) to emit a report of
+what the package itself bundles. Pass `true` for the defaults (`format: 'md'`, an LLM-friendly
+`analyze-data.md` in `dist`), or an options object to customize. Analysis adds work to the build,
+so this stays off by default — typical usage is an env-gated opt-in:
+
+```ts
+export default defineConfig({
+  bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true',
+})
+```
+
+The report is **not** a publishable artifact. Exclude it from `package.json` `files` (e.g.
+`"!dist/analyze-data.md"`) so an accidental analyze build cannot ship it.
+
 #### `clean`
 
 - Type: `boolean | string[]`

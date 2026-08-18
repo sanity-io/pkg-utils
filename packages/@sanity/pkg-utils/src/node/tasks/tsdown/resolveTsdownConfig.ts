@@ -177,6 +177,7 @@ export async function resolveTsdownConfig(
     reactCompiler: config?.reactCompiler,
     styledComponents: config?.styledComponents,
     vanillaExtract: config?.vanillaExtract,
+    bundleAnalyzer: config?.bundleAnalyzer,
     // Types-only builds still emit `.d.ts` files that deserve the check; watch mode skips it
     // so a failing TSDoc rule doesn't tear down the watcher on every save.
     tsdoc: options.watch ? false : tsdocOption,
