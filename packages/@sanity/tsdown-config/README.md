@@ -14,9 +14,9 @@ export default defineConfig({tsconfig: 'tsconfig.dist.json'})
 
 ## React Compiler
 
-The same React Compiler feature as `@sanity/pkg-utils` is available. It runs
-[`babel-plugin-react-compiler`](https://react.dev/learn/react-compiler) on the source files before
-they are bundled, so published components are memoized automatically. The plugin needs to be
+The same React Compiler feature as `@sanity/pkg-utils` is available. It runs the
+[React Compiler](https://react.dev/learn/react-compiler) on the source files before they are
+bundled, so published components are memoized automatically. The compiler needs to be
 installed separately:
 
 ```sh
@@ -42,6 +42,39 @@ export default defineConfig({
   reactCompiler: {target: '18'},
 })
 ```
+
+### Implementations (`implementation`)
+
+Two implementations of the React Compiler are supported, selected with the `implementation`
+option of `reactCompiler` (an option of this config, never forwarded to the compiler):
+
+- `'babel'` (the default) runs
+  [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) —
+  the reference implementation. The compiler leaves TypeScript and JSX in place for rolldown's
+  own transform, so `tsconfig.json` stays in charge of JSX lowering.
+- `'oxc'` runs [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react) —
+  oxc's Rust port of the compiler, wired up through `@vitejs/plugin-react`'s
+  [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419). It compiles,
+  strips TypeScript, and lowers JSX in one native pass (automatic runtime with the default
+  `react` import source — packages with a custom `jsxImportSource` should stay on `'babel'`
+  for now). The options narrow to the package's own `ReactCompilerOptions`: the serializable
+  subset of the babel plugin's options, so callback-valued options like `logger` and
+  function-valued `sources` are unavailable.
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: {target: '19', implementation: 'oxc'},
+})
+```
+
+Each implementation resolves its compiler from your project, which is why both packages are
+optional peer dependencies: install `babel-plugin-react-compiler` for `'babel'`, or
+`oxc-transform-react` for `'oxc'`.
+
+> [!WARNING]
+> The Rust port is experimental (`implementation: 'oxc'` is `@alpha` and not covered by
+> semver): review the generated output before publishing with it.
 
 ### React Server Components (`reactServer`)
 

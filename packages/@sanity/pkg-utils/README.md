@@ -188,9 +188,17 @@ pkg-utils sets up. Most Rollup plugins are also compatible.
 - Type: `boolean | ReactCompilerOptions`
 - Default: `false`
 
-Runs `babel-plugin-react-compiler` (which must be installed) on the source files before they are
-bundled, so published components are memoized automatically. Pass `true` for the defaults, or an
-options object to configure the compiler (e.g. `{target: '18'}`).
+Runs the React Compiler on the source files before they are bundled, so published components
+are memoized automatically. Pass `true` for the defaults, or an options object to configure the
+compiler (e.g. `{target: '18'}`).
+
+The `implementation` option (of pkg-utils, never forwarded to the compiler) selects which
+implementation runs: `'babel'` (the default) requires `babel-plugin-react-compiler` to be
+installed, while the experimental `'oxc'` (e.g. `{target: '19', implementation: 'oxc'}`)
+requires [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react) — the Rust
+port of the compiler, which also owns TypeScript/JSX lowering for the files it transforms. See
+the [`@sanity/tsdown-config` docs](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#implementations-implementation)
+for the details and caveats.
 
 #### `runtime`
 
