@@ -1,5 +1,24 @@
 # @sanity/pkg-utils
 
+## 12.2.0
+
+### Minor Changes
+
+- [#3310](https://github.com/sanity-io/pkg-utils/pull/3310) [`171251e`](https://github.com/sanity-io/pkg-utils/commit/171251ee840ea66a133fcb8c5aa72a19e609d235) Thanks [@stipsan](https://github.com/stipsan)! - Add a `bundleAnalyzer` option that wires Rolldown's experimental markdown bundle analyzer.
+
+  `true` selects `format: 'md'` (an LLM-friendly `analyze-data.md` in `outDir`) rather than the plugin's own JSON default, so an env-gated opt-in is enough:
+
+  ```ts
+  bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true'
+  ```
+
+  Pass an object to customize `format` / `fileName`. The report is not a publishable artifact — exclude it from `package.json` `files` (e.g. `"!dist/analyze-data.md"`). `@sanity/pkg-utils` forwards the same option from `package.config.ts`.
+
+### Patch Changes
+
+- Updated dependencies [[`171251e`](https://github.com/sanity-io/pkg-utils/commit/171251ee840ea66a133fcb8c5aa72a19e609d235)]:
+  - @sanity/tsdown-config@0.25.0
+
 ## 12.1.3
 
 ### Patch Changes
