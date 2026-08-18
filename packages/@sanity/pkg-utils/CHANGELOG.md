@@ -1,5 +1,28 @@
 # @sanity/pkg-utils
 
+## 12.1.3
+
+### Patch Changes
+
+- [#3290](https://github.com/sanity-io/pkg-utils/pull/3290) [`32ecd1c`](https://github.com/sanity-io/pkg-utils/commit/32ecd1cefccbb51358b1b2125a6978c0a71f0f20) Thanks [@rexxars](https://github.com/rexxars)! - Accept a runtime condition condensed to a plain string in `publishConfig.exports`
+  (`"node": "./dist/index.node.js"` resolves identically to
+  `"node": {"default": "./dist/index.node.js"}`), which is what is left of a `{source, default}`
+  condition once `source` is stripped for publishing. Validating an export subpath now also picks the
+  expected shape from the subpath itself, so a malformed entry is reported against the condition that
+  is wrong instead of as `A conditional CSS export must resolve to at least one ".css" file`, and a
+  `package.json` validation error that carries its own message is printed as a message rather than as
+  a raw issue object.
+
+- [#3298](https://github.com/sanity-io/pkg-utils/pull/3298) [`3aac365`](https://github.com/sanity-io/pkg-utils/commit/3aac36517efe6111c5c157efda0ff5ef284fc926) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.12
+
+- [#3288](https://github.com/sanity-io/pkg-utils/pull/3288) [`5bfa760`](https://github.com/sanity-io/pkg-utils/commit/5bfa76059aaf49793cc537b5c78b41a9466f858b) Thanks [@stipsan](https://github.com/stipsan)! - Stop flagging the synthesized namespace wrappers of the declaration bundler with `ae-missing-release-tag`.
+
+  Namespace re-exports (`export * as ns from './module'`, or `import * as ns` + `export {ns}`) make the declaration bundling pass synthesize a `declare namespace <module>_d_exports {…}` wrapper that drops the doc comment of the re-export statement, so the wrapper could never carry a release tag and there was no userland fix short of downgrading the rule for the whole package. The TSDoc check now recognizes those wrappers (the interop naming, declared as a namespace in the entry or a shared chunk, a body that only re-exports sibling declarations, and re-exported under an alias) and exempts them from `ae-missing-release-tag`, like API Extractor's own rollups never checked the equivalent namespace. Everything else, including user namespaces that merely resemble the interop naming, stays checked: a namespace that declares members of its own is yours to tag, even when the bundler's deconflicting hands it a wrapper-shaped name.
+
+- Updated dependencies [[`32ecd1c`](https://github.com/sanity-io/pkg-utils/commit/32ecd1cefccbb51358b1b2125a6978c0a71f0f20), [`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6), [`5bfa760`](https://github.com/sanity-io/pkg-utils/commit/5bfa76059aaf49793cc537b5c78b41a9466f858b)]:
+  - @sanity/parse-package-json@2.3.2
+  - @sanity/tsdown-config@0.24.2
+
 ## 12.1.2
 
 ### Patch Changes

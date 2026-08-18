@@ -1,5 +1,18 @@
 # @sanity/tsdown-config
 
+## 0.24.2
+
+### Patch Changes
+
+- [#3297](https://github.com/sanity-io/pkg-utils/pull/3297) [`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.4
+
+- [#3288](https://github.com/sanity-io/pkg-utils/pull/3288) [`5bfa760`](https://github.com/sanity-io/pkg-utils/commit/5bfa76059aaf49793cc537b5c78b41a9466f858b) Thanks [@stipsan](https://github.com/stipsan)! - Stop flagging the synthesized namespace wrappers of the declaration bundler with `ae-missing-release-tag`.
+
+  Namespace re-exports (`export * as ns from './module'`, or `import * as ns` + `export {ns}`) make the declaration bundling pass synthesize a `declare namespace <module>_d_exports {…}` wrapper that drops the doc comment of the re-export statement, so the wrapper could never carry a release tag and there was no userland fix short of downgrading the rule for the whole package. The TSDoc check now recognizes those wrappers (the interop naming, declared as a namespace in the entry or a shared chunk, a body that only re-exports sibling declarations, and re-exported under an alias) and exempts them from `ae-missing-release-tag`, like API Extractor's own rollups never checked the equivalent namespace. Everything else, including user namespaces that merely resemble the interop naming, stays checked: a namespace that declares members of its own is yours to tag, even when the bundler's deconflicting hands it a wrapper-shaped name.
+
+- Updated dependencies [[`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.2
+
 ## 0.24.1
 
 ### Patch Changes
