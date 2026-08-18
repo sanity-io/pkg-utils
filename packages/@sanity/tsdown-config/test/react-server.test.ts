@@ -139,9 +139,9 @@ describe('reactCompiler.reactServer option', () => {
     expect(reactServer.hooks).toBeUndefined()
   })
 
-  test('combines with `implementation: "oxc"`', async () => {
+  test('combines with `transform: "oxc"`', async () => {
     const [compiled, reactServer] = await defineDualConfig({
-      reactCompiler: {target: '19', implementation: 'oxc'},
+      reactCompiler: {target: '19', transform: 'oxc'},
     })
 
     // Only the compiled variant runs the oxc implementation; the react-server variant stays

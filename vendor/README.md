@@ -7,7 +7,7 @@ A build of `@vitejs/plugin-react` from the unreleased
 ("feat(react): add native React Compiler support"), which adds the `compiler` option backed by
 [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react) — the Rust port of the
 React Compiler. `@sanity/tsdown-config` consumes it (via a `file:` dependency) for the
-`reactCompiler: {implementation: 'oxc'}` option, alongside the unchanged `reactCompilerPreset`
+`reactCompiler: {transform: 'oxc'}` option, alongside the unchanged `reactCompilerPreset`
 babel path.
 
 The PR's pkg.pr.new "preview" CI job skips fork PRs, so no hosted build exists — this tarball is

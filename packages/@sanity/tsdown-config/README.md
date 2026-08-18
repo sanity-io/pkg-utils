@@ -43,9 +43,9 @@ export default defineConfig({
 })
 ```
 
-### Implementations (`implementation`)
+### Transforms (`transform`)
 
-Two implementations of the React Compiler are supported, selected with the `implementation`
+Two implementations of the React Compiler are supported, selected with the `transform`
 option of `reactCompiler` (an option of this config, never forwarded to the compiler):
 
 - `'babel'` (the default) runs
@@ -64,7 +64,7 @@ option of `reactCompiler` (an option of this config, never forwarded to the comp
 ```ts
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
-  reactCompiler: {target: '19', implementation: 'oxc'},
+  reactCompiler: {target: '19', transform: 'oxc'},
 })
 ```
 
@@ -73,7 +73,7 @@ optional peer dependencies: install `babel-plugin-react-compiler` for `'babel'`,
 `oxc-transform-react` for `'oxc'`.
 
 > [!WARNING]
-> The Rust port is experimental (`implementation: 'oxc'` is `@alpha` and not covered by
+> The Rust port is experimental (`transform: 'oxc'` is `@alpha` and not covered by
 > semver): review the generated output before publishing with it.
 
 ### React Server Components (`reactServer`)

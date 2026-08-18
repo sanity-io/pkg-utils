@@ -193,7 +193,7 @@ export interface ReactCompilerConfigOptions {
  * The default shape of the {@link ReactCompilerOptions | `reactCompiler`} option: the React
  * Compiler runs as `babel-plugin-react-compiler`, and the options are the compiler's own.
  * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
- * dependency, required by this implementation) is installed, and always match the installed
+ * dependency, required by this transform) is installed, and always match the installed
  * version of the compiler.
  * @public
  */
@@ -204,16 +204,16 @@ export type ReactCompilerBabelOptions = Partial<BabelReactCompilerPluginOptions>
      * Compiler, and the default.
      * @defaultValue 'babel'
      */
-    implementation?: 'babel'
+    transform?: 'babel'
   }
 
 /**
- * The `implementation: 'oxc'` shape of the {@link ReactCompilerOptions | `reactCompiler`}
+ * The `transform: 'oxc'` shape of the {@link ReactCompilerOptions | `reactCompiler`}
  * option: the React Compiler runs as `oxc-transform-react` — oxc's experimental Rust port —
  * and the options are that package's `ReactCompilerOptions` (the serializable subset of the
  * babel plugin's options: no `logger`, no function-valued `sources`). The typings resolve in
  * userland once `oxc-transform-react` (an optional peer dependency, required by this
- * implementation) is installed, and always match the installed version of the compiler.
+ * transform) is installed, and always match the installed version of the compiler.
  * @public
  */
 export type ReactCompilerOxcOptions = OxcReactCompilerOptions &
@@ -225,12 +225,12 @@ export type ReactCompilerOxcOptions = OxcReactCompilerOptions &
      * custom `jsxImportSource` should stay on `'babel'` for now).
      * @alpha The Rust port is experimental — review the generated output before publishing.
      */
-    implementation: 'oxc'
+    transform: 'oxc'
   }
 
 /**
  * Options for the React Compiler: the compiler's own options, plus two options of this
- * config — `implementation` picks which React Compiler implementation runs
+ * config — `transform` picks which React Compiler implementation runs
  * (`'babel'`, the default, or the experimental Rust port `'oxc'`), and `reactServer` opts
  * into the dual React Server Components build. Neither is ever forwarded to the compiler.
  * @public
@@ -374,7 +374,7 @@ export interface PackageOptions extends Pick<
    * This is the same feature as the `babel: {reactCompiler: true}` and `reactCompilerOptions`
    * options in `@sanity/pkg-utils`.
    *
-   * Two implementations are available, selected with the `implementation` option (of this
+   * Two implementations are available, selected with the `transform` option (of this
    * config, never forwarded to the compiler):
    *
    * - `'babel'` (the default) runs `babel-plugin-react-compiler` — the reference
@@ -607,10 +607,10 @@ async function resolvePackageConfig(
   if (reactCompiler !== false) {
     // The plugins are lazy loaded so they're only paid for when the React Compiler is enabled,
     // and the compiler package itself (`babel-plugin-react-compiler` or `oxc-transform-react`,
-    // per `implementation`) is resolved from the consumer package during the build, which is
+    // per `transform`) is resolved from the consumer package during the build, which is
     // why both can be optional peer dependencies.
     const reactCompilerOptions: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
-    if (reactCompilerOptions.implementation === 'oxc') {
+    if (reactCompilerOptions.transform === 'oxc') {
       // The Rust port: `@vitejs/plugin-react`'s `compiler` option wraps `oxc-transform-react`
       // in its `vite:react-compiler` plugin, which compiles React components, strips
       // TypeScript and lowers JSX in one native pass (making rolldown's own transform a no-op
@@ -618,11 +618,11 @@ async function resolvePackageConfig(
       // rest wire up Vite-only concerns (Fast Refresh wrapper, dev config) that a library
       // build must not include. Outside Vite none of its Vite hooks run, which leaves exactly
       // the defaults a library build wants: production JSX, sourcemaps on, no Fast Refresh.
-      // `implementation` and `reactServer` belong to this config — drop them before handing
+      // `transform` and `reactServer` belong to this config — drop them before handing
       // the options over to the compiler.
       const {
         reactServer: _reactServer,
-        implementation: _implementation,
+        transform: _transform,
         ...compilerOptions
       } = reactCompilerOptions
       const {default: pluginReact} = await import('@vitejs/plugin-react')
@@ -637,7 +637,7 @@ async function resolvePackageConfig(
       }).find((plugin) => plugin.name === 'vite:react-compiler')
       if (!compilerPlugin) {
         throw new Error(
-          '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support `reactCompiler: {implementation: "oxc"}`.',
+          '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support `reactCompiler: {transform: "oxc"}`.',
         )
       }
       plugins.push(compilerPlugin)
@@ -651,7 +651,7 @@ async function resolvePackageConfig(
       ])
       const {
         reactServer: _reactServer,
-        implementation: _implementation,
+        transform: _transform,
         ...compilerOptions
       } = reactCompilerOptions
       plugins.push(

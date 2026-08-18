@@ -30,16 +30,16 @@ describe('reactCompiler option', () => {
       '@rolldown/plugin-babel',
     ])
     expect(
-      getPluginNames(await defineConfig({reactCompiler: {target: '19', implementation: 'babel'}})),
+      getPluginNames(await defineConfig({reactCompiler: {target: '19', transform: 'babel'}})),
     ).toEqual(['@rolldown/plugin-babel'])
   })
 
-  test('adds the oxc compiler plugin with `implementation: "oxc"`', async () => {
-    expect(getPluginNames(await defineConfig({reactCompiler: {implementation: 'oxc'}}))).toEqual([
+  test('adds the oxc compiler plugin with `transform: "oxc"`', async () => {
+    expect(getPluginNames(await defineConfig({reactCompiler: {transform: 'oxc'}}))).toEqual([
       'vite:react-compiler',
     ])
     expect(
-      getPluginNames(await defineConfig({reactCompiler: {target: '19', implementation: 'oxc'}})),
+      getPluginNames(await defineConfig({reactCompiler: {target: '19', transform: 'oxc'}})),
     ).toEqual(['vite:react-compiler'])
   })
 })
@@ -53,7 +53,7 @@ describe('react-19-library', () => {
 
     // The React Compiler memoizes components with a memo cache provided by
     // `react/compiler-runtime` — the fixture sets
-    // `reactCompiler: {target: '19', implementation: 'oxc'}`, so this exercises the
+    // `reactCompiler: {target: '19', transform: 'oxc'}`, so this exercises the
     // `oxc-transform-react` implementation end-to-end
     expect(distIndexJs).toContain('import { c } from "react/compiler-runtime"')
     expect(distIndexJs).toContain('$ = c(')
