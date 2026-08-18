@@ -623,9 +623,15 @@ async function resolvePackageConfig(
       const {reactServer: _reactServer, implementation: _implementation, ...compilerOptions} =
         options
       const {default: pluginReact} = await import('@vitejs/plugin-react')
-      const compilerPlugin = pluginReact({compiler: compilerOptions}).find(
-        (plugin) => plugin.name === 'vite:react-compiler',
-      )
+      const compilerPlugin = pluginReact({
+        compiler: compilerOptions,
+        // tsdown's declaration bundling (rolldown-plugin-dts) runs its generated `.d.ts`
+        // modules through the same build's transform chain, and the plugin's default include
+        // (`/\.[tj]sx?$/`) matches them — the one-pass transform would strip every type and
+        // leave `export {}` declarations. The default node_modules exclusion is restated
+        // because a userland `exclude` replaces the plugin's default.
+        exclude: [/\/node_modules\//, RE_DTS_FILE],
+      }).find((plugin) => plugin.name === 'vite:react-compiler')
       if (!compilerPlugin) {
         throw new Error(
           '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support `reactCompiler: {implementation: "oxc"}`.',
