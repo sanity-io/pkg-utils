@@ -29,6 +29,20 @@ describe('reactCompiler option', () => {
     expect(getPluginNames(await defineConfig({reactCompiler: {target: '19'}}))).toEqual([
       '@rolldown/plugin-babel',
     ])
+    expect(
+      getPluginNames(
+        await defineConfig({reactCompiler: {target: '19', implementation: 'babel'}}),
+      ),
+    ).toEqual(['@rolldown/plugin-babel'])
+  })
+
+  test('adds the oxc compiler plugin with `implementation: "oxc"`', async () => {
+    expect(getPluginNames(await defineConfig({reactCompiler: {implementation: 'oxc'}}))).toEqual([
+      'vite:react-compiler',
+    ])
+    expect(
+      getPluginNames(await defineConfig({reactCompiler: {target: '19', implementation: 'oxc'}})),
+    ).toEqual(['vite:react-compiler'])
   })
 })
 
@@ -40,7 +54,9 @@ describe('react-19-library', () => {
     ])
 
     // The React Compiler memoizes components with a memo cache provided by
-    // `react/compiler-runtime` (since the fixture sets `reactCompiler: {target: '19'}`)
+    // `react/compiler-runtime` — the fixture sets
+    // `reactCompiler: {target: '19', implementation: 'oxc'}`, so this exercises the
+    // `oxc-transform-react` implementation end-to-end
     expect(distIndexJs).toContain('import { c } from "react/compiler-runtime"')
     expect(distIndexJs).toContain('$ = c(')
     expect(distIndexJs).toContain('react.memo_cache_sentinel')

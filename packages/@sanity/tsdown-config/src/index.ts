@@ -3,7 +3,8 @@ import type {
   CssExportsOptions,
   Options as VanillaExtractPluginOptions,
 } from '@sanity/vanilla-extract-tsdown-plugin'
-import type {PluginOptions as ReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
+import type {PluginOptions as BabelReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
+import type {ReactCompilerOptions as OxcReactCompilerOptions} from 'oxc-transform-react'
 import {detect} from 'package-manager-detector/detect'
 import {
   defineConfig as defineTsdownConfig,
@@ -152,17 +153,11 @@ export interface StyledComponentsOptions {
 }
 
 /**
- * Options for the React Compiler, the same options as `babel-plugin-react-compiler`.
- * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
- * dependency, required to use `reactCompiler`) is installed, and always match the installed
- * version of the compiler.
- *
- * On top of the compiler's own options, `reactServer` opts into the dual React Server
- * Components build — it's handled by this config and never forwarded to
- * `babel-plugin-react-compiler`.
+ * The options of this config that both React Compiler implementations share — never
+ * forwarded to the compiler itself.
  * @public
  */
-export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions> & {
+export interface ReactCompilerConfigOptions {
   /**
    * Also emit an uncompiled build of every entry (`<name>.react-server.js` next to `<name>.js`),
    * wired to the `react-server` export condition in `package.json`:
@@ -193,6 +188,54 @@ export type ReactCompilerOptions = Partial<ReactCompilerPluginOptions> & {
    */
   reactServer?: boolean
 }
+
+/**
+ * The default shape of the {@link ReactCompilerOptions | `reactCompiler`} option: the React
+ * Compiler runs as `babel-plugin-react-compiler`, and the options are the compiler's own.
+ * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
+ * dependency, required by this implementation) is installed, and always match the installed
+ * version of the compiler.
+ * @public
+ */
+export type ReactCompilerBabelOptions = Partial<BabelReactCompilerPluginOptions> &
+  ReactCompilerConfigOptions & {
+    /**
+     * Selects `babel-plugin-react-compiler` — the reference implementation of the React
+     * Compiler, and the default.
+     * @defaultValue 'babel'
+     */
+    implementation?: 'babel'
+  }
+
+/**
+ * The `implementation: 'oxc'` shape of the {@link ReactCompilerOptions | `reactCompiler`}
+ * option: the React Compiler runs as `oxc-transform-react` — oxc's experimental Rust port —
+ * and the options are that package's `ReactCompilerOptions` (the serializable subset of the
+ * babel plugin's options: no `logger`, no function-valued `sources`). The typings resolve in
+ * userland once `oxc-transform-react` (an optional peer dependency, required by this
+ * implementation) is installed, and always match the installed version of the compiler.
+ * @public
+ */
+export type ReactCompilerOxcOptions = OxcReactCompilerOptions &
+  ReactCompilerConfigOptions & {
+    /**
+     * Selects `oxc-transform-react`, the Rust port of the React Compiler. It compiles in one
+     * native pass that also owns TypeScript/JSX lowering for the files it transforms (JSX
+     * uses the automatic runtime with the default `react` import source, so packages with a
+     * custom `jsxImportSource` should stay on `'babel'` for now).
+     * @alpha The Rust port is experimental — review the generated output before publishing.
+     */
+    implementation: 'oxc'
+  }
+
+/**
+ * Options for the React Compiler: the compiler's own options, plus two options of this
+ * config — `implementation` picks which React Compiler implementation runs
+ * (`'babel'`, the default, or the experimental Rust port `'oxc'`), and `reactServer` opts
+ * into the dual React Server Components build. Neither is ever forwarded to the compiler.
+ * @public
+ */
+export type ReactCompilerOptions = ReactCompilerBabelOptions | ReactCompilerOxcOptions
 
 /**
  * @public
@@ -325,17 +368,25 @@ export interface PackageOptions extends Pick<
    */
   bundleAnalyzer?: boolean | PackageBundleAnalyzerOptions
   /**
-   * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so published
-   * components are memoized automatically. Pass `true` to use the defaults, or an options object
-   * to configure the compiler (e.g. `{target: '18'}`).
+   * Runs the React Compiler on the source files before they are bundled, so published
+   * components are memoized automatically. Pass `true` to use the defaults, or an options
+   * object to configure the compiler (e.g. `{target: '18'}`).
    * This is the same feature as the `babel: {reactCompiler: true}` and `reactCompilerOptions`
-   * options in `@sanity/pkg-utils`. Unlike `styledComponents` there's no oxc native port of the
-   * React Compiler yet, so `babel-plugin-react-compiler` needs to be installed.
+   * options in `@sanity/pkg-utils`.
+   *
+   * Two implementations are available, selected with the `implementation` option (of this
+   * config, never forwarded to the compiler):
+   *
+   * - `'babel'` (the default) runs `babel-plugin-react-compiler` — the reference
+   *   implementation, which must be installed.
+   * - `'oxc'` runs `oxc-transform-react` — oxc's experimental Rust port, which must be
+   *   installed — in one native pass that also owns TypeScript/JSX lowering for the files it
+   *   transforms; see {@link ReactCompilerOxcOptions}.
    *
    * The options object also accepts `reactServer: true` (an option of this config, not the
    * compiler), which additionally emits an uncompiled build of every entry wired to the
    * `react-server` export condition, for libraries that render in React Server Components —
-   * see {@link ReactCompilerOptions.reactServer}.
+   * see {@link ReactCompilerConfigOptions.reactServer}.
    * @defaultValue false
    */
   reactCompiler?: boolean | ReactCompilerOptions
@@ -554,25 +605,49 @@ async function resolvePackageConfig(
   // (https://github.com/sanity-io/ui/issues/2262).
   const plugins: Rolldown.Plugin[] = []
   if (reactCompiler !== false) {
-    // Follows the official tsdown recipe for the React Compiler:
-    // https://tsdown.dev/recipes/react-support#enabling-react-compiler
-    // The plugins are lazy loaded so they're only paid for when the React Compiler is enabled.
-    // `babel-plugin-react-compiler` itself is resolved by Babel from the consumer package during
-    // the build, which is why it can be an optional peer dependency. Once rolldown ships its rust
-    // port of the React Compiler this can be swapped out for an oxc transform, like `styledComponents`.
-    const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
-      import('@rolldown/plugin-babel'),
-      import('@vitejs/plugin-react'),
-    ])
-    // `reactServer` belongs to this config, not the compiler — drop it before handing the
-    // options over to the babel preset.
-    const {reactServer: _reactServer, ...reactCompilerOptions} =
-      typeof reactCompiler === 'object' ? reactCompiler : {}
-    plugins.push(
-      await pluginBabel({
-        presets: [reactCompilerPreset(reactCompilerOptions)],
-      }),
-    )
+    // The plugins are lazy loaded so they're only paid for when the React Compiler is enabled,
+    // and the compiler package itself (`babel-plugin-react-compiler` or `oxc-transform-react`,
+    // per `implementation`) is resolved from the consumer package during the build, which is
+    // why both can be optional peer dependencies.
+    const options: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
+    if (options.implementation === 'oxc') {
+      // The Rust port: `@vitejs/plugin-react`'s `compiler` option wraps `oxc-transform-react`
+      // in its `vite:react-compiler` plugin, which compiles React components, strips
+      // TypeScript and lowers JSX in one native pass (making rolldown's own transform a no-op
+      // for these files). Only that plugin is cherry-picked from the returned array — the
+      // rest wire up Vite-only concerns (Fast Refresh wrapper, dev config) that a library
+      // build must not include. Outside Vite none of its Vite hooks run, which leaves exactly
+      // the defaults a library build wants: production JSX, sourcemaps on, no Fast Refresh.
+      // `implementation` and `reactServer` belong to this config — drop them before handing
+      // the options over to the compiler.
+      const {reactServer: _reactServer, implementation: _implementation, ...compilerOptions} =
+        options
+      const {default: pluginReact} = await import('@vitejs/plugin-react')
+      const compilerPlugin = pluginReact({compiler: compilerOptions}).find(
+        (plugin) => plugin.name === 'vite:react-compiler',
+      )
+      if (!compilerPlugin) {
+        throw new Error(
+          '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support `reactCompiler: {implementation: "oxc"}`.',
+        )
+      }
+      plugins.push(compilerPlugin)
+    } else {
+      // The default implementation follows the official tsdown recipe for the React Compiler:
+      // https://tsdown.dev/recipes/react-support#enabling-react-compiler
+      // The compiler leaves TypeScript and JSX in place for rolldown's own transform.
+      const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
+        import('@rolldown/plugin-babel'),
+        import('@vitejs/plugin-react'),
+      ])
+      const {reactServer: _reactServer, implementation: _implementation, ...compilerOptions} =
+        options
+      plugins.push(
+        await pluginBabel({
+          presets: [reactCompilerPreset(compilerOptions)],
+        }),
+      )
+    }
   }
   if (options.vanillaExtract) {
     // Lazy loaded, like `reactCompiler`, so the CSS toolchain is only paid for when the option is

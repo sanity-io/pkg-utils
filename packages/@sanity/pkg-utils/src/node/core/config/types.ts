@@ -20,7 +20,10 @@ export type {
   PackageTsdocOptions,
   PackageTsdocRuleLevel,
   PackageVanillaExtractOptions,
+  ReactCompilerBabelOptions,
+  ReactCompilerConfigOptions,
   ReactCompilerOptions,
+  ReactCompilerOxcOptions,
   StyledComponentsOptions,
 } from '@sanity/tsdown-config'
 
@@ -172,10 +175,15 @@ export interface PkgConfigOptions {
    */
   plugins?: UserConfig['plugins']
   /**
-   * Runs `babel-plugin-react-compiler` on the source files before they are bundled, so
-   * published components are memoized automatically. Pass `true` to use the defaults, or an
-   * options object to configure the compiler (e.g. `{target: '18'}`). Requires
-   * `babel-plugin-react-compiler` to be installed.
+   * Runs the React Compiler on the source files before they are bundled, so published
+   * components are memoized automatically. Pass `true` to use the defaults, or an options
+   * object to configure the compiler (e.g. `{target: '18'}`).
+   *
+   * The `implementation` option (of this config, never forwarded to the compiler) selects
+   * which implementation runs: `'babel'` (the default) requires
+   * `babel-plugin-react-compiler` to be installed, while the experimental `'oxc'` requires
+   * `oxc-transform-react` — the Rust port of the compiler, which also owns TypeScript/JSX
+   * lowering for the files it transforms.
    */
   reactCompiler?: boolean | ReactCompilerOptions
   /**

@@ -139,6 +139,17 @@ describe('reactCompiler.reactServer option', () => {
     expect(reactServer.hooks).toBeUndefined()
   })
 
+  test('combines with `implementation: "oxc"`', async () => {
+    const [compiled, reactServer] = await defineDualConfig({
+      reactCompiler: {target: '19', implementation: 'oxc'},
+    })
+
+    // Only the compiled variant runs the oxc implementation; the react-server variant stays
+    // uncompiled either way (rolldown lowers its TypeScript/JSX)
+    expect(getPluginNames(compiled)).toEqual(['vite:react-compiler'])
+    expect(getPluginNames(reactServer)).toEqual([])
+  })
+
   test('tsdoc hook is only on the compiled variant when enabled', async () => {
     const [compiled, reactServer] = await defineDualConfig({
       reactCompiler: {target: '19'},
