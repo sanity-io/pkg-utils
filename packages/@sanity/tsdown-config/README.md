@@ -532,6 +532,52 @@ const config = await defineConfig({
 })
 ```
 
+## bundleAnalyzer
+
+Enables Rolldown's experimental
+[`bundleAnalyzerPlugin`](https://rolldown.rs/builtin-plugins/bundle-analyzer) to emit a report of
+what the package itself bundles — chunks, modules, dependency chains — next to the build output.
+The plugin is currently experimental (exported from `rolldown/experimental`); this option is
+`@alpha` to match.
+
+Analysis adds work to the build, so the option stays off by default. Typical usage is an
+env-gated opt-in so everyday `pnpm build` / publish is unchanged:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true',
+})
+```
+
+`true` selects `format: 'md'` — an LLM-friendly markdown report (`analyze-data.md` in `outDir`)
+— rather than the plugin's own `'json'` default. Pass an object to customize:
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  bundleAnalyzer: {
+    format: 'json',
+    fileName: 'bundle-analysis.json',
+  },
+})
+```
+
+The report is **not** a publishable artifact. Exclude it from `package.json` `files` so an
+accidental analyze build cannot ship it:
+
+```json
+{
+  "files": ["dist", "!dist/analyze-data.md"]
+}
+```
+
+With [`reactCompiler.reactServer`](#react-server-components-reactserver) only the compiled
+(`default`) variant is analyzed — the `react-server` variant skips it so the two parallel
+builds don't overwrite one report in the shared `outDir`.
+
 ## checks
 
 Rolldown's [`checks.circularDependency`](https://rolldown.rs/reference/InputOptions.checks#circulardependency)
@@ -615,7 +661,8 @@ like `@sanity/pkg-utils` compose their own opinions over it programmatically. `m
 applies with tsdown's semantics:
 
 - `plugins` (top-level, `inputOptions`, `outputOptions`) are **appended**, so layering your own
-  plugins never clobbers the ones this config sets up (React Compiler, vanilla-extract),
+  plugins never clobbers the ones this config sets up (React Compiler, vanilla-extract, bundle
+  analyzer),
 - plain objects deep-merge over the defaults (e.g. `minify: {mangle: true}` keeps the
   `compress`/`codegen` defaults), and
 - scalars and non-plugin arrays replace (e.g. `publint: false`, `format: ['esm']`).

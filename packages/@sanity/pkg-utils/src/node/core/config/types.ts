@@ -1,5 +1,6 @@
 import type {PkgExports} from '@sanity/parse-package-json'
 import type {
+  PackageBundleAnalyzerOptions,
   PackageCssOptions,
   PackageTsdocCustomTag,
   PackageTsdocOptions,
@@ -13,6 +14,7 @@ import type {StrictOptions} from '../../strict.ts'
 
 export type {PkgExport, PkgExports} from '@sanity/parse-package-json'
 export type {
+  PackageBundleAnalyzerOptions,
   PackageCssOptions,
   PackageTsdocCustomTag,
   PackageTsdocOptions,
@@ -65,6 +67,25 @@ export type PkgTsdocOptions = PackageTsdocOptions
 /** @public */
 export interface PkgConfigOptions {
   bundles?: PkgBundle[]
+  /**
+   * Enables Rolldown's experimental
+   * [`bundleAnalyzerPlugin`](https://rolldown.rs/builtin-plugins/bundle-analyzer) to emit a
+   * report of what the package itself bundles. Pass `true` for the defaults (`format: 'md'`,
+   * an LLM-friendly `analyze-data.md` in `dist`), or an options object to customize.
+   *
+   * Analysis adds work to the build, so this stays off by default — typical usage is an
+   * env-gated opt-in:
+   *
+   * ```ts
+   * bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true'
+   * ```
+   *
+   * The report is **not** a publishable artifact. Exclude it from `package.json` `files`
+   * (e.g. `"!dist/analyze-data.md"`) so an accidental analyze build cannot ship it.
+   * @defaultValue false
+   * @alpha This option wraps Rolldown's experimental analyzer, whose API may change.
+   */
+  bundleAnalyzer?: boolean | PackageBundleAnalyzerOptions
   /**
    * tsdown's `clean` option, passed through as-is. Cleaning is on by default: `true` (the
    * default) cleans the `dist` folder before the build, `false` skips cleaning, and a
@@ -145,7 +166,7 @@ export interface PkgConfigOptions {
   minify?: boolean
   /**
    * Extra rolldown plugins, appended after the plugins pkg-utils sets up (React Compiler,
-   * vanilla-extract). Most Rollup plugins are also compatible.
+   * vanilla-extract, bundle analyzer). Most Rollup plugins are also compatible.
    * @see https://tsdown.dev/advanced/plugins
    * @alpha
    */

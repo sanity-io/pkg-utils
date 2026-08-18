@@ -94,6 +94,55 @@ test('the `dts` object passthrough spreads over the defaults', async () => {
   expect(inlineConfig.dts).toEqual({newContext: true, tsgo: true, sourcemap: true})
 })
 
+test('forwards `bundleAnalyzer` to @sanity/tsdown-config', async () => {
+  const disabled = createContext({})
+  const [disabledBuild] = resolveTsdownBuilds(disabled)
+  if (!disabledBuild) throw new Error('expected a build')
+  const disabledConfig = await resolveTsdownConfig(disabled, disabledBuild, {clean: false})
+  expect(pluginNames(disabledConfig)).not.toContain('builtin:bundle-analyzer')
+
+  const enabled = createContext({bundleAnalyzer: true})
+  const [enabledBuild] = resolveTsdownBuilds(enabled)
+  if (!enabledBuild) throw new Error('expected a build')
+  const enabledConfig = await resolveTsdownConfig(enabled, enabledBuild, {clean: false})
+  expect(pluginNames(enabledConfig)).toContain('builtin:bundle-analyzer')
+  expect(bundleAnalyzerOptions(enabledConfig)).toEqual({format: 'md'})
+
+  const customized = createContext({
+    bundleAnalyzer: {format: 'json', fileName: 'bundle-analysis.json'},
+  })
+  const [customizedBuild] = resolveTsdownBuilds(customized)
+  if (!customizedBuild) throw new Error('expected a build')
+  const customizedConfig = await resolveTsdownConfig(customized, customizedBuild, {clean: false})
+  expect(bundleAnalyzerOptions(customizedConfig)).toEqual({
+    format: 'json',
+    fileName: 'bundle-analysis.json',
+  })
+})
+
+function pluginNames(config: {plugins?: unknown}): string[] {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) return []
+  return plugins.flatMap((plugin) =>
+    plugin && typeof plugin === 'object' && 'name' in plugin && typeof plugin.name === 'string'
+      ? [plugin.name]
+      : [],
+  )
+}
+
+function bundleAnalyzerOptions(config: {plugins?: unknown}): unknown {
+  const {plugins} = config
+  if (!Array.isArray(plugins)) return undefined
+  const plugin = plugins.find(
+    (candidate) =>
+      candidate &&
+      typeof candidate === 'object' &&
+      'name' in candidate &&
+      candidate.name === 'builtin:bundle-analyzer',
+  )
+  return plugin && typeof plugin === 'object' && '_options' in plugin ? plugin._options : undefined
+}
+
 test('inherits the declaration-only circular dependency suppression', async () => {
   // `checks.circularDependency` comes from `@sanity/tsdown-config`, and so does the
   // `suppressWarnings` predicate that drops the type-only cycles of the declaration bundling
