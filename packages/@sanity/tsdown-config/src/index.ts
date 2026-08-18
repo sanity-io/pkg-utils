@@ -609,8 +609,8 @@ async function resolvePackageConfig(
     // and the compiler package itself (`babel-plugin-react-compiler` or `oxc-transform-react`,
     // per `implementation`) is resolved from the consumer package during the build, which is
     // why both can be optional peer dependencies.
-    const options: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
-    if (options.implementation === 'oxc') {
+    const reactCompilerOptions: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
+    if (reactCompilerOptions.implementation === 'oxc') {
       // The Rust port: `@vitejs/plugin-react`'s `compiler` option wraps `oxc-transform-react`
       // in its `vite:react-compiler` plugin, which compiles React components, strips
       // TypeScript and lowers JSX in one native pass (making rolldown's own transform a no-op
@@ -620,8 +620,11 @@ async function resolvePackageConfig(
       // the defaults a library build wants: production JSX, sourcemaps on, no Fast Refresh.
       // `implementation` and `reactServer` belong to this config — drop them before handing
       // the options over to the compiler.
-      const {reactServer: _reactServer, implementation: _implementation, ...compilerOptions} =
-        options
+      const {
+        reactServer: _reactServer,
+        implementation: _implementation,
+        ...compilerOptions
+      } = reactCompilerOptions
       const {default: pluginReact} = await import('@vitejs/plugin-react')
       const compilerPlugin = pluginReact({
         compiler: compilerOptions,
@@ -646,8 +649,11 @@ async function resolvePackageConfig(
         import('@rolldown/plugin-babel'),
         import('@vitejs/plugin-react'),
       ])
-      const {reactServer: _reactServer, implementation: _implementation, ...compilerOptions} =
-        options
+      const {
+        reactServer: _reactServer,
+        implementation: _implementation,
+        ...compilerOptions
+      } = reactCompilerOptions
       plugins.push(
         await pluginBabel({
           presets: [reactCompilerPreset(compilerOptions)],

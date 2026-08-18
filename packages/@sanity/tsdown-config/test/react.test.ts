@@ -30,9 +30,7 @@ describe('reactCompiler option', () => {
       '@rolldown/plugin-babel',
     ])
     expect(
-      getPluginNames(
-        await defineConfig({reactCompiler: {target: '19', implementation: 'babel'}}),
-      ),
+      getPluginNames(await defineConfig({reactCompiler: {target: '19', implementation: 'babel'}})),
     ).toEqual(['@rolldown/plugin-babel'])
   })
 
