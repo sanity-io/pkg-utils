@@ -190,49 +190,42 @@ export interface ReactCompilerConfigOptions {
 }
 
 /**
- * The default shape of the {@link ReactCompilerOptions | `reactCompiler`} option: the React
- * Compiler runs as `babel-plugin-react-compiler`, and the options are the compiler's own.
- * The typings resolve in userland once `babel-plugin-react-compiler` (an optional peer
- * dependency, required by this transform) is installed, and always match the installed
- * version of the compiler.
+ * The default `reactCompiler` shape: `babel-plugin-react-compiler` (an optional peer
+ * dependency) runs the compiler, with its own `PluginOptions` — the typings resolve once the
+ * package is installed.
  * @public
  */
 export type ReactCompilerBabelOptions = Partial<BabelReactCompilerPluginOptions> &
   ReactCompilerConfigOptions & {
     /**
-     * Selects `babel-plugin-react-compiler` — the reference implementation of the React
-     * Compiler, and the default.
+     * `babel-plugin-react-compiler`, the reference implementation.
      * @defaultValue 'babel'
      */
     transform?: 'babel'
   }
 
 /**
- * The `transform: 'oxc'` shape of the {@link ReactCompilerOptions | `reactCompiler`}
- * option: the React Compiler runs as `oxc-transform-react` — oxc's experimental Rust port —
- * and the options are that package's `ReactCompilerOptions` (the serializable subset of the
- * babel plugin's options: no `logger`, no function-valued `sources`). The typings resolve in
- * userland once `oxc-transform-react` (an optional peer dependency, required by this
- * transform) is installed, and always match the installed version of the compiler.
+ * The `transform: 'oxc'` shape: `oxc-transform-react` (an optional peer dependency) runs the
+ * compiler, with its own `ReactCompilerOptions` — the serializable subset of the babel
+ * plugin's (no `logger`, no function-valued `sources`); the typings resolve once the package
+ * is installed.
  * @public
  */
 export type ReactCompilerOxcOptions = OxcReactCompilerOptions &
   ReactCompilerConfigOptions & {
     /**
-     * Selects `oxc-transform-react`, the Rust port of the React Compiler. It compiles in one
-     * native pass that also owns TypeScript/JSX lowering for the files it transforms (JSX
-     * uses the automatic runtime with the default `react` import source, so packages with a
-     * custom `jsxImportSource` should stay on `'babel'` for now).
-     * @alpha The Rust port is experimental — review the generated output before publishing.
+     * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
+     * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
+     * custom `jsxImportSource`.
+     * @alpha Experimental — review the generated output before publishing.
      */
     transform: 'oxc'
   }
 
 /**
- * Options for the React Compiler: the compiler's own options, plus two options of this
- * config — `transform` picks which React Compiler implementation runs
- * (`'babel'`, the default, or the experimental Rust port `'oxc'`), and `reactServer` opts
- * into the dual React Server Components build. Neither is ever forwarded to the compiler.
+ * Options for the React Compiler: the compiler's own options, plus `transform` (which
+ * implementation runs) and `reactServer` (the dual React Server Components build) — both
+ * handled by this config, never forwarded to the compiler.
  * @public
  */
 export type ReactCompilerOptions = ReactCompilerBabelOptions | ReactCompilerOxcOptions
@@ -370,23 +363,13 @@ export interface PackageOptions extends Pick<
   /**
    * Runs the React Compiler on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options
-   * object to configure the compiler (e.g. `{target: '18'}`).
-   * This is the same feature as the `babel: {reactCompiler: true}` and `reactCompilerOptions`
-   * options in `@sanity/pkg-utils`.
+   * object (e.g. `{target: '18'}`). This is the same feature as the
+   * `babel: {reactCompiler: true}` and `reactCompilerOptions` options in `@sanity/pkg-utils`.
    *
-   * Two implementations are available, selected with the `transform` option (of this
-   * config, never forwarded to the compiler):
-   *
-   * - `'babel'` (the default) runs `babel-plugin-react-compiler` — the reference
-   *   implementation, which must be installed.
-   * - `'oxc'` runs `oxc-transform-react` — oxc's experimental Rust port, which must be
-   *   installed — in one native pass that also owns TypeScript/JSX lowering for the files it
-   *   transforms; see {@link ReactCompilerOxcOptions}.
-   *
-   * The options object also accepts `reactServer: true` (an option of this config, not the
-   * compiler), which additionally emits an uncompiled build of every entry wired to the
-   * `react-server` export condition, for libraries that render in React Server Components —
-   * see {@link ReactCompilerConfigOptions.reactServer}.
+   * `transform` picks the implementation — `'babel'` (default, requires
+   * `babel-plugin-react-compiler`) or the experimental `'oxc'` (requires
+   * `oxc-transform-react`), see {@link ReactCompilerOxcOptions} — and `reactServer` adds the
+   * uncompiled `react-server` build, see {@link ReactCompilerConfigOptions.reactServer}.
    * @defaultValue false
    */
   reactCompiler?: boolean | ReactCompilerOptions
@@ -605,21 +588,16 @@ async function resolvePackageConfig(
   // (https://github.com/sanity-io/ui/issues/2262).
   const plugins: Rolldown.Plugin[] = []
   if (reactCompiler !== false) {
-    // The plugins are lazy loaded so they're only paid for when the React Compiler is enabled,
-    // and the compiler package itself (`babel-plugin-react-compiler` or `oxc-transform-react`,
-    // per `transform`) is resolved from the consumer package during the build, which is
-    // why both can be optional peer dependencies.
+    // Lazy loaded so the toolchain is only paid for when enabled. The compiler package itself
+    // (`babel-plugin-react-compiler` / `oxc-transform-react`, per `transform`) resolves from
+    // the consumer package, which is why both are optional peer dependencies.
     const reactCompilerOptions: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
     if (reactCompilerOptions.transform === 'oxc') {
-      // The Rust port: `@vitejs/plugin-react`'s `compiler` option wraps `oxc-transform-react`
-      // in its `vite:react-compiler` plugin, which compiles React components, strips
-      // TypeScript and lowers JSX in one native pass (making rolldown's own transform a no-op
-      // for these files). Only that plugin is cherry-picked from the returned array — the
-      // rest wire up Vite-only concerns (Fast Refresh wrapper, dev config) that a library
-      // build must not include. Outside Vite none of its Vite hooks run, which leaves exactly
-      // the defaults a library build wants: production JSX, sourcemaps on, no Fast Refresh.
-      // `transform` and `reactServer` belong to this config — drop them before handing
-      // the options over to the compiler.
+      // `@vitejs/plugin-react`'s `compiler` option: `oxc-transform-react` compiles, strips
+      // TypeScript and lowers JSX in one native pass. Only the `vite:react-compiler` plugin is
+      // cherry-picked — the rest of the array is Vite-only (Fast Refresh wrapper, dev config).
+      // Outside Vite its defaults are what a library build wants: production JSX, sourcemaps,
+      // no Fast Refresh. `transform`/`reactServer` are this config's — drop before forwarding.
       const {
         reactServer: _reactServer,
         transform: _transform,
@@ -628,11 +606,10 @@ async function resolvePackageConfig(
       const {default: pluginReact} = await import('@vitejs/plugin-react')
       const compilerPlugin = pluginReact({
         compiler: compilerOptions,
-        // tsdown's declaration bundling (rolldown-plugin-dts) runs its generated `.d.ts`
-        // modules through the same build's transform chain, and the plugin's default include
-        // (`/\.[tj]sx?$/`) matches them — the one-pass transform would strip every type and
-        // leave `export {}` declarations. The default node_modules exclusion is restated
-        // because a userland `exclude` replaces the plugin's default.
+        // Keep the one-pass transform away from rolldown-plugin-dts' generated `.d.ts` modules
+        // (the default include matches them) — it would strip every type, collapsing the
+        // bundled declarations to `export {}`. node_modules is restated because a userland
+        // `exclude` replaces the plugin's default.
         exclude: [/\/node_modules\//, RE_DTS_FILE],
       }).find((plugin) => plugin.name === 'vite:react-compiler')
       if (!compilerPlugin) {

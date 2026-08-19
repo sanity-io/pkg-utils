@@ -177,13 +177,9 @@ export interface PkgConfigOptions {
   /**
    * Runs the React Compiler on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options
-   * object to configure the compiler (e.g. `{target: '18'}`).
-   *
-   * The `transform` option (of this config, never forwarded to the compiler) selects
-   * which implementation runs: `'babel'` (the default) requires
-   * `babel-plugin-react-compiler` to be installed, while the experimental `'oxc'` requires
-   * `oxc-transform-react` — the Rust port of the compiler, which also owns TypeScript/JSX
-   * lowering for the files it transforms.
+   * object (e.g. `{target: '18'}`). `transform` picks the implementation: `'babel'`
+   * (default, requires `babel-plugin-react-compiler`) or the experimental `'oxc'` (requires
+   * `oxc-transform-react`, the Rust port).
    */
   reactCompiler?: boolean | ReactCompilerOptions
   /**

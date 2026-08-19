@@ -45,21 +45,12 @@ export default defineConfig({
 
 ### Transforms (`transform`)
 
-Two implementations of the React Compiler are supported, selected with the `transform`
-option of `reactCompiler` (an option of this config, never forwarded to the compiler):
+`transform` picks which implementation of the compiler runs:
 
-- `'babel'` (the default) runs
-  [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) —
-  the reference implementation. The compiler leaves TypeScript and JSX in place for rolldown's
-  own transform, so `tsconfig.json` stays in charge of JSX lowering.
-- `'oxc'` runs [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react) —
-  oxc's Rust port of the compiler, wired up through `@vitejs/plugin-react`'s
-  [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419). It compiles,
-  strips TypeScript, and lowers JSX in one native pass (automatic runtime with the default
-  `react` import source — packages with a custom `jsxImportSource` should stay on `'babel'`
-  for now). The options narrow to the package's own `ReactCompilerOptions`: the serializable
-  subset of the babel plugin's options, so callback-valued options like `logger` and
-  function-valued `sources` are unavailable.
+| `transform`         | Runs                                                                                       | Install                                   |
+| ------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| `'babel'` (default) | [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) | `pnpm add -D babel-plugin-react-compiler` |
+| `'oxc'`             | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`         |
 
 ```ts
 export default defineConfig({
@@ -68,13 +59,13 @@ export default defineConfig({
 })
 ```
 
-Each implementation resolves its compiler from your project, which is why both packages are
-optional peer dependencies: install `babel-plugin-react-compiler` for `'babel'`, or
-`oxc-transform-react` for `'oxc'`.
+Good to know about `'oxc'` (via `@vitejs/plugin-react`'s [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419)):
+
+- One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Stay on `'babel'`.
+- Options are the serializable subset: no `logger`, no function-valued `sources`.
 
 > [!WARNING]
-> The Rust port is experimental (`transform: 'oxc'` is `@alpha` and not covered by
-> semver): review the generated output before publishing with it.
+> The Rust port is experimental (`transform: 'oxc'` is `@alpha`): review the generated output before publishing.
 
 ### React Server Components (`reactServer`)
 

@@ -11,9 +11,8 @@ export default mergeConfig(
     },
   }),
   {
-    // The vendored `file:` tarball of `@vitejs/plugin-react` (see vendor/README.md) trips
-    // publint's local-dependency check by design: this package must not be published while
-    // the tarball is in place. Re-enable publint when the npm release replaces the tarball.
+    // The vendored `file:` tarball (see vendor/README.md) trips publint's local-dependency
+    // check by design. Re-enable when the npm release replaces the tarball.
     publint: false,
   },
 )
