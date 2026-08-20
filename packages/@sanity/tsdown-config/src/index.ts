@@ -609,8 +609,9 @@ async function resolvePackageConfig(
         // Keep the one-pass transform away from rolldown-plugin-dts' generated `.d.ts` modules
         // (the default include matches them) — it would strip every type, collapsing the
         // bundled declarations to `export {}`. node_modules is restated because a userland
-        // `exclude` replaces the plugin's default.
-        exclude: [/\/node_modules\//, RE_DTS_FILE],
+        // `exclude` replaces the plugin's default — with both separators, since plain rolldown
+        // (unlike Vite) does not normalize Windows ids to POSIX.
+        exclude: [/[\\/]node_modules[\\/]/, RE_DTS_FILE],
       }).find((plugin) => plugin.name === 'vite:react-compiler')
       if (!compilerPlugin) {
         throw new Error(
