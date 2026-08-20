@@ -193,8 +193,11 @@ are memoized automatically. Pass `true` for the defaults, or an options object
 (e.g. `{target: '18'}`).
 
 `transform` picks the compiler implementation: `'babel'` (default, install
-`babel-plugin-react-compiler`) or the experimental `'oxc'` (install `oxc-transform-react`) —
+`babel-plugin-react-compiler` — the rest of the babel toolchain ships with pkg-utils) or
+`'oxc'` (install `oxc-transform-react`, the Rust port) —
 [details and caveats](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#transforms-transform).
+Note that `@sanity/tsdown-config` defaults to `'oxc'` since 0.27; pkg-utils keeps `'babel'`
+as the default implementation.
 
 #### `runtime`
 

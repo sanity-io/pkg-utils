@@ -120,6 +120,28 @@ test('forwards `bundleAnalyzer` to @sanity/tsdown-config', async () => {
   })
 })
 
+test('keeps `babel` as the default `reactCompiler` transform', async () => {
+  // `@sanity/tsdown-config` defaults `reactCompiler.transform` to `'oxc'` since 0.27;
+  // pkg-utils pins `'babel'` before forwarding so published configs keep building with the
+  // compiler package they installed (`babel-plugin-react-compiler`)
+  for (const reactCompiler of [true, {target: '18'}] as const) {
+    const ctx = createContext({reactCompiler})
+    const [build] = resolveTsdownBuilds(ctx)
+    if (!build) throw new Error('expected a build')
+    const config = await resolveTsdownConfig(ctx, build, {clean: false})
+    expect(pluginNames(config)).toContain('@rolldown/plugin-babel')
+    expect(pluginNames(config)).not.toContain('vite:react-compiler')
+  }
+
+  // An explicit `transform: 'oxc'` still selects the Rust port
+  const ctx = createContext({reactCompiler: {target: '19', transform: 'oxc'}})
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+  const config = await resolveTsdownConfig(ctx, build, {clean: false})
+  expect(pluginNames(config)).toContain('vite:react-compiler')
+  expect(pluginNames(config)).not.toContain('@rolldown/plugin-babel')
+})
+
 function pluginNames(config: {plugins?: unknown}): string[] {
   const {plugins} = config
   if (!Array.isArray(plugins)) return []
