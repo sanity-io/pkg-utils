@@ -87,7 +87,7 @@ describe('reactCompiler.reactServer option', () => {
       await defineConfig({reactCompiler: {target: '19', reactServer: false}}),
     ]) {
       expect(Array.isArray(config)).toBe(false)
-      expect(getPluginNames(config)).toEqual(['@rolldown/plugin-babel'])
+      expect(getPluginNames(config)).toEqual(['vite:react-compiler'])
       expect(config.exports).not.toHaveProperty('customExports')
       expect(config.outExtensions).toBeUndefined()
     }
@@ -123,7 +123,7 @@ describe('reactCompiler.reactServer option', () => {
 
     // The compiled variant is the classic single build: the React Compiler applied, and it
     // owns `dts`, `exports` generation and `publint`
-    expect(getPluginNames(compiled)).toEqual(['@rolldown/plugin-babel'])
+    expect(getPluginNames(compiled)).toEqual(['vite:react-compiler'])
     expect(compiled.publint).toBe(true)
     expect(compiled.exports).toMatchObject({enabled: true, devExports: true})
 
@@ -139,14 +139,14 @@ describe('reactCompiler.reactServer option', () => {
     expect(reactServer.hooks).toBeUndefined()
   })
 
-  test('combines with `transform: "oxc"`', async () => {
+  test('combines with `transform: "babel"`', async () => {
     const [compiled, reactServer] = await defineDualConfig({
-      reactCompiler: {target: '19', transform: 'oxc'},
+      reactCompiler: {target: '19', transform: 'babel'},
     })
 
-    // Only the compiled variant runs the oxc implementation; the react-server variant stays
-    // uncompiled either way (rolldown lowers its TypeScript/JSX)
-    expect(getPluginNames(compiled)).toEqual(['vite:react-compiler'])
+    // Only the compiled variant runs the opt-in babel implementation; the react-server
+    // variant stays uncompiled either way (rolldown lowers its TypeScript/JSX)
+    expect(getPluginNames(compiled)).toEqual(['@rolldown/plugin-babel'])
     expect(getPluginNames(reactServer)).toEqual([])
   })
 
@@ -389,7 +389,9 @@ describe('react-server-library', () => {
     ])
 
     // The compiled output is auto-memoized with the memo cache provided by
-    // `react/compiler-runtime` (the fixture sets `reactCompiler: {target: '19'}`)
+    // `react/compiler-runtime` (the fixture sets
+    // `reactCompiler: {target: '19', transform: 'babel'}`, so this exercises the opt-in
+    // babel implementation end-to-end)
     expect(distIndexJs).toContain('react/compiler-runtime')
 
     // The react-server output is the same source without the compiler: no

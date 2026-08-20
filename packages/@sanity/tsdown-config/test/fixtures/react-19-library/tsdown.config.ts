@@ -4,6 +4,6 @@ export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   format: ['esm', 'cjs'],
   platform: 'neutral',
-  reactCompiler: {target: '19', transform: 'oxc'},
+  reactCompiler: {target: '19'},
   define: {'process.env.NODE_ENV': JSON.stringify('production')},
 })
