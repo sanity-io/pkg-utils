@@ -14,9 +14,9 @@ export default defineConfig({tsconfig: 'tsconfig.dist.json'})
 
 ## React Compiler
 
-The same React Compiler feature as `@sanity/pkg-utils` is available. It runs
-[`babel-plugin-react-compiler`](https://react.dev/learn/react-compiler) on the source files before
-they are bundled, so published components are memoized automatically. The plugin needs to be
+The same React Compiler feature as `@sanity/pkg-utils` is available. It runs the
+[React Compiler](https://react.dev/learn/react-compiler) on the source files before they are
+bundled, so published components are memoized automatically. The compiler needs to be
 installed separately:
 
 ```sh
@@ -42,6 +42,30 @@ export default defineConfig({
   reactCompiler: {target: '18'},
 })
 ```
+
+### Transforms (`transform`)
+
+`transform` picks which implementation of the compiler runs:
+
+| `transform`         | Runs                                                                                       | Install                                   |
+| ------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| `'babel'` (default) | [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) | `pnpm add -D babel-plugin-react-compiler` |
+| `'oxc'`             | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`         |
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: {target: '19', transform: 'oxc'},
+})
+```
+
+Good to know about `'oxc'` (via `@vitejs/plugin-react`'s [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419)):
+
+- One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Stay on `'babel'`.
+- Options are the serializable subset: no `logger`, no function-valued `sources`.
+
+> [!WARNING]
+> The Rust port is experimental (`transform: 'oxc'` is `@alpha`): review the generated output before publishing.
 
 ### React Server Components (`reactServer`)
 

@@ -17,7 +17,10 @@ export type {
   PkgConfigOptions,
   PackageBundleAnalyzerOptions,
   PackageVanillaExtractOptions,
+  ReactCompilerBabelOptions,
+  ReactCompilerConfigOptions,
   ReactCompilerOptions,
+  ReactCompilerOxcOptions,
   StyledComponentsOptions,
 } from './core/config/types.ts'
 export {DEFAULT_BROWSERSLIST_QUERY} from './core/defaults.ts'
