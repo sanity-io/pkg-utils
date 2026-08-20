@@ -189,38 +189,58 @@ export interface ReactCompilerConfigOptions {
   reactServer?: boolean
 }
 
+// Both compiler-implementation option shapes are `interface … extends` (heritage clauses)
+// rather than intersection type aliases, and that choice is load-bearing: the base types come
+// from optional peer dependencies, so in consumers that don't install one of them the type
+// import cannot resolve. In an intersection (`Partial<PluginOptions> & …`) the unresolved
+// import degrades to `any` (`skipLibCheck` silences the error inside this package's
+// declaration file), and `any` absorbs first the intersection, then the whole
+// `ReactCompilerOptions` union — every `reactCompiler` value would suddenly match the
+// `reactServer: true` overload of `defineConfig`, wrongly resolving configs to
+// `Promise<UserConfig[]>` (conditional-type `any` guards don't help: TypeScript 7 defers
+// them with an any-flavored constraint that poisons overload matching all the same). With a
+// heritage clause the checker instead drops the unresolvable base and keeps the interface's
+// own members, so the uninstalled branch degrades to `{transform?, reactServer?}` — the
+// union keeps discriminating, the overloads keep resolving, and the other (installed)
+// branch keeps its real option typings. Verified against both the JS (6.x) and Go-native
+// (7.x) compilers of the `typescript` peer range in `test/optional-peer-types.test.ts`.
+
 /**
  * The default `reactCompiler` shape: `babel-plugin-react-compiler` (an optional peer
  * dependency) runs the compiler, with its own `PluginOptions` — the typings resolve once the
- * package is installed.
+ * package is installed. Until then the compiler options fall away and only `transform` and
+ * `reactServer` remain typed.
  * @public
  */
-export type ReactCompilerBabelOptions = Partial<BabelReactCompilerPluginOptions> &
-  ReactCompilerConfigOptions & {
-    /**
-     * `babel-plugin-react-compiler`, the reference implementation.
-     * @defaultValue 'babel'
-     */
-    transform?: 'babel'
-  }
+export interface ReactCompilerBabelOptions
+  extends Partial<BabelReactCompilerPluginOptions>,
+    ReactCompilerConfigOptions {
+  /**
+   * `babel-plugin-react-compiler`, the reference implementation.
+   * @defaultValue 'babel'
+   */
+  transform?: 'babel'
+}
 
 /**
  * The `transform: 'oxc'` shape: `oxc-transform-react` (an optional peer dependency) runs the
  * compiler, with its own `ReactCompilerOptions` — the serializable subset of the babel
  * plugin's (no `logger`, no function-valued `sources`); the typings resolve once the package
- * is installed.
+ * is installed. Until then the compiler options fall away and only `transform` and
+ * `reactServer` remain typed.
  * @public
  */
-export type ReactCompilerOxcOptions = OxcReactCompilerOptions &
-  ReactCompilerConfigOptions & {
-    /**
-     * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
-     * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
-     * custom `jsxImportSource`.
-     * @alpha Experimental — review the generated output before publishing.
-     */
-    transform: 'oxc'
-  }
+export interface ReactCompilerOxcOptions
+  extends OxcReactCompilerOptions,
+    ReactCompilerConfigOptions {
+  /**
+   * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
+   * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
+   * custom `jsxImportSource`.
+   * @alpha Experimental — review the generated output before publishing.
+   */
+  transform: 'oxc'
+}
 
 /**
  * Options for the React Compiler: the compiler's own options, plus `transform` (which
