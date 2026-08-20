@@ -1,5 +1,11 @@
 # @sanity/tsdown-config
 
+## 0.26.0
+
+### Minor Changes
+
+- [#3312](https://github.com/sanity-io/pkg-utils/pull/3312) [`24bfc3f`](https://github.com/sanity-io/pkg-utils/commit/24bfc3f7304f7362553622ce770bc32a9fdd38e8) Thanks [@stipsan](https://github.com/stipsan)! - Add `reactCompiler.transform` to pick the React Compiler implementation: `'babel'` (the default, runs `babel-plugin-react-compiler`) or the experimental `'oxc'` (runs `oxc-transform-react`, the Rust port — one native pass for React Compiler + TypeScript/JSX). Both compilers are optional peer dependencies.
+
 ## 0.25.0
 
 ### Minor Changes
