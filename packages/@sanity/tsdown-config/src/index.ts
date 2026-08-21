@@ -189,38 +189,46 @@ export interface ReactCompilerConfigOptions {
   reactServer?: boolean
 }
 
+// `interface … extends` on purpose, not intersection aliases: an uninstalled peer's type
+// import degrades to `any` (skipLibCheck), and in an intersection that `any` would swallow
+// the whole `ReactCompilerOptions` union, making every config match the `reactServer: true`
+// overload of `defineConfig` (the bug sanity-io/ui had to stub around). Unresolvable
+// heritage clauses are dropped instead, leaving each interface's own members (`transform`,
+// `reactServer`), so the union keeps discriminating. See `test/optional-peer-types.test.ts`.
+
 /**
  * The default `reactCompiler` shape: `babel-plugin-react-compiler` (an optional peer
- * dependency) runs the compiler, with its own `PluginOptions` — the typings resolve once the
- * package is installed.
+ * dependency) runs the compiler, with its own `PluginOptions` — typed once the package is
+ * installed.
  * @public
  */
-export type ReactCompilerBabelOptions = Partial<BabelReactCompilerPluginOptions> &
-  ReactCompilerConfigOptions & {
-    /**
-     * `babel-plugin-react-compiler`, the reference implementation.
-     * @defaultValue 'babel'
-     */
-    transform?: 'babel'
-  }
+export interface ReactCompilerBabelOptions
+  extends Partial<BabelReactCompilerPluginOptions>,
+    ReactCompilerConfigOptions {
+  /**
+   * `babel-plugin-react-compiler`, the reference implementation.
+   * @defaultValue 'babel'
+   */
+  transform?: 'babel'
+}
 
 /**
  * The `transform: 'oxc'` shape: `oxc-transform-react` (an optional peer dependency) runs the
  * compiler, with its own `ReactCompilerOptions` — the serializable subset of the babel
- * plugin's (no `logger`, no function-valued `sources`); the typings resolve once the package
- * is installed.
+ * plugin's (no `logger`, no function-valued `sources`), typed once the package is installed.
  * @public
  */
-export type ReactCompilerOxcOptions = OxcReactCompilerOptions &
-  ReactCompilerConfigOptions & {
-    /**
-     * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
-     * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
-     * custom `jsxImportSource`.
-     * @alpha Experimental — review the generated output before publishing.
-     */
-    transform: 'oxc'
-  }
+export interface ReactCompilerOxcOptions
+  extends OxcReactCompilerOptions,
+    ReactCompilerConfigOptions {
+  /**
+   * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
+   * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
+   * custom `jsxImportSource`.
+   * @alpha Experimental — review the generated output before publishing.
+   */
+  transform: 'oxc'
+}
 
 /**
  * Options for the React Compiler: the compiler's own options, plus `transform` (which
