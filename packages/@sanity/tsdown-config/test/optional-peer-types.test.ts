@@ -2,9 +2,7 @@ import {cp, mkdir, mkdtemp, rm, symlink, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-// The JS compiler API is loaded from the official `@typescript/typescript6` compat package
-// instead of the `typescript` peer dependency, as TypeScript 7 (the Go-native compiler) no
-// longer ships it
+// TypeScript 7 (Go-native) no longer ships the JS compiler API; use the compat package
 import ts from '@typescript/typescript6'
 import {x} from 'tinyexec'
 import {afterAll, beforeAll, describe, expect, test} from 'vitest'
@@ -14,24 +12,23 @@ const packageDir = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(packageDir, '../../..')
 
 /**
- * Typechecks a consumer module against the built `dist/index.d.mts` (what npm consumers
- * see — `test/globalSetup.ts` builds it) with module resolution failing for
- * `blockedModules`, exactly like a consumer that did not install those optional peer
- * dependencies. Everything else resolves for real from this package's `node_modules`.
- *
- * Expected errors are marked with `@ts-expect-error` in the consumer source, so a single
- * "no diagnostics" assertion covers both directions: a degradation that produces new errors
- * fails, and one that stops producing an expected error fails through the unused directive.
+ * Typechecks a consumer module against the built `dist/index.d.mts` (built by `pretest`),
+ * with resolution failing for `blockedModules` — like a consumer that didn't install those
+ * peers. Expected errors carry `@ts-expect-error`, so "no diagnostics" asserts both ways
+ * (a vanished expected error fails via the unused directive).
  */
 function typecheckConsumer(consumerCode: string, blockedModules: string[]): string {
-  const consumerPath = path.join(packageDir, '__optional-peer-consumer__.ts')
+  // Forward slashes: TypeScript normalizes paths before host callbacks see them, so a
+  // backslash path would never match the `===` checks below on Windows
+  const consumerPath = path
+    .join(packageDir, '__optional-peer-consumer__.ts')
+    .replaceAll('\\', '/')
   const compilerOptions: ts.CompilerOptions = {
     module: ts.ModuleKind.Preserve,
     moduleResolution: ts.ModuleResolutionKind.Bundler,
     target: ts.ScriptTarget.ESNext,
     strict: true,
-    // What makes a missing optional peer degrade silently instead of erroring with
-    // TS2307 — the compiler setting this package's consumers run with
+    // What makes a missing peer degrade silently instead of erroring with TS2307
     skipLibCheck: true,
     noEmit: true,
     types: [],
@@ -48,8 +45,7 @@ function typecheckConsumer(consumerCode: string, blockedModules: string[]): stri
       : defaultGetSourceFile(fileName, languageVersionOrOptions, ...rest)
   host.resolveModuleNameLiterals = (moduleLiterals, containingFile, _redirected, options) =>
     moduleLiterals.map((literal) => {
-      // An empty resolution is exactly what a consumer's compiler produces for a module
-      // that is not installed
+      // An empty resolution is what a real compiler produces for an uninstalled module
       if (blockedModules.includes(literal.text)) return {resolvedModule: undefined}
       return ts.resolveModuleName(literal.text, containingFile, options, host)
     })
@@ -76,12 +72,9 @@ import type {UserConfig} from 'tsdown'
 
 describe('optional peer dependency typings', () => {
   test('a consumer without babel-plugin-react-compiler keeps working types', () => {
-    // The https://github.com/sanity-io/ui scenario: only `oxc-transform-react` is installed,
-    // and the unresolvable `babel-plugin-react-compiler` typings must not collapse the
-    // `ReactCompilerOptions` union into `any` — which used to make every `reactCompiler`
-    // config match the `reactServer: true` overload and resolve to `Promise<UserConfig[]>`,
-    // forcing consumers to stub the module themselves (sanity-io/ui#2957's
-    // `typings/babel-plugin-react-compiler.d.ts`).
+    // The sanity-io/ui scenario: only oxc installed. The missing babel typings must not
+    // collapse the union — every config used to resolve to the `Promise<UserConfig[]>`
+    // overload unless consumers stubbed the module.
     const diagnostics = typecheckConsumer(
       `${consumerPreamble}
 // A non-reactServer oxc config resolves to a single tsdown config
@@ -103,8 +96,7 @@ const babelDual: Promise<UserConfig[]> = defineConfig({
 // @ts-expect-error -- 'nope' is not a React Compiler target
 const invalidTarget = defineConfig({reactCompiler: {transform: 'oxc', target: 'nope'}})
 
-// The uninstalled babel branch degrades to transform/reactServer: its compiler options
-// only typecheck once the package is installed
+// The uninstalled babel branch degrades to transform/reactServer
 // @ts-expect-error -- babel compiler options don't resolve without the package
 const babelDegraded = defineConfig({reactCompiler: {compilationMode: 'infer'}})
 
@@ -116,8 +108,7 @@ export {babelDegraded, babelDual, dual, invalidTarget, single}
   })
 
   test('a consumer without oxc-transform-react keeps working types', () => {
-    // The mirror image: only `babel-plugin-react-compiler` is installed (the default
-    // `transform: 'babel'` setup, e.g. `reactCompiler: true` users)
+    // The mirror image: only babel installed (the default `transform: 'babel'` setup)
     const diagnostics = typecheckConsumer(
       `${consumerPreamble}
 const single: Promise<UserConfig> = defineConfig({
@@ -150,8 +141,7 @@ const enabled: Promise<UserConfig> = defineConfig({reactCompiler: true})
 const single: Promise<UserConfig> = defineConfig({reactCompiler: {transform: 'oxc'}})
 const dual: Promise<UserConfig[]> = defineConfig({reactCompiler: {reactServer: true}})
 
-// Compiler options don't typecheck until an implementation is installed — which is also
-// when they'd first work at runtime
+// Compiler options only typecheck once an implementation is installed
 // @ts-expect-error -- no compiler package is installed
 const degraded = defineConfig({reactCompiler: {compilationMode: 'infer'}})
 
@@ -199,15 +189,12 @@ export {babel, dual, invalidSources, invalidTarget, oxc}
 })
 
 describe('typescript 7 consumer', () => {
-  let fixtureDir: string
+  let fixtureDir: string | undefined
 
   beforeAll(async () => {
-    // The compiler-API tests above run on the JS checker (`@typescript/typescript6`); this
-    // fixture runs the same sanity-io/ui-shaped consumer through the Go-native `tsc` of the
-    // `typescript` peer range's other major (the workspace catalog version), whose error
-    // recovery for unresolvable heritage clauses is a separate implementation. It lives
-    // outside the workspace because inside it, node_modules lookups would always find the
-    // "missing" compiler package somewhere up the tree.
+    // Same ui-shaped consumer, but through the Go-native TypeScript 7 `tsc` (a separate
+    // checker implementation). Lives outside the workspace: inside it, node_modules lookups
+    // would always find the "missing" package somewhere up the tree.
     fixtureDir = await mkdtemp(path.join(tmpdir(), 'tsdown-config-optional-peers-'))
     const nodeModules = path.join(fixtureDir, 'node_modules')
     const packagedDir = path.join(nodeModules, '@sanity/tsdown-config')
@@ -215,11 +202,8 @@ describe('typescript 7 consumer', () => {
     await mkdir(packagedDir, {recursive: true})
     await mkdir(vanillaExtractStubDir, {recursive: true})
 
-    // The package under test, shaped like its published form: the real built dist behind
-    // the publishConfig exports. dist is copied (not symlinked — the compiler realpaths
-    // symlinks, and module lookups from the real location would find the "missing"
-    // babel-plugin-react-compiler up the workspace tree). tsdown and oxc-transform-react
-    // resolve for real; babel-plugin-react-compiler is nowhere to be found.
+    // The package as published: the real dist, copied (not symlinked — tsc realpaths
+    // symlinks, and lookups from the real location would find babel again)
     await cp(path.join(packageDir, 'dist'), path.join(packagedDir, 'dist'), {recursive: true})
     await writeFile(
       path.join(packagedDir, 'package.json'),
@@ -238,9 +222,8 @@ describe('typescript 7 consumer', () => {
         'junction',
       )
     }
-    // Only `Options` and `CssExportsOptions` are referenced from the built declarations,
-    // and nothing in this fixture uses the vanillaExtract/css options — a stub keeps the
-    // plugin's source tree (and its whole dependency graph) out of the program.
+    // A stub keeps the vanilla-extract plugin's source tree out of the program; only its
+    // two type names are referenced and this fixture never uses them
     await writeFile(
       path.join(vanillaExtractStubDir, 'package.json'),
       JSON.stringify({
@@ -270,9 +253,7 @@ describe('typescript 7 consumer', () => {
         },
       }),
     )
-    // The consumer sanity-io/ui's themer package ships (sans the
-    // `typings/babel-plugin-react-compiler.d.ts` stub it needed before this could
-    // typecheck), plus probes for the dual-build overload and both branches' degradation
+    // sanity-io/ui's themer config, minus the stub it needed before this fix
     await writeFile(
       path.join(fixtureDir, 'tsdown.config.mts'),
       `import {defineConfig} from '@sanity/tsdown-config'
@@ -301,12 +282,13 @@ export {babelDegraded, dual, invalidTarget}
   })
 
   afterAll(async () => {
-    await rm(fixtureDir, {recursive: true, force: true})
+    // `beforeAll` can throw before `mkdtemp` assigns it
+    if (fixtureDir) await rm(fixtureDir, {recursive: true, force: true})
   })
 
   test('the ui consumer typechecks without babel-plugin-react-compiler installed', async () => {
-    // The catalog `typescript` (a 7.x, resolved from the workspace root) — its bin is a
-    // node script, spawned through `node` so the test stays portable
+    if (!fixtureDir) expect.unreachable('expected the fixture directory')
+    // The catalog `typescript` bin is a node script; spawn through `node` for portability
     const tsc = path.join(repoRoot, 'node_modules', 'typescript', 'bin', 'tsc')
     const result = await x('node', [tsc, '-p', 'tsconfig.json'], {nodeOptions: {cwd: fixtureDir}})
     expect(result.stdout + result.stderr).toBe('')
