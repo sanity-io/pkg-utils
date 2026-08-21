@@ -1,5 +1,8 @@
 import path from 'node:path'
-import {defineConfig} from '@sanity/tsdown-config'
+import {
+  defineConfig,
+  type ReactCompilerOptions as TsdownConfigReactCompilerOptions,
+} from '@sanity/tsdown-config'
 import {mergeConfig, type InlineConfig, type UserConfig} from 'tsdown'
 import type {PkgConfigOptions} from '../../core/config/types.ts'
 import type {BuildContext} from '../../core/contexts/buildContext.ts'
@@ -45,6 +48,16 @@ export async function resolveTsdownConfig(
       ].join('\n'),
     )
   }
+  // Pin the `'babel'` default before forwarding: `@sanity/tsdown-config` defaults to `'oxc'`
+  // since 0.27, and inheriting the flip would break published configs.
+  const reactCompilerOption: TsdownConfigReactCompilerOptions | boolean | undefined =
+    typeof reactCompiler === 'object'
+      ? reactCompiler.transform === 'oxc'
+        ? reactCompiler
+        : {...reactCompiler, transform: 'babel'}
+      : reactCompiler === true
+        ? {transform: 'babel'}
+        : reactCompiler
 
   const entry: Record<string, string> = {}
   for (const buildEntry of build.entries) {
@@ -174,7 +187,7 @@ export async function resolveTsdownConfig(
     deps: ctx.deps,
     exports,
     css,
-    reactCompiler: config?.reactCompiler,
+    reactCompiler: reactCompilerOption,
     styledComponents: config?.styledComponents,
     vanillaExtract: config?.vanillaExtract,
     bundleAnalyzer: config?.bundleAnalyzer,

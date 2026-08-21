@@ -59,6 +59,8 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "dependencies": {
+    "@babel/core": "^7.29.7",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@sanity/browserslist-config": "^1.0.5",
     "@sanity/parse-package-json": "workspace:^",
     "@sanity/tsdown-config": "workspace:^",
@@ -87,6 +89,7 @@
   },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
+    "@types/babel__core": "^7.20.5",
     "@types/find-config": "^1.0.4",
     "@types/node": "catalog:",
     "@types/parse-github-url": "^1.0.3",
