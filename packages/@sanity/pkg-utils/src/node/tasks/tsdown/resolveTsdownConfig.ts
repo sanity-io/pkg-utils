@@ -48,12 +48,8 @@ export async function resolveTsdownConfig(
       ].join('\n'),
     )
   }
-  // pkg-utils keeps `'babel'` as the default React Compiler implementation, while
-  // `@sanity/tsdown-config` defaults to `'oxc'` since 0.27: inheriting the flip would break
-  // published configs, whose compiler package is a peer the package itself installs
-  // (`reactCompiler: true` projects have `babel-plugin-react-compiler`, not
-  // `oxc-transform-react`). The transform is pinned here so tsdown-config's default never
-  // applies — the babel toolchain the plugin needs ships with pkg-utils.
+  // Pin the `'babel'` default before forwarding: `@sanity/tsdown-config` defaults to `'oxc'`
+  // since 0.27, and inheriting the flip would break published configs.
   const reactCompilerOption: TsdownConfigReactCompilerOptions | boolean | undefined =
     typeof reactCompiler === 'object'
       ? reactCompiler.transform === 'oxc'

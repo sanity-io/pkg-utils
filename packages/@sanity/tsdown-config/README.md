@@ -64,11 +64,8 @@ Good to know about the default `'oxc'` (via `@vitejs/plugin-react`'s [`compiler`
 - One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Opt into `'babel'`.
 - Options are the serializable subset: no `logger`, no function-valued `sources`.
 
-`'babel'` runs `babel-plugin-react-compiler`, the reference implementation, and covers those
-cases — the compiler leaves TypeScript and JSX in place for rolldown's own transform. The
-babel pipeline is opt-in: `@rolldown/plugin-babel` and `@babel/core` are optional peer
-dependencies of this config, so babel never lands in `node_modules` unless a package sets
-`transform: 'babel'` and installs them.
+`'babel'` runs the reference implementation and covers those cases. It's opt-in: babel never
+lands in `node_modules` unless you set `transform: 'babel'` and install the toolchain.
 
 ### React Server Components (`reactServer`)
 

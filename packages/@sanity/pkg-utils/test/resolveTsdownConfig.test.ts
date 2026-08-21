@@ -121,9 +121,7 @@ test('forwards `bundleAnalyzer` to @sanity/tsdown-config', async () => {
 })
 
 test('keeps `babel` as the default `reactCompiler` transform', async () => {
-  // `@sanity/tsdown-config` defaults `reactCompiler.transform` to `'oxc'` since 0.27;
-  // pkg-utils pins `'babel'` before forwarding so published configs keep building with the
-  // compiler package they installed (`babel-plugin-react-compiler`)
+  // pkg-utils pins `'babel'` before forwarding — tsdown-config defaults to `'oxc'` since 0.27
   for (const reactCompiler of [true, {target: '18'}] as const) {
     const ctx = createContext({reactCompiler})
     const [build] = resolveTsdownBuilds(ctx)

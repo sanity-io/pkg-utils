@@ -191,18 +191,15 @@ export interface ReactCompilerConfigOptions {
 
 /**
  * The `transform: 'babel'` shape: `babel-plugin-react-compiler` (an optional peer dependency)
- * runs the compiler, with its own `PluginOptions` — the typings resolve once the package is
- * installed. The babel toolchain is not part of this config's dependency tree, so opting in
- * also means installing `@rolldown/plugin-babel` and `@babel/core` (both optional peer
- * dependencies).
+ * runs the compiler, with its own `PluginOptions` — install it together with
+ * `@rolldown/plugin-babel` and `@babel/core`.
  * @public
  */
 export type ReactCompilerBabelOptions = Partial<BabelReactCompilerPluginOptions> &
   ReactCompilerConfigOptions & {
     /**
-     * `babel-plugin-react-compiler`, the reference implementation — the opt-in for
-     * capabilities the Rust port lacks: a custom `jsxImportSource` (babel leaves JSX to
-     * rolldown's own transform), a `logger`, or function-valued `sources`.
+     * The reference implementation — for what the Rust port lacks: custom `jsxImportSource`,
+     * `logger`, function-valued `sources`.
      */
     transform: 'babel'
   }
@@ -593,9 +590,7 @@ async function resolvePackageConfig(
   if (reactCompiler !== false) {
     // Lazy loaded so the toolchain is only paid for when enabled. The compiler package itself
     // (`oxc-transform-react` / `babel-plugin-react-compiler`, per `transform`) resolves from
-    // the consumer package, which is why both are optional peer dependencies — and so is the
-    // whole babel toolchain (`@rolldown/plugin-babel`, `@babel/core`), so packages that stay
-    // on the default `oxc` transform never install babel at all.
+    // the consumer package — everything babel-flavored is an optional peer dependency.
     const reactCompilerOptions: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
     if (reactCompilerOptions.transform === 'babel') {
       // The opt-in reference implementation follows the official tsdown recipe for the React
@@ -604,7 +599,7 @@ async function resolvePackageConfig(
       const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
         import('@rolldown/plugin-babel').catch((cause: unknown) => {
           throw new Error(
-            '`reactCompiler: {transform: "babel"}` needs the babel toolchain, which `@sanity/tsdown-config` does not install — run `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler` (or drop `transform` for the default `oxc` implementation, which only needs `oxc-transform-react`).',
+            '`reactCompiler: {transform: "babel"}` needs `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler`.',
             {cause},
           )
         }),

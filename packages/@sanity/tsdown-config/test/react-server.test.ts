@@ -389,9 +389,7 @@ describe('react-server-library', () => {
     ])
 
     // The compiled output is auto-memoized with the memo cache provided by
-    // `react/compiler-runtime` (the fixture sets
-    // `reactCompiler: {target: '19', transform: 'babel'}`, so this exercises the opt-in
-    // babel implementation end-to-end)
+    // `react/compiler-runtime` (the fixture opts into `transform: 'babel'`)
     expect(distIndexJs).toContain('react/compiler-runtime')
 
     // The react-server output is the same source without the compiler: no

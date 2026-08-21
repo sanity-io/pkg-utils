@@ -26,34 +26,21 @@ export type {
   StyledComponentsOptions,
 } from '@sanity/tsdown-config'
 
-// pkg-utils declares its own `ReactCompiler*` shapes instead of re-exporting
-// `@sanity/tsdown-config`'s: since 0.27 that config defaults `reactCompiler.transform` to
-// `'oxc'` (its babel shape requires an explicit `transform: 'babel'`), while `pkg build`
-// keeps `'babel'` as the default implementation — flipping it would break published configs,
-// whose compiler package is a peer the package itself installs (`reactCompiler: true`
-// projects have `babel-plugin-react-compiler`, not `oxc-transform-react`).
-// `resolveTsdownConfig` pins the transform before the options are forwarded.
-//
-// Both shapes are `interface … extends` (heritage clauses) rather than intersection type
-// aliases because the base types come from optional peer dependencies: in consumers that
-// don't install one of them, an intersection would degrade to `any` (`skipLibCheck` silences
-// the unresolved import inside the emitted declarations) and absorb the whole
-// `ReactCompilerOptions` union, while an unresolvable heritage clause is dropped — the shape
-// degrades to its own `transform` member and the union keeps discriminating.
+// Declared locally instead of re-exported: `@sanity/tsdown-config` 0.27+ defaults
+// `reactCompiler.transform` to `'oxc'`, pkg-utils keeps `'babel'` (flipping would break
+// published configs). `interface … extends` so an uninstalled optional peer drops the
+// heritage clause instead of degrading the union to `any`.
 
 /**
  * The default `reactCompiler` shape: `babel-plugin-react-compiler` (an optional peer
- * dependency) runs the compiler, with its own `PluginOptions` — the typings resolve once the
- * package is installed. Until then the compiler options fall away and only `transform` and
- * `reactServer` remain typed.
+ * dependency) runs the compiler, with its own `PluginOptions`.
  * @public
  */
 export interface ReactCompilerBabelOptions
   extends Partial<BabelReactCompilerPluginOptions>,
     ReactCompilerConfigOptions {
   /**
-   * `babel-plugin-react-compiler`, the reference implementation. The rest of the babel
-   * toolchain (`@rolldown/plugin-babel`, `@babel/core`) ships with pkg-utils.
+   * `babel-plugin-react-compiler`, the reference implementation.
    * @defaultValue 'babel'
    */
   transform?: 'babel'
@@ -61,26 +48,18 @@ export interface ReactCompilerBabelOptions
 
 /**
  * The `transform: 'oxc'` shape: `oxc-transform-react` (an optional peer dependency) runs the
- * compiler, with its own `ReactCompilerOptions` — the serializable subset of the babel
- * plugin's (no `logger`, no function-valued `sources`); the typings resolve once the package
- * is installed. Until then the compiler options fall away and only `transform` and
- * `reactServer` remain typed.
+ * compiler — the serializable subset of the babel plugin's options.
  * @public
  */
 export interface ReactCompilerOxcOptions
   extends OxcReactCompilerOptions,
     ReactCompilerConfigOptions {
-  /**
-   * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
-   * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
-   * custom `jsxImportSource`.
-   */
+  /** `oxc-transform-react`, the Rust port — stay on `'babel'` for a custom `jsxImportSource`. */
   transform: 'oxc'
 }
 
 /**
- * Options for the React Compiler: the compiler's own options, plus `transform` (which
- * implementation runs) — handled by `pkg build`, never forwarded to the compiler.
+ * Options for the React Compiler: the compiler's own options, plus `transform`.
  * @public
  */
 export type ReactCompilerOptions = ReactCompilerBabelOptions | ReactCompilerOxcOptions
@@ -236,10 +215,8 @@ export interface PkgConfigOptions {
    * Runs the React Compiler on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options
    * object (e.g. `{target: '18'}`). `transform` picks the implementation: `'babel'`
-   * (default, requires `babel-plugin-react-compiler` — the rest of the babel toolchain ships
-   * with pkg-utils) or `'oxc'` (requires `oxc-transform-react`, the Rust port). Unlike
-   * `@sanity/tsdown-config` (which defaults to `'oxc'` since 0.27), pkg-utils keeps `'babel'`
-   * as the default implementation.
+   * (default, requires `babel-plugin-react-compiler`) or `'oxc'` (requires
+   * `oxc-transform-react`, the Rust port).
    */
   reactCompiler?: boolean | ReactCompilerOptions
   /**
