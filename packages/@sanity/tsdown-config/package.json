@@ -38,6 +38,7 @@
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
+    "pretest": "pnpm run build",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
