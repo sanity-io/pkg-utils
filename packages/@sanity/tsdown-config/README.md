@@ -64,10 +64,8 @@ Good to know about `'oxc'` (via `@vitejs/plugin-react`'s [`compiler` option](htt
 - One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Stay on `'babel'`.
 - Options are the serializable subset: no `logger`, no function-valued `sources`.
 
-Only the implementation you use needs to be installed, and the compiler option typings come
-from the installed package: the other implementation's branch degrades to just
-`transform`/`reactServer` until its package is installed. No `declare module` stubs are needed
-for the implementation you skip.
+Only the implementation you use needs to be installed: the other one's options simply stay
+untyped (no `declare module` stubs needed).
 
 > [!WARNING]
 > The Rust port is experimental (`transform: 'oxc'` is `@alpha`): review the generated output before publishing.
