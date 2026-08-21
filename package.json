@@ -24,7 +24,7 @@
     "playground:clean": "pnpm --filter './playground/**' --silent run clean",
     "playground:typecheck": "pnpm --filter './playground/**' typecheck",
     "release": "changeset publish",
-    "pretest": "pnpm --filter '@sanity/pkg-utils' pretest && pnpm --filter '@sanity/tsdown-config' pretest && pnpm run playground:clean",
+    "pretest": "pnpm --filter '@sanity/pkg-utils' pretest && pnpm --filter @sanity/tsdown-config pretest && pnpm run playground:clean",
     "test": "vitest run",
     "test:update-snapshots": "vitest run --update",
     "test:watch": "vitest",
