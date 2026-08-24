@@ -203,8 +203,7 @@ export interface ReactCompilerConfigOptions {
  * @public
  */
 export interface ReactCompilerBabelOptions
-  extends Partial<BabelReactCompilerPluginOptions>,
-    ReactCompilerConfigOptions {
+  extends Partial<BabelReactCompilerPluginOptions>, ReactCompilerConfigOptions {
   /**
    * `babel-plugin-react-compiler`, the reference implementation.
    * @defaultValue 'babel'
@@ -219,8 +218,7 @@ export interface ReactCompilerBabelOptions
  * @public
  */
 export interface ReactCompilerOxcOptions
-  extends OxcReactCompilerOptions,
-    ReactCompilerConfigOptions {
+  extends OxcReactCompilerOptions, ReactCompilerConfigOptions {
   /**
    * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
    * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a

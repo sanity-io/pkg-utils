@@ -20,9 +20,7 @@ const repoRoot = path.resolve(packageDir, '../../..')
 function typecheckConsumer(consumerCode: string, blockedModules: string[]): string {
   // Forward slashes: TypeScript normalizes paths before host callbacks see them, so a
   // backslash path would never match the `===` checks below on Windows
-  const consumerPath = path
-    .join(packageDir, '__optional-peer-consumer__.ts')
-    .replaceAll('\\', '/')
+  const consumerPath = path.join(packageDir, '__optional-peer-consumer__.ts').replaceAll('\\', '/')
   const compilerOptions: ts.CompilerOptions = {
     module: ts.ModuleKind.Preserve,
     moduleResolution: ts.ModuleResolutionKind.Bundler,
@@ -38,7 +36,8 @@ function typecheckConsumer(consumerCode: string, blockedModules: string[]): stri
   const defaultReadFile = host.readFile.bind(host)
   const defaultGetSourceFile = host.getSourceFile.bind(host)
   host.fileExists = (fileName) => fileName === consumerPath || defaultFileExists(fileName)
-  host.readFile = (fileName) => (fileName === consumerPath ? consumerCode : defaultReadFile(fileName))
+  host.readFile = (fileName) =>
+    fileName === consumerPath ? consumerCode : defaultReadFile(fileName)
   host.getSourceFile = (fileName, languageVersionOrOptions, ...rest) =>
     fileName === consumerPath
       ? ts.createSourceFile(fileName, consumerCode, languageVersionOrOptions)
