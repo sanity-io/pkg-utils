@@ -35,6 +35,7 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  - '@types/react-dom@19.2.5'
   - '@tsdown/css@0.22.14'
   - '@sanity/ui@4.0.1'
   - '@sanity/diff@6.9.2'
@@ -72,6 +73,7 @@ trustPolicyExclude:
   - '@octokit/endpoint@9.0.6'
   - '@octokit/plugin-paginate-rest@9.2.2'
   - '@sanity/sdk@2.1.2'
+  - '@sanity/sdk@3.0.0-rc.1'
   - chokidar@4.0.3
   - groq@3.88.1-typegen-experimental.0
   - tinyexec@1.2.2
