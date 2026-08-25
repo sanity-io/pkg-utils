@@ -24,7 +24,7 @@
     "playground:clean": "pnpm --filter './playground/**' --silent run clean",
     "playground:typecheck": "pnpm --filter './playground/**' typecheck",
     "release": "changeset publish",
-    "pretest": "pnpm --filter '@sanity/pkg-utils' pretest && pnpm run playground:clean",
+    "pretest": "pnpm --filter '@sanity/pkg-utils' pretest && pnpm --filter @sanity/tsdown-config pretest && pnpm run playground:clean",
     "test": "vitest run",
     "test:update-snapshots": "vitest run --update",
     "test:watch": "vitest",
@@ -52,7 +52,7 @@
     "knip": "^6.32.2",
     "lint-staged": "^16.4.0",
     "npm-run-all2": "^9.0.3",
-    "oxlint": "^1.78.0",
+    "oxlint": "^1.80.0",
     "oxlint-tsgolint": "^7.0.2001",
     "prettier": "^3.9.6",
     "rimraf": "^6.1.3",
@@ -61,7 +61,7 @@
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@11.24.0",
   "@parcel/resolver-default": {
     "packageExports": true
   }

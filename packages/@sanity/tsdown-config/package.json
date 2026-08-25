@@ -1,6 +1,6 @@
 {
   "name": "@sanity/tsdown-config",
-  "version": "0.26.0",
+  "version": "0.26.1",
   "description": "Shared configuration for tsdown",
   "keywords": [
     "sanity-io",
@@ -38,11 +38,12 @@
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
+    "pretest": "pnpm run build",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@microsoft/api-extractor": "^7.58.12",
+    "@microsoft/api-extractor": "^7.59.0",
     "@microsoft/tsdoc-config": "^0.18.1",
     "@sanity/browserslist-config": "^1.0.5",
     "@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
@@ -52,8 +53,8 @@
     "jsonc-parser": "^3.3.1",
     "lightningcss": "catalog:",
     "package-manager-detector": "^1.8.0",
-    "publint": "^0.3.23",
-    "rolldown": "~1.2.4"
+    "publint": "^0.3.24",
+    "rolldown": "~1.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

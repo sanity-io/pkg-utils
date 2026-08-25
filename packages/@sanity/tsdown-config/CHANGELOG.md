@@ -1,5 +1,20 @@
 # @sanity/tsdown-config
 
+## 0.26.1
+
+### Patch Changes
+
+- [#3332](https://github.com/sanity-io/pkg-utils/pull/3332) [`39567ea`](https://github.com/sanity-io/pkg-utils/commit/39567ea66d624c81013aee38310d6e00fc02579c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.58.13
+
+- [#3334](https://github.com/sanity-io/pkg-utils/pull/3334) [`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.24
+
+- [#3338](https://github.com/sanity-io/pkg-utils/pull/3338) [`c22bbd1`](https://github.com/sanity-io/pkg-utils/commit/c22bbd1665562dda2b4de6e7b435d4832d256410) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.59.0
+
+- [#3319](https://github.com/sanity-io/pkg-utils/pull/3319) [`f4ce0f7`](https://github.com/sanity-io/pkg-utils/commit/f4ce0f7e1e02fd7843267d7302d3ecfd7ebfb23c) Thanks [@stipsan](https://github.com/stipsan)! - Installing only one of the optional React Compiler packages no longer breaks `defineConfig()`'s types. The missing package's typings used to degrade to `any` and collapse the `ReactCompilerOptions` union, so every `reactCompiler` config resolved to the `reactServer: true` overload (`Promise<UserConfig[]>`) unless consumers stubbed the missing module. Now the uninstalled branch degrades to just `transform`/`reactServer` while the installed one keeps its real typings — stubs like sanity-io/ui's `typings/babel-plugin-react-compiler.d.ts` can be deleted.
+
+- Updated dependencies [[`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.3
+
 ## 0.26.0
 
 ### Minor Changes

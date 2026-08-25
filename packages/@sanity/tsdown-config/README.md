@@ -65,7 +65,9 @@ Good to know about the default `'oxc'` (via `@vitejs/plugin-react`'s [`compiler`
 - Options are the serializable subset: no `logger`, no function-valued `sources`.
 
 `'babel'` runs the reference implementation and covers those cases. It's opt-in: babel never
-lands in `node_modules` unless you set `transform: 'babel'` and install the toolchain.
+lands in `node_modules` unless you set `transform: 'babel'` and install the toolchain. Only
+the implementation you use needs to be installed — the other one's options simply stay
+untyped (no `declare module` stubs needed).
 
 ### React Server Components (`reactServer`)
 
