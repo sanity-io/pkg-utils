@@ -35,6 +35,7 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  - '@types/react-dom@19.2.5'
   - '@tsdown/css@0.22.14'
   - '@sanity/ui@4.0.1'
   - '@sanity/diff@6.9.2'
