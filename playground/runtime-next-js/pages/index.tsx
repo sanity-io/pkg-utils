@@ -20,7 +20,13 @@ export default function IndexPage(
   // it expects the values to be the same on the server and client.
   const [{index, extra}, setState] = useState(props)
 
-  useEffect(() => setState({index: _index, extra: _extra}), [])
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setState({index: _index, extra: _extra})
+    }, 0)
+
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   return (
     <div>
