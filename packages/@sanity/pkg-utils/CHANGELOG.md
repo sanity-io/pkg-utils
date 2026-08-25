@@ -1,5 +1,12 @@
 # @sanity/pkg-utils
 
+## 12.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`dd6510f`](https://github.com/sanity-io/pkg-utils/commit/dd6510f1277d9cd37254b40d48bf1bb60d75e367)]:
+  - @sanity/tsdown-config@0.26.2
+
 ## 12.3.1
 
 ### Patch Changes
