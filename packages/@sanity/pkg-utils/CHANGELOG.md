@@ -1,5 +1,17 @@
 # @sanity/pkg-utils
 
+## 12.3.1
+
+### Patch Changes
+
+- [#3333](https://github.com/sanity-io/pkg-utils/pull/3333) [`c5aff11`](https://github.com/sanity-io/pkg-utils/commit/c5aff11b16bb737a0b1b101faf2c41192313430c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency globby to ^16.2.4
+
+- [#3334](https://github.com/sanity-io/pkg-utils/pull/3334) [`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.24
+
+- Updated dependencies [[`39567ea`](https://github.com/sanity-io/pkg-utils/commit/39567ea66d624c81013aee38310d6e00fc02579c), [`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526), [`c22bbd1`](https://github.com/sanity-io/pkg-utils/commit/c22bbd1665562dda2b4de6e7b435d4832d256410), [`f4ce0f7`](https://github.com/sanity-io/pkg-utils/commit/f4ce0f7e1e02fd7843267d7302d3ecfd7ebfb23c)]:
+  - @sanity/tsdown-config@0.26.1
+  - @sanity/parse-package-json@2.3.3
+
 ## 12.3.0
 
 ### Minor Changes
