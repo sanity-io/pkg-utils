@@ -73,7 +73,7 @@ describe('bundleAnalyzer option', () => {
     if (!compiled || !reactServer)
       throw new Error('expected the compiled and react-server variants')
 
-    expect(getPluginNames(compiled)).toEqual(['@rolldown/plugin-babel', BUNDLE_ANALYZER_PLUGIN])
+    expect(getPluginNames(compiled)).toEqual(['vite:react-compiler', BUNDLE_ANALYZER_PLUGIN])
     expect(getPluginNames(reactServer)).toEqual([])
   })
 })

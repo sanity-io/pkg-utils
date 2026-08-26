@@ -20,7 +20,7 @@ bundled, so published components are memoized automatically. The compiler needs 
 installed separately:
 
 ```sh
-pnpm add --save-dev babel-plugin-react-compiler
+pnpm add --save-dev oxc-transform-react
 ```
 
 Then enable it:
@@ -47,28 +47,27 @@ export default defineConfig({
 
 `transform` picks which implementation of the compiler runs:
 
-| `transform`         | Runs                                                                                       | Install                                   |
-| ------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------- |
-| `'babel'` (default) | [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) | `pnpm add -D babel-plugin-react-compiler` |
-| `'oxc'`             | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`         |
+| `transform`       | Runs                                                                                       | Install                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| `'oxc'` (default) | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`                                             |
+| `'babel'`         | [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) | `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler` |
 
 ```ts
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
-  reactCompiler: {target: '19', transform: 'oxc'},
+  reactCompiler: {target: '19', transform: 'babel'},
 })
 ```
 
-Good to know about `'oxc'` (via `@vitejs/plugin-react`'s [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419)):
+Good to know about the default `'oxc'` (via `@vitejs/plugin-react`'s [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419)):
 
-- One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Stay on `'babel'`.
+- One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Opt into `'babel'`.
 - Options are the serializable subset: no `logger`, no function-valued `sources`.
 
-Only the implementation you use needs to be installed: the other one's options simply stay
+`'babel'` runs the reference implementation and covers those cases. It's opt-in: babel never
+lands in `node_modules` unless you set `transform: 'babel'` and install the toolchain. Only
+the implementation you use needs to be installed — the other one's options simply stay
 untyped (no `declare module` stubs needed).
-
-> [!WARNING]
-> The Rust port is experimental (`transform: 'oxc'` is `@alpha`): review the generated output before publishing.
 
 ### React Server Components (`reactServer`)
 

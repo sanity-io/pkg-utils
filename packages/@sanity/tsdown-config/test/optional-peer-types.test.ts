@@ -91,15 +91,18 @@ const babelDual: Promise<UserConfig[]> = defineConfig({
   reactCompiler: {transform: 'babel', reactServer: true},
 })
 
+// Without a transform the options resolve against the installed oxc default
+const oxcDefault: Promise<UserConfig> = defineConfig({reactCompiler: {compilationMode: 'infer'}})
+
 // The installed oxc branch keeps its real option typings
 // @ts-expect-error -- 'nope' is not a React Compiler target
 const invalidTarget = defineConfig({reactCompiler: {transform: 'oxc', target: 'nope'}})
 
 // The uninstalled babel branch degrades to transform/reactServer
 // @ts-expect-error -- babel compiler options don't resolve without the package
-const babelDegraded = defineConfig({reactCompiler: {compilationMode: 'infer'}})
+const babelDegraded = defineConfig({reactCompiler: {transform: 'babel', compilationMode: 'infer'}})
 
-export {babelDegraded, babelDual, dual, invalidTarget, single}
+export {babelDegraded, babelDual, dual, invalidTarget, oxcDefault, single}
 `,
       ['babel-plugin-react-compiler'],
     )
@@ -107,26 +110,30 @@ export {babelDegraded, babelDual, dual, invalidTarget, single}
   })
 
   test('a consumer without oxc-transform-react keeps working types', () => {
-    // The mirror image: only babel installed (the default `transform: 'babel'` setup)
+    // The mirror image: only babel installed (the opt-in transform: 'babel' setup)
     const diagnostics = typecheckConsumer(
       `${consumerPreamble}
 const single: Promise<UserConfig> = defineConfig({
-  reactCompiler: {target: '18', compilationMode: 'infer'},
+  reactCompiler: {target: '18', transform: 'babel', compilationMode: 'infer'},
 })
 
 const dual: Promise<UserConfig[]> = defineConfig({
-  reactCompiler: {target: '18', reactServer: true},
+  reactCompiler: {target: '18', transform: 'babel', reactServer: true},
 })
 
 // The installed babel branch keeps its real option typings
 // @ts-expect-error -- 'nope' is not a compilationMode
-const invalidMode = defineConfig({reactCompiler: {compilationMode: 'nope'}})
+const invalidMode = defineConfig({reactCompiler: {transform: 'babel', compilationMode: 'nope'}})
+
+// Without transform: 'babel' the options fall into the (uninstalled) oxc default
+// @ts-expect-error -- the degraded oxc branch has no compiler options
+const missingTransform = defineConfig({reactCompiler: {target: '18'}})
 
 // The uninstalled oxc branch degrades to transform/reactServer
 // @ts-expect-error -- oxc compiler options don't resolve without the package
 const oxcDegraded = defineConfig({reactCompiler: {transform: 'oxc', compilationMode: 'infer'}})
 
-export {dual, invalidMode, oxcDegraded, single}
+export {dual, invalidMode, missingTransform, oxcDegraded, single}
 `,
       ['oxc-transform-react'],
     )
@@ -158,6 +165,7 @@ export {degraded, dual, enabled, single}
 const babel: Promise<UserConfig> = defineConfig({
   reactCompiler: {
     target: '18',
+    transform: 'babel',
     compilationMode: 'infer',
     logger: {logEvent: () => {}},
     sources: (filename) => filename.includes('src'),
@@ -272,7 +280,7 @@ const dual: Promise<UserConfig[]> = defineConfig({
 const invalidTarget = defineConfig({reactCompiler: {transform: 'oxc', target: 'nope'}})
 
 // @ts-expect-error -- babel compiler options don't resolve without the package
-const babelDegraded = defineConfig({reactCompiler: {compilationMode: 'infer'}})
+const babelDegraded = defineConfig({reactCompiler: {transform: 'babel', compilationMode: 'infer'}})
 
 export default config
 export {babelDegraded, dual, invalidTarget}

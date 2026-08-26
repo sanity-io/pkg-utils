@@ -703,6 +703,12 @@ importers:
 
   packages/@sanity/pkg-utils:
     dependencies:
+      '@babel/core':
+        specifier: ^7.29.7
+        version: 7.29.7(supports-color@10.2.2)
+      '@rolldown/plugin-babel':
+        specifier: ^0.2.3
+        version: 0.2.3(@babel/core@7.29.7(supports-color@10.2.2))(@babel/runtime@7.29.7)(rolldown@1.2.5)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
       '@sanity/browserslist-config':
         specifier: ^1.0.5
         version: 1.0.5
@@ -785,6 +791,9 @@ importers:
       '@sanity/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig
+      '@types/babel__core':
+        specifier: ^7.20.5
+        version: 7.20.5
       '@types/find-config':
         specifier: ^1.0.4
         version: 1.0.4
@@ -826,18 +835,12 @@ importers:
 
   packages/@sanity/tsdown-config:
     dependencies:
-      '@babel/core':
-        specifier: ^7.29.7
-        version: 7.29.7(supports-color@10.2.2)
       '@microsoft/api-extractor':
         specifier: ^7.59.0
         version: 7.59.0(@types/node@24.13.3)
       '@microsoft/tsdoc-config':
         specifier: ^0.18.1
         version: 0.18.1
-      '@rolldown/plugin-babel':
-        specifier: ^0.2.3
-        version: 0.2.3(@babel/core@7.29.7(supports-color@10.2.2))(@babel/runtime@7.29.7)(rolldown@1.2.5)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
       '@sanity/browserslist-config':
         specifier: ^1.0.5
         version: 1.0.5
@@ -869,6 +872,12 @@ importers:
         specifier: ~1.2.5
         version: 1.2.5
     devDependencies:
+      '@babel/core':
+        specifier: ^7.29.7
+        version: 7.29.7(supports-color@10.2.2)
+      '@rolldown/plugin-babel':
+        specifier: ^0.2.3
+        version: 0.2.3(@babel/core@7.29.7(supports-color@10.2.2))(@babel/runtime@7.29.7)(rolldown@1.2.5)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
       '@sanity/pkg-utils':
         specifier: workspace:*
         version: link:../pkg-utils
@@ -931,6 +940,12 @@ importers:
 
   packages/@sanity/tsdown-config/test/fixtures/react-server-library:
     devDependencies:
+      '@babel/core':
+        specifier: ^7.29.7
+        version: 7.29.7(supports-color@10.2.2)
+      '@rolldown/plugin-babel':
+        specifier: ^0.2.3
+        version: 0.2.3(@babel/core@7.29.7(supports-color@10.2.2))(@babel/runtime@7.29.7)(rolldown@1.2.5)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18

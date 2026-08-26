@@ -197,23 +197,23 @@ export interface ReactCompilerConfigOptions {
 // `reactServer`), so the union keeps discriminating. See `test/optional-peer-types.test.ts`.
 
 /**
- * The default `reactCompiler` shape: `babel-plugin-react-compiler` (an optional peer
- * dependency) runs the compiler, with its own `PluginOptions` — typed once the package is
- * installed.
+ * The `transform: 'babel'` shape: `babel-plugin-react-compiler` (an optional peer dependency)
+ * runs the compiler, with its own `PluginOptions` — typed once the package is installed.
+ * Install it together with `@rolldown/plugin-babel` and `@babel/core`.
  * @public
  */
 export interface ReactCompilerBabelOptions
   extends Partial<BabelReactCompilerPluginOptions>, ReactCompilerConfigOptions {
   /**
-   * `babel-plugin-react-compiler`, the reference implementation.
-   * @defaultValue 'babel'
+   * The reference implementation — for what the Rust port lacks: custom `jsxImportSource`,
+   * `logger`, function-valued `sources`.
    */
-  transform?: 'babel'
+  transform: 'babel'
 }
 
 /**
- * The `transform: 'oxc'` shape: `oxc-transform-react` (an optional peer dependency) runs the
- * compiler, with its own `ReactCompilerOptions` — the serializable subset of the babel
+ * The default `reactCompiler` shape: `oxc-transform-react` (an optional peer dependency) runs
+ * the compiler, with its own `ReactCompilerOptions` — the serializable subset of the babel
  * plugin's (no `logger`, no function-valued `sources`), typed once the package is installed.
  * @public
  */
@@ -221,11 +221,11 @@ export interface ReactCompilerOxcOptions
   extends OxcReactCompilerOptions, ReactCompilerConfigOptions {
   /**
    * `oxc-transform-react`, the Rust port. Its one native pass also strips TypeScript and
-   * lowers JSX (automatic runtime, `react` import source) — stay on `'babel'` with a
+   * lowers JSX (automatic runtime, `react` import source) — opt into `'babel'` for a
    * custom `jsxImportSource`.
-   * @alpha Experimental — review the generated output before publishing.
+   * @defaultValue 'oxc'
    */
-  transform: 'oxc'
+  transform?: 'oxc'
 }
 
 /**
@@ -370,11 +370,11 @@ export interface PackageOptions extends Pick<
    * Runs the React Compiler on the source files before they are bundled, so published
    * components are memoized automatically. Pass `true` to use the defaults, or an options
    * object (e.g. `{target: '18'}`). This is the same feature as the
-   * `babel: {reactCompiler: true}` and `reactCompilerOptions` options in `@sanity/pkg-utils`.
+   * `reactCompiler` option in `@sanity/pkg-utils`.
    *
-   * `transform` picks the implementation — `'babel'` (default, requires
-   * `babel-plugin-react-compiler`) or the experimental `'oxc'` (requires
-   * `oxc-transform-react`), see {@link ReactCompilerOxcOptions} — and `reactServer` adds the
+   * `transform` picks the implementation — `'oxc'` (default, requires `oxc-transform-react`)
+   * or `'babel'` (requires `babel-plugin-react-compiler`, `@rolldown/plugin-babel` and
+   * `@babel/core`), see {@link ReactCompilerBabelOptions} — and `reactServer` adds the
    * uncompiled `react-server` build, see {@link ReactCompilerConfigOptions.reactServer}.
    * @defaultValue false
    */
@@ -595,15 +595,39 @@ async function resolvePackageConfig(
   const plugins: Rolldown.Plugin[] = []
   if (reactCompiler !== false) {
     // Lazy loaded so the toolchain is only paid for when enabled. The compiler package itself
-    // (`babel-plugin-react-compiler` / `oxc-transform-react`, per `transform`) resolves from
-    // the consumer package, which is why both are optional peer dependencies.
+    // (`oxc-transform-react` / `babel-plugin-react-compiler`, per `transform`) resolves from
+    // the consumer package — everything babel-flavored is an optional peer dependency.
     const reactCompilerOptions: ReactCompilerOptions = reactCompiler === true ? {} : reactCompiler
-    if (reactCompilerOptions.transform === 'oxc') {
-      // `@vitejs/plugin-react`'s `compiler` option: `oxc-transform-react` compiles, strips
-      // TypeScript and lowers JSX in one native pass. Only the `vite:react-compiler` plugin is
-      // cherry-picked — the rest of the array is Vite-only (Fast Refresh wrapper, dev config).
-      // Outside Vite its defaults are what a library build wants: production JSX, sourcemaps,
-      // no Fast Refresh. `transform`/`reactServer` are this config's — drop before forwarding.
+    if (reactCompilerOptions.transform === 'babel') {
+      // The opt-in reference implementation follows the official tsdown recipe for the React
+      // Compiler: https://tsdown.dev/recipes/react-support#enabling-react-compiler
+      // The compiler leaves TypeScript and JSX in place for rolldown's own transform.
+      const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
+        import('@rolldown/plugin-babel').catch((cause: unknown) => {
+          throw new Error(
+            '`reactCompiler: {transform: "babel"}` needs `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler`.',
+            {cause},
+          )
+        }),
+        import('@vitejs/plugin-react'),
+      ])
+      const {
+        reactServer: _reactServer,
+        transform: _transform,
+        ...compilerOptions
+      } = reactCompilerOptions
+      plugins.push(
+        await pluginBabel({
+          presets: [reactCompilerPreset(compilerOptions)],
+        }),
+      )
+    } else {
+      // The default: `@vitejs/plugin-react`'s `compiler` option — `oxc-transform-react`
+      // compiles, strips TypeScript and lowers JSX in one native pass. Only the
+      // `vite:react-compiler` plugin is cherry-picked — the rest of the array is Vite-only
+      // (Fast Refresh wrapper, dev config). Outside Vite its defaults are what a library
+      // build wants: production JSX, sourcemaps, no Fast Refresh. `transform`/`reactServer`
+      // are this config's — drop before forwarding.
       const {
         reactServer: _reactServer,
         transform: _transform,
@@ -621,28 +645,10 @@ async function resolvePackageConfig(
       }).find((plugin) => plugin.name === 'vite:react-compiler')
       if (!compilerPlugin) {
         throw new Error(
-          '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support `reactCompiler: {transform: "oxc"}`.',
+          '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support the default `oxc` implementation of the `reactCompiler` option.',
         )
       }
       plugins.push(compilerPlugin)
-    } else {
-      // The default implementation follows the official tsdown recipe for the React Compiler:
-      // https://tsdown.dev/recipes/react-support#enabling-react-compiler
-      // The compiler leaves TypeScript and JSX in place for rolldown's own transform.
-      const [{default: pluginBabel}, {reactCompilerPreset}] = await Promise.all([
-        import('@rolldown/plugin-babel'),
-        import('@vitejs/plugin-react'),
-      ])
-      const {
-        reactServer: _reactServer,
-        transform: _transform,
-        ...compilerOptions
-      } = reactCompilerOptions
-      plugins.push(
-        await pluginBabel({
-          presets: [reactCompilerPreset(compilerOptions)],
-        }),
-      )
     }
   }
   if (options.vanillaExtract) {
