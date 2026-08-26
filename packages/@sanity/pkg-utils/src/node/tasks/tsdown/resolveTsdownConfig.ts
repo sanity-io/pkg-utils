@@ -37,7 +37,9 @@ export async function resolveTsdownConfig(
 ): Promise<InlineConfig> {
   const {config, cwd, distPath, pkg} = ctx
 
-  const reactCompiler = config?.reactCompiler
+  // `?? false` up front (like tsdown-config's own normalization): JS configs bypass the
+  // types, and a `reactCompiler: null` would pass the `typeof … === 'object'` checks below
+  const reactCompiler = config?.reactCompiler ?? false
   if (typeof reactCompiler === 'object' && reactCompiler.reactServer === true) {
     throw new Error(
       [
@@ -50,14 +52,14 @@ export async function resolveTsdownConfig(
   }
   // Pin the `'babel'` default before forwarding: `@sanity/tsdown-config` defaults to `'oxc'`
   // since 0.27, and inheriting the flip would break published configs.
-  const reactCompilerOption: TsdownConfigReactCompilerOptions | boolean | undefined =
+  const reactCompilerOption: TsdownConfigReactCompilerOptions | boolean =
     typeof reactCompiler === 'object'
       ? reactCompiler.transform === 'oxc'
         ? reactCompiler
         : {...reactCompiler, transform: 'babel'}
-      : reactCompiler === true
+      : reactCompiler
         ? {transform: 'babel'}
-        : reactCompiler
+        : false
 
   const entry: Record<string, string> = {}
   for (const buildEntry of build.entries) {

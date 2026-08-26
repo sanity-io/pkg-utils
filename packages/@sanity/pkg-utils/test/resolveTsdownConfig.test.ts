@@ -140,6 +140,19 @@ test('keeps `babel` as the default `reactCompiler` transform', async () => {
   expect(pluginNames(config)).not.toContain('@rolldown/plugin-babel')
 })
 
+test('a JS config with `reactCompiler: null` disables the compiler instead of crashing', async () => {
+  // JS configs bypass the types, and `typeof null === 'object'`
+  const nullConfig: PkgConfigOptions = JSON.parse('{"reactCompiler": null}')
+  const ctx = createContext(nullConfig)
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const config = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(pluginNames(config)).not.toContain('@rolldown/plugin-babel')
+  expect(pluginNames(config)).not.toContain('vite:react-compiler')
+})
+
 function pluginNames(config: {plugins?: unknown}): string[] {
   const {plugins} = config
   if (!Array.isArray(plugins)) return []
