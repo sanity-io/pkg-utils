@@ -45,17 +45,7 @@ minimumReleaseAgeExclude:
   - '@sanity/types@6.9.2'
   - '@sanity/util@6.9.2'
   - sanity@6.9.2
-  - '@yuku-parser/binding-darwin-arm64@0.8.0'
-  - '@yuku-parser/binding-darwin-x64@0.8.0'
-  - '@yuku-parser/binding-freebsd-x64@0.8.0'
-  - '@yuku-parser/binding-linux-arm-gnu@0.8.0'
-  - '@yuku-parser/binding-linux-arm-musl@0.8.0'
-  - '@yuku-parser/binding-linux-arm64-gnu@0.8.0'
-  - '@yuku-parser/binding-linux-arm64-musl@0.8.0'
-  - '@yuku-parser/binding-linux-x64-gnu@0.8.0'
-  - '@yuku-parser/binding-linux-x64-musl@0.8.0'
-  - '@yuku-parser/binding-win32-arm64@0.8.0'
-  - '@yuku-parser/binding-win32-x64@0.8.0'
+  - '@yuku-parser/*'
   - '@vitejs/plugin-react@6.1.0'
   - '@oxlint/binding-android-arm-eabi@1.80.0'
   - '@oxlint/binding-android-arm64@1.80.0'
@@ -79,6 +69,8 @@ minimumReleaseAgeExclude:
   - oxlint@1.80.0
   - tsdown@0.22.14
   - verkit@0.3.0
+
+minimumReleaseAgeExcludePrune: true
 
 overrides:
   '@sanity/pkg-utils': workspace:*
