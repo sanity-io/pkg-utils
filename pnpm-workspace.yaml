@@ -46,6 +46,7 @@ minimumReleaseAgeExclude:
   - '@sanity/util@6.9.2'
   - sanity@6.9.2
   - '@yuku-parser/*'
+  - '@yuku-toolchain/types@0.9.3'
   - '@vitejs/plugin-react@6.1.0'
   - '@oxlint/binding-android-arm-eabi@1.80.0'
   - '@oxlint/binding-android-arm64@1.80.0'
@@ -69,8 +70,10 @@ minimumReleaseAgeExclude:
   - '@rolldown/*'
   - oxlint@1.80.0
   - rolldown
-  - tsdown@0.22.14
   - verkit@0.3.0
+  - yuku-ast@0.9.3
+  - yuku-parser@0.9.3
+  - tsdown@0.22.14
 
 minimumReleaseAgeExcludePrune: true
 
