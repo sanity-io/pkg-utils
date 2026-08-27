@@ -1,5 +1,16 @@
 # @sanity/tsdown-config
 
+## 0.27.0
+
+### Minor Changes
+
+- [#3320](https://github.com/sanity-io/pkg-utils/pull/3320) [`8d15fe5`](https://github.com/sanity-io/pkg-utils/commit/8d15fe5f622624755059b86dc12385011e7b55ac) Thanks [@stipsan](https://github.com/stipsan)! - **Breaking:** the babel pipeline is opt-in. `reactCompiler` defaults to `transform: 'oxc'`, and `@rolldown/plugin-babel` + `@babel/core` are optional peer dependencies instead of dependencies. To stay on babel: set `transform: 'babel'` and `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler`.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.5
+
 ## 0.26.2
 
 ### Patch Changes

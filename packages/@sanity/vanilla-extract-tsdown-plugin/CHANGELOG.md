@@ -1,5 +1,12 @@
 # @sanity/vanilla-extract-tsdown-plugin
 
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-rolldown-plugin@0.4.5
+
 ## 0.3.4
 
 ### Patch Changes

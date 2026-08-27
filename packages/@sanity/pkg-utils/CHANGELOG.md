@@ -1,5 +1,14 @@
 # @sanity/pkg-utils
 
+## 12.3.3
+
+### Patch Changes
+
+- [#3320](https://github.com/sanity-io/pkg-utils/pull/3320) [`8d15fe5`](https://github.com/sanity-io/pkg-utils/commit/8d15fe5f622624755059b86dc12385011e7b55ac) Thanks [@stipsan](https://github.com/stipsan)! - `reactCompiler` still defaults to the `'babel'` transform, and the babel toolchain `@sanity/tsdown-config` made opt-in now ships with pkg-utils — no changes needed.
+
+- Updated dependencies [[`8d15fe5`](https://github.com/sanity-io/pkg-utils/commit/8d15fe5f622624755059b86dc12385011e7b55ac)]:
+  - @sanity/tsdown-config@0.27.0
+
 ## 12.3.2
 
 ### Patch Changes
