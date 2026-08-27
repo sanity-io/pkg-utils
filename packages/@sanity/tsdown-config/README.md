@@ -48,8 +48,8 @@ export default defineConfig({
 `transform` picks which implementation of the compiler runs:
 
 | `transform`       | Runs                                                                                       | Install                                                                      |
-| ----------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| `'oxc'` (default) | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`                                             |
+| ----------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `'oxc'` (default) | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`                                            |
 | `'babel'`         | [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) | `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler` |
 
 ```ts
