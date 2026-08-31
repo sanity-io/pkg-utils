@@ -1,5 +1,15 @@
 # @sanity/tsdown-config
 
+## 0.27.1
+
+### Patch Changes
+
+- [#3348](https://github.com/sanity-io/pkg-utils/pull/3348) [`4abbbe4`](https://github.com/sanity-io/pkg-utils/commit/4abbbe40e5c1cfd57f5afdcdc82533a62f51f08d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.6
+
+- [#3361](https://github.com/sanity-io/pkg-utils/pull/3361) [`b7ca997`](https://github.com/sanity-io/pkg-utils/commit/b7ca997401cda4e370d8eddbdfcf7fdea46e4ae6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vitejs/plugin-react to ^6.1.1
+- Updated dependencies [[`4abbbe4`](https://github.com/sanity-io/pkg-utils/commit/4abbbe40e5c1cfd57f5afdcdc82533a62f51f08d)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.6
+
 ## 0.27.0
 
 ### Minor Changes
