@@ -1304,8 +1304,8 @@ importers:
   playground/sanity-plugin-with-styled-components:
     dependencies:
       '@sanity/ui':
-        specifier: ^4.0.6
-        version: 4.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        specifier: ^4.0.7
+        version: 4.0.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       react-compiler-runtime:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.8)
@@ -1338,8 +1338,8 @@ importers:
   playground/sanity-plugin-with-vanilla-extract:
     dependencies:
       '@sanity/ui':
-        specifier: ^4.0.6
-        version: 4.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        specifier: ^4.0.7
+        version: 4.0.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
     devDependencies:
       '@types/react':
         specifier: ^19.2.18
@@ -6668,8 +6668,16 @@ packages:
       react-dom: ^19.2
       styled-components: ^6.1
 
-  '@sanity/ui@5.0.0-alpha.6':
-    resolution: {integrity: sha512-o03jAkIlWTVTnf2xCFD99z9xwqZ2ZFQMcYwLdid5WMJhL6isJNblgyBrIrd+BGfySc1kxfW2l5GtW3Z1f5F56A==}
+  '@sanity/ui@4.0.7':
+    resolution: {integrity: sha512-hdXAqZDlctHUKVH7UJmQpCgeHefVjDIa3b6QUkCiLxS+tPhlRvNjOJRB32HAftWNw7scS6aJhXlqJp2/KvH8SA==}
+    engines: {node: '>=22.12'}
+    peerDependencies:
+      react: ^19.2
+      react-dom: ^19.2
+      styled-components: ^6.1
+
+  '@sanity/ui@5.0.0-alpha.7':
+    resolution: {integrity: sha512-hf/PNN9RSuRBaNUwGowj5yutd7OGTeDKaSd7uMFAeGZfz8lZ6DqtN2Aeqb4yeI+7QiezfelYP39gPLyrjVzLGg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     hasBin: true
     peerDependencies:
@@ -13998,6 +14006,11 @@ packages:
     peerDependencies:
       react: ^18.3 || ^19.0.0-0
 
+  use-effect-event@2.0.4:
+    resolution: {integrity: sha512-il5ezAwTIxg1dr+eXP+1SS1EpXe6IFy1oADvGxmiCNGCDX1X+ygERRDOFoCyzc+r6ktqag3VITmrw1ZPfoig1g==}
+    peerDependencies:
+      react: ^18.3 || ^19.0.0-0
+
   use-hot-module-reload@2.0.0:
     resolution: {integrity: sha512-RbL/OY1HjHNf5BYSFV3yDtQhIGKjCx9ntEjnUBYsOGc9fTo94nyFTcjtD42/twJkPgMljWpszUIpTGD3LuwHSg==}
     peerDependencies:
@@ -20787,7 +20800,7 @@ snapshots:
       '@sanity/icons': 5.2.1(react@19.2.8)
       '@sanity/ui': 4.0.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       react: 19.2.8
-      ui5: '@sanity/ui@5.0.0-alpha.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
+      ui5: '@sanity/ui@5.0.0-alpha.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
     transitivePeerDependencies:
       - react-dom
       - styled-components
@@ -21714,7 +21727,21 @@ snapshots:
       styled-components: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       use-effect-event: 2.0.3(react@19.2.8)
 
-  '@sanity/ui@5.0.0-alpha.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@sanity/ui@4.0.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(styled-components@6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@sanity/color': 3.0.8
+      '@sanity/icons': 5.2.1(react@19.2.8)
+      csstype: 3.2.3
+      motion: 13.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      react-is: 19.2.8
+      react-refractor: 4.0.0(react@19.2.8)
+      styled-components: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      use-effect-event: 2.0.4(react@19.2.8)
+
+  '@sanity/ui@5.0.0-alpha.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@sanity-labs/design-tokens': 0.0.2-alpha.4
       '@sanity/icons': 3.8.0(react@19.2.8)
@@ -29151,7 +29178,7 @@ snapshots:
       speakingurl: 14.0.1
       styled-components: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       swr: 2.5.1(react@19.2.8)
-      ui5: '@sanity/ui@5.0.0-alpha.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
+      ui5: '@sanity/ui@5.0.0-alpha.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
       urlpattern-polyfill: 10.1.0
       use-device-pixel-ratio: 1.1.2(react@19.2.8)
       use-effect-event: 2.0.3(react@19.2.8)
@@ -29302,7 +29329,7 @@ snapshots:
       speakingurl: 14.0.1
       styled-components: 6.5.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       swr: 2.5.1(react@19.2.8)
-      ui5: '@sanity/ui@5.0.0-alpha.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
+      ui5: '@sanity/ui@5.0.0-alpha.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)'
       urlpattern-polyfill: 10.1.0
       use-device-pixel-ratio: 1.1.2(react@19.2.8)
       use-effect-event: 2.0.3(react@19.2.8)
@@ -30583,6 +30610,10 @@ snapshots:
       react: 19.2.8
 
   use-effect-event@2.0.3(react@19.2.8):
+    dependencies:
+      react: 19.2.8
+
+  use-effect-event@2.0.4(react@19.2.8):
     dependencies:
       react: 19.2.8
 
