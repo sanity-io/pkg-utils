@@ -6,6 +6,8 @@ packages:
   - css-playground/*
   - packages/@sanity/tsdown-config/test/fixtures/**
 
+ignoreWorkspaceCycles: true
+
 catalog:
   '@sanity/client': ^7.26.2
   '@sanity/icons': ^5.2.1
