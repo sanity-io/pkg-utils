@@ -1,5 +1,11 @@
 # @sanity/parse-package-json
 
+## 2.3.4
+
+### Patch Changes
+
+- [#3374](https://github.com/sanity-io/pkg-utils/pull/3374) [`943a2b2`](https://github.com/sanity-io/pkg-utils/commit/943a2b236394139f58e80b3784bf37d2668edfca) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency zod to ^4.5.4
+
 ## 2.3.3
 
 ### Patch Changes

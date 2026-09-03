@@ -1,5 +1,18 @@
 # @sanity/pkg-utils
 
+## 12.3.5
+
+### Patch Changes
+
+- [#3373](https://github.com/sanity-io/pkg-utils/pull/3373) [`6d164d0`](https://github.com/sanity-io/pkg-utils/commit/6d164d04628d9a66373bd5541bb55f8a8e8009ea) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency pretty-bytes to ^7.1.2
+
+- [#3374](https://github.com/sanity-io/pkg-utils/pull/3374) [`943a2b2`](https://github.com/sanity-io/pkg-utils/commit/943a2b236394139f58e80b3784bf37d2668edfca) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency zod to ^4.5.4
+
+- [#3389](https://github.com/sanity-io/pkg-utils/pull/3389) [`fec61d3`](https://github.com/sanity-io/pkg-utils/commit/fec61d3137e0733de7328020ea7ffc05db85fa18) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.13
+- Updated dependencies [[`943a2b2`](https://github.com/sanity-io/pkg-utils/commit/943a2b236394139f58e80b3784bf37d2668edfca), [`7edcb76`](https://github.com/sanity-io/pkg-utils/commit/7edcb769b9598b1981bd8546b4939148fdbedefa)]:
+  - @sanity/parse-package-json@2.3.4
+  - @sanity/tsdown-config@0.27.2
+
 ## 12.3.4
 
 ### Patch Changes
