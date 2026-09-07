@@ -764,8 +764,8 @@ importers:
         specifier: ^3.9.6
         version: 3.9.6
       pretty-bytes:
-        specifier: ^7.1.2
-        version: 7.1.2
+        specifier: ^7.1.3
+        version: 7.1.3
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -12025,6 +12025,10 @@ packages:
 
   pretty-bytes@7.1.2:
     resolution: {integrity: sha512-spZIOSORH9joSPGN0L/tYfvINH+xbOpnI3kdcEkq0mzGMjFvDZzyRVbqEOV0wACF0gggdKE9RWO2mosGsBh/Rg==}
+    engines: {node: '>=20'}
+
+  pretty-bytes@7.1.3:
+    resolution: {integrity: sha512-U2KZ675nqba6XSBppSjU2pRgc9Ffx9+uUtd/RTWYmOawVkZuUbBYuwdtFZQmLv+yMgQ2TQxWWuOpyNje67J9tg==}
     engines: {node: '>=20'}
 
   pretty-error@4.0.0:
@@ -28067,6 +28071,8 @@ snapshots:
   prettier@3.9.6: {}
 
   pretty-bytes@7.1.2: {}
+
+  pretty-bytes@7.1.3: {}
 
   pretty-error@4.0.0:
     dependencies:
