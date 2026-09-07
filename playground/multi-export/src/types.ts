@@ -1,3 +1,4 @@
+/** @internal */
 interface PluginOptions {
   /**
    * @defaultValue true
@@ -8,6 +9,7 @@ interface PluginOptions {
 /** @public */
 export interface Plugin {
   name: string
+  /** @internal */
   options?: PluginOptions
 }
 
