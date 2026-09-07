@@ -1,5 +1,47 @@
 # @sanity/pkg-utils
 
+## 13.0.0
+
+### Major Changes
+
+- [#3406](https://github.com/sanity-io/pkg-utils/pull/3406) [`5372ae6`](https://github.com/sanity-io/pkg-utils/commit/5372ae63601ad17ddebf5478160330c66f764a29) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade tsdown and `@tsdown/css` to 0.23.
+
+  **BREAKING:** the `@sanity/tsdown-config` and `@sanity/vanilla-extract-tsdown-plugin`
+  `tsdown` peer range is now `^0.23.0`; tsdown 0.22 is no longer supported. Node.js 25
+  can no longer run either package or `pkg build`. Use Node `^22.18.0`, `^24.11.0`, or
+  `>=26.0.0`.
+
+  tsdown 0.23 removes deprecated config options. Replace `dts.tsgo: true` and
+  `dts.oxc: true` with `dts.generator: 'tsgo'` and `dts.generator: 'oxc'`.
+  Replace `dts.oxc: false` with `dts.generator: 'tsc'`. Remove `dts.cjsReexport`.
+  Replace `dts.volarPlugins` with `dts.customLanguages` and rename each language's
+  `create` hook to `createVolarPlugins`.
+  Under `deps`, replace `skipNodeModulesBundle: true` with `neverBundle: true`
+  and `onlyAllowBundle` with `onlyBundle`.
+
+  `deps.resolveDepSubpath: true` preserves the old dependency-specifier behavior.
+  `pkg watch` now closes tsdown's native watch handle, including its Rolldown watchers
+  and keyboard-shortcut resources, and sets `ignoreWatch` on `package.json` and
+  `tsconfig.json` so tsdown does not restart itself and orphan a watcher that abort
+  cannot close. CSS builds now need `@tsdown/css@0.23.0`, the exact version tsdown 0.23
+  pins.
+
+  tsdown 0.23 also emits declarations with inline `export declare` modifiers instead of
+  a trailing export list. A `.d.ts` with no export statement is an export context, so a
+  type that the source left unexported becomes part of the published API. Export the
+  types you mean to publish and tag them `@public`.
+
+### Patch Changes
+
+- [#3373](https://github.com/sanity-io/pkg-utils/pull/3373) [`6d164d0`](https://github.com/sanity-io/pkg-utils/commit/6d164d04628d9a66373bd5541bb55f8a8e8009ea) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency pretty-bytes to ^7.1.2
+
+- [#3374](https://github.com/sanity-io/pkg-utils/pull/3374) [`943a2b2`](https://github.com/sanity-io/pkg-utils/commit/943a2b236394139f58e80b3784bf37d2668edfca) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency zod to ^4.5.4
+
+- [#3389](https://github.com/sanity-io/pkg-utils/pull/3389) [`fec61d3`](https://github.com/sanity-io/pkg-utils/commit/fec61d3137e0733de7328020ea7ffc05db85fa18) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.13
+- Updated dependencies [[`943a2b2`](https://github.com/sanity-io/pkg-utils/commit/943a2b236394139f58e80b3784bf37d2668edfca), [`7edcb76`](https://github.com/sanity-io/pkg-utils/commit/7edcb769b9598b1981bd8546b4939148fdbedefa), [`5372ae6`](https://github.com/sanity-io/pkg-utils/commit/5372ae63601ad17ddebf5478160330c66f764a29)]:
+  - @sanity/parse-package-json@2.3.4
+  - @sanity/tsdown-config@0.28.0
+
 ## 12.3.4
 
 ### Patch Changes
