@@ -12,6 +12,14 @@ import type {TsdownBuild} from './resolveTsdownBuilds.ts'
 
 const RE_TS_SOURCE = /\.[cm]?tsx?$/
 
+function hasNativePreview(pkg: {devDependencies?: unknown}): boolean {
+  return (
+    typeof pkg.devDependencies === 'object' &&
+    pkg.devDependencies !== null &&
+    '@typescript/native-preview' in pkg.devDependencies
+  )
+}
+
 /**
  * Composes the tsdown config for one build of the waterfall: `@sanity/tsdown-config`'s
  * `defineConfig()` provides the shared Sanity base, and the pkg-utils opinions (browserslist
@@ -116,25 +124,16 @@ export async function resolveTsdownConfig(
     define[key] = JSON.stringify(value)
   }
 
-  // Types are generated with tsdown (rolldown-plugin-dts). `@typescript/native-preview` in
-  // devDependencies selects the `tsgo` generator, like v11; an explicit `dts.generator` wins.
-  // Only the object form spreads: when the `legacyChecks` migration errors are skipped
-  // (`NODE_ENV=production` / `legacyChecks: false`), a leftover v11 string like
-  // `dts: 'rolldown'` must degrade to the default behavior (which is what it meant) instead
-  // of spreading into numeric character keys.
   const hasTsSources =
     !build.css && build.entries.some((buildEntry) => RE_TS_SOURCE.test(buildEntry.source))
-  const dtsPassthrough = typeof config?.dts === 'object' ? config.dts : undefined
+  const dtsObject = typeof config?.dts === 'object' ? config.dts : undefined
+  const nativePreviewGenerator = hasNativePreview(pkg) ? ({generator: 'tsgo'} as const) : undefined
   const dts =
     hasTsSources && config?.dts !== false
       ? {
-          ...(typeof pkg.devDependencies === 'object' &&
-          '@typescript/native-preview' in pkg.devDependencies
-            ? {generator: 'tsgo' as const}
-            : {}),
-          // Always create dts from scratch, don't reuse contexts from previous builds
+          ...nativePreviewGenerator,
           newContext: true,
-          ...dtsPassthrough,
+          ...dtsObject,
           ...(ctx.emitDeclarationOnly ? {emitDtsOnly: true} : {}),
         }
       : false
