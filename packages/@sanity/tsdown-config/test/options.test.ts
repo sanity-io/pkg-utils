@@ -206,14 +206,34 @@ describe('sourcemap option', () => {
 
 describe('deps option', () => {
   test('defaults to neverBundle `/^node:/` when platform is neutral', async () => {
-    expect((await defineConfig()).deps).toEqual({neverBundle: [/^node:/]})
-    expect((await defineConfig({platform: 'neutral'})).deps).toEqual({neverBundle: [/^node:/]})
+    expect((await defineConfig()).deps).toEqual({
+      resolveDepSubpath: true,
+      neverBundle: [/^node:/],
+    })
+    expect((await defineConfig({platform: 'neutral'})).deps).toEqual({
+      resolveDepSubpath: true,
+      neverBundle: [/^node:/],
+    })
   })
 
   test('does not add `/^node:/` when platform is not neutral', async () => {
-    expect((await defineConfig({platform: 'node'})).deps).toBeUndefined()
+    expect((await defineConfig({platform: 'node'})).deps).toEqual({resolveDepSubpath: true})
+    expect((await defineConfig({platform: 'browser'})).deps).toEqual({resolveDepSubpath: true})
     expect((await defineConfig({platform: 'node', deps: {neverBundle: true}})).deps).toEqual({
+      resolveDepSubpath: true,
       neverBundle: true,
+    })
+  })
+
+  test('keeps resolveDepSubpath true unless the user sets false', async () => {
+    expect((await defineConfig({deps: {onlyBundle: false}})).deps).toEqual({
+      resolveDepSubpath: true,
+      onlyBundle: false,
+      neverBundle: [/^node:/],
+    })
+    expect((await defineConfig({deps: {resolveDepSubpath: false}})).deps).toEqual({
+      resolveDepSubpath: false,
+      neverBundle: [/^node:/],
     })
   })
 
@@ -221,6 +241,7 @@ describe('deps option', () => {
     // tsdown's `mergeConfig` would replace the array; concatenate so per-package externals
     // (e.g. self-references like `/^sanity(\\/|$)/`) add to the node builtins instead
     expect((await defineConfig({deps: {neverBundle: [/^sanity(\/|$)/]}})).deps).toEqual({
+      resolveDepSubpath: true,
       neverBundle: [/^node:/, /^sanity(\/|$)/],
     })
   })

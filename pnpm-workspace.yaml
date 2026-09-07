@@ -12,6 +12,7 @@ catalog:
   '@sanity/client': ^7.26.2
   '@sanity/icons': ^5.2.1
   '@sanity/logos': ^2.2.5
+  '@tsdown/css': ^0.23.0
   '@types/node': ^24.13.3
   lightningcss: ^1.33.0
   oxc-transform-react: ^0.148.0
@@ -39,7 +40,6 @@ minimumReleaseAge: 1440
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
   - '@types/react-dom@19.2.5'
-  - '@tsdown/css@0.22.14'
   - '@sanity/ui@4.0.1'
   - '@sanity/diff@6.9.2'
   - '@sanity/mutator@6.9.2'
@@ -78,7 +78,6 @@ minimumReleaseAgeExclude:
   - verkit@0.3.0
   - yuku-ast@0.9.3
   - yuku-parser@0.9.3
-  - tsdown@0.22.14
 
 minimumReleaseAgeExcludePrune: true
 
