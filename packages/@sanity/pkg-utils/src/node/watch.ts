@@ -22,8 +22,16 @@ export async function watch(options: {
 
   const logger = createLogger()
 
+  const pkgPath = findPkgPath({cwd})
+  if (!pkgPath) {
+    throw new Error('missing package.json', {cause: {cwd}})
+  }
+
+  const bootstrapConfig = await loadConfig({cwd, pkgPath})
+  const watchedTsconfig = tsconfigOption || bootstrapConfig?.tsconfig || 'tsconfig.json'
+
   const {watchConfigFiles} = await import('./watchConfigFiles.ts')
-  const configFiles$ = await watchConfigFiles({cwd, logger})
+  const configFiles$ = await watchConfigFiles({cwd, logger, tsconfig: watchedTsconfig})
 
   // RxJS does not await async subscriber callbacks. Only the latest runId may
   // publish handles; a stale or aborted run must close the handles it created.

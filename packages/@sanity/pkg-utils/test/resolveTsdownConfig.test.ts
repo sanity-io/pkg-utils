@@ -176,6 +176,21 @@ function bundleAnalyzerOptions(config: {plugins?: unknown}): unknown {
   return plugin && typeof plugin === 'object' && '_options' in plugin ? plugin._options : undefined
 }
 
+test('watch mode ignores package.json and tsconfig so tsdown cannot orphan the handle', async () => {
+  const ctx = createContext({})
+  ctx.ts = {configPath: 'tsconfig.json'}
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const watchConfig = await resolveTsdownConfig(ctx, build, {clean: true, watch: true})
+  expect(watchConfig.ignoreWatch).toEqual([path.join(cwd, 'package.json'), 'tsconfig.json'])
+  expect(watchConfig.watch).toBe(true)
+
+  const buildConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+  expect(buildConfig.ignoreWatch).toBeUndefined()
+  expect(buildConfig.watch).toBeUndefined()
+})
+
 test('inherits the declaration-only circular dependency suppression', async () => {
   // `checks.circularDependency` comes from `@sanity/tsdown-config`, and so does the
   // `suppressWarnings` predicate that drops the type-only cycles of the declaration bundling

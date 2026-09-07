@@ -24,5 +24,7 @@ and `onlyAllowBundle` with `onlyBundle`.
 The `@sanity/tsdown-config` and `@sanity/vanilla-extract-tsdown-plugin` peer
 ranges still accept tsdown 0.22. `deps.resolveDepSubpath: true` preserves the
 old dependency-specifier behavior. `pkg watch` now closes tsdown's native watch
-handle, including its Rolldown watchers and keyboard-shortcut resources. CSS
-builds now require `@tsdown/css@^0.23.0`.
+handle, including its Rolldown watchers and keyboard-shortcut resources, and
+sets `ignoreWatch` on `package.json` and `tsconfig.json` so tsdown does not
+restart itself and orphan a watcher that abort cannot close. CSS builds now
+require `@tsdown/css@^0.23.0`.

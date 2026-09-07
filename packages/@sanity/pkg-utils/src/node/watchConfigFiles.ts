@@ -8,26 +8,22 @@ import {watchFiles} from './watchFiles.ts'
 export async function watchConfigFiles(options: {
   cwd: string
   logger: Logger
+  tsconfig?: string
 }): Promise<Observable<string[]>> {
-  const {cwd, logger} = options
+  const {cwd, logger, tsconfig = 'tsconfig.json'} = options
 
-  const initialFiles = await globFiles([
+  const configFiles = [
     path.resolve(cwd, 'package.json'),
+    path.resolve(cwd, tsconfig),
     path.resolve(cwd, 'package.config.cjs'),
     path.resolve(cwd, 'package.config.js'),
     path.resolve(cwd, 'package.config.ts'),
     path.resolve(cwd, 'package.config.mjs'),
     path.resolve(cwd, 'package.config.mts'),
-  ])
+  ]
 
-  const fileEvent$ = watchFiles([
-    path.resolve(cwd, 'package.json'),
-    path.resolve(cwd, 'package.config.cjs'),
-    path.resolve(cwd, 'package.config.js'),
-    path.resolve(cwd, 'package.config.ts'),
-    path.resolve(cwd, 'package.config.mjs'),
-    path.resolve(cwd, 'package.config.mts'),
-  ])
+  const initialFiles = await globFiles(configFiles)
+  const fileEvent$ = watchFiles(configFiles)
 
   return fileEvent$.pipe(
     scan((files, fileEvent) => {

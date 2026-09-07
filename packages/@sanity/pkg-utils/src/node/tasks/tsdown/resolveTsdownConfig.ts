@@ -221,7 +221,14 @@ export async function resolveTsdownConfig(
     ...merged,
     config: false,
     logLevel: 'warn',
-    ...(options.watch ? {watch: true} : {}),
+    ...(options.watch
+      ? {
+          watch: true,
+          // tsdown restarts itself on these paths and discards the handle pkg-utils
+          // holds. pkg watch reloads the waterfall instead.
+          ignoreWatch: [path.join(cwd, 'package.json'), ctx.ts.configPath ?? 'tsconfig.json'],
+        }
+      : {}),
   }
 }
 
