@@ -212,9 +212,9 @@ describe('deps option', () => {
 
   test('does not add `/^node:/` when platform is not neutral', async () => {
     expect((await defineConfig({platform: 'node'})).deps).toBeUndefined()
-    expect(
-      (await defineConfig({platform: 'node', deps: {skipNodeModulesBundle: true}})).deps,
-    ).toEqual({skipNodeModulesBundle: true})
+    expect((await defineConfig({platform: 'node', deps: {neverBundle: true}})).deps).toEqual({
+      neverBundle: true,
+    })
   })
 
   test('appends userland neverBundle entries to the `/^node:/` default', async () => {
@@ -222,16 +222,6 @@ describe('deps option', () => {
     // (e.g. self-references like `/^sanity(\\/|$)/`) add to the node builtins instead
     expect((await defineConfig({deps: {neverBundle: [/^sanity(\/|$)/]}})).deps).toEqual({
       neverBundle: [/^node:/, /^sanity(\/|$)/],
-    })
-    expect(
-      (
-        await defineConfig({
-          deps: {neverBundle: [/^sanity(\/|$)/], skipNodeModulesBundle: true},
-        })
-      ).deps,
-    ).toEqual({
-      neverBundle: [/^node:/, /^sanity(\/|$)/],
-      skipNodeModulesBundle: true,
     })
   })
 

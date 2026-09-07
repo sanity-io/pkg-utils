@@ -119,7 +119,7 @@ export async function watch(options: {
         })
         first = false
 
-        runBundles.push(...(await tsdownBuild(inlineConfig)))
+        runBundles.push(...(await tsdownBuild(inlineConfig)).bundles)
       }
 
       if (id !== runId) {

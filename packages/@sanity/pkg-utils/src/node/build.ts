@@ -98,7 +98,7 @@ export async function build(options: {
       const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {clean: first && clean})
       first = false
 
-      const bundles = await tsdownBuild(inlineConfig)
+      const {bundles} = await tsdownBuild(inlineConfig)
 
       if (ctx.emitDeclarationOnly) {
         // `dts.emitDtsOnly` suppresses the JS chunks of the ES pass, but the CJS pass emits
