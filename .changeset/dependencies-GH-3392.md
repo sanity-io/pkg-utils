@@ -16,10 +16,13 @@ Upgrade tsdown and `@tsdown/css` to 0.23.
 tsdown 0.23 removes deprecated config options. Replace `dts.tsgo: true` and
 `dts.oxc: true` with `dts.generator: 'tsgo'` and `dts.generator: 'oxc'`.
 Replace `dts.oxc: false` with `dts.generator: 'tsc'`. Remove `dts.cjsReexport`.
+Replace `dts.volarPlugins` with `dts.customLanguages` and rename each language's
+`create` hook to `createVolarPlugins`.
 Under `deps`, replace `skipNodeModulesBundle: true` with `neverBundle: true`
 and `onlyAllowBundle` with `onlyBundle`.
 
 The `@sanity/tsdown-config` and `@sanity/vanilla-extract-tsdown-plugin` peer
 ranges still accept tsdown 0.22. `deps.resolveDepSubpath: true` preserves the
 old dependency-specifier behavior. `pkg watch` now closes tsdown's native watch
-handle, including its Rolldown watchers and keyboard-shortcut resources.
+handle, including its Rolldown watchers and keyboard-shortcut resources. CSS
+builds now require `@tsdown/css@^0.23.0`.
