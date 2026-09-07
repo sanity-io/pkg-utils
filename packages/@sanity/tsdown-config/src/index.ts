@@ -581,13 +581,11 @@ async function resolvePackageConfig(
           : Array.isArray(userNeverBundle)
             ? [nodeBuiltinExternal, ...userNeverBundle]
             : [nodeBuiltinExternal, userNeverBundle]
-  const deps: UserConfig['deps'] =
-    options.deps === undefined && neverBundle === undefined
-      ? undefined
-      : {
-          ...options.deps,
-          ...(neverBundle === undefined ? {} : {neverBundle}),
-        }
+  const deps: UserConfig['deps'] = {
+    resolveDepSubpath: true,
+    ...options.deps,
+    ...(neverBundle === undefined ? {} : {neverBundle}),
+  }
 
   // `outputOptions` is left to tsdown's defaults - notably chunk filenames keep tsdown's hashed
   // default (unless userland sets `hash`), which prevents chunk/entry filename collisions

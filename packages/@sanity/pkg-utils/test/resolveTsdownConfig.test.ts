@@ -85,13 +85,13 @@ test('a leftover v11 `dts` string degrades to the default instead of spreading',
 })
 
 test('the `dts` object passthrough spreads over the defaults', async () => {
-  const ctx = createContext({dts: {tsgo: true, sourcemap: true}})
+  const ctx = createContext({dts: {generator: 'tsgo', sourcemap: true}})
   const [build] = resolveTsdownBuilds(ctx)
   if (!build) throw new Error('expected a build')
 
   const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
 
-  expect(inlineConfig.dts).toEqual({newContext: true, tsgo: true, sourcemap: true})
+  expect(inlineConfig.dts).toEqual({newContext: true, generator: 'tsgo', sourcemap: true})
 })
 
 test('forwards `bundleAnalyzer` to @sanity/tsdown-config', async () => {
@@ -175,6 +175,21 @@ function bundleAnalyzerOptions(config: {plugins?: unknown}): unknown {
   )
   return plugin && typeof plugin === 'object' && '_options' in plugin ? plugin._options : undefined
 }
+
+test('watch mode ignores package.json and tsconfig so tsdown cannot orphan the handle', async () => {
+  const ctx = createContext({})
+  ctx.ts = {configPath: 'tsconfig.json'}
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const watchConfig = await resolveTsdownConfig(ctx, build, {clean: true, watch: true})
+  expect(watchConfig.ignoreWatch).toEqual([path.join(cwd, 'package.json'), 'tsconfig.json'])
+  expect(watchConfig.watch).toBe(true)
+
+  const buildConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+  expect(buildConfig.ignoreWatch).toBeUndefined()
+  expect(buildConfig.watch).toBeUndefined()
+})
 
 test('inherits the declaration-only circular dependency suppression', async () => {
   // `checks.circularDependency` comes from `@sanity/tsdown-config`, and so does the

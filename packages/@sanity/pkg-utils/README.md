@@ -147,8 +147,8 @@ The path to the directory to which bundle and chunk files should be written.
 - Default: `undefined`
 
 tsdown's [`dts` options](https://tsdown.dev/options/dts), passed through as-is (an object, or
-`false` to skip generating `.d.ts` files entirely). For example `dts: {tsgo: true}` selects the
-Go-native TypeScript compiler for type generation.
+`false` to skip generating `.d.ts` files entirely). For example `dts: {generator: 'tsgo'}`
+selects the Go-native TypeScript compiler for type generation.
 
 #### `exports`
 

@@ -1,5 +1,6 @@
 import {up as findPkgPath} from 'empathic/package'
-import {describe, expect, test} from 'vitest'
+import {build as tsdownBuild, type TsdownHandle} from 'tsdown'
+import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 import {loadConfig} from '../src/node/core/config/loadConfig'
 import {loadPkgWithReporting} from '../src/node/core/pkg/loadPkgWithReporting'
 import {createLogger} from '../src/node/logger'
@@ -7,6 +8,30 @@ import {resolveBuildContext} from '../src/node/resolveBuildContext'
 import {resolveTsdownBuilds} from '../src/node/tasks/tsdown/resolveTsdownBuilds'
 import {watch} from '../src/node/watch'
 import {spawnProject} from './env/spawnProject'
+
+vi.mock('tsdown', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('tsdown')>()
+  return {
+    ...actual,
+    build: vi.fn(),
+  }
+})
+
+function mockWatchHandle(): {
+  handle: TsdownHandle
+  close: ReturnType<typeof vi.fn>
+  restart: ReturnType<typeof vi.fn>
+} {
+  const close = vi.fn(async () => {})
+  const restart = vi.fn(async () => {
+    throw new Error('watch.restart() must not be used')
+  })
+  return {
+    close,
+    restart,
+    handle: {bundles: [], watch: {close, restart}},
+  }
+}
 
 async function resolveProjectBuilds(projectCwd: string) {
   const logger = createLogger(true) // quiet mode
@@ -29,6 +54,17 @@ async function resolveProjectBuilds(projectCwd: string) {
 }
 
 describe.skipIf(process.platform === 'win32')('watch functionality', () => {
+  let abort: AbortController | undefined
+
+  beforeEach(() => {
+    vi.mocked(tsdownBuild).mockReset()
+  })
+
+  afterEach(() => {
+    abort?.abort()
+    abort = undefined
+  })
+
   test('resolves the build waterfall for a TypeScript project', async () => {
     const project = await spawnProject('ts')
     const builds = await resolveProjectBuilds(project.cwd)
@@ -68,33 +104,63 @@ describe.skipIf(process.platform === 'win32')('watch functionality', () => {
     expect(builds.at(-1)?.canonical).toBe(true)
   })
 
-  test(
-    'watch function should initialize and clean up with AbortController',
-    {retry: process.platform === 'darwin' ? 3 : 0},
-    async () => {
-      // A fixture no other test file builds: `watch()` cleans `dist` on startup and rebuilds
-      // it, which races the parallel `cli.test.ts` worker when they share a fixture — publint
-      // packs the package there, and a pack that lands in the cleaned window sees an empty
-      // `dist` and reports every export target as not published.
-      const project = await spawnProject('multi-exports-commonjs')
-      const ac = new AbortController()
+  test('abort closes published handles and does not start another build', async () => {
+    const project = await spawnProject('multi-exports-commonjs')
+    const builds = await resolveProjectBuilds(project.cwd)
+    const published = Array.from({length: builds.length}, () => mockWatchHandle())
+    vi.mocked(tsdownBuild).mockImplementation(async () => {
+      const next = published[vi.mocked(tsdownBuild).mock.calls.length - 1]
+      if (!next) throw new Error('unexpected extra tsdown build')
+      return next.handle
+    })
 
-      // This test verifies that watch() can be called and initialized
-      // We don't let it run indefinitely, just verify it starts without error
-      void watch({
-        cwd: project.cwd,
-        strict: false,
-        signal: ac.signal,
-      })
+    abort = new AbortController()
+    await watch({
+      cwd: project.cwd,
+      strict: false,
+      signal: abort.signal,
+    })
 
-      // Give it a moment to initialize
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+    await vi.waitFor(() => {
+      expect(tsdownBuild).toHaveBeenCalledTimes(builds.length)
+    })
 
-      // Clean up the watch subscriptions
-      ac.abort()
+    abort.abort()
 
-      // If we got here without an error being thrown, the watch initialized successfully
-      expect(true).toBe(true)
-    },
-  )
+    await vi.waitFor(() => {
+      for (const {close, restart} of published) {
+        expect(close).toHaveBeenCalledTimes(1)
+        expect(restart).not.toHaveBeenCalled()
+      }
+    })
+    expect(tsdownBuild).toHaveBeenCalledTimes(builds.length)
+  })
+
+  test('abort during an in-flight build closes that handle and does not rebuild', async () => {
+    const project = await spawnProject('multi-exports-commonjs')
+    const pending = Promise.withResolvers<TsdownHandle>()
+    vi.mocked(tsdownBuild).mockReturnValue(pending.promise)
+
+    abort = new AbortController()
+    await watch({
+      cwd: project.cwd,
+      strict: false,
+      signal: abort.signal,
+    })
+
+    await vi.waitFor(() => {
+      expect(tsdownBuild).toHaveBeenCalledTimes(1)
+    })
+
+    abort.abort()
+
+    const {handle, close, restart} = mockWatchHandle()
+    pending.resolve(handle)
+
+    await vi.waitFor(() => {
+      expect(close).toHaveBeenCalledTimes(1)
+    })
+    expect(restart).not.toHaveBeenCalled()
+    expect(tsdownBuild).toHaveBeenCalledTimes(1)
+  })
 })

@@ -12,6 +12,14 @@ import type {TsdownBuild} from './resolveTsdownBuilds.ts'
 
 const RE_TS_SOURCE = /\.[cm]?tsx?$/
 
+function hasNativePreview(pkg: {devDependencies?: unknown}): boolean {
+  return (
+    typeof pkg.devDependencies === 'object' &&
+    pkg.devDependencies !== null &&
+    '@typescript/native-preview' in pkg.devDependencies
+  )
+}
+
 /**
  * Composes the tsdown config for one build of the waterfall: `@sanity/tsdown-config`'s
  * `defineConfig()` provides the shared Sanity base, and the pkg-utils opinions (browserslist
@@ -116,25 +124,16 @@ export async function resolveTsdownConfig(
     define[key] = JSON.stringify(value)
   }
 
-  // Types are generated with tsdown (rolldown-plugin-dts). `@typescript/native-preview` in
-  // devDependencies auto-enables tsgo, like v11; an explicit `dts.tsgo` wins. Only the object
-  // form spreads: when the `legacyChecks` migration errors are skipped
-  // (`NODE_ENV=production` / `legacyChecks: false`), a leftover v11 string like
-  // `dts: 'rolldown'` must degrade to the default behavior (which is what it meant) instead
-  // of spreading into numeric character keys.
   const hasTsSources =
     !build.css && build.entries.some((buildEntry) => RE_TS_SOURCE.test(buildEntry.source))
-  const dtsPassthrough = typeof config?.dts === 'object' ? config.dts : undefined
+  const dtsObject = typeof config?.dts === 'object' ? config.dts : undefined
+  const nativePreviewGenerator = hasNativePreview(pkg) ? ({generator: 'tsgo'} as const) : undefined
   const dts =
     hasTsSources && config?.dts !== false
       ? {
-          ...(typeof pkg.devDependencies === 'object' &&
-          '@typescript/native-preview' in pkg.devDependencies
-            ? {tsgo: true}
-            : {}),
-          // Always create dts from scratch, don't reuse contexts from previous builds
+          ...nativePreviewGenerator,
           newContext: true,
-          ...dtsPassthrough,
+          ...dtsObject,
           ...(ctx.emitDeclarationOnly ? {emitDtsOnly: true} : {}),
         }
       : false
@@ -222,25 +221,18 @@ export async function resolveTsdownConfig(
     ...merged,
     config: false,
     logLevel: 'warn',
-    ...(options.watch ? {watch: true} : {}),
+    ...(options.watch
+      ? {
+          watch: true,
+          // tsdown restarts itself on these paths and discards the handle pkg-utils
+          // holds. pkg watch reloads the waterfall instead.
+          ignoreWatch: [path.join(cwd, 'package.json'), ctx.ts.configPath ?? 'tsconfig.json'],
+        }
+      : {}),
   }
 }
 
-/**
- * Declares the conditional export of every CSS file a watch rebuild emitted.
- *
- * A full build leaves this to `cssNodeCompatPlugin`, which composes into tsdown's
- * `exports.customExports`. Watch mode turns tsdown's `exports` feature off (a `package.json`
- * write per rebuild would loop the watcher), so `pkg watch` maintains the exports itself. Most
- * of them are known before the build and are written once per context in `watch.ts`, but the
- * merged `style.css` of CSS imported from JS only exists when something actually imports CSS —
- * declaring it from the config alone would point the export at files nobody produced.
- *
- * `build:done` is the only place that knows: in watch mode `build()` resolves before the first
- * rebuild runs, so the returned bundle's chunks are still empty. The write is idempotent, so
- * the `package.json` watcher settles after one extra rebuild rather than looping.
- * @internal
- */
+/** @internal */
 function createWatchCssExportsHook(
   ctx: BuildContext,
   css: NonNullable<PkgConfigOptions['css']>,

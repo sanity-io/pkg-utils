@@ -10,10 +10,10 @@ describe('dts option', () => {
   test('is passed through to tsdown as-is', async () => {
     expect((await defineConfig({dts: false})).dts).toBe(false)
     expect((await defineConfig({dts: true})).dts).toBe(true)
-    expect((await defineConfig({dts: {tsgo: true}})).dts).toEqual({tsgo: true})
-    expect((await defineConfig({dts: {sourcemap: true, oxc: false}})).dts).toEqual({
+    expect((await defineConfig({dts: {generator: 'tsgo'}})).dts).toEqual({generator: 'tsgo'})
+    expect((await defineConfig({dts: {sourcemap: true, generator: 'tsc'}})).dts).toEqual({
       sourcemap: true,
-      oxc: false,
+      generator: 'tsc',
     })
   })
 })
@@ -206,32 +206,43 @@ describe('sourcemap option', () => {
 
 describe('deps option', () => {
   test('defaults to neverBundle `/^node:/` when platform is neutral', async () => {
-    expect((await defineConfig()).deps).toEqual({neverBundle: [/^node:/]})
-    expect((await defineConfig({platform: 'neutral'})).deps).toEqual({neverBundle: [/^node:/]})
+    expect((await defineConfig()).deps).toEqual({
+      resolveDepSubpath: true,
+      neverBundle: [/^node:/],
+    })
+    expect((await defineConfig({platform: 'neutral'})).deps).toEqual({
+      resolveDepSubpath: true,
+      neverBundle: [/^node:/],
+    })
   })
 
   test('does not add `/^node:/` when platform is not neutral', async () => {
-    expect((await defineConfig({platform: 'node'})).deps).toBeUndefined()
-    expect(
-      (await defineConfig({platform: 'node', deps: {skipNodeModulesBundle: true}})).deps,
-    ).toEqual({skipNodeModulesBundle: true})
+    expect((await defineConfig({platform: 'node'})).deps).toEqual({resolveDepSubpath: true})
+    expect((await defineConfig({platform: 'browser'})).deps).toEqual({resolveDepSubpath: true})
+    expect((await defineConfig({platform: 'node', deps: {neverBundle: true}})).deps).toEqual({
+      resolveDepSubpath: true,
+      neverBundle: true,
+    })
+  })
+
+  test('keeps resolveDepSubpath true unless the user sets false', async () => {
+    expect((await defineConfig({deps: {onlyBundle: false}})).deps).toEqual({
+      resolveDepSubpath: true,
+      onlyBundle: false,
+      neverBundle: [/^node:/],
+    })
+    expect((await defineConfig({deps: {resolveDepSubpath: false}})).deps).toEqual({
+      resolveDepSubpath: false,
+      neverBundle: [/^node:/],
+    })
   })
 
   test('appends userland neverBundle entries to the `/^node:/` default', async () => {
     // tsdown's `mergeConfig` would replace the array; concatenate so per-package externals
     // (e.g. self-references like `/^sanity(\\/|$)/`) add to the node builtins instead
     expect((await defineConfig({deps: {neverBundle: [/^sanity(\/|$)/]}})).deps).toEqual({
+      resolveDepSubpath: true,
       neverBundle: [/^node:/, /^sanity(\/|$)/],
-    })
-    expect(
-      (
-        await defineConfig({
-          deps: {neverBundle: [/^sanity(\/|$)/], skipNodeModulesBundle: true},
-        })
-      ).deps,
-    ).toEqual({
-      neverBundle: [/^node:/, /^sanity(\/|$)/],
-      skipNodeModulesBundle: true,
     })
   })
 

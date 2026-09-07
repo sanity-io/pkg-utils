@@ -44,8 +44,7 @@ exports[`cli > should build \`custom-dist\` package > ./lib/index.cjs 1`] = `
 
 exports[`cli > should build \`custom-dist\` package > ./lib/index.d.ts 1`] = `
 "/** @public */
-declare const VERSION = "1.0.0";
-export { VERSION };
+export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -73,8 +72,7 @@ exports[`cli > should build \`dummy-module\` package > ./dist/extra.cjs 1`] = `
 
 exports[`cli > should build \`dummy-module\` package > ./dist/extra.d.ts 1`] = `
 "/** @public */
-declare const version: string;
-export { version };
+export declare const version: string;
 //# sourceMappingURL=extra.d.ts.map"
 `;
 
@@ -102,8 +100,7 @@ exports[`cli > should build \`dummy-module\` package > ./dist/index.cjs 1`] = `
 
 exports[`cli > should build \`dummy-module\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare const version: string;
-export { version };
+export declare const version: string;
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -131,26 +128,26 @@ exports.defineConfig = defineConfig, exports.definePlugin = definePlugin;
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
-"interface PluginOptions {
+"/** @public */
+export interface PluginOptions {
   /**
    * @defaultValue true
    */
   enabled?: boolean;
 }
 /** @public */
-interface Plugin {
+export interface Plugin {
   name: string;
   options?: PluginOptions;
 }
 /** @public */
-interface Config extends Plugin {
+export interface Config extends Plugin {
   plugins?: Plugin[];
 }
 /** @public */
-declare function defineConfig(options: Config): Config;
+export declare function defineConfig(options: Config): Config;
 /** @public */
-declare function definePlugin(plugin: Plugin): Plugin;
-export { Config, Plugin, defineConfig, definePlugin };
+export declare function definePlugin(plugin: Plugin): Plugin;
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -183,8 +180,7 @@ exports.plugin = plugin;
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
 "import { Plugin } from "multi-export";
 /** @public */
-declare function plugin(): Plugin;
-export { plugin };
+export declare function plugin(): Plugin;
 //# sourceMappingURL=plugin.d.ts.map"
 `;
 
@@ -207,8 +203,7 @@ exports[`cli > should build \`node-condition\` package > ./dist/index.cjs 1`] = 
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare const version: string;
-export { version };
+export declare const version: string;
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -234,10 +229,9 @@ exports.readPackageJson = readPackageJson, exports.version = "1.0.0";
 
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.d.ts 1`] = `
 "/** @public */
-declare const version: string;
+export declare const version: string;
 /** @public */
-declare function readPackageJson(filePath: string): string;
-export { readPackageJson, version };
+export declare function readPackageJson(filePath: string): string;
 //# sourceMappingURL=index.node.d.ts.map"
 `;
 
@@ -256,12 +250,11 @@ export { readPackageJson, version };
 
 exports[`cli > should build \`react-18\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare function App(): React.JSX.Element;
+export declare function App(): React.JSX.Element;
 /** @public */
-declare const Input: import("react").ForwardRefExoticComponent<Omit<{
+export declare const Input: import("react").ForwardRefExoticComponent<Omit<{
   label?: React.ReactNode;
 } & import("react").HTMLProps<HTMLInputElement>, "ref"> & import("react").RefAttributes<HTMLInputElement>>;
-export { App, Input };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -449,13 +442,12 @@ export { App, Input };
 
 exports[`cli > should build \`react-19\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare function App(): React.JSX.Element;
+export declare function App(): React.JSX.Element;
 /** @public */
-declare function Input(props: {
+export declare function Input(props: {
   label?: React.ReactNode;
   ref: React.Ref<HTMLInputElement>;
 } & React.HTMLProps<HTMLInputElement>): React.JSX.Element;
-export { App, Input };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -678,7 +670,7 @@ interface ColorSchemaType extends StringSchemaType {
 }
 type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
-declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
+export declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
 declare const colorTypeName: 'color';
 /**
  * @public
@@ -693,8 +685,8 @@ declare module 'sanity' {
   }
 }
 /** @public */
-declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };
+export declare const colorInput: Plugin<void>;
+export type { ColorDefinition };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -767,7 +759,7 @@ interface ColorSchemaType extends StringSchemaType {
 }
 type ColorInputProps = StringInputProps<ColorSchemaType>;
 /** @public */
-declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
+export declare const ColorInput: React.LazyExoticComponent<React.ComponentType<ColorInputProps>>;
 declare const colorTypeName: 'color';
 /**
  * @public
@@ -782,8 +774,8 @@ declare module 'sanity' {
   }
 }
 /** @public */
-declare const colorInput: Plugin<void>;
-export { type ColorDefinition, ColorInput, colorInput };
+export declare const colorInput: Plugin<void>;
+export type { ColorDefinition };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -811,13 +803,13 @@ exports[`cli > should build \`ts\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @public
  */
-interface IncludedModuleDummy {
+export interface IncludedModuleDummy {
   field: string;
 }
 /**
  * @internal
  */
-interface _Dummy {
+export interface _Dummy {
   field: string;
 }
 declare module "./module2" {
@@ -826,8 +818,7 @@ declare module "./module2" {
   }
 }
 /** @public */
-declare const VERSION = "1.0.0";
-export { IncludedModuleDummy, VERSION, _Dummy };
+export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -835,13 +826,13 @@ exports[`cli > should build \`ts-bundler\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @public
  */
-interface IncludedModuleDummy {
+export interface IncludedModuleDummy {
   field: string;
 }
 /**
  * @internal
  */
-interface _Dummy {
+export interface _Dummy {
   field: string;
 }
 declare module './module2' {
@@ -850,8 +841,7 @@ declare module './module2' {
   }
 }
 /** @public */
-declare const VERSION = "1.0.0";
-export { IncludedModuleDummy, VERSION, _Dummy };
+export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -868,10 +858,10 @@ declare namespace other_d_exports {
 /** @public */
 declare const answer: number;
 /** @public */
-declare const VERSION = "1.0.0";
+export declare const VERSION = "1.0.0";
 /** @public */
 declare const inner_d_exports$1: string;
-export { VERSION, inner_d_exports as inner, inner_d_exports$1 as inner_d_exports, other_d_exports as other };
+export { inner_d_exports as inner, inner_d_exports$1 as inner_d_exports, other_d_exports as other };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -879,13 +869,13 @@ exports[`cli > should build \`ts-node16\` package > ./dist/index.d.ts 1`] = `
 "/**
  * @public
  */
-interface IncludedModuleDummy {
+export interface IncludedModuleDummy {
   field: string;
 }
 /**
  * @internal
  */
-interface _Dummy {
+export interface _Dummy {
   field: string;
 }
 declare module './module2.js' {
@@ -894,8 +884,7 @@ declare module './module2.js' {
   }
 }
 /** @public */
-declare const VERSION = "1.0.0";
-export { IncludedModuleDummy, VERSION, _Dummy };
+export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -910,16 +899,16 @@ exports.a = "a", exports.c = require_c.t;
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
 "import { t as c } from "./c-BCyBvqMe.cjs";
 /** @public */
-declare const a = "a";
-export { a, c };
+export declare const a = "a";
+export { c };
 //# sourceMappingURL=a.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
 "import { t as c } from "./c-BCyBvqMe.js";
 /** @public */
-declare const a = "a";
-export { a, c };
+export declare const a = "a";
+export { c };
 //# sourceMappingURL=a.d.ts.map"
 `;
 
@@ -943,16 +932,16 @@ exports.b = "b", exports.c = require_c.t;
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
 "import { t as c } from "./c-BCyBvqMe.cjs";
 /** @public */
-declare const b = "b";
-export { b, c };
+export declare const b = "b";
+export { c };
 //# sourceMappingURL=b.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
 "import { t as c } from "./c-BCyBvqMe.js";
 /** @public */
-declare const b = "b";
-export { b, c };
+export declare const b = "b";
+export { c };
 //# sourceMappingURL=b.d.ts.map"
 `;
 
@@ -1006,15 +995,13 @@ exports[`cli > should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.cts 1`] = `
 "/** @public */
-declare const VERSION: string;
-export { VERSION };
+export declare const VERSION: string;
 //# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/index.d.ts 1`] = `
 "/** @public */
-declare const VERSION: string;
-export { VERSION };
+export declare const VERSION: string;
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1105,8 +1092,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
  * @internal - it may have breaking changes in any release
  */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+export { RemoveIcon, SanityLogo };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
@@ -1142,8 +1129,8 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
 /**
  * @internal - it may have breaking changes in any release
  */
-declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+export { RemoveIcon, SanityLogo };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1386,14 +1373,13 @@ exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./
 /**
  * @public
  */
-interface ExternalSubpathImport {
+export interface ExternalSubpathImport {
   path: AgentActionPath;
 }
 /**
  * @public
  */
-declare function identity(path: AgentActionPath): AgentActionPath;
-export { ExternalSubpathImport, identity };
+export declare function identity(path: AgentActionPath): AgentActionPath;
 //# sourceMappingURL=index.d.cts.map"
 `;
 
@@ -1402,14 +1388,13 @@ exports[`cli > should build \`ts-rolldown-external-subpath-import\` package > ./
 /**
  * @public
  */
-interface ExternalSubpathImport {
+export interface ExternalSubpathImport {
   path: AgentActionPath;
 }
 /**
  * @public
  */
-declare function identity(path: AgentActionPath): AgentActionPath;
-export { ExternalSubpathImport, identity };
+export declare function identity(path: AgentActionPath): AgentActionPath;
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1514,14 +1499,12 @@ exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/ind
 `;
 
 exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.cts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
+"export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown-without-extract\` package > ./dist/index.d.ts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
+"export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1533,8 +1516,7 @@ export { VERSION };
 `;
 
 exports[`cli > should build \`ts-without-extract\` package > ./dist/index.d.ts 1`] = `
-"declare const VERSION = "1.0.0";
-export { VERSION };
+"export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1542,13 +1524,13 @@ exports[`cli > should build with \`--quiet\` flag suppressing output > ./dist/in
 "/**
  * @public
  */
-interface IncludedModuleDummy {
+export interface IncludedModuleDummy {
   field: string;
 }
 /**
  * @internal
  */
-interface _Dummy {
+export interface _Dummy {
   field: string;
 }
 declare module "./module2" {
@@ -1557,7 +1539,6 @@ declare module "./module2" {
   }
 }
 /** @public */
-declare const VERSION = "1.0.0";
-export { IncludedModuleDummy, VERSION, _Dummy };
+export declare const VERSION = "1.0.0";
 //# sourceMappingURL=index.d.ts.map"
 `;

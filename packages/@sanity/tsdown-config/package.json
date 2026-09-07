@@ -61,7 +61,7 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@sanity/pkg-utils": "workspace:^",
     "@sanity/tsconfig": "workspace:^",
-    "@tsdown/css": "^0.22.14",
+    "@tsdown/css": "catalog:",
     "@types/babel__core": "^7.20.5",
     "babel-plugin-react-compiler": "^1.0.0",
     "oxc-transform-react": "catalog:",
@@ -76,7 +76,7 @@
     "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
     "oxc-transform-react": "*",
-    "tsdown": "^0.22.7",
+    "tsdown": "^0.23.0",
     "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
@@ -97,7 +97,7 @@
     }
   },
   "engines": {
-    "node": "^22.18.0 || >=24.11.0"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "publishConfig": {
     "exports": {
