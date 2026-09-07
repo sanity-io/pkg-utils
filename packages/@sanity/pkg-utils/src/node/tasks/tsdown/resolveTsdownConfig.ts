@@ -225,21 +225,7 @@ export async function resolveTsdownConfig(
   }
 }
 
-/**
- * Declares the conditional export of every CSS file a watch rebuild emitted.
- *
- * A full build leaves this to `cssNodeCompatPlugin`, which composes into tsdown's
- * `exports.customExports`. Watch mode turns tsdown's `exports` feature off (a `package.json`
- * write per rebuild would loop the watcher), so `pkg watch` maintains the exports itself. Most
- * of them are known before the build and are written once per context in `watch.ts`, but the
- * merged `style.css` of CSS imported from JS only exists when something actually imports CSS —
- * declaring it from the config alone would point the export at files nobody produced.
- *
- * `build:done` is the only place that knows: in watch mode `build()` resolves before the first
- * rebuild runs, so the returned bundle's chunks are still empty. The write is idempotent, so
- * the `package.json` watcher settles after one extra rebuild rather than looping.
- * @internal
- */
+/** @internal */
 function createWatchCssExportsHook(
   ctx: BuildContext,
   css: NonNullable<PkgConfigOptions['css']>,

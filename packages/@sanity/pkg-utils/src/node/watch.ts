@@ -1,7 +1,7 @@
 import {up as findPkgPath} from 'empathic/package'
 import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
-import {build as tsdownBuild, type TsdownBundle} from 'tsdown'
+import {build as tsdownBuild, type TsdownHandle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
 import {usesCssExportNodeCompat} from './core/pkg/cssExportOptions.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
@@ -10,9 +10,6 @@ import {createLogger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
 import {resolveTsdownBuilds} from './tasks/tsdown/resolveTsdownBuilds.ts'
 import {resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
-
-const asyncDispose: typeof Symbol.asyncDispose =
-  Symbol.asyncDispose || Symbol.for('Symbol.asyncDispose')
 
 /** @public */
 export async function watch(options: {
@@ -28,19 +25,15 @@ export async function watch(options: {
   const {watchConfigFiles} = await import('./watchConfigFiles.ts')
   const configFiles$ = await watchConfigFiles({cwd, logger})
 
-  // Every rebuild of the waterfall holds tsdown watchers (one per platform build); they are
-  // disposed when the config files change (the waterfall restarts) or the signal aborts.
-  // RxJS does not await async subscriber callbacks, so a monotonically increasing run id
-  // guards the rebuilds: only the latest run may publish into `bundles`, and a run that turns
-  // stale mid-flight (a newer config-file event, or the abort signal) disposes the watchers
-  // it created instead of leaking them.
-  let bundles: TsdownBundle[] = []
+  // RxJS does not await async subscriber callbacks. Only the latest runId may
+  // publish handles; a stale or aborted run must close the handles it created.
+  let handles: TsdownHandle[] = []
   let runId = 0
-  const disposeBundles = async () => {
-    const disposing = bundles
-    bundles = []
-    for (const bundle of disposing) {
-      await bundle[asyncDispose]()
+  const closeHandles = async () => {
+    const closing = handles
+    handles = []
+    for (const handle of closing) {
+      await handle.watch.close()
     }
   }
 
@@ -63,14 +56,10 @@ export async function watch(options: {
 
   const ctxSubscription: Subscription = ctx$.subscribe(async (ctx) => {
     const id = ++runId
-    const runBundles: TsdownBundle[] = []
+    const runHandles: TsdownHandle[] = []
     try {
-      await disposeBundles()
+      await closeHandles()
 
-      // Full builds write the conditional `./<css>` export through tsdown's
-      // `exports.customExports` composition, but watch mode disables tsdown's `exports` feature
-      // (a package.json write per rebuild would loop the watcher). Keep the export in sync here
-      // instead, once per context, like v11 — the write is idempotent, so it won't loop.
       const cssNames: string[] = []
       const cssSources: Record<string, string> = {}
 
@@ -119,19 +108,17 @@ export async function watch(options: {
         })
         first = false
 
-        runBundles.push(...(await tsdownBuild(inlineConfig)).bundles)
+        runHandles.push(await tsdownBuild(inlineConfig))
       }
 
       if (id !== runId) {
-        // A newer run (or the abort signal) took over while this rebuild was in flight —
-        // dispose everything this run created instead of publishing it
-        for (const bundle of runBundles) {
-          await bundle[asyncDispose]()
+        for (const handle of runHandles) {
+          await handle.watch.close()
         }
         return
       }
 
-      bundles = runBundles
+      handles = runHandles
 
       logger.success(`${ctx.pkg.name}: watching for file changes\u2026`)
       logger.log()
@@ -149,7 +136,7 @@ export async function watch(options: {
       () => {
         runId++
         ctxSubscription.unsubscribe()
-        void disposeBundles()
+        void closeHandles()
       },
       {once: true},
     )
