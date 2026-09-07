@@ -146,7 +146,7 @@ export async function watch(options: {
       () => {
         runId++
         ctxSubscription.unsubscribe()
-        void closeHandles()
+        closeHandles().catch((err) => logger.error(err))
       },
       {once: true},
     )
