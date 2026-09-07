@@ -22,12 +22,14 @@ export async function watch(options: {
 
   const logger = createLogger()
 
-  const pkgPath = findPkgPath({cwd})
-  if (!pkgPath) {
+  const bootstrapPkgPath = findPkgPath({cwd})
+  if (!bootstrapPkgPath) {
     throw new Error('missing package.json', {cause: {cwd}})
   }
 
-  const bootstrapConfig = await loadConfig({cwd, pkgPath})
+  // The watched tsconfig is fixed when the watcher starts, so a `tsconfig` that a later
+  // `package.config.ts` edit introduces is not picked up.
+  const bootstrapConfig = await loadConfig({cwd, pkgPath: bootstrapPkgPath})
   const watchedTsconfig = tsconfigOption || bootstrapConfig?.tsconfig || 'tsconfig.json'
 
   const {watchConfigFiles} = await import('./watchConfigFiles.ts')
