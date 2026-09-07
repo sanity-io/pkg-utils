@@ -11,4 +11,5 @@
 fix(deps): update tsdown to ^0.23.0 and adapt to TsdownHandle
 
 tsdown 0.23's `build()` returns `{bundles, watch}` instead of `TsdownBundle[]`.
-pkg-utils now takes `.bundles` from that handle.
+pkg-utils takes `.bundles` from that handle. Select the Go dts generator with
+`dts: {generator: 'tsgo'}` (`dts.tsgo: true` is gone).

@@ -10,10 +10,10 @@ describe('dts option', () => {
   test('is passed through to tsdown as-is', async () => {
     expect((await defineConfig({dts: false})).dts).toBe(false)
     expect((await defineConfig({dts: true})).dts).toBe(true)
-    expect((await defineConfig({dts: {tsgo: true}})).dts).toEqual({tsgo: true})
-    expect((await defineConfig({dts: {sourcemap: true, oxc: false}})).dts).toEqual({
+    expect((await defineConfig({dts: {generator: 'tsgo'}})).dts).toEqual({generator: 'tsgo'})
+    expect((await defineConfig({dts: {sourcemap: true, generator: 'tsc'}})).dts).toEqual({
       sourcemap: true,
-      oxc: false,
+      generator: 'tsc',
     })
   })
 })

@@ -85,13 +85,13 @@ test('a leftover v11 `dts` string degrades to the default instead of spreading',
 })
 
 test('the `dts` object passthrough spreads over the defaults', async () => {
-  const ctx = createContext({dts: {tsgo: true, sourcemap: true}})
+  const ctx = createContext({dts: {generator: 'tsgo', sourcemap: true}})
   const [build] = resolveTsdownBuilds(ctx)
   if (!build) throw new Error('expected a build')
 
   const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
 
-  expect(inlineConfig.dts).toEqual({newContext: true, tsgo: true, sourcemap: true})
+  expect(inlineConfig.dts).toEqual({newContext: true, generator: 'tsgo', sourcemap: true})
 })
 
 test('forwards `bundleAnalyzer` to @sanity/tsdown-config', async () => {

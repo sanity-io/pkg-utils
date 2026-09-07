@@ -30,7 +30,7 @@ const tombstones: LegacyCheck[] = [
       '',
       '  // package.config.ts',
       '  export default defineConfig({',
-      '    dts: {tsgo: true},',
+      "    dts: {generator: 'tsgo'},",
       '  })',
     ],
   },
@@ -165,7 +165,7 @@ export function runLegacyConfigChecks(config: Record<string, unknown>): void {
         ...(dts === 'rolldown'
           ? [
               "`dts: 'rolldown'` is the default behavior now: delete the option. Options that",
-              'accompanied it move into the object, e.g. `tsgo: true` becomes `dts: {tsgo: true}`.',
+              "accompanied it move into the object, e.g. `dts: {generator: 'tsgo'}`.",
             ]
           : [
               "`dts: 'api-extractor'` type generation was removed. Types are generated with",

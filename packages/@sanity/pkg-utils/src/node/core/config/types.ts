@@ -169,8 +169,8 @@ export interface PkgConfigOptions {
   dist?: string
   /**
    * tsdown's `dts` options, passed through as-is (an object, or `false` to skip generating
-   * `.d.ts` files entirely). For example `dts: {tsgo: true}` selects the Go-native TypeScript
-   * compiler for type generation.
+   * `.d.ts` files entirely). For example `dts: {generator: 'tsgo'}` selects the Go-native
+   * TypeScript compiler for type generation.
    * @see https://tsdown.dev/options/dts
    */
   dts?: false | Extract<NonNullable<UserConfig['dts']>, object>
@@ -310,8 +310,8 @@ export interface PkgConfigOptions {
    */
   rollup?: never
   /**
-   * @deprecated Removed in v12. Set `dts: {tsgo: true}` instead — the `dts` option is passed
-   * through to tsdown as-is.
+   * @deprecated Removed in v12. Set `dts: {generator: 'tsgo'}` instead — the `dts` option is
+   * passed through to tsdown as-is.
    */
   tsgo?: never
 }

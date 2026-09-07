@@ -13,7 +13,7 @@ stops with an error that contains these same migration instructions (skipped whe
 | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `dts: 'rolldown'`                              | delete it (it's the default now)                                                        |
 | `dts: 'api-extractor'`                         | delete it (types come from tsdown)                                                      |
-| `tsgo: true`                                   | `dts: {tsgo: true}`                                                                     |
+| `tsgo: true`                                   | `dts: {generator: 'tsgo'}`                                                              |
 | `babel: {reactCompiler: true}`                 | `reactCompiler: true`                                                                   |
 | `reactCompilerOptions: {...}`                  | `reactCompiler: {...}`                                                                  |
 | `babel: {styledComponents: true}`              | `styledComponents: true`                                                                |
