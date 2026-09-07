@@ -128,8 +128,8 @@ exports.defineConfig = defineConfig, exports.definePlugin = definePlugin;
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.d.ts 1`] = `
-"/** @internal */
-interface PluginOptions {
+"/** @public */
+export interface PluginOptions {
   /**
    * @defaultValue true
    */
@@ -138,7 +138,6 @@ interface PluginOptions {
 /** @public */
 export interface Plugin {
   name: string;
-  /** @internal */
   options?: PluginOptions;
 }
 /** @public */
