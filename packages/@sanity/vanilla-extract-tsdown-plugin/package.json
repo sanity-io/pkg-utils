@@ -1,6 +1,6 @@
 {
   "name": "@sanity/vanilla-extract-tsdown-plugin",
-  "version": "0.2.9",
+  "version": "0.4.0",
   "description": "tsdown plugin for vanilla-extract that extracts CSS into a lightningcss-optimized file, modeled after @tsdown/css",
   "keywords": [
     "sanity-io",
@@ -46,15 +46,15 @@
     "@sanity/tsconfig": "workspace:^",
     "@sanity/tsdown-config": "workspace:^",
     "@types/node": "catalog:",
-    "@vanilla-extract/css": "^1.21.1",
+    "@vanilla-extract/css": "^1.21.2",
     "publint": "catalog:",
-    "rolldown": "~1.2.0",
+    "rolldown": "~1.2.7",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "tsdown": "^0.22.5"
+    "tsdown": "^0.23.0"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

@@ -14,6 +14,7 @@
   },
   "rules": {
     "import/no-cycle": "error",
+    "import/no-unassigned-import": ["error", {"allow": ["**/*.css"]}],
     "oxc/no-barrel-file": "error",
     "eslint/no-console": ["warn", {"allow": ["warn", "error"]}],
     "react/react-in-jsx-scope": "off",

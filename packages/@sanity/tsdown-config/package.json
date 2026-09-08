@@ -1,6 +1,6 @@
 {
   "name": "@sanity/tsdown-config",
-  "version": "0.21.0",
+  "version": "0.28.0",
   "description": "Shared configuration for tsdown",
   "keywords": [
     "sanity-io",
@@ -28,6 +28,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./tsdoc": "./src/tsdoc/index.ts",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
@@ -37,48 +38,71 @@
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
+    "pretest": "pnpm run build",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
   "dependencies": {
-    "@babel/core": "^7.29.7",
-    "@rolldown/plugin-babel": "^0.2.3",
+    "@microsoft/api-extractor": "^7.59.0",
+    "@microsoft/tsdoc-config": "^0.18.1",
     "@sanity/browserslist-config": "^1.0.5",
     "@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
-    "@vitejs/plugin-react": "^6.0.4",
-    "browserslist": "^4.28.7",
+    "@typescript/typescript6": "^6.0.2",
+    "@vitejs/plugin-react": "^6.1.1",
+    "browserslist": "^4.28.8",
+    "jsonc-parser": "^3.3.1",
     "lightningcss": "catalog:",
-    "package-manager-detector": "^1.7.0",
-    "publint": "^0.3.22"
+    "package-manager-detector": "^1.8.0",
+    "publint": "^0.3.24",
+    "rolldown": "~1.2.7"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@sanity/pkg-utils": "workspace:^",
     "@sanity/tsconfig": "workspace:^",
-    "@tsdown/css": "^0.22.13",
+    "@tsdown/css": "catalog:",
     "@types/babel__core": "^7.20.5",
     "babel-plugin-react-compiler": "^1.0.0",
-    "rolldown": "~1.2.0",
-    "tinyexec": "^1.2.4",
+    "oxc-transform-react": "catalog:",
+    "tinyexec": "^1.3.1",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@babel/core": "*",
+    "@rolldown/plugin-babel": "*",
+    "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
-    "tsdown": "^0.22.5",
+    "oxc-transform-react": "*",
+    "tsdown": "^0.23.0",
     "typescript": "6.x || 7.x"
   },
   "peerDependenciesMeta": {
+    "@babel/core": {
+      "optional": true
+    },
+    "@rolldown/plugin-babel": {
+      "optional": true
+    },
+    "@tsdown/css": {
+      "optional": true
+    },
     "babel-plugin-react-compiler": {
+      "optional": true
+    },
+    "oxc-transform-react": {
       "optional": true
     }
   },
   "engines": {
-    "node": ">=20.19 <22 || >=22.12"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
+      "./tsdoc": "./dist/tsdoc.mjs",
       "./package.json": "./package.json"
     }
   }

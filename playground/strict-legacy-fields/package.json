@@ -37,5 +37,15 @@
   "browserslist": "extends @sanity/browserslist-config",
   "devDependencies": {
     "@sanity/pkg-utils": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

@@ -7,6 +7,8 @@ export interface SpawnedProject {
   cwd: string
   readFile: (filePath: string) => Promise<string>
   run: (cmd: string) => Promise<string>
+  /** Run the `pkg` CLI directly (resolved from the project's `node_modules/.bin`). */
+  pkg: (args: string[]) => Promise<string>
 }
 
 /**
@@ -22,30 +24,34 @@ export async function spawnProject(name: string): Promise<SpawnedProject> {
     PATH: `${process.env['PATH']}${path.delimiter}${binPath}`,
   }
 
+  const runPnpm = async (args: string[]): Promise<string> => {
+    const result = await exec('pnpm', args, {
+      cwd,
+      env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
+
+    const stdout = result.stdout?.toString('utf-8') || ''
+    const stderr = result.stderr?.toString('utf-8') || ''
+
+    if (!result.ok) {
+      const cleanStdout = stripVTControlCharacters(stdout)
+      const cleanStderr = stripVTControlCharacters(stderr)
+      console.log(cleanStdout)
+      console.error(cleanStderr)
+      throw new Error(`Command "pnpm ${args.join(' ')}" failed with exit code ${result.code}`)
+    }
+
+    return stripVTControlCharacters(stdout)
+  }
+
   return {
     cwd,
 
     readFile: (filePath: string) => fs.readFile(path.resolve(cwd, filePath), 'utf-8'),
 
-    run: async (cmd: string): Promise<string> => {
-      const result = await exec('pnpm', ['run', cmd], {
-        cwd,
-        env,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      })
+    run: (cmd: string) => runPnpm(['run', cmd]),
 
-      const stdout = result.stdout?.toString('utf-8') || ''
-      const stderr = result.stderr?.toString('utf-8') || ''
-
-      if (!result.ok) {
-        const cleanStdout = stripVTControlCharacters(stdout)
-        const cleanStderr = stripVTControlCharacters(stderr)
-        console.log(cleanStdout)
-        console.error(cleanStderr)
-        throw new Error(`Command "pnpm run ${cmd}" failed with exit code ${result.code}`)
-      }
-
-      return stripVTControlCharacters(stdout)
-    },
+    pkg: (args: string[]) => runPnpm(['exec', 'pkg', ...args]),
   }
 }

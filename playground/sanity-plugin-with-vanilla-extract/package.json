@@ -20,6 +20,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -32,23 +33,36 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "dependencies": {
-    "@sanity/ui": "4.0.0-static.46"
+    "@sanity/ui": "^4.0.7"
   },
   "devDependencies": {
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vanilla-extract/css": "^1.21.1",
-    "@vanilla-extract/vite-plugin": "^5.2.5",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vanilla-extract/css": "^1.21.2",
+    "@vanilla-extract/vite-plugin": "^5.2.6",
     "babel-plugin-react-compiler": "1.0.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "sanity": "^6.5.0",
-    "styled-components": "^6.4.4",
-    "vite": "^8.1.5"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sanity": "^6.12.0",
+    "styled-components": "^6.5.3",
+    "vite": "^8.2.2"
   },
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",
     "sanity": "^4 || ^5.0.0 || ^6.0.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

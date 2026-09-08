@@ -87,7 +87,7 @@ describe('reactCompiler.reactServer option', () => {
       await defineConfig({reactCompiler: {target: '19', reactServer: false}}),
     ]) {
       expect(Array.isArray(config)).toBe(false)
-      expect(getPluginNames(config)).toEqual(['@rolldown/plugin-babel'])
+      expect(getPluginNames(config)).toEqual(['vite:react-compiler'])
       expect(config.exports).not.toHaveProperty('customExports')
       expect(config.outExtensions).toBeUndefined()
     }
@@ -123,19 +123,40 @@ describe('reactCompiler.reactServer option', () => {
 
     // The compiled variant is the classic single build: the React Compiler applied, and it
     // owns `dts`, `exports` generation and `publint`
-    expect(getPluginNames(compiled)).toEqual(['@rolldown/plugin-babel'])
+    expect(getPluginNames(compiled)).toEqual(['vite:react-compiler'])
     expect(compiled.publint).toBe(true)
-    expect(compiled.exports).toMatchObject({enabled: 'local-only'})
+    expect(compiled.exports).toMatchObject({enabled: true, devExports: true})
 
     // The react-server variant builds the same source without the compiler, skips d.ts (the
     // compiled variant's declarations serve both entries), never cleans (the compiled
     // variant's `clean` covers the run - tsdown cleans once, before either variant emits),
-    // and stays out of `exports` generation and `publint`
+    // and stays out of `exports` generation, `publint`, and `tsdoc`
     expect(getPluginNames(reactServer)).toEqual([])
     expect(reactServer.dts).toBe(false)
     expect(reactServer.clean).toBe(false)
     expect(reactServer.exports).toBe(false)
     expect(reactServer.publint).toBe(false)
+    expect(reactServer.hooks).toBeUndefined()
+  })
+
+  test('combines with `transform: "babel"`', async () => {
+    const [compiled, reactServer] = await defineDualConfig({
+      reactCompiler: {target: '19', transform: 'babel'},
+    })
+
+    // Only the compiled variant runs the opt-in babel implementation; the react-server
+    // variant stays uncompiled either way (rolldown lowers its TypeScript/JSX)
+    expect(getPluginNames(compiled)).toEqual(['@rolldown/plugin-babel'])
+    expect(getPluginNames(reactServer)).toEqual([])
+  })
+
+  test('tsdoc hook is only on the compiled variant when enabled', async () => {
+    const [compiled, reactServer] = await defineDualConfig({
+      reactCompiler: {target: '19'},
+      tsdoc: true,
+    })
+    expect(typeof compiled.hooks).toBe('function')
+    expect(reactServer.hooks).toBeUndefined()
   })
 
   test('react-server entries sit next to the compiled ones with `.react-server` inserted', async () => {
@@ -368,7 +389,7 @@ describe('react-server-library', () => {
     ])
 
     // The compiled output is auto-memoized with the memo cache provided by
-    // `react/compiler-runtime` (the fixture sets `reactCompiler: {target: '19'}`)
+    // `react/compiler-runtime` (the fixture opts into `transform: 'babel'`)
     expect(distIndexJs).toContain('react/compiler-runtime')
 
     // The react-server output is the same source without the compiler: no

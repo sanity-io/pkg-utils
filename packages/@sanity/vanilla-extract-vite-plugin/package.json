@@ -1,6 +1,6 @@
 {
   "name": "@sanity/vanilla-extract-vite-plugin",
-  "version": "0.2.6",
+  "version": "0.2.18",
   "description": "Vite 8 plugin for vanilla-extract with plugin hook filters and a caching compiler on Vite's ModuleRunner",
   "keywords": [
     "sanity-io",
@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@sanity/vanilla-extract-integration": "workspace:^",
-    "@vanilla-extract/css": "^1.21.1"
+    "@vanilla-extract/css": "^1.21.2"
   },
   "devDependencies": {
     "@sanity/tsconfig": "workspace:^",
@@ -50,7 +50,7 @@
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vite": "^8.1.5",
+    "vite": "^8.2.2",
     "vitest": "catalog:"
   },
   "peerDependencies": {

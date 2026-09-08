@@ -16,6 +16,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "files": [
     "dist",
     "src"
@@ -23,5 +24,16 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js",
+        "default": "./dist/index.js"
+      },
+      "./css/styles.css": "./src/css/styles.css",
+      "./package.json": "./package.json"
+    }
   }
 }

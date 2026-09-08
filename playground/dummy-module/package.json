@@ -11,7 +11,8 @@
       "browser": {
         "source": "./src/index.ts",
         "import": "./dist/index.browser.js",
-        "require": "./dist/index.browser.cjs"
+        "require": "./dist/index.browser.cjs",
+        "default": "./dist/index.browser.js"
       },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
@@ -22,7 +23,8 @@
       "browser": {
         "source": "./src/extra.ts",
         "import": "./dist/extra.browser.js",
-        "require": "./dist/extra.browser.cjs"
+        "require": "./dist/extra.browser.cjs",
+        "default": "./dist/extra.browser.js"
       },
       "import": "./dist/extra.js",
       "require": "./dist/extra.cjs",
@@ -34,9 +36,9 @@
   "module": "./dist/index.js",
   "browser": {
     "./dist/index.cjs": "./dist/index.browser.cjs",
-    "./dist/index.js": "./dist/index.browser.esm.js",
+    "./dist/index.js": "./dist/index.browser.js",
     "./dist/extra.cjs": "./dist/extra.browser.cjs",
-    "./dist/extra.js": "./dist/extra.browser.esm.js"
+    "./dist/extra.js": "./dist/extra.browser.js"
   },
   "types": "./dist/index.d.ts",
   "typesVersions": {
@@ -53,5 +55,30 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "browser": {
+          "import": "./dist/index.browser.js",
+          "require": "./dist/index.browser.cjs",
+          "default": "./dist/index.browser.js"
+        },
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./extra": {
+        "browser": {
+          "import": "./dist/extra.browser.js",
+          "require": "./dist/extra.browser.cjs",
+          "default": "./dist/extra.browser.js"
+        },
+        "import": "./dist/extra.js",
+        "require": "./dist/extra.cjs",
+        "default": "./dist/extra.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

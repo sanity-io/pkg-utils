@@ -61,6 +61,7 @@ export function printPackageTree(ctx: BuildContext): void {
 
           if (entry.browser.import) exp.browser.import = fileInfo(entry.browser.import)
           if (entry.browser.require) exp.browser.require = fileInfo(entry.browser.require)
+          if (entry.browser.default) exp.browser.default = fileInfo(entry.browser.default)
         } else {
           delete exp.browser
         }
@@ -77,6 +78,7 @@ export function printPackageTree(ctx: BuildContext): void {
           if (entry.node.source) exp.node.source = fileInfo(entry.node.source)
           if (entry.node.import) exp.node.import = fileInfo(entry.node.import)
           if (entry.node.require) exp.node.require = fileInfo(entry.node.require)
+          if (entry.node.default) exp.node.default = fileInfo(entry.node.default)
         } else {
           delete exp.node
         }

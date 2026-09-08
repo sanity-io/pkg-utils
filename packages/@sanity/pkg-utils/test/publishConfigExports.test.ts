@@ -6,7 +6,6 @@ import {
   containsExportCondition,
   loadPkgWithReporting,
 } from '../src/node/core/pkg/loadPkgWithReporting'
-import {writeBundleCssExports} from '../src/node/core/pkg/writeBundleCssExports'
 import {createLogger} from '../src/node/logger'
 import {parseStrictOptions} from '../src/node/strict'
 
@@ -459,11 +458,145 @@ describe('publishConfig.exports validation', () => {
     )
   })
 
-  // Regression test: a vanilla-extract build adds the `./bundle.css` export to `exports` via
-  // `writeBundleCssExports` and then runs the strict `--check`. If the export is not mirrored into
-  // `publishConfig.exports`, the check fails with "missing export path". This asserts the build +
-  // check stays green for packages that declare `publishConfig.exports`.
-  test('should pass after writeBundleCssExports mirrors the css export into publishConfig.exports', async () => {
+  test('should pass when a nested runtime condition is condensed to a string', async () => {
+    // `"node": "./dist/index.node.js"` is all that is left of `{source, default}` once the
+    // `source` condition is stripped for publishing, and resolves identically to
+    // `{"default": "./dist/index.node.js"}` - the same condensation the entry itself allows.
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            node: {
+              source: './src/index.node.ts',
+              default: './dist/index.node.js',
+            },
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              node: './dist/index.node.js',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      false,
+    )
+  })
+
+  test('should fail when a condensed nested runtime condition points at the wrong file', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            node: {
+              source: './src/index.node.ts',
+              default: './dist/index.node.js',
+            },
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              node: './dist/index.js',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+    )
+  })
+
+  test('should fail when a nested runtime condition is condensed but has more than `default`', async () => {
+    await testPackage(
+      {
+        name: 'test-pkg',
+        version: '1.0.0',
+        license: 'MIT',
+        type: 'module',
+        exports: {
+          '.': {
+            source: './src/index.ts',
+            node: {
+              source: './src/index.node.ts',
+              require: './dist/index.node.cjs',
+              default: './dist/index.node.js',
+            },
+            default: './dist/index.js',
+          },
+        },
+        publishConfig: {
+          exports: {
+            '.': {
+              node: './dist/index.node.js',
+              default: './dist/index.js',
+            },
+          },
+        },
+        files: ['dist'],
+      },
+      true,
+    )
+  })
+
+  test.each(['source', 'monorepo'])(
+    'should fail when publishConfig.exports contains a nested %s condition',
+    async (condition) => {
+      await testPackage(
+        {
+          name: 'test-pkg',
+          version: '1.0.0',
+          license: 'MIT',
+          type: 'module',
+          exports: {
+            '.': {
+              source: './src/index.ts',
+              node: {
+                source: './src/index.node.ts',
+                default: './dist/index.node.js',
+              },
+              default: './dist/index.js',
+            },
+          },
+          publishConfig: {
+            exports: {
+              '.': {
+                node: {
+                  [condition]: './src/index.node.ts',
+                  default: './dist/index.node.js',
+                },
+                default: './dist/index.js',
+              },
+            },
+          },
+          files: ['dist'],
+        },
+        true,
+      )
+    },
+  )
+
+  test('should pass when a `.css` subpath declares only its `source`', async () => {
+    // The documented way to ship a stylesheet: the author writes the `source` and the build
+    // fills the remaining conditions into both maps. Before that first build `exports` holds
+    // nothing but the `source` and `publishConfig.exports` holds nothing at all, so the
+    // cross-map checks must not reject it.
     await testPackage(
       {
         name: 'test-pkg',
@@ -475,29 +608,20 @@ describe('publishConfig.exports validation', () => {
             source: './src/index.ts',
             default: './dist/index.js',
           },
-          './package.json': './package.json',
+          './ui/styles.css': {
+            source: './src/ui/styles.css',
+          },
         },
         publishConfig: {
           exports: {
             '.': {
               default: './dist/index.js',
             },
-            './package.json': './package.json',
           },
         },
         files: ['dist'],
       },
       false,
-      {
-        beforeValidate: async (cwd) => {
-          await writeBundleCssExports({
-            cwd,
-            distPath: join(cwd, 'dist'),
-            cssName: 'bundle.css',
-            logger: createLogger(true),
-          })
-        },
-      },
     )
   })
 })

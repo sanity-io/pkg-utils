@@ -14,13 +14,13 @@ export default defineConfig({tsconfig: 'tsconfig.dist.json'})
 
 ## React Compiler
 
-The same React Compiler feature as `@sanity/pkg-utils` is available. It runs
-[`babel-plugin-react-compiler`](https://react.dev/learn/react-compiler) on the source files before
-they are bundled, so published components are memoized automatically. The plugin needs to be
+The same React Compiler feature as `@sanity/pkg-utils` is available. It runs the
+[React Compiler](https://react.dev/learn/react-compiler) on the source files before they are
+bundled, so published components are memoized automatically. The compiler needs to be
 installed separately:
 
 ```sh
-pnpm add --save-dev babel-plugin-react-compiler
+pnpm add --save-dev oxc-transform-react
 ```
 
 Then enable it:
@@ -42,6 +42,32 @@ export default defineConfig({
   reactCompiler: {target: '18'},
 })
 ```
+
+### Transforms (`transform`)
+
+`transform` picks which implementation of the compiler runs:
+
+| `transform`       | Runs                                                                                       | Install                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `'oxc'` (default) | [`oxc-transform-react`](https://www.npmjs.com/package/oxc-transform-react), the Rust port  | `pnpm add -D oxc-transform-react`                                            |
+| `'babel'`         | [`babel-plugin-react-compiler`](https://www.npmjs.com/package/babel-plugin-react-compiler) | `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler` |
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  reactCompiler: {target: '19', transform: 'babel'},
+})
+```
+
+Good to know about the default `'oxc'` (via `@vitejs/plugin-react`'s [`compiler` option](https://github.com/vitejs/vite-plugin-react/pull/1419)):
+
+- One native pass compiles, strips TypeScript, and lowers JSX. Custom `jsxImportSource`? Opt into `'babel'`.
+- Options are the serializable subset: no `logger`, no function-valued `sources`.
+
+`'babel'` runs the reference implementation and covers those cases. It's opt-in: babel never
+lands in `node_modules` unless you set `transform: 'babel'` and install the toolchain. Only
+the implementation you use needs to be installed — the other one's options simply stay
+untyped (no `declare module` stubs needed).
 
 ### React Server Components (`reactServer`)
 
@@ -152,8 +178,8 @@ export default defineConfig({
 })
 ```
 
-By default (`inject: {nodeCompat: true}`) the conditional CSS export pattern is wired up
-automatically:
+By default (`inject: true` with `exports: {nodeCompat: true}`) the conditional CSS export pattern
+is wired up automatically:
 
 - injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
   vanilla-extract styles,
@@ -174,9 +200,15 @@ consumers by adding it to `sideEffects` in `package.json`:
 
 Pass an options object instead of `true` to customize - the options are modeled after the
 [`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
-`target`, `lightningcss`). Set `inject: true` for a plain relative `import "./bundle.css"`
-instead of the conditional export pattern, or `inject: false` to wire up the import, shim, and
-export yourself.
+`target`, `lightningcss`). `inject` and `exports` are independent: set `exports: true` for a
+plain (browser-only) `"./bundle.css"` export without the shim, `exports: false` for a relative
+`import "./bundle.css"` instead of the export pattern, or `inject: false` to publish the CSS
+without importing it automatically (for packages whose consumers import the subpath themselves).
+
+> [!NOTE]
+> `inject: {nodeCompat: true}` is deprecated. It means `{inject: true, exports: {nodeCompat: true}}`
+> and still works, with a warning: `nodeCompat` configures how the CSS file is published, not how
+> the import is injected, so it moved to `exports`.
 
 Two Sanity-flavored defaults diverge from the bare plugins (which match `@tsdown/css` exactly):
 
@@ -196,11 +228,10 @@ default (`bundle.css` vs `style.css`) and do not interfere with each other.
 
 ## css
 
-tsdown's experimental [`css` option](https://tsdown.dev/options/css) is passed through as-is.
-It enables the `@tsdown/css` pipeline for CSS modules, preprocessors, Lightning CSS / PostCSS,
-inject, and related features. Install [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css)
-in the project first — `@sanity/tsdown-config` only forwards the option and does not depend on
-`@tsdown/css` itself:
+tsdown's experimental [`css` option](https://tsdown.dev/options/css) enables the `@tsdown/css`
+pipeline for plain CSS, CSS modules, preprocessors, and Lightning CSS / PostCSS. Install
+[`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) in the project first — it is an
+optional peer dependency:
 
 ```sh
 pnpm add --save-dev @tsdown/css
@@ -212,11 +243,22 @@ import {defineConfig} from '@sanity/tsdown-config'
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   css: {
-    inject: true,
     modules: {localsConvention: 'camelCase'},
   },
 })
 ```
+
+The options are `@tsdown/css`'s, plus an `exports` option this config implements on top, with the
+same two Sanity-flavored defaults as `vanillaExtract`:
+
+- `exports` defaults to `{nodeCompat: true}`, wiring up the same conditional CSS export pattern:
+  the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
+  `style-css.d.ts` declaration, and the conditional `"./style.css"` export in `package.json`.
+  `@tsdown/css` has no equivalent — its own `inject` emits a relative `import "./style.css"`,
+  which throws in runtimes that cannot load `.css` files. Set `exports: true` for a plain
+  (browser-only) CSS export, or `exports: false` to fall back to the relative injection.
+- `minify` defaults to `true`, and browserless CSS syntax lowering targets fall back to
+  `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
 
 Both `css` and `vanillaExtract` can be enabled in the same config. Use that when a package
 authors styles with vanilla-extract _and_ CSS modules (`.module.css`):
@@ -228,15 +270,14 @@ export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
   vanillaExtract: true,
   css: {
-    inject: true,
     modules: {localsConvention: 'camelCase'},
   },
 })
 ```
 
-vanilla-extract extracts into `dist/bundle.css` by default (with the conditional
-`"./bundle.css"` export when `inject` stays at its Sanity default), while `@tsdown/css` merges
-other CSS — including scoped CSS modules — into `dist/style.css`. See the
+vanilla-extract extracts into `dist/bundle.css`, while `@tsdown/css` merges other CSS — including
+scoped CSS modules — into `dist/style.css`. Each pipeline publishes its own conditional export and
+emits its own shim, so they never collide. See the
 [`InlineConfig.css`](https://tsdown.dev/reference/api/Interface.InlineConfig#css) API reference
 for the full option surface.
 
@@ -254,8 +295,46 @@ import {defineConfig} from '@sanity/tsdown-config'
 
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
-  dts: {tsgo: true},
+  dts: {generator: 'tsgo'},
 })
+```
+
+## tsdoc
+
+Runs [API Extractor](https://api-extractor.com/) after the build (via tsdown's `build:done` hook)
+to check that TSDoc tags are valid and release tags are correct. Off by default — set
+`tsdoc: true` to enable, or pass an options object to customize rules and custom tags:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  tsdoc: true,
+})
+```
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  tsdoc: {
+    rules: {
+      // do not require internal members to be prefixed with `_`
+      'ae-internal-missing-underscore': 'off',
+    },
+  },
+})
+```
+
+The check runs against every entry `.d.ts` / `.d.mts` / `.d.cts` file the build emitted. API
+Extractor is loaded only when that hook runs (or when you import the programmatic API), so
+enabling `tsdoc` does not pull those dependencies into the root `@sanity/tsdown-config` entry.
+
+It is also available as `checkTsdoc` from `@sanity/tsdown-config/tsdoc` for hosts that want to
+run it outside the build:
+
+```ts
+import {checkTsdoc} from '@sanity/tsdown-config/tsdoc'
 ```
 
 ## outDir
@@ -437,8 +516,9 @@ export default defineConfig({
 tsdown's [`exports` option](https://tsdown.dev/options/package-exports) is forwarded with
 different defaults, suited for publishing Sanity libraries:
 
-- `enabled: 'local-only'` - the `exports` map in `package.json` is generated during local builds
-  and skipped in CI, where the committed `package.json` is already up to date, and
+- `enabled: true` - the `exports` map in `package.json` is generated on every build, whether
+  `CI` is set or not. Gating on `'local-only'`/`'ci-only'` surprised environments like Cursor
+  Cloud that set `CI=true` without intending to skip `package.json` rewrites, and
 - `devExports: true` when pnpm is detected - the local `exports` map points at the source files
   (so monorepo siblings and editors resolve them directly), while `publishConfig.exports` receives
   the built files. This default is omitted for other or unknown package managers because they do
@@ -457,11 +537,80 @@ export default defineConfig({
 })
 ```
 
+The package-manager detection behind the `devExports` default only runs when that default can
+still apply - it is skipped when the userland value replaces the defaults (`false`, `true`, a
+bare CI condition) or sets `devExports` explicitly, so those configs behave identically across
+package managers without any filesystem probing.
+
+## cwd
+
+tsdown's `cwd` option is forwarded as-is, and also used for the package-manager detection behind
+the [`exports`](#exports) `devExports` default (instead of `process.cwd()`). Config files can
+leave it unset; set it when driving builds programmatically for a package in another directory,
+e.g. from a monorepo script or a tool composing this config:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+const config = await defineConfig({
+  cwd: '/path/to/package',
+  tsconfig: 'tsconfig.dist.json',
+})
+```
+
+## bundleAnalyzer
+
+Enables Rolldown's experimental
+[`bundleAnalyzerPlugin`](https://rolldown.rs/builtin-plugins/bundle-analyzer) to emit a report of
+what the package itself bundles — chunks, modules, dependency chains — next to the build output.
+The plugin is currently experimental (exported from `rolldown/experimental`); this option is
+`@alpha` to match.
+
+Analysis adds work to the build, so the option stays off by default. Typical usage is an
+env-gated opt-in so everyday `pnpm build` / publish is unchanged:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true',
+})
+```
+
+`true` selects `format: 'md'` — an LLM-friendly markdown report (`analyze-data.md` in `outDir`)
+— rather than the plugin's own `'json'` default. Pass an object to customize:
+
+```ts
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  bundleAnalyzer: {
+    format: 'json',
+    fileName: 'bundle-analysis.json',
+  },
+})
+```
+
+The report is **not** a publishable artifact. Exclude it from `package.json` `files` so an
+accidental analyze build cannot ship it:
+
+```json
+{
+  "files": ["dist", "!dist/analyze-data.md"]
+}
+```
+
+With [`reactCompiler.reactServer`](#react-server-components-reactserver) only the compiled
+(`default`) variant is analyzed — the `react-server` variant skips it so the two parallel
+builds don't overwrite one report in the shared `outDir`.
+
 ## checks
 
 Rolldown's [`checks.circularDependency`](https://rolldown.rs/reference/InputOptions.checks#circulardependency)
 warning is enabled by default (Rolldown itself defaults it to `false`). Circular imports inflate
 bundle size and can cause execution-order issues, so library builds surface them as warnings.
+Cycles that only exist between declaration files are filtered out - see
+[`suppressWarnings`](#suppresswarnings).
 
 To turn the warning off, merge over the returned config:
 
@@ -471,6 +620,47 @@ import {mergeConfig} from 'tsdown'
 
 export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
   checks: {circularDependency: false},
+})
+```
+
+## suppressWarnings
+
+The `checks.circularDependency` check above also applies to the declaration bundling pass, where
+it reports cycles between the emitted `.d.ts` modules. Those imports are type-only and erased at
+runtime, so the cycles carry none of the hazards the check exists to surface - and they're
+unavoidable for mutually referencing public types, e.g. a `DocumentNode` whose `fields` are
+`FieldNode`s that point back at their `parent` document. In
+[sanity-io/sanity#13753](https://github.com/sanity-io/sanity/pull/13753) 109 of 136 cycle
+warnings were declaration-only, drowning out the 27 real ones.
+
+So `defineConfig` sets tsdown's `suppressWarnings` to drop `CIRCULAR_DEPENDENCY` warnings whose
+**entire** cycle consists of declaration files (`.d.ts`/`.d.mts`/`.d.cts`). A cycle that includes
+even one runtime module still warns.
+
+Adding your own suppressions - strings (matched with `includes`), regular expressions (matched
+with `test`), or a predicate - goes through the `suppressWarnings` option, which is OR'd with the
+built-in one rather than replacing it:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  suppressWarnings: [/EMPTY_BUNDLE/, 'node_modules/some-dep'],
+})
+```
+
+Suppression happens before `failOnWarn` turns warnings into errors, so a suppressed warning never
+fails the build. To drop the built-in suppression instead of adding to it, merge over the returned
+config - `mergeConfig` replaces functions:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {mergeConfig} from 'tsdown'
+
+export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}), {
+  // Restores every warning, including the declaration-only cycles
+  suppressWarnings: () => false,
 })
 ```
 
@@ -488,4 +678,31 @@ export default mergeConfig(await defineConfig({tsconfig: 'tsconfig.dist.json'}),
   // Any tsdown option, e.g. opting out of hashed chunk filenames:
   hash: false,
 })
+```
+
+## Programmatic composition
+
+`defineConfig()` output is a `mergeConfig`-safe base, and that is a supported contract - tools
+like `@sanity/pkg-utils` compose their own opinions over it programmatically. `mergeConfig`
+applies with tsdown's semantics:
+
+- `plugins` (top-level, `inputOptions`, `outputOptions`) are **appended**, so layering your own
+  plugins never clobbers the ones this config sets up (React Compiler, vanilla-extract, bundle
+  analyzer),
+- plain objects deep-merge over the defaults (e.g. `minify: {mangle: true}` keeps the
+  `compress`/`codegen` defaults), and
+- scalars and non-plugin arrays replace (e.g. `publint: false`, `format: ['esm']`).
+
+Combined with [`cwd`](#cwd), a host can resolve a package-specific config without touching
+`process.cwd()`:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+import {build, mergeConfig} from 'tsdown'
+
+const config = mergeConfig(await defineConfig({cwd, tsconfig: 'tsconfig.dist.json'}), {
+  // the host's own opinions, e.g. computed targets or extra plugins
+})
+
+await build({...config, config: false})
 ```

@@ -41,6 +41,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
@@ -67,5 +68,35 @@
   },
   "devDependencies": {
     "dummy-side-effects": "workspace:*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./plugin": {
+        "import": "./dist/plugin.js",
+        "require": "./dist/plugin.cjs",
+        "default": "./dist/plugin.js"
+      },
+      "./pure": {
+        "import": "./dist/pure.js",
+        "require": "./dist/pure.cjs",
+        "default": "./dist/pure.js"
+      },
+      "./side-effect": {
+        "import": "./dist/side-effect.js",
+        "require": "./dist/side-effect.cjs",
+        "default": "./dist/side-effect.js"
+      },
+      "./no-side-effect": {
+        "import": "./dist/no-side-effect.js",
+        "require": "./dist/no-side-effect.cjs",
+        "default": "./dist/no-side-effect.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

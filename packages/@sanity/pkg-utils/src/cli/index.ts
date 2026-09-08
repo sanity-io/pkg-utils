@@ -20,7 +20,7 @@ cli
   .option('--strict', 'Strict mode')
   .option('--tsconfig [tsconfig]', '[string] tsconfig.json')
   .option('--check', 'Run the check command after build (same as running `pkg build && pkg check`)')
-  .option('--clean', 'Clean the dist directory before building')
+  .option('--no-clean', 'Skip cleaning the `dist` folder before the build')
   .option('--quiet', 'Suppress all output except errors, warnings, and checks')
   .action(async (options) => {
     const {check = false, ...buildOptions} = options

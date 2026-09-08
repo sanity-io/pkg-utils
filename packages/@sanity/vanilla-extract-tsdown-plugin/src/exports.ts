@@ -1,7 +1,17 @@
 import {cssShimDtsFileName, cssShimFileName} from '@sanity/vanilla-extract-rolldown-plugin'
 
 /**
- * Build the conditional CSS export object that the `inject` wiring expects, e.g.
+ * Build the plain CSS export target of `exports: true`, e.g. `"./dist/bundle.css"`. Enough for
+ * packages that only run in browsers or bundlers; `exports: {nodeCompat: true}` uses
+ * {@link createConditionalCssExport} instead so the subpath also resolves in Node.
+ * @internal
+ */
+export function createCssExport(cssFileName: string, outDir: string): string {
+  return `./${outDir}/${cssFileName}`
+}
+
+/**
+ * Build the conditional CSS export object that `exports.nodeCompat` expects, e.g.
  * ```json
  * {
  *   "types": "./dist/bundle-css.d.ts",
@@ -37,7 +47,7 @@ export function createConditionalCssExport(
 export function insertCssExport(
   exports: Record<string, unknown>,
   exportKey: string,
-  conditionalExport: Record<string, string>,
+  conditionalExport: Record<string, string> | string,
 ): Record<string, unknown> {
   const nextExports: Record<string, unknown> = {}
   let inserted = false

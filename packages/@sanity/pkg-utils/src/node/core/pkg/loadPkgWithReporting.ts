@@ -6,10 +6,35 @@ import {checkDependencyPlacement} from './dependencyPlacement.ts'
 import {assertLast, assertOrder} from './helpers.ts'
 import {loadPkg} from './loadPkg.ts'
 
+/** The conditions that only resolve before publishing, and are stripped from the publish map. */
+const devConditions = new Set(['source', 'development', 'monorepo'])
+
+/**
+ * A nested runtime condition (`node`, `browser`) may be condensed to a plain string when `default`
+ * is the only condition left once the dev-only ones are stripped: the resolver treats
+ * `"node": "./dist/index.node.js"` and `"node": {"default": "./dist/index.node.js"}` identically.
+ * This is the same condensation `publishConfig.exports["<subpath>"]` itself allows at entry level.
+ */
+function condenseExportValue(value: unknown): unknown {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return value
+
+  const conditions = Object.entries(value).filter(([condition]) => !devConditions.has(condition))
+  const [first] = conditions
+
+  if (conditions.length === 1 && first?.[0] === 'default' && typeof first[1] === 'string') {
+    return first[1]
+  }
+
+  return value
+}
+
 /**
  * Helper function to recursively compare export values, excluding source, development, and monorepo conditions
  */
-function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
+function areExportValuesEqual(input1: unknown, input2: unknown): boolean {
+  const value1 = condenseExportValue(input1)
+  const value2 = condenseExportValue(input2)
+
   // If both are strings, simple comparison
   if (typeof value1 === 'string' && typeof value2 === 'string') {
     return value1 === value2
@@ -32,12 +57,8 @@ function areExportValuesEqual(value1: unknown, value2: unknown): boolean {
     const obj1 = value1 as Record<string, any>
     const obj2 = value2 as Record<string, any>
 
-    const keys1 = Object.keys(obj1).filter(
-      (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
-    )
-    const keys2 = Object.keys(obj2).filter(
-      (k) => k !== 'source' && k !== 'development' && k !== 'monorepo',
-    )
+    const keys1 = Object.keys(obj1).filter((k) => !devConditions.has(k))
+    const keys2 = Object.keys(obj2).filter((k) => !devConditions.has(k))
 
     // Check if they have the same keys
     if (keys1.length !== keys2.length) {
@@ -293,9 +314,20 @@ export async function loadPkgWithReporting(options: {
           // Validate publishConfig.exports structure
           const publishExports = pkg.publishConfig.exports
 
+          // A `.css` subpath with a `source` is a stylesheet built by the CSS pipeline, which
+          // fills the subpath into both maps. Until the first build runs, `exports` holds
+          // nothing but the `source` the author wrote and `publishConfig.exports` holds
+          // nothing at all — the documented way to declare one — so it is exempt from the
+          // cross-map checks below.
+          const isBuiltCssExport = (exportPath: string): boolean => {
+            if (!exportPath.endsWith('.css')) return false
+            const exp = pkg.exports?.[exportPath]
+            return typeof exp === 'object' && exp !== null && 'source' in exp
+          }
+
           // Check that all keys in exports exist in publishConfig.exports
           for (const exportPath of Object.keys(pkg.exports)) {
-            if (!(exportPath in publishExports)) {
+            if (!(exportPath in publishExports) && !isBuiltCssExport(exportPath)) {
               shouldError = true
               logger.error(
                 `publishConfig.exports: missing export path "${exportPath}" that exists in exports`,
@@ -315,6 +347,7 @@ export async function loadPkgWithReporting(options: {
 
           // Validate each export path
           for (const [exportPath, exp] of Object.entries(pkg.exports)) {
+            if (isBuiltCssExport(exportPath)) continue
             if (typeof exp === 'string' || 'svelte' in exp) {
               // For string or svelte exports, publishConfig should match
               const publishExp = publishExports[exportPath]
@@ -369,14 +402,14 @@ export async function loadPkgWithReporting(options: {
             const publishConditions = Object.keys(publishExp)
 
             // Check for source, development, or monorepo in publishConfig
-            if ('source' in publishExp) {
+            if (containsExportCondition(publishExp, 'source')) {
               shouldError = true
               logger.error(
                 `publishConfig.exports["${exportPath}"]: should not contain the \`source\` condition`,
               )
             }
 
-            if ('monorepo' in publishExp) {
+            if (containsExportCondition(publishExp, 'monorepo')) {
               shouldError = true
               logger.error(
                 `publishConfig.exports["${exportPath}"]: should not contain the \`monorepo\` condition`,
@@ -445,7 +478,13 @@ export async function loadPkgWithReporting(options: {
           continue
         }
 
-        logger.error(issue)
+        // Every other issue carries its own message: report it against the path it was found at,
+        // rather than dumping the raw issue object.
+        logger.error(
+          issue.path.length
+            ? `\`${formatPath(issue.path)}\` in \`./package.json\` is invalid: ${issue.message}`
+            : `\`./package.json\` is invalid: ${issue.message}`,
+        )
       }
     } else {
       logger.error(err)

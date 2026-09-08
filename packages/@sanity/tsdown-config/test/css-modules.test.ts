@@ -36,14 +36,19 @@ describe('vanilla-extract + css modules', () => {
     expect(styleCss).not.toContain('rgb(1, 2, 3)')
   })
 
-  test('injects both the conditional VE import and the CSS-modules stylesheet import', async () => {
+  test('injects both stylesheets as self-referential imports', async () => {
     const distIndexJs = await readFile(path.join(fixtureDir, 'dist/index.js'), 'utf-8')
 
+    // Both pipelines inject the bare specifier of their own conditional CSS export, so the
+    // imports resolve to a no-op shim in runtimes that cannot load `.css` files. `@tsdown/css`
+    // would emit a relative `import "./style.css"`, which throws there.
     expect(distIndexJs).toContain(
       'import "@fixtures/vanilla-extract-css-modules-library/bundle.css"',
     )
-    // `css.inject: true` preserves a relative import of the emitted modules stylesheet
-    expect(distIndexJs).toMatch(/import\s+["']\.\/style\.css["']/)
+    expect(distIndexJs).toContain(
+      'import "@fixtures/vanilla-extract-css-modules-library/style.css"',
+    )
+    expect(distIndexJs).not.toMatch(/import\s+["']\.\/style\.css["']/)
 
     // Virtual VE modules and authored colour markers stay out of the JS; the modules map
     // exports the scoped names instead
@@ -64,20 +69,30 @@ describe('vanilla-extract + css modules', () => {
     expect(distIndexJs).toMatch(/\bactionButton\s*:/)
   })
 
-  test('still wires the conditional ./bundle.css export and no-op shim for VE', async () => {
-    const [shim, pkgRaw] = await Promise.all([
+  test('wires a conditional export and no-op shim for each pipeline, without collisions', async () => {
+    const [veShim, cssShim, pkgRaw] = await Promise.all([
       readFile(path.join(fixtureDir, 'dist/bundle-css.js'), 'utf-8'),
+      readFile(path.join(fixtureDir, 'dist/style-css.js'), 'utf-8'),
       readFile(path.join(fixtureDir, 'package.json'), 'utf-8'),
     ])
     const pkg = JSON.parse(pkgRaw)
 
-    expect(shim).toContain('No-op shim')
+    // Each pipeline owns its own CSS file, so neither emits shims for the other's
+    expect(veShim).toContain('No-op shim for `bundle.css`')
+    expect(cssShim).toContain('No-op shim for `style.css`')
     expect(pkg.exports['./bundle.css']).toEqual({
       types: './dist/bundle-css.d.ts',
       browser: './dist/bundle.css',
       style: './dist/bundle.css',
       node: './dist/bundle-css.js',
       default: './dist/bundle-css.js',
+    })
+    expect(pkg.exports['./style.css']).toEqual({
+      types: './dist/style-css.d.ts',
+      browser: './dist/style.css',
+      style: './dist/style.css',
+      node: './dist/style-css.js',
+      default: './dist/style-css.js',
     })
   })
 })

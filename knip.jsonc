@@ -32,10 +32,6 @@
     "packages/@sanity/pkg-utils": {
       "entry": ["package.config.ts", "scripts/*.ts", "src/cli/index.ts"],
       "project": ["src/**/*.ts", "scripts/**/*.ts", "test/**/*.ts"],
-      "ignoreDependencies": [
-        // Referenced as a string in babel config, not imported
-        "@babel/preset-typescript",
-      ],
       "ignoreBinaries": ["sanity-tsdoc"],
     },
     "packages/@sanity/parse-package-json": {

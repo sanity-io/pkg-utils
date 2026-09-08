@@ -6,16 +6,30 @@ packages:
   - css-playground/*
   - packages/@sanity/tsdown-config/test/fixtures/**
 
+ignoreWorkspaceCycles: true
+
 catalog:
-  '@sanity/client': ^7.24.0
-  '@sanity/icons': ^5.1.0
-  '@sanity/logos': ^2.2.4
+  '@sanity/client': ^7.26.2
+  '@sanity/icons': ^5.2.1
+  '@sanity/logos': ^2.2.5
+  '@tsdown/css': ^0.23.0
   '@types/node': ^24.13.3
   lightningcss: ^1.33.0
-  publint: ^0.3.22
-  tsdown: ^0.22.13
+  oxc-transform-react: ^0.148.0
+  publint: ^0.3.24
+  tsdown: ^0.23.0
   typescript: 7.0.2
-  vitest: ^4.1.10
+  vitest: ^4.1.11
+
+# Lifecycle scripts that must run for native/binary packages (pnpm v11 defaults
+# strictDepBuilds to true, so unlisted packages fail the install).
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  unrs-resolver: true
 
 # The pnpm v11 default (1 day)
 minimumReleaseAge: 1440
@@ -25,17 +39,47 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
-  - '@yuku-parser/binding-darwin-arm64@0.8.0'
-  - '@yuku-parser/binding-darwin-x64@0.8.0'
-  - '@yuku-parser/binding-freebsd-x64@0.8.0'
-  - '@yuku-parser/binding-linux-arm-gnu@0.8.0'
-  - '@yuku-parser/binding-linux-arm-musl@0.8.0'
-  - '@yuku-parser/binding-linux-arm64-gnu@0.8.0'
-  - '@yuku-parser/binding-linux-arm64-musl@0.8.0'
-  - '@yuku-parser/binding-linux-x64-gnu@0.8.0'
-  - '@yuku-parser/binding-linux-x64-musl@0.8.0'
-  - '@yuku-parser/binding-win32-arm64@0.8.0'
-  - '@yuku-parser/binding-win32-x64@0.8.0'
+  - '@types/react-dom@19.2.5'
+  - '@sanity/ui@4.0.1'
+  - '@sanity/diff@6.9.2'
+  - '@sanity/mutator@6.9.2'
+  - '@sanity/preview-url-secret@4.1.3'
+  - '@sanity/schema@6.9.2'
+  - '@sanity/types@6.9.2'
+  - '@sanity/util@6.9.2'
+  - sanity@6.9.2
+  - '@yuku-parser/*'
+  - '@yuku-toolchain/types@0.9.3'
+  - '@vitejs/plugin-react@6.1.0'
+  - '@oxc-transform-react/*'
+  - '@oxlint/binding-android-arm-eabi@1.80.0'
+  - '@oxlint/binding-android-arm64@1.80.0'
+  - '@oxlint/binding-darwin-arm64@1.80.0'
+  - '@oxlint/binding-darwin-x64@1.80.0'
+  - '@oxlint/binding-freebsd-x64@1.80.0'
+  - '@oxlint/binding-linux-arm-gnueabihf@1.80.0'
+  - '@oxlint/binding-linux-arm-musleabihf@1.80.0'
+  - '@oxlint/binding-linux-arm64-gnu@1.80.0'
+  - '@oxlint/binding-linux-arm64-musl@1.80.0'
+  - '@oxlint/binding-linux-ppc64-gnu@1.80.0'
+  - '@oxlint/binding-linux-riscv64-gnu@1.80.0'
+  - '@oxlint/binding-linux-riscv64-musl@1.80.0'
+  - '@oxlint/binding-linux-s390x-gnu@1.80.0'
+  - '@oxlint/binding-linux-x64-gnu@1.80.0'
+  - '@oxlint/binding-linux-x64-musl@1.80.0'
+  - '@oxlint/binding-openharmony-arm64@1.80.0'
+  - '@oxlint/binding-win32-arm64-msvc@1.80.0'
+  - '@oxlint/binding-win32-ia32-msvc@1.80.0'
+  - '@oxlint/binding-win32-x64-msvc@1.80.0'
+  - '@rolldown/*'
+  - oxc-transform-react
+  - oxlint@1.80.0
+  - rolldown
+  - verkit@0.3.0
+  - yuku-ast@0.9.3
+  - yuku-parser@0.9.3
+
+minimumReleaseAgeExcludePrune: true
 
 overrides:
   '@sanity/pkg-utils': workspace:*
@@ -50,6 +94,7 @@ trustPolicyExclude:
   - '@octokit/endpoint@9.0.6'
   - '@octokit/plugin-paginate-rest@9.2.2'
   - '@sanity/sdk@2.1.2'
+  - '@sanity/sdk@3.0.0-rc.1'
   - chokidar@4.0.3
   - groq@3.88.1-typegen-experimental.0
   - tinyexec@1.2.2

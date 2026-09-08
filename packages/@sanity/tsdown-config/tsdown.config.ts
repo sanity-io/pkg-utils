@@ -1,3 +1,10 @@
 import {defineConfig} from './src/index.ts'
 
-export default defineConfig({tsconfig: 'tsconfig.dist.json', platform: 'node'})
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  platform: 'node',
+  entry: {
+    index: './src/index.ts',
+    tsdoc: './src/tsdoc/index.ts',
+  },
+})

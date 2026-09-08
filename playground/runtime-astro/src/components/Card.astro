@@ -1,17 +1,13 @@
 ---
 export interface Props {
-  format: string;
-  runtime: string;
-  path: string;
+  version: string;
 }
 
-const { format, runtime, path } = Astro.props;
+const { version } = Astro.props;
 ---
 
 <pre class="card">
-  format: {format}
-  runtime: {runtime}
-  path: {path}
+  version: {version}
 </pre>
 
 <style>

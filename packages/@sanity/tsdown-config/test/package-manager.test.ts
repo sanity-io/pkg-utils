@@ -15,7 +15,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
 
     expect((await defineConfig()).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: true,
     })
     expect(mockedDetect).toHaveBeenCalledWith({cwd: process.cwd()})
@@ -29,7 +29,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue(packageManager)
 
     expect((await defineConfig()).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
     })
   })
 
@@ -37,7 +37,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue(null)
 
     expect((await defineConfig()).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
     })
   })
 
@@ -45,7 +45,7 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
 
     expect((await defineConfig({exports: {all: true}})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       all: true,
     })
   })
@@ -54,8 +54,57 @@ describe('devExports default', () => {
     mockedDetect.mockResolvedValue({name: 'npm', agent: 'npm'})
 
     expect((await defineConfig({exports: {devExports: true}})).exports).toEqual({
-      enabled: 'local-only',
+      enabled: true,
       devExports: true,
     })
+    // An explicit `devExports` makes the pnpm-gated default unreachable, so the detection
+    // is skipped entirely
+    expect(mockedDetect).not.toHaveBeenCalled()
+  })
+
+  test('detects from the `cwd` option instead of process.cwd() when provided', async () => {
+    mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
+
+    expect((await defineConfig({cwd: '/somewhere/else'})).exports).toEqual({
+      enabled: true,
+      devExports: true,
+    })
+    expect(mockedDetect).toHaveBeenCalledWith({cwd: '/somewhere/else'})
+  })
+})
+
+describe('package-manager detection only runs when it decides the devExports default', () => {
+  beforeEach(() => {
+    mockedDetect.mockReset()
+    mockedDetect.mockResolvedValue({name: 'pnpm', agent: 'pnpm'})
+  })
+
+  test.each([
+    // `false`, `true` and bare CI conditions replace the defaults entirely (mergeConfig
+    // semantics), so the pnpm-gated `devExports` default can never apply
+    {exports: false as const},
+    {exports: true as const},
+    {exports: 'ci-only' as const},
+    {exports: 'local-only' as const},
+    // An explicit `devExports` value (any value) overrides the default
+    {exports: {devExports: 'source'} as const},
+    {exports: {devExports: false} as const},
+    {exports: {enabled: 'ci-only', devExports: true} as const},
+  ])('is skipped for exports: $exports', async ({exports}) => {
+    await defineConfig({exports})
+    expect(mockedDetect).not.toHaveBeenCalled()
+  })
+
+  test.each([
+    // The default can still apply: no userland value, or an object that leaves `devExports`
+    // to the default (mergeConfig ignores explicit `undefined`)
+    {},
+    {exports: {} as const},
+    {exports: {all: true} as const},
+    {exports: {enabled: 'ci-only'} as const},
+    {exports: {devExports: undefined} as const},
+  ])('runs for %o', async (options) => {
+    await defineConfig(options)
+    expect(mockedDetect).toHaveBeenCalledTimes(1)
   })
 })

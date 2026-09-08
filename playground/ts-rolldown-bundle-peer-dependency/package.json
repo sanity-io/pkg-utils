@@ -15,6 +15,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -35,5 +36,18 @@
     "@sanity/icons": "catalog:",
     "@sanity/logos": "catalog:",
     "react": "*"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "inlinedDependencies": {
+    "@sanity/icons": "5.2.1"
   }
 }

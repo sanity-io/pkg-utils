@@ -1,5 +1,225 @@
 # @sanity/tsdown-config
 
+## 0.28.0
+
+### Minor Changes
+
+- [#3406](https://github.com/sanity-io/pkg-utils/pull/3406) [`5372ae6`](https://github.com/sanity-io/pkg-utils/commit/5372ae63601ad17ddebf5478160330c66f764a29) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade tsdown and `@tsdown/css` to 0.23.
+
+  **BREAKING:** the `@sanity/tsdown-config` and `@sanity/vanilla-extract-tsdown-plugin`
+  `tsdown` peer range is now `^0.23.0`; tsdown 0.22 is no longer supported. Node.js 25
+  can no longer run either package or `pkg build`. Use Node `^22.18.0`, `^24.11.0`, or
+  `>=26.0.0`.
+
+  tsdown 0.23 removes deprecated config options. Replace `dts.tsgo: true` and
+  `dts.oxc: true` with `dts.generator: 'tsgo'` and `dts.generator: 'oxc'`.
+  Replace `dts.oxc: false` with `dts.generator: 'tsc'`. Remove `dts.cjsReexport`.
+  Replace `dts.volarPlugins` with `dts.customLanguages` and rename each language's
+  `create` hook to `createVolarPlugins`.
+  Under `deps`, replace `skipNodeModulesBundle: true` with `neverBundle: true`
+  and `onlyAllowBundle` with `onlyBundle`.
+
+  `deps.resolveDepSubpath: true` preserves the old dependency-specifier behavior.
+  `pkg watch` now closes tsdown's native watch handle, including its Rolldown watchers
+  and keyboard-shortcut resources, and sets `ignoreWatch` on `package.json` and
+  `tsconfig.json` so tsdown does not restart itself and orphan a watcher that abort
+  cannot close. CSS builds now need `@tsdown/css@0.23.0`, the exact version tsdown 0.23
+  pins.
+
+  tsdown 0.23 also emits declarations with inline `export declare` modifiers instead of
+  a trailing export list. A `.d.ts` with no export statement is an export context, so a
+  type that the source left unexported becomes part of the published API. Export the
+  types you mean to publish and tag them `@public`.
+
+### Patch Changes
+
+- [#3388](https://github.com/sanity-io/pkg-utils/pull/3388) [`7edcb76`](https://github.com/sanity-io/pkg-utils/commit/7edcb769b9598b1981bd8546b4939148fdbedefa) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.7
+- Updated dependencies [[`7edcb76`](https://github.com/sanity-io/pkg-utils/commit/7edcb769b9598b1981bd8546b4939148fdbedefa), [`5372ae6`](https://github.com/sanity-io/pkg-utils/commit/5372ae63601ad17ddebf5478160330c66f764a29)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.4.0
+
+## 0.27.1
+
+### Patch Changes
+
+- [#3348](https://github.com/sanity-io/pkg-utils/pull/3348) [`4abbbe4`](https://github.com/sanity-io/pkg-utils/commit/4abbbe40e5c1cfd57f5afdcdc82533a62f51f08d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.6
+
+- [#3361](https://github.com/sanity-io/pkg-utils/pull/3361) [`b7ca997`](https://github.com/sanity-io/pkg-utils/commit/b7ca997401cda4e370d8eddbdfcf7fdea46e4ae6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vitejs/plugin-react to ^6.1.1
+- Updated dependencies [[`4abbbe4`](https://github.com/sanity-io/pkg-utils/commit/4abbbe40e5c1cfd57f5afdcdc82533a62f51f08d)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.6
+
+## 0.27.0
+
+### Minor Changes
+
+- [#3320](https://github.com/sanity-io/pkg-utils/pull/3320) [`8d15fe5`](https://github.com/sanity-io/pkg-utils/commit/8d15fe5f622624755059b86dc12385011e7b55ac) Thanks [@stipsan](https://github.com/stipsan)! - **Breaking:** the babel pipeline is opt-in. `reactCompiler` defaults to `transform: 'oxc'`, and `@rolldown/plugin-babel` + `@babel/core` are optional peer dependencies instead of dependencies. To stay on babel: set `transform: 'babel'` and `pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler`.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.5
+
+## 0.26.2
+
+### Patch Changes
+
+- [#3317](https://github.com/sanity-io/pkg-utils/pull/3317) [`dd6510f`](https://github.com/sanity-io/pkg-utils/commit/dd6510f1277d9cd37254b40d48bf1bb60d75e367) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.5
+
+- Updated dependencies [[`dd6510f`](https://github.com/sanity-io/pkg-utils/commit/dd6510f1277d9cd37254b40d48bf1bb60d75e367)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.4
+
+## 0.26.1
+
+### Patch Changes
+
+- [#3332](https://github.com/sanity-io/pkg-utils/pull/3332) [`39567ea`](https://github.com/sanity-io/pkg-utils/commit/39567ea66d624c81013aee38310d6e00fc02579c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.58.13
+
+- [#3334](https://github.com/sanity-io/pkg-utils/pull/3334) [`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.24
+
+- [#3338](https://github.com/sanity-io/pkg-utils/pull/3338) [`c22bbd1`](https://github.com/sanity-io/pkg-utils/commit/c22bbd1665562dda2b4de6e7b435d4832d256410) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.59.0
+
+- [#3319](https://github.com/sanity-io/pkg-utils/pull/3319) [`f4ce0f7`](https://github.com/sanity-io/pkg-utils/commit/f4ce0f7e1e02fd7843267d7302d3ecfd7ebfb23c) Thanks [@stipsan](https://github.com/stipsan)! - Installing only one of the optional React Compiler packages no longer breaks `defineConfig()`'s types. The missing package's typings used to degrade to `any` and collapse the `ReactCompilerOptions` union, so every `reactCompiler` config resolved to the `reactServer: true` overload (`Promise<UserConfig[]>`) unless consumers stubbed the missing module. Now the uninstalled branch degrades to just `transform`/`reactServer` while the installed one keeps its real typings — stubs like sanity-io/ui's `typings/babel-plugin-react-compiler.d.ts` can be deleted.
+
+- Updated dependencies [[`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.3
+
+## 0.26.0
+
+### Minor Changes
+
+- [#3312](https://github.com/sanity-io/pkg-utils/pull/3312) [`24bfc3f`](https://github.com/sanity-io/pkg-utils/commit/24bfc3f7304f7362553622ce770bc32a9fdd38e8) Thanks [@stipsan](https://github.com/stipsan)! - Add `reactCompiler.transform` to pick the React Compiler implementation: `'babel'` (the default, runs `babel-plugin-react-compiler`) or the experimental `'oxc'` (runs `oxc-transform-react`, the Rust port — one native pass for React Compiler + TypeScript/JSX). Both compilers are optional peer dependencies.
+
+## 0.25.0
+
+### Minor Changes
+
+- [#3310](https://github.com/sanity-io/pkg-utils/pull/3310) [`171251e`](https://github.com/sanity-io/pkg-utils/commit/171251ee840ea66a133fcb8c5aa72a19e609d235) Thanks [@stipsan](https://github.com/stipsan)! - Add a `bundleAnalyzer` option that wires Rolldown's experimental markdown bundle analyzer.
+
+  `true` selects `format: 'md'` (an LLM-friendly `analyze-data.md` in `outDir`) rather than the plugin's own JSON default, so an env-gated opt-in is enough:
+
+  ```ts
+  bundleAnalyzer: process.env.ENABLE_BUNDLE_ANALYZER === 'true'
+  ```
+
+  Pass an object to customize `format` / `fileName`. The report is not a publishable artifact — exclude it from `package.json` `files` (e.g. `"!dist/analyze-data.md"`). `@sanity/pkg-utils` forwards the same option from `package.config.ts`.
+
+## 0.24.2
+
+### Patch Changes
+
+- [#3297](https://github.com/sanity-io/pkg-utils/pull/3297) [`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.4
+
+- [#3288](https://github.com/sanity-io/pkg-utils/pull/3288) [`5bfa760`](https://github.com/sanity-io/pkg-utils/commit/5bfa76059aaf49793cc537b5c78b41a9466f858b) Thanks [@stipsan](https://github.com/stipsan)! - Stop flagging the synthesized namespace wrappers of the declaration bundler with `ae-missing-release-tag`.
+
+  Namespace re-exports (`export * as ns from './module'`, or `import * as ns` + `export {ns}`) make the declaration bundling pass synthesize a `declare namespace <module>_d_exports {…}` wrapper that drops the doc comment of the re-export statement, so the wrapper could never carry a release tag and there was no userland fix short of downgrading the rule for the whole package. The TSDoc check now recognizes those wrappers (the interop naming, declared as a namespace in the entry or a shared chunk, a body that only re-exports sibling declarations, and re-exported under an alias) and exempts them from `ae-missing-release-tag`, like API Extractor's own rollups never checked the equivalent namespace. Everything else, including user namespaces that merely resemble the interop naming, stays checked: a namespace that declares members of its own is yours to tag, even when the bundler's deconflicting hands it a wrapper-shaped name.
+
+- Updated dependencies [[`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.2
+
+## 0.24.1
+
+### Patch Changes
+
+- [#3214](https://github.com/sanity-io/pkg-utils/pull/3214) [`23788f8`](https://github.com/sanity-io/pkg-utils/commit/23788f85919c8d4b511110e5f93494d41506a4e0) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.3
+
+- [#3271](https://github.com/sanity-io/pkg-utils/pull/3271) [`f489697`](https://github.com/sanity-io/pkg-utils/commit/f489697576bf97a259e0a9a63162b66b5439f1ff) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.8
+
+- Updated dependencies [[`23788f8`](https://github.com/sanity-io/pkg-utils/commit/23788f85919c8d4b511110e5f93494d41506a4e0)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.1
+
+## 0.24.0
+
+### Minor Changes
+
+- [#3250](https://github.com/sanity-io/pkg-utils/pull/3250) [`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b) Thanks [@stipsan](https://github.com/stipsan)! - Move the conditional CSS export from `inject.nodeCompat` to `exports.nodeCompat`, and give `@tsdown/css` output the same treatment.
+
+  `nodeCompat` configures how the CSS file is published, not how the import is injected, so it moves to a dedicated `exports` option. `inject` and `exports` are now independent: `inject` prepends an import of the CSS to entry chunks, while `exports` publishes it as the `./<fileName>` export subpath (which also makes any injected import self-referential). `exports: true` declares a plain string export for browser-only packages; `exports: {nodeCompat: true}` declares the conditional export and emits the no-op JS shim plus its `.d.ts`. `inject: {nodeCompat: true}` keeps working, normalized to `{inject: true, exports: {nodeCompat: true}}` with a deprecation warning; an explicit `exports` wins over it.
+
+  `@sanity/tsdown-config` gains a `css.exports` option implementing the same pattern on top of `@tsdown/css` (an optional peer dependency), which compiles CSS but has no node-shim concept of its own — its `inject` emits a relative import that throws in runtimes that cannot load `.css` files.
+
+  `@sanity/pkg-utils` gains a `css` option, and builds a `.css` export subpath that declares a `source`:
+
+  ```json
+  "./ui/styles.css": {"source": "./src/ui/styles.css"}
+  ```
+
+  `pkg build` compiles it to `dist/ui/styles.css` with the same minify and lowering settings `vanillaExtract` gets, emits the shim, and fills in the `types`/`browser`/`style`/`node`/`default` conditions. `@sanity/parse-package-json` exposes the new `parseCssExports` for reading those subpaths, and `parseExports` no longer returns them as JS entries.
+
+- [#3253](https://github.com/sanity-io/pkg-utils/pull/3253) [`bc16006`](https://github.com/sanity-io/pkg-utils/commit/bc1600690343a7c3bdedd94928cb77b40f7b93b2) Thanks [@stipsan](https://github.com/stipsan)! - Suppress `CIRCULAR_DEPENDENCY` warnings from the declaration bundling pass by default, and add a `suppressWarnings` option.
+
+  `defineConfig` enables Rolldown's `checks.circularDependency`, which also reports cycles between the emitted `.d.ts` modules. Those imports are type-only and erased at runtime, so the cycles carry none of the hazards the check exists to surface, and they're unavoidable for mutually referencing public types — in [sanity-io/sanity#13753](https://github.com/sanity-io/sanity/pull/13753) 109 of 136 cycle warnings were declaration-only, drowning out the 27 real ones. The config now sets tsdown's `suppressWarnings` to drop warnings whose **entire** cycle consists of declaration files (`.d.ts`/`.d.mts`/`.d.cts`); a cycle that includes even one runtime module still warns. Consumers that filtered these out themselves (like `@repo/tsdown.config` in `sanity-io/sanity`) can drop their own predicate.
+
+  The new `suppressWarnings` option takes tsdown's own value shapes (strings matched with `includes`, regular expressions matched with `test`, or a predicate) and is OR'd with the built-in suppression, so per-package suppressions can't silently undo it. Merging `suppressWarnings` over the returned config still replaces the default entirely (`mergeConfig` replaces functions), which is the escape hatch for restoring every warning: `mergeConfig(await defineConfig(), {suppressWarnings: () => false})`.
+
+  tsdown added `suppressWarnings` in `0.22.7`, so the `tsdown` peer range is raised from `^0.22.5` to `^0.22.7`. On `0.22.5`/`0.22.6` the option is silently ignored (the cycle warnings keep appearing) and the `UserConfig['suppressWarnings']` indexed access in the published declarations does not resolve.
+
+- [#3246](https://github.com/sanity-io/pkg-utils/pull/3246) [`c1106f1`](https://github.com/sanity-io/pkg-utils/commit/c1106f18091be74fcd4b2d989fb848c3b5a00445) Thanks [@stipsan](https://github.com/stipsan)! - Move the `tsdoc` feature (API Extractor TSDoc/release-tag checking) from `@sanity/pkg-utils` into `@sanity/tsdown-config`.
+
+  In `@sanity/tsdown-config` the option is `false` by default; set `tsdoc: true` (or an options object) to run the check after the build via tsdown's `build:done` hook. The checker lives at `@sanity/tsdown-config/tsdoc` and is lazy-loaded from the root config, so API Extractor is not part of the default entry's module graph. `@sanity/pkg-utils` continues enabling it by default (`tsdoc: true`) when composing the config, and still runs it during `pkg check` via `checkTsdoc` from `@sanity/tsdown-config/tsdoc`.
+
+### Patch Changes
+
+- [#3252](https://github.com/sanity-io/pkg-utils/pull/3252) [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.23
+
+- Updated dependencies [[`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b), [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.3.0
+
+## 0.23.0
+
+### Minor Changes
+
+- [#3238](https://github.com/sanity-io/pkg-utils/pull/3238) [`e19e63e`](https://github.com/sanity-io/pkg-utils/commit/e19e63eb41532c544f0759725bd8526b6acae013) Thanks [@stipsan](https://github.com/stipsan)! - Default `exports.enabled` to `true` instead of `'local-only'`.
+
+  Gating on `CI` via `'local-only'`/`'ci-only'` surprised environments that set `CI=true` without meaning "don't rewrite package.json" (notably Cursor Cloud and GitHub Copilot)
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.13
+
+## 0.22.0
+
+### Minor Changes
+
+- [#3221](https://github.com/sanity-io/pkg-utils/pull/3221) [`125080f`](https://github.com/sanity-io/pkg-utils/commit/125080f8b0fb748150422bc4a464f487d804f4db) Thanks [@stipsan](https://github.com/stipsan)! - Make `defineConfig` a composable base for programmatic hosts (like the upcoming tsdown-powered `@sanity/pkg-utils`):
+
+  - New `cwd` option: forwarded to tsdown's own `cwd`, and used for the package-manager detection behind the `devExports` default instead of `process.cwd()` — so builds driven programmatically for a package in another directory resolve the right defaults.
+  - Package-manager detection only runs when it can affect the outcome: it exists solely to decide the pnpm-gated `devExports: true` default, so it is skipped when the userland `exports` value replaces the defaults (`false`, `true`, a bare CI condition) or sets `devExports` explicitly. Explicit configs behave identically across package managers, with no filesystem probing.
+  - The composition contract is now documented and covered by tests: `defineConfig()` output is a `mergeConfig`-safe base — `plugins` append (never clobbering the React Compiler / vanilla-extract plugins this config sets up), plain objects deep-merge, and scalars/non-plugin arrays replace.
+  - **Node 20 support is dropped**: `engines.node` is now `^22.18.0 || >=24.11.0`, matching tsdown's own requirement. The previous `>=20.19 <22` range was unachievable in practice — this package only executes inside tsdown's process, which already requires Node `^22.18.0`.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.12
+
+## 0.21.3
+
+### Patch Changes
+
+- [#3205](https://github.com/sanity-io/pkg-utils/pull/3205) [`6b1d707`](https://github.com/sanity-io/pkg-utils/commit/6b1d7074e1bc277b9e0a54f941c91c8980ddacec) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @vitejs/plugin-react to ^6.0.5
+
+## 0.21.2
+
+### Patch Changes
+
+- Updated dependencies [[`17cfcbe`](https://github.com/sanity-io/pkg-utils/commit/17cfcbe73a4e9f972e74baeb4e8d7a4bb0a960b3)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.11
+
+## 0.21.1
+
+### Patch Changes
+
+- [#3132](https://github.com/sanity-io/pkg-utils/pull/3132) [`e400791`](https://github.com/sanity-io/pkg-utils/commit/e400791579aaf1fe04f81ee8ff79b5d6218a0ea8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.28.7
+
+- [#3133](https://github.com/sanity-io/pkg-utils/pull/3133) [`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.22
+
+- [#3158](https://github.com/sanity-io/pkg-utils/pull/3158) [`eaa211f`](https://github.com/sanity-io/pkg-utils/commit/eaa211fdac3dfd3abb749bae796e5f2213003294) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency package-manager-detector to ^1.8.0
+
+- [#3154](https://github.com/sanity-io/pkg-utils/pull/3154) [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency tsdown to ^0.22.14
+
+- Updated dependencies [[`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31), [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.2.10
+
 ## 0.21.0
 
 ### Minor Changes

@@ -1,4 +1,5 @@
-interface PluginOptions {
+/** @public */
+export interface PluginOptions {
   /**
    * @defaultValue true
    */

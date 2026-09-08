@@ -3,9 +3,11 @@
 ## Cursor Cloud specific instructions
 
 This is the `@sanity/pkg-utils` monorepo: a pnpm workspace containing a build/tooling CLI for
-authoring npm packages (`packages/@sanity/pkg-utils`, wraps rolldown/rollup + API Extractor),
-supporting packages (`tsdown-config`, `tsconfig`, `parse-package-json`, the
-`vanilla-extract-*-plugin` packages), a `playground/*` fixture suite (~30 packages exercising
+authoring npm packages (`packages/@sanity/pkg-utils`, which composes `tsdown` +
+`@sanity/tsdown-config` for JS + `.d.ts` builds, publint for `pkg check`, and API Extractor for
+TSDoc/release-tag checking only), supporting packages (`tsdown-config`, `tsconfig`,
+`parse-package-json`, the `vanilla-extract-*-plugin` packages), a `playground/*` fixture suite
+(~30 packages exercising
 build/typecheck scenarios), a `css-playground/*` fixture suite (~20 packages verifying the
 conditional `bundle.css` export pattern across many frameworks/runtimes), and an
 `integration/*` suite (a real Sanity Studio fixture comparing
@@ -24,7 +26,7 @@ commands, e.g. `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm k
 native TypeScript config-loading; on an older Node it fails with `Failed to import module "unrun"`.
 The sandbox's default system Node (`/exec-daemon/node`, v22.14.0) does **not** satisfy this. Fix:
 Node is managed via `nvm`, with the default alias set to `24` (Node v24.18.0 LTS, "Krypton" —
-matching CI's `node-version: lts/*`) and `pnpm@10.34.4` (matching the root `packageManager` field)
+matching CI's `node-version: lts/*`) and `pnpm@11` (matching the root `packageManager` field)
 installed globally under that Node version. A normal login shell (`bash -l`, which sources
 `~/.bashrc`) picks this up automatically via nvm's own auto-`use`-default-on-source behavior — no
 manual `nvm use` should be necessary. `deno` (`~/.deno/bin`, pinned to v2.9.2 to match CI) and `bun`

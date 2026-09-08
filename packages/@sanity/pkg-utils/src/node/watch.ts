@@ -1,16 +1,15 @@
-import path from 'node:path'
 import {up as findPkgPath} from 'empathic/package'
 import type {Subscription} from 'rxjs'
 import {switchMap} from 'rxjs'
+import {build as tsdownBuild, type TsdownHandle} from 'tsdown'
 import {loadConfig} from './core/config/loadConfig.ts'
-import {resolveVanillaExtract, resolveVanillaExtractCssName} from './core/config/vanillaExtract.ts'
+import {usesCssExportNodeCompat} from './core/pkg/cssExportOptions.ts'
 import {loadPkgWithReporting} from './core/pkg/loadPkgWithReporting.ts'
 import {writeBundleCssExports} from './core/pkg/writeBundleCssExports.ts'
 import {createLogger} from './logger.ts'
 import {resolveBuildContext} from './resolveBuildContext.ts'
-import {resolveWatchTasks} from './resolveWatchTasks.ts'
-import {watchTaskHandlers} from './tasks/index.ts'
-import {type TaskHandler, type WatchTask} from './tasks/types.ts'
+import {resolveTsdownBuilds} from './tasks/tsdown/resolveTsdownBuilds.ts'
+import {resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
 
 /** @public */
 export async function watch(options: {
@@ -23,19 +22,35 @@ export async function watch(options: {
 
   const logger = createLogger()
 
-  const {watchConfigFiles} = await import('./watchConfigFiles.ts')
-  const configFiles$ = await watchConfigFiles({cwd, logger})
+  const bootstrapPkgPath = findPkgPath({cwd})
+  if (!bootstrapPkgPath) {
+    throw new Error('missing package.json', {cause: {cwd}})
+  }
 
-  const taskSubscriptions: Subscription[] = []
+  // The watched tsconfig is fixed when the watcher starts, so a `tsconfig` that a later
+  // `package.config.ts` edit introduces is not picked up.
+  const bootstrapConfig = await loadConfig({cwd, pkgPath: bootstrapPkgPath})
+  const watchedTsconfig = tsconfigOption || bootstrapConfig?.tsconfig || 'tsconfig.json'
+
+  const {watchConfigFiles} = await import('./watchConfigFiles.ts')
+  const configFiles$ = await watchConfigFiles({cwd, logger, tsconfig: watchedTsconfig})
+
+  // RxJS does not await async subscriber callbacks. Only the latest runId may
+  // publish handles; a stale or aborted run must close the handles it created.
+  let handles: TsdownHandle[] = []
+  let runId = 0
+  const closeHandles = async () => {
+    const closing = handles
+    handles = []
+    for (const handle of closing) {
+      await handle.watch.close()
+    }
+  }
 
   const ctx$ = configFiles$.pipe(
-    switchMap(async (configFiles) => {
-      const files = configFiles.map((f) => path.relative(cwd, f))
-
-      const packageJsonPath = files.find((f) => f === 'package.json')
-
+    switchMap(async () => {
       const pkgPath = findPkgPath({cwd})
-      if (!packageJsonPath || !pkgPath) {
+      if (!pkgPath) {
         throw new Error('missing package.json', {cause: {cwd}})
       }
 
@@ -49,52 +64,79 @@ export async function watch(options: {
     }),
   )
 
-  const ctxSubscription = ctx$.subscribe(async (ctx) => {
-    // Unsubscribe previous task subscriptions when config changes trigger a new context
-    for (const sub of taskSubscriptions) {
-      sub.unsubscribe()
-    }
-    taskSubscriptions.length = 0
+  const ctxSubscription: Subscription = ctx$.subscribe(async (ctx) => {
+    const id = ++runId
+    const runHandles: TsdownHandle[] = []
+    try {
+      await closeHandles()
 
-    // Keep the conditional `./<css>` export in package.json in sync with the injected
-    // `import "<pkg>/<css>"` for watch builds too (idempotent, so it won't loop).
-    const vanillaExtract = resolveVanillaExtract(ctx.config)
-    if (vanillaExtract.compatMode) {
+      const cssNames: string[] = []
+      const cssSources: Record<string, string> = {}
+
+      const vanillaExtract = ctx.config?.vanillaExtract
+      if (vanillaExtract) {
+        const veOptions = vanillaExtract === true ? {} : vanillaExtract
+        if (usesCssExportNodeCompat(veOptions)) {
+          cssNames.push(veOptions.fileName || 'bundle.css')
+        }
+      }
+
+      // The `@tsdown/css` pipeline's own exports: the `.css` export subpaths built by the
+      // stylesheet build. Their file names follow their subpath and a declared entry always
+      // emits, so they are known up front. The merged `style.css` of CSS imported from JS is
+      // not — it only exists once something actually imports CSS — so `resolveTsdownConfig`
+      // declares that one from a `build:done` hook instead, matching what
+      // `cssNodeCompatPlugin` declares in a full build.
+      const cssConfig = ctx.config?.css
+      const cssNodeCompat =
+        (Boolean(cssConfig) || ctx.cssExports.length > 0) &&
+        usesCssExportNodeCompat(cssConfig ?? {})
+      if (cssNodeCompat) {
+        for (const cssExport of ctx.cssExports) {
+          cssNames.push(cssExport._path.replace(/^\.\//, ''))
+          cssSources[cssExport._path] = cssExport.source
+        }
+      }
+
       await writeBundleCssExports({
         cwd,
         distPath: ctx.distPath,
-        cssName: resolveVanillaExtractCssName(vanillaExtract.options, {
-          compatMode: true,
-          runtime: '*',
-        }),
+        cssNames,
+        sources: cssSources,
         logger,
       })
-    }
 
-    const watchTasks = resolveWatchTasks(ctx)
+      const builds = resolveTsdownBuilds(ctx)
 
-    for (const task of watchTasks) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- TypeScript can't infer the correct handler type from discriminated union
-      const handler = watchTaskHandlers[task.type] as TaskHandler<WatchTask, unknown>
-      const result$ = handler.exec(ctx, task)
+      let first = true
+      for (const buildDef of builds) {
+        if (id !== runId) break
 
-      const sub = result$.subscribe({
-        error: (err) => {
-          ctx.logger.error(err)
-          ctx.logger.log()
+        const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {
+          clean: first,
+          watch: true,
+        })
+        first = false
 
-          process.exit(1)
-        },
-        next: (result) => {
-          handler.complete(ctx, task, result)
-        },
-        complete: () => {
-          ctx.logger.success(handler.name(ctx, task))
-          ctx.logger.log()
-        },
-      })
+        runHandles.push(await tsdownBuild(inlineConfig))
+      }
 
-      taskSubscriptions.push(sub)
+      if (id !== runId) {
+        for (const handle of runHandles) {
+          await handle.watch.close()
+        }
+        return
+      }
+
+      handles = runHandles
+
+      logger.success(`${ctx.pkg.name}: watching for file changes\u2026`)
+      logger.log()
+    } catch (err) {
+      ctx.logger.error(err)
+      ctx.logger.log()
+
+      process.exit(1)
     }
   })
 
@@ -102,11 +144,9 @@ export async function watch(options: {
     signal.addEventListener(
       'abort',
       () => {
-        for (const sub of taskSubscriptions) {
-          sub.unsubscribe()
-        }
-        taskSubscriptions.length = 0
+        runId++
         ctxSubscription.unsubscribe()
+        closeHandles().catch((err) => logger.error(err))
       },
       {once: true},
     )

@@ -11,7 +11,8 @@
       "node": {
         "source": "./src/index.node.ts",
         "import": "./dist/index.node.js",
-        "require": "./dist/index.node.cjs"
+        "require": "./dist/index.node.cjs",
+        "default": "./dist/index.node.js"
       },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
@@ -29,5 +30,20 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "clean": "rimraf dist"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "node": {
+          "import": "./dist/index.node.js",
+          "require": "./dist/index.node.cjs",
+          "default": "./dist/index.node.js"
+        },
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

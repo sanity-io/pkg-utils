@@ -16,18 +16,31 @@ by default), optionally lowered and minified with [lightningcss](https://lightni
 following the same architecture (and option vocabulary and defaults) as
 [`@tsdown/css`](https://tsdown.dev/options/css).
 
-Like `css.inject` in `@tsdown/css`, the `inject` option is disabled by default; `inject: true`
-injects a relative `import "./bundle.css"` into the entry chunks that use vanilla-extract styles —
-through rolldown's native magic-string, so sourcemaps stay intact. `inject: {nodeCompat: true}`
-instead injects the self-referential `import "<pkg>/bundle.css"` of the conditional CSS export
-pattern and emits a no-op `bundle-css.js` shim (plus `bundle-css.d.ts` for the export's `types`
-condition) for the `node`/`default` conditions of that export to point at, so the import is
-harmless in runtimes that cannot import `.css` files. The shim is named with a hyphen
+Two independent options control what happens to the extracted CSS, both disabled by default like
+`css.inject` in `@tsdown/css`:
+
+- **`inject`** prepends an import of the CSS to every entry chunk that uses vanilla-extract styles,
+  through rolldown's native magic-string, so sourcemaps stay intact.
+- **`exports`** publishes the CSS as the `"./bundle.css"` export subpath of the package. Any
+  injected import then uses the self-referential `"<pkg>/bundle.css"` bare specifier instead of a
+  relative path.
+
+`exports: true` declares a plain `"./bundle.css": "./dist/bundle.css"` export, which is enough for
+packages that only ever run in browsers or bundlers. `exports: {nodeCompat: true}` declares a
+conditional export instead, and emits a no-op `bundle-css.js` shim (plus `bundle-css.d.ts` for the
+export's `types` condition) for its `node`/`default` conditions to point at, so the subpath stays
+resolvable in runtimes that cannot import `.css` files. The shim is named with a hyphen
 (`bundle-css.js`) rather than a `.css.js` suffix so it does not match vanilla-extract's
-`cssFileFilter`. Writing the conditional `"./bundle.css"` export to `package.json` is the host
-tool's job — with tsdown,
+`cssFileFilter`.
+
+Writing the export to `package.json` is the host tool's job — with tsdown,
 [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme)
 maintains it automatically.
+
+> [!NOTE]
+> `inject: {nodeCompat: true}` is deprecated. It means `{inject: true, exports: {nodeCompat: true}}`
+> and still works, with a warning: `nodeCompat` configures how the CSS file is published, not how
+> the import is injected, so it moved to `exports`.
 
 ## Usage
 
@@ -99,12 +112,18 @@ vanillaExtractPlugin({
   lightningcss: {errorRecovery: true},
   /**
    * Inject an import of the extracted CSS into the JS output, like `css.inject` (and matching
-   * its default of `false`). `true` injects a relative `import "./<fileName>"`;
-   * `{nodeCompat: true}` instead injects the self-referential `import "<pkg>/<fileName>"` of
-   * the conditional CSS export pattern, plus the no-op JS shim.
+   * its default of `false`). The specifier is relative unless `exports` publishes the CSS,
+   * in which case it is the self-referential `import "<pkg>/<fileName>"`.
    * @defaultValue false
    */
-  inject: {nodeCompat: true},
+  inject: true,
+  /**
+   * Publish the CSS as the `"./<fileName>"` export subpath. `true` declares a plain string
+   * export; `{nodeCompat: true}` declares a conditional export and emits the no-op JS shim
+   * plus its `.d.ts`, so the subpath also resolves in runtimes that cannot load `.css`.
+   * @defaultValue false
+   */
+  exports: {nodeCompat: true},
 })
 ```
 
@@ -124,7 +143,7 @@ const plugin = vanillaExtractPlugin(options)
 plugin.api.setBuildContext({
   // Default for the `target` option (e.g. the host's resolved top-level target)
   target: ['chrome90'],
-  // Package name for the self-referential import injected by `inject.nodeCompat`
+  // Package name for the self-referential import of `exports`
   packageName: 'my-library',
   // Working directory the `.css.ts` modules are compiled from
   cwd: process.cwd(),

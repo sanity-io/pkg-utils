@@ -15,6 +15,7 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -24,5 +25,15 @@
     "build:quiet": "pkg build --strict --check --clean --quiet",
     "clean": "rimraf dist",
     "typecheck": "tsc"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

@@ -1,5 +1,153 @@
 # @sanity/vanilla-extract-rolldown-plugin
 
+## 0.4.7
+
+### Patch Changes
+
+- [#3388](https://github.com/sanity-io/pkg-utils/pull/3388) [`7edcb76`](https://github.com/sanity-io/pkg-utils/commit/7edcb769b9598b1981bd8546b4939148fdbedefa) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.7
+
+- [#3406](https://github.com/sanity-io/pkg-utils/pull/3406) [`5372ae6`](https://github.com/sanity-io/pkg-utils/commit/5372ae63601ad17ddebf5478160330c66f764a29) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade tsdown and `@tsdown/css` to 0.23.
+
+  **BREAKING:** the `@sanity/tsdown-config` and `@sanity/vanilla-extract-tsdown-plugin`
+  `tsdown` peer range is now `^0.23.0`; tsdown 0.22 is no longer supported. Node.js 25
+  can no longer run either package or `pkg build`. Use Node `^22.18.0`, `^24.11.0`, or
+  `>=26.0.0`.
+
+  tsdown 0.23 removes deprecated config options. Replace `dts.tsgo: true` and
+  `dts.oxc: true` with `dts.generator: 'tsgo'` and `dts.generator: 'oxc'`.
+  Replace `dts.oxc: false` with `dts.generator: 'tsc'`. Remove `dts.cjsReexport`.
+  Replace `dts.volarPlugins` with `dts.customLanguages` and rename each language's
+  `create` hook to `createVolarPlugins`.
+  Under `deps`, replace `skipNodeModulesBundle: true` with `neverBundle: true`
+  and `onlyAllowBundle` with `onlyBundle`.
+
+  `deps.resolveDepSubpath: true` preserves the old dependency-specifier behavior.
+  `pkg watch` now closes tsdown's native watch handle, including its Rolldown watchers
+  and keyboard-shortcut resources, and sets `ignoreWatch` on `package.json` and
+  `tsconfig.json` so tsdown does not restart itself and orphan a watcher that abort
+  cannot close. CSS builds now need `@tsdown/css@0.23.0`, the exact version tsdown 0.23
+  pins.
+
+  tsdown 0.23 also emits declarations with inline `export declare` modifiers instead of
+  a trailing export list. A `.d.ts` with no export statement is an export context, so a
+  type that the source left unexported becomes part of the published API. Export the
+  types you mean to publish and tag them `@public`.
+
+- Updated dependencies [[`7edcb76`](https://github.com/sanity-io/pkg-utils/commit/7edcb769b9598b1981bd8546b4939148fdbedefa), [`5372ae6`](https://github.com/sanity-io/pkg-utils/commit/5372ae63601ad17ddebf5478160330c66f764a29)]:
+  - @sanity/vanilla-extract-integration@0.1.18
+
+## 0.4.6
+
+### Patch Changes
+
+- [#3348](https://github.com/sanity-io/pkg-utils/pull/3348) [`4abbbe4`](https://github.com/sanity-io/pkg-utils/commit/4abbbe40e5c1cfd57f5afdcdc82533a62f51f08d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.6
+- Updated dependencies [[`4abbbe4`](https://github.com/sanity-io/pkg-utils/commit/4abbbe40e5c1cfd57f5afdcdc82533a62f51f08d), [`f95cc72`](https://github.com/sanity-io/pkg-utils/commit/f95cc7228aeefbf0f8fde211258d1a6d16b6d7ff)]:
+  - @sanity/vanilla-extract-integration@0.1.17
+
+## 0.4.5
+
+### Patch Changes
+
+- Updated dependencies [[`82d55c9`](https://github.com/sanity-io/pkg-utils/commit/82d55c9209a7b6f869f7132c2621a3f1fa73ab64)]:
+  - @sanity/vanilla-extract-integration@0.1.16
+
+## 0.4.4
+
+### Patch Changes
+
+- [#3317](https://github.com/sanity-io/pkg-utils/pull/3317) [`dd6510f`](https://github.com/sanity-io/pkg-utils/commit/dd6510f1277d9cd37254b40d48bf1bb60d75e367) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.5
+
+- Updated dependencies [[`dd6510f`](https://github.com/sanity-io/pkg-utils/commit/dd6510f1277d9cd37254b40d48bf1bb60d75e367)]:
+  - @sanity/vanilla-extract-integration@0.1.15
+
+## 0.4.3
+
+### Patch Changes
+
+- [#3334](https://github.com/sanity-io/pkg-utils/pull/3334) [`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.24
+
+- Updated dependencies [[`d4534f7`](https://github.com/sanity-io/pkg-utils/commit/d4534f7aa72f3c29f49997f13f7e3f73fd39d042), [`8aa45df`](https://github.com/sanity-io/pkg-utils/commit/8aa45df1f26b970dc0fcf9965e5dcb58f9684526)]:
+  - @sanity/vanilla-extract-integration@0.1.14
+
+## 0.4.2
+
+### Patch Changes
+
+- [#3297](https://github.com/sanity-io/pkg-utils/pull/3297) [`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.4
+
+- Updated dependencies [[`5496b49`](https://github.com/sanity-io/pkg-utils/commit/5496b49a8ce776af68a9c4f71715c52270b398b6), [`45aa622`](https://github.com/sanity-io/pkg-utils/commit/45aa6222d5b00ad1885a5bedd217235f27c0e8d2)]:
+  - @sanity/vanilla-extract-integration@0.1.13
+
+## 0.4.1
+
+### Patch Changes
+
+- [#3214](https://github.com/sanity-io/pkg-utils/pull/3214) [`23788f8`](https://github.com/sanity-io/pkg-utils/commit/23788f85919c8d4b511110e5f93494d41506a4e0) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.3
+
+- Updated dependencies [[`23788f8`](https://github.com/sanity-io/pkg-utils/commit/23788f85919c8d4b511110e5f93494d41506a4e0), [`9722764`](https://github.com/sanity-io/pkg-utils/commit/9722764f61000569b616ddbb0740df9a9d439767)]:
+  - @sanity/vanilla-extract-integration@0.1.12
+
+## 0.4.0
+
+### Minor Changes
+
+- [#3250](https://github.com/sanity-io/pkg-utils/pull/3250) [`33e7b93`](https://github.com/sanity-io/pkg-utils/commit/33e7b932ea5d30787667c30fdbf6901c087c092b) Thanks [@stipsan](https://github.com/stipsan)! - Move the conditional CSS export from `inject.nodeCompat` to `exports.nodeCompat`, and give `@tsdown/css` output the same treatment.
+
+  `nodeCompat` configures how the CSS file is published, not how the import is injected, so it moves to a dedicated `exports` option. `inject` and `exports` are now independent: `inject` prepends an import of the CSS to entry chunks, while `exports` publishes it as the `./<fileName>` export subpath (which also makes any injected import self-referential). `exports: true` declares a plain string export for browser-only packages; `exports: {nodeCompat: true}` declares the conditional export and emits the no-op JS shim plus its `.d.ts`. `inject: {nodeCompat: true}` keeps working, normalized to `{inject: true, exports: {nodeCompat: true}}` with a deprecation warning; an explicit `exports` wins over it.
+
+  `@sanity/tsdown-config` gains a `css.exports` option implementing the same pattern on top of `@tsdown/css` (an optional peer dependency), which compiles CSS but has no node-shim concept of its own — its `inject` emits a relative import that throws in runtimes that cannot load `.css` files.
+
+  `@sanity/pkg-utils` gains a `css` option, and builds a `.css` export subpath that declares a `source`:
+
+  ```json
+  "./ui/styles.css": {"source": "./src/ui/styles.css"}
+  ```
+
+  `pkg build` compiles it to `dist/ui/styles.css` with the same minify and lowering settings `vanillaExtract` gets, emits the shim, and fills in the `types`/`browser`/`style`/`node`/`default` conditions. `@sanity/parse-package-json` exposes the new `parseCssExports` for reading those subpaths, and `parseExports` no longer returns them as JS entries.
+
+### Patch Changes
+
+- [#3252](https://github.com/sanity-io/pkg-utils/pull/3252) [`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.23
+
+- Updated dependencies [[`d952984`](https://github.com/sanity-io/pkg-utils/commit/d95298486a2af3f4c26408108cce4efe3a5d4af2)]:
+  - @sanity/vanilla-extract-integration@0.1.11
+
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies [[`dea08dc`](https://github.com/sanity-io/pkg-utils/commit/dea08dcf8b56bcadf378777c918cd9643777b9a3)]:
+  - @sanity/vanilla-extract-integration@0.1.10
+
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies [[`58645f9`](https://github.com/sanity-io/pkg-utils/commit/58645f91d3296ab144d7d927bec176d695c36fa2)]:
+  - @sanity/vanilla-extract-integration@0.1.9
+
+## 0.3.5
+
+### Patch Changes
+
+- [#3186](https://github.com/sanity-io/pkg-utils/pull/3186) [`17cfcbe`](https://github.com/sanity-io/pkg-utils/commit/17cfcbe73a4e9f972e74baeb4e8d7a4bb0a960b3) Thanks [@stipsan](https://github.com/stipsan)! - Bump `@vanilla-extract/css` to `^1.21.2` (debug identifiers replace dots with underscores) and `@vanilla-extract/vite-plugin` comparison baselines to `^5.2.6`.
+
+  Also port the upstream vite-plugin virtual-CSS cache-miss fix ([vanilla-extract#1776](https://github.com/vanilla-extract-css/vanilla-extract/pull/1776)): when Vite serves a `.vanilla.css` module without re-running the parent `.css.ts` transform (e.g. 304 Not Modified after a server restart with a warm browser cache), the plugin now processes the parent on demand instead of failing to resolve/load the virtual CSS.
+
+- Updated dependencies [[`17cfcbe`](https://github.com/sanity-io/pkg-utils/commit/17cfcbe73a4e9f972e74baeb4e8d7a4bb0a960b3)]:
+  - @sanity/vanilla-extract-integration@0.1.8
+
+## 0.3.4
+
+### Patch Changes
+
+- [#3133](https://github.com/sanity-io/pkg-utils/pull/3133) [`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.22
+
+- [#3154](https://github.com/sanity-io/pkg-utils/pull/3154) [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency tsdown to ^0.22.14
+
+- Updated dependencies [[`d60da06`](https://github.com/sanity-io/pkg-utils/commit/d60da06b34a3634fd35740f6e4cead5b2a6a0c31), [`523fb8c`](https://github.com/sanity-io/pkg-utils/commit/523fb8c21c5a9800084886985d53ef6d3b7e1538)]:
+  - @sanity/vanilla-extract-integration@0.1.7
+
 ## 0.3.3
 
 ### Patch Changes
