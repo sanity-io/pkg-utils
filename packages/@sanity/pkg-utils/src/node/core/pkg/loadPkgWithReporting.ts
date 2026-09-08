@@ -296,7 +296,7 @@ export async function loadPkgWithReporting(options: {
           if (hasDevelopmentCondition) {
             shouldError = true
             logger.error(
-              'package.json: `publishConfig.exports` is required when `exports` contains a `development` condition. It must define the published export map without `development`; otherwise tools such as Vite and Turbopack can resolve development-only source files from the published package. ' +
+              'package.json: `publishConfig.exports` is required when `exports` contains a `development` condition. It must define the published export map without `development`; otherwise tools such as Vite and Turbopack can select that condition from the published package. ' +
                 'See https://tsdown.dev/options/package-exports#dev-exports for more information.',
             )
           } else if (strictOptions.noPublishConfigExports !== 'off') {
