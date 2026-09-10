@@ -1093,6 +1093,28 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 export declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+declare global {
+  interface File {}
+}
+declare global {
+  /**
+   * Query result types, keyed by GROQ query string. Empty by default, \`sanity typegen\` registers
+   * the queries it finds:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanityQueries {
+   *     '*[_type == "post"]': PostsQueryResult
+   *   }
+   * }
+   * \`\`\`
+   * \`client.fetch(query)\` and \`ClientReturn<typeof query>\` then resolve to the registered type.
+   *
+   * The registry is a global rather than a module augmentation of \`@sanity/client\` so that it
+   * does not depend on module resolution: it resolves the same whether \`@sanity/client\` is a
+   * direct dependency, how many copies of it are installed, and from every subpath export.
+   */
+  interface SanityQueries {}
+}
 export { RemoveIcon, SanityLogo };
 //# sourceMappingURL=index.d.cts.map"
 `;
@@ -1130,6 +1152,28 @@ declare type StackablePerspective = ('published' | 'drafts' | string) & {};
  * @internal - it may have breaking changes in any release
  */
 export declare function validateApiPerspective(perspective: unknown): asserts perspective is ClientPerspective;
+declare global {
+  interface File {}
+}
+declare global {
+  /**
+   * Query result types, keyed by GROQ query string. Empty by default, \`sanity typegen\` registers
+   * the queries it finds:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanityQueries {
+   *     '*[_type == "post"]': PostsQueryResult
+   *   }
+   * }
+   * \`\`\`
+   * \`client.fetch(query)\` and \`ClientReturn<typeof query>\` then resolve to the registered type.
+   *
+   * The registry is a global rather than a module augmentation of \`@sanity/client\` so that it
+   * does not depend on module resolution: it resolves the same whether \`@sanity/client\` is a
+   * direct dependency, how many copies of it are installed, and from every subpath export.
+   */
+  interface SanityQueries {}
+}
 export { RemoveIcon, SanityLogo };
 //# sourceMappingURL=index.d.ts.map"
 `;
