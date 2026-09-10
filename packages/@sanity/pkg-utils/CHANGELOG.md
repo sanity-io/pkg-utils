@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 13.0.1
+
+### Patch Changes
+
+- [#3401](https://github.com/sanity-io/pkg-utils/pull/3401) [`7fed4ff`](https://github.com/sanity-io/pkg-utils/commit/7fed4ffc0a13d376185e46c102cfd0c6e3a1b585) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency pretty-bytes to ^7.1.3
+- Updated dependencies []:
+  - @sanity/tsdown-config@0.28.1
+
 ## 13.0.0
 
 ### Major Changes
