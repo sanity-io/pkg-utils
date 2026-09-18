@@ -71,7 +71,7 @@ describe('namespace-reexport-library', () => {
       result.messages.filter((message) => message.messageId === 'ae-missing-release-tag'),
     ).toEqual([])
     expect(result.errorCount).toBe(0)
-  })
+  }, 30_000)
 })
 
 function runCheck(dir: string) {
