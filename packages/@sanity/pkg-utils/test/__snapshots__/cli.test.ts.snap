@@ -1019,7 +1019,7 @@ let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), 
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1071,7 +1071,7 @@ import { SanityLogo } from "@sanity/logos";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
 /**
  * Note: This will add Symbol.observable globally for all TypeScript users,
  * however, we are no longer polyfilling Symbol.observable
@@ -1115,7 +1115,7 @@ declare global {
    */
   interface SanityQueries {}
 }
-export { RemoveIcon, SanityLogo };
+export { SanityLogo };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
@@ -1130,7 +1130,7 @@ import "http";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
 /**
  * Note: This will add Symbol.observable globally for all TypeScript users,
  * however, we are no longer polyfilling Symbol.observable
@@ -1174,7 +1174,7 @@ declare global {
    */
   interface SanityQueries {}
 }
-export { RemoveIcon, SanityLogo };
+export { SanityLogo };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1185,7 +1185,7 @@ import { SanityLogo } from "@sanity/logos";
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ forwardRef(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ jsx("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1230,7 +1230,7 @@ let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), 
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1270,8 +1270,8 @@ import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export { SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
@@ -1282,8 +1282,8 @@ import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export { SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1295,7 +1295,7 @@ import { validateApiPerspective } from "@sanity/client";
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ forwardRef(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ jsx("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1324,7 +1324,7 @@ let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), 
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1364,8 +1364,8 @@ import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export { SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
@@ -1376,8 +1376,8 @@ import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export { SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1389,7 +1389,7 @@ import { validateApiPerspective } from "@sanity/client";
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ forwardRef(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ jsx("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1448,7 +1448,7 @@ let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), 
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ (0, react.forwardRef)(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
@@ -1488,8 +1488,8 @@ import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export { SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.cts.map"
 `;
 
@@ -1500,8 +1500,8 @@ import { validateApiPerspective } from "@sanity/client";
 /**
  * @public
  */
-declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
-export { RemoveIcon, SanityLogo, validateApiPerspective };
+export declare const RemoveIcon: ForwardRefExoticComponent<Omit<SVGProps<SVGSVGElement>, "ref"> & RefAttributes<SVGSVGElement>>;
+export { SanityLogo, validateApiPerspective };
 //# sourceMappingURL=index.d.ts.map"
 `;
 
@@ -1513,7 +1513,7 @@ import { validateApiPerspective } from "@sanity/client";
 /**
 * @public
 */
-const RemoveIcon = /* @__PURE__ */ forwardRef(function(props, ref) {
+const RemoveIcon = /* @__PURE__ */ forwardRef(function RemoveIcon(props, ref) {
 	return /* @__PURE__ */ jsx("svg", {
 		"data-sanity-icon": "remove",
 		width: "1em",
