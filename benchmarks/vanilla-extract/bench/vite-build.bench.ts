@@ -1,5 +1,5 @@
 import path from 'node:path'
-import {bench, describe} from 'vitest'
+import {describe, test} from 'vitest'
 import {runViteBuild} from './helpers/commands.ts'
 import {coldBuildOptions} from './helpers/options.ts'
 import {assertViteOutputSync} from './helpers/output.ts'
@@ -24,13 +24,13 @@ for (const identifiers of ['short', 'debug'] as const) {
           ? '@vanilla-extract/vite-plugin'
           : '@sanity/vanilla-extract-vite-plugin'
 
-      bench(
-        `Vite 8 + ${packageName}`,
-        async () => {
+      test(`Vite 8 + ${packageName}`, async ({bench}) => {
+        await bench(`Vite 8 + ${packageName}`, async () => {
           await runViteBuild(fixtureRoot, outputDirectory, plugin, {identifiers})
-        },
-        coldBuildOptions('build', outputDirectory, () => assertViteOutputSync(outputDirectory)),
-      )
+        }).run(
+          coldBuildOptions('build', outputDirectory, () => assertViteOutputSync(outputDirectory)),
+        )
+      })
     }
   })
 }
@@ -45,16 +45,16 @@ describe(`vite build, kitchen sink: debug identifiers, css minify + target chrom
     const packageName =
       plugin === 'official' ? '@vanilla-extract/vite-plugin' : '@sanity/vanilla-extract-vite-plugin'
 
-    bench(
-      `Vite 8 + ${packageName}`,
-      async () => {
+    test(`Vite 8 + ${packageName}`, async ({bench}) => {
+      await bench(`Vite 8 + ${packageName}`, async () => {
         await runViteBuild(heavyFixtureRoot, outputDirectory, plugin, {
           identifiers: 'debug',
           cssMinify: true,
           cssTarget: 'chrome61',
         })
-      },
-      coldBuildOptions('build', outputDirectory, () => assertViteOutputSync(outputDirectory)),
-    )
+      }).run(
+        coldBuildOptions('build', outputDirectory, () => assertViteOutputSync(outputDirectory)),
+      )
+    })
   }
 })

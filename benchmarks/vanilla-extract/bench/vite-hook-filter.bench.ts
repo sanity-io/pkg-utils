@@ -1,5 +1,5 @@
 import path from 'node:path'
-import {beforeAll, bench, describe} from 'vitest'
+import {beforeAll, describe, test} from 'vitest'
 import {runViteBuild, type CommandResult} from './helpers/commands.ts'
 import {runHookDiagnostics} from './helpers/hook-diagnostics.ts'
 import {coldBuildOptions} from './helpers/options.ts'
@@ -36,18 +36,18 @@ for (const fixture of manifest.stress) {
       )
       let lastResult: CommandResult | undefined
 
-      bench(
-        name,
-        async () => {
+      test(name, async ({bench}) => {
+        await bench(name, async () => {
           lastResult = await runViteBuild(fixturePath(fixture), outputDirectory, plugin, {
             showWarnings: true,
           })
-        },
-        coldBuildOptions('stress', outputDirectory, () => {
-          assertViteOutputSync(outputDirectory)
-          surfacePluginTimingWarning(`${fixture.plainModules}/${plugin}`, lastResult)
-        }),
-      )
+        }).run(
+          coldBuildOptions('stress', outputDirectory, () => {
+            assertViteOutputSync(outputDirectory)
+            surfacePluginTimingWarning(`${fixture.plainModules}/${plugin}`, lastResult)
+          }),
+        )
+      })
     }
   })
 }

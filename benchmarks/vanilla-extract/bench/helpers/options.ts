@@ -1,5 +1,5 @@
 import {rm} from 'node:fs/promises'
-import type {BenchOptions} from 'vitest'
+import type {BenchRunOptions} from 'vitest'
 
 type BenchmarkKind = 'build' | 'hmr' | 'stress'
 
@@ -28,8 +28,8 @@ function readPositiveInteger(name: string, fallback: number): number {
 
 export function fixedBenchmarkOptions(
   kind: BenchmarkKind,
-  overrides: Pick<BenchOptions, 'now' | 'setup' | 'teardown'> = {},
-): BenchOptions {
+  overrides: Pick<BenchRunOptions, 'now' | 'setup' | 'teardown'> = {},
+): BenchRunOptions {
   return {
     iterations: readPositiveInteger(environmentNames[kind], defaultIterations[kind]),
     time: 0,
@@ -44,7 +44,7 @@ export function coldBuildOptions(
   kind: Extract<BenchmarkKind, 'build' | 'stress'>,
   outputDirectory: string,
   teardown: () => void | Promise<void>,
-): BenchOptions {
+): BenchRunOptions {
   return fixedBenchmarkOptions(kind, {
     setup: () => rm(outputDirectory, {recursive: true, force: true}),
     teardown,

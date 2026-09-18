@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`strict options > {'noNodeTypesDependency': 'off'} 1`] = `
+exports[`strict options > {noNodeTypesDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -27,7 +27,7 @@ exports[`strict options > {'noNodeTypesDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonBrowser': 'error'} 1`] = `
+exports[`strict options > {noPackageJsonBrowser: error} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -54,7 +54,7 @@ exports[`strict options > {'noPackageJsonBrowser': 'error'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonBrowser': 'off'} 1`] = `
+exports[`strict options > {noPackageJsonBrowser: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -81,7 +81,7 @@ exports[`strict options > {'noPackageJsonBrowser': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonBrowser': 'warn'} 1`] = `
+exports[`strict options > {noPackageJsonBrowser: warn} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -108,7 +108,7 @@ exports[`strict options > {'noPackageJsonBrowser': 'warn'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypesVersions': 'error'} 1`] = `
+exports[`strict options > {noPackageJsonTypesVersions: error} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -135,7 +135,7 @@ exports[`strict options > {'noPackageJsonTypesVersions': 'error'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypesVersions': 'off'} 1`] = `
+exports[`strict options > {noPackageJsonTypesVersions: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -162,7 +162,7 @@ exports[`strict options > {'noPackageJsonTypesVersions': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypesVersions': 'warn'} 1`] = `
+exports[`strict options > {noPackageJsonTypesVersions: warn} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -189,7 +189,7 @@ exports[`strict options > {'noPackageJsonTypesVersions': 'warn'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypings': 'error'} 1`] = `
+exports[`strict options > {noPackageJsonTypings: error} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -216,7 +216,67 @@ exports[`strict options > {'noPackageJsonTypings': 'error'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypings': 'off'} 1`] = `
+exports[`strict options > {noPackageJsonTypings: false} 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union",
+    "unionErrors": [
+      {
+        "issues": [
+          {
+            "received": false,
+            "code": "invalid_literal",
+            "expected": "error",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": false,
+            "code": "invalid_literal",
+            "expected": "warn",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": false,
+            "code": "invalid_literal",
+            "expected": "off",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      }
+    ],
+    "path": [
+      "strictOptions",
+      "noPackageJsonTypings"
+    ],
+    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
+  }
+]]
+`;
+
+exports[`strict options > {noPackageJsonTypings: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -243,7 +303,67 @@ exports[`strict options > {'noPackageJsonTypings': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypings': 'warn'} 1`] = `
+exports[`strict options > {noPackageJsonTypings: true} 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union",
+    "unionErrors": [
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "error",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "warn",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      },
+      {
+        "issues": [
+          {
+            "received": true,
+            "code": "invalid_literal",
+            "expected": "off",
+            "path": [
+              "strictOptions",
+              "noPackageJsonTypings"
+            ],
+            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\""
+          }
+        ],
+        "name": "ZodError"
+      }
+    ],
+    "path": [
+      "strictOptions",
+      "noPackageJsonTypings"
+    ],
+    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
+  }
+]]
+`;
+
+exports[`strict options > {noPackageJsonTypings: warn} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -270,127 +390,7 @@ exports[`strict options > {'noPackageJsonTypings': 'warn'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noPackageJsonTypings': false} 1`] = `
-[ZodError: [
-  {
-    "code": "invalid_union",
-    "unionErrors": [
-      {
-        "issues": [
-          {
-            "received": false,
-            "code": "invalid_literal",
-            "expected": "error",
-            "path": [
-              "strictOptions",
-              "noPackageJsonTypings"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\""
-          }
-        ],
-        "name": "ZodError"
-      },
-      {
-        "issues": [
-          {
-            "received": false,
-            "code": "invalid_literal",
-            "expected": "warn",
-            "path": [
-              "strictOptions",
-              "noPackageJsonTypings"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\""
-          }
-        ],
-        "name": "ZodError"
-      },
-      {
-        "issues": [
-          {
-            "received": false,
-            "code": "invalid_literal",
-            "expected": "off",
-            "path": [
-              "strictOptions",
-              "noPackageJsonTypings"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\""
-          }
-        ],
-        "name": "ZodError"
-      }
-    ],
-    "path": [
-      "strictOptions",
-      "noPackageJsonTypings"
-    ],
-    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
-  }
-]]
-`;
-
-exports[`strict options > {'noPackageJsonTypings': true} 1`] = `
-[ZodError: [
-  {
-    "code": "invalid_union",
-    "unionErrors": [
-      {
-        "issues": [
-          {
-            "received": true,
-            "code": "invalid_literal",
-            "expected": "error",
-            "path": [
-              "strictOptions",
-              "noPackageJsonTypings"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\""
-          }
-        ],
-        "name": "ZodError"
-      },
-      {
-        "issues": [
-          {
-            "received": true,
-            "code": "invalid_literal",
-            "expected": "warn",
-            "path": [
-              "strictOptions",
-              "noPackageJsonTypings"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\""
-          }
-        ],
-        "name": "ZodError"
-      },
-      {
-        "issues": [
-          {
-            "received": true,
-            "code": "invalid_literal",
-            "expected": "off",
-            "path": [
-              "strictOptions",
-              "noPackageJsonTypings"
-            ],
-            "message": "Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\""
-          }
-        ],
-        "name": "ZodError"
-      }
-    ],
-    "path": [
-      "strictOptions",
-      "noPackageJsonTypings"
-    ],
-    "message": "Validation error: Validation error: Invalid literal value, expected \\"error\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"warn\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\", or Validation error: Invalid literal value, expected \\"off\\" at \\"strictOptions.noPackageJsonTypings\\" at \\"strictOptions.noPackageJsonTypings\\""
-  }
-]]
-`;
-
-exports[`strict options > {'noReactDependency': 'off'} 1`] = `
+exports[`strict options > {noReactDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -417,7 +417,7 @@ exports[`strict options > {'noReactDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noReactDomDependency': 'off'} 1`] = `
+exports[`strict options > {noReactDomDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -444,7 +444,7 @@ exports[`strict options > {'noReactDomDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noReactDomTypesDependency': 'off'} 1`] = `
+exports[`strict options > {noReactDomTypesDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -471,7 +471,7 @@ exports[`strict options > {'noReactDomTypesDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noReactIsPeerDependency': 'off'} 1`] = `
+exports[`strict options > {noReactIsPeerDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -498,7 +498,7 @@ exports[`strict options > {'noReactIsPeerDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noReactIsPeerDependency': true} 1`] = `
+exports[`strict options > {noReactIsPeerDependency: true} 1`] = `
 [ZodError: [
   {
     "code": "invalid_union",
@@ -558,7 +558,7 @@ exports[`strict options > {'noReactIsPeerDependency': true} 1`] = `
 ]]
 `;
 
-exports[`strict options > {'noReactTypesDependency': 'off'} 1`] = `
+exports[`strict options > {noReactTypesDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -585,7 +585,7 @@ exports[`strict options > {'noReactTypesDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noRxjsPeerDependency': 'off'} 1`] = `
+exports[`strict options > {noRxjsPeerDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -612,7 +612,7 @@ exports[`strict options > {'noRxjsPeerDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noSanityClientPeerDependency': 'off'} 1`] = `
+exports[`strict options > {noSanityClientPeerDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -639,7 +639,7 @@ exports[`strict options > {'noSanityClientPeerDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noSanityDependency': 'off'} 1`] = `
+exports[`strict options > {noSanityDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -666,7 +666,7 @@ exports[`strict options > {'noSanityDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noSanityIconsPeerDependency': 'off'} 1`] = `
+exports[`strict options > {noSanityIconsPeerDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -693,7 +693,7 @@ exports[`strict options > {'noSanityIconsPeerDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noSanityUiPeerDependency': 'off'} 1`] = `
+exports[`strict options > {noSanityUiPeerDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -720,7 +720,7 @@ exports[`strict options > {'noSanityUiPeerDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'noStyledComponentsDependency': 'off'} 1`] = `
+exports[`strict options > {noStyledComponentsDependency: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -747,7 +747,7 @@ exports[`strict options > {'noStyledComponentsDependency': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'preferModuleType': 'error'} 1`] = `
+exports[`strict options > {preferModuleType: error} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -774,7 +774,7 @@ exports[`strict options > {'preferModuleType': 'error'} 1`] = `
 }
 `;
 
-exports[`strict options > {'preferModuleType': 'off'} 1`] = `
+exports[`strict options > {preferModuleType: off} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",
@@ -801,7 +801,7 @@ exports[`strict options > {'preferModuleType': 'off'} 1`] = `
 }
 `;
 
-exports[`strict options > {'preferModuleType': 'warn'} 1`] = `
+exports[`strict options > {preferModuleType: warn} 1`] = `
 {
   "alwaysPackageJsonFiles": "error",
   "alwaysPackageJsonTypes": "error",

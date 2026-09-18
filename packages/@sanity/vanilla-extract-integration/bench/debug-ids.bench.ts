@@ -18,7 +18,7 @@
  * for `compile()`) so the comparison remains reproducible as both parsers evolve.
  */
 import {parseAst} from 'rolldown/parseAst'
-import {bench, describe} from 'vitest'
+import {test} from 'vitest'
 import {parse as yukuParse} from 'yuku-parser'
 import {injectDebugIds} from '../src/debugIds.ts'
 import {generateCorpus} from './corpus.ts'
@@ -31,16 +31,17 @@ console.log(
   `[debug-ids bench] corpus: ${corpus.length} files, ${(corpusBytes / 1024).toFixed(0)} KiB`,
 )
 
-describe(`inject debug IDs over ${corpus.length} .css.ts files`, () => {
-  bench('rolldown/parseAst (oxc)', () => {
-    for (const source of corpus) {
-      injectDebugIds(source, parseAst(source, {lang: 'ts', preserveParens: false}))
-    }
-  })
-
-  bench('yuku-parser', () => {
-    for (const source of corpus) {
-      injectDebugIds(source, yukuParse(source, {lang: 'ts', preserveParens: false}).program)
-    }
-  })
+test(`inject debug IDs over ${corpus.length} .css.ts files`, async ({bench}) => {
+  await bench.compare(
+    bench('rolldown/parseAst (oxc)', () => {
+      for (const source of corpus) {
+        injectDebugIds(source, parseAst(source, {lang: 'ts', preserveParens: false}))
+      }
+    }),
+    bench('yuku-parser', () => {
+      for (const source of corpus) {
+        injectDebugIds(source, yukuParse(source, {lang: 'ts', preserveParens: false}).program)
+      }
+    }),
+  )
 })
