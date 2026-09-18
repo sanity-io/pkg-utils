@@ -31,7 +31,20 @@ interface BundledDevOutput {
   lazyPatch: string
 }
 
-const lazyChunkModuleId = `${studioRoot}/src/PlainCssJsInput.tsx?rolldown-lazy=1`
+/**
+ * Rolldown 1.2.9 stopped emitting hashed proxy chunks (`PlainCssJsInput-<hash>.js`) for lazy
+ * routes. The bundled entry now calls `requestLazy(..., () => import('/@vite/lazy?id=...'))`
+ * with the real module id (absolute path + `?rolldown-lazy=1`). Fall back to the historical
+ * id so a future layout that drops the URL from the entry still exercises the same compile.
+ */
+function resolveLazyChunkModuleId(entry: string): string {
+  const fallbackId = `${studioRoot}/src/PlainCssJsInput.tsx?rolldown-lazy=1`
+  const matches = [...entry.matchAll(/\/@vite\/lazy\?id=([^"'\\\s&]+)/g)]
+  const fromEntry = matches
+    .map((match) => decodeURIComponent(match[1]!))
+    .find((id) => id.includes('PlainCssJsInput'))
+  return fromEntry ?? fallbackId
+}
 
 async function collectBundledDevOutput(
   implementation: PluginImplementation,
@@ -49,9 +62,13 @@ async function collectBundledDevOutput(
       expect(exports[exportName], `expected ${exportName} in the bundled entry`).toBeTruthy()
     }
     // The lazily imported input must not be part of the initial bundle, or the on-demand
-    // compile below would not exercise anything
+    // compile below would not exercise anything. Rolldown ≥1.2.9 keeps the module on a
+    // `/@vite/lazy` request instead of a hashed `PlainCssJsInput-*.js` proxy chunk.
     expect(entry).not.toContain('veStudioLazyBadge')
-    expect(entry).toContain('PlainCssJsInput-')
+    expect(entry).toContain('PlainCssJsInput')
+    const lazyChunkModuleId = resolveLazyChunkModuleId(entry)
+    expect(lazyChunkModuleId).toContain('PlainCssJsInput')
+    expect(lazyChunkModuleId).toContain('rolldown-lazy')
 
     let lazyPatch: string
     try {
