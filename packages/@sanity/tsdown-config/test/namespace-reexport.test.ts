@@ -52,28 +52,24 @@ describe('namespace-reexport-library', () => {
     )
   })
 
-  test(
-    'checkTsdoc passes: the wrappers are skipped',
-    async () => {
-      const result = await checkTsdoc({
-        cwd: fixtureDir,
-        entryDtsFiles: [
-          path.join(fixtureDir, 'dist/index.d.ts'),
-          path.join(fixtureDir, 'dist/index.d.cts'),
-          path.join(fixtureDir, 'dist/extra.d.ts'),
-          path.join(fixtureDir, 'dist/extra.d.cts'),
-        ],
-        tsconfig: 'tsconfig.dist.json',
-        rules: {'ae-missing-release-tag': 'error'},
-      })
+  test('checkTsdoc passes: the wrappers are skipped', async () => {
+    const result = await checkTsdoc({
+      cwd: fixtureDir,
+      entryDtsFiles: [
+        path.join(fixtureDir, 'dist/index.d.ts'),
+        path.join(fixtureDir, 'dist/index.d.cts'),
+        path.join(fixtureDir, 'dist/extra.d.ts'),
+        path.join(fixtureDir, 'dist/extra.d.cts'),
+      ],
+      tsconfig: 'tsconfig.dist.json',
+      rules: {'ae-missing-release-tag': 'error'},
+    })
 
-      expect(
-        result.messages.filter((message) => message.messageId === 'ae-missing-release-tag'),
-      ).toEqual([])
-      expect(result.errorCount).toBe(0)
-    },
-    30_000,
-  )
+    expect(
+      result.messages.filter((message) => message.messageId === 'ae-missing-release-tag'),
+    ).toEqual([])
+    expect(result.errorCount).toBe(0)
+  }, 30_000)
 })
 
 function runCheck(dir: string) {
