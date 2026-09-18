@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "tap --disable-coverage --allow-empty-coverage"
+    "test": "node test/main.test.js"
+  },
+  "tap": {
+    "plugin": [
+      "!@tapjs/typescript"
+    ]
   },
   "devDependencies": {
     "sanity-css-vanilla-extract-test": "workspace:*",
-    "tap": "^21.8.0",
-    "typescript": "^7.0.2"
+    "tap": "^21.8.0"
   }
 }

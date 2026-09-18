@@ -1,3 +1,4 @@
+import {expect, test} from '@jest/globals'
 import {CREATE_CONFIG_MESSAGE, createConfig, TestComponent} from 'sanity-css-vanilla-extract-test'
 
 // Jest (node test environment) resolves the package's `exports` conditions, so the self-referential
