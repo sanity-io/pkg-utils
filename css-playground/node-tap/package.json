@@ -6,9 +6,13 @@
   "scripts": {
     "test": "tap --disable-coverage --allow-empty-coverage"
   },
+  "tap": {
+    "plugin": [
+      "!@tapjs/typescript"
+    ]
+  },
   "devDependencies": {
     "sanity-css-vanilla-extract-test": "workspace:*",
-    "tap": "^21.8.0",
-    "typescript": "^7.0.2"
+    "tap": "^21.8.0"
   }
 }
