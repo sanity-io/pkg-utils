@@ -23,14 +23,14 @@ interface LightningCSSOptionsWithTargets {
  *
  * @internal
  */
-export async function resolveCssLoweringTargets<T extends LightningCSSOptionsWithTargets>(options: {
+export async function resolveCssLoweringTargets(options: {
   /** The pipeline's own `target` option. */
   cssTarget: string | string[] | false | undefined
   /** tsdown's top-level `target`, the fallback for `cssTarget`. */
   target: string | string[] | false | undefined
   /** The pipeline's own `lightningcss` options. */
-  lightningcss: T | undefined
-}): Promise<T | undefined> {
+  lightningcss: LightningCSSOptionsWithTargets | undefined
+}): Promise<LightningCSSOptionsWithTargets | undefined> {
   const {target, lightningcss} = options
   const cssTarget = options.cssTarget ?? target
 
@@ -50,9 +50,8 @@ export async function resolveCssLoweringTargets<T extends LightningCSSOptionsWit
       import('@sanity/browserslist-config'),
       import('lightningcss'),
     ])
-  // oxlint-disable-next-line no-unsafe-type-assertion -- widening the passthrough options object
   return {
     ...lightningcss,
     targets: browserslistToTargets(browserslist(browserslistConfig)),
-  } as T
+  }
 }
