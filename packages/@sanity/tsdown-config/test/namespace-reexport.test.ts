@@ -52,9 +52,7 @@ describe('namespace-reexport-library', () => {
     )
   })
 
-  // API Extractor over four bundled dts files is routinely ~5s on Windows CI, which
-  // flakes against vitest's default 5s timeout.
-  test('checkTsdoc passes: the wrappers are skipped', {timeout: 30_000}, async () => {
+  test('checkTsdoc passes: the wrappers are skipped', async () => {
     const result = await checkTsdoc({
       cwd: fixtureDir,
       entryDtsFiles: [
