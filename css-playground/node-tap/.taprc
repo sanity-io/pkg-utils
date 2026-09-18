@@ -1,0 +1,5 @@
+# vim: set filetype=yaml :
+# tap's TypeScript plugin loads ts-node, which needs the JS compiler API that
+# TypeScript 7 does not ship. This fixture only needs Node to import the producer.
+plugin:
+  - '!@tapjs/typescript'
