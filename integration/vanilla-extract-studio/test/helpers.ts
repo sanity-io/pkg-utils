@@ -261,8 +261,8 @@ function extractWsToken(code: string): string | undefined {
 
 /**
  * Requests the on-demand compilation of a bundled-dev lazy chunk the way the browser runtime
- * does: lazy `import()`s in the served bundle load a stub chunk whose body fetches
- * `/@vite/lazy?id=<module id>&clientId=<id>`, compiling the chunk on first request. The
+ * does. Rolldown ≥1.2.9 inlines `requestLazy(..., () => import('/@vite/lazy?id=...'))` in the
+ * entry (older versions loaded a hashed stub chunk that then fetched the same endpoint). The
  * `clientId` must belong to a registered client, so this helper first announces one over the
  * HMR WebSocket (`vite:module-loaded`, like the Rolldown browser runtime on startup) using
  * the `wsToken` embedded in the HMR client. Vite has moved that token between the served
