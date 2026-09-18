@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "tap --disable-coverage --allow-empty-coverage"
+    "test": "node test/main.test.js"
   },
   "tap": {
     "plugin": [
