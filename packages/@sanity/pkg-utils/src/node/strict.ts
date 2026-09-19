@@ -94,7 +94,10 @@ export interface StrictOptions {
    */
   preferModuleType: ToggleType
   /**
-   * Warns if `publishConfig.exports` is missing when `source`, `development`, or `monorepo` conditions are used in exports.
+   * Warns if `publishConfig.exports` is missing when `source` or `monorepo` conditions are used in exports.
+   *
+   * A missing `publishConfig.exports` is always an error when `development` is used because
+   * publishing that condition breaks consumers whose tools select it.
    * @defaultValue 'warn'
    */
   noPublishConfigExports: ToggleType
