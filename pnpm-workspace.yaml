@@ -13,7 +13,7 @@ catalog:
   '@sanity/icons': ^5.2.2
   '@sanity/logos': ^2.2.5
   '@tsdown/css': ^0.23.0
-  '@types/node': ^24.13.3
+  '@types/node': ^24.13.6
   lightningcss: ^1.33.0
   oxc-transform-react: ^0.150.0
   publint: ^0.3.24
@@ -46,6 +46,7 @@ minimumReleaseAgeExclude:
   - '@oxlint-tsgolint/*'
   - oxlint-tsgolint@7.0.2002
   - rolldown
+  - '@types/node@24.13.6'
 
 minimumReleaseAgeExcludePrune: true
 
