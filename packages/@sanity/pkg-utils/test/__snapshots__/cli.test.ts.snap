@@ -1015,7 +1015,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-DgUL0DtS.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-C8aK4N4h.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -2056,15 +2056,15 @@ var ParseError = class extends Error {
 */
 function createParser(config) {
 	if (typeof config == "function") throw TypeError("\`config\` must be an object, got a function instead. Did you mean \`createParser({onEvent: fn})\`?");
-	let { maxBufferSize, onComment, onError, onEvent, onId, onRetry } = config, pendingFragments = [], pendingFragmentsLength = 0, isFirstChunk = !0, id, data = "", dataLines = 0, eventType, terminated = !1, skippingLine = !1, skipNextLineFeed = !1;
+	let { maxBufferSize, onComment, onError, onEvent, onId, onRetry } = config, pendingFragments = [], pendingFragmentsLength = 0, bomPrefix = "", id, data = "", dataLines = 0, eventType, terminated = !1, skippingLine = !1, skipNextLineFeed = !1;
 	/**
 	* Feeds a chunk of the SSE stream to the parser. Any trailing bytes that do
 	* not yet form a complete line are held back and prepended to the next chunk,
 	* so callers can pass arbitrary slices of the stream without worrying about
 	* line boundaries.
 	*
-	* Per the SSE spec, one leading UTF-8 BOM at the start of the very first chunk
-	* is stripped before parsing. This handles both the raw 3-byte form (0xEF 0xBB
+	* Per the SSE spec, one leading UTF-8 BOM is stripped before parsing,
+	* even when split across chunks. This handles both the raw 3-byte form (0xEF 0xBB
 	* 0xBF) and a single decoded U+FEFF, so a leading BOM is ignored regardless of
 	* how the caller decoded the bytes.
 	*
@@ -2072,7 +2072,14 @@ function createParser(config) {
 	*/
 	function feed(chunk) {
 		if (terminated) throw Error("Cannot feed parser: it was terminated after exceeding the configured max buffer size. Call \`reset()\` to resume parsing.");
-		if (isFirstChunk && (isFirstChunk = !1, chunk.charCodeAt(0) === 65279 ? chunk = chunk.slice(1) : chunk.charCodeAt(0) === 239 && chunk.charCodeAt(1) === 187 && chunk.charCodeAt(2) === 191 && (chunk = chunk.slice(3))), (skippingLine || skipNextLineFeed) && (chunk = resumeAfterSkip(chunk), !chunk)) return;
+		if (bomPrefix !== void 0) {
+			if (chunk = bomPrefix + chunk, chunk === "" || chunk === "ï" || chunk === "ï»") {
+				bomPrefix = chunk;
+				return;
+			}
+			bomPrefix = void 0, chunk = chunk.replace(/^(?:\\uFEFF|\\xEF\\xBB\\xBF)/, "");
+		}
+		if ((skippingLine || skipNextLineFeed) && (chunk = resumeAfterSkip(chunk), !chunk)) return;
 		if (!pendingFragments.length) {
 			let trailing = processLines(chunk);
 			trailing !== "" && storeTrailing(trailing), checkBufferSize();
@@ -2235,7 +2242,7 @@ function createParser(config) {
 			let incompleteLine = pendingFragments.join("");
 			parseLine(incompleteLine, 0, incompleteLine.length);
 		}
-		isFirstChunk = !0, id = void 0, data = "", dataLines = 0, eventType = void 0, pendingFragments.length = 0, pendingFragmentsLength = 0, terminated = !1, skippingLine = !1, skipNextLineFeed = !1;
+		bomPrefix = "", id = void 0, data = "", dataLines = 0, eventType = void 0, pendingFragments.length = 0, pendingFragmentsLength = 0, terminated = !1, skippingLine = !1, skipNextLineFeed = !1;
 	}
 	return {
 		feed,
@@ -4206,7 +4213,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-DfD6eAwo.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-oyqICD0C.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
