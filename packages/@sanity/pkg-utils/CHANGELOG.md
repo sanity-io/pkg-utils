@@ -1,5 +1,22 @@
 # @sanity/pkg-utils
 
+## 13.0.1
+
+### Patch Changes
+
+- [#3401](https://github.com/sanity-io/pkg-utils/pull/3401) [`7fed4ff`](https://github.com/sanity-io/pkg-utils/commit/7fed4ffc0a13d376185e46c102cfd0c6e3a1b585) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency pretty-bytes to ^7.1.3
+
+- [#3425](https://github.com/sanity-io/pkg-utils/pull/3425) [`9f501a7`](https://github.com/sanity-io/pkg-utils/commit/9f501a72fdd9202d479259e79802288031ea3087) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @rolldown/plugin-babel to ^0.2.4
+
+- [#3437](https://github.com/sanity-io/pkg-utils/pull/3437) [`667fbd1`](https://github.com/sanity-io/pkg-utils/commit/667fbd1fda149770f5087afaa1bd9be15bd0e1c7) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency zod to ^4.6.5
+
+- [#3440](https://github.com/sanity-io/pkg-utils/pull/3440) [`4c451e1`](https://github.com/sanity-io/pkg-utils/commit/4c451e1de65fba02b3cc0860c128a4b5deec43ba) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.0
+
+- [#3109](https://github.com/sanity-io/pkg-utils/pull/3109) [`5a0d956`](https://github.com/sanity-io/pkg-utils/commit/5a0d956439569bdb8d90e5fe5649677178ed413e) Thanks [@stipsan](https://github.com/stipsan)! - Fail builds whenever a `development` export condition is not removed by `publishConfig.exports`, including when strict validation is disabled.
+- Updated dependencies [[`232d6ea`](https://github.com/sanity-io/pkg-utils/commit/232d6ea8a088b0202db3085b9141ff9d4b124d3f), [`667fbd1`](https://github.com/sanity-io/pkg-utils/commit/667fbd1fda149770f5087afaa1bd9be15bd0e1c7), [`4c451e1`](https://github.com/sanity-io/pkg-utils/commit/4c451e1de65fba02b3cc0860c128a4b5deec43ba), [`7bbcee4`](https://github.com/sanity-io/pkg-utils/commit/7bbcee4954f966d5aa1f8801d5658f37ac269f77), [`857c2dd`](https://github.com/sanity-io/pkg-utils/commit/857c2dd27ad9786f1d3c8e6a4cfeddce54b300d8)]:
+  - @sanity/tsdown-config@0.28.1
+  - @sanity/parse-package-json@2.3.5
+
 ## 13.0.0
 
 ### Major Changes
