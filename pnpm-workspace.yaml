@@ -52,6 +52,14 @@ minimumReleaseAgeExcludePrune: true
 
 overrides:
   '@sanity/pkg-utils': workspace:*
+  # tsdown / @tsdown/css declare `rolldown: ~1.2.7`, which includes 1.2.9, but pnpm keeps
+  # their previously locked 1.2.8 unless forced. Two copies make plugin types incompatible
+  # (`MinimalPluginContext.environment` landed in 1.2.9) and the 1.2.9
+  # `bundleAnalyzerPlugin` never writes `analyze-data.md` under tsdown's 1.2.8 runtime.
+  # Scoped to these packages only — a workspace-wide `rolldown` override would also move
+  # copies that pin an older range (and must not be used to yank vite off its own resolve).
+  'tsdown>rolldown': '~1.2.9'
+  '@tsdown/css>rolldown': '~1.2.9'
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
