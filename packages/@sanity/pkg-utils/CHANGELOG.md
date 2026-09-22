@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 13.0.2
+
+### Patch Changes
+
+- [#3463](https://github.com/sanity-io/pkg-utils/pull/3463) [`586fe08`](https://github.com/sanity-io/pkg-utils/commit/586fe087b8f0d5d28e04dd28bddbe3e7efe6c5e9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency prettier to ^3.9.8
+
+- [#3472](https://github.com/sanity-io/pkg-utils/pull/3472) [`f760551`](https://github.com/sanity-io/pkg-utils/commit/f760551adecb62954c783a307b05851061a28e25) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency empathic to ^2.1.0
+
 ## 13.0.1
 
 ### Patch Changes
