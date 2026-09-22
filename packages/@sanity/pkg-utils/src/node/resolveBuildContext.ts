@@ -122,7 +122,6 @@ export async function resolveBuildContext(options: {
   // names map to `^name(/|$)` patterns. The package's own name always stays external, so
   // self-referencing imports (e.g. the injected `import "<pkg>/bundle.css"`) never resolve
   // into the bundle.
-  const packagePattern = (name: string) => new RegExp(`^${escapeRegExp(name)}(/|$)`)
   const neverBundleAdditions: (string | RegExp)[] = external
     .filter((name) => !parsedExternal.includes(name))
     .map(packagePattern)
@@ -278,6 +277,10 @@ export function mergeDeps(
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function packagePattern(name: string): RegExp {
+  return new RegExp(`^${escapeRegExp(name)}(/|$)`)
 }
 
 function transformPackageName(packageName: string): string {
