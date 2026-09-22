@@ -19,15 +19,18 @@ const strictOptions = parseStrictOptions({})
 const logger = createLogger()
 const cwd = process.cwd()
 
+function testParseExports(
+  options: Omit<
+    Parameters<typeof parseAndValidateExports>[0],
+    'strict' | 'strictOptions' | 'logger' | 'cwd'
+  >,
+) {
+  return parseAndValidateExports({strict: true, logger, strictOptions, cwd, ...options})
+}
+
 describe.each([{type: 'commonjs' as const}, {type: 'module' as const}, {type: undefined}])(
   'parseAndValidateExports({type: $type})',
   ({type}) => {
-    const testParseExports = (
-      options: Omit<
-        Parameters<typeof parseAndValidateExports>[0],
-        'strict' | 'strictOptions' | 'logger' | 'cwd'
-      >,
-    ) => parseAndValidateExports({strict: true, logger, strictOptions, cwd, ...options})
     const reference = {
       '.': {
         source: defaults['.'].source,
