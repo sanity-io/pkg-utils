@@ -36,12 +36,10 @@ export default defineConfig({
 ```
 
 **Result:**
-
 - No JavaScript downleveling
 - Modern features preserved (optional chaining `?.`, nullish coalescing `??`, etc.)
 
 **Use when:**
-
 - Targeting modern environments
 - Handling transformations elsewhere
 - Building libraries for further processing
@@ -82,17 +80,21 @@ export default defineConfig({
 
 ## Supported Targets
 
-### ECMAScript Versions
+tsdown (Rolldown) uses [Oxc](https://oxc.rs/docs/guide/usage/transformer/lowering#target) for syntax lowering. The following environment names are supported (with version numbers, e.g. `chrome100`, `node18`, `es2020`):
 
-- `es2015`, `es2016`, `es2017`, `es2018`, `es2019`, `es2020`, `es2021`, `es2022`, `es2023`, `esnext`
+- **ECMAScript versions**: `es2015`, `es2016`, ..., `es2025`, `esnext`
+- **Browsers**: `chrome`, `edge`, `firefox`, `ie`, `ios`, `opera`, `safari`, `samsung`
+- **Runtimes**: `node`, `deno`, `hermes`, `rhino`
 
-### Browser Versions
+### Baseline Widely Available
 
-- `chrome100`, `safari18`, `firefox110`, `edge100`, etc.
+The special target `'baseline-widely-available'` expands to the browser versions covered by [Baseline Widely Available](https://web.dev/baseline) (e.g. `chrome111`, `edge111`, `firefox114`, `safari16.4`, `ios16.4`):
 
-### Node.js Versions
-
-- `node16`, `node18`, `node20`, `node20.18`, etc.
+```ts
+export default defineConfig({
+  target: 'baseline-widely-available',
+})
+```
 
 ## Examples
 
@@ -122,7 +124,7 @@ export default defineConfig({
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm'],
-  target: 'es2015', // Maximum compatibility
+  target: 'es2015',  // Maximum compatibility
 })
 ```
 
@@ -170,7 +172,7 @@ See [oxc issue #9170](https://github.com/oxc-project/oxc/issues/9170).
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm', 'cjs'],
-  target: 'es2020', // Wide compatibility
+  target: 'es2020',  // Wide compatibility
 })
 ```
 
@@ -180,7 +182,7 @@ export default defineConfig({
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm'],
-  target: false, // No transformations
+  target: false,  // No transformations
 })
 ```
 
@@ -201,7 +203,7 @@ When `@tsdown/css` is installed and a browser target is set, CSS syntax is also 
 
 ```ts
 export default defineConfig({
-  target: 'chrome108', // CSS nesting will be flattened
+  target: 'chrome108',  // CSS nesting will be flattened
 })
 ```
 

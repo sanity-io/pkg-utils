@@ -4,7 +4,7 @@ Control how default exports are handled in CommonJS output.
 
 ## Overview
 
-The `cjsDefault` option improves compatibility when generating CommonJS modules. When enabled (default), modules with only a single default export use `module.exports = ...` instead of `exports.default = ...`.
+The `cjsDefault` option improves compatibility when generating CommonJS **entry** modules. When enabled (default), entry modules with only a single default export use `module.exports = ...` instead of `exports.default = ...`.
 
 ## Type
 
@@ -20,7 +20,7 @@ cjsDefault?: boolean  // default: true
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['cjs'],
-  cjsDefault: true, // default behavior
+  cjsDefault: true,  // default behavior
 })
 ```
 
@@ -41,7 +41,6 @@ export default defineConfig({
 When your module has **only a single default export**, tsdown transforms:
 
 **Source:**
-
 ```ts
 // src/index.ts
 export default function greet() {
@@ -50,7 +49,6 @@ export default function greet() {
 ```
 
 **Generated CJS:**
-
 ```js
 // dist/index.cjs
 function greet() {
@@ -60,7 +58,6 @@ module.exports = greet
 ```
 
 **Generated Declaration:**
-
 ```ts
 // dist/index.d.cts
 declare function greet(): void
@@ -82,6 +79,21 @@ exports.default = greet
 ```
 
 Consumers need `require('your-module').default`.
+
+## Entry Modules Only
+
+`cjsDefault` only applies to **explicit entry modules**. In [unbundle mode](option-unbundle.md), imported modules that are emitted as non-entry chunks keep named CJS exports such as `exports.default`. CJS is considered legacy and is supported in maintenance-only mode, so this behavior will not be extended to non-entry chunks.
+
+If every source module is intended to be consumed independently, include all of them as entries:
+
+```ts
+export default defineConfig({
+  entry: ['src/**/*.ts'],
+  root: 'src',
+  format: 'cjs',
+  unbundle: true,
+})
+```
 
 ## When to Disable
 
