@@ -92,24 +92,29 @@ export default defineConfig({
 Most packages need little configuration because package metadata supplies the entries. Common
 options include:
 
-- `tsconfig` (`'tsconfig.json'` by default), `src` (`'./src'`), and `dist` (`'./dist'`)
+- `tsconfig` (`'tsconfig.json'` by default)
+- `dist` to override the output directory inferred from authored export targets (commonly `dist`)
 - `clean` (`true`), `sourcemap` (`true`), and `minify` (`false` for full minification)
 - `runtime` (`'*'`), `deps`, `dts`, `define`, and extra Rolldown `plugins`
 - `reactCompiler`, `styledComponents`, `vanillaExtract`, `css`, and `bundleAnalyzer`
 - `tsdoc` (`true`)
 - `bundles` for entry points such as workers or CLIs that are built but not exported
 
-`process.env.PKG_VERSION` is always replaced with the package version, or with the
+Public entries come from `package.json#exports`, not a `src` config option. `process.env.PKG_VERSION`
+is always replaced with the package version, or with the
 `PKG_VERSION` environment override. Values in `define` are serialized before forwarding.
 
 ## Understand the composed defaults
 
-pkg-utils starts from `@sanity/tsdown-config`, so it inherits the neutral-platform behavior,
-source maps, compress-only minification with preserved names, dependency-subpath resolution, and
-runtime circular-dependency warnings. It then owns these differences:
+pkg-utils starts from `@sanity/tsdown-config`, so it inherits source maps, compress-only
+minification with preserved names, dependency-subpath resolution, and runtime
+circular-dependency warnings. The default `'*'` build uses the wrapper's neutral platform;
+`browser` and `node` export conditions create matching platform builds instead. pkg-utils then
+owns these differences:
 
 - The authored exports map decides entries, formats, and browser/node build variants.
-- Browser targets come from Sanity's browserslist configuration.
+- JS targets are derived from the package browserslist (Sanity's browserslist config by default),
+  split for browser and Node builds and combined for the `'*'` build.
 - `tsdoc` defaults to `true` for builds and checks, but is skipped in watch mode.
 - `publint` runs through `pkg check`, not tsdown's build hook.
 - Per-file tsdown reports are disabled in favor of pkg-utils output.
@@ -139,8 +144,8 @@ export default defineConfig({
 
 Strings match exactly or as globs; use a regular expression to include package subpaths. Type
 inlining follows bundling decisions. Declaration generation is enabled for TypeScript entries
-unless `dts: false`; a package using `@typescript/native-preview` defaults to the `tsgo`
-generator.
+unless `dts: false`; a package with `@typescript/native-preview` in `devDependencies` defaults to
+the `tsgo` generator.
 
 Keep a distribution tsconfig focused on publishable source. Declaration generation does not
 replace a separate type-check command.
@@ -180,8 +185,10 @@ Example standalone stylesheet export:
 - Do not publish bundle-analyzer output. Exclude `dist/analyze-data.md` from `package.json#files`.
 - Do not forget `sideEffects` for emitted CSS.
 - Do not assume declaration bundling type-checks source. Run the repository's type-check command.
-- Do not use removed pre-v12 options such as `babel`, `extract`, `rollup`, `external`,
-  `reactCompilerOptions`, or `jsxImportSource`; use the current top-level options and `deps`.
+- Do not use removed pre-v12 options such as `babel`, `extract`, `rollup`,
+  `reactCompilerOptions`, or `jsxImportSource`; use the current top-level options.
+- `external` is deprecated but still supported with a warning. Migrate it to `deps.neverBundle`
+  or `deps.alwaysBundle`.
 
 ## When to use direct `@sanity/tsdown-config`
 

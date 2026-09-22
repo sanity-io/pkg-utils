@@ -74,9 +74,10 @@ resulting local `exports` and `publishConfig.exports`.
 
 ## Use `PackageOptions` first
 
-The wrapper directly exposes common package options: `entry`, `format`, `dts`, `define`, `target`,
-`outDir`, `clean`, `platform`, `cwd`, `exports`, `sourcemap`, `deps`, `css`, `vanillaExtract`,
-`reactCompiler`, `styledComponents`, `bundleAnalyzer`, `tsdoc`, and `suppressWarnings`.
+The wrapper directly exposes common package options: `tsconfig`, `entry`, `format`, `dts`, `define`,
+`target`, `outDir`, `clean`, `platform`, `cwd`, `exports`, `sourcemap`, `deps`, `css`,
+`vanillaExtract`, `reactCompiler`, `styledComponents`, `bundleAnalyzer`, `tsdoc`, and
+`suppressWarnings`.
 
 Add only what the package needs:
 
