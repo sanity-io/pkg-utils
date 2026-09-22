@@ -8,6 +8,17 @@ npm install @sanity/pkg-utils -D
 
 [![npm version](https://img.shields.io/npm/v/@sanity/pkg-utils.svg?style=flat-square)](https://www.npmjs.com/package/@sanity/pkg-utils)
 
+## Agent Skill
+
+Install the Agent Skill for the `pkg` CLI and `@sanity/pkg-utils` from the repository:
+
+```sh
+npx skills add sanity-io/pkg-utils --skill sanity-pkg-utils
+```
+
+For direct tsdown builds using Sanity's shared config instead, install
+`npx skills add sanity-io/pkg-utils --skill sanity-tsdown-config`.
+
 ## Basic usage
 
 ```sh

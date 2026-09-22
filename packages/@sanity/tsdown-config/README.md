@@ -4,6 +4,18 @@ Shared config for tsdown
 pnpm add --save-dev @sanity/tsdown-config tsdown
 ```
 
+## Agent Skill
+
+Install the Agent Skill for this Sanity wrapper from the repository:
+
+```sh
+npx skills add sanity-io/pkg-utils --skill sanity-tsdown-config
+```
+
+The skill documents this package's defaults and opt-in integrations. For generic tsdown behavior,
+install the upstream skill separately with
+`npx skills add rolldown/tsdown --skill tsdown`.
+
 Create a `tsdown.config.ts` file with:
 
 ```ts
