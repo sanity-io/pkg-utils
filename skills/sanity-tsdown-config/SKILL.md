@@ -4,7 +4,7 @@ description: Configure Sanity libraries with @sanity/tsdown-config, including it
 license: MIT
 metadata:
   author: sanity-io
-  version: "0.28"
+  version: '0.28'
 ---
 
 # `@sanity/tsdown-config`
@@ -50,20 +50,20 @@ pnpm tsdown --watch
 
 Do not restate these unless intentionally overriding them:
 
-| Behavior | `@sanity/tsdown-config` default |
-| --- | --- |
-| Platform | `'neutral'`; also externalizes `node:` built-ins and restores `module`/`main` resolution for inlined dependencies without exports |
-| Format | `'esm'` |
-| Source maps | `true` (stock tsdown defaults to `false`) |
-| Package exports | Always generated; in pnpm projects, `devExports: true` points local exports at source and puts built exports in `publishConfig` |
-| Package validation | `publint: true` |
-| Dependency subpaths | `deps.resolveDepSubpath: true` |
-| Circular dependencies | `checks.circularDependency: true`; declaration-only cycles are suppressed, runtime cycles still warn |
-| Minification | Compression/dead-code elimination only; no mangling or whitespace codegen; function and class names are preserved |
-| Report | `{gzip: false}` |
-| Cleaning | Stock tsdown default: clean `outDir` (`dist`) |
-| Output directory | Stock tsdown default: `dist` |
-| Chunk names | Keep tsdown's hashed default |
+| Behavior              | `@sanity/tsdown-config` default                                                                                                   |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Platform              | `'neutral'`; also externalizes `node:` built-ins and restores `module`/`main` resolution for inlined dependencies without exports |
+| Format                | `'esm'`                                                                                                                           |
+| Source maps           | `true` (stock tsdown defaults to `false`)                                                                                         |
+| Package exports       | Always generated; in pnpm projects, `devExports: true` points local exports at source and puts built exports in `publishConfig`   |
+| Package validation    | `publint: true`                                                                                                                   |
+| Dependency subpaths   | `deps.resolveDepSubpath: true`                                                                                                    |
+| Circular dependencies | `checks.circularDependency: true`; declaration-only cycles are suppressed, runtime cycles still warn                              |
+| Minification          | Compression/dead-code elimination only; no mangling or whitespace codegen; function and class names are preserved                 |
+| Report                | `{gzip: false}`                                                                                                                   |
+| Cleaning              | Stock tsdown default: clean `outDir` (`dist`)                                                                                     |
+| Output directory      | Stock tsdown default: `dist`                                                                                                      |
+| Chunk names           | Keep tsdown's hashed default                                                                                                      |
 
 The neutral platform is deliberate for isomorphic packages. Do not switch to `'node'` merely
 because some source imports Node APIs: `'node'` can emit module-scope CommonJS interop that crashes

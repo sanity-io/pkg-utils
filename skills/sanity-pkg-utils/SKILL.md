@@ -4,7 +4,7 @@ description: Build, watch, and validate Sanity npm libraries with the pkg CLI an
 license: MIT
 metadata:
   author: sanity-io
-  version: "13"
+  version: '13'
 ---
 
 # `@sanity/pkg-utils`
