@@ -8,6 +8,9 @@ packages:
 
 ignoreWorkspaceCycles: true
 
+# Deduplicate compatible dependency versions during installation (pnpm >= 12.6.0).
+autoDedupe: true
+
 catalog:
   '@sanity/client': ^8.6.2
   '@sanity/icons': ^5.2.2
@@ -20,6 +23,10 @@ catalog:
   tsdown: ^0.23.0
   typescript: 7.0.2
   vitest: ^5.0.1
+
+# When running `pnpm add`, reuse a dependency's catalog version automatically if
+# it already exists in a catalog, so shared deps stay aligned on a single version.
+catalogMode: prefer
 
 # Lifecycle scripts that must run for native/binary packages (pnpm v11 defaults
 # strictDepBuilds to true, so unlisted packages fail the install).
@@ -50,19 +57,20 @@ minimumReleaseAgeExclude:
   - oxlint@1.85.0
   - rolldown
   - '@types/node@24.13.6'
+  # @microsoft/api-extractor@7.59.2 exact-pins these same-day sibling releases
+  - '@microsoft/api-extractor@7.59.2'
+  - '@microsoft/api-extractor-model@7.33.13'
+  - '@rushstack/node-core-library@5.24.2'
+  - '@rushstack/terminal@0.24.5'
+  - '@rushstack/ts-command-line@5.3.15'
+  # astro@7.3.4 exact-pins this same-day release
+  - astro@7.3.4
+  - '@astrojs/markdown-satteri@0.4.2'
 
 minimumReleaseAgeExcludePrune: true
 
 overrides:
   '@sanity/pkg-utils': workspace:*
-  # tsdown / @tsdown/css declare `rolldown: ~1.2.7`, which includes 1.2.9, but pnpm keeps
-  # their previously locked 1.2.8 unless forced. Two copies make plugin types incompatible
-  # (`MinimalPluginContext.environment` landed in 1.2.9) and the 1.2.9
-  # `bundleAnalyzerPlugin` never writes `analyze-data.md` under tsdown's 1.2.8 runtime.
-  # Scoped to these packages only — a workspace-wide `rolldown` override would also move
-  # copies that pin an older range (and must not be used to yank vite off its own resolve).
-  'tsdown>rolldown': '~1.2.9'
-  '@tsdown/css>rolldown': '~1.2.9'
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:

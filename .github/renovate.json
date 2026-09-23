@@ -10,15 +10,10 @@
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
-      "description": "Update tsdown and @tsdown/css together without the default release-age delay",
-      "matchPackageNames": ["tsdown", "@tsdown/css"],
+      "description": "Update tsdown, @tsdown/css, rolldown and rolldown-plugin-dts together in one PR without the default release-age delay: tsdown pins a rolldown patch range, so bumping them separately splits the workspace onto two rolldown copies",
+      "matchPackageNames": ["tsdown", "@tsdown/css", "rolldown", "rolldown-plugin-dts"],
       "groupName": "tsdown",
       "groupSlug": "tsdown",
-      "minimumReleaseAge": null
-    },
-    {
-      "description": "Update Rolldown and rolldown-plugin-dts without the default release-age delay",
-      "matchPackageNames": ["rolldown", "rolldown-plugin-dts"],
       "minimumReleaseAge": null
     },
     {
