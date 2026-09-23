@@ -42,7 +42,7 @@ describe('vanillaExtractPlugin', () => {
       expect.unreachable('expected the transform, resolveId and load hooks to be object hooks')
     }
     expect(transform.filter).toMatchObject({id: expect.any(RegExp)})
-    expect(resolveId.filter).toMatchObject({id: expect.any(RegExp)})
+    expect(resolveId.filter).toMatchObject({id: [expect.any(RegExp), expect.any(RegExp)]})
     expect(load.filter).toMatchObject({id: expect.any(RegExp)})
 
     const bundle = await rolldown({
