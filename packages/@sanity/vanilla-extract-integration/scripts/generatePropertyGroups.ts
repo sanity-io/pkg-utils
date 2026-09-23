@@ -77,6 +77,29 @@ const overrides: Record<string, string[]> = {
   'border-inline-color': ['border-inline-start-color', 'border-inline-end-color'],
   'border-inline-style': ['border-inline-start-style', 'border-inline-end-style'],
   'border-inline-width': ['border-inline-start-width', 'border-inline-end-width'],
+  // ...and the per-side ones by the physical `border-width`/`border-style` (or, for
+  // `border-block-end`, the `border-top-*` longhands), which would let `borderBlockEnd` slip
+  // past `borderBottomWidth` in the overlap check
+  'border-block-start': [
+    'border-block-start-width',
+    'border-block-start-style',
+    'border-block-start-color',
+  ],
+  'border-block-end': [
+    'border-block-end-width',
+    'border-block-end-style',
+    'border-block-end-color',
+  ],
+  'border-inline-start': [
+    'border-inline-start-width',
+    'border-inline-start-style',
+    'border-inline-start-color',
+  ],
+  'border-inline-end': [
+    'border-inline-end-width',
+    'border-inline-end-style',
+    'border-inline-end-color',
+  ],
   // `outline` resets `outline-offset` in practice (matching StyleX's resolution table)
   'outline': ['outline-width', 'outline-style', 'outline-color', 'outline-offset'],
   // Legacy per-axis longhands some engines still accept

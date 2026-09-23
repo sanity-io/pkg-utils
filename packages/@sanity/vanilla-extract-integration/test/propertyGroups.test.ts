@@ -86,6 +86,25 @@ describe('propertiesOverlap', () => {
     expect(isShorthand('all')).toBe(true)
     expect(isShorthand('paddingTop')).toBe(false)
   })
+
+  test('logical border side shorthands reach every physical side of their parts', () => {
+    // `mdn-data` describes these by their computed physical longhands (`border-block-end` by
+    // `border-top-*`), which would let `borderBlockEnd` slip past `borderBottomWidth`
+    for (const side of ['BlockStart', 'BlockEnd', 'InlineStart', 'InlineEnd']) {
+      expect(
+        [...physicalLonghands(`border${side}`)].toSorted((a, b) => a.localeCompare(b)),
+      ).toEqual(
+        ['Top', 'Right', 'Bottom', 'Left']
+          .flatMap((physical) =>
+            ['Width', 'Style', 'Color'].map((part) => `border${physical}${part}`),
+          )
+          .toSorted((a, b) => a.localeCompare(b)),
+      )
+    }
+    expect(propertiesOverlap('borderBlockEnd', 'borderBottomWidth')).toBe(true)
+    expect(propertiesOverlap('borderInlineEnd', 'borderRightColor')).toBe(true)
+    expect(propertiesOverlap('borderBlockEnd', 'borderRadius')).toBe(false)
+  })
 })
 
 /**
