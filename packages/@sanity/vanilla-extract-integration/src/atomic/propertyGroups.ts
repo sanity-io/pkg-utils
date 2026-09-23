@@ -185,5 +185,3 @@ export function isShorthand(property: string): boolean {
   const canonical = canonicalName(property)
   return canonical === 'all' || canonical in SHORTHAND_LONGHANDS
 }
-
-export {SHORTHAND_LONGHANDS}

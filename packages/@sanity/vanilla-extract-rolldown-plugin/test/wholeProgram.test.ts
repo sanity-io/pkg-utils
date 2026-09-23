@@ -43,6 +43,10 @@ function findEntryChunk(output: readonly (OutputAsset | OutputChunk)[]): OutputC
   return chunk
 }
 
+/** The atomic `color` classes of rendered CSS, in order. */
+const atomicClasses = (css: string) =>
+  [...css.matchAll(/\.(color_rgb_\d_\d_\d__\w+) \{/g)].map(([, name]) => name)
+
 /** The top-level rules of rendered CSS, in order. */
 function topLevelRules(css: string): string[] {
   const rules: string[] = []
@@ -211,8 +215,6 @@ describe('atomic', () => {
     // `button.css.ts` and `styles.css.ts` both declare `color`, with different values, so
     // neither mode shares — but whole-program names the classes in one scope while per-module
     // names them per file scope, which the hashes reveal
-    const atomicClasses = (css: string) =>
-      [...css.matchAll(/\.(color_rgb_\d_\d_\d__\w+) \{/g)].map(([, name]) => name)
     expect(atomicClasses(findAsset(perModule.output, 'bundle.css'))).toHaveLength(2)
     expect(atomicClasses(findAsset(wholeProgram.output, 'bundle.css'))).toHaveLength(2)
     expect(atomicClasses(findAsset(perModule.output, 'bundle.css'))).not.toEqual(

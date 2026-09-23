@@ -149,7 +149,7 @@ export interface StylesheetOptions {
   atomic?: AtomicOptions
 }
 
-export class Stylesheet {
+class Stylesheet {
   rules: Array<CSSRule>
   conditionalRulesets: Array<ConditionalRuleset>
   currConditionalRuleset: ConditionalRuleset | undefined
@@ -855,7 +855,7 @@ export class Stylesheet {
   }
 }
 
-export function renderCss(block: Record<string, unknown>, indent: string = ''): string {
+function renderCss(block: Record<string, unknown>, indent: string = ''): string {
   const rules: Array<string> = []
 
   for (const key of Object.keys(block)) {

@@ -17,7 +17,6 @@ export type CSSSelectorBlock = Extract<CSS, {type: 'selector' | 'global'}>
 export type CSSKeyframesBlock = Extract<CSS, {type: 'keyframes'}>
 export type CSSPropertyBlock = Extract<CSS, {type: 'property'}>
 export type CSSFontFaceBlock = Extract<CSS, {type: 'fontFace'}>
-export type CSSLayerDeclaration = Extract<CSS, {type: 'layer'}>
 export type GlobalFontFaceRule = CSSFontFaceBlock['rule']
 
 export type CSSPropertiesWithVars = CSSProperties & {
