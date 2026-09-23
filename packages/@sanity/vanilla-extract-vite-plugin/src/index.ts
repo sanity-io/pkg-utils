@@ -7,6 +7,7 @@ import path from 'node:path'
 import {
   cssFileFilter,
   normalizePath,
+  type AtomicReport,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 import {
@@ -31,6 +32,16 @@ export type {
 } from './compiler.ts'
 
 const PLUGIN_NAMESPACE = 'sanity-vanilla-extract'
+
+/** One line summarizing the atomic pass for `atomic: {report: true}`. */
+function formatAtomicReport(report: AtomicReport, css: string): string {
+  const declarations = report.atomicDeclarations + report.residualDeclarations
+  const shared =
+    report.atomicDeclarations > 0
+      ? Math.round((report.sharedDeclarations / report.atomicDeclarations) * 100)
+      : 0
+  return `atomic: ${declarations} declarations, ${report.atomicDeclarations} atomic (${report.atomicClasses} classes, ${report.sharedDeclarations} shared, ${shared}%), ${report.residualDeclarations} kept on their class; CSS ${new TextEncoder().encode(css).byteLength} bytes`
+}
 
 const virtualExtCss = '.vanilla.css'
 
@@ -136,6 +147,20 @@ export interface Options {
    * @defaultValue the Vite root
    */
   roots?: string[]
+  /**
+   * Renders the declarations of `style()` rules as shared single-declaration ("atomic")
+   * classes, and expands every exported class list with them — identity class first, the same
+   * classlist shape as vanilla-extract's own style composition. Sharing is exact: two identical
+   * declarations share a class only when no declaration whose property overlaps theirs is
+   * rendered between them in the same cascade layer with the same importance, which is the
+   * precise condition under which every combination of classes on an element keeps resolving
+   * to the same winner. See `atomic` in `@sanity/vanilla-extract-rolldown-plugin` for the full
+   * contract. Per module, classes are shared within a `.css.ts` module's file scope; in
+   * whole-program mode (dev server) across the program. `{report: true}` logs a summary of the
+   * pass after each build or program render.
+   * @defaultValue false
+   */
+  atomic?: boolean | {report?: boolean}
 }
 
 /**
@@ -160,7 +185,10 @@ export function vanillaExtractPlugin({
   mode = 'emitCss',
   compilation = 'per-module',
   roots,
+  atomic: atomicOption = false,
 }: Options = {}): Plugin[] {
+  const atomic = atomicOption !== false
+  const atomicReport = typeof atomicOption === 'object' && atomicOption.report === true
   let config: ResolvedConfig
   let configEnv: ConfigEnv
   let isBuild: boolean
@@ -217,7 +245,14 @@ export function vanillaExtractPlugin({
       enableFileWatcher: !isBuild,
       compilation: isWholeProgram() ? 'whole-program' : 'per-module',
       ...(roots ? {roots: roots.map((root) => path.resolve(config.root, root))} : {}),
+      atomic,
     })
+  }
+
+  /** Logs the atomic pass summary of a whole-program render (`atomic: {report: true}`). */
+  const reportProgram = (program: {css: string; atomicReport?: AtomicReport | undefined}) => {
+    if (!atomicReport || !program.atomicReport) return
+    config.logger.info(`[vanilla-extract] ${formatAtomicReport(program.atomicReport, program.css)}`)
   }
 
   /**
@@ -255,8 +290,9 @@ export function vanillaExtractPlugin({
       // The program's stylesheet: rebuilt when stale (a member was added or a file changed)
       await ensureCompiler()
       if (!compiler) return null
-      const {css} = await compiler.processVanillaProgram()
-      return css || null
+      const program = await compiler.processVanillaProgram()
+      reportProgram(program)
+      return program.css || null
     }
 
     const fileId = virtualIdToFileId(absoluteVirtualId)

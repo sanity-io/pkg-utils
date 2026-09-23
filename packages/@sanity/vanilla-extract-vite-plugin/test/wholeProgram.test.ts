@@ -253,6 +253,51 @@ describe('compiler: whole-program', () => {
   })
 })
 
+describe('atomic', () => {
+  test.each(['per-module', 'whole-program'] as const)(
+    'expands class lists and serves atomic rules in dev (%s)',
+    async (compilation) => {
+      await writeProgramFixture()
+      const server = await createServer({
+        root: programRoot,
+        configFile: false,
+        logLevel: 'silent',
+        server: {middlewareMode: true},
+        appType: 'custom',
+        plugins: [vanillaExtractPlugin({compilation, atomic: true, identifiers: 'debug'})],
+      })
+      try {
+        const overrides = await server.transformRequest('/src/overrides.css.ts')
+        const shown =
+          /shown = '(overrides_shown__\w+ display_block__\w+ borderColor_rgb_4_5_6__\w+)'/.exec(
+            overrides?.code ?? '',
+          )
+        expect(shown, overrides?.code).toBeTruthy()
+        const [identity, display, border] = shown![1]!.split(' ')
+        // The composition with its own rule lists its identity, its atom, then `shown` expanded
+        expect(overrides?.code).toMatch(
+          new RegExp(
+            `emphasized = 'overrides_emphasized__\\w+ fontWeight_600__\\w+ ${identity} ${display} ${border}'`,
+          ),
+        )
+
+        const cssUrl =
+          compilation === 'whole-program'
+            ? programCssUrl(overrides?.code)
+            : overrides!.code
+                .match(/import\s+["']([^"']+\.vanilla\.css[^"']*)["']/)![1]!
+                .replace(/^\/@id\//, '')
+        const css = (await server.transformRequest(cssUrl))?.code ?? ''
+        expect(css).toContain(`.${display}`)
+        expect(css).toContain(`.${border}`)
+        expect(css).not.toMatch(new RegExp(`\\.${identity}\\s*\\{`))
+      } finally {
+        await server.close()
+      }
+    },
+  )
+})
+
 describe('vite dev: whole-program', () => {
   test('serves `.css.ts` modules importing the single program CSS module', async () => {
     const server = await createProgramServer(appRoot)

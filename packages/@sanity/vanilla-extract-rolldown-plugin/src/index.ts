@@ -8,6 +8,7 @@ import {
   processVanillaFile,
   processVanillaProgram,
   virtualCssFileFilter,
+  type AtomicReport,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
@@ -78,6 +79,19 @@ const RE_DTS = /\.d\.[cm]?ts$/
 export type CompilationMode = 'per-module' | 'whole-program'
 
 /**
+ * The atomic pass, see {@link Options.atomic}.
+ * @public
+ */
+export interface AtomicOptions {
+  /**
+   * Log a summary of the pass at the end of the build: how many declarations became atomic
+   * classes, how many were shared, and the size of the extracted CSS.
+   * @defaultValue false
+   */
+  report?: boolean
+}
+
+/**
  * Options for {@link vanillaExtractPlugin}, modeled after the `css` options of
  * [`@tsdown/css`](https://tsdown.dev/options/css) so they feel familiar in a rolldown-based
  * toolchain.
@@ -116,6 +130,27 @@ export interface Options {
    * @defaultValue the directories of the build's input entries
    */
   roots?: string[]
+  /**
+   * Renders the declarations of `style()` rules as shared single-declaration ("atomic")
+   * classes, and expands every exported class list with them — identity class first, the same
+   * classlist shape as vanilla-extract's own style composition — so `${a} &` selectors,
+   * `globalStyle(`${a} svg`)` and recipes' `classNames.base` keep working.
+   *
+   * Sharing is exact: two identical declarations share a class only when no declaration
+   * whose property overlaps theirs (same property, a shorthand/longhand or a logical/physical
+   * relative) is rendered between them in the same cascade layer with the same importance.
+   * That is the precise condition under which every combination of classes on an element —
+   * `clsx(a, b)`, a `className` prop next to a recipe — keeps resolving to the same winner as
+   * without the pass, so it changes no rendering, at the cost of sharing less than an atomic
+   * CSS framework would: a `display: block` between two `display: flex` declarations keeps
+   * them apart, and so does a `paddingBottom` between two `padding`s.
+   *
+   * Per module (`compilation: 'per-module'`) classes are shared within a `.css.ts` module's
+   * file scope; with `compilation: 'whole-program'` across the whole program. Complex
+   * selectors (`& + &`), `globalStyle` and themes stay on their identity class.
+   * @defaultValue false
+   */
+  atomic?: boolean | AtomicOptions
   /**
    * Name of the emitted CSS file that all extracted CSS is merged into, like `css.fileName`
    * in `@tsdown/css` (which defaults to `"style.css"`).
@@ -255,6 +290,8 @@ export type VanillaExtractPlugin = Plugin<VanillaExtractPluginApi> & {
 export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugin {
   const identifiers = options.identifiers ?? 'short'
   const compilation = options.compilation ?? 'per-module'
+  const atomic = options.atomic !== undefined && options.atomic !== false
+  const atomicReport = typeof options.atomic === 'object' && options.atomic.report === true
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
   const minify = options.minify ?? false
   const lightningcss = options.lightningcss
@@ -286,6 +323,9 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
    */
   const programCache = new ProgramCache()
   let wholeProgram: WholeProgram | undefined
+
+  /** Atomic pass statistics per rendered file scope (per-module mode), for `atomic.report`. */
+  const atomicReports = new Map<string, AtomicReport>()
 
   let warnedAboutDeprecatedInject = false
 
@@ -347,6 +387,7 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
           cwd,
           identOption: identifiers,
           cssImports: [`import '${PROGRAM_CSS_SPECIFIER}';`],
+          atomic,
         }),
       )
       styles.set(PROGRAM_CSS_MODULE_ID, wholeProgram.program.css)
@@ -421,6 +462,10 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
           source,
           filePath,
           identOption: identifiers,
+          atomic,
+          onAtomicReport: (report, fileScope) => {
+            atomicReports.set(fileScope.filePath, report)
+          },
         })
         return {
           code: output,
@@ -546,6 +591,12 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
 
       this.emitFile({type: 'asset', fileName, source: css})
 
+      if (atomicReport) {
+        const report =
+          wholeProgram?.program.atomicReport ?? sumAtomicReports(atomicReports.values())
+        this.info(`[vanilla-extract] ${formatAtomicReport(report, css)}`)
+      }
+
       if (nodeCompat) {
         // The shim is intentionally free of syntax so it parses as both CommonJS and an ES
         // module, and is named `bundle-css.js` (not `bundle.css.js`) so vanilla-extract's
@@ -565,6 +616,32 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       }
     },
   }
+}
+
+function sumAtomicReports(reports: Iterable<AtomicReport>): AtomicReport {
+  const total: AtomicReport = {
+    atomicDeclarations: 0,
+    residualDeclarations: 0,
+    sharedDeclarations: 0,
+    atomicClasses: 0,
+  }
+  for (const report of reports) {
+    total.atomicDeclarations += report.atomicDeclarations
+    total.residualDeclarations += report.residualDeclarations
+    total.sharedDeclarations += report.sharedDeclarations
+    total.atomicClasses += report.atomicClasses
+  }
+  return total
+}
+
+/** One line summarizing the atomic pass for `atomic.report`. */
+export function formatAtomicReport(report: AtomicReport, css: string): string {
+  const declarations = report.atomicDeclarations + report.residualDeclarations
+  const shared =
+    report.atomicDeclarations > 0
+      ? Math.round((report.sharedDeclarations / report.atomicDeclarations) * 100)
+      : 0
+  return `atomic: ${declarations} declarations, ${report.atomicDeclarations} atomic (${report.atomicClasses} classes, ${report.sharedDeclarations} shared, ${shared}%), ${report.residualDeclarations} kept on their class; CSS ${new TextEncoder().encode(css).byteLength} bytes`
 }
 
 /**

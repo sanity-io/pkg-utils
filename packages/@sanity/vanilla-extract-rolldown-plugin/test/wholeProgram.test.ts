@@ -165,6 +165,62 @@ describe('compilation: whole-program', () => {
   })
 })
 
+describe('atomic', () => {
+  test.each(['per-module', 'whole-program'] as const)(
+    'renders atomic classes and expands the exported class lists (%s)',
+    async (compilation) => {
+      const {output, logs} = await buildFixture('program', {
+        compilation,
+        atomic: {report: true},
+        identifiers: 'debug',
+      })
+      const css = findAsset(output, 'bundle.css')
+      const {code} = findEntryChunk(output)
+
+      // `panel` keeps its identity class first, followed by one atomic class per declaration
+      // (its media declaration included)
+      const panel =
+        /panel = "(layout_panel__\w+ color_\w+ backgroundColor_rgb_1_2_3__\w+ display_none__\w+)"/.exec(
+          code,
+        )
+      expect(panel, code).toBeTruthy()
+      const [, color, background] = panel![1]!.split(' ')
+      expect(css).toContain(`.${color} {\n  color: var(--color__`)
+      expect(css).toContain(`.${background} {\n  background-color: rgb(1, 2, 3);\n}`)
+      // The media rule is atomic too, under its query
+      expect(css).toMatch(
+        /@media \(min-width: 600px\) \{\n {2}\.display_none__\w+ \{\n {4}display: none;/,
+      )
+      // Nothing is left on the identity class, so no rule for it
+      expect(css).not.toMatch(/\.layout_panel__\w+ \{/)
+
+      // `report: true` logs a summary once per output
+      expect(logs.filter((message) => message.includes('atomic:'))).toEqual([
+        expect.stringMatching(
+          /atomic: \d+ declarations, \d+ atomic \(\d+ classes, \d+ shared, \d+%\), \d+ kept on their class; CSS \d+ bytes/,
+        ),
+      ])
+    },
+  )
+
+  test('shares identical declarations across modules in whole-program mode only', async () => {
+    const [perModule, wholeProgram] = await Promise.all([
+      buildFixture('basic', {atomic: true, identifiers: 'debug'}),
+      buildFixture('basic', {atomic: true, identifiers: 'debug', compilation: 'whole-program'}),
+    ])
+    // `button.css.ts` and `styles.css.ts` both declare `color`, with different values, so
+    // neither mode shares — but whole-program names the classes in one scope while per-module
+    // names them per file scope, which the hashes reveal
+    const atomicClasses = (css: string) =>
+      [...css.matchAll(/\.(color_rgb_\d_\d_\d__\w+) \{/g)].map(([, name]) => name)
+    expect(atomicClasses(findAsset(perModule.output, 'bundle.css'))).toHaveLength(2)
+    expect(atomicClasses(findAsset(wholeProgram.output, 'bundle.css'))).toHaveLength(2)
+    expect(atomicClasses(findAsset(perModule.output, 'bundle.css'))).not.toEqual(
+      atomicClasses(findAsset(wholeProgram.output, 'bundle.css')),
+    )
+  })
+})
+
 describe('whole-program discovery helpers', () => {
   test('inputEntryFiles handles array and record inputs and skips virtual ids', () => {
     expect(inputEntryFiles(['src/index.ts', '\0virtual', 'virtual:entry'], '/pkg')).toEqual([

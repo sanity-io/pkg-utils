@@ -17,9 +17,10 @@ import {
   discoverCssModules,
   getPackageInfo,
   normalizePath,
+  renderStylesheet,
   serializeVanillaModule,
   transform,
-  transformCss,
+  type AtomicReport,
   type Composition,
   type CSS as Css,
   type IdentifierOption,
@@ -150,6 +151,8 @@ export interface ProcessedVanillaProgram {
   modules: ReadonlyMap<string, string>
   /** The members whose serialized JS differs from the previous program build. */
   changedModules: ReadonlySet<string>
+  /** The atomic pass's statistics, when `atomic` is enabled. */
+  atomicReport: AtomicReport | undefined
 }
 
 /**
@@ -256,6 +259,12 @@ export interface CreateCompilerOptions {
    * @defaultValue `[root]`
    */
   roots?: string[]
+  /**
+   * Enables the atomic pass (see `atomic` on the plugin options): per module, classes are
+   * shared within a `.css.ts` module's file scope; in whole-program mode across the program.
+   * @defaultValue false
+   */
+  atomic?: boolean
 }
 
 /** Invalidates the runner's evaluated modules for a changed file, and their importers. */
@@ -432,6 +441,7 @@ export function createCompiler({
   enableFileWatcher = true,
   compilation = 'per-module',
   roots = [root],
+  atomic = false,
 }: CreateCompilerOptions): Compiler {
   const processVanillaFileCache = new Map<
     string,
@@ -439,6 +449,8 @@ export function createCompiler({
   >()
 
   const cssCache = new NormalizedMap<{css: string}>(root)
+  /** Per-module rendering with the atomic pass: each module's identity → atomic classes. */
+  const expansionsByModuleId = new NormalizedMap<ReadonlyMap<string, ReadonlyArray<string>>>(root)
   const classRegistrationsByModuleId = new NormalizedMap<{
     localClassNames: Set<string>
     composedClassLists: Composition[]
@@ -480,6 +492,7 @@ export function createCompiler({
     },
     onFileRemoved(filePath) {
       cssCache.delete(filePath)
+      expansionsByModuleId.delete(filePath)
       classRegistrationsByModuleId.delete(filePath)
       cssObjsByModuleId.delete(filePath)
       programMembers.delete(normalizePath(filePath))
@@ -600,14 +613,16 @@ export function createCompiler({
         cssObjs.push(...(cssObjsByModuleId.get(moduleId) ?? []))
       }
 
-      const css = transformCss({
+      const rendered = renderStylesheet({
         localClassNames: [...localClassNames],
         composedClassLists,
         // The renderer mutates its input (pixelify, keyframes) and the objects live on across
         // program builds
         cssObjs: structuredClone(cssObjs),
         onCompositionUsed: (identifier) => usedCompositions.add(identifier),
-      }).join('\n')
+        ...(atomic ? {atomic: {scopeKey: 'program', identOption: identifiers}} : {}),
+      })
+      const css = rendered.css.join('\n')
 
       // Unlike per-module compilation, the whole program knows every selector, so unreferenced
       // composition identifiers can be stripped like the rolldown plugin does
@@ -624,12 +639,13 @@ export function createCompiler({
           [`import '${PROGRAM_CSS_ID}';`],
           {...fileExports},
           unusedCompositionRegex,
+          atomic ? {localClassNames, expansions: rendered.expansions} : undefined,
         )
         if (programResult?.modules.get(member) !== source) changedModules.add(member)
         modules.set(member, source)
       }
 
-      programResult = {css, modules, changedModules}
+      programResult = {css, modules, changedModules, atomicReport: rendered.report}
       builtProgramVersion = version
       return programResult
     })
@@ -737,89 +753,112 @@ export function createCompiler({
         },
       }
 
-      const {fileExports, cssImports, watchFiles, lastInvalidationTimestamp} = await lock(
-        async () => {
-          globalAdapterStore[GLOBAL_ADAPTER_KEY] = cssAdapter
-          let evaluatedExports: Record<string, unknown>
-          try {
-            evaluatedExports = await runner.import<Record<string, unknown>>(filePath)
-          } finally {
-            delete globalAdapterStore[GLOBAL_ADAPTER_KEY]
+      const {
+        fileExports,
+        cssImports,
+        watchFiles,
+        lastInvalidationTimestamp,
+        expansions,
+        localClassNames: allLocalClassNames,
+      } = await lock(async () => {
+        globalAdapterStore[GLOBAL_ADAPTER_KEY] = cssAdapter
+        let evaluatedExports: Record<string, unknown>
+        try {
+          evaluatedExports = await runner.import<Record<string, unknown>>(filePath)
+        } finally {
+          delete globalAdapterStore[GLOBAL_ADAPTER_KEY]
+        }
+
+        const moduleId = normalizePath(filePath)
+        const moduleNode = moduleGraph.getModuleById(moduleId)
+        if (!moduleNode) {
+          throw new Error(`[vanilla-extract] Can't find module for ${filePath}`)
+        }
+
+        const collectedCssImports: string[] = []
+        const orderedComposedClassLists: Composition[] = []
+        /** Identity → atomic classes across this module and its `.css.ts` dependencies. */
+        const collectedExpansions = new Map<string, ReadonlyArray<string>>()
+
+        const scanModule = createModuleScanner()
+        const {cssDeps, watchFiles: scannedWatchFiles} = scanModule(moduleNode)
+
+        for (const cssDep of cssDeps) {
+          const cssDepModuleId = normalizePath(cssDep)
+          const cssObjs = cssByModuleId.get(cssDepModuleId)
+          const cachedCss = cssCache.get(cssDepModuleId)
+          const cachedClassRegistrations = classRegistrationsByModuleId.get(cssDepModuleId)
+
+          if (cachedClassRegistrations) {
+            orderedComposedClassLists.push(...cachedClassRegistrations.composedClassLists)
           }
 
-          const moduleId = normalizePath(filePath)
-          const moduleNode = moduleGraph.getModuleById(moduleId)
-          if (!moduleNode) {
-            throw new Error(`[vanilla-extract] Can't find module for ${filePath}`)
+          if (!cssObjs && !cachedCss && !cachedClassRegistrations) {
+            continue
           }
 
-          const collectedCssImports: string[] = []
-          const orderedComposedClassLists: Composition[] = []
-
-          const scanModule = createModuleScanner()
-          const {cssDeps, watchFiles: scannedWatchFiles} = scanModule(moduleNode)
-
-          for (const cssDep of cssDeps) {
-            const cssDepModuleId = normalizePath(cssDep)
-            const cssObjs = cssByModuleId.get(cssDepModuleId)
-            const cachedCss = cssCache.get(cssDepModuleId)
-            const cachedClassRegistrations = classRegistrationsByModuleId.get(cssDepModuleId)
-
-            if (cachedClassRegistrations) {
-              orderedComposedClassLists.push(...cachedClassRegistrations.composedClassLists)
+          if (cssObjs) {
+            // The dependency was (re-)evaluated during this compilation: transform its CSS
+            const rendered =
+              cssObjs.length > 0
+                ? renderStylesheet({
+                    localClassNames: [...localClassNames],
+                    composedClassLists: orderedComposedClassLists,
+                    cssObjs,
+                    // This compiler currently retains all composition classes
+                    onCompositionUsed: () => {},
+                    ...(atomic
+                      ? {
+                          atomic: {
+                            scopeKey: cssDepModuleId,
+                            identOption: identifiers,
+                            fileScope: {filePath: cssDepModuleId},
+                          },
+                        }
+                      : {}),
+                  })
+                : {css: [], expansions: new Map<string, string[]>(), report: undefined}
+            cssCache.set(cssDepModuleId, {css: rendered.css.join('\n')})
+            expansionsByModuleId.set(cssDepModuleId, rendered.expansions)
+          } else if (cachedClassRegistrations) {
+            // The dependency was served from the runner's cache: replay its class
+            // registrations so compositions in downstream files keep resolving
+            for (const localClassName of cachedClassRegistrations.localClassNames) {
+              localClassNames.add(localClassName)
             }
-
-            if (!cssObjs && !cachedCss && !cachedClassRegistrations) {
-              continue
-            }
-
-            if (cssObjs) {
-              // The dependency was (re-)evaluated during this compilation: transform its CSS
-              const cssRules =
-                cssObjs.length > 0
-                  ? transformCss({
-                      localClassNames: [...localClassNames],
-                      composedClassLists: orderedComposedClassLists,
-                      cssObjs,
-                      // This compiler currently retains all composition classes
-                      onCompositionUsed: () => {},
-                    })
-                  : []
-              cssCache.set(cssDepModuleId, {css: cssRules.join('\n')})
-            } else if (cachedClassRegistrations) {
-              // The dependency was served from the runner's cache: replay its class
-              // registrations so compositions in downstream files keep resolving
-              for (const localClassName of cachedClassRegistrations.localClassNames) {
-                localClassNames.add(localClassName)
-              }
-              composedClassLists.push(...cachedClassRegistrations.composedClassLists)
-            }
-
-            const {css = ''} = cssCache.get(cssDepModuleId) ?? {}
-
-            // Check the transformed CSS, not `cssObjs.length`: a module can register CSS
-            // objects that transform to nothing (e.g. `recipe()` calls `style({})` for a
-            // default base class). Emitting an import for empty CSS leaves a dangling virtual
-            // module that bundlers fail to resolve.
-            if (css) {
-              collectedCssImports.push(`import '${cssImportSpecifier(cssDepModuleId)}';`)
-            }
+            composedClassLists.push(...cachedClassRegistrations.composedClassLists)
           }
 
-          return {
-            fileExports: evaluatedExports,
-            cssImports: outputCss ? collectedCssImports : [],
-            watchFiles: scannedWatchFiles,
-            lastInvalidationTimestamp: moduleNode.lastInvalidationTimestamp,
+          const {css = ''} = cssCache.get(cssDepModuleId) ?? {}
+          for (const [identity, atomicClasses] of expansionsByModuleId.get(cssDepModuleId) ?? []) {
+            collectedExpansions.set(identity, atomicClasses)
           }
-        },
-      )
+
+          // Check the transformed CSS, not `cssObjs.length`: a module can register CSS
+          // objects that transform to nothing (e.g. `recipe()` calls `style({})` for a
+          // default base class). Emitting an import for empty CSS leaves a dangling virtual
+          // module that bundlers fail to resolve.
+          if (css) {
+            collectedCssImports.push(`import '${cssImportSpecifier(cssDepModuleId)}';`)
+          }
+        }
+
+        return {
+          fileExports: evaluatedExports,
+          cssImports: outputCss ? collectedCssImports : [],
+          watchFiles: scannedWatchFiles,
+          lastInvalidationTimestamp: moduleNode.lastInvalidationTimestamp,
+          expansions: collectedExpansions,
+          localClassNames,
+        }
+      })
 
       const result: ProcessedVanillaFile = {
         source: serializeVanillaModule(
           cssImports,
           fileExports,
           null, // This compiler currently retains all composition classes
+          atomic ? {localClassNames: allLocalClassNames, expansions} : undefined,
         ),
         watchFiles,
       }

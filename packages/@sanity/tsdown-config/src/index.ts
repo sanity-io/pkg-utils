@@ -34,7 +34,8 @@ export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
  * Options for the `vanillaExtract` option — the same options as
  * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`,
  * `lightningcss`, `inject`, and `exports`, all modeled after the `css` options of
- * `@tsdown/css`), with three Sanity-flavored defaults on top:
+ * `@tsdown/css`, plus `compilation`/`roots` for whole-program compilation and `atomic` for
+ * the atomic pass), with three Sanity-flavored defaults on top:
  *
  * - `inject` and `exports` default to `true` and `{nodeCompat: true}` (instead of the plugin's
  *   `false` for both), wiring up the conditional CSS export pattern that Sanity libraries ship
