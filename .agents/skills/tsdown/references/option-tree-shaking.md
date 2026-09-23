@@ -25,7 +25,7 @@ tsdown --no-treeshake
 ```ts
 export default defineConfig({
   entry: ['src/index.ts'],
-  treeshake: true,  // Default
+  treeshake: true, // Default
 })
 ```
 
@@ -34,7 +34,11 @@ export default defineConfig({
 ### With Tree Shaking
 
 **Source:**
+
 ```ts
+// src/index.ts
+import {hello} from './util'
+
 // src/util.ts
 export function unused() {
   console.log("I'm unused")
@@ -44,12 +48,11 @@ export function hello(x: number) {
   console.log('Hello World', x)
 }
 
-// src/index.ts
-import { hello } from './util'
 hello(1)
 ```
 
 **Output:**
+
 ```js
 // dist/index.mjs
 function hello(x) {
@@ -63,6 +66,7 @@ hello(1)
 ### Without Tree Shaking
 
 **Output:**
+
 ```js
 // dist/index.mjs
 function unused() {
@@ -162,7 +166,7 @@ export default defineConfig({
 ```ts
 export default defineConfig((options) => ({
   entry: ['src/index.ts'],
-  treeshake: !options.watch,  // Disable in dev
+  treeshake: !options.watch, // Disable in dev
 }))
 ```
 
@@ -173,11 +177,7 @@ export default defineConfig({
   entry: ['src/index.ts'],
   treeshake: {
     moduleSideEffects: (id) => {
-      return (
-        id.includes('.css') ||
-        id.includes('polyfill') ||
-        id.includes('side-effect')
-      )
+      return id.includes('.css') || id.includes('polyfill') || id.includes('side-effect')
     },
   },
 })
@@ -195,8 +195,9 @@ export default defineConfig({
 ```
 
 Users can import only what they need:
+
 ```ts
-import { onlyWhatINeed } from 'my-utils'
+import {onlyWhatINeed} from 'my-utils'
 ```
 
 ## Benefits
@@ -295,6 +296,9 @@ export default defineConfig({
 ### Pure Utility Functions
 
 ```ts
+// Only 'add' imported = only 'add' bundled
+import {add} from './utils'
+
 // utils.ts - perfect for tree shaking
 export function add(a, b) {
   return a + b
@@ -303,9 +307,6 @@ export function add(a, b) {
 export function multiply(a, b) {
   return a * b
 }
-
-// Only 'add' imported = only 'add' bundled
-import { add } from './utils'
 ```
 
 ### With Side Effects
@@ -313,7 +314,7 @@ import { add } from './utils'
 ```ts
 // polyfill.ts - has side effects
 if (!Array.prototype.at) {
-  Array.prototype.at = function(index) {
+  Array.prototype.at = function (index) {
     // polyfill implementation
   }
 }

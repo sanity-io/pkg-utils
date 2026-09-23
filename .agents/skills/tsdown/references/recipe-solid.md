@@ -11,8 +11,8 @@ npx create-tsdown@latest -t solid
 ## Configuration
 
 ```ts
+import {defineConfig} from 'tsdown'
 import solid from 'unplugin-solid/rolldown'
-import { defineConfig } from 'tsdown'
 
 export default defineConfig({
   entry: ['./src/index.ts'],
