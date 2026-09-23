@@ -126,8 +126,28 @@ vanillaExtractPlugin({
    * @defaultValue false
    */
   exports: {nodeCompat: true},
+  /**
+   * Compile every `.css.ts` module under `roots` once as a whole program (one child
+   * compilation, one stylesheet, one order shared with `@sanity/vanilla-extract-vite-plugin`'s
+   * whole-program dev mode) instead of once per module. `roots` is relative to tsdown's cwd
+   * and defaults to the entries' directories.
+   * @defaultValue 'per-module'
+   */
+  compilation: 'whole-program',
+  roots: ['src'],
+  /**
+   * Render the declarations of `style()` rules as shared single-declaration classes, sharing
+   * only where that cannot change what any element renders as. `{report: true}` logs a
+   * summary at the end of the build.
+   * @defaultValue false
+   */
+  atomic: {report: true},
 })
 ```
+
+See the rolldown plugin's README for
+[whole-program compilation](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#whole-program-compilation)
+and [atomic classes](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-rolldown-plugin#atomic-classes).
 
 CSS sourcemaps are not emitted, matching `@tsdown/css` — which
 [intentionally skips them](https://github.com/rolldown/tsdown/issues/472#issuecomment-4017224099)

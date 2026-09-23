@@ -72,8 +72,54 @@ vanillaExtractPlugin({
    * @defaultValue 'emitCss'
    */
   mode: 'emitCss',
+  /**
+   * How `.css.ts` modules are compiled during `vite dev`: one evaluation and one virtual
+   * `.vanilla.css` module per `.css.ts` module (like `@vanilla-extract/vite-plugin`), or every
+   * module under `roots` evaluated as one program and served as one stylesheet. See below.
+   * `vite build` always compiles per module.
+   * @defaultValue 'per-module'
+   */
+  compilation: 'whole-program',
+  /**
+   * The directories scanned for `.css.ts` modules in whole-program mode, relative to the Vite
+   * root. `node_modules`, `dist` and `.git` are skipped.
+   * @defaultValue the Vite root
+   */
+  roots: ['src'],
+  /**
+   * Render the declarations of `style()` rules as shared single-declaration classes, see
+   * below. `{report: true}` logs a summary of the pass after each build or program render.
+   * @defaultValue false
+   */
+  atomic: {report: true},
 })
 ```
+
+## Whole-program compilation
+
+With `compilation: 'whole-program'` the dev server's compiler evaluates every `.css.ts` module
+under `roots` (plus any the browser requests that discovery missed) as one program on the shared
+module runner, renders one stylesheet and serves it as a single virtual CSS module. Modules
+render in dependency order, then discovery order (sorted paths), with every conditional block
+after every unconditional rule — the same order `@sanity/vanilla-extract-rolldown-plugin`
+produces in its whole-program mode, so `sanity dev` and the library build agree, and a later
+module's base rule no longer beats an earlier module's media rule. Class names and exports are
+unchanged. Editing a `.css.ts` module swaps that one stylesheet; only the members whose
+serialized JS actually changed are invalidated (Vite still re-transforms the dependents of the
+edited file, as it does per module). Unreferenced pure compositions are stripped like in library
+builds, since the whole program knows every selector.
+
+`vite build` keeps compiling per module: Vite's CSS pipeline orders and splits CSS by module
+graph and chunk, which a single program order cannot be expressed through.
+
+## Atomic classes
+
+`atomic: true` renders the declarations of `style()` rules as shared single-declaration classes
+and expands the exported class lists with them (identity class first, like vanilla-extract's own
+style composition), sharing a class only where that cannot change what any element renders as —
+see [`@sanity/vanilla-extract-rolldown-plugin`](../vanilla-extract-rolldown-plugin/README.md#atomic-classes)
+for the contract. Per module, classes are shared within a `.css.ts` module's file scope; in
+whole-program mode, across the program.
 
 ## tsconfig paths
 

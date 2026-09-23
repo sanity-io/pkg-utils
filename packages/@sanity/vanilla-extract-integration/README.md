@@ -8,6 +8,8 @@ A vendored port of [`@vanilla-extract/integration`](https://github.com/vanilla-e
 | debug IDs injected by **babel** (`@vanilla-extract/babel-plugin-debug-ids` + `@babel/plugin-syntax-typescript`) | an AST pass over [`yuku-parser`](https://yuku.fyi)'s oxc-shaped AST, spliced by offset so untouched code stays byte-identical |
 | module evaluation via the **`eval`** package                                                                    | `node:vm.compileFunction` + `node:module.createRequire`                                                                       |
 | `find-up`, `dedent`, `mlly` dependencies                                                                        | inlined (walk-up loop, plain strings, vendored `detectSyntax` regexes)                                                        |
+| CSS rendered by `@vanilla-extract/css/transformCss`                                                             | a vendored `transformCss` (`src/transformCss/`, byte-identical output) that the atomic pass hooks into                        |
+| one child compilation and one `transformCss` per `.css.ts` module                                               | additionally `processVanillaProgram()`: every module of a project compiled, evaluated and rendered once                       |
 
 The only runtime dependencies left are `rolldown` (which the host toolchain — tsdown, Vite 8, or raw rolldown — ships anyway; the wide `^1.1.5` range lets package managers reuse the host's copy when its version satisfies it, though hosts pinning older minors can still resolve a second copy), `yuku-parser` (already transitive in rolldown-based toolchains through `rolldown-plugin-dts`), `@vanilla-extract/css`, and `javascript-stringify`.
 
@@ -16,17 +18,41 @@ The only runtime dependencies left are `rolldown` (which the host toolchain — 
 ```ts
 import {
   compile, // rolldown child compilation of a .css.ts graph
+  compileProgram, // one child compilation over a set of .css.ts modules (synthetic namespace entry)
   cssFileFilter,
+  discoverCssModules, // every .css.ts module under some directories
+  evaluateVanillaModule, // run compiled output with a collecting adapter
   getPackageInfo,
   getSourceFromVirtualCssFile,
   normalizePath,
   processVanillaFile, // evaluate compiled output into virtual CSS imports + serialized exports
+  processVanillaProgram, // the same for a whole set of modules: one adapter, one stylesheet
+  propertiesOverlap, // the CSS property overlap relation the atomic pass is built on
+  renderStylesheet, // transformCss plus the atomic pass's class list expansions and report
   serializeVanillaModule,
   transform, // debug IDs + file scope wrapping for a single module
+  transformCss, // vendored @vanilla-extract/css/transformCss
   virtualCssFileFilter,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 ```
+
+## The atomic pass
+
+`processVanillaFile({atomic: true})` / `processVanillaProgram({atomic: true})` render the
+declarations of `style()` rules as shared single-declaration classes and expand the serialized
+class lists with them. The pass lives in `src/atomic/`:
+
+- `propertyGroups.ts` — which properties can set the same physical longhand (shorthands from
+  `mdn-data` via `scripts/generatePropertyGroups.ts`, hand-written logical ↔ physical groups,
+  aliases), cross-checked against StyleX's resolution tables in `test/propertyGroups.test.ts`.
+- `atomicPass.ts` — the barrier analysis over the rendering order: identical declarations share a
+  class only when no overlapping declaration (same cascade layer, same importance) renders
+  between them, which is exactly when sharing cannot change any element's computed styles.
+  `test/cascadeEquivalence.test.ts` proves that in Chromium over random style sets.
+
+The contract, and why it shares less than an atomic CSS framework, is documented in the
+[rolldown plugin's README](../vanilla-extract-rolldown-plugin/README.md#atomic-classes).
 
 Intentional differences from upstream:
 
