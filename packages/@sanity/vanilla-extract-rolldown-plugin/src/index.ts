@@ -4,7 +4,9 @@ import {
   cssFileFilter,
   getPackageInfo,
   getSourceFromVirtualCssFile,
+  normalizePath,
   processVanillaFile,
+  processVanillaProgram,
   virtualCssFileFilter,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
@@ -22,6 +24,15 @@ import {
   type CssExportsOptions,
 } from './exportsOptions.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
+import {
+  defaultProgramRoots,
+  inputEntryFiles,
+  PROGRAM_CSS_MODULE_ID,
+  PROGRAM_CSS_SPECIFIER,
+  PROGRAM_CSS_SPECIFIER_FILTER,
+  ProgramCache,
+  type WholeProgram,
+} from './wholeProgram.ts'
 
 export {
   cssShimDtsFileName,
@@ -61,6 +72,12 @@ const RE_VANILLA_CSS_MODULE = /\.vanilla\.js$/
 const RE_DTS = /\.d\.[cm]?ts$/
 
 /**
+ * How the `.css.ts` modules of a build are compiled, see {@link Options.compilation}.
+ * @public
+ */
+export type CompilationMode = 'per-module' | 'whole-program'
+
+/**
  * Options for {@link vanillaExtractPlugin}, modeled after the `css` options of
  * [`@tsdown/css`](https://tsdown.dev/options/css) so they feel familiar in a rolldown-based
  * toolchain.
@@ -72,6 +89,33 @@ export interface Options {
    * @defaultValue "short"
    */
   identifiers?: IdentifierOption
+  /**
+   * How the `.css.ts` modules are compiled:
+   *
+   * - `'per-module'` (the default, and what `@vanilla-extract/rollup-plugin` does): every
+   *   `.css.ts` module is bundled with its dependency graph, evaluated and rendered on its own
+   *   as the bundler reaches it. Shared modules (themes, tokens) are compiled once per importer,
+   *   and the CSS is concatenated in module order.
+   * - `'whole-program'`: every `.css.ts` module under {@link Options.roots | `roots`} is
+   *   discovered up front, bundled into one child compilation (shared modules compiled once),
+   *   evaluated with one adapter and rendered as one stylesheet. Class names and exports are
+   *   identical to `'per-module'`; the CSS order changes: modules render in dependency order,
+   *   at-rule declarations are hoisted once, and every conditional block (`@media`, `@supports`,
+   *   `@container`, `@layer`, `@scope`, `@starting-style`) follows every unconditional rule —
+   *   so a later module's base rule can no longer beat an earlier module's media rule. The
+   *   order is the same one `@sanity/vanilla-extract-vite-plugin` produces in whole-program
+   *   mode. Modules the bundler reaches outside `roots` fall back to per-module compilation
+   *   with a warning, and discovered modules the bundler never reaches are reported at the end
+   *   of the build (their CSS is still emitted).
+   * @defaultValue 'per-module'
+   */
+  compilation?: CompilationMode
+  /**
+   * The directories scanned for `.css.ts` modules in `'whole-program'` mode, relative to the
+   * working directory. `node_modules`, `dist` and `.git` directories are skipped.
+   * @defaultValue the directories of the build's input entries
+   */
+  roots?: string[]
   /**
    * Name of the emitted CSS file that all extracted CSS is merged into, like `css.fileName`
    * in `@tsdown/css` (which defaults to `"style.css"`).
@@ -210,6 +254,7 @@ export type VanillaExtractPlugin = Plugin<VanillaExtractPluginApi> & {
  */
 export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugin {
   const identifiers = options.identifiers ?? 'short'
+  const compilation = options.compilation ?? 'per-module'
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
   const minify = options.minify ?? false
   const lightningcss = options.lightningcss
@@ -234,6 +279,13 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
    * `generateBundle`, never from build-wide state.
    */
   const styles = new Map<string, string>()
+
+  /**
+   * The whole-program compilation (`compilation: 'whole-program'`), memoized across the
+   * per-format builds of a host and invalidated when a watched file changes.
+   */
+  const programCache = new ProgramCache()
+  let wholeProgram: WholeProgram | undefined
 
   let warnedAboutDeprecatedInject = false
 
@@ -274,12 +326,58 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       },
     },
 
-    buildStart() {
+    async buildStart(inputOptions) {
       // Hosts run one build per output format with a shared plugin instance, so the
       // deprecation is reported once instead of once per format.
-      if (!deprecatedInjectNodeCompat || warnedAboutDeprecatedInject) return
-      warnedAboutDeprecatedInject = true
-      this.warn(`[vanilla-extract] ${DEPRECATED_INJECT_NODE_COMPAT_WARNING}`)
+      if (deprecatedInjectNodeCompat && !warnedAboutDeprecatedInject) {
+        warnedAboutDeprecatedInject = true
+        this.warn(`[vanilla-extract] ${DEPRECATED_INJECT_NODE_COMPAT_WARNING}`)
+      }
+
+      if (compilation !== 'whole-program') return
+
+      // Discover and compile the whole `.css.ts` set before the module graph is walked: the
+      // per-module `transform` results are served from this one compilation
+      const roots = options.roots
+        ? options.roots.map((root) => path.resolve(cwd, root))
+        : defaultProgramRoots(inputEntryFiles(inputOptions.input, inputOptions.cwd))
+      wholeProgram = await programCache.get(roots, {cwd, identOption: identifiers}, (filePaths) =>
+        processVanillaProgram({
+          filePaths,
+          cwd,
+          identOption: identifiers,
+          cssImports: [`import '${PROGRAM_CSS_SPECIFIER}';`],
+        }),
+      )
+      styles.set(PROGRAM_CSS_MODULE_ID, wholeProgram.program.css)
+      for (const file of wholeProgram.program.watchFiles) {
+        this.addWatchFile(file)
+      }
+    },
+
+    buildEnd() {
+      if (!wholeProgram) return
+      const {program, served} = wholeProgram
+      // A module is reached when the bundler transformed it, or when a transformed module
+      // imports it inside the child compilation (`.css.ts` importing `.css.ts` never reaches
+      // the bundler's own graph)
+      const reached = new Set(served)
+      for (const filePath of served) {
+        for (const dependency of program.dependencies.get(filePath) ?? []) {
+          reached.add(normalizePath(dependency))
+        }
+      }
+      const unreached = wholeProgram.filePaths.filter((filePath) => !reached.has(filePath))
+      if (unreached.length > 0) {
+        this.warn(
+          `[vanilla-extract] ${unreached.length} discovered .css.ts module(s) are not imported by this build, but their CSS is part of the whole-program stylesheet. Narrow the \`roots\` option or remove them:\n${unreached.map((filePath) => `  - ${path.relative(cwd, filePath)}`).join('\n')}`,
+        )
+      }
+    },
+
+    watchChange() {
+      // Re-discover and recompile the program on the next build
+      programCache.invalidate()
     },
 
     // `inject` prepends the CSS import in `renderChunk` through rolldown's native MagicString
@@ -297,6 +395,17 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       filter: {id: cssFileFilter},
       async handler(_code, id) {
         const [filePath = id] = id.split('?')
+
+        if (wholeProgram) {
+          const programModule = wholeProgram.program.modules.get(normalizePath(filePath))
+          if (programModule !== undefined) {
+            wholeProgram.served.add(normalizePath(filePath))
+            return {code: programModule, map: {mappings: ''}}
+          }
+          this.warn(
+            `[vanilla-extract] ${path.relative(cwd, filePath)} is outside the whole-program \`roots\`, so it is compiled on its own and its CSS follows the module order instead of the program order.`,
+          )
+        }
 
         const {source, watchFiles} = await compile({
           filePath,
@@ -322,8 +431,12 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
 
     // Resolve the virtual .vanilla.css imports emitted by the transform, stashing their CSS
     resolveId: {
-      filter: {id: virtualCssFileFilter},
+      filter: {id: [virtualCssFileFilter, PROGRAM_CSS_SPECIFIER_FILTER]},
       async handler(id) {
+        // The whole-program CSS is stashed in `styles` by `buildStart` (no `?source=` payload,
+        // since every module of the program imports the same specifier)
+        if (id === PROGRAM_CSS_SPECIFIER) return PROGRAM_CSS_MODULE_ID
+
         const {fileName: virtualCssName, source} = await getSourceFromVirtualCssFile(id)
         // The `\0` prefix marks the id as virtual for other plugins, and the `.vanilla.css`
         // ending is rewritten to `.vanilla.js` to keep the id out of CSS pipelines (tsdown's

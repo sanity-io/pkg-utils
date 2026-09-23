@@ -40,6 +40,12 @@ export interface CompiledProgram {
   /** The export name of each module's namespace on the compiled source, by file path. */
   namespaces: ReadonlyMap<string, string>
   watchFiles: string[]
+  /**
+   * The bundled modules each program module (transitively) imports, by file path — the
+   * `.css.ts` modules among them only surface through this graph, since the serialized modules
+   * no longer import each other.
+   */
+  dependencies: ReadonlyMap<string, ReadonlySet<string>>
 }
 
 /** The id of the synthetic entry {@link compileProgram} bundles. */
@@ -55,13 +61,14 @@ async function runChildCompilation({
   cwd: string
   identOption: IdentifierOption
   plugins?: Plugin[]
-}): Promise<{source: string; watchFiles: string[]}> {
+}): Promise<{source: string; watchFiles: string[]; importedIds: Map<string, string[]>}> {
   const {rolldown} = await import('rolldown')
   const packageInfo = getPackageInfo(cwd)
 
   // Every module bundled into the compilation, collected at buildEnd — the equivalent of
   // upstream's esbuild `metafile.inputs`, which also listed transitively bundled plain modules
   let moduleIds: string[] = []
+  const importedIds = new Map<string, string[]>()
 
   const bundle = await rolldown({
     input: [input],
@@ -88,6 +95,22 @@ async function runChildCompilation({
         },
         buildEnd() {
           moduleIds = Array.from(this.getModuleIds())
+          // Only bundled modules take part in the dependency graph: externals
+          // (`@vanilla-extract/*`, whose `code` is null) are neither watched nor part of it
+          const bundled = new Map(
+            moduleIds.flatMap((id) => {
+              const info = this.getModuleInfo(id)
+              return info && typeof info.code === 'string' ? [[id, info] as const] : []
+            }),
+          )
+          for (const [id, info] of bundled) {
+            importedIds.set(
+              id,
+              [...info.importedIds, ...info.dynamicallyImportedIds].filter((importedId) =>
+                bundled.has(importedId),
+              ),
+            )
+          }
         },
       },
     ],
@@ -115,10 +138,23 @@ async function runChildCompilation({
       source: entryChunk.code,
       // Virtual modules (`\0`-prefixed plugin ids) aren't watchable files
       watchFiles: moduleIds.filter((id) => !id.startsWith('\0')),
+      importedIds,
     }
   } finally {
     await bundle.close()
   }
+}
+
+/** The transitive imports of `id` in the child compilation's graph (excluding `id` itself). */
+function transitiveImports(id: string, importedIds: ReadonlyMap<string, string[]>): Set<string> {
+  const seen = new Set<string>()
+  const stack = [...(importedIds.get(id) ?? [])]
+  for (let next = stack.pop(); next !== undefined; next = stack.pop()) {
+    if (seen.has(next) || next === id) continue
+    seen.add(next)
+    stack.push(...(importedIds.get(next) ?? []))
+  }
+  return seen
 }
 
 /**
@@ -160,7 +196,7 @@ export async function compileProgram({
     entryLines.push(`export * as ${namespace} from ${JSON.stringify(filePath)};`)
   }
 
-  const {source, watchFiles} = await runChildCompilation({
+  const {source, watchFiles, importedIds} = await runChildCompilation({
     input: PROGRAM_ENTRY_ID,
     cwd,
     identOption,
@@ -185,5 +221,10 @@ export async function compileProgram({
     ],
   })
 
-  return {source, namespaces, watchFiles}
+  const dependencies = new Map<string, ReadonlySet<string>>()
+  for (const filePath of namespaces.keys()) {
+    dependencies.set(filePath, transitiveImports(filePath, importedIds))
+  }
+
+  return {source, namespaces, watchFiles, dependencies}
 }

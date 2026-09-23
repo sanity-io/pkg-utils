@@ -144,6 +144,22 @@ describe('processVanillaProgram', () => {
     )
   })
 
+  test('reports the transitive dependencies of every module', async () => {
+    const program = await processVanillaProgram({
+      filePaths: kitchenSink,
+      cwd: packageRoot,
+      identOption: 'short',
+    })
+    const [entry, styles, theme] = kitchenSink
+
+    // entry → styles → theme; theme depends on nothing bundled (`@vanilla-extract/*` is external)
+    expect(
+      [...(program.dependencies.get(entry ?? '') ?? [])].toSorted((a, b) => a.localeCompare(b)),
+    ).toEqual([styles ?? '', theme ?? ''].toSorted((a, b) => a.localeCompare(b)))
+    expect([...(program.dependencies.get(styles ?? '') ?? [])]).toEqual([theme])
+    expect([...(program.dependencies.get(theme ?? '') ?? [])]).toEqual([])
+  })
+
   test('evaluates shared dependencies once', async () => {
     const program = await processVanillaProgram({
       filePaths: kitchenSink,

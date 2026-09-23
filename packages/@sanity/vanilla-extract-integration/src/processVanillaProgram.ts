@@ -49,6 +49,12 @@ export interface ProcessedVanillaProgram {
   cssByFileScope: ReadonlyMap<string, ReadonlyArray<CSS>>
   /** Every file the program depends on (the child compilation's module ids). */
   watchFiles: string[]
+  /**
+   * The files each module in `filePaths` (transitively) imports, by absolute path. A `.css.ts`
+   * module that only other `.css.ts` modules import never surfaces in the host bundler's graph
+   * (the serialized modules don't import each other), so this is how to tell it is reached.
+   */
+  dependencies: ReadonlyMap<string, ReadonlySet<string>>
 }
 
 /**
@@ -62,7 +68,11 @@ export async function processVanillaProgram({
   identOption = process.env['NODE_ENV'] === 'production' ? 'short' : 'debug',
   cssImports = [],
 }: ProcessVanillaProgramOptions): Promise<ProcessedVanillaProgram> {
-  const {source, namespaces, watchFiles} = await compileProgram({filePaths, identOption, cwd})
+  const {source, namespaces, watchFiles, dependencies} = await compileProgram({
+    filePaths,
+    identOption,
+    cwd,
+  })
 
   const {exports, cssByFileScope, localClassNames, composedClassLists, usedCompositions} =
     evaluateVanillaModule({
@@ -111,5 +121,5 @@ export async function processVanillaProgram({
     )
   }
 
-  return {css, modules, fileScopes, cssByFileScope, watchFiles}
+  return {css, modules, fileScopes, cssByFileScope, watchFiles, dependencies}
 }

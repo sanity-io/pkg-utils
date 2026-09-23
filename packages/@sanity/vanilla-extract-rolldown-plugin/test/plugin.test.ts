@@ -466,7 +466,8 @@ describe('plugin hook filters', () => {
       expect.unreachable('expected the transform, resolveId and load hooks to be object hooks')
     }
     expect(transform.filter).toMatchObject({id: expect.any(RegExp)})
-    expect(resolveId.filter).toMatchObject({id: expect.any(RegExp)})
+    // The per-module `.vanilla.css?source=` ids and the whole-program CSS specifier
+    expect(resolveId.filter).toMatchObject({id: [expect.any(RegExp), expect.any(RegExp)]})
     expect(load.filter).toMatchObject({id: expect.any(RegExp)})
   })
 })
