@@ -1,6 +1,9 @@
 {
   "extends": "@sanity/tsconfig/strictest",
-  "exclude": ["**/dist/**"],
+  "exclude": [
+    "**/dist/**",
+    "test/fixtures/atomic-fuzz"
+  ],
   "compilerOptions": {
     "rootDir": "."
   }
