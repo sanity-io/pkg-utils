@@ -23,13 +23,12 @@ export default defineConfig({
 ```ts
 // Before (tsup)
 import myPlugin from 'unplugin-example/esbuild'
+// After (tsdown)
+import myPlugin from 'unplugin-example/rolldown'
 
 export default defineConfig({
   esbuildPlugins: [myPlugin()],
 })
-
-// After (tsdown)
-import myPlugin from 'unplugin-example/rolldown'
 
 export default defineConfig({
   plugins: [myPlugin()],
@@ -43,12 +42,12 @@ Note: All `unplugin-*/esbuild` imports must change to `unplugin-*/rolldown`.
 ```ts
 // Before (tsup)
 export default defineConfig({
-  outExtension: ({ format }) => ({ js: format === 'cjs' ? '.cjs' : '.mjs' }),
+  outExtension: ({format}) => ({js: format === 'cjs' ? '.cjs' : '.mjs'}),
 })
 
 // After (tsdown)
 export default defineConfig({
-  outExtensions: ({ format }) => ({ js: format === 'cjs' ? '.cjs' : '.mjs' }),
+  outExtensions: ({format}) => ({js: format === 'cjs' ? '.cjs' : '.mjs'}),
 })
 ```
 
@@ -136,7 +135,7 @@ export default defineConfig({
 
 // After (tsdown)
 export default defineConfig({
-  css: { inject: true },
+  css: {inject: true},
 })
 ```
 
@@ -152,7 +151,7 @@ export default defineConfig({
 
 // After (tsdown)
 export default defineConfig({
-  deps: { neverBundle: true },
+  deps: {neverBundle: true},
 })
 ```
 
@@ -216,8 +215,12 @@ export default defineConfig({
 
 ```ts
 // Before (tsup.config.ts)
-import { defineConfig } from 'tsup'
+
+// After (tsdown.config.ts)
+import {defineConfig} from 'tsdown'
+import {defineConfig} from 'tsup'
 import myPlugin from 'unplugin-example/esbuild'
+import myPlugin from 'unplugin-example/rolldown'
 
 export default defineConfig({
   entryPoints: ['src/index.ts'],
@@ -235,10 +238,6 @@ export default defineConfig({
   clean: true,
 })
 
-// After (tsdown.config.ts)
-import { defineConfig } from 'tsdown'
-import myPlugin from 'unplugin-example/rolldown'
-
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['cjs', 'esm'],
@@ -250,7 +249,7 @@ export default defineConfig({
   copy: 'public',
   cjsDefault: true,
   nodeProtocol: 'strip',
-  css: { inject: true },
+  css: {inject: true},
   plugins: [myPlugin()],
   // splitting removed — always enabled in tsdown
   clean: true,
