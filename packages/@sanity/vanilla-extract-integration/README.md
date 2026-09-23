@@ -50,6 +50,10 @@ class lists with them. The pass lives in `src/atomic/`:
   class only when no overlapping declaration (same cascade layer, same importance) renders
   between them, which is exactly when sharing cannot change any element's computed styles.
   `test/cascadeEquivalence.test.ts` proves that in Chromium over random style sets.
+- `priorities.ts` — StyleX's cascade priority scheme (shorthands below longhands, pseudos and
+  at-rules by kind) computed from the same tables, the building block of the planned opt-in
+  `atomic: 'priority'` mode that trades order-based overrides for unconditional sharing; see
+  [docs/atomic-priority-mode.md](./docs/atomic-priority-mode.md).
 
 The contract, and why it shares less than an atomic CSS framework, is documented in the
 [rolldown plugin's README](../vanilla-extract-rolldown-plugin/README.md#atomic-classes).

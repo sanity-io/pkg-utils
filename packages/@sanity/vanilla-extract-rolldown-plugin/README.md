@@ -234,6 +234,12 @@ Complex selectors (`& + &`, selector lists), `globalStyle`, `createTheme` and ke
 they are — and count as barriers. Per module, classes are shared within a `.css.ts` module's
 file scope; with `compilation: 'whole-program'`, across the whole program.
 
+Sharing regardless of barriers, the way StyleX does, needs StyleX's contract too — conflicts
+between composed styles resolved per property by a runtime (`cx()`) and by a priority scheme
+instead of by class order. That is the planned, separate opt-in `atomic: 'priority'` mode,
+designed in the integration's
+[`docs/atomic-priority-mode.md`](../vanilla-extract-integration/docs/atomic-priority-mode.md).
+
 ## Adapter API
 
 Host-specific adapters can provide resolved defaults through the plugin's
