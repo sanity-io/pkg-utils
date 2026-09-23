@@ -6,7 +6,13 @@
  *
  * The upstream `esbuildOptions` passthrough is intentionally dropped: it leaked the esbuild API
  * into the public surface, and no consumer in this repository ever passed it.
+ *
+ * {@link compileProgram} is this fork's addition: the same child compilation over a synthetic
+ * entry that re-exports every `.css.ts` module of a project as a namespace, so the whole graph is
+ * bundled (scope-hoisted, with colliding bindings deconflicted by rolldown) and evaluated once.
  */
+import path from 'node:path'
+import type {Plugin} from 'rolldown'
 import {cssFileFilter} from './filters.ts'
 import {getPackageInfo} from './packageInfo.ts'
 import {transform} from './transform.ts'
@@ -19,20 +25,37 @@ export interface CompileOptions {
   cwd?: string
 }
 
-/**
- * Bundles a single `.css.ts` module (and its local dependency graph) into evaluatable CommonJS
- * with a rolldown child compilation, wrapping every vanilla-extract module with its file scope
- * along the way. `@vanilla-extract/*` imports stay external so the evaluated code binds to the
- * same instances the project resolves.
- *
- * rolldown is lazy-loaded so the native binding only loads once a file is actually compiled.
- * @public
- */
-export async function compile({
-  filePath,
+/** @public */
+export interface CompileProgramOptions {
+  /** Absolute paths of the `.css.ts` modules to bundle together. */
+  filePaths: ReadonlyArray<string>
+  identOption: IdentifierOption
+  cwd?: string
+}
+
+/** @public */
+export interface CompiledProgram {
+  /** The compiled CommonJS source; its exports are the module namespaces, see `namespaces`. */
+  source: string
+  /** The export name of each module's namespace on the compiled source, by file path. */
+  namespaces: ReadonlyMap<string, string>
+  watchFiles: string[]
+}
+
+/** The id of the synthetic entry {@link compileProgram} bundles. */
+const PROGRAM_ENTRY_ID = '\0vanilla-extract-program'
+
+async function runChildCompilation({
+  input,
+  cwd,
   identOption,
-  cwd = process.cwd(),
-}: CompileOptions): Promise<{source: string; watchFiles: string[]}> {
+  plugins = [],
+}: {
+  input: string
+  cwd: string
+  identOption: IdentifierOption
+  plugins?: Plugin[]
+}): Promise<{source: string; watchFiles: string[]}> {
   const {rolldown} = await import('rolldown')
   const packageInfo = getPackageInfo(cwd)
 
@@ -41,12 +64,13 @@ export async function compile({
   let moduleIds: string[] = []
 
   const bundle = await rolldown({
-    input: [filePath],
+    input: [input],
     cwd,
     platform: 'node',
     external: [/^@vanilla-extract($|\/)/],
     logLevel: 'silent',
     plugins: [
+      ...plugins,
       {
         name: 'vanilla-extract-filescope',
         transform: {
@@ -95,4 +119,71 @@ export async function compile({
   } finally {
     await bundle.close()
   }
+}
+
+/**
+ * Bundles a single `.css.ts` module (and its local dependency graph) into evaluatable CommonJS
+ * with a rolldown child compilation, wrapping every vanilla-extract module with its file scope
+ * along the way. `@vanilla-extract/*` imports stay external so the evaluated code binds to the
+ * same instances the project resolves.
+ *
+ * rolldown is lazy-loaded so the native binding only loads once a file is actually compiled.
+ * @public
+ */
+export async function compile({
+  filePath,
+  identOption,
+  cwd = process.cwd(),
+}: CompileOptions): Promise<{source: string; watchFiles: string[]}> {
+  return runChildCompilation({input: filePath, cwd, identOption})
+}
+
+/**
+ * Bundles a whole set of `.css.ts` modules (and their local dependency graphs) into one
+ * evaluatable CommonJS module through a synthetic entry that re-exports each module as a
+ * namespace (`export * as m0 from '/abs/foo.css.ts'`). Modules shared between them are bundled
+ * and evaluated once, and rolldown's scope hoisting renames colliding bindings.
+ * @public
+ */
+export async function compileProgram({
+  filePaths,
+  identOption,
+  cwd = process.cwd(),
+}: CompileProgramOptions): Promise<CompiledProgram> {
+  const namespaces = new Map<string, string>()
+  const entryLines: string[] = []
+
+  const resolvedFilePaths = new Set(filePaths.map((filePath) => path.resolve(cwd, filePath)))
+  for (const [index, filePath] of Array.from(resolvedFilePaths).entries()) {
+    const namespace = `m${index}`
+    namespaces.set(filePath, namespace)
+    entryLines.push(`export * as ${namespace} from ${JSON.stringify(filePath)};`)
+  }
+
+  const {source, watchFiles} = await runChildCompilation({
+    input: PROGRAM_ENTRY_ID,
+    cwd,
+    identOption,
+    plugins: [
+      {
+        name: 'vanilla-extract-program-entry',
+        resolveId: {
+          filter: {id: /^\0vanilla-extract-program$/},
+          handler(id) {
+            return id === PROGRAM_ENTRY_ID ? id : undefined
+          },
+        },
+        load: {
+          filter: {id: /^\0vanilla-extract-program$/},
+          handler(id) {
+            return id === PROGRAM_ENTRY_ID
+              ? {code: entryLines.join('\n'), moduleType: 'js'}
+              : undefined
+          },
+        },
+      },
+    ],
+  })
+
+  return {source, namespaces, watchFiles}
 }

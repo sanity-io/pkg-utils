@@ -8,12 +8,28 @@
  * @packageDocumentation
  */
 
-export {compile, type CompileOptions} from './compile.ts'
+export {
+  compile,
+  compileProgram,
+  type CompiledProgram,
+  type CompileOptions,
+  type CompileProgramOptions,
+} from './compile.ts'
+export {
+  evaluateVanillaModule,
+  type EvaluatedVanillaModule,
+  type EvaluateVanillaModuleOptions,
+} from './evaluateVanillaModule.ts'
 export {cssFileFilter, virtualCssFileFilter} from './filters.ts'
 export {getSourceFromVirtualCssFile} from './getSourceFromVirtualCssFile.ts'
 export {normalizePath} from './normalizePath.ts'
 export {getPackageInfo, type PackageInfo} from './packageInfo.ts'
 export {processVanillaFile, type ProcessVanillaFileOptions} from './processVanillaFile.ts'
+export {
+  processVanillaProgram,
+  type ProcessedVanillaProgram,
+  type ProcessVanillaProgramOptions,
+} from './processVanillaProgram.ts'
 export {serializeVanillaModule} from './serializeVanillaModule.ts'
 export {transform, type TransformParams} from './transform.ts'
 export {transformCss, type TransformCssParams} from './transformCss/transformCss.ts'
