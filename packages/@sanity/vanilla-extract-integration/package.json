@@ -35,6 +35,7 @@
   "scripts": {
     "bench": "vitest bench",
     "build": "tsdown",
+    "generate:property-groups": "node scripts/generatePropertyGroups.ts",
     "prepack": "pnpm build",
     "test": "vitest run",
     "typecheck": "tsc --build"
@@ -54,6 +55,7 @@
     "@types/node": "catalog:",
     "@vanilla-extract/recipes": "^0.5.7",
     "@vanilla-extract/sprinkles": "^1.7.1",
+    "mdn-data": "^2.27.1",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",

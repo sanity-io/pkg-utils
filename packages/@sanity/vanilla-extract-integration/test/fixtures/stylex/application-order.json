@@ -1,0 +1,754 @@
+{
+  "_source": "https://github.com/facebook/stylex/blob/main/packages/@stylexjs/babel-plugin/src/shared/preprocess-rules/application-order.js (MIT, Meta Platforms)",
+  "_description": "For each shorthand, the properties StyleX application-order resolution nulls when the shorthand is written (i.e. the properties it overlaps).",
+  "nulls": {
+    "all": [
+      "animationComposition",
+      "animationDelay",
+      "animationDirection",
+      "animationDuration",
+      "animationFillMode",
+      "animationIterationCount",
+      "animationName",
+      "animationPlayState",
+      "animationRange",
+      "animationRangeEnd",
+      "animationRangeStart",
+      "animationTimeline",
+      "animationTimingFunction"
+    ],
+    "animationRange": [
+      "animationRangeEnd",
+      "animationRangeStart"
+    ],
+    "background": [
+      "backgroundAttachment",
+      "backgroundClip",
+      "backgroundColor",
+      "backgroundImage",
+      "backgroundOrigin",
+      "backgroundPosition",
+      "backgroundPositionX",
+      "backgroundPositionY",
+      "backgroundRepeat",
+      "backgroundSize"
+    ],
+    "backgroundPosition": [
+      "backgroundPositionX",
+      "backgroundPositionY"
+    ],
+    "border": [
+      "borderBlockColor",
+      "borderBlockStyle",
+      "borderBlockWidth",
+      "borderBottomColor",
+      "borderBottomStyle",
+      "borderBottomWidth",
+      "borderColor",
+      "borderInlineColor",
+      "borderInlineEndColor",
+      "borderInlineEndStyle",
+      "borderInlineEndWidth",
+      "borderInlineStartColor",
+      "borderInlineStartStyle",
+      "borderInlineStartWidth",
+      "borderInlineStyle",
+      "borderInlineWidth",
+      "borderLeftColor",
+      "borderLeftStyle",
+      "borderLeftWidth",
+      "borderRightColor",
+      "borderRightStyle",
+      "borderRightWidth",
+      "borderStyle",
+      "borderTopColor",
+      "borderTopStyle",
+      "borderTopWidth",
+      "borderWidth"
+    ],
+    "borderBlock": [
+      "borderBlockColor",
+      "borderBlockStyle",
+      "borderBlockWidth",
+      "borderBottomColor",
+      "borderBottomStyle",
+      "borderBottomWidth",
+      "borderTopColor",
+      "borderTopStyle",
+      "borderTopWidth"
+    ],
+    "borderBlockColor": [
+      "borderBottomColor",
+      "borderTopColor"
+    ],
+    "borderBlockStyle": [
+      "borderBottomStyle",
+      "borderTopStyle"
+    ],
+    "borderBlockWidth": [
+      "borderBottomWidth",
+      "borderTopWidth"
+    ],
+    "borderBottom": [
+      "borderBottomColor",
+      "borderBottomStyle",
+      "borderBottomWidth"
+    ],
+    "borderBottomLeftRadius": [
+      "borderEndEndRadius",
+      "borderEndStartRadius"
+    ],
+    "borderBottomRightRadius": [
+      "borderEndEndRadius",
+      "borderEndStartRadius"
+    ],
+    "borderColor": [
+      "borderBlockColor",
+      "borderBottomColor",
+      "borderInlineColor",
+      "borderInlineEndColor",
+      "borderInlineStartColor",
+      "borderLeftColor",
+      "borderRightColor",
+      "borderTopColor"
+    ],
+    "borderEndEndRadius": [
+      "borderBottomLeftRadius",
+      "borderBottomRightRadius"
+    ],
+    "borderEndStartRadius": [
+      "borderBottomLeftRadius",
+      "borderBottomRightRadius"
+    ],
+    "borderImage": [
+      "borderImageOutset",
+      "borderImageRepeat",
+      "borderImageSlice",
+      "borderImageSource",
+      "borderImageWidth"
+    ],
+    "borderInline": [
+      "borderInlineColor",
+      "borderInlineEndColor",
+      "borderInlineEndStyle",
+      "borderInlineEndWidth",
+      "borderInlineStartColor",
+      "borderInlineStartStyle",
+      "borderInlineStartWidth",
+      "borderInlineStyle",
+      "borderInlineWidth",
+      "borderLeftColor",
+      "borderLeftStyle",
+      "borderLeftWidth",
+      "borderRightColor",
+      "borderRightStyle",
+      "borderRightWidth"
+    ],
+    "borderInlineColor": [
+      "borderInlineEndColor",
+      "borderInlineStartColor",
+      "borderLeftColor",
+      "borderRightColor"
+    ],
+    "borderInlineEnd": [
+      "borderInlineEndColor",
+      "borderInlineEndStyle",
+      "borderInlineEndWidth",
+      "borderLeftColor",
+      "borderLeftStyle",
+      "borderLeftWidth",
+      "borderRightColor",
+      "borderRightStyle",
+      "borderRightWidth"
+    ],
+    "borderInlineEndColor": [
+      "borderLeftColor",
+      "borderRightColor"
+    ],
+    "borderInlineEndStyle": [
+      "borderLeftStyle",
+      "borderRightStyle"
+    ],
+    "borderInlineEndWidth": [
+      "borderLeftWidth",
+      "borderRightWidth"
+    ],
+    "borderInlineStart": [
+      "borderInlineStartColor",
+      "borderInlineStartStyle",
+      "borderInlineStartWidth",
+      "borderLeftColor",
+      "borderLeftStyle",
+      "borderLeftWidth",
+      "borderRightColor",
+      "borderRightStyle",
+      "borderRightWidth"
+    ],
+    "borderInlineStartColor": [
+      "borderLeftColor",
+      "borderRightColor"
+    ],
+    "borderInlineStartStyle": [
+      "borderLeftStyle",
+      "borderRightStyle"
+    ],
+    "borderInlineStartWidth": [
+      "borderLeftWidth",
+      "borderRightWidth"
+    ],
+    "borderInlineStyle": [
+      "borderInlineEndStyle",
+      "borderInlineStartStyle",
+      "borderLeftStyle",
+      "borderRightStyle"
+    ],
+    "borderInlineWidth": [
+      "borderInlineEndWidth",
+      "borderInlineStartWidth",
+      "borderLeftWidth",
+      "borderRightWidth"
+    ],
+    "borderLeft": [
+      "borderInlineEndColor",
+      "borderInlineEndStyle",
+      "borderInlineEndWidth",
+      "borderInlineStartColor",
+      "borderInlineStartStyle",
+      "borderInlineStartWidth",
+      "borderLeftColor",
+      "borderLeftStyle",
+      "borderLeftWidth"
+    ],
+    "borderLeftColor": [
+      "borderInlineEndColor",
+      "borderInlineStartColor"
+    ],
+    "borderLeftStyle": [
+      "borderInlineEndStyle",
+      "borderInlineStartStyle"
+    ],
+    "borderLeftWidth": [
+      "borderInlineEndWidth",
+      "borderInlineStartWidth"
+    ],
+    "borderRadius": [
+      "borderBottomLeftRadius",
+      "borderBottomRightRadius",
+      "borderEndEndRadius",
+      "borderEndStartRadius",
+      "borderStartEndRadius",
+      "borderStartStartRadius",
+      "borderTopLeftRadius",
+      "borderTopRightRadius"
+    ],
+    "borderRight": [
+      "borderInlineEndColor",
+      "borderInlineEndStyle",
+      "borderInlineEndWidth",
+      "borderInlineStartColor",
+      "borderInlineStartStyle",
+      "borderInlineStartWidth",
+      "borderRightColor",
+      "borderRightStyle",
+      "borderRightWidth"
+    ],
+    "borderRightColor": [
+      "borderInlineEndColor",
+      "borderInlineStartColor"
+    ],
+    "borderRightStyle": [
+      "borderInlineEndStyle",
+      "borderInlineStartStyle"
+    ],
+    "borderRightWidth": [
+      "borderInlineEndWidth",
+      "borderInlineStartWidth"
+    ],
+    "borderStartEndRadius": [
+      "borderTopLeftRadius",
+      "borderTopRightRadius"
+    ],
+    "borderStartStartRadius": [
+      "borderTopLeftRadius",
+      "borderTopRightRadius"
+    ],
+    "borderStyle": [
+      "borderBlockStyle",
+      "borderBottomStyle",
+      "borderInlineEndStyle",
+      "borderInlineStartStyle",
+      "borderInlineStyle",
+      "borderLeftStyle",
+      "borderRightStyle",
+      "borderTopStyle"
+    ],
+    "borderTop": [
+      "borderTopColor",
+      "borderTopStyle",
+      "borderTopWidth"
+    ],
+    "borderTopLeftRadius": [
+      "borderStartEndRadius",
+      "borderStartStartRadius"
+    ],
+    "borderTopRightRadius": [
+      "borderStartEndRadius",
+      "borderStartStartRadius"
+    ],
+    "borderWidth": [
+      "borderBlockWidth",
+      "borderBottomWidth",
+      "borderInlineEndWidth",
+      "borderInlineStartWidth",
+      "borderInlineWidth",
+      "borderLeftWidth",
+      "borderRightWidth",
+      "borderTopWidth"
+    ],
+    "columnRule": [
+      "columnRuleColor",
+      "columnRuleStyle",
+      "columnRuleWidth"
+    ],
+    "columns": [
+      "columnCount",
+      "columnWidth"
+    ],
+    "containIntrinsicSize": [
+      "containIntrinsicHeight",
+      "containIntrinsicWidth"
+    ],
+    "container": [
+      "containerName",
+      "containerType"
+    ],
+    "cornerBottomLeftShape": [
+      "cornerEndEndShape",
+      "cornerEndStartShape"
+    ],
+    "cornerBottomRightShape": [
+      "cornerEndEndShape",
+      "cornerEndStartShape"
+    ],
+    "cornerEndEndShape": [
+      "cornerBottomLeftShape",
+      "cornerBottomRightShape"
+    ],
+    "cornerEndStartShape": [
+      "cornerBottomLeftShape",
+      "cornerBottomRightShape"
+    ],
+    "cornerShape": [
+      "cornerBottomLeftShape",
+      "cornerBottomRightShape",
+      "cornerEndEndShape",
+      "cornerEndStartShape",
+      "cornerStartEndShape",
+      "cornerStartStartShape",
+      "cornerTopLeftShape",
+      "cornerTopRightShape"
+    ],
+    "cornerStartEndShape": [
+      "cornerTopLeftShape",
+      "cornerTopRightShape"
+    ],
+    "cornerStartStartShape": [
+      "cornerTopLeftShape",
+      "cornerTopRightShape"
+    ],
+    "cornerTopLeftShape": [
+      "cornerStartEndShape",
+      "cornerStartStartShape"
+    ],
+    "cornerTopRightShape": [
+      "cornerStartEndShape",
+      "cornerStartStartShape"
+    ],
+    "flex": [
+      "flexBasis",
+      "flexGrow",
+      "flexShrink"
+    ],
+    "flexFlow": [
+      "flexDirection",
+      "flexWrap"
+    ],
+    "font": [
+      "fontFamily",
+      "fontSize",
+      "fontStretch",
+      "fontStyle",
+      "fontVariant",
+      "fontVariantAlternates",
+      "fontVariantCaps",
+      "fontVariantEastAsian",
+      "fontVariantEmoji",
+      "fontVariantLigatures",
+      "fontVariantNumeric",
+      "fontVariantPosition",
+      "fontWeight",
+      "lineHeight"
+    ],
+    "fontVariant": [
+      "fontVariantAlternates",
+      "fontVariantCaps",
+      "fontVariantEastAsian",
+      "fontVariantEmoji",
+      "fontVariantLigatures",
+      "fontVariantNumeric",
+      "fontVariantPosition"
+    ],
+    "gap": [
+      "columnGap",
+      "rowGap"
+    ],
+    "grid": [
+      "gridAutoColumns",
+      "gridAutoFlow",
+      "gridAutoRows",
+      "gridTemplate",
+      "gridTemplateAreas",
+      "gridTemplateColumns",
+      "gridTemplateRows"
+    ],
+    "gridArea": [
+      "gridColumn",
+      "gridColumnEnd",
+      "gridColumnStart",
+      "gridRow",
+      "gridRowEnd",
+      "gridRowStart"
+    ],
+    "gridColumn": [
+      "gridColumnEnd",
+      "gridColumnStart"
+    ],
+    "gridRow": [
+      "gridRowEnd",
+      "gridRowStart"
+    ],
+    "gridTemplate": [
+      "gridTemplateAreas",
+      "gridTemplateColumns",
+      "gridTemplateRows"
+    ],
+    "inset": [
+      "bottom",
+      "insetBlock",
+      "insetInline",
+      "insetInlineEnd",
+      "insetInlineStart",
+      "left",
+      "right",
+      "top"
+    ],
+    "insetBlock": [
+      "bottom",
+      "top"
+    ],
+    "insetInline": [
+      "insetInlineEnd",
+      "insetInlineStart",
+      "left",
+      "right"
+    ],
+    "insetInlineEnd": [
+      "left",
+      "right"
+    ],
+    "insetInlineStart": [
+      "left",
+      "right"
+    ],
+    "left": [
+      "insetInlineEnd",
+      "insetInlineStart"
+    ],
+    "listStyle": [
+      "listStyleImage",
+      "listStylePosition",
+      "listStyleType"
+    ],
+    "margin": [
+      "marginBlock",
+      "marginBottom",
+      "marginInline",
+      "marginInlineEnd",
+      "marginInlineStart",
+      "marginLeft",
+      "marginRight",
+      "marginTop"
+    ],
+    "marginBlock": [
+      "marginBottom",
+      "marginTop"
+    ],
+    "marginInline": [
+      "marginInlineEnd",
+      "marginInlineStart",
+      "marginLeft",
+      "marginRight"
+    ],
+    "marginInlineEnd": [
+      "marginLeft",
+      "marginRight"
+    ],
+    "marginInlineStart": [
+      "marginLeft",
+      "marginRight"
+    ],
+    "marginLeft": [
+      "marginInlineEnd",
+      "marginInlineStart"
+    ],
+    "marginRight": [
+      "marginInlineEnd",
+      "marginInlineStart"
+    ],
+    "mask": [
+      "maskClip",
+      "maskComposite",
+      "maskImage",
+      "maskMode",
+      "maskOrigin",
+      "maskPosition",
+      "maskRepeat",
+      "maskSize"
+    ],
+    "maskBorder": [
+      "maskBorderMode",
+      "maskBorderOutset",
+      "maskBorderRepeat",
+      "maskBorderSlice",
+      "maskBorderSource",
+      "maskBorderWidth"
+    ],
+    "offset": [
+      "offsetAnchor",
+      "offsetDistance",
+      "offsetPath",
+      "offsetPosition",
+      "offsetRotate"
+    ],
+    "outline": [
+      "outlineColor",
+      "outlineOffset",
+      "outlineStyle",
+      "outlineWidth"
+    ],
+    "overflow": [
+      "overflowX",
+      "overflowY"
+    ],
+    "padding": [
+      "paddingBlock",
+      "paddingBottom",
+      "paddingEnd",
+      "paddingInline",
+      "paddingLeft",
+      "paddingRight",
+      "paddingStart",
+      "paddingTop"
+    ],
+    "paddingBlock": [
+      "paddingBottom",
+      "paddingTop"
+    ],
+    "paddingInline": [
+      "paddingEnd",
+      "paddingLeft",
+      "paddingRight",
+      "paddingStart"
+    ],
+    "paddingInlineEnd": [
+      "paddingLeft",
+      "paddingRight"
+    ],
+    "paddingInlineStart": [
+      "paddingLeft",
+      "paddingRight"
+    ],
+    "paddingLeft": [
+      "paddingInlineEnd",
+      "paddingInlineStart"
+    ],
+    "paddingRight": [
+      "paddingInlineEnd",
+      "paddingInlineStart"
+    ],
+    "placeContent": [
+      "alignContent",
+      "justifyContent"
+    ],
+    "placeItems": [
+      "alignItems",
+      "justifyItems"
+    ],
+    "placeSelf": [
+      "alignSelf",
+      "justifySelf"
+    ],
+    "right": [
+      "insetInlineEnd",
+      "insetInlineStart"
+    ],
+    "scrollMargin": [
+      "scrollMarginBlock",
+      "scrollMarginBottom",
+      "scrollMarginInline",
+      "scrollMarginInlineEnd",
+      "scrollMarginInlineStart",
+      "scrollMarginLeft",
+      "scrollMarginRight",
+      "scrollMarginTop"
+    ],
+    "scrollMarginBlock": [
+      "scrollMarginBottom",
+      "scrollMarginTop"
+    ],
+    "scrollMarginInline": [
+      "scrollMarginInlineEnd",
+      "scrollMarginInlineStart",
+      "scrollMarginLeft",
+      "scrollMarginRight"
+    ],
+    "scrollMarginInlineEnd": [
+      "scrollMarginLeft",
+      "scrollMarginRight"
+    ],
+    "scrollMarginInlineStart": [
+      "scrollMarginLeft",
+      "scrollMarginRight"
+    ],
+    "scrollMarginLeft": [
+      "scrollMarginInlineEnd",
+      "scrollMarginInlineStart"
+    ],
+    "scrollMarginRight": [
+      "scrollMarginInlineEnd",
+      "scrollMarginInlineStart"
+    ],
+    "scrollPadding": [
+      "scrollPaddingBlock",
+      "scrollPaddingBottom",
+      "scrollPaddingInline",
+      "scrollPaddingInlineEnd",
+      "scrollPaddingInlineStart",
+      "scrollPaddingLeft",
+      "scrollPaddingRight",
+      "scrollPaddingTop"
+    ],
+    "scrollPaddingBlock": [
+      "scrollPaddingBottom",
+      "scrollPaddingTop"
+    ],
+    "scrollPaddingInline": [
+      "scrollPaddingInlineEnd",
+      "scrollPaddingInlineStart",
+      "scrollPaddingLeft",
+      "scrollPaddingRight"
+    ],
+    "scrollPaddingInlineEnd": [
+      "scrollPaddingLeft",
+      "scrollPaddingRight"
+    ],
+    "scrollPaddingInlineStart": [
+      "scrollPaddingLeft",
+      "scrollPaddingRight"
+    ],
+    "scrollPaddingLeft": [
+      "scrollPaddingInlineEnd",
+      "scrollPaddingInlineStart"
+    ],
+    "scrollPaddingRight": [
+      "scrollPaddingInlineEnd",
+      "scrollPaddingInlineStart"
+    ],
+    "scrollSnapType": [
+      "scrollSnapTypeX",
+      "scrollSnapTypeY"
+    ],
+    "scrollTimeline": [
+      "scrollTimelineAxis",
+      "scrollTimelineName"
+    ],
+    "textDecoration": [
+      "textDecorationColor",
+      "textDecorationLine",
+      "textDecorationStyle",
+      "textDecorationThickness"
+    ],
+    "textEmphasis": [
+      "textEmphasisColor",
+      "textEmphasisStyle"
+    ],
+    "transition": [
+      "transitionBehavior",
+      "transitionDelay",
+      "transitionDuration",
+      "transitionProperty",
+      "transitionTimingFunction"
+    ]
+  },
+  "aliases": {
+    "blockSize": "height",
+    "borderBlockEnd": "borderBottom",
+    "borderBlockEndColor": "borderBottomColor",
+    "borderBlockEndStyle": "borderBottomStyle",
+    "borderBlockEndWidth": "borderBottomWidth",
+    "borderBlockStart": "borderTop",
+    "borderBlockStartColor": "borderTopColor",
+    "borderBlockStartStyle": "borderTopStyle",
+    "borderBlockStartWidth": "borderTopWidth",
+    "borderBottomEndRadius": "borderEndEndRadius",
+    "borderBottomStartRadius": "borderEndStartRadius",
+    "borderEnd": "borderInlineEnd",
+    "borderEndColor": "borderInlineEndColor",
+    "borderEndStyle": "borderInlineEndStyle",
+    "borderEndWidth": "borderInlineEndWidth",
+    "borderHorizontal": "borderInline",
+    "borderHorizontalColor": "borderInlineColor",
+    "borderHorizontalStyle": "borderInlineStyle",
+    "borderHorizontalWidth": "borderInlineWidth",
+    "borderStart": "borderInlineStart",
+    "borderStartColor": "borderInlineStartColor",
+    "borderStartStyle": "borderInlineStartStyle",
+    "borderStartWidth": "borderInlineStartWidth",
+    "borderTopEndRadius": "borderStartEndRadius",
+    "borderTopStartRadius": "borderStartStartRadius",
+    "borderVertical": "borderBlock",
+    "borderVerticalColor": "borderBlockColor",
+    "borderVerticalStyle": "borderBlockStyle",
+    "borderVerticalWidth": "borderBlockWidth",
+    "containIntrinsicBlockSize": "containIntrinsicHeight",
+    "containIntrinsicInlineSize": "containIntrinsicWidth",
+    "end": "insetInlineEnd",
+    "gridColumnGap": "columnGap",
+    "gridGap": "gap",
+    "gridRowGap": "rowGap",
+    "inlineSize": "width",
+    "insetBlockEnd": "bottom",
+    "insetBlockStart": "top",
+    "marginBlockEnd": "marginBottom",
+    "marginBlockStart": "marginTop",
+    "marginEnd": "marginInlineEnd",
+    "marginHorizontal": "marginInline",
+    "marginStart": "marginInlineStart",
+    "marginVertical": "marginBlock",
+    "maxBlockSize": "maxHeight",
+    "maxInlineSize": "maxWidth",
+    "minBlockSize": "minHeight",
+    "minInlineSize": "minWidth",
+    "overflowBlock": "overflowY",
+    "overflowInline": "overflowX",
+    "paddingBlockEnd": "paddingBottom",
+    "paddingBlockStart": "paddingTop",
+    "paddingEnd": "paddingInlineEnd",
+    "paddingHorizontal": "paddingInline",
+    "paddingStart": "paddingInlineStart",
+    "paddingVertical": "paddingBlock",
+    "scrollMarginBlockEnd": "scrollMarginBottom",
+    "scrollMarginBlockStart": "scrollMarginTop",
+    "start": "insetInlineStart"
+  }
+}
