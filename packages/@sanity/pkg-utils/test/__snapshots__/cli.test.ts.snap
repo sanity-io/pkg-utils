@@ -1015,7 +1015,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-C8aK4N4h.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-B06tN_57.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -4213,7 +4213,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-oyqICD0C.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-xaR4r_Be.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
