@@ -8,6 +8,9 @@ packages:
 
 ignoreWorkspaceCycles: true
 
+# Deduplicate compatible dependency versions during installation (pnpm >= 12.6.0).
+autoDedupe: true
+
 catalog:
   '@sanity/client': ^8.6.2
   '@sanity/icons': ^5.2.2
