@@ -14,6 +14,7 @@
 import path from 'node:path'
 import type {Plugin} from 'rolldown'
 import {cssFileFilter} from './filters.ts'
+import {normalizePath} from './normalizePath.ts'
 import {getPackageInfo} from './packageInfo.ts'
 import {transform} from './transform.ts'
 import type {IdentifierOption} from './types.ts'
@@ -37,13 +38,16 @@ export interface CompileProgramOptions {
 export interface CompiledProgram {
   /** The compiled CommonJS source; its exports are the module namespaces, see `namespaces`. */
   source: string
-  /** The export name of each module's namespace on the compiled source, by file path. */
+  /**
+   * The export name of each module's namespace on the compiled source, by normalized absolute
+   * path (POSIX separators, see {@link normalizePath}).
+   */
   namespaces: ReadonlyMap<string, string>
   watchFiles: string[]
   /**
-   * The bundled modules each program module (transitively) imports, by file path — the
-   * `.css.ts` modules among them only surface through this graph, since the serialized modules
-   * no longer import each other.
+   * The bundled modules each program module (transitively) imports, by normalized absolute
+   * path — the `.css.ts` modules among them only surface through this graph, since the
+   * serialized modules no longer import each other.
    */
   dependencies: ReadonlyMap<string, ReadonlySet<string>>
 }
@@ -103,12 +107,14 @@ async function runChildCompilation({
               return info && typeof info.code === 'string' ? [[id, info] as const] : []
             }),
           )
+          // Keyed by normalized paths: rolldown ids keep the OS separators, while the program
+          // maps are looked up with POSIX ones
           for (const [id, info] of bundled) {
             importedIds.set(
-              id,
-              [...info.importedIds, ...info.dynamicallyImportedIds].filter((importedId) =>
-                bundled.has(importedId),
-              ),
+              normalizePath(id),
+              [...info.importedIds, ...info.dynamicallyImportedIds]
+                .filter((importedId) => bundled.has(importedId))
+                .map(normalizePath),
             )
           }
         },
@@ -192,7 +198,7 @@ export async function compileProgram({
   const resolvedFilePaths = new Set(filePaths.map((filePath) => path.resolve(cwd, filePath)))
   for (const [index, filePath] of Array.from(resolvedFilePaths).entries()) {
     const namespace = `m${index}`
-    namespaces.set(filePath, namespace)
+    namespaces.set(normalizePath(filePath), namespace)
     entryLines.push(`export * as ${namespace} from ${JSON.stringify(filePath)};`)
   }
 

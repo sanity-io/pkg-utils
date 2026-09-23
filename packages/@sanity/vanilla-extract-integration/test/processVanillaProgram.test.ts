@@ -3,6 +3,7 @@ import {fileURLToPath} from 'node:url'
 import {describe, expect, test} from 'vitest'
 import {compile} from '../src/compile.ts'
 import {evaluateVanillaModule} from '../src/evaluateVanillaModule.ts'
+import {normalizePath} from '../src/normalizePath.ts'
 import {processVanillaFile} from '../src/processVanillaFile.ts'
 import {processVanillaProgram} from '../src/processVanillaProgram.ts'
 import {transformCss} from '../src/transformCss/transformCss.ts'
@@ -75,12 +76,14 @@ describe('processVanillaProgram', () => {
         identOption,
       })
 
-      expect([...program.modules.keys()]).toEqual([...kitchenSink, ...basic])
+      expect([...program.modules.keys()]).toEqual([...kitchenSink, ...basic].map(normalizePath))
 
       for (const filePath of [...kitchenSink, ...basic]) {
         const {source} = await compile({filePath, cwd: packageRoot, identOption})
         const perModule = await processVanillaFile({source, filePath, identOption})
-        expect(exportsOf(program.modules.get(filePath) ?? ''), filePath).toBe(exportsOf(perModule))
+        expect(exportsOf(program.modules.get(normalizePath(filePath)) ?? ''), filePath).toBe(
+          exportsOf(perModule),
+        )
       }
     })
 
@@ -132,7 +135,7 @@ describe('processVanillaProgram', () => {
       cwd: packageRoot,
       identOption: 'debug',
     })
-    const styles = program.modules.get(kitchenSink[1] ?? '') ?? ''
+    const styles = program.modules.get(normalizePath(kitchenSink[1] ?? '')) ?? ''
 
     // `pureComposition` is referenced by `referencesComposition`'s selector: its identifier stays
     expect(styles).toMatch(
@@ -150,7 +153,7 @@ describe('processVanillaProgram', () => {
       cwd: packageRoot,
       identOption: 'short',
     })
-    const [entry, styles, theme] = kitchenSink
+    const [entry, styles, theme] = kitchenSink.map(normalizePath)
 
     // entry → styles → theme; theme depends on nothing bundled (`@vanilla-extract/*` is external)
     expect(

@@ -49,7 +49,10 @@ export interface ProcessVanillaProgramOptions {
 export interface ProcessedVanillaProgram {
   /** The program's CSS: one `Stylesheet` over every file scope, rules joined by newlines. */
   css: string
-  /** The serialized ES module source of every module in `filePaths`, keyed by absolute path. */
+  /**
+   * The serialized ES module source of every module in `filePaths`, keyed by normalized
+   * absolute path (POSIX separators).
+   */
   modules: ReadonlyMap<string, string>
   /** The file scopes that produced CSS, in program (rendering) order. */
   fileScopes: ReadonlyArray<FileScope>
@@ -58,9 +61,10 @@ export interface ProcessedVanillaProgram {
   /** Every file the program depends on (the child compilation's module ids). */
   watchFiles: string[]
   /**
-   * The files each module in `filePaths` (transitively) imports, by absolute path. A `.css.ts`
-   * module that only other `.css.ts` modules import never surfaces in the host bundler's graph
-   * (the serialized modules don't import each other), so this is how to tell it is reached.
+   * The files each module in `filePaths` (transitively) imports, by normalized absolute path.
+   * A `.css.ts` module that only other `.css.ts` modules import never surfaces in the host
+   * bundler's graph (the serialized modules don't import each other), so this is how to tell
+   * it is reached.
    */
   dependencies: ReadonlyMap<string, ReadonlySet<string>>
   /** The atomic pass's statistics, when `atomic` is enabled. */

@@ -3,6 +3,7 @@ import {fileURLToPath} from 'node:url'
 import {describe, expect, test} from 'vitest'
 import {compile} from '../src/compile.ts'
 import {getSourceFromVirtualCssFile} from '../src/getSourceFromVirtualCssFile.ts'
+import {normalizePath} from '../src/normalizePath.ts'
 import {processVanillaFile} from '../src/processVanillaFile.ts'
 import {processVanillaProgram} from '../src/processVanillaProgram.ts'
 
@@ -182,11 +183,13 @@ describe('atomic pass, whole-program rendering', () => {
       atomic: true,
     })
     expect(program.css).toMatchSnapshot('program css')
-    expect(program.modules.get(entryPath)).toMatchSnapshot('entry module')
-    expect(program.modules.get(basePath)).toMatchSnapshot('base module')
+    const entrySource = program.modules.get(normalizePath(entryPath))
+    const baseSource = program.modules.get(normalizePath(basePath))
+    expect(entrySource).toMatchSnapshot('entry module')
+    expect(baseSource).toMatchSnapshot('base module')
 
-    const entry = classLists(program.modules.get(entryPath) ?? '')
-    const base = classLists(program.modules.get(basePath) ?? '')
+    const entry = classLists(entrySource ?? '')
+    const base = classLists(baseSource ?? '')
     const baseCardAtoms = base['baseCard']!.split(' ').slice(1)
     const cardAtoms = entry['card']!.split(' ').slice(1)
     // base.css.ts renders first (entry imports it). `usesVars`'s `gap` shares baseCard's:

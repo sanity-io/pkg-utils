@@ -18,8 +18,12 @@ export const PROGRAM_CSS_MODULE_ID = '\0vanilla-extract-program.vanilla.js'
 /** The absolute paths of the entry files in a normalized rolldown `input` option. */
 export function inputEntryFiles(input: string[] | Record<string, string>, cwd: string): string[] {
   const entries = Array.isArray(input) ? input : Object.values(input)
+  // Virtual ids (`\0…`, `virtual:…`) aren't files; a Windows drive letter (`C:\…`) also looks
+  // like a scheme, but is an absolute path
   return entries
-    .filter((entry) => !entry.startsWith('\0') && !/^[a-z]+:/i.test(entry))
+    .filter(
+      (entry) => !entry.startsWith('\0') && (path.isAbsolute(entry) || !/^[a-z]+:/i.test(entry)),
+    )
     .map((entry) => path.resolve(cwd, entry))
 }
 

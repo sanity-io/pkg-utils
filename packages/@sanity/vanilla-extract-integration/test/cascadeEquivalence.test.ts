@@ -13,6 +13,7 @@ import {chromium, type Browser} from 'playwright'
 import {afterAll, beforeAll, describe, expect, test} from 'vitest'
 import {compile} from '../src/compile.ts'
 import {getSourceFromVirtualCssFile} from '../src/getSourceFromVirtualCssFile.ts'
+import {normalizePath} from '../src/normalizePath.ts'
 import {processVanillaFile} from '../src/processVanillaFile.ts'
 import {processVanillaProgram} from '../src/processVanillaProgram.ts'
 
@@ -195,7 +196,8 @@ async function renderProgram(files: string[], atomic: boolean): Promise<Rendered
   })
   const lists = new Map<string, string>()
   for (const file of files) {
-    for (const [name, list] of classLists(program.modules.get(path.join(fuzzRoot, file)) ?? '')) {
+    const source = program.modules.get(normalizePath(path.join(fuzzRoot, file))) ?? ''
+    for (const [name, list] of classLists(source)) {
       lists.set(`${file}:${name}`, list)
     }
   }

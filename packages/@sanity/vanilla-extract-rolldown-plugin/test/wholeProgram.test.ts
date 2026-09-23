@@ -236,6 +236,12 @@ describe('whole-program discovery helpers', () => {
     ])
   })
 
+  test.runIf(process.platform === 'win32')('inputEntryFiles keeps Windows drive paths', () => {
+    expect(inputEntryFiles(['C:\\pkg\\src\\index.ts', 'virtual:entry'], 'C:\\pkg')).toEqual([
+      'C:\\pkg\\src\\index.ts',
+    ])
+  })
+
   test('defaultProgramRoots collapses nested entry directories', () => {
     expect(
       defaultProgramRoots(['/pkg/src/index.ts', '/pkg/src/cli/index.ts', '/pkg/other/entry.ts']),
