@@ -24,6 +24,10 @@ catalog:
   typescript: 7.0.2
   vitest: ^5.0.1
 
+# When running `pnpm add`, reuse a dependency's catalog version automatically if
+# it already exists in a catalog, so shared deps stay aligned on a single version.
+catalogMode: prefer
+
 # Lifecycle scripts that must run for native/binary packages (pnpm v11 defaults
 # strictDepBuilds to true, so unlisted packages fail the install).
 allowBuilds:
