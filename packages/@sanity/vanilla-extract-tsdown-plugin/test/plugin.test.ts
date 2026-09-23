@@ -57,6 +57,31 @@ describe('vanillaExtractPlugin', () => {
     }
   })
 
+  test('passes `compilation: whole-program` through, resolving `roots` against the tsdown cwd', async () => {
+    const plugin = vanillaExtractPlugin({compilation: 'whole-program', roots: ['.']})
+    await plugin.tsdownConfigResolved?.({
+      pkg: {name: '@fixtures/host-library'},
+      cwd: fixtureDir,
+    } as Partial<ResolvedConfig> as ResolvedConfig)
+
+    const logs: string[] = []
+    const bundle = await rolldown({
+      input: path.join(fixtureDir, 'index.ts'),
+      plugins: [plugin],
+      onLog(_level, log) {
+        logs.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findAsset(output, 'bundle.css')).toContain('rgb(1, 2, 3)')
+      expect(findEntryChunk(output).moduleIds).toContain('\0vanilla-extract-program.vanilla.js')
+      expect(logs).toEqual([])
+    } finally {
+      await bundle.close()
+    }
+  })
+
   test("`tsdownConfigResolved` forwards tsdown's package name and `target`", async () => {
     // The self-referential import of `exports` uses the package name tsdown resolved (instead
     // of reading package.json from the working directory), and the CSS syntax lowering target
