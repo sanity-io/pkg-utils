@@ -1,9 +1,10 @@
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import {discoverCssModules} from '@sanity/vanilla-extract-integration'
 import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
 import {describe, expect, test} from 'vitest'
 import {vanillaExtractPlugin, type Options} from '../src/index.ts'
-import {defaultProgramRoots, discoverCssModules, inputEntryFiles} from '../src/wholeProgram.ts'
+import {defaultProgramRoots, inputEntryFiles} from '../src/wholeProgram.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.resolve(__dirname, 'fixtures')

@@ -1,9 +1,6 @@
-import type {Dirent} from 'node:fs'
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  cssFileFilter,
-  normalizePath,
+  discoverCssModules,
   type IdentifierOption,
   type ProcessedVanillaProgram,
 } from '@sanity/vanilla-extract-integration'
@@ -18,9 +15,6 @@ export const PROGRAM_CSS_SPECIFIER_FILTER: RegExp =
   /^virtual:vanilla-extract-program\.vanilla\.css$/
 export const PROGRAM_CSS_MODULE_ID = '\0vanilla-extract-program.vanilla.js'
 
-/** Directories never scanned for `.css.ts` modules. */
-const SKIPPED_DIRECTORIES = new Set(['node_modules', 'dist', '.git'])
-
 /** The absolute paths of the entry files in a normalized rolldown `input` option. */
 export function inputEntryFiles(input: string[] | Record<string, string>, cwd: string): string[] {
   const entries = Array.isArray(input) ? input : Object.values(input)
@@ -34,39 +28,15 @@ export function inputEntryFiles(input: string[] | Record<string, string>, cwd: s
  * of the entry files, minus any nested inside another.
  */
 export function defaultProgramRoots(entryFiles: ReadonlyArray<string>): string[] {
-  const directories = Array.from(new Set(entryFiles.map((file) => path.dirname(file)))).toSorted()
+  const directories = Array.from(new Set(entryFiles.map((file) => path.dirname(file)))).toSorted(
+    (a, b) => a.localeCompare(b),
+  )
   return directories.filter(
     (directory) =>
       !directories.some(
         (other) => other !== directory && directory.startsWith(`${other}${path.sep}`),
       ),
   )
-}
-
-/** Every `.css.ts` (and sibling extension) module under `roots`, sorted, `node_modules` skipped. */
-export async function discoverCssModules(roots: ReadonlyArray<string>): Promise<string[]> {
-  const found = new Set<string>()
-
-  async function walk(directory: string): Promise<void> {
-    let entries: Array<Dirent>
-    try {
-      entries = await fs.readdir(directory, {withFileTypes: true})
-    } catch {
-      return
-    }
-    await Promise.all(
-      entries.map(async (entry) => {
-        if (entry.isDirectory()) {
-          if (!SKIPPED_DIRECTORIES.has(entry.name)) await walk(path.join(directory, entry.name))
-        } else if (entry.isFile() && cssFileFilter.test(entry.name)) {
-          found.add(normalizePath(path.join(directory, entry.name)))
-        }
-      }),
-    )
-  }
-
-  await Promise.all(roots.map((root) => walk(root)))
-  return Array.from(found).toSorted()
 }
 
 /** A whole-program compilation plus the bookkeeping the plugin hooks need around it. */

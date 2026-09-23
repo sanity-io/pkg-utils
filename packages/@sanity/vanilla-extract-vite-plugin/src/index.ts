@@ -3,6 +3,7 @@
  * Copyright (c) 2021 SEEK) with plugin hook filters, the environment-aware `hotUpdate` hook,
  * and a caching compiler on Vite's Environment API / `ModuleRunner` instead of `vite-node`.
  */
+import path from 'node:path'
 import {
   cssFileFilter,
   normalizePath,
@@ -18,11 +19,16 @@ import {
   type TransformResult,
   type UserConfig,
 } from 'vite'
-import {createCompiler, type Compiler} from './compiler.ts'
+import {createCompiler, PROGRAM_CSS_ID, type Compiler} from './compiler.ts'
 import {getAbsoluteId} from './ids.ts'
 
-export {createCompiler} from './compiler.ts'
-export type {Compiler, CreateCompilerOptions, ProcessedVanillaFile} from './compiler.ts'
+export {createCompiler, PROGRAM_CSS_ID} from './compiler.ts'
+export type {
+  Compiler,
+  CreateCompilerOptions,
+  ProcessedVanillaFile,
+  ProcessedVanillaProgram,
+} from './compiler.ts'
 
 const PLUGIN_NAMESPACE = 'sanity-vanilla-extract'
 
@@ -104,6 +110,32 @@ export interface Options {
    * @defaultValue 'emitCss'
    */
   mode?: 'emitCss' | 'inlineCssInDev'
+  /**
+   * How the `.css.ts` modules are compiled during `vite dev` (`serve`):
+   *
+   * - `'per-module'` (the default, and what `@vanilla-extract/vite-plugin` does): each `.css.ts`
+   *   module is evaluated and rendered on its own, and its CSS is served as its own virtual
+   *   `.vanilla.css` module, ordered by Vite's module graph.
+   * - `'whole-program'`: every `.css.ts` module under {@link Options.roots | `roots`} (plus any
+   *   the dev server requests that discovery missed) is evaluated as one program with one
+   *   adapter and rendered as one stylesheet, served as a single virtual CSS module
+   *   ({@link PROGRAM_CSS_ID}). Modules render in dependency order, then discovery order (sorted
+   *   paths), with every conditional block after every unconditional rule — the same order
+   *   `@sanity/vanilla-extract-rolldown-plugin` produces in whole-program mode, so `vite dev`
+   *   and the library build agree. Class names are unchanged. A `.css.ts` edit swaps that one
+   *   stylesheet, and only the modules whose serialized JS actually changed are invalidated.
+   *
+   * Builds (`vite build`) always compile per module: Vite's CSS pipeline orders and splits CSS
+   * by module graph and chunk, which a single program order cannot be expressed through.
+   * @defaultValue 'per-module'
+   */
+  compilation?: 'per-module' | 'whole-program'
+  /**
+   * The directories scanned for `.css.ts` modules in `'whole-program'` mode, relative to the
+   * Vite root. `node_modules`, `dist` and `.git` directories are skipped.
+   * @defaultValue the Vite root
+   */
+  roots?: string[]
 }
 
 /**
@@ -126,6 +158,8 @@ export function vanillaExtractPlugin({
   identifiers,
   pluginFilter,
   mode = 'emitCss',
+  compilation = 'per-module',
+  roots,
 }: Options = {}): Plugin[] {
   let config: ResolvedConfig
   let configEnv: ConfigEnv
@@ -137,6 +171,9 @@ export function vanillaExtractPlugin({
   const transformedModules = new Set<string>()
 
   const getIdentOption = () => identifiers ?? (config.mode === 'production' ? 'short' : 'debug')
+
+  /** Whole-program compilation applies to the dev server only, see `Options.compilation`. */
+  const isWholeProgram = () => compilation === 'whole-program' && config.command === 'serve'
 
   const initializeCompiler = async () => {
     let configForCompiler: UserConfig | undefined
@@ -178,6 +215,8 @@ export function vanillaExtractPlugin({
       cssImportSpecifier: fileIdToVirtualId,
       viteConfig,
       enableFileWatcher: !isBuild,
+      compilation: isWholeProgram() ? 'whole-program' : 'per-module',
+      ...(roots ? {roots: roots.map((root) => path.resolve(config.root, root))} : {}),
     })
   }
 
@@ -212,6 +251,14 @@ export function vanillaExtractPlugin({
    * stale cache entry would keep serving outdated virtual CSS across HMR.
    */
   const ensureCssForVirtualId = async (absoluteVirtualId: string): Promise<string | null> => {
+    if (absoluteVirtualId === PROGRAM_CSS_ID) {
+      // The program's stylesheet: rebuilt when stale (a member was added or a file changed)
+      await ensureCompiler()
+      if (!compiler) return null
+      const {css} = await compiler.processVanillaProgram()
+      return css || null
+    }
+
     const fileId = virtualIdToFileId(absoluteVirtualId)
 
     // Authored `.vanilla.css` files aren't vanilla-extract parents — don't spin up the compiler
@@ -379,6 +426,42 @@ export function vanillaExtractPlugin({
         const {moduleGraph} = this.environment
         const seen = new Set<EnvironmentModuleNode>()
 
+        if (isWholeProgram()) {
+          // Drop the changed file from the compiler (independently of its own watcher's timing),
+          // rebuild the program, and invalidate what changed: the single stylesheet, the members
+          // whose serialized JS differs (a program-level effect, e.g. a composition identifier
+          // another module started referencing), and the changed file's own graph nodes - whose
+          // dependents Vite then hard-invalidates like it does for per-module compilation. Both
+          // environments (client, ssr) call this; the compiler memoizes the rebuild.
+          await compiler.invalidateFile(file)
+          const {changedModules} = await compiler.processVanillaProgram()
+
+          for (const programCssModule of moduleGraph.getModulesByFile(PROGRAM_CSS_ID) ?? [
+            moduleGraph.getModuleById(PROGRAM_CSS_ID),
+          ]) {
+            if (programCssModule) {
+              moduleGraph.invalidateModule(programCssModule, seen, timestamp, true)
+            }
+          }
+          for (const changedModule of changedModules) {
+            const environmentModule = moduleGraph.getModuleById(changedModule)
+            if (environmentModule) {
+              moduleGraph.invalidateModule(environmentModule, seen, timestamp, true)
+            }
+          }
+          for (const mod of importerChain) {
+            // Non-vanilla modules of the chain (e.g. a `util.ts` a `.css.ts` imports) may also
+            // be part of this environment's graph
+            if (mod.id && !cssFileFilter.test(mod.id)) {
+              const environmentModule = moduleGraph.getModuleById(mod.id)
+              if (environmentModule) {
+                moduleGraph.invalidateModule(environmentModule, seen, timestamp, true)
+              }
+            }
+          }
+          return
+        }
+
         for (const mod of importerChain) {
           if (!mod.id) continue
           if (cssFileFilter.test(mod.id)) {
@@ -404,7 +487,10 @@ export function vanillaExtractPlugin({
           const [validId = source, query] = source.split('?')
           if (!isVirtualId(validId)) return undefined
 
-          const absoluteId = getAbsoluteId({filePath: validId, root: config.root})
+          const absoluteId =
+            validId === PROGRAM_CSS_ID
+              ? PROGRAM_CSS_ID
+              : getAbsoluteId({filePath: validId, root: config.root})
           const css = await ensureCssForVirtualId(absoluteId)
           if (!css) return undefined
 
@@ -419,7 +505,10 @@ export function vanillaExtractPlugin({
           const [validId = id] = id.split('?')
           if (!isVirtualId(validId)) return undefined
 
-          const absoluteId = getAbsoluteId({filePath: validId, root: config.root})
+          const absoluteId =
+            validId === PROGRAM_CSS_ID
+              ? PROGRAM_CSS_ID
+              : getAbsoluteId({filePath: validId, root: config.root})
           const css = await ensureCssForVirtualId(absoluteId)
           if (!css) return undefined
 

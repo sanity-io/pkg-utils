@@ -14,6 +14,7 @@
 import {isAbsolute, join} from 'node:path'
 import {
   cssFileFilter,
+  discoverCssModules,
   getPackageInfo,
   normalizePath,
   serializeVanillaModule,
@@ -134,18 +135,63 @@ export interface ProcessedVanillaFile {
   watchFiles: Set<string>
 }
 
+/**
+ * The result of a whole-program compilation (`compilation: 'whole-program'`), see
+ * {@link Compiler.processVanillaProgram}.
+ * @public
+ */
+export interface ProcessedVanillaProgram {
+  /**
+   * The program's CSS: one stylesheet over every member module, rendered in dependency order
+   * (a module's `.css.ts` dependencies before it), then discovery order (sorted paths).
+   */
+  css: string
+  /** The serialized JS of every member module, keyed by normalized absolute path. */
+  modules: ReadonlyMap<string, string>
+  /** The members whose serialized JS differs from the previous program build. */
+  changedModules: ReadonlySet<string>
+}
+
+/**
+ * The id every member of a whole-program compilation imports for the program's CSS. It matches
+ * the plugin's `.vanilla.css` hook filters and Vite's CSS pipeline picks it up like any other
+ * virtual `.css` module.
+ * @public
+ */
+export const PROGRAM_CSS_ID = 'virtual:vanilla-extract-program.vanilla.css'
+
 /** @public */
 export interface Compiler {
   /**
    * Evaluates a `.css.ts` module (through the internal Vite server, cached in its module graph)
    * and returns its serialized JS along with the files it depends on. The extracted CSS is
    * retrievable per file through {@link Compiler.getCssForFile}.
+   *
+   * In whole-program mode the module joins the program (if discovery didn't already find it),
+   * the program is (re)built when stale, and the module's JS is served from it — importing the
+   * program's single CSS module ({@link PROGRAM_CSS_ID}) instead of a per-file one.
    */
   processVanillaFile(
     filePath: string,
     options?: {outputCss?: boolean},
   ): Promise<ProcessedVanillaFile>
-  /** The extracted CSS of a previously processed `.css.ts` file, if any. */
+  /**
+   * Whole-program mode only: (re)builds the program if it is stale — a member was added, or a
+   * file changed (see {@link Compiler.invalidateFile}) — and returns it, including which
+   * members' JS changed since the previous build so the host can invalidate exactly those.
+   */
+  processVanillaProgram(): Promise<ProcessedVanillaProgram>
+  /**
+   * Marks a changed file: its evaluated module (and importers) are dropped from the runner and
+   * the compiler's module graph, and in whole-program mode the program becomes stale. Hosts call
+   * this from their own file watcher so a rebuild never depends on the compiler's watcher
+   * having fired first.
+   */
+  invalidateFile(filePath: string): Promise<void>
+  /**
+   * The extracted CSS of a previously processed `.css.ts` file, if any. In whole-program mode
+   * only {@link PROGRAM_CSS_ID} has CSS: the program's stylesheet.
+   */
   getCssForFile(filePath: string): {filePath: string; css: string} | undefined
   /**
    * All extracted CSS known to the compiler, e.g. to inline into HTML during dev SSR
@@ -197,6 +243,19 @@ export interface CreateCompilerOptions {
    * @defaultValue true
    */
   enableFileWatcher?: boolean
+  /**
+   * `'whole-program'` evaluates every `.css.ts` module under {@link CreateCompilerOptions.roots}
+   * (plus any module requested that discovery missed) as one program with one adapter and
+   * renders one stylesheet, instead of one per module. See `compilation` on the plugin options.
+   * @defaultValue 'per-module'
+   */
+  compilation?: 'per-module' | 'whole-program'
+  /**
+   * The directories scanned for `.css.ts` modules in whole-program mode (`node_modules`, `dist`
+   * and `.git` are skipped).
+   * @defaultValue `[root]`
+   */
+  roots?: string[]
 }
 
 /** Invalidates the runner's evaluated modules for a changed file, and their importers. */
@@ -219,10 +278,13 @@ async function createCompilerServer({
   identifiers,
   viteConfig,
   enableFileWatcher,
+  onFileChanged,
   onFileRemoved,
 }: Required<
   Pick<CreateCompilerOptions, 'root' | 'identifiers' | 'viteConfig' | 'enableFileWatcher'>
 > & {
+  /** Called when the watcher reports a changed file (after the runner dropped it). */
+  onFileChanged: (filePath: string) => void
   /** Called when the watcher reports a deleted file, so the compiler can prune its caches. */
   onFileRemoved: (filePath: string) => void
 }) {
@@ -338,6 +400,7 @@ async function createCompilerServer({
     // cache is normally invalidated through the HMR channel, which is disabled here
     server.watcher.on('change', (filePath) => {
       invalidateRunnerFile(runner, filePath)
+      onFileChanged(filePath)
     })
     server.watcher.on('unlink', (filePath) => {
       invalidateRunnerFile(runner, filePath)
@@ -350,6 +413,16 @@ async function createCompilerServer({
   return {server, runner}
 }
 
+/** Adapter callbacks received a file scope from `@vanilla-extract/css` >= 1.10.0 onwards. */
+function requireFileScope(fileScope: {filePath: string} | undefined): {filePath: string} {
+  if (!fileScope) {
+    throw new Error(
+      'Your version of @vanilla-extract/css must be at least v1.10.0. Please update to a compatible version.',
+    )
+  }
+  return fileScope
+}
+
 /** @public */
 export function createCompiler({
   root,
@@ -357,6 +430,8 @@ export function createCompiler({
   cssImportSpecifier = (filePath) => `${filePath}.vanilla.css`,
   viteConfig = {},
   enableFileWatcher = true,
+  compilation = 'per-module',
+  roots = [root],
 }: CreateCompilerOptions): Compiler {
   const processVanillaFileCache = new Map<
     string,
@@ -369,14 +444,41 @@ export function createCompiler({
     composedClassLists: Composition[]
   }>(root)
 
+  /**
+   * Whole-program mode keeps the raw CSS objects of every evaluated module across program
+   * builds: the runner only re-evaluates invalidated modules, and the program renders all of
+   * them together every time.
+   */
+  const cssObjsByModuleId = new NormalizedMap<Css[]>(root)
+  /** Whole-program mode: every `.css.ts` module known to the program, as normalized paths. */
+  const programMembers = new Set<string>()
+  const programWatchFiles = new NormalizedMap<Set<string>>(root)
+  let programDiscovery: Promise<void> | undefined
+  let programResult: ProcessedVanillaProgram | undefined
+  let programBuild: Promise<ProcessedVanillaProgram> | undefined
+  /** Bumped whenever the program must be rebuilt; a build is current when it saw the latest. */
+  let programVersion = 0
+  let builtProgramVersion = -1
+
+  const markProgramStale = () => {
+    programVersion++
+  }
+
   const serverPromise = createCompilerServer({
     root,
     identifiers,
     viteConfig,
     enableFileWatcher,
+    onFileChanged() {
+      markProgramStale()
+    },
     onFileRemoved(filePath) {
       cssCache.delete(filePath)
       classRegistrationsByModuleId.delete(filePath)
+      cssObjsByModuleId.delete(filePath)
+      programMembers.delete(normalizePath(filePath))
+      programWatchFiles.delete(filePath)
+      markProgramStale()
       const moduleId = normalizePath(filePath)
       for (const cacheKey of processVanillaFileCache.keys()) {
         if (cacheKey.startsWith(`${moduleId}|`)) {
@@ -386,11 +488,182 @@ export function createCompiler({
     },
   })
 
+  const ensureProgramDiscovery = () => {
+    programDiscovery ??= (async () => {
+      for (const file of await discoverCssModules(roots)) programMembers.add(normalizePath(file))
+    })()
+    return programDiscovery
+  }
+
+  /**
+   * Evaluates every program member (the runner re-runs only what was invalidated), orders the
+   * `.css.ts` modules dependency-first from the compiler's module graph, renders them as one
+   * stylesheet and serializes each member's JS from its own exports.
+   */
+  async function buildProgram(): Promise<ProcessedVanillaProgram> {
+    const {server, runner} = await serverPromise
+    await ensureProgramDiscovery()
+    const version = programVersion
+    const moduleGraph = server.environments.ssr.moduleGraph
+    const members = [...programMembers].toSorted((a, b) => a.localeCompare(b))
+
+    const cssAdapter: Adapter = {
+      getIdentOption: () => identifiers,
+      onBeginFileScope: (fileScope) => {
+        // Before (re-)evaluating a file, reset its caches
+        const moduleId = normalizePath(fileScope.filePath)
+        cssObjsByModuleId.set(moduleId, [])
+        classRegistrationsByModuleId.set(moduleId, {
+          localClassNames: new Set(),
+          composedClassLists: [],
+        })
+      },
+      onEndFileScope: (fileScope) => {
+        const moduleId = normalizePath(fileScope.filePath)
+        cssObjsByModuleId.set(moduleId, cssObjsByModuleId.get(moduleId) ?? [])
+      },
+      registerClassName: (className, fileScope) => {
+        classRegistrationsByModuleId
+          .get(requireFileScope(fileScope).filePath)
+          ?.localClassNames.add(className)
+      },
+      registerComposition: (composedClassList, fileScope) => {
+        classRegistrationsByModuleId
+          .get(requireFileScope(fileScope).filePath)
+          ?.composedClassLists.push(composedClassList)
+      },
+      markCompositionUsed: () => {},
+      appendCss: (css, fileScope) => {
+        const moduleId = normalizePath(fileScope.filePath)
+        const cssObjs = cssObjsByModuleId.get(moduleId) ?? []
+        cssObjs.push(css)
+        cssObjsByModuleId.set(moduleId, cssObjs)
+      },
+    }
+
+    return lock(async () => {
+      globalAdapterStore[GLOBAL_ADAPTER_KEY] = cssAdapter
+      const exportsByMember = new Map<string, Record<string, unknown>>()
+      try {
+        for (const member of members) {
+          exportsByMember.set(member, await runner.import<Record<string, unknown>>(member))
+        }
+      } finally {
+        delete globalAdapterStore[GLOBAL_ADAPTER_KEY]
+      }
+
+      // Program order: each member's `.css.ts` dependencies before it, members in sorted order
+      const scanModule = createModuleScanner()
+      const orderedCssModules: string[] = []
+      const seen = new Set<string>()
+      for (const member of members) {
+        const moduleNode = moduleGraph.getModuleById(member)
+        if (!moduleNode) {
+          throw new Error(`[vanilla-extract] Can't find module for ${member}`)
+        }
+        const {cssDeps, watchFiles} = scanModule(moduleNode)
+        programWatchFiles.set(member, watchFiles)
+        for (const cssDep of cssDeps) {
+          const cssDepModuleId = normalizePath(cssDep)
+          if (seen.has(cssDepModuleId)) continue
+          seen.add(cssDepModuleId)
+          orderedCssModules.push(cssDepModuleId)
+        }
+      }
+
+      const localClassNames = new Set<string>()
+      const composedClassLists: Composition[] = []
+      const cssObjs: Css[] = []
+      for (const moduleId of orderedCssModules) {
+        const registrations = classRegistrationsByModuleId.get(moduleId)
+        if (registrations) {
+          for (const className of registrations.localClassNames) localClassNames.add(className)
+          composedClassLists.push(...registrations.composedClassLists)
+        }
+        cssObjs.push(...(cssObjsByModuleId.get(moduleId) ?? []))
+      }
+
+      const usedCompositions = new Set<string>()
+      const css = transformCss({
+        localClassNames: [...localClassNames],
+        composedClassLists,
+        // The renderer mutates its input (pixelify, keyframes) and the objects live on across
+        // program builds
+        cssObjs: structuredClone(cssObjs),
+        onCompositionUsed: (identifier) => usedCompositions.add(identifier),
+      }).join('\n')
+
+      // Unlike per-module compilation, the whole program knows every selector, so unreferenced
+      // composition identifiers can be stripped like the rolldown plugin does
+      const unusedCompositions = composedClassLists
+        .filter(({identifier}) => !usedCompositions.has(identifier))
+        .map(({identifier}) => identifier)
+      const unusedCompositionRegex =
+        unusedCompositions.length > 0 ? RegExp(`(${unusedCompositions.join('|')})\\s`, 'g') : null
+
+      const modules = new Map<string, string>()
+      const changedModules = new Set<string>()
+      for (const [member, fileExports] of exportsByMember) {
+        const source = serializeVanillaModule(
+          [`import '${PROGRAM_CSS_ID}';`],
+          {...fileExports},
+          unusedCompositionRegex,
+        )
+        if (programResult?.modules.get(member) !== source) changedModules.add(member)
+        modules.set(member, source)
+      }
+
+      programResult = {css, modules, changedModules}
+      builtProgramVersion = version
+      return programResult
+    })
+  }
+
+  const isProgramCurrent = (
+    program: ProcessedVanillaProgram | undefined,
+  ): program is ProcessedVanillaProgram =>
+    program !== undefined && builtProgramVersion === programVersion
+
+  /**
+   * The current program, building it when stale. Concurrent callers share one in-flight build;
+   * a member added or a file changed while a build is in flight only lands in the next one.
+   */
+  const ensureProgram = async (): Promise<ProcessedVanillaProgram> => {
+    let program = programResult
+    while (!isProgramCurrent(program)) {
+      programBuild ??= buildProgram().finally(() => {
+        programBuild = undefined
+      })
+      program = await programBuild
+    }
+    return program
+  }
+
+  async function processVanillaFileInProgram(filePath: string): Promise<ProcessedVanillaFile> {
+    await ensureProgramDiscovery()
+    if (!programMembers.has(filePath)) {
+      // Requested but not discovered (outside `roots`): it joins the program from here on
+      programMembers.add(filePath)
+      markProgramStale()
+    }
+    const program = await ensureProgram()
+
+    const source = program.modules.get(filePath)
+    if (source === undefined) {
+      throw new Error(`[vanilla-extract] ${filePath} is not part of the whole-program compilation`)
+    }
+    return {source, watchFiles: programWatchFiles.get(filePath) ?? new Set()}
+  }
+
   return {
     async processVanillaFile(filePath, options = {}) {
       const {server, runner} = await serverPromise
 
       filePath = normalizePath(isAbsolute(filePath) ? filePath : join(root, filePath))
+      if (compilation === 'whole-program') {
+        return processVanillaFileInProgram(filePath)
+      }
+
       const outputCss = options.outputCss ?? true
       const moduleGraph = server.environments.ssr.moduleGraph
 
@@ -425,23 +698,15 @@ export function createCompiler({
           cssByModuleId.set(moduleId, cssByModuleId.get(moduleId) ?? [])
         },
         registerClassName: (className, fileScope) => {
-          if (!fileScope) {
-            throw new Error(
-              'Your version of @vanilla-extract/css must be at least v1.10.0. Please update to a compatible version.',
-            )
-          }
           localClassNames.add(className)
-          classRegistrationsByModuleId.get(fileScope.filePath)?.localClassNames.add(className)
+          classRegistrationsByModuleId
+            .get(requireFileScope(fileScope).filePath)
+            ?.localClassNames.add(className)
         },
         registerComposition: (composedClassList, fileScope) => {
-          if (!fileScope) {
-            throw new Error(
-              'Your version of @vanilla-extract/css must be at least v1.10.0. Please update to a compatible version.',
-            )
-          }
           composedClassLists.push(composedClassList)
           classRegistrationsByModuleId
-            .get(fileScope.filePath)
+            .get(requireFileScope(fileScope).filePath)
             ?.composedClassLists.push(composedClassList)
         },
         markCompositionUsed: () => {
@@ -547,7 +812,30 @@ export function createCompiler({
       return result
     },
 
+    async processVanillaProgram() {
+      if (compilation !== 'whole-program') {
+        throw new Error(
+          '[vanilla-extract] processVanillaProgram() requires `compilation: "whole-program"`',
+        )
+      }
+      return ensureProgram()
+    },
+
+    async invalidateFile(filePath) {
+      const {server, runner} = await serverPromise
+      const normalizedPath = normalizePath(isAbsolute(filePath) ? filePath : join(root, filePath))
+      invalidateRunnerFile(runner, normalizedPath)
+      const moduleGraph = server.environments.ssr.moduleGraph
+      for (const moduleNode of moduleGraph.getModulesByFile(normalizedPath) ?? []) {
+        moduleGraph.invalidateModule(moduleNode)
+      }
+      markProgramStale()
+    },
+
     getCssForFile(filePath) {
+      if (compilation === 'whole-program') {
+        return filePath === PROGRAM_CSS_ID ? {css: programResult?.css ?? '', filePath} : undefined
+      }
       filePath = isAbsolute(filePath) ? filePath : join(root, filePath)
       const result = cssCache.get(normalizePath(filePath))
       if (!result) return undefined
@@ -555,6 +843,9 @@ export function createCompiler({
     },
 
     getAllCss() {
+      if (compilation === 'whole-program') {
+        return programResult?.css ? `${programResult.css}\n` : ''
+      }
       let allCss = ''
       for (const {css} of cssCache.values()) {
         if (css) allCss += `${css}\n`
@@ -588,6 +879,7 @@ export function createCompiler({
           moduleGraph.invalidateModule(moduleNode)
         }
       }
+      markProgramStale()
     },
 
     async close() {

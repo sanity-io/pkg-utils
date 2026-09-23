@@ -20,6 +20,7 @@ export {
   type EvaluatedVanillaModule,
   type EvaluateVanillaModuleOptions,
 } from './evaluateVanillaModule.ts'
+export {discoverCssModules} from './discoverCssModules.ts'
 export {cssFileFilter, virtualCssFileFilter} from './filters.ts'
 export {getSourceFromVirtualCssFile} from './getSourceFromVirtualCssFile.ts'
 export {normalizePath} from './normalizePath.ts'
