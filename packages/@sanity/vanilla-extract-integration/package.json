@@ -36,6 +36,7 @@
     "bench": "vitest bench",
     "build": "tsdown",
     "generate:property-groups": "node scripts/generatePropertyGroups.ts",
+    "install-browser": "playwright install chromium",
     "prepack": "pnpm build",
     "test": "vitest run",
     "typecheck": "tsc --build"
@@ -56,6 +57,7 @@
     "@vanilla-extract/recipes": "^0.5.7",
     "@vanilla-extract/sprinkles": "^1.7.1",
     "mdn-data": "^2.27.1",
+    "playwright": "^1.63.0",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",

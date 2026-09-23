@@ -99,6 +99,11 @@ jobs:
       - run: pnpm integration:test
         env:
           NODE_OPTIONS: --max_old_space_size=8192
+      # The atomic pass's cascade-equivalence property test renders random style sets in
+      # Chromium with and without the pass and compares every element's computed styles. It
+      # skips itself without a browser, so the unit-test matrix (no browser) never runs it.
+      - run: pnpm --filter @sanity/vanilla-extract-integration install-browser
+      - run: pnpm --filter @sanity/vanilla-extract-integration exec vitest run test/cascadeEquivalence.test.ts
 
   test:
     runs-on: ${{ matrix.platform }}
