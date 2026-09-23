@@ -124,7 +124,7 @@ describe('compilation: whole-program', () => {
   test('falls back to per-module compilation for modules outside `roots`, with a warning', async () => {
     const {output, logs} = await buildFixture('program', {
       compilation: 'whole-program',
-      roots: ['test/fixtures/no-css'],
+      roots: [path.join(fixturesDir, 'no-css')],
     })
     const css = findAsset(output, 'bundle.css')
 
@@ -143,9 +143,11 @@ describe('compilation: whole-program', () => {
   })
 
   test('reports discovered modules the build never imports', async () => {
+    // Relative `roots` resolve against the build's `cwd`, so the fixtures are addressed
+    // absolutely to keep the test independent of where vitest runs from
     const {output, logs} = await buildFixture('program', {
       compilation: 'whole-program',
-      roots: ['test/fixtures/program', 'test/fixtures/basic'],
+      roots: [path.join(fixturesDir, 'program'), path.join(fixturesDir, 'basic')],
     })
 
     // Their CSS is part of the program stylesheet regardless...
