@@ -185,3 +185,20 @@ export function isShorthand(property: string): boolean {
   const canonical = canonicalName(property)
   return canonical === 'all' || canonical in SHORTHAND_LONGHANDS
 }
+
+/** Whether a property is a logical longhand (`marginInlineStart`, `inlineSize`). */
+export function isLogicalLonghand(property: string): boolean {
+  return canonicalName(property) in LOGICAL_TO_PHYSICAL
+}
+
+const PHYSICAL_WITH_LOGICAL_COUNTERPART = new Set(Object.values(LOGICAL_TO_PHYSICAL).flat())
+
+/** Whether a property is a physical longhand some logical longhand can resolve to (`marginLeft`, `width`). */
+export function hasLogicalCounterpart(property: string): boolean {
+  return PHYSICAL_WITH_LOGICAL_COUNTERPART.has(canonicalName(property))
+}
+
+/** The longhands a shorthand sets, one level deep (`border` → `borderWidth`, …); empty for anything else. */
+export function directLonghands(property: string): ReadonlyArray<string> {
+  return SHORTHAND_LONGHANDS[canonicalName(property)] ?? []
+}

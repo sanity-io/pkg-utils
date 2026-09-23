@@ -34,6 +34,14 @@ export {
 export {serializeVanillaModule, type ClassListExpansions} from './serializeVanillaModule.ts'
 export {transform, type TransformParams} from './transform.ts'
 export type {AtomicOptions, AtomicReport} from './atomic/atomicPass.ts'
+export {
+  conditionPriority,
+  declarationPriority,
+  priorityLayer,
+  propertyPriority,
+  selectorPriority,
+  type DeclarationPriorityInput,
+} from './atomic/priorities.ts'
 export {isShorthand, physicalLonghands, propertiesOverlap} from './atomic/propertyGroups.ts'
 export {
   renderStylesheet,
