@@ -37,6 +37,47 @@ function isPlainObject(value: unknown): boolean {
   )
 }
 
+/**
+ * The atomic pass's result the serializer needs to expand exported class lists, see
+ * {@link serializeVanillaModule}.
+ * @public
+ */
+export interface ClassListExpansions {
+  /** Every class name registered by the evaluated modules, to recognize class list strings. */
+  localClassNames: ReadonlySet<string>
+  /** Identity class → the atomic classes its declarations were split into. */
+  expansions: ReadonlyMap<string, ReadonlyArray<string>>
+}
+
+/**
+ * Appends the atomic classes of every identity class in a class list string, keeping each
+ * identity class in place and first before its own atomics: `'a1'` → `'a1 x1 x2'`,
+ * `'c1 a1'` → `'c1 x3 a1 x1 x2'`. Strings that aren't pure class lists (a token that isn't a
+ * registered class, e.g. an exported selector string) are left untouched.
+ */
+function expandClassList(
+  value: string,
+  {localClassNames, expansions}: ClassListExpansions,
+): string {
+  if (value === '') return value
+  const tokens = value.split(' ')
+  if (!tokens.every((token) => localClassNames.has(token))) return value
+
+  const result: string[] = []
+  const seen = new Set<string>()
+  for (const token of tokens) {
+    if (seen.has(token)) continue
+    seen.add(token)
+    result.push(token)
+    for (const atomicClass of expansions.get(token) ?? []) {
+      if (seen.has(atomicClass)) continue
+      seen.add(atomicClass)
+      result.push(atomicClass)
+    }
+  }
+  return result.join(' ')
+}
+
 function stringifyExports(
   functionSerializationImports: Set<string>,
   value: unknown,
@@ -44,6 +85,7 @@ function stringifyExports(
   key: string,
   exportLookup: Map<unknown, string>,
   exportDependencyGraph: DependencyGraph,
+  classListExpansions: ClassListExpansions | undefined,
 ): string | undefined {
   return stringify(
     value,
@@ -74,7 +116,8 @@ function stringifyExports(
       }
 
       if (typeof node === 'string') {
-        return next(unusedCompositionRegex ? node.replace(unusedCompositionRegex, '') : node)
+        const stripped = unusedCompositionRegex ? node.replace(unusedCompositionRegex, '') : node
+        return next(classListExpansions ? expandClassList(stripped, classListExpansions) : stripped)
       }
 
       if (typeof node === 'function') {
@@ -114,6 +157,7 @@ function stringifyExports(
                   key,
                   exportLookup,
                   exportDependencyGraph,
+                  classListExpansions,
                 ),
               )
               .join(',')})`
@@ -183,13 +227,16 @@ class DependencyGraph {
 
 /**
  * Serializes the evaluated exports of a `.css.ts` module (plus its virtual CSS imports) back
- * into an ES module.
+ * into an ES module. With `classListExpansions` (the atomic pass's result), every exported
+ * class list gains the atomic classes of the identity classes it contains — the same classlist
+ * shape as vanilla-extract's own style composition, identity class first.
  * @public
  */
 export function serializeVanillaModule(
   cssImports: Array<string>,
   exports: Record<string, unknown>,
   unusedCompositionRegex: RegExp | null,
+  classListExpansions?: ClassListExpansions,
 ): string {
   const functionSerializationImports = new Set<string>()
   const exportLookup = new Map(
@@ -208,6 +255,7 @@ export function serializeVanillaModule(
       key === 'default' ? defaultExportName : key,
       exportLookup,
       exportDependencyGraph,
+      classListExpansions,
     )
 
     if (key === 'default') {

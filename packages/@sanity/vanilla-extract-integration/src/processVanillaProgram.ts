@@ -7,11 +7,12 @@
  */
 import path from 'node:path'
 import type {FileScope} from '@vanilla-extract/css'
+import type {AtomicReport} from './atomic/atomicPass.ts'
 import {compileProgram} from './compile.ts'
 import {evaluateVanillaModule} from './evaluateVanillaModule.ts'
 import {parseFileScope} from './fileScope.ts'
 import {serializeVanillaModule} from './serializeVanillaModule.ts'
-import {transformCss} from './transformCss/transformCss.ts'
+import {renderStylesheet} from './transformCss/transformCss.ts'
 import type {CSS} from './transformCss/types.ts'
 import {toRecord} from './transformCss/utils.ts'
 import type {IdentifierOption} from './types.ts'
@@ -35,6 +36,13 @@ export interface ProcessVanillaProgramOptions {
    * `?source=` specifier, since it is shared by every module.
    */
   cssImports?: ReadonlyArray<string>
+  /**
+   * Enables the atomic pass over the whole program: identical declarations are shared across
+   * every module wherever that cannot change what an element renders as, and every module's
+   * exported class lists are expanded with the atomic classes (identity class first).
+   * @defaultValue false
+   */
+  atomic?: boolean
 }
 
 /** @public */
@@ -55,6 +63,8 @@ export interface ProcessedVanillaProgram {
    * (the serialized modules don't import each other), so this is how to tell it is reached.
    */
   dependencies: ReadonlyMap<string, ReadonlySet<string>>
+  /** The atomic pass's statistics, when `atomic` is enabled. */
+  atomicReport: AtomicReport | undefined
 }
 
 /**
@@ -67,6 +77,7 @@ export async function processVanillaProgram({
   cwd = process.cwd(),
   identOption = process.env['NODE_ENV'] === 'production' ? 'short' : 'debug',
   cssImports = [],
+  atomic = false,
 }: ProcessVanillaProgramOptions): Promise<ProcessedVanillaProgram> {
   const {source, namespaces, watchFiles, dependencies} = await compileProgram({
     filePaths,
@@ -90,12 +101,15 @@ export async function processVanillaProgram({
     cssObjs.push(...fileScopeCss)
   }
 
-  const css = transformCss({
+  const rendered = renderStylesheet({
     localClassNames: Array.from(localClassNames),
     composedClassLists,
     cssObjs,
     onCompositionUsed: (identifier) => usedCompositions.add(identifier),
-  }).join('\n')
+    // One scope for the whole program: the classes are shared across every module
+    ...(atomic ? {atomic: {scopeKey: 'program', identOption}} : {}),
+  })
+  const css = rendered.css.join('\n')
 
   const unusedCompositions = composedClassLists
     .filter(({identifier}) => !usedCompositions.has(identifier))
@@ -117,9 +131,18 @@ export async function processVanillaProgram({
         // Namespace objects expose their exports as enumerable getters
         {...toRecord(moduleExports)},
         unusedCompositionRegex,
+        atomic ? {localClassNames, expansions: rendered.expansions} : undefined,
       ),
     )
   }
 
-  return {css, modules, fileScopes, cssByFileScope, watchFiles, dependencies}
+  return {
+    css,
+    modules,
+    fileScopes,
+    cssByFileScope,
+    watchFiles,
+    dependencies,
+    atomicReport: rendered.report,
+  }
 }

@@ -3,12 +3,18 @@
  * `packages/css/src/conditionalRulesets.ts`, with the untyped rule bodies typed.
  */
 
+import type {AtomicDeclaration} from '../atomic/atomicPass.ts'
+
 /** e.g. @media screen and (min-width: 500px) */
 type Query = string
 
 export interface ConditionalRule {
   selector: string
   rule: Record<string, unknown>
+  /** Set when the rule is a single atomic declaration split off a `style()` rule. */
+  atomic?: AtomicDeclaration
+  /** Set by the atomic pass when an earlier identical declaration renders this rule. */
+  dropped?: boolean
 }
 
 export interface Condition {
@@ -192,6 +198,7 @@ export class ConditionalRuleset {
       const selectors: Record<string, unknown> = {}
 
       for (const rule of rules) {
+        if (rule.dropped) continue
         const existing = selectors[rule.selector]
         selectors[rule.selector] = {
           // Preserve existing declarations if a rule with the same selector has already been added

@@ -31,8 +31,15 @@ export {
   type ProcessedVanillaProgram,
   type ProcessVanillaProgramOptions,
 } from './processVanillaProgram.ts'
-export {serializeVanillaModule} from './serializeVanillaModule.ts'
+export {serializeVanillaModule, type ClassListExpansions} from './serializeVanillaModule.ts'
 export {transform, type TransformParams} from './transform.ts'
-export {transformCss, type TransformCssParams} from './transformCss/transformCss.ts'
+export type {AtomicOptions, AtomicReport} from './atomic/atomicPass.ts'
+export {isShorthand, physicalLonghands, propertiesOverlap} from './atomic/propertyGroups.ts'
+export {
+  renderStylesheet,
+  transformCss,
+  type RenderedStylesheet,
+  type TransformCssParams,
+} from './transformCss/transformCss.ts'
 export type {Composition, CSS} from './transformCss/types.ts'
 export type {IdentifierOption} from './types.ts'

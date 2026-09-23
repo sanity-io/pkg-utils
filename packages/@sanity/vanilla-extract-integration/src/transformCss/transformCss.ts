@@ -12,7 +12,16 @@
  */
 import {markCompositionUsed} from '@vanilla-extract/css/adapter'
 import AhoCorasick from 'modern-ahocorasick'
-import {ConditionalRuleset} from './conditionalRulesets.ts'
+import {
+  planAtomicClasses,
+  renderTemplate,
+  selectorTemplate,
+  type AtomicDeclaration,
+  type AtomicOptions,
+  type AtomicReport,
+  type RenderedDeclaration,
+} from '../atomic/atomicPass.ts'
+import {ConditionalRuleset, type ConditionalRule} from './conditionalRulesets.ts'
 import {cssesc} from './cssesc.ts'
 import {nestingSelectorRegex} from './nestingSelectorRegex.ts'
 import {simplePseudoLookup, simplePseudos} from './simplePseudos.ts'
@@ -114,6 +123,10 @@ export interface CSSRule {
   conditions?: Array<string>
   selector: string
   rule: Record<string, unknown>
+  /** Set when the rule is a single atomic declaration split off a `style()` rule. */
+  atomic?: AtomicDeclaration
+  /** Set by the atomic pass when an earlier identical declaration renders this rule. */
+  dropped?: boolean
 }
 
 /** The branches of one at-rule kind on a style block, e.g. `StyleRule['@media']`. */
@@ -128,6 +141,12 @@ export interface StylesheetOptions {
    * behavior.
    */
   onCompositionUsed?: (identifier: string) => void
+  /**
+   * Enables the atomic pass: the declarations of `style()` rules are rendered as shared
+   * single-declaration classes where that cannot change what any element renders as, and the
+   * style's exported class list is expanded with them (see {@link RenderedStylesheet.expansions}).
+   */
+  atomic?: AtomicOptions
 }
 
 export class Stylesheet {
@@ -142,6 +161,12 @@ export class Stylesheet {
   layers: Map<string, Array<string>>
   propertyRules: Array<CSSPropertyBlock>
   readonly onCompositionUsed: (identifier: string) => void
+  readonly atomic: AtomicOptions | undefined
+  /** The style block whose rules are being added, for the atomic pass to know the identity class. */
+  currentRoot: CSSStyleBlock | CSSSelectorBlock | undefined
+  /** Identity class → atomic classes, filled by {@link toCss} when the atomic pass is enabled. */
+  expansions: Map<string, string[]>
+  report: AtomicReport | undefined
 
   constructor(
     localClassNames: Array<string>,
@@ -159,6 +184,8 @@ export class Stylesheet {
     this.localClassNamesSearch = new AhoCorasick(localClassNames)
     this.layers = new Map()
     this.onCompositionUsed = options.onCompositionUsed ?? markCompositionUsed
+    this.atomic = options.atomic
+    this.expansions = new Map()
 
     // Class list compositions should be priortized by Newer > Older
     // Therefore we reverse the array as they are added in sequence
@@ -200,6 +227,8 @@ export class Stylesheet {
       const layerDefinition = `@layer ${root.name}`
       this.addLayer([layerDefinition])
     } else {
+      this.currentRoot = root
+
       // Add main styles
       const mainRule = omit(root.rule, specialKeys)
       this.addRule({
@@ -216,6 +245,8 @@ export class Stylesheet {
 
       this.transformSimplePseudos(root, root.rule)
       this.transformSelectors(root, root.rule)
+
+      this.currentRoot = undefined
     }
 
     const activeConditionalRuleset = this.conditionalRulesets[this.conditionalRulesets.length - 1]
@@ -242,14 +273,9 @@ export class Stylesheet {
       throw new Error(`Couldn't add conditional rule`)
     }
 
-    this.currConditionalRuleset.addRule(
-      {
-        selector,
-        rule,
-      },
-      conditionQuery,
-      parentConditions,
-    )
+    for (const entry of this.splitAtomic({selector, rule}, conditions)) {
+      this.currConditionalRuleset.addRule(entry, conditionQuery, parentConditions)
+    }
   }
 
   addRule(cssRule: CSSRule): void {
@@ -257,10 +283,30 @@ export class Stylesheet {
     const rule = this.transformVars(this.transformProperties(cssRule.rule))
     const selector = this.transformSelector(cssRule.selector)
 
-    this.rules.push({
-      selector,
-      rule,
-    })
+    this.rules.push(...this.splitAtomic({selector, rule}, []))
+  }
+
+  /**
+   * With the atomic pass enabled, splits a `style()` rule whose selector targets the style's
+   * class once into one entry per declaration (selector kept as a `&` template until the pass
+   * assigns class names in {@link toCss}); every other rule stays whole.
+   */
+  splitAtomic(entry: CSSRule, conditions: ReadonlyArray<string>): CSSRule[] {
+    const root = this.currentRoot
+    if (!this.atomic || root?.type !== 'local') return [entry]
+
+    const template = selectorTemplate(entry.selector, root.selector)
+    if (template === undefined) return [entry]
+
+    const split: CSSRule[] = []
+    for (const [property, value] of Object.entries(entry.rule)) {
+      split.push({
+        selector: template,
+        rule: {[property]: value},
+        atomic: {identity: root.selector, template, conditions: [...conditions], property, value},
+      })
+    }
+    return split
   }
 
   addLayer(layer: Array<string>): void {
@@ -693,7 +739,71 @@ export class Stylesheet {
     }
   }
 
+  /**
+   * Visits every declaration block in the order {@link toCss} renders it: unconditional rules,
+   * then each conditional ruleset's conditions in precedence order (rules grouped by selector
+   * at the position of the selector's first rule, children after), which is the order the
+   * cascade sees.
+   */
+  walkRenderOrder(visit: (entry: CSSRule | ConditionalRule, conditions: string[]) => void): void {
+    for (const rule of this.rules) visit(rule, [])
+
+    const walk = (ruleset: ConditionalRuleset, conditions: string[]) => {
+      for (const {query, rules, children} of ruleset.getSortedRuleset()) {
+        const path = [...conditions, query]
+        const groups = new Map<string | ConditionalRule, ConditionalRule[]>()
+        for (const rule of rules) {
+          // Atomic entries render under a class of their own; other rules with the same
+          // selector are merged into the first one's block
+          const groupKey = rule.atomic ? rule : rule.selector
+          const group = groups.get(groupKey)
+          if (group) group.push(rule)
+          else groups.set(groupKey, [rule])
+        }
+        for (const group of groups.values()) {
+          for (const rule of group) visit(rule, path)
+        }
+        walk(children, path)
+      }
+    }
+    for (const conditionalRuleset of this.conditionalRulesets) walk(conditionalRuleset, [])
+  }
+
+  /** Runs the atomic pass over the rendering order, assigning class names and dropping shares. */
+  applyAtomicPass(atomic: AtomicOptions): void {
+    const declarations: RenderedDeclaration[] = []
+    const atomicEntries = new Map<number, CSSRule | ConditionalRule>()
+
+    this.walkRenderOrder((entry, conditions) => {
+      if (entry.atomic) {
+        atomicEntries.set(declarations.length, entry)
+        declarations.push({
+          property: entry.atomic.property,
+          value: entry.atomic.value,
+          conditions,
+          atomic: entry.atomic,
+        })
+        return
+      }
+      for (const [property, value] of Object.entries(entry.rule)) {
+        declarations.push({property, value, conditions})
+      }
+    })
+
+    const {decisions, expansions, report} = planAtomicClasses(declarations, atomic)
+    for (const [index, entry] of atomicEntries) {
+      const decision = decisions.get(index)
+      if (!decision || !entry.atomic) continue
+      entry.selector = renderTemplate(entry.atomic.template, decision.className)
+      if (decision.shared) entry.dropped = true
+    }
+    this.expansions = expansions
+    this.report = report
+  }
+
   toCss(): Array<string> {
+    if (this.atomic) this.applyAtomicPass(this.atomic)
+
     const css: Array<string> = []
 
     // Render font-face rules
@@ -730,6 +840,7 @@ export class Stylesheet {
 
     // Render unconditional rules
     for (const rule of this.rules) {
+      if (rule.dropped) continue
       css.push(renderCss({[rule.selector]: rule.rule}))
     }
 
@@ -777,22 +888,46 @@ export interface TransformCssParams extends StylesheetOptions {
   cssObjs: Array<CSS>
 }
 
+/** @public */
+export interface RenderedStylesheet {
+  /** One string per top-level rule. */
+  css: string[]
+  /**
+   * With the atomic pass enabled: each `style()` class and the atomic classes its declarations
+   * were split into, in rendering order — what the serializer appends to the exported class
+   * lists. Empty otherwise.
+   */
+  expansions: ReadonlyMap<string, ReadonlyArray<string>>
+  /** The atomic pass's statistics, when enabled. */
+  report: AtomicReport | undefined
+}
+
 /**
- * Renders the CSS objects collected by an adapter into CSS rules, one string per top-level rule
- * — the vendored equivalent of `transformCss` from `@vanilla-extract/css/transformCss`.
+ * Renders the CSS objects collected by an adapter, like {@link transformCss}, and also returns
+ * the atomic pass's class list expansions and report.
  * @public
  */
-export function transformCss({
+export function renderStylesheet({
   localClassNames,
   cssObjs,
   composedClassLists,
   ...options
-}: TransformCssParams): string[] {
+}: TransformCssParams): RenderedStylesheet {
   const stylesheet = new Stylesheet(localClassNames, composedClassLists, options)
 
   for (const root of cssObjs) {
     stylesheet.processCssObj(root)
   }
 
-  return stylesheet.toCss()
+  const css = stylesheet.toCss()
+  return {css, expansions: stylesheet.expansions, report: stylesheet.report}
+}
+
+/**
+ * Renders the CSS objects collected by an adapter into CSS rules, one string per top-level rule
+ * — the vendored equivalent of `transformCss` from `@vanilla-extract/css/transformCss`.
+ * @public
+ */
+export function transformCss(params: TransformCssParams): string[] {
+  return renderStylesheet(params).css
 }
