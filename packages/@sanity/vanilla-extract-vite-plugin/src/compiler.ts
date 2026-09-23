@@ -18,10 +18,12 @@ import {
   normalizePath,
   serializeVanillaModule,
   transform,
+  transformCss,
+  type Composition,
+  type CSS as Css,
   type IdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 import type {Adapter} from '@vanilla-extract/css'
-import {transformCss} from '@vanilla-extract/css/transformCss'
 import {
   createServer,
   createServerModuleRunner,
@@ -30,9 +32,6 @@ import {
 } from 'vite'
 import type {EvaluatedModuleNode, ModuleRunner} from 'vite/module-runner'
 import {lock} from './lock.ts'
-
-type Css = Parameters<Adapter['appendCss']>[0]
-type Composition = Parameters<Adapter['registerComposition']>[0]
 
 /**
  * The evaluated `.css.ts` modules call `setAdapter(globalThis[...])` (spliced in by the
@@ -500,6 +499,8 @@ export function createCompiler({
                       localClassNames: [...localClassNames],
                       composedClassLists: orderedComposedClassLists,
                       cssObjs,
+                      // This compiler currently retains all composition classes
+                      onCompositionUsed: () => {},
                     })
                   : []
               cssCache.set(cssDepModuleId, {css: cssRules.join('\n')})
