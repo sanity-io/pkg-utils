@@ -4,7 +4,7 @@
 
 ## Requirements
 
-- Node.js >= 25.5.0 (ESM support requires >= 25.7.0)
+- Node.js >= 25.7.0
 - Not supported in Bun or Deno
 
 ## Basic Usage
@@ -18,7 +18,6 @@ export default defineConfig({
 
 ## Behavior When Enabled
 
-- Default output format changes from `esm` to `cjs` (unless Node.js >= 25.7.0)
 - Declaration file generation (`dts`) is disabled by default
 - Code splitting is disabled
 - Only single entry points are supported
@@ -42,24 +41,24 @@ export default defineConfig({
 
 ## `ExeOptions`
 
-| Option      | Type                                                  | Description                                                   |
-| ----------- | ----------------------------------------------------- | ------------------------------------------------------------- |
-| `seaConfig` | `Omit<SeaConfig, 'main' \| 'output' \| 'mainFormat'>` | Node.js configuration options                                 |
-| `fileName`  | `string \| ((chunk) => string)`                       | Custom output file name (without `.exe` or platform suffixes) |
-| `targets`   | `ExeTarget[]`                                         | Cross-platform build targets (requires `@tsdown/exe`)         |
+| Option | Type | Description |
+|--------|------|-------------|
+| `seaConfig` | `Omit<SeaConfig, 'main' \| 'output' \| 'mainFormat'>` | Node.js configuration options |
+| `fileName` | `string \| ((chunk) => string)` | Custom output file name (without `.exe` or platform suffixes) |
+| `targets` | `ExeTarget[]` | Cross-platform build targets (requires `@tsdown/exe`) |
 
 ## `SeaConfig`
 
 See [Node.js Single Executable Applications documentation](https://nodejs.org/api/single-executable-applications.html).
 
-| Option                          | Type                       | Default | Description                      |
-| ------------------------------- | -------------------------- | ------- | -------------------------------- |
-| `disableExperimentalSEAWarning` | `boolean`                  | `true`  | Disable the experimental warning |
-| `useSnapshot`                   | `boolean`                  | `false` | Use V8 snapshot                  |
-| `useCodeCache`                  | `boolean`                  | `false` | Use V8 code cache                |
-| `execArgv`                      | `string[]`                 | -       | Extra Node.js arguments          |
-| `execArgvExtension`             | `'none' \| 'env' \| 'cli'` | `'env'` | How to extend execArgv           |
-| `assets`                        | `Record<string, string>`   | -       | Assets to embed                  |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `disableExperimentalSEAWarning` | `boolean` | `true` | Disable the experimental warning |
+| `useSnapshot` | `boolean` | `false` | Use V8 snapshot |
+| `useCodeCache` | `boolean` | `false` | Use V8 code cache |
+| `execArgv` | `string[]` | - | Extra Node.js arguments |
+| `execArgvExtension` | `'none' \| 'env' \| 'cli'` | `'env'` | How to extend execArgv |
+| `assets` | `Record<string, string>` | - | Assets to embed |
 
 ## Cross-Platform Builds
 
@@ -74,9 +73,9 @@ export default defineConfig({
   entry: ['src/cli.ts'],
   exe: {
     targets: [
-      {platform: 'linux', arch: 'x64', nodeVersion: '25.7.0'},
-      {platform: 'darwin', arch: 'arm64', nodeVersion: '25.7.0'},
-      {platform: 'win', arch: 'x64', nodeVersion: '25.7.0'},
+      { platform: 'linux', arch: 'x64', nodeVersion: '25.7.0' },
+      { platform: 'darwin', arch: 'arm64', nodeVersion: '25.7.0' },
+      { platform: 'win', arch: 'x64', nodeVersion: '25.7.0' },
     ],
   },
 })
@@ -93,16 +92,33 @@ dist/
 
 ### `ExeTarget`
 
-| Field         | Type                           | Description                          |
-| ------------- | ------------------------------ | ------------------------------------ |
-| `platform`    | `'win' \| 'darwin' \| 'linux'` | Target OS (nodejs.org naming)        |
-| `arch`        | `'x64' \| 'arm64'`             | Target CPU architecture              |
-| `nodeVersion` | `string`                       | Node.js version (must be `>=25.7.0`) |
+| Field | Type | Description |
+|-------|------|-------------|
+| `platform` | `'win' \| 'darwin' \| 'linux'` | Target OS (nodejs.org naming) |
+| `arch` | `'x64' \| 'arm64'` | Target CPU architecture |
+| `nodeVersion` | `string` | Node.js version (must be `>=25.7.0`), or `'latest'` / `'latest-lts'` to resolve automatically |
+
+### Custom Node.js Index and Download URL
+
+When downloading Node.js binaries (e.g. behind a corporate proxy or using a mirror), you can customize the sources:
+
+```ts
+export default defineConfig({
+  entry: ['src/cli.ts'],
+  exe: {
+    targets: [{ platform: 'linux', arch: 'x64', nodeVersion: 'latest-lts' }],
+    // Index used to resolve 'latest' / 'latest-lts' versions
+    nodeDistIndexUrl: 'https://mirrors.example.com/node/index.json', // default: https://nodejs.org/dist/index.json
+    // Fully custom download URL per target
+    getDownloadUrl: (target) =>
+      `https://mirrors.example.com/node/v${target.nodeVersion}/node-v${target.nodeVersion}-${target.platform}-${target.arch}.tar.gz`,
+  },
+})
+```
 
 ### Caching
 
 Downloaded Node.js binaries are cached in system cache directories:
-
 - **macOS:** `~/Library/Caches/tsdown/node/`
 - **Linux:** `~/.cache/tsdown/node/`
 - **Windows:** `%LOCALAPPDATA%/tsdown/Caches/node/`
