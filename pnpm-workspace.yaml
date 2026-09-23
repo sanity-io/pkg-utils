@@ -61,7 +61,7 @@ overrides:
   # Scoped to these packages only — a workspace-wide `rolldown` override would also move
   # copies that pin an older range (and must not be used to yank vite off its own resolve).
   'tsdown>rolldown': '~1.2.9'
-  '@tsdown/css>rolldown': '~1.2.9'
+  '@tsdown/css>rolldown': '~1.2.10'
 
 # This is needed for prettier to be able to use the plugin specified by the `@sanity/prettier-config` preset
 publicHoistPattern:
