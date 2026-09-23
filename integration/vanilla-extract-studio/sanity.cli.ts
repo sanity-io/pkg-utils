@@ -30,12 +30,25 @@ function resolveIdentifiers(): IdentifierOption | undefined {
   throw new Error(`Unsupported VE_IDENTIFIERS value: ${identifiers}`)
 }
 
+function resolveCompilation(): 'per-module' | 'whole-program' | undefined {
+  const compilation = process.env['VE_COMPILATION']
+  if (!compilation) return undefined
+  if (compilation === 'per-module' || compilation === 'whole-program') return compilation
+  throw new Error(`Unsupported VE_COMPILATION value: ${compilation}`)
+}
+
 function resolvePlugin(): PluginOption {
   const implementation = process.env['VE_PLUGIN'] ?? 'fork'
   const identifiers = resolveIdentifiers()
   const options = identifiers === undefined ? {} : {identifiers}
-  if (implementation === 'fork') return forkVanillaExtractPlugin(options)
-  if (implementation === 'upstream') return upstreamVanillaExtractPlugin(options)
+  const compilation = resolveCompilation()
+  if (implementation === 'fork') {
+    return forkVanillaExtractPlugin(compilation ? {...options, compilation} : options)
+  }
+  if (implementation === 'upstream') {
+    if (compilation) throw new Error('VE_COMPILATION only applies to the fork')
+    return upstreamVanillaExtractPlugin(options)
+  }
   throw new Error(`Unsupported VE_PLUGIN value: ${implementation}`)
 }
 

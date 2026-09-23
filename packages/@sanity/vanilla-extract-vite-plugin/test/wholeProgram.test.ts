@@ -59,6 +59,12 @@ async function writeProgramFixture({
       `  borderColor: 'rgb(4, 5, 6)',`,
       `})`,
       ``,
+      `/** A composition with rules of its own: its identifier carries them and must be kept. */`,
+      `export const emphasized: string = style([shown, {fontWeight: 600}])`,
+      ``,
+      `/** A pure composition nothing references: its identifier is stripped, like in builds. */`,
+      `export const alias: string = style([shown])`,
+      ``,
     ].join('\n'),
   )
   await writeFile(
@@ -207,6 +213,22 @@ describe('compiler: whole-program', () => {
     expect(third.modules.get(normalizePath(layoutCssTs))).toBe(
       first.modules.get(normalizePath(layoutCssTs)),
     )
+  })
+
+  test('keeps composition identifiers that carry rules and strips unreferenced pure ones', async () => {
+    await writeProgramFixture()
+    const compiler = createProgramCompiler(programRoot)
+
+    const {modules, css} = await compiler.processVanillaProgram()
+    const overrides = modules.get(normalizePath(overridesCssTs)) ?? ''
+    // `style([shown, {fontWeight: 600}])` marked itself used while evaluating: identifier first,
+    // then the composed class, and its rule is in the stylesheet
+    expect(overrides).toMatch(
+      /export var emphasized = 'overrides_emphasized__\w+ overrides_shown__\w+';/,
+    )
+    expect(css).toMatch(/\.overrides_emphasized__\w+ \{\n {2}font-weight: 600;\n\}/)
+    // `style([shown])` has no rules and no selector references it: only the composed class
+    expect(overrides).toMatch(/export var alias = 'overrides_shown__\w+';/)
   })
 
   test('adds requested modules that discovery did not cover', async () => {

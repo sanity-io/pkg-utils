@@ -92,6 +92,7 @@ function buildEnvironment(
   variant?: BuildVariant,
 ): NodeJS.ProcessEnv {
   return {
+    VE_BENCH_COMPILATION: variant?.compilation ?? 'per-module',
     VE_BENCH_FIXTURE_ROOT: fixtureRoot,
     VE_BENCH_IDENTIFIERS: variant?.identifiers ?? 'short',
     VE_BENCH_MINIFY: variant?.minify ? '1' : '0',

@@ -442,6 +442,12 @@ export function createCompiler({
   const classRegistrationsByModuleId = new NormalizedMap<{
     localClassNames: Set<string>
     composedClassLists: Composition[]
+    /**
+     * Composition identifiers `@vanilla-extract/css` marked as used while the module evaluated
+     * (a `style([base, {…}])` with rules of its own marks itself), which the whole-program
+     * serialization must keep even though no selector references them.
+     */
+    usedCompositions: Set<string>
   }>(root)
 
   /**
@@ -516,6 +522,7 @@ export function createCompiler({
         classRegistrationsByModuleId.set(moduleId, {
           localClassNames: new Set(),
           composedClassLists: [],
+          usedCompositions: new Set(),
         })
       },
       onEndFileScope: (fileScope) => {
@@ -532,7 +539,15 @@ export function createCompiler({
           .get(requireFileScope(fileScope).filePath)
           ?.composedClassLists.push(composedClassList)
       },
-      markCompositionUsed: () => {},
+      markCompositionUsed: (identifier) => {
+        // `markCompositionUsed` carries no file scope: the composition belongs to whichever
+        // module registered it
+        for (const registrations of classRegistrationsByModuleId.values()) {
+          if (registrations.composedClassLists.some((entry) => entry.identifier === identifier)) {
+            registrations.usedCompositions.add(identifier)
+          }
+        }
+      },
       appendCss: (css, fileScope) => {
         const moduleId = normalizePath(fileScope.filePath)
         const cssObjs = cssObjsByModuleId.get(moduleId) ?? []
@@ -573,17 +588,18 @@ export function createCompiler({
 
       const localClassNames = new Set<string>()
       const composedClassLists: Composition[] = []
+      const usedCompositions = new Set<string>()
       const cssObjs: Css[] = []
       for (const moduleId of orderedCssModules) {
         const registrations = classRegistrationsByModuleId.get(moduleId)
         if (registrations) {
           for (const className of registrations.localClassNames) localClassNames.add(className)
           composedClassLists.push(...registrations.composedClassLists)
+          for (const identifier of registrations.usedCompositions) usedCompositions.add(identifier)
         }
         cssObjs.push(...(cssObjsByModuleId.get(moduleId) ?? []))
       }
 
-      const usedCompositions = new Set<string>()
       const css = transformCss({
         localClassNames: [...localClassNames],
         composedClassLists,
@@ -689,6 +705,7 @@ export function createCompiler({
           classRegistrationsByModuleId.set(moduleId, {
             localClassNames: new Set(),
             composedClassLists: [],
+            usedCompositions: new Set(),
           })
         },
         onEndFileScope: (fileScope) => {

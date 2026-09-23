@@ -22,7 +22,12 @@ Commands, each across the shared option matrix in `test/variants.ts`:
   effects, and fork ≡ upstream equality of both.
 - **`sanity dev`** (`test/dev.test.ts`) — identifier variants. Requests the transformed
   `.css.ts` modules over HTTP like the browser would, follows their virtual `.vanilla.css`
-  imports, and compares served CSS and exported class names.
+  imports, and compares served CSS and exported class names. A second baseline runs the fork
+  with `compilation: 'whole-program'` (`VE_COMPILATION=whole-program`, no upstream
+  counterpart): the class names must equal upstream's and every rule upstream serves must be in
+  the single program stylesheet — which also carries the rules of discovered modules nothing
+  requested yet (the lazily loaded `PlainCssJsInput.css.ts`), in program order rather than
+  Vite's module order.
 - **`sanity dev` with `unstable_bundledDev`** (`test/bundled-dev.test.ts`) — Vite's
   experimental bundled dev mode, where node_modules files run through the plugin pipeline
   (no dep optimizer) and dynamic imports are compiled on demand at first request. The test
@@ -42,7 +47,7 @@ Commands, each across the shared option matrix in `test/variants.ts`:
 
 The studio fixture is this package itself: `sanity.cli.ts` selects the plugin implementation
 and options through `VE_PLUGIN` / `VE_IDENTIFIERS` / `VE_CSS_MINIFY` / `VE_CSS_TARGET` /
-`VE_BUNDLED_DEV` environment variables set by the tests.
+`VE_BUNDLED_DEV` / `VE_COMPILATION` environment variables set by the tests.
 
 ## Running
 

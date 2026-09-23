@@ -6,6 +6,10 @@
  * pass in `@sanity/vanilla-extract-integration`) for every `.css.ts` module, which `short`
  * skips entirely. Minify/target aren't crossed with `debug`: they run after extraction and are
  * orthogonal to the per-module transform being measured.
+ *
+ * The `whole-program` variant is Sanity-plugin-only (`compilation: 'whole-program'`: one child
+ * compilation and one stylesheet for all `.css.ts` modules instead of one per module); the
+ * Rollup side runs its usual per-module pipeline as the reference.
  */
 export interface BuildVariant {
   /** Stable slug used in output directory names. */
@@ -15,6 +19,8 @@ export interface BuildVariant {
   minify: boolean
   target: string | false
   identifiers: 'short' | 'debug'
+  /** `@sanity/vanilla-extract-rolldown-plugin`'s `compilation` option (per-module by default). */
+  compilation?: 'per-module' | 'whole-program'
 }
 
 export const buildVariants: BuildVariant[] = [
@@ -46,5 +52,13 @@ export const buildVariants: BuildVariant[] = [
     minify: false,
     target: false,
     identifiers: 'debug',
+  },
+  {
+    slug: 'whole-program',
+    label: 'whole-program compilation (Sanity plugin), no minify, no target',
+    minify: false,
+    target: false,
+    identifiers: 'short',
+    compilation: 'whole-program',
   },
 ]
