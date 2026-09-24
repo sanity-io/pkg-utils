@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 13.0.3
+
+### Patch Changes
+
+- [#3490](https://github.com/sanity-io/pkg-utils/pull/3490) [`cb5a10b`](https://github.com/sanity-io/pkg-utils/commit/cb5a10b7780673b9ae8a7f3fb7987281a253f3f7) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsx to ^4.23.15
+- Updated dependencies [[`76c7488`](https://github.com/sanity-io/pkg-utils/commit/76c7488ec1c047235a700541620219957aea9d39), [`a8f601a`](https://github.com/sanity-io/pkg-utils/commit/a8f601a2d3bdf2d81155fdd2f9523a859d64cd8f)]:
+  - @sanity/tsdown-config@0.28.2
+
 ## 13.0.2
 
 ### Patch Changes
