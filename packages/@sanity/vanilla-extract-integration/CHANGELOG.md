@@ -1,5 +1,11 @@
 # @sanity/vanilla-extract-integration
 
+## 0.1.20
+
+### Patch Changes
+
+- [#3489](https://github.com/sanity-io/pkg-utils/pull/3489) [`a8f601a`](https://github.com/sanity-io/pkg-utils/commit/a8f601a2d3bdf2d81155fdd2f9523a859d64cd8f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.10
+
 ## 0.1.19
 
 ### Patch Changes
