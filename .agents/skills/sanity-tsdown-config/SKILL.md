@@ -1,0 +1,1 @@
+../../../skills/sanity-tsdown-config/SKILL.md
