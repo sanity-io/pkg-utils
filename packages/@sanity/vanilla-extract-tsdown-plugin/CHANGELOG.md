@@ -1,5 +1,13 @@
 # @sanity/vanilla-extract-tsdown-plugin
 
+## 0.4.2
+
+### Patch Changes
+
+- [#3513](https://github.com/sanity-io/pkg-utils/pull/3513) [`9f1d9fa`](https://github.com/sanity-io/pkg-utils/commit/9f1d9fae2654b9bc053dc90c5320b01d83617a0e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.11
+- Updated dependencies [[`9f1d9fa`](https://github.com/sanity-io/pkg-utils/commit/9f1d9fae2654b9bc053dc90c5320b01d83617a0e)]:
+  - @sanity/vanilla-extract-rolldown-plugin@0.4.9
+
 ## 0.4.1
 
 ### Patch Changes
