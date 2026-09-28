@@ -63,8 +63,6 @@ minimumReleaseAgeExclude:
   - '@rushstack/node-core-library@5.24.2'
   - '@rushstack/terminal@0.24.5'
   - '@rushstack/ts-command-line@5.3.15'
-  # astro@7.3.4 exact-pins this same-day release
-  - astro@7.3.4
   - '@astrojs/markdown-satteri@0.4.2'
 
 minimumReleaseAgeExcludePrune: true
@@ -83,5 +81,8 @@ trustPolicyExclude:
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
   - webpack-dev-middleware@7.4.6
+  # 3.2.1 was published with provenance and 3.2.2 without, which reads as a trust
+  # downgrade. Same maintainer, and the diff is only the WeakRef leak fix.
+  - why-is-node-running@3.2.2
 
 trustPolicyExcludePrune: true
