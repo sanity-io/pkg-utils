@@ -22,7 +22,7 @@ catalog:
   publint: ^0.3.24
   tsdown: ^0.23.0
   typescript: 7.0.2
-  vitest: ^5.0.1
+  vitest: ^5.0.2
 
 # When running `pnpm add`, reuse a dependency's catalog version automatically if
 # it already exists in a catalog, so shared deps stay aligned on a single version.
@@ -56,7 +56,6 @@ minimumReleaseAgeExclude:
   - '@oxlint/*'
   - oxlint@1.86.0
   - rolldown
-  - '@types/node@24.13.6'
   # @microsoft/api-extractor@7.59.2 exact-pins these same-day sibling releases
   - '@microsoft/api-extractor@7.59.2'
   - '@microsoft/api-extractor-model@7.33.13'
@@ -81,5 +80,8 @@ trustPolicyExclude:
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
   - webpack-dev-middleware@7.4.6
+  # 3.2.1 was published with provenance and 3.2.2 without, which reads as a trust
+  # downgrade. Same maintainer, and the diff is only the WeakRef leak fix.
+  - why-is-node-running@3.2.2
 
 trustPolicyExcludePrune: true
