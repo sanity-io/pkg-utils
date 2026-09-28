@@ -1015,7 +1015,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-B06tN_57.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-BgMmb0eX.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -2355,6 +2355,7 @@ var _readyState = /* @__PURE__ */ new WeakMap(), _url = /* @__PURE__ */ new Weak
 		}), require_request_DXOkY5MQ.En(this, _onIdChange, (value) => {
 			require_request_DXOkY5MQ.Sn(_lastEventId, this, value);
 		}), require_request_DXOkY5MQ.En(this, _onEvent, (event) => {
+			if (require_request_DXOkY5MQ.bn(_readyState, this) === this.CLOSED) return;
 			let origin = require_request_DXOkY5MQ.bn(_redirectUrl, this) ? require_request_DXOkY5MQ.bn(_redirectUrl, this).origin : require_request_DXOkY5MQ.bn(_url, this).origin, lastEventId = require_request_DXOkY5MQ.bn(_lastEventId, this) ?? "", messageEvent = new MessageEvent(event.event || "message", {
 				data: event.data,
 				origin,
@@ -2422,7 +2423,7 @@ function _getRequestOptions() {
 * @internal
 */
 function _failConnection(message, code) {
-	require_request_DXOkY5MQ.bn(_readyState, this) !== this.CLOSED && require_request_DXOkY5MQ.Sn(_readyState, this, this.CLOSED);
+	this.close();
 	let errorEvent = new ErrorEvent("error", {
 		code,
 		message
@@ -4213,7 +4214,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-xaR4r_Be.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-Dc7lz-2t.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
@@ -4251,7 +4252,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.8.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), RETRYABLE_STATUSES = /* @__PURE__ */ new Set([408, 429]);
 /**
 * Note: connection failure is not the same as network disconnect which may happen more frequent.
@@ -4353,6 +4354,33 @@ function _connectListenEventSource(client, uri, listenFor) {
 		..."data" in event ? event.data : {}
 	})));
 }
+/**
+* Build the global document reference a comment stores in \`target.document._ref\`,
+* without a client.
+*
+* \`client.collaboration.comments.getTargetDocumentRef\` reads the resource off the
+* client's configuration and calls this. Use this directly when the resource is
+* already at hand and no client should be involved, for example inside a state
+* selector that has to stay free of side effects.
+*
+* The reference always names the published document: a draft or version ID is
+* reduced to its published form first.
+*
+* @example
+* \`\`\`ts
+* getCommentTargetDocumentRef({type: 'dataset', id: 'abc123.production'}, 'drafts.doc-1')
+* // 'dataset:abc123.production:doc-1'
+* \`\`\`
+*
+* @param resource - The resource the comments are stored against, as \`ClientConfig['resource']\` takes it
+* @param documentId - Document ID, in published, draft or version form
+* @returns Global document reference, of the form \`resourceType:resourceId:documentId\`
+* @alpha
+*/
+function getCommentTargetDocumentRef(resource, documentId) {
+	if (!documentId) throw Error("Document ID must be provided");
+	return \`\${resource.type}:\${resource.id}:\${getPublishedId(documentId)}\`;
+}
 /** @internal */
 const possibleRequestOptions = [
 	"headers",
@@ -4387,8 +4415,7 @@ function resourceQuery(client) {
 /** @internal */
 function _getTargetDocumentRef(client, documentId) {
 	if (!documentId) throw Error("Document ID must be provided");
-	let resource = resolveCommentResource(client);
-	return \`\${resource.type}:\${resource.id}:\${getPublishedId(documentId)}\`;
+	return getCommentTargetDocumentRef(resolveCommentResource(client), documentId);
 }
 function write(client, httpRequest, method, url, body, options = {}) {
 	return _requestObservable(client, httpRequest, {
@@ -4397,6 +4424,7 @@ function write(client, httpRequest, method, url, body, options = {}) {
 		body,
 		query: {
 			...resourceQuery(client),
+			clientVersion: version,
 			...options.transactionId ? { transactionId: options.transactionId } : {}
 		},
 		...pick(options, possibleRequestOptions)
@@ -4422,13 +4450,35 @@ function writeMutationResult(...args) {
 		results
 	})));
 }
+/**
+* Moves the deprecated \`range\` + \`fieldValue\` onto a \`portable-text\` \`anchor\`.
+* Anything else passes through unchanged, and invalid combinations are left
+* for the API to reject.
+*/
+function withAnchor(input) {
+	let { range, fieldValue, ...rest } = input;
+	return range === void 0 || input.anchor !== void 0 ? input : range === null ? fieldValue ? input : {
+		...rest,
+		anchor: null
+	} : {
+		...rest,
+		anchor: {
+			type: "portable-text",
+			...range,
+			...fieldValue && { fieldValue }
+		}
+	};
+}
 /** @internal */
 function _create(client, httpRequest, body, options) {
-	return writeDocument(body._id, client, httpRequest, "POST", "/collaboration/comments", body, options);
+	return writeDocument(body._id, client, httpRequest, "POST", "/collaboration/comments", body.target ? {
+		...body,
+		target: withAnchor(body.target)
+	} : body, options);
 }
 /** @internal */
 function _update(client, httpRequest, id, body, options) {
-	return writeDocument(id, client, httpRequest, "PATCH", commentUrl(id), body, options);
+	return writeDocument(id, client, httpRequest, "PATCH", commentUrl(id), withAnchor(body), options);
 }
 /** @internal */
 function _delete(client, httpRequest, id, options) {
@@ -7275,7 +7325,6 @@ function defineCreateClientExports(envOptions, ClassConstructor) {
 		createClient
 	};
 }
-var name = "@sanity/client", version = "8.6.2";
 const log = createDebug("sanity:client");
 function isNodeReadableStream(value) {
 	return typeof value != "object" || !value || !("pipe" in value) ? !1 : typeof value.pipe == "function";
@@ -7389,6 +7438,50 @@ declare global {
    * direct dependency, how many copies of it are installed, and from every subpath export.
    */
   interface SanityQueries {}
+  /**
+   * Schema types, keyed first by resource and then read as a union. Empty by default; a
+   * multi-resource \`sanity typegen\` run registers one entry per configured resource:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanitySchemasByResource {
+   *     'ppsg7ml5.test': Author | Movie | Slug
+   *   }
+   * }
+   * \`\`\`
+   * A resource key is the same string the SDK uses for its runtime cache: \`projectId.dataset\`
+   * for a dataset, with no prefix. Consumers select one document type out of the union by its
+   * \`_type\`, so the union may include object types that are not documents.
+   */
+  interface SanitySchemasByResource {}
+  /**
+   * Query result types, keyed by resource and then by GROQ query string. Empty by default; a
+   * multi-resource \`sanity typegen\` run registers the queries it finds per resource:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanityQueriesByResource {
+   *     'ppsg7ml5.test': {'*[_type == "post"]': PostsQueryResult}
+   *   }
+   * }
+   * \`\`\`
+   * The flat \`SanityQueries\` registry stays as it is. It cannot express two datasets whose
+   * schemas give the same query text different result types, which is what this adds.
+   */
+  interface SanityQueriesByResource {}
+  /**
+   * Projection result types, keyed by resource, then document type, then projection string.
+   * Empty by default:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanityProjectionsByResource {
+   *     'ppsg7ml5.test': {author: {'{name}': {name: string | null}}}
+   *   }
+   * }
+   * \`\`\`
+   * A projection applies to a document the caller identifies by handle, so the same projection
+   * text resolves differently per document type as well as per resource. That is why there is a
+   * document-type level here and not in \`SanityQueriesByResource\`.
+   */
+  interface SanityProjectionsByResource {}
 }
 /**
  * @internal - it may have breaking changes in any release
@@ -7445,6 +7538,50 @@ declare global {
    * direct dependency, how many copies of it are installed, and from every subpath export.
    */
   interface SanityQueries {}
+  /**
+   * Schema types, keyed first by resource and then read as a union. Empty by default; a
+   * multi-resource \`sanity typegen\` run registers one entry per configured resource:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanitySchemasByResource {
+   *     'ppsg7ml5.test': Author | Movie | Slug
+   *   }
+   * }
+   * \`\`\`
+   * A resource key is the same string the SDK uses for its runtime cache: \`projectId.dataset\`
+   * for a dataset, with no prefix. Consumers select one document type out of the union by its
+   * \`_type\`, so the union may include object types that are not documents.
+   */
+  interface SanitySchemasByResource {}
+  /**
+   * Query result types, keyed by resource and then by GROQ query string. Empty by default; a
+   * multi-resource \`sanity typegen\` run registers the queries it finds per resource:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanityQueriesByResource {
+   *     'ppsg7ml5.test': {'*[_type == "post"]': PostsQueryResult}
+   *   }
+   * }
+   * \`\`\`
+   * The flat \`SanityQueries\` registry stays as it is. It cannot express two datasets whose
+   * schemas give the same query text different result types, which is what this adds.
+   */
+  interface SanityQueriesByResource {}
+  /**
+   * Projection result types, keyed by resource, then document type, then projection string.
+   * Empty by default:
+   * \`\`\`ts
+   * declare global {
+   *   interface SanityProjectionsByResource {
+   *     'ppsg7ml5.test': {author: {'{name}': {name: string | null}}}
+   *   }
+   * }
+   * \`\`\`
+   * A projection applies to a document the caller identifies by handle, so the same projection
+   * text resolves differently per document type as well as per resource. That is why there is a
+   * document-type level here and not in \`SanityQueriesByResource\`.
+   */
+  interface SanityProjectionsByResource {}
 }
 /**
  * @internal - it may have breaking changes in any release
