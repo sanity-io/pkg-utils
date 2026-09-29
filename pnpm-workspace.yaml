@@ -12,7 +12,7 @@ ignoreWorkspaceCycles: true
 autoDedupe: true
 
 catalog:
-  '@sanity/client': ^8.8.0
+  '@sanity/client': ^8.9.0
   '@sanity/icons': ^5.2.3
   '@sanity/logos': ^2.2.6
   '@tsdown/css': ^0.23.0
@@ -46,6 +46,7 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  - '@sanity/client@8.9.0'
   - '@astrojs/react@7.0.0'
   - '@sanity/client@8.8.0'
   - '@yuku-parser/*'
