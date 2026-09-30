@@ -25,7 +25,7 @@ describe('styledComponents option', () => {
   test('applies the same defaults as `babel: {styledComponents: true}` in @sanity/pkg-utils', async () => {
     expect(getStyledComponentsTransform(await defineConfig({styledComponents: true}))).toEqual({
       fileName: false,
-      transpileTemplateLiterals: false,
+      transpileTemplateLiterals: true,
       pure: true,
       cssProp: false,
     })
@@ -38,7 +38,7 @@ describe('styledComponents option', () => {
       ),
     ).toEqual({
       fileName: true,
-      transpileTemplateLiterals: false,
+      transpileTemplateLiterals: true,
       pure: false,
       cssProp: false,
       namespace: 'my-lib',
@@ -58,8 +58,11 @@ describe('styled-components-library', () => {
       // both are added by the transform just like `babel-plugin-styled-components` does
       expect(output).toContain('displayName: "StyledButton"')
       expect(output).toMatch(/componentId: "sc-/)
-      // The CSS inside the tagged template literal is minified
-      expect(output).toContain('`cursor:pointer;border-radius:2px;padding:0;`')
+      // The tagged template literal is transpiled to a plain call expression (with minified CSS),
+      // the same output shape as `babel: {styledComponents: true}` in `@sanity/pkg-utils`, so pure
+      // annotations can apply to it (they aren't supported on tagged template expressions:
+      // https://github.com/rollup/rollup/issues/4035)
+      expect(output).toContain('(["cursor:pointer;border-radius:2px;padding:0;"])')
     }
   })
 
