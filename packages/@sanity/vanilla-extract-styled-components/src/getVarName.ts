@@ -2,10 +2,11 @@ import type {CSSVarFunction, CSSVarName} from './types.ts'
 
 /**
  * `var(` + the custom property name + either `)` or the `,` that starts a fallback (as in the
- * output of `fallbackVar`). Names may contain `cssesc` escapes such as `\:`, so an escaped
- * character is consumed as a unit instead of terminating the name.
+ * output of `fallbackVar`). Names may contain `cssesc` escapes such as `\:`, or a hex escape
+ * like `\E9 ` whose trailing space terminates the escape rather than the name, so an escape is
+ * consumed as a unit instead of terminating the name.
  */
-const VAR_FUNCTION = /^var\(\s*(--(?:\\.|[^\s,)\\])+)\s*(?:,|\)\s*$)/
+const VAR_FUNCTION = /^var\(\s*(--(?:\\(?:[\dA-Fa-f]{1,6}\s?|.)|[^\s,)\\])+)\s*(?:,|\)\s*$)/
 
 /** A custom property name: `--` followed by at least one character (`--` alone is reserved). */
 const isVarName = (value: string): value is CSSVarName => /^--./.test(value)

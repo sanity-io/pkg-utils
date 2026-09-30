@@ -1,7 +1,13 @@
 import {fallbackVar} from '@vanilla-extract/css'
 import {describe, expect, test} from 'vitest'
 import {getVarName, type CSSVarFunction, type CSSVarName} from '../src/index.ts'
-import {avatarSize, brandColor, escapedVar, themeVars} from './fixtures/avatar.css.ts'
+import {
+  avatarSize,
+  brandColor,
+  escapedVar,
+  hexEscapedVar,
+  themeVars,
+} from './fixtures/avatar.css.ts'
 
 describe('getVarName', () => {
   test('unwraps the var() function around a createVar() reference', () => {
@@ -19,6 +25,12 @@ describe('getVarName', () => {
   test('keeps cssesc escapes in the name intact', () => {
     expect(escapedVar).toMatch(/^var\(--avatar\\:size__\w+\)$/)
     expect(getVarName(escapedVar)).toBe(escapedVar.slice('var('.length, -')'.length))
+  })
+
+  test('keeps the space that terminates a cssesc hex escape inside the name', () => {
+    expect(hexEscapedVar).toMatch(/^var\(--h\\E9 ader__\w+\)$/)
+    expect(getVarName(hexEscapedVar)).toBe(hexEscapedVar.slice('var('.length, -')'.length))
+    expect(getVarName(fallbackVar(hexEscapedVar, '2rem'))).toBe(getVarName(hexEscapedVar))
   })
 
   test('drops the fallback of a fallbackVar() reference, which only matters when reading', () => {

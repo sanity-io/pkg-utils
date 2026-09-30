@@ -32,6 +32,11 @@ export const brandColor = createVar('brandColor')
 export const textColor = createVar('textColor')
 /** The debug id is escaped by `cssesc`, so the property name contains a `\:` escape */
 export const escapedVar = createVar('avatar:size')
+/**
+ * `cssesc` escapes the `é` as a hex escape, and keeps the space that terminates it because the
+ * next character is a hex digit, so the property name contains a `\E9 ` escape
+ */
+export const hexEscapedVar = createVar('héader')
 
 export const themeVars = createThemeContract({
   color: {brand: null, text: null},
