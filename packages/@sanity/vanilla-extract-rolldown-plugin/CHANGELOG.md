@@ -1,5 +1,12 @@
 # @sanity/vanilla-extract-rolldown-plugin
 
+## 0.4.10
+
+### Patch Changes
+
+- Updated dependencies [[`383030d`](https://github.com/sanity-io/pkg-utils/commit/383030dd2640744926244d0b1d2d9796137154e3)]:
+  - @sanity/vanilla-extract-integration@0.1.21
+
 ## 0.4.9
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @sanity/tsdown-config
 
+## 0.28.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.4.3
+
 ## 0.28.2
 
 ### Patch Changes

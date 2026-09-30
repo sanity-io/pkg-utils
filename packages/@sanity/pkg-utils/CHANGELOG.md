@@ -1,5 +1,15 @@
 # @sanity/pkg-utils
 
+## 13.0.4
+
+### Patch Changes
+
+- [#3524](https://github.com/sanity-io/pkg-utils/pull/3524) [`3feccb8`](https://github.com/sanity-io/pkg-utils/commit/3feccb8dec8553b1f3a0ae02a5b5b72bc82564aa) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency chalk to ^6.0.1
+
+- [#3527](https://github.com/sanity-io/pkg-utils/pull/3527) [`a02de7c`](https://github.com/sanity-io/pkg-utils/commit/a02de7cd38b8d050cc252160a77412187e8b86c5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency pretty-bytes to ^7.2.0
+- Updated dependencies []:
+  - @sanity/tsdown-config@0.28.3
+
 ## 13.0.3
 
 ### Patch Changes
