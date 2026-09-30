@@ -46,6 +46,18 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  - '@sanity/sdk-react@3.6.0'
+  - '@sanity/sdk@3.6.0'
+  - '@sanity/validation@6.17.0'
+  - '@sanity/util@6.17.0'
+  - '@sanity/types@6.17.0'
+  - '@sanity/schema@6.17.0'
+  - '@sanity/mutator@6.17.0'
+  - '@sanity/diff@6.17.0'
+  - '@sanity/access-ui@6.17.0'
+  - 'sanity@6.17.0'
+  - '@next/*'
+  - 'next@16.3.7'
   - '@sanity/client@8.9.0'
   - '@astrojs/react@7.0.0'
   - '@yuku-parser/*'
