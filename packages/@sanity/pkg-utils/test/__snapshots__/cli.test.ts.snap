@@ -4252,7 +4252,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var name = "@sanity/client", version = "8.8.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.9.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), RETRYABLE_STATUSES = /* @__PURE__ */ new Set([408, 429]);
 /**
 * Note: connection failure is not the same as network disconnect which may happen more frequent.
