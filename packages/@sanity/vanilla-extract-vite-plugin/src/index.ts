@@ -177,7 +177,11 @@ export function vanillaExtractPlugin({
       identifiers: getIdentOption(),
       cssImportSpecifier: fileIdToVirtualId,
       viteConfig,
-      enableFileWatcher: !isBuild,
+      // The host's file watcher invalidates the compiler through the `watchChange` hook below,
+      // before the host re-runs `load`/`transform` (Vite's dev server, Rolldown's dev engine in
+      // bundled dev mode, watch-mode builds). A watcher of its own would only race that and
+      // invalidate every change a second time.
+      enableFileWatcher: false,
     })
   }
 
