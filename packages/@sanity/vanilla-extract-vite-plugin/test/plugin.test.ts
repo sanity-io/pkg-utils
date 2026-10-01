@@ -352,6 +352,69 @@ describe('vite dev', () => {
     }
   })
 
+  test('registers the parent `.css.ts` and its dependencies as watch files of the virtual CSS', async () => {
+    const server = await createServer({
+      root: appRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      appType: 'custom',
+      plugins: [vanillaExtractPlugin()],
+    })
+    try {
+      // Requesting the parent first puts the virtual module in the module graph, which Vite
+      // needs to record watch files added in `load`
+      const transformed = await server.transformRequest('/src/styles.css.ts')
+      const virtualImport = transformed?.code.match(/import\s+["']([^"']+\.vanilla\.css[^"']*)["']/)
+      await server.transformRequest(virtualImport![1]!)
+
+      // Rolldown's dev engine (bundled dev mode) only re-loads a module whose watch files
+      // changed; in unbundled dev, Vite records them as file-only dependencies of the module
+      const virtualId = `${normalizePath(stylesCssTs)}.vanilla.css`
+      const [virtualModule] =
+        server.environments.client.moduleGraph.getModulesByFile(virtualId) ?? []
+      if (!virtualModule) expect.unreachable('expected the virtual CSS module in the module graph')
+      const dependencyFiles = [...virtualModule.importedModules].map((mod) => mod.file)
+      expect(dependencyFiles).toEqual(
+        expect.arrayContaining([normalizePath(stylesCssTs), normalizePath(themeTs)]),
+      )
+    } finally {
+      await server.close()
+    }
+  })
+
+  test('`watchChange` invalidates the compiler before the bundler re-runs its hooks', async () => {
+    await writeMutableThemeFixture('rgb(1, 2, 3)')
+    const plugins = vanillaExtractPlugin()
+    // No file watchers at all (the compiler inherits `server.watch`), so only the hook can
+    // invalidate the compiler — like a bundler watcher that fires before the compiler's
+    const server = await createServer({
+      root: mutableRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true, watch: null},
+      appType: 'custom',
+      plugins: [plugins],
+    })
+    try {
+      const virtualId = `${normalizePath(mutableStylesCssTs)}.vanilla.css`
+      expect((await server.transformRequest(virtualId))?.code).toContain('rgb(1, 2, 3)')
+
+      await writeMutableThemeFixture('rgb(7, 8, 9)')
+      const plugin = plugins.find((candidate) => candidate.name === 'sanity-vanilla-extract')
+      const watchChange = plugin?.watchChange
+      const handler = typeof watchChange === 'object' ? watchChange.handler : watchChange
+      if (!handler) expect.unreachable('expected a `watchChange` hook')
+      await handler.call({} as never, normalizePath(mutableThemeTs), {event: 'update'})
+
+      // Re-load the virtual module like the bundler would after a watch-file change
+      server.environments.client.moduleGraph.onFileChange(virtualId)
+      expect((await server.transformRequest(virtualId))?.code).toContain('rgb(7, 8, 9)')
+    } finally {
+      await server.close()
+    }
+  })
+
   test('declares plugin hook filters', () => {
     // Regression guard for the rolldown-vite Rust ↔ JS roundtrip
     // (https://github.com/vanilla-extract-css/vanilla-extract/issues/1641): the hooks are
@@ -460,6 +523,58 @@ describe('compiler', () => {
     await compiler.processVanillaFile(mutableStylesCssTs)
     expect(compiler.getCssForFile(mutableStylesCssTs)?.css).toContain('rgb(7, 8, 9)')
   })
+
+  test('recompiles a changed file and its importers after `invalidateFile`', async () => {
+    await writeMutableThemeFixture('rgb(1, 2, 3)')
+    // The file watcher is off, so only `invalidateFile` can refresh the caches
+    const compiler = createTestCompiler(mutableRoot)
+
+    await compiler.processVanillaFile(mutableStylesCssTs)
+    expect(compiler.getCssForFile(mutableStylesCssTs)?.css).toContain('rgb(1, 2, 3)')
+
+    await writeMutableThemeFixture('rgb(7, 8, 9)')
+    await compiler.invalidateFile(mutableThemeTs)
+
+    await compiler.processVanillaFile(mutableStylesCssTs)
+    expect(compiler.getCssForFile(mutableStylesCssTs)?.css).toContain('rgb(7, 8, 9)')
+  })
+
+  test('prunes the extracted CSS of a file reported deleted to `invalidateFile`', async () => {
+    await writeMutableFixture('rgb(1, 2, 3)')
+    const compiler = createTestCompiler(mutableRoot)
+    await compiler.processVanillaFile(mutableStylesCssTs)
+    expect(compiler.getAllCss()).toContain('rgb(1, 2, 3)')
+
+    await compiler.invalidateFile(mutableStylesCssTs, {deleted: true})
+    expect(compiler.getCssForFile(mutableStylesCssTs)).toBeUndefined()
+    expect(compiler.getAllCss()).not.toContain('rgb(')
+  })
+
+  test('keeps watching files when the consumer runs Vite’s bundled dev mode', async () => {
+    await writeMutableFixture('rgb(1, 2, 3)')
+    // `sanity dev` with `unstable_bundledDev` forwards `experimental.bundledDev`, under which
+    // Vite's watcher skips the project root
+    const compiler = createCompiler({
+      root: mutableRoot,
+      identifiers: 'debug',
+      viteConfig: {experimental: {bundledDev: true}},
+    })
+    compilersToClose.push(compiler)
+
+    await compiler.processVanillaFile(mutableStylesCssTs)
+    expect(compiler.getCssForFile(mutableStylesCssTs)?.css).toContain('rgb(1, 2, 3)')
+
+    await expect
+      .poll(
+        async () => {
+          await writeMutableFixture('rgb(7, 8, 9)')
+          await compiler.processVanillaFile(mutableStylesCssTs)
+          return compiler.getCssForFile(mutableStylesCssTs)?.css
+        },
+        {interval: 250, timeout: 10_000},
+      )
+      .toContain('rgb(7, 8, 9)')
+  }, 15_000)
 
   test('recompiles when the file watcher reports a change', async () => {
     await writeMutableFixture('rgb(1, 2, 3)')
