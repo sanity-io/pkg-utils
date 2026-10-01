@@ -260,20 +260,11 @@ function extractWsToken(code: string): string | undefined {
 }
 
 /**
- * Requests the on-demand compilation of a bundled-dev lazy chunk the way the browser runtime
- * does. Rolldown ≥1.2.9 inlines `requestLazy(..., () => import('/@vite/lazy?id=...'))` in the
- * entry (older versions loaded a hashed stub chunk that then fetched the same endpoint). The
- * `clientId` must belong to a registered client, so this helper first announces one over the
- * HMR WebSocket (`vite:module-loaded`, like the Rolldown browser runtime on startup) using
- * the `wsToken` embedded in the HMR client. Vite has moved that token between the served
- * entry, a sibling `rolldown-runtime-*.js` chunk, and (as of vite ≥8.2.1) the standalone
- * `/bundledDevClient.mjs` script loaded from the HTML.
+ * Finds the `wsToken` embedded in the bundled-dev HMR client. Vite has moved it between the
+ * served entry, a sibling `rolldown-runtime-*.js` chunk, and (as of vite ≥8.2.1) the
+ * standalone `/bundledDevClient.mjs` script loaded from the HTML.
  */
-export async function compileLazyChunk(
-  server: DevServerHandle,
-  entryCode: string,
-  lazyModuleId: string,
-): Promise<string> {
+async function findWsToken(server: DevServerHandle, entryCode: string): Promise<string> {
   let wsToken = extractWsToken(entryCode)
   if (!wsToken) {
     // Newer Vite bundled-dev layouts (observed with sanity ≥6.9) place the HMR client in a
@@ -299,38 +290,59 @@ export async function compileLazyChunk(
       'No wsToken found in the served entry, its rolldown-runtime sibling, or /bundledDevClient.mjs',
     )
   }
+  return wsToken
+}
 
-  const clientId = `integration-test-${Math.random().toString(36).slice(2)}`
+/** Opens an HMR WebSocket to the dev server and waits for its connection greeting. */
+async function openHmrSocket(server: DevServerHandle, entryCode: string): Promise<WebSocket> {
+  const wsToken = await findWsToken(server, entryCode)
   const socket = new WebSocket(`ws://127.0.0.1:${server.port}/?token=${wsToken}`, 'vite-hmr')
-  try {
-    // The server greets every accepted client with `{"type":"connected"}`, so waiting for it
-    // also covers the open handshake. Time-boxed so an unresponsive server (or a rejected
-    // `wsToken`) fails the test instead of hanging it until the suite timeout.
-    await new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('Timed out waiting for the HMR WebSocket connection greeting'))
-      }, 30_000)
-      socket.addEventListener('message', (event) => {
-        const message: unknown = JSON.parse(String(event.data))
-        if (
-          typeof message === 'object' &&
-          message !== null &&
-          'type' in message &&
-          message.type === 'connected'
-        ) {
-          clearTimeout(timeout)
-          resolve()
-        }
-      })
-      socket.addEventListener('error', () => {
+  // The server greets every accepted client with `{"type":"connected"}`, so waiting for it
+  // also covers the open handshake. Time-boxed so an unresponsive server (or a rejected
+  // `wsToken`) fails the test instead of hanging it until the suite timeout.
+  await new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error('Timed out waiting for the HMR WebSocket connection greeting'))
+    }, 30_000)
+    socket.addEventListener('message', (event) => {
+      const message: unknown = JSON.parse(String(event.data))
+      if (
+        typeof message === 'object' &&
+        message !== null &&
+        'type' in message &&
+        message.type === 'connected'
+      ) {
         clearTimeout(timeout)
-        reject(new Error('HMR WebSocket connection failed'))
-      })
-      socket.addEventListener('close', () => {
-        clearTimeout(timeout)
-        reject(new Error('HMR WebSocket closed before the connection greeting'))
-      })
+        resolve()
+      }
     })
+    socket.addEventListener('error', () => {
+      clearTimeout(timeout)
+      reject(new Error('HMR WebSocket connection failed'))
+    })
+    socket.addEventListener('close', () => {
+      clearTimeout(timeout)
+      reject(new Error('HMR WebSocket closed before the connection greeting'))
+    })
+  })
+  return socket
+}
+
+/**
+ * Requests the on-demand compilation of a bundled-dev lazy chunk the way the browser runtime
+ * does. Rolldown ≥1.2.9 inlines `requestLazy(..., () => import('/@vite/lazy?id=...'))` in the
+ * entry (older versions loaded a hashed stub chunk that then fetched the same endpoint). The
+ * `clientId` must belong to a registered client, so this helper first announces one over the
+ * HMR WebSocket (`vite:module-loaded`, like the Rolldown browser runtime on startup).
+ */
+export async function compileLazyChunk(
+  server: DevServerHandle,
+  entryCode: string,
+  lazyModuleId: string,
+): Promise<string> {
+  const clientId = `integration-test-${Math.random().toString(36).slice(2)}`
+  const socket = await openHmrSocket(server, entryCode)
+  try {
     socket.send(
       JSON.stringify({type: 'custom', event: 'vite:module-loaded', data: {modules: [], clientId}}),
     )
@@ -351,6 +363,81 @@ export async function compileLazyChunk(
     return await response.text()
   } finally {
     socket.close()
+  }
+}
+
+/** A bundled-dev HMR patch pushed to a client: the ids of its changed modules, and its code. */
+export interface HmrUpdate {
+  changedIds: string[]
+  code: string
+}
+
+export interface HmrClient {
+  /**
+   * Waits for an HMR update matching `predicate`, failing with every update received so far
+   * once `timeout` elapses.
+   */
+  waitForUpdate(
+    description: string,
+    predicate: (update: HmrUpdate) => boolean,
+    timeout?: number,
+  ): Promise<HmrUpdate>
+  close(): void
+}
+
+/**
+ * Registers an HMR client with a bundled-dev server (`vite:client-connected`, like the browser
+ * client on startup) and collects the patches pushed to it. The patches aren't evaluated, so
+ * the client never reports them as delivered and later patches re-ship their factories.
+ */
+export async function connectHmrClient(
+  server: DevServerHandle,
+  entryCode: string,
+): Promise<HmrClient> {
+  const socket = await openHmrSocket(server, entryCode)
+  const updates: Promise<HmrUpdate>[] = []
+  socket.addEventListener('message', (event) => {
+    const message: unknown = JSON.parse(String(event.data))
+    if (
+      typeof message !== 'object' ||
+      message === null ||
+      !('type' in message) ||
+      message.type !== 'bundled-dev-update' ||
+      !('url' in message) ||
+      typeof message.url !== 'string'
+    ) {
+      return
+    }
+    const changedIds =
+      'changedIds' in message && Array.isArray(message.changedIds)
+        ? message.changedIds.map(String)
+        : []
+    updates.push(
+      server.fetchText(`/${message.url.replace(/^\//, '')}`).then((code) => ({changedIds, code})),
+    )
+  })
+  const clientId = `integration-test-${Math.random().toString(36).slice(2)}`
+  socket.send(JSON.stringify({type: 'custom', event: 'vite:client-connected', data: {clientId}}))
+  // The registration is processed asynchronously; give it a beat before files change
+  await new Promise((resolve) => setTimeout(resolve, 250))
+
+  return {
+    async waitForUpdate(description, predicate, timeout = 30_000) {
+      const deadline = Date.now() + timeout
+      for (;;) {
+        const received = await Promise.all(updates)
+        const match = received.find(predicate)
+        if (match) return match
+        if (Date.now() > deadline) {
+          const summary = received.map(({changedIds}) => JSON.stringify(changedIds)).join(', ')
+          throw new Error(
+            `Timed out waiting for an HMR update ${description}; received: ${summary || 'none'}`,
+          )
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
+    },
+    close: () => socket.close(),
   }
 }
 
