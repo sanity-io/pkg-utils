@@ -177,7 +177,11 @@ export function vanillaExtractPlugin({
       identifiers: getIdentOption(),
       cssImportSpecifier: fileIdToVirtualId,
       viteConfig,
-      enableFileWatcher: !isBuild,
+      // The host's file watcher invalidates the compiler through the `watchChange` hook below,
+      // before the host re-runs `load`/`transform` (Vite's dev server, Rolldown's dev engine in
+      // bundled dev mode, watch-mode builds). A watcher of its own would only race that and
+      // invalidate every change a second time.
+      enableFileWatcher: false,
     })
   }
 
@@ -210,25 +214,37 @@ export function vanillaExtractPlugin({
    * cache-miss populate the parent was never `transform`ed in the consuming server (so
    * `addWatchFile` never wired dependency edits back to a retransform), and returning the
    * stale cache entry would keep serving outdated virtual CSS across HMR.
+   *
+   * Also returns the files the CSS was derived from (the parent and its non-`node_modules`
+   * dependencies), for `load` to register as the virtual module's watch files.
    */
-  const ensureCssForVirtualId = async (absoluteVirtualId: string): Promise<string | null> => {
+  const ensureCssForVirtualId = async (
+    absoluteVirtualId: string,
+  ): Promise<{css: string; watchFiles: string[]} | null> => {
     const fileId = virtualIdToFileId(absoluteVirtualId)
 
     // Authored `.vanilla.css` files aren't vanilla-extract parents — don't spin up the compiler
     // for them. Only serve if a previous compilation already put CSS in the cache.
     if (!cssFileFilter.test(fileId)) {
-      if (!compiler) return null
-      return compiler.getCssForFile(fileId)?.css || null
+      const css = compiler?.getCssForFile(fileId)?.css
+      return css ? {css, watchFiles: []} : null
     }
 
     await ensureCompiler()
     if (!compiler) return null
 
-    await compiler.processVanillaFile(fileId, {outputCss: true})
+    const {watchFiles} = await compiler.processVanillaFile(fileId, {outputCss: true})
     // Same absolute id the `transform` path records, so `hotUpdate`'s `findImporterTree`
     // boundary check matches after a cache-miss populate
     transformedModules.add(fileId)
-    return compiler.getCssForFile(fileId)?.css || null
+    const css = compiler.getCssForFile(fileId)?.css
+    if (!css) return null
+    return {
+      css,
+      watchFiles: [...new Set([fileId, ...watchFiles])].filter(
+        (file) => !file.includes('node_modules'),
+      ),
+    }
   }
 
   return [
@@ -322,6 +338,13 @@ export function vanillaExtractPlugin({
         return compiler?.close()
       },
 
+      // Rolldown's dev engine (Vite's bundled dev mode) and watch-mode builds re-run `load` and
+      // `transform` on their own file watcher, which can fire before the compiler's: awaiting
+      // the invalidation here, before they re-run, keeps them from re-reading stale results
+      async watchChange(id, {event}) {
+        await compiler?.invalidateFile(id, {deleted: event === 'delete'})
+      },
+
       transform: {
         filter: {id: CSS_FILE_ID_FILTER},
         async handler(_code, id, options) {
@@ -405,8 +428,7 @@ export function vanillaExtractPlugin({
           if (!isVirtualId(validId)) return undefined
 
           const absoluteId = getAbsoluteId({filePath: validId, root: config.root})
-          const css = await ensureCssForVirtualId(absoluteId)
-          if (!css) return undefined
+          if (!(await ensureCssForVirtualId(absoluteId))) return undefined
 
           // Keep the original query string for HMR
           return absoluteId + (query ? `?${query}` : '')
@@ -415,17 +437,28 @@ export function vanillaExtractPlugin({
 
       load: {
         filter: {id: VIRTUAL_CSS_ID_FILTER},
-        async handler(id) {
+        async handler(id, options) {
           const [validId = id] = id.split('?')
           if (!isVirtualId(validId)) return undefined
 
           const absoluteId = getAbsoluteId({filePath: validId, root: config.root})
-          const css = await ensureCssForVirtualId(absoluteId)
-          if (!css) return undefined
+          const result = await ensureCssForVirtualId(absoluteId)
+          if (!result) return undefined
+
+          if (!isBuild && !options?.ssr) {
+            // The virtual module has no file of its own: Rolldown's dev engine (Vite's bundled
+            // dev mode, which never calls `hotUpdate`) and watch-mode builds only re-load it
+            // when one of its watch files changes, and otherwise keep shipping the CSS from
+            // its first load. In unbundled dev these become file-only dependencies of the
+            // CSS module in Vite's module graph, alongside the `hotUpdate` invalidation.
+            for (const file of result.watchFiles) {
+              this.addWatchFile(file)
+            }
+          }
 
           // Vite's CSS pipeline owns the module from here (PostCSS, minification,
           // code-splitting, HMR style injection)
-          return css
+          return result.css
         },
       },
     },

@@ -172,6 +172,15 @@ export interface Compiler {
     transformedVanillaModules: ReadonlySet<string>,
   ): Promise<Set<EnvironmentModuleNode>>
   /**
+   * Invalidates a changed file and everything importing it in the compiler's module graph and
+   * runner cache, so the next {@link Compiler.processVanillaFile} re-evaluates the edited code;
+   * a deleted file's extracted CSS is dropped as well. The compiler's file watcher does the
+   * same, but asynchronously: call this from a `watchChange` hook when the consuming bundler
+   * re-runs transforms on a watcher of its own (Rolldown's dev engine in Vite's bundled dev
+   * mode, watch-mode builds), which would otherwise race it.
+   */
+  invalidateFile(filePath: string, options?: {deleted?: boolean}): Promise<void>
+  /**
    * Invalidates every non-`node_modules` module in the compiler's module graph and runner
    * cache, forcing the next {@link Compiler.processVanillaFile} to re-evaluate. The extracted
    * CSS of previous compilations intentionally stays available (like upstream
@@ -246,6 +255,10 @@ async function createCompilerServer({
   //   `sanity schema extract` worker) would inline CJS dependencies, which Vite's native
   //   `ModuleRunner` (unlike the legacy `vite-node`) cannot evaluate, and
   //   `ssr.target: 'webworker'` would flip the SSR environment to browser-leaning resolution.
+  // - The parent's `experimental.bundledDev` (e.g. `sanity dev` with `unstable_bundledDev`)
+  //   must not leak in either: in bundled dev mode Vite's file watcher stops watching the
+  //   project root, so the compiler would never see `.css.ts` edits and keep serving the CSS
+  //   it evaluated at startup.
   //
   // Covered end-to-end by the `@integration/vanilla-extract-studio` suite, which compares
   // `sanity dev` / `sanity build` / `sanity schema extract` output against
@@ -261,6 +274,7 @@ async function createCompilerServer({
     base: undefined,
     configFile: false,
     root,
+    experimental: {...viteConfig.experimental, bundledDev: false},
     // Don't include HTML middlewares
     appType: 'custom',
     // Forward the consumer's server options (e.g. `fs.allow`, needed to evaluate files outside
@@ -370,21 +384,23 @@ export function createCompiler({
     composedClassLists: Composition[]
   }>(root)
 
+  const pruneFile = (filePath: string) => {
+    cssCache.delete(filePath)
+    classRegistrationsByModuleId.delete(filePath)
+    const moduleId = normalizePath(filePath)
+    for (const cacheKey of processVanillaFileCache.keys()) {
+      if (cacheKey.startsWith(`${moduleId}|`)) {
+        processVanillaFileCache.delete(cacheKey)
+      }
+    }
+  }
+
   const serverPromise = createCompilerServer({
     root,
     identifiers,
     viteConfig,
     enableFileWatcher,
-    onFileRemoved(filePath) {
-      cssCache.delete(filePath)
-      classRegistrationsByModuleId.delete(filePath)
-      const moduleId = normalizePath(filePath)
-      for (const cacheKey of processVanillaFileCache.keys()) {
-        if (cacheKey.startsWith(`${moduleId}|`)) {
-          processVanillaFileCache.delete(cacheKey)
-        }
-      }
-    },
+    onFileRemoved: pruneFile,
   })
 
   return {
@@ -570,6 +586,17 @@ export function createCompiler({
       if (!moduleNode) return new Set()
 
       return findImporterTree(moduleNode, transformedVanillaModules)
+    },
+
+    async invalidateFile(filePath, {deleted = false} = {}) {
+      const {server, runner} = await serverPromise
+
+      filePath = normalizePath(isAbsolute(filePath) ? filePath : join(root, filePath))
+      // Invalidating the module also stamps a new `lastInvalidationTimestamp` on it and its
+      // importers, which is what makes `processVanillaFile` skip its cached result
+      server.environments.ssr.moduleGraph.onFileChange(filePath)
+      invalidateRunnerFile(runner, filePath)
+      if (deleted) pruneFile(filePath)
     },
 
     async invalidateAllModules() {
