@@ -1,5 +1,15 @@
 # @sanity/pkg-utils
 
+## 13.0.5
+
+### Patch Changes
+
+- [#3541](https://github.com/sanity-io/pkg-utils/pull/3541) [`ea9ea1c`](https://github.com/sanity-io/pkg-utils/commit/ea9ea1cbf28aca0bfa37b3d1059e42f9acda2078) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.25
+
+- [#3548](https://github.com/sanity-io/pkg-utils/pull/3548) [`3cc7ff8`](https://github.com/sanity-io/pkg-utils/commit/3cc7ff8e92ee1d4da77021b362fce3d5d849f168) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.3
+- Updated dependencies [[`847e9c3`](https://github.com/sanity-io/pkg-utils/commit/847e9c326f728ad50625f7f22429c94b86037213), [`ea9ea1c`](https://github.com/sanity-io/pkg-utils/commit/ea9ea1cbf28aca0bfa37b3d1059e42f9acda2078), [`733c107`](https://github.com/sanity-io/pkg-utils/commit/733c107495828d0422d8de9458af07db6aa344cf), [`db47390`](https://github.com/sanity-io/pkg-utils/commit/db473906e3581cca4de309882de54260d28fc16b), [`3cc7ff8`](https://github.com/sanity-io/pkg-utils/commit/3cc7ff8e92ee1d4da77021b362fce3d5d849f168)]:
+  - @sanity/tsdown-config@0.28.4
+
 ## 13.0.4
 
 ### Patch Changes
