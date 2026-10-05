@@ -35,6 +35,14 @@ Commands, each across the shared option matrix in `test/variants.ts`:
   module used to hang the fork's compiler and crash the dev server, forcing the workaround
   in [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553); the compiled
   patch must match upstream's byte for byte, no workaround required.
+- **HMR in bundled dev mode** (`test/bundled-dev-hmr.test.ts`) — registers an HMR client, edits
+  `src/button.css.ts` and then `src/theme.ts` (a plain module `styles.css.ts` imports), and
+  asserts each edit pushes a patch with the new CSS of the matching virtual `.vanilla.css`
+  module, then that a page load regenerates the bundle with both edits. Vite never calls
+  `hotUpdate` in this mode, and the fork used to keep serving the CSS it compiled at startup
+  until `sanity dev` restarted. This test is fork-only: `@vanilla-extract/vite-plugin` still
+  serves the stale CSS, so it can't be the reference. The edited files are restored after the
+  test.
 - **`sanity schema extract`** (`test/schema-extract.test.ts`) — identifier variants. The
   fixture schema embeds the generated class names in a field description, so the extracted
   schema doubles as identifier output; the command also exercises `.css.ts` evaluation inside

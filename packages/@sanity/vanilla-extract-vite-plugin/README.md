@@ -18,6 +18,11 @@ alternative to
 - **The environment-aware
   [`hotUpdate` hook](https://vite.dev/guide/api-environment-plugins#the-hotupdate-hook)**
   instead of the deprecated `handleHotUpdate`.
+- **Style HMR in Vite's experimental
+  [bundled dev mode](https://vite.dev/guide/rolldown#full-bundle-mode)** (`experimental.bundledDev`,
+  e.g. `sanity dev` with `unstable_bundledDev`), where Vite never calls `hotUpdate` and
+  `@vanilla-extract/vite-plugin` keeps serving the CSS it compiled at startup until the dev
+  server restarts.
 
 Head-to-head numbers against `@vanilla-extract/vite-plugin` — `vite build` across minify/target
 variants, dev HMR, and a hook-filter stress sweep — live in the
