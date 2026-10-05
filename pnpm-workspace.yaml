@@ -57,7 +57,6 @@ minimumReleaseAgeExclude:
   - '@sanity/access-ui@6.17.0'
   - 'sanity@6.17.0'
   - '@next/*'
-  - 'next@16.3.7'
   - '@sanity/client@8.9.0'
   - '@astrojs/react@7.0.0'
   - '@yuku-parser/*'
@@ -68,12 +67,6 @@ minimumReleaseAgeExclude:
   - '@oxlint/*'
   - oxlint@1.86.0
   - rolldown
-  # @microsoft/api-extractor@7.59.2 exact-pins these same-day sibling releases
-  - '@microsoft/api-extractor@7.59.2'
-  - '@microsoft/api-extractor-model@7.33.13'
-  - '@rushstack/node-core-library@5.24.2'
-  - '@rushstack/terminal@0.24.5'
-  - '@rushstack/ts-command-line@5.3.15'
   - '@astrojs/markdown-satteri@0.4.2'
 minimumReleaseAgeExcludePrune: true
 
@@ -91,8 +84,5 @@ trustPolicyExclude:
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
   - webpack-dev-middleware@7.4.6
-  # 3.2.1 was published with provenance and 3.2.2 without, which reads as a trust
-  # downgrade. Same maintainer, and the diff is only the WeakRef leak fix.
-  - why-is-node-running@3.2.2
 
 trustPolicyExcludePrune: true
