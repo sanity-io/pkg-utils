@@ -1,5 +1,21 @@
 # @sanity/tsdown-config
 
+## 0.28.4
+
+### Patch Changes
+
+- [#3534](https://github.com/sanity-io/pkg-utils/pull/3534) [`847e9c3`](https://github.com/sanity-io/pkg-utils/commit/847e9c326f728ad50625f7f22429c94b86037213) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.12
+
+- [#3541](https://github.com/sanity-io/pkg-utils/pull/3541) [`ea9ea1c`](https://github.com/sanity-io/pkg-utils/commit/ea9ea1cbf28aca0bfa37b3d1059e42f9acda2078) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency publint to ^0.3.25
+
+- [#3546](https://github.com/sanity-io/pkg-utils/pull/3546) [`733c107`](https://github.com/sanity-io/pkg-utils/commit/733c107495828d0422d8de9458af07db6aa344cf) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/api-extractor to ^7.59.3
+
+- [#3547](https://github.com/sanity-io/pkg-utils/pull/3547) [`db47390`](https://github.com/sanity-io/pkg-utils/commit/db473906e3581cca4de309882de54260d28fc16b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @microsoft/tsdoc-config to ^0.18.3
+
+- [#3548](https://github.com/sanity-io/pkg-utils/pull/3548) [`3cc7ff8`](https://github.com/sanity-io/pkg-utils/commit/3cc7ff8e92ee1d4da77021b362fce3d5d849f168) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.3
+- Updated dependencies [[`847e9c3`](https://github.com/sanity-io/pkg-utils/commit/847e9c326f728ad50625f7f22429c94b86037213)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.4.4
+
 ## 0.28.3
 
 ### Patch Changes
