@@ -1,5 +1,18 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.2.22
+
+### Patch Changes
+
+- [#3536](https://github.com/sanity-io/pkg-utils/pull/3536) [`c496b3b`](https://github.com/sanity-io/pkg-utils/commit/c496b3b57d2d9770f6f668f241285e8bfc966d73) Thanks [@stipsan](https://github.com/stipsan)! - Fix stale CSS in Vite's bundled dev mode (`experimental.bundledDev`, e.g. `sanity dev` with `unstable_bundledDev`). Editing a `.css.ts` file, or a module it imports, now hot-updates its styles. Previously the dev server kept serving the CSS it compiled at startup, through HMR and full page reloads alike, until it was restarted.
+
+  - The compiler no longer inherits `experimental.bundledDev`. In that mode Vite's file watcher skips the project root, so the compiler never saw an edit.
+  - The virtual `.vanilla.css` modules register their `.css.ts` file and its dependencies as watch files. Bundled dev mode never calls `hotUpdate`, and Rolldown's dev engine only re-loads a module whose own file or watch files changed.
+  - The plugin invalidates its compiler from a new `watchChange` hook, before Vite or Rolldown re-run `load` and `transform`. It no longer starts a file watcher for the compiler: that watcher raced the re-runs, which could read results cached before the edit. The hook calls the new `Compiler.invalidateFile` method.
+
+- Updated dependencies [[`847e9c3`](https://github.com/sanity-io/pkg-utils/commit/847e9c326f728ad50625f7f22429c94b86037213), [`b36928b`](https://github.com/sanity-io/pkg-utils/commit/b36928b5448b3e9acc119fb91db6152b6bf9efaa)]:
+  - @sanity/vanilla-extract-integration@0.1.22
+
 ## 0.2.21
 
 ### Patch Changes
