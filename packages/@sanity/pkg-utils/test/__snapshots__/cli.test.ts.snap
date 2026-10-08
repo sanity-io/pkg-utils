@@ -1015,7 +1015,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-BO3FTnI6.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-KUBBY8G8.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -2104,17 +2104,7 @@ function createParser(config) {
 		return lineEnd === -1 ? "" : lineEnd === chunk.length - 1 && chunk.charCodeAt(lineEnd) === 13 ? (skippingLine = !1, skipNextLineFeed = !0, "") : (skippingLine = !1, chunk.slice(lineEnd + (chunk.charCodeAt(lineEnd) === 13 && chunk.charCodeAt(lineEnd + 1) === 10 ? 2 : 1)));
 	}
 	function storeTrailing(trailing) {
-		if (trailing) {
-			if (trailing.charCodeAt(trailing.length - 1) === 13) {
-				parseLine(trailing, 0, trailing.length - 1), skipNextLineFeed = !0;
-				return;
-			}
-			if (shouldBufferTrailing(trailing)) {
-				pendingFragments.push(trailing), pendingFragmentsLength = trailing.length;
-				return;
-			}
-			skippingLine = !0;
-		}
+		trailing && (trailing.charCodeAt(trailing.length - 1) === 13 ? (parseLine(trailing, 0, trailing.length - 1), skipNextLineFeed = !0) : shouldBufferTrailing(trailing) ? (pendingFragments.push(trailing), pendingFragmentsLength = trailing.length) : skippingLine = !0);
 	}
 	function shouldBufferTrailing(trailing) {
 		let firstCharCode = trailing.charCodeAt(0);
@@ -2794,7 +2784,7 @@ const VALID_ASSET_TYPES = ["image", "file"], VALID_INSERT_LOCATIONS = [
 };
 function once(fn) {
 	let didCall = !1, returnValue;
-	return (...args) => didCall ? returnValue : (returnValue = fn(...args), didCall = !0, returnValue);
+	return (...args) => (didCall ||= (returnValue = fn(...args), !0), returnValue);
 }
 const createWarningPrinter = (message) => once((...args) => console.warn(message.join(" "), ...args)), printCdnAndWithCredentialsWarning = createWarningPrinter(["Because you set \`withCredentials\` to true, we will override your \`useCdn\`", "setting to be false since (cookie-based) credentials are never set on the CDN"]), printCdnWarning = createWarningPrinter([
 	"Since you haven't set a value for \`useCdn\`, we will deliver content using our",
@@ -2939,13 +2929,8 @@ function connectWithESInstance(es, events) {
 			if ("data" in evt) {
 				let [parseError, event] = parseEvent(evt);
 				observer.error(parseError || !event ? new MessageParseError("Unable to parse EventSource error message", { cause: parseError }) : new MessageError(require_isRecord_Kfmt_nk_.t(event.data) && typeof event.data.message == "string" ? event.data.message : "", event));
-				return;
-			}
-			if (evt.code !== void 0) {
-				observer.error(new ConnectionFailedError("EventSource connection failed", { status: evt.code }));
-				return;
-			}
-			if (es.readyState === es.CLOSED) observer.error(new ConnectionFailedError("EventSource connection failed"));
+			} else if (evt.code !== void 0) observer.error(new ConnectionFailedError("EventSource connection failed", { status: evt.code }));
+			else if (es.readyState === es.CLOSED) observer.error(new ConnectionFailedError("EventSource connection failed"));
 			else {
 				let type = "reconnect";
 				isRequestedEvent(type) && observer.next({ type });
@@ -2957,20 +2942,11 @@ function connectWithESInstance(es, events) {
 		}
 		function onMessage(message) {
 			let [parseError, event] = parseEvent(message);
-			if (parseError || !event) {
-				observer.error(new MessageParseError("Unable to parse EventSource message", { cause: parseError }));
-				return;
-			}
-			if (message.type === "channelError") {
+			if (parseError || !event) observer.error(new MessageParseError("Unable to parse EventSource message", { cause: parseError }));
+			else if (message.type === "channelError") {
 				let tag = new URL(es.url).searchParams.get("tag");
 				observer.error(new ChannelError(extractErrorMessage(event?.data, tag), event.data));
-				return;
-			}
-			if (message.type === "disconnect") {
-				observer.error(new DisconnectError(\`Server disconnected client: \${require_isRecord_Kfmt_nk_.t(event.data) && typeof event.data.reason == "string" && event.data.reason || "unknown error"}\`));
-				return;
-			}
-			isRequestedEvent(message.type) && observer.next({
+			} else message.type === "disconnect" ? observer.error(new DisconnectError(\`Server disconnected client: \${require_isRecord_Kfmt_nk_.t(event.data) && typeof event.data.reason == "string" && event.data.reason || "unknown error"}\`)) : isRequestedEvent(message.type) && observer.next({
 				type: message.type,
 				id: message.lastEventId,
 				...event.data ? { data: event.data } : {}
@@ -3468,7 +3444,7 @@ function _fetch$2(client, httpRequest, _stega, query, _params = {}, options = {}
 		query,
 		params
 	}, reqOpts);
-	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-CO1HKnm2-CzmQecbV.cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
+	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-CO1HKnm2-DjI5VMNE.cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
 		let result = stegaEncodeSourceMap(res.result, res.resultSourceMap, stega);
 		return mapResponse({
 			...res,
@@ -4214,7 +4190,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-5ovdsIaf.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-cbVHB2hn.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
@@ -5717,21 +5693,13 @@ function checkCorsObservable(url, projectId, requireCredentials, fetcher) {
 		}).then((text) => {
 			if (signal.aborted) return;
 			let parsed = text === void 0 ? void 0 : JSON.parse(text), result = require_isRecord_Kfmt_nk_.t(parsed) ? parsed.result : void 0;
-			if (requireCredentials && require_isRecord_Kfmt_nk_.t(result) && result.withCredentials === !1) {
-				observer.error(new require_request_DXOkY5MQ.n({
-					projectId,
-					credentials: !0
-				}));
-				return;
-			}
-			if (require_isRecord_Kfmt_nk_.t(result) && result.allowed === !1) {
-				observer.error(new require_request_DXOkY5MQ.n({
-					projectId,
-					credentials: requireCredentials
-				}));
-				return;
-			}
-			observer.next(), observer.complete();
+			requireCredentials && require_isRecord_Kfmt_nk_.t(result) && result.withCredentials === !1 ? observer.error(new require_request_DXOkY5MQ.n({
+				projectId,
+				credentials: !0
+			})) : require_isRecord_Kfmt_nk_.t(result) && result.allowed === !1 ? observer.error(new require_request_DXOkY5MQ.n({
+				projectId,
+				credentials: requireCredentials
+			})) : (observer.next(), observer.complete());
 		}).catch(() => {
 			signal.aborted || observer.closed || (observer.next(), observer.complete());
 		}), () => controller.abort();
@@ -7621,7 +7589,7 @@ function generateHelpUrl(slug) {
 }
 function once(fn) {
 	let didCall = !1, returnValue;
-	return (...args) => didCall ? returnValue : (returnValue = fn(...args), didCall = !0, returnValue);
+	return (...args) => (didCall ||= (returnValue = fn(...args), !0), returnValue);
 }
 const createWarningPrinter = (message) => once((...args) => console.warn(message.join(" "), ...args));
 createWarningPrinter(["Because you set \`withCredentials\` to true, we will override your \`useCdn\`", "setting to be false since (cookie-based) credentials are never set on the CDN"]), createWarningPrinter([
