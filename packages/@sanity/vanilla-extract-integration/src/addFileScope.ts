@@ -33,26 +33,32 @@ export function addFileScope({
   const normalizedPath = normalizePath(path.relative(rootPath, filePath))
   const {hasESM, isMixed} = detectSyntax(source)
 
+  // `JSON.stringify` produces a quoted JS string literal, so quotes, backslashes, newlines,
+  // and other special characters in the path or package name cannot break out of the call.
+  // Ported from `@vanilla-extract/integration` 8.0.11
+  // (vanilla-extract-css/vanilla-extract#1785).
+  const fileScopeArgs = `${JSON.stringify(normalizedPath)}, ${JSON.stringify(packageName)}`
+
   // Keying on the module specifier (not on a `setFileScope(` call) is deliberate, matching
   // upstream: a source that already imports the fileScope module cannot be wrapped again — the
   // injected `import { setFileScope, endFileScope }` would duplicate its bindings and turn the
   // module into a syntax error. An import without a call is out of contract and passes through.
   if (source.includes('@vanilla-extract/css/fileScope')) {
-    source = source.replace(
-      /setFileScope\(((\n|.)*?)\)/,
-      `setFileScope("${normalizedPath}", "${packageName}")`,
-    )
+    // A function replacement inserts `fileScopeArgs` literally. A string replacement would
+    // treat `$` in the path or package name as a `String.prototype.replace` pattern (`$&`,
+    // `$'`, `` $` ``).
+    source = source.replace(/setFileScope\(((\n|.)*?)\)/, () => `setFileScope(${fileScopeArgs})`)
   } else if (hasESM && !isMixed) {
     source = [
       `import { setFileScope, endFileScope } from "@vanilla-extract/css/fileScope";`,
-      `setFileScope("${normalizedPath}", "${packageName}");`,
+      `setFileScope(${fileScopeArgs});`,
       source,
       `endFileScope();`,
     ].join('\n')
   } else {
     source = [
       `const __vanilla_filescope__ = require("@vanilla-extract/css/fileScope");`,
-      `__vanilla_filescope__.setFileScope("${normalizedPath}", "${packageName}");`,
+      `__vanilla_filescope__.setFileScope(${fileScopeArgs});`,
       source,
       `__vanilla_filescope__.endFileScope();`,
     ].join('\n')
