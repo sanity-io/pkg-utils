@@ -1,5 +1,13 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.2.24
+
+### Patch Changes
+
+- [#3585](https://github.com/sanity-io/pkg-utils/pull/3585) [`d212bfa`](https://github.com/sanity-io/pkg-utils/commit/d212bfab59f5ae503e50eeb2b26b1a403ae55013) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update `@vanilla-extract/css` to ^1.21.3
+- Updated dependencies [[`a7d96e4`](https://github.com/sanity-io/pkg-utils/commit/a7d96e4bf4896b9633cfad130026ad9c24677fa6), [`d212bfa`](https://github.com/sanity-io/pkg-utils/commit/d212bfab59f5ae503e50eeb2b26b1a403ae55013), [`d212bfa`](https://github.com/sanity-io/pkg-utils/commit/d212bfab59f5ae503e50eeb2b26b1a403ae55013)]:
+  - @sanity/vanilla-extract-integration@0.1.24
+
 ## 0.2.23
 
 ### Patch Changes
