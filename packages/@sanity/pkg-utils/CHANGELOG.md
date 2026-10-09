@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 13.0.8
+
+### Patch Changes
+
+- [#3589](https://github.com/sanity-io/pkg-utils/pull/3589) [`24c9a21`](https://github.com/sanity-io/pkg-utils/commit/24c9a2128e153590a988dfa521a043720c653b04) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency cac to ^7.0.1
+- Updated dependencies []:
+  - @sanity/tsdown-config@0.28.7
+
 ## 13.0.7
 
 ### Patch Changes
