@@ -1,5 +1,17 @@
 # @sanity/vanilla-extract-integration
 
+## 0.1.24
+
+### Patch Changes
+
+- [#3576](https://github.com/sanity-io/pkg-utils/pull/3576) [`a7d96e4`](https://github.com/sanity-io/pkg-utils/commit/a7d96e4bf4896b9633cfad130026ad9c24677fa6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.13
+
+- [#3585](https://github.com/sanity-io/pkg-utils/pull/3585) [`d212bfa`](https://github.com/sanity-io/pkg-utils/commit/d212bfab59f5ae503e50eeb2b26b1a403ae55013) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update `@vanilla-extract/css` to ^1.21.3
+
+- [#3585](https://github.com/sanity-io/pkg-utils/pull/3585) [`d212bfa`](https://github.com/sanity-io/pkg-utils/commit/d212bfab59f5ae503e50eeb2b26b1a403ae55013) Thanks [@stipsan](https://github.com/stipsan)! - fix: escape file paths and package names interpolated into `setFileScope(...)`, so quotes and other special characters cannot break out of the generated string literal
+
+  Ports [vanilla-extract#1785](https://github.com/vanilla-extract-css/vanilla-extract/pull/1785) (`ced6c58`).
+
 ## 0.1.23
 
 ### Patch Changes

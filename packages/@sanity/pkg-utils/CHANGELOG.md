@@ -1,5 +1,12 @@
 # @sanity/pkg-utils
 
+## 13.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`5f50c99`](https://github.com/sanity-io/pkg-utils/commit/5f50c992bdcfb0e7da240ad0aedde8640c55e978), [`a7d96e4`](https://github.com/sanity-io/pkg-utils/commit/a7d96e4bf4896b9633cfad130026ad9c24677fa6)]:
+  - @sanity/tsdown-config@0.28.6
+
 ## 13.0.6
 
 ### Patch Changes
