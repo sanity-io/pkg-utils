@@ -15,12 +15,12 @@ catalog:
   '@sanity/client': ^8.9.0
   '@sanity/icons': ^5.2.3
   '@sanity/logos': ^2.2.6
-  '@tsdown/css': ^0.23.0
+  '@tsdown/css': ^0.23.1
   '@types/node': ^24.19.1
   lightningcss: ^1.33.0
   oxc-transform-react: ^0.153.0
   publint: ^0.3.25
-  tsdown: ^0.23.0
+  tsdown: ^0.23.1
   typescript: 7.0.2
   vitest: ^5.0.3
 
@@ -48,7 +48,6 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - '@next/*'
   - '@sanity/client@8.9.0'
-  - '@astrojs/react@7.0.0'
   - '@yuku-parser/*'
   - '@oxc-transform-react/*'
   - '@rolldown/*'
@@ -57,6 +56,7 @@ minimumReleaseAgeExclude:
   - '@oxlint/*'
   - oxlint@1.87.0
   - rolldown
+  - 'cac@7.1.0'
   - 'package-manager-detector@1.9.0'
   - '@vitejs/plugin-react@6.1.2'
   - '@microsoft/api-extractor@7.59.4'
