@@ -1,5 +1,20 @@
 # @sanity/pkg-utils
 
+## 13.0.9
+
+### Patch Changes
+
+- [#3595](https://github.com/sanity-io/pkg-utils/pull/3595) [`dd545f3`](https://github.com/sanity-io/pkg-utils/commit/dd545f35be0805dc0e49d614d6b6341dc85e91cb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update tsdown to ^0.23.1
+
+- [#3605](https://github.com/sanity-io/pkg-utils/pull/3605) [`2214615`](https://github.com/sanity-io/pkg-utils/commit/221461575a8fe8444316e1d9bf142a7b7edd8ab6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency prettier to ^3.9.10
+
+- [#3606](https://github.com/sanity-io/pkg-utils/pull/3606) [`304bc15`](https://github.com/sanity-io/pkg-utils/commit/304bc15af1d6d9c5352c6375e5ba8c0c04dcb2dd) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency zod to ^4.6.6
+
+- [#3607](https://github.com/sanity-io/pkg-utils/pull/3607) [`154f346`](https://github.com/sanity-io/pkg-utils/commit/154f346a5dda058c09a6d28c93a620dbd4b5fdc3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency cac to ^7.1.0
+- Updated dependencies [[`dd545f3`](https://github.com/sanity-io/pkg-utils/commit/dd545f35be0805dc0e49d614d6b6341dc85e91cb), [`304bc15`](https://github.com/sanity-io/pkg-utils/commit/304bc15af1d6d9c5352c6375e5ba8c0c04dcb2dd)]:
+  - @sanity/parse-package-json@2.3.6
+  - @sanity/tsdown-config@0.28.8
+
 ## 13.0.8
 
 ### Patch Changes
