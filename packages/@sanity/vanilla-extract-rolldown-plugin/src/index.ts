@@ -68,7 +68,10 @@ const RE_DTS = /\.d\.[cm]?ts$/
  */
 export interface Options {
   /**
-   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc).
+   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc). Whatever
+   * the format, identifiers are hashed from the package name and version plus a digest of the
+   * `.css.ts` module source, so two versions of a package on one page never share class names
+   * (see `createFileScopePackageName` in `@sanity/vanilla-extract-integration`).
    * @defaultValue "short"
    */
   identifiers?: IdentifierOption

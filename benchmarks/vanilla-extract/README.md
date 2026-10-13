@@ -79,18 +79,18 @@ Keep this section current: re-run the full suite and update the tables whenever 
 `vanilla-extract` dependencies are bumped or any of the `@sanity/vanilla-extract-*` plugins
 change (see [AGENTS.md](../../AGENTS.md)).
 
-Last run: 2026-10-08, after bumping `@vanilla-extract/css` to 1.21.3 and
-`@vanilla-extract/integration` to 8.0.11, and escaping `setFileScope` arguments in
-`@sanity/vanilla-extract-integration`. Full default suite (`pnpm benchmark:vanilla-extract`) on
-Node.js 24.18.0, Linux x64, Intel Xeon, **4 cores**; Rollup 4.64.0, Rolldown 1.2.12, Vite 8.3.3,
-Vitest 5.0.3, yuku-parser 0.17.0. Values are mean wall-clock milliseconds from that runner and are
+Last run: 2026-10-13, after qualifying the vanilla-extract file scopes with the package version
+and a digest of the module source in `@sanity/vanilla-extract-integration` (version-unique
+identifiers, SAPP-4639). Full default suite (`pnpm benchmark:vanilla-extract`) on Node.js
+24.18.0, Linux x64, Intel Xeon, **4 cores**; Rollup 4.64.5, Rolldown 1.2.13, Vite 8.3.4, Vitest
+5.0.3, yuku-parser 0.19.0. Values are mean wall-clock milliseconds from that runner and are
 machine-specific, so compare ratios rather than absolute numbers.
 
-Ratios: library build 3.02–3.69x, Vite build 1.26–1.59x, HMR at parity, hook-filter 1.72–1.89x.
-Short-identifier library builds sit next to the 2026-10-01 run. The debug-identifier gap is
-wider on this runner: the official babel transform cost more, and the Sanity `yuku-parser` pass
-cost less. HMR stayed at the ~270 ms leaf / ~410 ms theme level measured on 2026-10-01.
-Hook-entry counts are unchanged.
+Ratios: library build 3.10–3.41x, Vite build 1.32–1.59x, HMR at parity, hook-filter 1.76–1.87x.
+Every number sits within run-to-run noise of the 2026-10-08 run: the per-module md5 digest of
+the file-scope qualification is not measurable next to the bundling work. The debug-identifier
+gap narrowed slightly on this runner (the official babel transform cost less than on 2026-10-08),
+the kitchen-sink and HMR cases are unchanged, and the hook-entry counts are unchanged.
 
 ### Core count shifts the build ratios
 
@@ -112,14 +112,14 @@ Sanity on leaf edits, 1.05x official on theme edits, rme up to ±20%); hook-filt
 
 | Variant                  | Rollup + `@vanilla-extract/rollup-plugin` | Rolldown + `@sanity/vanilla-extract-rolldown-plugin` | Relative result     |
 | ------------------------ | ----------------------------------------: | ---------------------------------------------------: | ------------------- |
-| No minify, no target     |                               1,128.89 ms |                                            374.02 ms | Sanity 3.02x faster |
-| Minify                   |                               1,113.79 ms |                                            354.40 ms | Sanity 3.14x faster |
-| Target chrome61          |                               1,129.64 ms |                                            352.18 ms | Sanity 3.21x faster |
-| Minify + target chrome61 |                               1,135.87 ms |                                            360.01 ms | Sanity 3.16x faster |
-| Debug identifiers        |                               1,478.68 ms |                                            400.87 ms | Sanity 3.69x faster |
+| No minify, no target     |                               1,148.72 ms |                                            358.97 ms | Sanity 3.20x faster |
+| Minify                   |                               1,175.82 ms |                                            361.99 ms | Sanity 3.25x faster |
+| Target chrome61          |                               1,154.90 ms |                                            372.63 ms | Sanity 3.10x faster |
+| Minify + target chrome61 |                               1,156.29 ms |                                            354.05 ms | Sanity 3.27x faster |
+| Debug identifiers        |                               1,412.72 ms |                                            414.55 ms | Sanity 3.41x faster |
 
-Debug identifiers cost each pipeline `debug − baseline`: **+349.8 ms** for the official
-babel-based transform, **+26.9 ms** for the Sanity `yuku-parser` pass — the transform runs
+Debug identifiers cost each pipeline `debug − baseline`: **+264.0 ms** for the official
+babel-based transform, **+55.6 ms** for the Sanity `yuku-parser` pass — the transform runs
 once per `.css.ts` module and scales with file size, so the production-shaped modules widen
 the gap the near-empty fixtures used to understate.
 
@@ -127,21 +127,21 @@ the gap the near-empty fixtures used to understate.
 
 | Identifiers | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
 | ----------- | -----------------------------: | ------------------------------------: | ------------------- |
-| Short       |                    1,007.46 ms |                             800.56 ms | Sanity 1.26x faster |
-| Debug       |                    1,360.28 ms |                             857.21 ms | Sanity 1.59x faster |
+| Short       |                    1,045.95 ms |                             791.65 ms | Sanity 1.32x faster |
+| Debug       |                    1,356.51 ms |                             854.44 ms | Sanity 1.59x faster |
 
 ### Vite build kitchen sink, 5,000 TS + 500 CSS modules, debug identifiers, css minify + target chrome61 (5 samples each)
 
 | `@vanilla-extract/vite-plugin` | `@sanity/vanilla-extract-vite-plugin` | Relative result     |
 | -----------------------------: | ------------------------------------: | ------------------- |
-|                    4,610.63 ms |                           3,334.60 ms | Sanity 1.38x faster |
+|                    4,623.39 ms |                           3,408.25 ms | Sanity 1.36x faster |
 
 ### Vite dev HMR (10 samples each)
 
 | Scenario                               | Official plugin | Sanity plugin | Relative result     |
 | -------------------------------------- | --------------: | ------------: | ------------------- |
-| Single `.css.ts` leaf edit             |       271.37 ms |     265.97 ms | Sanity 1.02x faster |
-| Shared theme edit, 100 style importers |       412.01 ms |     411.18 ms | parity (1.00x)      |
+| Single `.css.ts` leaf edit             |       276.34 ms |     268.79 ms | Sanity 1.03x faster |
+| Shared theme edit, 100 style importers |       396.14 ms |     401.37 ms | parity (1.01x)      |
 
 Both HMR scenarios sit inside the run-to-run noise, so treat them as parity.
 
@@ -149,9 +149,9 @@ Both HMR scenarios sit inside the run-to-run noise, so treat them as parity.
 
 | Unrelated modules | Official plugin | Sanity plugin | Relative result     |
 | ----------------: | --------------: | ------------: | ------------------- |
-|                 0 |       482.57 ms |     255.81 ms | Sanity 1.89x faster |
-|             1,000 |       501.48 ms |     273.92 ms | Sanity 1.83x faster |
-|             5,000 |       762.96 ms |     442.51 ms | Sanity 1.72x faster |
+|                 0 |       492.26 ms |     263.57 ms | Sanity 1.87x faster |
+|             1,000 |       510.01 ms |     279.64 ms | Sanity 1.82x faster |
+|             5,000 |       736.41 ms |     419.45 ms | Sanity 1.76x faster |
 
 The untimed hook diagnostic shows why: the official plugin's unfiltered hooks enter JavaScript
 once per module, while the Sanity plugin's native hook filters reject unrelated ids before the

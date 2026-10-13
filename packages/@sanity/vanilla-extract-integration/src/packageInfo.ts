@@ -12,6 +12,12 @@ import path from 'node:path'
  */
 export interface PackageInfo {
   name: string
+  /**
+   * The `version` field of that `package.json`, when it has one. Qualifies the file scopes of
+   * the package's `.css.ts` modules, so their identifiers differ between package versions —
+   * see {@link createFileScopePackageName}.
+   */
+  version?: string
   path: string
   dirname: string
 }
@@ -29,8 +35,10 @@ function getClosestPackageInfo(directory: string): Partial<PackageInfo> | undefi
     if (fs.existsSync(packageJsonPath)) {
       const manifest: unknown = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
       const name = isRecord(manifest) ? manifest['name'] : undefined
+      const version = isRecord(manifest) ? manifest['version'] : undefined
       return {
         ...(typeof name === 'string' && name ? {name} : {}),
+        ...(typeof version === 'string' && version ? {version} : {}),
         path: packageJsonPath,
         dirname: currentDirectory,
       }
@@ -70,6 +78,7 @@ export function getPackageInfo(cwd?: string | null): PackageInfo {
 
   const resolvedPackageInfo: PackageInfo = {
     name: packageInfo.name,
+    ...(packageInfo.version === undefined ? {} : {version: packageInfo.version}),
     path: packageInfo.path ?? '',
     dirname: packageInfo.dirname ?? '',
   }

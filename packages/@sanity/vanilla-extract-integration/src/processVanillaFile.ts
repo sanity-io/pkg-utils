@@ -7,6 +7,7 @@ import {removeAdapter, setAdapter} from '@vanilla-extract/css/adapter'
 import {transformCss} from '@vanilla-extract/css/transformCss'
 import {evalModule} from './evalModule.ts'
 import {parseFileScope, stringifyFileScope} from './fileScope.ts'
+import {createAdapterIdentOption, parseFileScopePackageName} from './fileScopePackageName.ts'
 import {serializeCss} from './serializeCss.ts'
 import {serializeVanillaModule} from './serializeVanillaModule.ts'
 import type {IdentifierOption} from './types.ts'
@@ -46,6 +47,7 @@ export async function processVanillaFile({
   const localClassNames = new Set<string>()
   const composedClassLists: Array<Composition> = []
   const usedCompositions = new Set<string>()
+  const adapterIdentOption = createAdapterIdentOption(identOption)
 
   const cssAdapter: Adapter = {
     appendCss: (css, fileScope) => {
@@ -68,7 +70,7 @@ export async function processVanillaFile({
       usedCompositions.add(identifier)
     },
     onEndFileScope: () => {},
-    getIdentOption: () => identOption,
+    getIdentOption: () => adapterIdentOption,
   }
 
   const currentNodeEnv = process.env['NODE_ENV']
@@ -99,7 +101,13 @@ export async function processVanillaFile({
   const cssImports: string[] = []
 
   for (const [serialisedFileScope, fileScopeCss] of cssByFileScope) {
-    const fileScope = parseFileScope(serialisedFileScope)
+    const {filePath: fileScopePath, packageName} = parseFileScope(serialisedFileScope)
+    // Callers see the bare package name; the version and digest qualifying the file scope are
+    // an implementation detail of the identifier hash
+    const fileScope: FileScope =
+      packageName === undefined
+        ? {filePath: fileScopePath}
+        : {filePath: fileScopePath, packageName: parseFileScopePackageName(packageName).name}
 
     setAdapter(cssAdapter)
 

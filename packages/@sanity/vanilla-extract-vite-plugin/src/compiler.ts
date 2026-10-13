@@ -13,6 +13,7 @@
  */
 import {isAbsolute, join} from 'node:path'
 import {
+  createAdapterIdentOption,
   cssFileFilter,
   getPackageInfo,
   normalizePath,
@@ -334,6 +335,7 @@ async function createCompilerServer({
             rootPath: root,
             filePath: id,
             packageName: pkg.name,
+            packageVersion: pkg.version,
             identOption: identifiers,
             globalAdapterIdentifier,
           })
@@ -383,6 +385,7 @@ export function createCompiler({
     localClassNames: Set<string>
     composedClassLists: Composition[]
   }>(root)
+  const adapterIdentOption = createAdapterIdentOption(identifiers)
 
   const pruneFile = (filePath: string) => {
     cssCache.delete(filePath)
@@ -425,7 +428,7 @@ export function createCompiler({
       const composedClassLists: Composition[] = []
 
       const cssAdapter: Adapter = {
-        getIdentOption: () => identifiers,
+        getIdentOption: () => adapterIdentOption,
         onBeginFileScope: (fileScope) => {
           // Before evaluating a file, reset the cache for it
           const moduleId = normalizePath(fileScope.filePath)

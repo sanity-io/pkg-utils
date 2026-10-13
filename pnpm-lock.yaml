@@ -779,6 +779,9 @@ importers:
 
   integration/vanilla-extract-studio:
     devDependencies:
+      '@emotion/hash':
+        specifier: ^0.9.2
+        version: 0.9.2
       '@sanity/tsconfig':
         specifier: workspace:*
         version: link:../../packages/@sanity/tsconfig

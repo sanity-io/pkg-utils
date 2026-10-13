@@ -16,10 +16,13 @@ The only runtime dependencies left are `rolldown` (which the host toolchain — 
 ```ts
 import {
   compile, // rolldown child compilation of a .css.ts graph
+  createAdapterIdentOption, // identifier option for a compilation adapter (bare package name for custom functions)
+  createFileScopePackageName, // `<name>@<version>+<source digest>`, the package name of a file scope
   cssFileFilter,
   getPackageInfo,
   getSourceFromVirtualCssFile,
   normalizePath,
+  parseFileScopePackageName,
   processVanillaFile, // evaluate compiled output into virtual CSS imports + serialized exports
   serializeVanillaModule,
   transform, // debug IDs + file scope wrapping for a single module
@@ -33,6 +36,20 @@ Intentional differences from upstream:
 - The `esbuildOptions` bag of `compile()` is dropped (it leaked the esbuild API into the public surface).
 - Only the API surface consumed by `@sanity/vanilla-extract-rolldown-plugin` and `@sanity/vanilla-extract-vite-plugin` is exported.
 - The babel-compiled `createTheme` destructure special-cases of the debug-ID transform are not ported: the transform only ever sees authored source.
+- File scopes are qualified with the package version and a digest of the module source, so identifiers are unique per package build (see below). Upstream hashes the bare package name.
+
+## Identifiers are unique per package version
+
+`@vanilla-extract/css` derives every identifier it generates — class names, keyframes, CSS vars, containers, layers — from `hash(packageName + filePath)` followed by a per-file call counter (`_2mi48t0`, `_2mi48t1`, …). Upstream sets the file scope's `packageName` to the bare package name, so a `.css.ts` module gets the **same identifiers in every version of the package**. Once a style is added, removed or reordered, the counter shifts and a class name that used to select one rule selects another. When two versions of the same library are loaded on one page (an app bundling its own `@sanity/ui` next to a Studio loaded from the module CDN, a Studio plugin bundling a different `@sanity/ui` than the Studio) the stylesheets style each other's markup with the wrong rules: in `@sanity/ui` ≤ 4.4.2 `_2mi48t0` was the Button's loading overlay (`position: absolute; inset: 0`), in 4.4.4 it became the Button's root class, and every Button turned into an opaque box.
+
+`transform()` therefore sets the file scope's package name to `createFileScopePackageName({name, version, source})`: the package name qualified by its version (`0.0.0` when the `package.json` has none) and an 8-hex-char digest of the module source, e.g. `@sanity/ui@4.4.4+1f3a9c2e`. `compile()` and `@sanity/vanilla-extract-vite-plugin`'s compiler feed it the `version` resolved by `getPackageInfo()`.
+
+- **Unique across versions and content.** Every published version of a package gets its own identifiers; so do builds of the same version with different styles (local or preview builds), and packages without a version.
+- **Deterministic.** The same package name, version and module source always produce the same identifiers, wherever the package is built. A shared `theme.css.ts` gets the same identifiers whether it's evaluated through an importer or on its own.
+- **As short as before.** The hash output has a fixed 32-bit width (`@emotion/hash`, base36 encoded), so the identifiers don't grow with the richer input.
+- **Custom identifier functions keep working.** They receive the bare `packageName` (through `createAdapterIdentOption`), while the qualified file scope already feeds into the `hash` they receive. The same goes for the `fileScope` handed to `processVanillaFile`'s `serializeVirtualCssPath`.
+
+The remaining difference to upstream is the hash itself, which the Sanity Studio integration suite (`integration/vanilla-extract-studio`) accounts for when comparing the fork's output against `@vanilla-extract/vite-plugin`.
 
 ## The parser bench-off
 

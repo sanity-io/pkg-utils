@@ -2,8 +2,11 @@ import {rm} from 'node:fs/promises'
 import path from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {
+  createIdentifierNormalizer,
   describeResult,
+  normalizeClassNames,
   outputRoot,
+  readBuildBindings,
   readBuildClassNames,
   readBuildCss,
   runSanityCommand,
@@ -15,6 +18,8 @@ import {buildVariants, classNameExpectation, type BuildVariant} from './variants
 interface BuildOutput {
   css: string
   classNames: FixtureClassNames
+  /** Every `veStudio…` binding across all chunks, the lazy `veStudioLazyBadge` included. */
+  bindings: Record<string, string>
 }
 
 /**
@@ -37,6 +42,7 @@ async function buildStudio(
   return {
     css: await readBuildCss(outDir),
     classNames: await readBuildClassNames(outDir),
+    bindings: await readBuildBindings(outDir),
   }
 }
 
@@ -92,8 +98,21 @@ describe('sanity build', () => {
       expectCssMarkers(upstream, variant)
 
       const fork = await buildStudio('fork', variant)
-      expect(fork.classNames).toEqual(upstream.classNames)
-      expect(fork.css).toBe(upstream.css)
+      expectClassNameFormat(fork, variant)
+      expectCssMarkers(fork, variant)
+
+      // The fork's identifiers differ from upstream's only in their file-scope hash (qualified
+      // with the package version and module digest); everything else must match verbatim. The
+      // mapping is built from every binding, so the lazy chunk's file scope is covered too.
+      expect(Object.keys(upstream.bindings).toSorted()).toEqual([
+        'veStudioButton',
+        'veStudioDialog',
+        'veStudioLazyBadge',
+        'veStudioOverlay',
+      ])
+      const normalize = createIdentifierNormalizer(fork.bindings, upstream.bindings)
+      expect(normalizeClassNames(fork.classNames, normalize)).toEqual(upstream.classNames)
+      expect(normalize(fork.css)).toBe(upstream.css)
     },
   )
 })

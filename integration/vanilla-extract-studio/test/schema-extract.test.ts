@@ -2,7 +2,9 @@ import {mkdir, readFile, rm} from 'node:fs/promises'
 import path from 'node:path'
 import {describe, expect, test} from 'vitest'
 import {
+  createIdentifierNormalizer,
   describeResult,
+  normalizeClassNames,
   outputRoot,
   parseFixtureClassNames,
   runSanityCommand,
@@ -53,23 +55,28 @@ describe('sanity schema extract', () => {
     async (_slug, variant) => {
       // The upstream plugin is the reference for expected output
       const upstream = await extractSchema('upstream', variant)
+      const fork = await extractSchema('fork', variant)
 
       // The schema-extraction worker runs in development mode, so plugin-default identifiers
       // resolve to `debug`
       const {pattern, firstClassPrefixes} = classNameExpectation(variant.identifiers, 'debug')
-      for (const [exportName, classList] of Object.entries(upstream.classNames)) {
-        for (const className of classList.split(' ')) {
-          expect(className, `${exportName} class ${className}`).toMatch(pattern)
-        }
-        if (firstClassPrefixes) {
-          const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
-          expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
+      for (const output of [upstream, fork]) {
+        for (const [exportName, classList] of Object.entries(output.classNames)) {
+          for (const className of classList.split(' ')) {
+            expect(className, `${exportName} class ${className}`).toMatch(pattern)
+          }
+          if (firstClassPrefixes) {
+            const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
+            expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
+          }
         }
       }
 
-      const fork = await extractSchema('fork', variant)
-      expect(fork.classNames).toEqual(upstream.classNames)
-      expect(fork.schema).toEqual(upstream.schema)
+      // The fork's identifiers differ from upstream's only in their file-scope hash (qualified
+      // with the package version and module digest); everything else must match verbatim
+      const normalize = createIdentifierNormalizer(fork.classNames, upstream.classNames)
+      expect(normalizeClassNames(fork.classNames, normalize)).toEqual(upstream.classNames)
+      expect(JSON.parse(normalize(JSON.stringify(fork.schema)))).toEqual(upstream.schema)
     },
   )
 })

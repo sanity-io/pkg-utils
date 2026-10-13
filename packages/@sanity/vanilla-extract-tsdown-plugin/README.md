@@ -82,7 +82,10 @@ familiar in a tsdown config:
 ```ts
 vanillaExtractPlugin({
   /**
-   * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * Formatting of identifiers (class names, keyframes, CSS vars, etc). Whatever the format,
+   * identifiers are hashed from the package name **and version** plus a digest of the
+   * `.css.ts` module source, so two versions of a package on one page never share class names
+   * (see the `@sanity/vanilla-extract-integration` README).
    * @defaultValue 'short'
    */
   identifiers: 'short',

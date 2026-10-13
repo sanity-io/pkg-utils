@@ -7,6 +7,7 @@
  */
 import {addFileScope} from './addFileScope.ts'
 import {injectDebugIds} from './debugIds.ts'
+import {createFileScopePackageName} from './fileScopePackageName.ts'
 import type {IdentifierOption} from './types.ts'
 
 /** @public */
@@ -15,6 +16,12 @@ export interface TransformParams {
   filePath: string
   rootPath: string
   packageName: string
+  /**
+   * The package version. Together with a digest of `source` it qualifies the file scope's
+   * package name, which keeps the generated identifiers unique per package version and
+   * module content — see {@link createFileScopePackageName}.
+   */
+  packageVersion?: string | undefined
   identOption: IdentifierOption
   globalAdapterIdentifier?: string
 }
@@ -30,7 +37,9 @@ function langFromPath(filePath: string): 'js' | 'jsx' | 'ts' | 'tsx' {
 /**
  * Prepares a `.css.ts` module's source for evaluation: injects debug IDs (only when
  * `identOption` is `'debug'` — `'short'` production builds skip the parse entirely) and wraps
- * the module with its file scope (and optional global adapter binding).
+ * the module with its file scope (and optional global adapter binding). The file scope's
+ * package name is qualified with the package version and a digest of the source, so the
+ * identifiers `@vanilla-extract/css` derives from it are unique per package build.
  *
  * The parser is lazy-loaded so its native binding only loads once a module is actually
  * transformed with debug identifiers.
@@ -41,6 +50,7 @@ export async function transform({
   filePath,
   rootPath,
   packageName,
+  packageVersion,
   identOption,
   globalAdapterIdentifier,
 }: TransformParams): Promise<string> {
@@ -59,7 +69,9 @@ export async function transform({
     source: code,
     filePath,
     rootPath,
-    packageName,
+    // Digested from the authored source, not the debug-ID-injected code, so the digest is the
+    // same for every identifier option
+    packageName: createFileScopePackageName({name: packageName, version: packageVersion, source}),
     globalAdapterIdentifier,
   })
 }

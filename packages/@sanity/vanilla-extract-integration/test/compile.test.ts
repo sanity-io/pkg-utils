@@ -16,10 +16,13 @@ describe('compile', () => {
       identOption: 'short',
     })
 
-    // Every vanilla-extract module in the graph is wrapped with its file scope
+    // Every vanilla-extract module in the graph is wrapped with its file scope, whose package
+    // name is qualified with the package version and a digest of the module source
     expect(source).toContain('"test/fixtures/basic/entry.css.ts"')
     expect(source).toContain('"test/fixtures/basic/theme.css.ts"')
-    expect(source).toContain('"@sanity/vanilla-extract-integration"')
+    expect(source).toMatch(
+      /"test\/fixtures\/basic\/entry\.css\.ts", "@sanity\/vanilla-extract-integration@\d+\.\d+\.\d+[^"+]*\+[0-9a-f]{8}"/,
+    )
 
     // The plain util module is bundled in (its value is inlined or referenced)
     expect(source).toContain('8px')

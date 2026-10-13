@@ -1,7 +1,9 @@
 import {describe, expect, test} from 'vitest'
 import {
+  createIdentifierNormalizer,
   extractDevClassNames,
   extractVirtualCssImports,
+  normalizeClassNames,
   startSanityDev,
   type FixtureClassNames,
   type PluginImplementation,
@@ -66,29 +68,34 @@ describe('sanity dev', () => {
     async (_slug, variant) => {
       // The upstream plugin is the reference for expected output
       const upstream = await collectDevOutput('upstream', variant)
+      const fork = await collectDevOutput('fork', variant)
 
       // Dev servers run in development mode, so plugin-default identifiers resolve to `debug`
       const {pattern, firstClassPrefixes} = classNameExpectation(variant.identifiers, 'debug')
-      for (const [exportName, classList] of Object.entries(upstream.classNames)) {
-        for (const className of classList.split(' ')) {
-          expect(className, `${exportName} class ${className}`).toMatch(pattern)
-          expect(upstream.css, `expected a CSS rule for ${exportName} (.${className})`).toContain(
-            `.${className}`,
-          )
+      for (const output of [upstream, fork]) {
+        for (const [exportName, classList] of Object.entries(output.classNames)) {
+          for (const className of classList.split(' ')) {
+            expect(className, `${exportName} class ${className}`).toMatch(pattern)
+            expect(output.css, `expected a CSS rule for ${exportName} (.${className})`).toContain(
+              `.${className}`,
+            )
+          }
+          if (firstClassPrefixes) {
+            const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
+            expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
+          }
         }
-        if (firstClassPrefixes) {
-          const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
-          expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
-        }
+        // Dev CSS is never minified
+        expect(output.css).toContain('rgb(1, 2, 3)')
+        expect(output.css).toContain('rgb(4, 5, 6)')
+        expect(output.css).toContain('40rem')
       }
-      // Dev CSS is never minified
-      expect(upstream.css).toContain('rgb(1, 2, 3)')
-      expect(upstream.css).toContain('rgb(4, 5, 6)')
-      expect(upstream.css).toContain('40rem')
 
-      const fork = await collectDevOutput('fork', variant)
-      expect(fork.classNames).toEqual(upstream.classNames)
-      expect(fork.css).toBe(upstream.css)
+      // The fork's identifiers differ from upstream's only in their file-scope hash (qualified
+      // with the package version and module digest); everything else must match verbatim
+      const normalize = createIdentifierNormalizer(fork.classNames, upstream.classNames)
+      expect(normalizeClassNames(fork.classNames, normalize)).toEqual(upstream.classNames)
+      expect(normalize(fork.css)).toBe(upstream.css)
     },
   )
 })

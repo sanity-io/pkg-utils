@@ -1,9 +1,11 @@
 import {spawn, type ChildProcess} from 'node:child_process'
+import {readFileSync} from 'node:fs'
 import {readdir, readFile} from 'node:fs/promises'
 import {createRequire} from 'node:module'
 import {createServer} from 'node:net'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import murmurhash from '@emotion/hash'
 
 export const studioRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export const outputRoot = path.join(studioRoot, 'output')
@@ -104,8 +106,12 @@ export async function readBuildCss(outDir: string): Promise<string> {
     .join('\n')
 }
 
-/** The class lists of the fixture's `.css.ts` exports, keyed like the schema description. */
-export interface FixtureClassNames {
+/**
+ * The class lists of the fixture's `.css.ts` exports, keyed like the schema description. A type
+ * alias rather than an interface so it is assignable to the `Record<string, string>` class
+ * lists of {@link createIdentifierNormalizer}.
+ */
+export type FixtureClassNames = {
   dialog: string
   overlay: string
   button: string
@@ -134,6 +140,140 @@ export function parseFixtureBindings(source: string): FixtureClassNames | undefi
 }
 
 /**
+ * The file-scope hashes of the fixture's vanilla-extract modules as the upstream reference
+ * generates them: `@vanilla-extract/css` derives every identifier from
+ * `murmurhash(packageName + filePath)` plus a per-file counter, and upstream's package name
+ * is the studio's bare package name.
+ *
+ * The fork qualifies that package name with the package version and a digest of the module
+ * source (`createFileScopePackageName` in `@sanity/vanilla-extract-integration`), so the same
+ * `.css.ts` module never shares identifiers with another version of the package. That changes
+ * the hash but nothing else about the identifiers, so the implementations are compared with
+ * the fork's hashes mapped onto upstream's (see {@link createIdentifierNormalizer}).
+ */
+const upstreamFileScopeHashes = (() => {
+  const manifest: unknown = JSON.parse(readFileSync(path.join(studioRoot, 'package.json'), 'utf8'))
+  const name =
+    typeof manifest === 'object' && manifest !== null && 'name' in manifest
+      ? manifest.name
+      : undefined
+  if (typeof name !== 'string') throw new Error('The studio package.json has no name')
+  return ['src/styles.css.ts', 'src/button.css.ts', 'src/PlainCssJsInput.css.ts'].map((filePath) =>
+    murmurhash(`${name}${filePath}`),
+  )
+})()
+
+const BASE36 = /^[0-9a-z]+$/
+
+/** vanilla-extract's identifier normalization: a leading digit gets a `_` prefix. */
+const normalizeIdentifier = (identifier: string) =>
+  /^[0-9]/.test(identifier) ? `_${identifier}` : identifier
+
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** Splits an upstream identifier around its (known) file-scope hash. */
+function splitUpstreamIdentifier(identifier: string): {
+  prefix: string
+  hash: string
+  counter: string
+} {
+  for (const hash of upstreamFileScopeHashes) {
+    const index = identifier.lastIndexOf(hash)
+    if (index === -1) continue
+    const counter = identifier.slice(index + hash.length)
+    if (!BASE36.test(counter)) continue
+    return {prefix: identifier.slice(0, index), hash, counter}
+  }
+  throw new Error(
+    `No upstream file-scope hash in identifier ${identifier}; is the fixture module list of helpers.ts complete?`,
+  )
+}
+
+/**
+ * Maps the fork's identifiers onto the upstream reference's, from paired class lists keyed by
+ * export name. Each fork class is split like its upstream counterpart
+ * (`<prefix><hash><counter>`, where `_` prefixes are implied by the hash), which pairs every
+ * fork file-scope hash with the upstream one — asserting along the way that the two differ
+ * (the fork's version/digest qualification is in effect) and correspond one-to-one. The
+ * returned function rewrites every identifier token derived from those file scopes, whether
+ * in CSS, JS or JSON text, so the rest of the output can be compared verbatim.
+ */
+export function createIdentifierNormalizer(
+  fork: Record<string, string>,
+  upstream: Record<string, string>,
+): (text: string) => string {
+  const hashMap = new Map<string, string>()
+
+  for (const [exportName, upstreamClassList] of Object.entries(upstream)) {
+    const forkClassList = fork[exportName]
+    if (forkClassList === undefined) {
+      throw new Error(`The fork output has no ${exportName} class list`)
+    }
+    const upstreamClasses = upstreamClassList.split(' ')
+    const forkClasses = forkClassList.split(' ')
+    if (forkClasses.length !== upstreamClasses.length) {
+      throw new Error(
+        `${exportName}: the fork has ${forkClasses.length} classes (${forkClassList}), upstream ${upstreamClasses.length} (${upstreamClassList})`,
+      )
+    }
+    upstreamClasses.forEach((upstreamClass, index) => {
+      const forkClass = forkClasses[index]!
+      const {prefix, hash: upstreamHash, counter} = splitUpstreamIdentifier(upstreamClass)
+      // Same prefix and counter around the fork's own hash — except for the `_` vanilla-extract
+      // prepends to identifiers starting with a digit, which depends on the hash
+      const basePrefix = prefix === '_' ? '' : prefix
+      const match = new RegExp(
+        `^_?${escapeRegExp(basePrefix)}([0-9a-z]+)${escapeRegExp(counter)}$`,
+      ).exec(forkClass)
+      if (!match) {
+        throw new Error(
+          `${exportName}: fork class ${forkClass} does not have the shape of upstream's ${upstreamClass}`,
+        )
+      }
+      const forkHash = match[1]!
+      if (forkHash === upstreamHash) {
+        throw new Error(
+          `${exportName}: the fork's file-scope hash ${forkHash} equals upstream's — the version/digest qualification of the file scope is not in effect`,
+        )
+      }
+      const previous = hashMap.get(forkHash)
+      if (previous !== undefined && previous !== upstreamHash) {
+        throw new Error(
+          `${exportName}: fork hash ${forkHash} maps to both ${previous} and ${upstreamHash}`,
+        )
+      }
+      hashMap.set(forkHash, upstreamHash)
+    })
+  }
+  if (new Set(hashMap.values()).size !== hashMap.size) {
+    throw new Error(
+      `The fork hashes do not map one-to-one onto upstream's: ${JSON.stringify([...hashMap])}`,
+    )
+  }
+
+  return (text) =>
+    text.replace(/[A-Za-z_][0-9A-Za-z_-]*/g, (token) => {
+      for (const [forkHash, upstreamHash] of hashMap) {
+        const index = token.lastIndexOf(forkHash)
+        if (index === -1) continue
+        const counter = token.slice(index + forkHash.length)
+        if (!BASE36.test(counter)) continue
+        const prefix = token.slice(0, index)
+        return normalizeIdentifier(`${prefix === '_' ? '' : prefix}${upstreamHash}${counter}`)
+      }
+      return token
+    })
+}
+
+/** Applies an identifier normalizer to every class list of the fixture exports. */
+export function normalizeClassNames(
+  {dialog, overlay, button}: FixtureClassNames,
+  normalize: (text: string) => string,
+): FixtureClassNames {
+  return {dialog: normalize(dialog), overlay: normalize(overlay), button: normalize(button)}
+}
+
+/**
  * The fixture class names as they appear in the built JS. The builds run with `--no-minify`,
  * so the compiled `.css.ts` modules keep their `veStudio…` binding names; if a future bundler
  * folds the constants away instead, the schema-description literal of `sanity.config.ts`
@@ -147,6 +287,23 @@ export async function readBuildClassNames(outDir: string): Promise<FixtureClassN
     if (classNames) return classNames
   }
   throw new Error(`No fixture class names found in the JS output of ${outDir}`)
+}
+
+/**
+ * Every `veStudio…` export binding of the compiled `.css.ts` modules in a build output, across
+ * all of its JS chunks — including the lazily loaded chunk of `PlainCssJsInput.css.ts`, whose
+ * CSS is part of the build output as well.
+ */
+export async function readBuildBindings(outDir: string): Promise<Record<string, string>> {
+  const bindings: Record<string, string> = {}
+  const files = (await collectFiles(outDir)).filter((file) => file.endsWith('.js'))
+  for (const file of files) {
+    const source = await readFile(file, 'utf8')
+    for (const match of source.matchAll(/\b(veStudio[A-Za-z]+)\s*=\s*(["'])([^"'\n]+)\2/g)) {
+      bindings[match[1]!] = match[3]!
+    }
+  }
+  return bindings
 }
 
 async function findFreePort(): Promise<number> {

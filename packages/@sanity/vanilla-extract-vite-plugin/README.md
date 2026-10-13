@@ -57,7 +57,10 @@ Requires Vite 8. For older Vite versions, use `@vanilla-extract/vite-plugin`.
 ```ts
 vanillaExtractPlugin({
   /**
-   * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * Formatting of identifiers (class names, keyframes, CSS vars, etc). Whatever the format,
+   * identifiers are hashed from the package name **and version** plus a digest of the
+   * `.css.ts` module source, so two versions of a package on one page never share class names
+   * (see the `@sanity/vanilla-extract-integration` README).
    * @defaultValue 'short' when `mode` is 'production', 'debug' otherwise
    */
   identifiers: 'short',

@@ -9,6 +9,13 @@
  */
 
 export {compile, type CompileOptions} from './compile.ts'
+export {
+  createAdapterIdentOption,
+  createFileScopePackageName,
+  parseFileScopePackageName,
+  type FileScopePackageNameParams,
+  type ParsedFileScopePackageName,
+} from './fileScopePackageName.ts'
 export {cssFileFilter, virtualCssFileFilter} from './filters.ts'
 export {getSourceFromVirtualCssFile} from './getSourceFromVirtualCssFile.ts'
 export {normalizePath} from './normalizePath.ts'

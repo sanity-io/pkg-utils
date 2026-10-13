@@ -1,7 +1,9 @@
 import {describe, expect, test} from 'vitest'
 import {
   compileLazyChunk,
+  createIdentifierNormalizer,
   extractDevClassNames,
+  normalizeClassNames,
   startSanityDev,
   studioRoot,
   type FixtureClassNames,
@@ -28,6 +30,8 @@ import {classNameExpectation} from './variants.ts'
  */
 interface BundledDevOutput {
   classNames: FixtureClassNames
+  /** The `veStudioLazyBadge` class of the on-demand-compiled chunk. */
+  badge: string
   lazyPatch: string
 }
 
@@ -86,7 +90,7 @@ async function collectBundledDevOutput(
     // its extracted CSS, served through a virtual `.vanilla.css` style-injection module
     const lazyExports = extractDevClassNames(lazyPatch)
     const badge = lazyExports['veStudioLazyBadge']
-    expect(badge, 'expected veStudioLazyBadge in the lazy-compiled chunk').toBeTruthy()
+    if (!badge) expect.unreachable('expected veStudioLazyBadge in the lazy-compiled chunk')
     expect(badge).toMatch(classNameExpectation('default', 'debug').pattern)
     expect(lazyPatch).toContain(`.${badge} {`)
     expect(lazyPatch).toContain('rgb(7, 8, 9)')
@@ -107,6 +111,7 @@ async function collectBundledDevOutput(
         overlay: exports['veStudioOverlay']!,
         button: exports['veStudioButton']!,
       },
+      badge,
       lazyPatch,
     }
   } finally {
@@ -118,17 +123,27 @@ describe('sanity dev (bundled dev mode)', () => {
   test('fork output matches the upstream reference, including on-demand chunks with a plain .css.js dependency', async () => {
     // The upstream plugin is the reference for expected output
     const upstream = await collectBundledDevOutput('upstream')
+    const fork = await collectBundledDevOutput('fork')
 
     // Dev servers run in development mode, so plugin-default identifiers resolve to `debug`
     const {pattern} = classNameExpectation('default', 'debug')
-    for (const [exportName, classList] of Object.entries(upstream.classNames)) {
-      for (const className of classList.split(' ')) {
-        expect(className, `${exportName} class ${className}`).toMatch(pattern)
+    for (const output of [upstream, fork]) {
+      for (const [exportName, classList] of Object.entries(output.classNames)) {
+        for (const className of classList.split(' ')) {
+          expect(className, `${exportName} class ${className}`).toMatch(pattern)
+        }
       }
     }
 
-    const fork = await collectBundledDevOutput('fork')
-    expect(fork.classNames).toEqual(upstream.classNames)
-    expect(fork.lazyPatch).toBe(upstream.lazyPatch)
+    // The fork's identifiers differ from upstream's only in their file-scope hash (qualified
+    // with the package version and module digest); everything else must match verbatim. The
+    // lazy chunk's badge class is paired too, so its file scope is part of the mapping.
+    const normalize = createIdentifierNormalizer(
+      {...fork.classNames, badge: fork.badge},
+      {...upstream.classNames, badge: upstream.badge},
+    )
+    expect(normalizeClassNames(fork.classNames, normalize)).toEqual(upstream.classNames)
+    expect(normalize(fork.badge)).toBe(upstream.badge)
+    expect(normalize(fork.lazyPatch)).toBe(upstream.lazyPatch)
   })
 })
