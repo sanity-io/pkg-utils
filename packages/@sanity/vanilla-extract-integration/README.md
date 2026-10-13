@@ -21,14 +21,18 @@ import {
   getSourceFromVirtualCssFile,
   normalizePath,
   processVanillaFile, // evaluate compiled output into virtual CSS imports + serialized exports
+  resolveIdentifierOption, // turn the plugins' `identifiers` option (incl. 'safe') into an IdentifierOption
   serializeVanillaModule,
   transform, // debug IDs + file scope wrapping for a single module
   virtualCssFileFilter,
   type IdentifierOption,
+  type PluginIdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 ```
 
 Intentional differences from upstream:
+
+- The plugins' `identifiers` option also accepts `'safe'`: `'short'` identifiers whose file-scope hash is `@emotion/hash(packageName + '@' + packageVersion + filePath)`, so releases of a package never share a class name. `resolveIdentifierOption(identifiers, cwd)` turns it into a custom identifier function, reading the version from the same `package.json` as the package name (`getPackageInfo()` now also returns `version`).
 
 - The `esbuildOptions` bag of `compile()` is dropped (it leaked the esbuild API into the public surface).
 - Only the API surface consumed by `@sanity/vanilla-extract-rolldown-plugin` and `@sanity/vanilla-extract-vite-plugin` is exported.

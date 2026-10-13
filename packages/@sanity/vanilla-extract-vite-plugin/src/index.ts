@@ -6,7 +6,7 @@
 import {
   cssFileFilter,
   normalizePath,
-  type IdentifierOption,
+  type PluginIdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 import {
   loadConfigFromFile,
@@ -76,10 +76,19 @@ export type PluginFilter = (filterProps: {
  */
 export interface Options {
   /**
-   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc).
+   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc):
+   *
+   * - `'short'`: a hash of the package name and file path, then a per-file counter. The same
+   *   file names its styles the same way in every release, so a release that reorders them
+   *   reuses class names for different rules.
+   * - `'safe'`: `'short'`, but the hash also covers the package version (from the
+   *   `package.json` the package name is read from). Use it when CSS from different releases
+   *   can end up on the same page.
+   * - `'debug'`: `'short'` prefixed with the file and debug names.
+   * - A custom function, receiving the `'short'` hash.
    * @defaultValue `'short'` when `mode` is `'production'`, `'debug'` otherwise
    */
-  identifiers?: IdentifierOption
+  identifiers?: PluginIdentifierOption
   /**
    * Which of the consumer's Vite plugins are re-instantiated inside the compiler server that
    * evaluates the `.css.ts` modules. By default **no** plugins are forwarded (and the

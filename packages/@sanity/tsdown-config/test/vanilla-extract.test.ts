@@ -301,6 +301,24 @@ describe('vanillaExtract CSS target fallback', () => {
   })
 })
 
+function classNames(css: string): string[] {
+  return Array.from(css.matchAll(/^\.([\w-]+) \{/gm), ([, name]) => name!)
+}
+
+describe('vanillaExtract identifiers', () => {
+  test("passes `identifiers: 'safe'` through to the plugin", async () => {
+    const short = classNames(await buildCssWithConfig({vanillaExtract: {minify: false}}))
+    const safe = classNames(
+      await buildCssWithConfig({vanillaExtract: {minify: false, identifiers: 'safe'}}),
+    )
+
+    // `'safe'` only changes the hashes: same rules, no class name in common with `'short'`
+    expect(short.length).toBeGreaterThan(0)
+    expect(safe).toHaveLength(short.length)
+    expect(safe.filter((name) => short.includes(name))).toEqual([])
+  })
+})
+
 function getPluginNames(config: UserConfig) {
   const {plugins} = config
   if (!Array.isArray(plugins)) return undefined

@@ -398,6 +398,87 @@ describe('vanillaExtractPlugin', () => {
   })
 })
 
+/**
+ * Builds a release of the `fixture-ui` library like a host would from its package root. The
+ * `release-*` fixtures mirror `@sanity/ui`'s `button.css.ts`: 4.4.4 declared a root style
+ * before 4.4.2's loading overlay, and 4.4.3 ships the same file as 4.4.4.
+ */
+async function buildRelease(
+  version: string,
+  options?: Options,
+): Promise<{css: string; classNames: string[]}> {
+  const root = path.join(__dirname, 'fixtures', `release-${version}`)
+  const plugin = vanillaExtractPlugin(options)
+  plugin.api.setBuildContext({cwd: root})
+  const bundle = await rolldown({input: path.join(root, 'index.ts'), cwd: root, plugins: [plugin]})
+  try {
+    const {output} = await bundle.generate({format: 'esm'})
+    const css = findAsset(output, 'bundle.css')
+    return {css, classNames: Array.from(css.matchAll(/^\.([\w-]+) \{/gm), ([, name]) => name!)}
+  } finally {
+    await bundle.close()
+  }
+}
+
+function sharedClassNames(a: {classNames: string[]}, b: {classNames: string[]}): string[] {
+  return a.classNames.filter((name) => b.classNames.includes(name))
+}
+
+describe("`identifiers: 'safe'` across releases", () => {
+  test("`'short'` (the default) reuses 4.4.2's overlay class for 4.4.4's root", async () => {
+    const [previous, next] = await Promise.all([buildRelease('4.4.2'), buildRelease('4.4.4')])
+
+    // The first style of both releases is `<hash of package + path>0`: wherever both releases'
+    // CSS is on one page, 4.4.2's overlay rule (`position: absolute; inset: 0; z-index: 1`)
+    // covers every 4.4.4 Button
+    expect(next.classNames[0]).toBe(previous.classNames[0])
+    expect(previous.css).toContain(`.${previous.classNames[0]} {\n  position: absolute;`)
+    expect(next.css).toContain(`.${next.classNames[0]} {\n  position: relative;`)
+  })
+
+  test("`'safe'` releases never share a class name", async () => {
+    const [previous, next] = await Promise.all([
+      buildRelease('4.4.2', {identifiers: 'safe'}),
+      buildRelease('4.4.4', {identifiers: 'safe'}),
+    ])
+
+    expect(previous.classNames).toHaveLength(1)
+    expect(next.classNames).toHaveLength(2)
+    expect(sharedClassNames(previous, next)).toEqual([])
+  })
+
+  test("`'safe'` names the same file differently at two versions", async () => {
+    const [short443, short444, safe443, safe444] = await Promise.all([
+      buildRelease('4.4.3'),
+      buildRelease('4.4.4'),
+      buildRelease('4.4.3', {identifiers: 'safe'}),
+      buildRelease('4.4.4', {identifiers: 'safe'}),
+    ])
+
+    expect(short444.css).toBe(short443.css)
+    expect(sharedClassNames(safe443, safe444)).toEqual([])
+    expect(safe444.css).not.toBe(safe443.css)
+  })
+
+  test("`'safe'` names the same file the same way within a version", async () => {
+    const [first, second] = await Promise.all([
+      buildRelease('4.4.4', {identifiers: 'safe'}),
+      buildRelease('4.4.4', {identifiers: 'safe'}),
+    ])
+
+    expect(second.css).toBe(first.css)
+    // Only the hashes differ from `'short'`: same rules, same identifier shape
+    const short = await buildRelease('4.4.4')
+    expect(first.classNames).toHaveLength(short.classNames.length)
+    for (const name of first.classNames) expect(name).toMatch(/^_?[0-9a-z]+$/)
+    let renamed = first.css
+    for (const [index, name] of first.classNames.entries()) {
+      renamed = renamed.replaceAll(name, short.classNames[index]!)
+    }
+    expect(renamed).toBe(short.css)
+  })
+})
+
 describe('adapter api', () => {
   test('`setBuildContext` provides the package name for the self-referential import', async () => {
     // Hosts resolve the consumer's package name themselves (e.g. tsdown's `config.pkg.name`,

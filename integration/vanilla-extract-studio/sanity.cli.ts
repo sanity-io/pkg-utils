@@ -10,7 +10,9 @@ import {vanillaExtractPlugin as upstreamVanillaExtractPlugin} from '@vanilla-ext
 import {defineCliConfig} from 'sanity/cli'
 import type {BuildOptions, PluginOption} from 'vite'
 
-type IdentifierOption = Parameters<typeof forkVanillaExtractPlugin>[0] extends
+// Derived from the upstream plugin: the variants run through both implementations, and the
+// fork's option also accepts `'safe'`, which upstream doesn't
+type IdentifierOption = Parameters<typeof upstreamVanillaExtractPlugin>[0] extends
   {identifiers?: infer T} | undefined
   ? T
   : never

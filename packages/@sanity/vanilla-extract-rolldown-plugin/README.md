@@ -81,7 +81,10 @@ so they feel familiar in a rolldown-based toolchain:
 ```ts
 vanillaExtractPlugin({
   /**
-   * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * Formatting of identifiers (class names, keyframes, CSS vars, etc): 'short' (a hash of the
+   * package name and file path, then a per-file counter), 'safe' ('short' with the package
+   * version also hashed in, see below), 'debug' ('short' prefixed with file and debug names),
+   * or a custom function.
    * @defaultValue 'short'
    */
   identifiers: 'short',
@@ -125,6 +128,26 @@ vanillaExtractPlugin({
    */
   exports: {nodeCompat: true},
 })
+```
+
+### Release-safe identifiers
+
+The default `'short'` identifiers are vanilla-extract's: `@emotion/hash(packageName + filePath)`
+followed by a base-36 counter of the identifiers generated in the file so far (and a `_` prefix
+when the name starts with a digit). Nothing in that changes between releases, so a release that
+reorders a file's styles reuses its class names for different rules — `._2mi48t0` is the Button
+loading overlay in `@sanity/ui` 4.4.2 and the Button root in 4.4.4. Pages that load the CSS of
+both releases style one release's markup with the other's rules.
+
+`identifiers: 'safe'` is `'short'` with the package version in the hash:
+`@emotion/hash(packageName + '@' + packageVersion + filePath)`, with the same counter and `_`
+prefix. The version comes from the same `package.json` the package name is read from (the
+nearest one with a `name`, from the build's working directory). Every release gets its own class
+names, the same release always builds the same ones, and the names stay as short as `'short'`
+ones. It is opt-in because it renames every class on every release.
+
+```ts
+vanillaExtractPlugin({identifiers: 'safe'})
 ```
 
 CSS sourcemaps are not emitted, matching `@tsdown/css` — which
