@@ -122,6 +122,23 @@ export function parseFixtureClassNames(source: string): FixtureClassNames | unde
   return {dialog: dialog!, overlay: overlay!, button: button!.trim()}
 }
 
+/**
+ * Every `veStudio…` class-name binding in the built JS, including the lazily loaded
+ * `veStudioLazyBadge` (whose CSS ships in the build output alongside the entry's). Used to
+ * align fork and upstream class names for structural comparison; see `test/compare.ts`.
+ */
+export async function readAllVeBindings(outDir: string): Promise<Record<string, string>> {
+  const files = (await collectFiles(outDir)).filter((file) => file.endsWith('.js'))
+  const bindings: Record<string, string> = {}
+  for (const file of files) {
+    const source = await readFile(file, 'utf8')
+    for (const match of source.matchAll(/\b(veStudio[A-Za-z]+)\s*=\s*(["'])([^"'\n]+)\2/g)) {
+      bindings[match[1]!] ??= match[3]!
+    }
+  }
+  return bindings
+}
+
 /** Parses the `veStudio*` export bindings of the compiled `.css.ts` modules out of JS code. */
 export function parseFixtureBindings(source: string): FixtureClassNames | undefined {
   const bindings: Record<string, string> = {}

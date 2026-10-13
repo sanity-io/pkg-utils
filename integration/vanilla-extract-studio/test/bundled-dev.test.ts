@@ -1,4 +1,5 @@
 import {describe, expect, test} from 'vitest'
+import {alignClassRecords, replaceClasses} from './compare.ts'
 import {
   compileLazyChunk,
   extractDevClassNames,
@@ -128,7 +129,28 @@ describe('sanity dev (bundled dev mode)', () => {
     }
 
     const fork = await collectBundledDevOutput('fork')
-    expect(fork.classNames).toEqual(upstream.classNames)
-    expect(fork.lazyPatch).toBe(upstream.lazyPatch)
+    for (const [exportName, classList] of Object.entries(fork.classNames)) {
+      for (const className of classList.split(' ')) {
+        expect(className, `${exportName} class ${className}`).toMatch(pattern)
+      }
+    }
+
+    // The fork salts its file-scope hash with the package version and content (SAPP-4639)
+    // while upstream hashes the bare `packageName + filePath`, so the class names
+    // legitimately differ — compare everything except the salted hash values
+    const entryAlignment = alignClassRecords({...fork.classNames}, {...upstream.classNames})
+    expect(replaceClasses(JSON.stringify(fork.classNames), entryAlignment.forkToPlaceholder)).toBe(
+      replaceClasses(JSON.stringify(upstream.classNames), entryAlignment.upstreamToPlaceholder),
+    )
+
+    // The lazy chunk carries its own vanilla-extract export (`veStudioLazyBadge`), aligned
+    // separately from the entry's classes
+    const patchForkBindings = extractDevClassNames(fork.lazyPatch)
+    const patchUpstreamBindings = extractDevClassNames(upstream.lazyPatch)
+    expect(Object.keys(patchForkBindings)).toContain('veStudioLazyBadge')
+    const patchAlignment = alignClassRecords(patchForkBindings, patchUpstreamBindings)
+    expect(replaceClasses(fork.lazyPatch, patchAlignment.forkToPlaceholder)).toBe(
+      replaceClasses(upstream.lazyPatch, patchAlignment.upstreamToPlaceholder),
+    )
   })
 })

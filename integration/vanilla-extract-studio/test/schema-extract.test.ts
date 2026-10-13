@@ -1,6 +1,7 @@
 import {mkdir, readFile, rm} from 'node:fs/promises'
 import path from 'node:path'
 import {describe, expect, test} from 'vitest'
+import {alignFixtureClasses, normalizeClassRecord, replaceClasses} from './compare.ts'
 import {
   describeResult,
   outputRoot,
@@ -47,29 +48,46 @@ async function extractSchema(
   return {schema, classNames: classNames!}
 }
 
+function expectClassNameFormat(classNames: FixtureClassNames, variant: StudioVariant): void {
+  // The schema-extraction worker runs in development mode, so plugin-default identifiers
+  // resolve to `debug`
+  const {pattern, firstClassPrefixes} = classNameExpectation(variant.identifiers, 'debug')
+  for (const [exportName, classList] of Object.entries(classNames)) {
+    for (const className of classList.split(' ')) {
+      expect(className, `${exportName} class ${className}`).toMatch(pattern)
+    }
+    if (firstClassPrefixes) {
+      const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
+      expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
+    }
+  }
+}
+
 describe('sanity schema extract', () => {
   test.each(schemaExtractVariants.map((variant) => [variant.slug, variant] as const))(
-    '%s: fork output matches the upstream reference',
+    '%s: fork output structurally matches the upstream reference',
     async (_slug, variant) => {
       // The upstream plugin is the reference for expected output
       const upstream = await extractSchema('upstream', variant)
-
-      // The schema-extraction worker runs in development mode, so plugin-default identifiers
-      // resolve to `debug`
-      const {pattern, firstClassPrefixes} = classNameExpectation(variant.identifiers, 'debug')
-      for (const [exportName, classList] of Object.entries(upstream.classNames)) {
-        for (const className of classList.split(' ')) {
-          expect(className, `${exportName} class ${className}`).toMatch(pattern)
-        }
-        if (firstClassPrefixes) {
-          const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
-          expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
-        }
-      }
+      expectClassNameFormat(upstream.classNames, variant)
 
       const fork = await extractSchema('fork', variant)
-      expect(fork.classNames).toEqual(upstream.classNames)
-      expect(fork.schema).toEqual(upstream.schema)
+      expectClassNameFormat(fork.classNames, variant)
+
+      // The fork salts its file-scope hash with the package version and content (SAPP-4639)
+      // while upstream hashes the bare `packageName + filePath`, so the class names
+      // legitimately differ — compare everything except the salted hash values
+      const alignment = alignFixtureClasses(fork.classNames, upstream.classNames)
+      expect(normalizeClassRecord({...fork.classNames}, alignment.forkToPlaceholder)).toEqual(
+        normalizeClassRecord({...upstream.classNames}, alignment.upstreamToPlaceholder),
+      )
+      expect(
+        JSON.parse(replaceClasses(JSON.stringify(fork.schema), alignment.forkToPlaceholder)),
+      ).toEqual(
+        JSON.parse(
+          replaceClasses(JSON.stringify(upstream.schema), alignment.upstreamToPlaceholder),
+        ),
+      )
     },
   )
 })

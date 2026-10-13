@@ -12,13 +12,17 @@ describe('getPackageInfo', () => {
     const info = getPackageInfo(__dirname)
 
     expect(info.name).toBe('@sanity/vanilla-extract-integration')
+    expect(info.version).toMatch(/^\d+\.\d+\.\d+/)
     expect(info.dirname).toBe(path.resolve(__dirname, '..'))
     expect(info.path).toBe(path.resolve(__dirname, '../package.json'))
   })
 
   test('walks past nameless package.json files', () => {
     const root = mkdtempSync(path.join(os.tmpdir(), 'package-info-'))
-    writeFileSync(path.join(root, 'package.json'), JSON.stringify({name: 'outer-package'}))
+    writeFileSync(
+      path.join(root, 'package.json'),
+      JSON.stringify({name: 'outer-package', version: '1.2.3'}),
+    )
 
     const nested = path.join(root, 'nameless', 'deep')
     mkdirSync(nested, {recursive: true})
@@ -27,6 +31,17 @@ describe('getPackageInfo', () => {
     const info = getPackageInfo(nested)
 
     expect(info.name).toBe('outer-package')
+    expect(info.version).toBe('1.2.3')
     expect(info.dirname).toBe(root)
+  })
+
+  test('leaves version undefined when the package.json has none', () => {
+    const root = mkdtempSync(path.join(os.tmpdir(), 'package-info-'))
+    writeFileSync(path.join(root, 'package.json'), JSON.stringify({name: 'unversioned-package'}))
+
+    const info = getPackageInfo(root)
+
+    expect(info.name).toBe('unversioned-package')
+    expect(info.version).toBeUndefined()
   })
 })

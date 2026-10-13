@@ -1,4 +1,5 @@
 import {describe, expect, test} from 'vitest'
+import {alignFixtureClasses, normalizeClassRecord, replaceClasses} from './compare.ts'
 import {
   extractDevClassNames,
   extractVirtualCssImports,
@@ -60,35 +61,48 @@ async function collectDevOutput(
   }
 }
 
+function expectDevOutputFormat(output: DevOutput, variant: StudioVariant): void {
+  // Dev servers run in development mode, so plugin-default identifiers resolve to `debug`
+  const {pattern, firstClassPrefixes} = classNameExpectation(variant.identifiers, 'debug')
+  for (const [exportName, classList] of Object.entries(output.classNames)) {
+    for (const className of classList.split(' ')) {
+      expect(className, `${exportName} class ${className}`).toMatch(pattern)
+      expect(output.css, `expected a CSS rule for ${exportName} (.${className})`).toContain(
+        `.${className}`,
+      )
+    }
+    if (firstClassPrefixes) {
+      const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
+      expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
+    }
+  }
+  // Dev CSS is never minified
+  expect(output.css).toContain('rgb(1, 2, 3)')
+  expect(output.css).toContain('rgb(4, 5, 6)')
+  expect(output.css).toContain('40rem')
+}
+
 describe('sanity dev', () => {
   test.each(devVariants.map((variant) => [variant.slug, variant] as const))(
-    '%s: fork output matches the upstream reference',
+    '%s: fork output structurally matches the upstream reference',
     async (_slug, variant) => {
       // The upstream plugin is the reference for expected output
       const upstream = await collectDevOutput('upstream', variant)
-
-      // Dev servers run in development mode, so plugin-default identifiers resolve to `debug`
-      const {pattern, firstClassPrefixes} = classNameExpectation(variant.identifiers, 'debug')
-      for (const [exportName, classList] of Object.entries(upstream.classNames)) {
-        for (const className of classList.split(' ')) {
-          expect(className, `${exportName} class ${className}`).toMatch(pattern)
-          expect(upstream.css, `expected a CSS rule for ${exportName} (.${className})`).toContain(
-            `.${className}`,
-          )
-        }
-        if (firstClassPrefixes) {
-          const prefix = firstClassPrefixes[exportName as keyof FixtureClassNames]
-          expect(classList, `${exportName} debug ID`).toMatch(new RegExp(`^${prefix}`))
-        }
-      }
-      // Dev CSS is never minified
-      expect(upstream.css).toContain('rgb(1, 2, 3)')
-      expect(upstream.css).toContain('rgb(4, 5, 6)')
-      expect(upstream.css).toContain('40rem')
+      expectDevOutputFormat(upstream, variant)
 
       const fork = await collectDevOutput('fork', variant)
-      expect(fork.classNames).toEqual(upstream.classNames)
-      expect(fork.css).toBe(upstream.css)
+      expectDevOutputFormat(fork, variant)
+
+      // The fork salts its file-scope hash with the package version and content (SAPP-4639)
+      // while upstream hashes the bare `packageName + filePath`, so the class names
+      // legitimately differ — compare everything except the salted hash values
+      const alignment = alignFixtureClasses(fork.classNames, upstream.classNames)
+      expect(normalizeClassRecord({...fork.classNames}, alignment.forkToPlaceholder)).toEqual(
+        normalizeClassRecord({...upstream.classNames}, alignment.upstreamToPlaceholder),
+      )
+      expect(replaceClasses(fork.css, alignment.forkToPlaceholder)).toBe(
+        replaceClasses(upstream.css, alignment.upstreamToPlaceholder),
+      )
     },
   )
 })

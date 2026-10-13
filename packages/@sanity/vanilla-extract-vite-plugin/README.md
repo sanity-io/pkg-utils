@@ -58,6 +58,10 @@ Requires Vite 8. For older Vite versions, use `@vanilla-extract/vite-plugin`.
 vanillaExtractPlugin({
   /**
    * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * The underlying hash is always salted with the project's package version and the `.css.ts`
+   * module's content, so identical file paths in different package versions — or with
+   * different style content — never share class names (SAPP-4639). This intentionally
+   * diverges from `@vanilla-extract/vite-plugin`, whose bare hash collides across versions.
    * @defaultValue 'short' when `mode` is 'production', 'debug' otherwise
    */
   identifiers: 'short',

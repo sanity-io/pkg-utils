@@ -82,6 +82,10 @@ so they feel familiar in a rolldown-based toolchain:
 vanillaExtractPlugin({
   /**
    * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * The underlying hash is always salted with the built package's version and the `.css.ts`
+   * module's content, so identical file paths in different package versions — or with
+   * different style content — never share class names (SAPP-4639). This intentionally
+   * diverges from `@vanilla-extract/rollup-plugin`, whose bare hash collides across versions.
    * @defaultValue 'short'
    */
   identifiers: 'short',

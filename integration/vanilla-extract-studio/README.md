@@ -3,7 +3,15 @@
 Integration suite that runs a real Sanity Studio fixture through the `sanity` CLI with
 `@sanity/vanilla-extract-vite-plugin` (the fork) and with `@vanilla-extract/vite-plugin` (the
 upstream original), and compares their output. **The upstream plugin is the reference**: for
-every command and option variant, the fork's output must match it exactly.
+every command and option variant, the fork's output must match it structurally.
+
+"Structurally" because the fork intentionally diverges in one place: it salts its file-scope
+hash with the package version and the `.css.ts` module's content (SAPP-4639), while upstream
+hashes the bare `packageName + filePath` — so the two implementations legitimately emit
+_different_ class names for the same styles. The comparisons in `test/compare.ts` align both
+sides' class names positionally (per export, per composition slot) and normalize them onto
+shared placeholders before comparing, so they assert everything _except_ the salted hash
+values: the same exports, the same compositions, the same CSS rules.
 
 The suite exists because the fork initially shipped without CLI-level coverage and regressed in
 ways its unit tests couldn't see (missing CSS in `sanity build` output, a crash in
@@ -19,7 +27,7 @@ Commands, each across the shared option matrix in `test/variants.ts`:
   `'lightningcss'`), and `build.cssTarget` (`chrome61`) variants. Asserts the emitted CSS
   assets and the class names in the built JS: identifier formatting, per-class CSS rules
   (class names in JS without matching CSS was the production regression), minify/target
-  effects, and fork ≡ upstream equality of both.
+  effects, and fork ≡ upstream structural equality of both (modulo the fork's salted hashes).
 - **`sanity dev`** (`test/dev.test.ts`) — identifier variants. Requests the transformed
   `.css.ts` modules over HTTP like the browser would, follows their virtual `.vanilla.css`
   imports, and compares served CSS and exported class names.
@@ -34,7 +42,8 @@ Commands, each across the shared option matrix in `test/variants.ts`:
   `Styles.css.js` whose name matches vanilla-extract's `cssFileFilter`. Processing that
   module used to hang the fork's compiler and crash the dev server, forcing the workaround
   in [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553); the compiled
-  patch must match upstream's byte for byte, no workaround required.
+  patch must match upstream's structurally (modulo the fork's salted hashes), no workaround
+  required.
 - **HMR in bundled dev mode** (`test/bundled-dev-hmr.test.ts`) — registers an HMR client, edits
   `src/button.css.ts` and then `src/theme.ts` (a plain module `styles.css.ts` imports), and
   asserts each edit pushes a patch with the new CSS of the matching virtual `.vanilla.css`

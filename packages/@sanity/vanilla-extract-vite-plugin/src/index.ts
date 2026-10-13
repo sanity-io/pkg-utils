@@ -77,6 +77,13 @@ export type PluginFilter = (filterProps: {
 export interface Options {
   /**
    * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc).
+   *
+   * The underlying hash is always salted with the project's package version and the `.css.ts`
+   * module's content (see `resolveScopedPackageName` in
+   * `@sanity/vanilla-extract-integration`), so identical file paths in different package
+   * versions — or with different style content — never share class names (SAPP-4639). This
+   * intentionally diverges from `@vanilla-extract/vite-plugin`, whose bare
+   * `murmur(packageName + filePath)` hash collides across versions.
    * @defaultValue `'short'` when `mode` is `'production'`, `'debug'` otherwise
    */
   identifiers?: IdentifierOption

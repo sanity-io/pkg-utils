@@ -334,6 +334,7 @@ async function createCompilerServer({
             rootPath: root,
             filePath: id,
             packageName: pkg.name,
+            packageVersion: pkg.version,
             identOption: identifiers,
             globalAdapterIdentifier,
           })

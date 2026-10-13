@@ -22,6 +22,11 @@ export interface ProcessVanillaFileOptions {
   filePath: string
   outputCss?: boolean
   identOption?: IdentifierOption
+  /**
+   * Customizes the virtual `.vanilla.css` import emitted per file scope. Note that
+   * `fileScope.packageName` is the version- and content-salted scope (SAPP-4639), not the bare
+   * package name — see `resolveScopedPackageName` in `./transform.ts`.
+   */
   serializeVirtualCssPath?: (file: {
     fileName: string
     fileScope: FileScope

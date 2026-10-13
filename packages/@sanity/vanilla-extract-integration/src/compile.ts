@@ -58,6 +58,7 @@ export async function compile({
               filePath: validId,
               rootPath: cwd,
               packageName: packageInfo.name,
+              packageVersion: packageInfo.version,
               identOption,
             })
           },

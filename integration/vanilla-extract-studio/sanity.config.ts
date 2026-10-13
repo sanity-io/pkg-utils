@@ -18,7 +18,9 @@ const PlainCssJsInput = lazy(() => import('./src/PlainCssJsInput'))
  * `sanity schema extract` preserves as a literal value type), so the extracted schema carries
  * them: the integration tests compare the extracted schema of the fork against the upstream
  * reference, which asserts both that `.css.ts` evaluation works inside the schema-extraction
- * worker and that both implementations generate identical identifiers.
+ * worker and that both implementations generate structurally identical output (the class names
+ * themselves legitimately differ: the fork salts its file-scope hash with the package
+ * version and content, SAPP-4639).
  */
 const veStyledDocument = defineType({
   name: 'veStyledDocument',

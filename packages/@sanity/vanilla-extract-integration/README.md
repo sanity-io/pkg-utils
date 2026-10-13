@@ -33,6 +33,12 @@ Intentional differences from upstream:
 - The `esbuildOptions` bag of `compile()` is dropped (it leaked the esbuild API into the public surface).
 - Only the API surface consumed by `@sanity/vanilla-extract-rolldown-plugin` and `@sanity/vanilla-extract-vite-plugin` is exported.
 - The babel-compiled `createTheme` destructure special-cases of the debug-ID transform are not ported: the transform only ever sees authored source.
+- File scopes are salted with the package version and the module's content hash
+  (`resolveScopedPackageName`, applied by `transform()` when `packageVersion` is forwarded):
+  upstream hashes the bare `packageName + filePath` for its file-scope hash, so identical file
+  paths in different package versions — or with different style content — produce identical
+  class names that collide when both versions share a page (SAPP-4639). The salted names keep
+  the same short shape; only the hash values differ.
 
 ## The parser bench-off
 

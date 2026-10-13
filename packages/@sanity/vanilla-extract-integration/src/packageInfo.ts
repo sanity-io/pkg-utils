@@ -12,6 +12,12 @@ import path from 'node:path'
  */
 export interface PackageInfo {
   name: string
+  /**
+   * The `version` field of the same `package.json`, when present. Vanilla-extract file scopes
+   * are salted with it so class names differ between package versions (SAPP-4639); packages
+   * without a `version` still get content-unique names, but not version-unique ones.
+   */
+  version?: string
   path: string
   dirname: string
 }
@@ -29,8 +35,10 @@ function getClosestPackageInfo(directory: string): Partial<PackageInfo> | undefi
     if (fs.existsSync(packageJsonPath)) {
       const manifest: unknown = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
       const name = isRecord(manifest) ? manifest['name'] : undefined
+      const version = isRecord(manifest) ? manifest['version'] : undefined
       return {
         ...(typeof name === 'string' && name ? {name} : {}),
+        ...(typeof version === 'string' && version ? {version} : {}),
         path: packageJsonPath,
         dirname: currentDirectory,
       }
@@ -70,6 +78,7 @@ export function getPackageInfo(cwd?: string | null): PackageInfo {
 
   const resolvedPackageInfo: PackageInfo = {
     name: packageInfo.name,
+    ...(packageInfo.version ? {version: packageInfo.version} : {}),
     path: packageInfo.path ?? '',
     dirname: packageInfo.dirname ?? '',
   }

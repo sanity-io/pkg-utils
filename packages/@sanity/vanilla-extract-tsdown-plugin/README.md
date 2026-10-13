@@ -83,6 +83,9 @@ familiar in a tsdown config:
 vanillaExtractPlugin({
   /**
    * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * The underlying hash is always salted with the built package's version and the `.css.ts`
+   * module's content, so identical file paths in different package versions — or with
+   * different style content — never share class names (SAPP-4639).
    * @defaultValue 'short'
    */
   identifiers: 'short',

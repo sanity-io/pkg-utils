@@ -713,7 +713,7 @@ exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./d
 "import { c } from "react/compiler-runtime";
 import { Stack, Text } from "@sanity/ui";
 import { jsx, jsxs } from "react/jsx-runtime";
-var input = "_1n31tph0";
+var input = "_196cmt50";
 function ColorInput(props) {
 	let $ = c(10), t0 = props.schemaType.options?.colorspace ?? "limited-srgb", t1 = props.schemaType.options?.alpha ? "true" : void 0, t2;
 	$[0] !== props.elementProps || $[1] !== t0 || $[2] !== t1 ? (t2 = /* @__PURE__ */ jsx("input", {
@@ -739,11 +739,11 @@ function ColorInput(props) {
 }
 export { ColorInput as default };
 
-//# sourceMappingURL=ColorInput-C7Xco6IZ.js.map"
+//# sourceMappingURL=ColorInput-Dp74453C.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--card-border-color);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--card-focus-ring-color)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}}
+"._196cmt50{cursor:pointer;box-sizing:border-box;background:var(--card-border-color);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._196cmt50:hover{box-shadow:0 0 0 2px var(--card-focus-ring-color)}._196cmt50::-webkit-color-swatch-wrapper{padding:0}._196cmt50::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}._196cmt50::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._196cmt50::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}._196cmt50::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}}
 "
 `;
 
@@ -785,7 +785,7 @@ import "@sanity/ui/styles.css";
 import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-C7Xco6IZ.js")), colorType = defineType({
+const ColorInput = lazy(() => import("./ColorInput-Dp74453C.js")), colorType = defineType({
 	name: "color",
 	type: "string",
 	title: "Color",

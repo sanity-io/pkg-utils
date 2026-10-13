@@ -1,9 +1,11 @@
 import {rm} from 'node:fs/promises'
 import path from 'node:path'
 import {describe, expect, test} from 'vitest'
+import {alignClassRecords, normalizeClassRecord, replaceClasses} from './compare.ts'
 import {
   describeResult,
   outputRoot,
+  readAllVeBindings,
   readBuildClassNames,
   readBuildCss,
   runSanityCommand,
@@ -15,6 +17,8 @@ import {buildVariants, classNameExpectation, type BuildVariant} from './variants
 interface BuildOutput {
   css: string
   classNames: FixtureClassNames
+  /** Every `veStudio…` binding, including the lazily loaded `veStudioLazyBadge`. */
+  bindings: Record<string, string>
 }
 
 /**
@@ -37,6 +41,7 @@ async function buildStudio(
   return {
     css: await readBuildCss(outDir),
     classNames: await readBuildClassNames(outDir),
+    bindings: await readAllVeBindings(outDir),
   }
 }
 
@@ -84,7 +89,7 @@ function expectCssMarkers(output: BuildOutput, variant: BuildVariant): void {
 
 describe('sanity build', () => {
   test.each(buildVariants.map((variant) => [variant.slug, variant] as const))(
-    '%s: fork output matches the upstream reference',
+    '%s: fork output structurally matches the upstream reference',
     async (_slug, variant) => {
       // The upstream plugin is the reference for expected output
       const upstream = await buildStudio('upstream', variant)
@@ -92,8 +97,21 @@ describe('sanity build', () => {
       expectCssMarkers(upstream, variant)
 
       const fork = await buildStudio('fork', variant)
-      expect(fork.classNames).toEqual(upstream.classNames)
-      expect(fork.css).toBe(upstream.css)
+      expectClassNameFormat(fork, variant)
+      expectCssMarkers(fork, variant)
+
+      // The fork salts its file-scope hash with the package version and content (SAPP-4639)
+      // while upstream hashes the bare `packageName + filePath`, so the class names
+      // legitimately differ — compare everything except the salted hash values. The
+      // alignment covers every binding (including the lazy badge, whose CSS ships in the
+      // build output), not just the entry's three exports.
+      const alignment = alignClassRecords(fork.bindings, upstream.bindings)
+      expect(normalizeClassRecord(fork.bindings, alignment.forkToPlaceholder)).toEqual(
+        normalizeClassRecord(upstream.bindings, alignment.upstreamToPlaceholder),
+      )
+      expect(replaceClasses(fork.css, alignment.forkToPlaceholder)).toBe(
+        replaceClasses(upstream.css, alignment.upstreamToPlaceholder),
+      )
     },
   )
 })
