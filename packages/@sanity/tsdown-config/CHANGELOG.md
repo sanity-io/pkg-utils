@@ -1,5 +1,11 @@
 # @sanity/tsdown-config
 
+## 0.28.9
+
+### Patch Changes
+
+- [#3616](https://github.com/sanity-io/pkg-utils/pull/3616) [`ad85626`](https://github.com/sanity-io/pkg-utils/commit/ad85626282f9fcc0a0c03cc7edeb0af96adaaaeb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.154.0
+
 ## 0.28.8
 
 ### Patch Changes
