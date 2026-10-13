@@ -16,9 +16,11 @@ import {
   cssFileFilter,
   getPackageInfo,
   normalizePath,
+  resolveIdentifierOption,
   serializeVanillaModule,
   transform,
   type IdentifierOption,
+  type PluginIdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 import type {Adapter} from '@vanilla-extract/css'
 import {transformCss} from '@vanilla-extract/css/transformCss'
@@ -194,7 +196,12 @@ export interface Compiler {
 /** @public */
 export interface CreateCompilerOptions {
   root: string
-  identifiers?: IdentifierOption
+  /**
+   * The `identifiers` option of the plugin. `'safe'` hashes in the version of the
+   * `package.json` at `root`.
+   * @defaultValue 'debug'
+   */
+  identifiers?: PluginIdentifierOption
   /**
    * Maps a `.css.ts` file path to the virtual CSS module specifier imported by its compiled JS.
    */
@@ -226,13 +233,12 @@ function invalidateRunnerFile(runner: ModuleRunner, filePath: string): void {
 
 async function createCompilerServer({
   root,
-  identifiers,
+  identOption,
   viteConfig,
   enableFileWatcher,
   onFileRemoved,
-}: Required<
-  Pick<CreateCompilerOptions, 'root' | 'identifiers' | 'viteConfig' | 'enableFileWatcher'>
-> & {
+}: Required<Pick<CreateCompilerOptions, 'root' | 'viteConfig' | 'enableFileWatcher'>> & {
+  identOption: IdentifierOption
   /** Called when the watcher reports a deleted file, so the compiler can prune its caches. */
   onFileRemoved: (filePath: string) => void
 }) {
@@ -334,7 +340,7 @@ async function createCompilerServer({
             rootPath: root,
             filePath: id,
             packageName: pkg.name,
-            identOption: identifiers,
+            identOption,
             globalAdapterIdentifier,
           })
         },
@@ -373,6 +379,7 @@ export function createCompiler({
   viteConfig = {},
   enableFileWatcher = true,
 }: CreateCompilerOptions): Compiler {
+  const identOption = resolveIdentifierOption(identifiers, root)
   const processVanillaFileCache = new Map<
     string,
     {lastInvalidationTimestamp: number; result: ProcessedVanillaFile}
@@ -397,7 +404,7 @@ export function createCompiler({
 
   const serverPromise = createCompilerServer({
     root,
-    identifiers,
+    identOption,
     viteConfig,
     enableFileWatcher,
     onFileRemoved: pruneFile,
@@ -425,7 +432,7 @@ export function createCompiler({
       const composedClassLists: Composition[] = []
 
       const cssAdapter: Adapter = {
-        getIdentOption: () => identifiers,
+        getIdentOption: () => identOption,
         onBeginFileScope: (fileScope) => {
           // Before evaluating a file, reset the cache for it
           const moduleId = normalizePath(fileScope.filePath)

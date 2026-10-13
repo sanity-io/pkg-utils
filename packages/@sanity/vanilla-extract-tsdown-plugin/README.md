@@ -82,7 +82,10 @@ familiar in a tsdown config:
 ```ts
 vanillaExtractPlugin({
   /**
-   * Formatting of identifiers (class names, keyframes, CSS vars, etc).
+   * Formatting of identifiers (class names, keyframes, CSS vars, etc): 'short' (a hash of the
+   * package name and file path, then a per-file counter), 'safe' ('short' with the package
+   * version also hashed in, so releases never share a class name), 'debug' ('short' prefixed
+   * with file and debug names), or a custom function.
    * @defaultValue 'short'
    */
   identifiers: 'short',

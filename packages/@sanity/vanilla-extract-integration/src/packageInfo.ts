@@ -12,6 +12,8 @@ import path from 'node:path'
  */
 export interface PackageInfo {
   name: string
+  /** The `version` of the same `package.json`, when it declares one. */
+  version?: string
   path: string
   dirname: string
 }
@@ -29,8 +31,10 @@ function getClosestPackageInfo(directory: string): Partial<PackageInfo> | undefi
     if (fs.existsSync(packageJsonPath)) {
       const manifest: unknown = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
       const name = isRecord(manifest) ? manifest['name'] : undefined
+      const version = isRecord(manifest) ? manifest['version'] : undefined
       return {
         ...(typeof name === 'string' && name ? {name} : {}),
+        ...(typeof version === 'string' && version ? {version} : {}),
         path: packageJsonPath,
         dirname: currentDirectory,
       }
@@ -70,6 +74,7 @@ export function getPackageInfo(cwd?: string | null): PackageInfo {
 
   const resolvedPackageInfo: PackageInfo = {
     name: packageInfo.name,
+    ...(packageInfo.version ? {version: packageInfo.version} : {}),
     path: packageInfo.path ?? '',
     dirname: packageInfo.dirname ?? '',
   }

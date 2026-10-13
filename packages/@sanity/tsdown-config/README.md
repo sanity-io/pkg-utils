@@ -222,6 +222,23 @@ without importing it automatically (for packages whose consumers import the subp
 > and still works, with a warning: `nodeCompat` configures how the CSS file is published, not how
 > the import is injected, so it moved to `exports`.
 
+The default `identifiers: 'short'` names each style after a hash of the package name and the
+file path, plus a counter of the styles before it in the file. A release that reorders a file's
+styles therefore reuses its class names for different rules, and pages that load the CSS of two
+releases (e.g. an app bundling a design system next to a CDN-served Studio bundling another
+release of it) style one release's markup with the other's rules. Opt in to `'safe'` to keep
+releases apart: it is `'short'` with the package version also hashed in, so every release gets
+its own class names, and the same release always builds the same ones:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  vanillaExtract: {identifiers: 'safe'},
+})
+```
+
 Two Sanity-flavored defaults diverge from the bare plugins (which match `@tsdown/css` exactly):
 
 - `minify` defaults to `true` - published Sanity libraries ship minified CSS. Set

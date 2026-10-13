@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url'
 import {normalizePath} from '@sanity/vanilla-extract-integration'
 import {build, createServer, type Plugin, type Rollup} from 'vite'
 import {afterEach, describe, expect, test} from 'vitest'
-import {createCompiler, vanillaExtractPlugin, type Compiler} from '../src/index.ts'
+import {createCompiler, vanillaExtractPlugin, type Compiler, type Options} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const appRoot = path.resolve(__dirname, 'fixtures/app')
@@ -78,8 +78,12 @@ afterEach(async () => {
   await Promise.all(compilersToClose.splice(0).map((compiler) => compiler.close()))
 })
 
-function createTestCompiler(root: string, enableFileWatcher = false): Compiler {
-  const compiler = createCompiler({root, identifiers: 'debug', enableFileWatcher})
+function createTestCompiler(
+  root: string,
+  enableFileWatcher = false,
+  identifiers: Options['identifiers'] = 'debug',
+): Compiler {
+  const compiler = createCompiler({root, identifiers, enableFileWatcher})
   compilersToClose.push(compiler)
   return compiler
 }
@@ -627,4 +631,104 @@ describe('compiler', () => {
       .toBeUndefined()
     expect(compiler.getAllCss()).not.toContain('rgb(')
   }, 30_000)
+})
+
+/**
+ * Writes a package root publishing the mutable fixture's `box` style at `version`, inside the
+ * gitignored `src/` of the mutable fixture. Each version gets its own root: package infos are
+ * cached per directory.
+ */
+async function writeReleaseFixture(version: string): Promise<string> {
+  const root = path.join(mutableRoot, 'src', `release-${version}`)
+  await mkdir(root, {recursive: true})
+  await writeFile(
+    path.join(root, 'package.json'),
+    `${JSON.stringify({name: 'fixture-app', version}, null, 2)}\n`,
+  )
+  await writeFile(
+    path.join(root, 'styles.css.ts'),
+    [
+      `import {style} from '@vanilla-extract/css'`,
+      ``,
+      `export const box: string = style({`,
+      `  color: 'rgb(1, 2, 3)',`,
+      `})`,
+      ``,
+    ].join('\n'),
+  )
+  return root
+}
+
+async function compileBoxClassName(compiler: Compiler, filePath: string): Promise<string> {
+  const {source} = await compiler.processVanillaFile(filePath)
+  const className = /export var box = ['"]([^'"]+)['"]/.exec(source)?.[1]
+  if (!className) expect.unreachable('expected the `box` class name export')
+  return className
+}
+
+/** The class selectors of a stylesheet, in rule order. */
+function classSelectors(css: string): string[] {
+  return Array.from(css.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g), ([, name]) => name!)
+}
+
+function compileBox(root: string, identifiers: Options['identifiers']): Promise<string> {
+  return compileBoxClassName(
+    createTestCompiler(root, false, identifiers),
+    path.join(root, 'styles.css.ts'),
+  )
+}
+
+async function buildAppCss(options?: Options): Promise<string> {
+  const result = await build({
+    root: appRoot,
+    configFile: false,
+    logLevel: 'silent',
+    plugins: [vanillaExtractPlugin(options)],
+    build: {write: false},
+  })
+  return findCssAsset(
+    Array.isArray(result) ? result[0]!.output : (result as Rollup.RollupOutput).output,
+  )
+}
+
+describe("`identifiers: 'safe'`", () => {
+  test('names the same module differently at two package versions', async () => {
+    const [previousRoot, nextRoot] = await Promise.all([
+      writeReleaseFixture('1.0.0'),
+      writeReleaseFixture('1.0.1'),
+    ])
+
+    // `'debug'` (like `'short'`) hashes only the package name and file path
+    expect(await compileBox(nextRoot, 'debug')).toBe(await compileBox(previousRoot, 'debug'))
+
+    const previous = await compileBox(previousRoot, 'safe')
+    const next = await compileBox(nextRoot, 'safe')
+    expect(previous).toMatch(/^_?[0-9a-z]+$/)
+    expect(next).toMatch(/^_?[0-9a-z]+$/)
+    expect(next).not.toBe(previous)
+  })
+
+  test('names the same module the same way within a package version', async () => {
+    const root = await writeReleaseFixture('1.0.0')
+    const filePath = path.join(root, 'styles.css.ts')
+
+    const first = await compileBoxClassName(createTestCompiler(root, false, 'safe'), filePath)
+    const second = await compileBoxClassName(createTestCompiler(root, false, 'safe'), filePath)
+    expect(second).toBe(first)
+  })
+
+  test('only renames the classes of a `vite build`', async () => {
+    // Production builds default to `'short'`
+    const [short, safe] = await Promise.all([buildAppCss(), buildAppCss({identifiers: 'safe'})])
+
+    const shortClasses = classSelectors(short)
+    const safeClasses = classSelectors(safe)
+    expect(safeClasses).toHaveLength(shortClasses.length)
+    expect(safeClasses.filter((name) => shortClasses.includes(name))).toEqual([])
+    let renamed = safe
+    for (const [index, name] of safeClasses.entries()) {
+      renamed = renamed.replaceAll(name, shortClasses[index]!)
+    }
+    expect(renamed).toBe(short)
+  })
 })

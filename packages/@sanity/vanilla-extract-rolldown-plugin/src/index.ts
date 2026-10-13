@@ -5,8 +5,9 @@ import {
   getPackageInfo,
   getSourceFromVirtualCssFile,
   processVanillaFile,
+  resolveIdentifierOption,
   virtualCssFileFilter,
-  type IdentifierOption,
+  type PluginIdentifierOption,
 } from '@sanity/vanilla-extract-integration'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {OutputChunk, Plugin, RenderedChunk} from 'rolldown'
@@ -68,10 +69,19 @@ const RE_DTS = /\.d\.[cm]?ts$/
  */
 export interface Options {
   /**
-   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc).
+   * Different formatting of identifiers (e.g. class names, keyframes, CSS Vars, etc):
+   *
+   * - `'short'`: a hash of the package name and file path, then a per-file counter. The same
+   *   file names its styles the same way in every release, so a release that reorders them
+   *   reuses class names for different rules.
+   * - `'safe'`: `'short'`, but the hash also covers the package version (from the
+   *   `package.json` the package name is read from). Use it for libraries whose CSS from
+   *   different releases can end up on the same page.
+   * - `'debug'`: `'short'` prefixed with the file and debug names.
+   * - A custom function, receiving the `'short'` hash.
    * @defaultValue "short"
    */
-  identifiers?: IdentifierOption
+  identifiers?: PluginIdentifierOption
   /**
    * Name of the emitted CSS file that all extracted CSS is merged into, like `css.fileName`
    * in `@tsdown/css` (which defaults to `"style.css"`).
@@ -297,11 +307,14 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
       filter: {id: cssFileFilter},
       async handler(_code, id) {
         const [filePath = id] = id.split('?')
+        // Resolved per module: hosts may provide `cwd` (and with it the package) late, through
+        // `api.setBuildContext`
+        const identOption = resolveIdentifierOption(identifiers, cwd)
 
         const {source, watchFiles} = await compile({
           filePath,
           cwd,
-          identOption: identifiers,
+          identOption,
         })
 
         for (const file of watchFiles) {
@@ -311,7 +324,7 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
         const output = await processVanillaFile({
           source,
           filePath,
-          identOption: identifiers,
+          identOption,
         })
         return {
           code: output,
