@@ -46,7 +46,12 @@ minimumReleaseAge: 1440
 # the version is older than minimumReleaseAge; add new ones only when a dependency bump needs
 # a release fresher than the gate.
 minimumReleaseAgeExclude:
+  # Name-level exemptions for packages whose Renovate PRs keep hitting the gate (fresh releases
+  # land faster than the gate matures them; `next` patch releases are usually security fixes).
+  - next
   - '@next/*'
+  - react
+  - react-dom
   - '@sanity/client@8.9.0'
   - '@yuku-parser/*'
   - '@oxc-transform-react/*'
@@ -61,7 +66,6 @@ minimumReleaseAgeExclude:
   - '@vitejs/plugin-react@6.1.2'
   - '@microsoft/api-extractor@7.59.4'
   - '@microsoft/api-extractor-model@7.33.15'
-  - '@sanity/ui@4.4.4'
   - 'styled-components@6.6.0'
   - 'zod@4.6.7'
   - '@rushstack/node-core-library@5.25.1'
@@ -98,6 +102,39 @@ publicHoistPattern:
 trustPolicy: no-downgrade
 
 trustPolicyExclude:
+  # The cssnano monorepo (github.com/cssnano/cssnano) published its 8.0.3–8.0.10 maintenance
+  # releases as staged publishes (with an approver), while every 9.x release is a plain
+  # trusted-publisher publish, so pnpm flags each 9.x version of these packages as a trust
+  # downgrade (nuxt >= 4.6 depends on cssnano ^9.4). Name-level: every future bump trips again.
+  - cssnano
+  - cssnano-preset-default
+  - cssnano-utils
+  - postcss-colormin
+  - postcss-convert-values
+  - postcss-discard-comments
+  - postcss-discard-duplicates
+  - postcss-discard-empty
+  - postcss-discard-overridden
+  - postcss-merge-longhand
+  - postcss-merge-rules
+  - postcss-minify-font-values
+  - postcss-minify-gradients
+  - postcss-minify-params
+  - postcss-minify-selectors
+  - postcss-normalize-charset
+  - postcss-normalize-display-values
+  - postcss-normalize-positions
+  - postcss-normalize-repeat-style
+  - postcss-normalize-string
+  - postcss-normalize-timing-functions
+  - postcss-normalize-unicode
+  - postcss-normalize-url
+  - postcss-normalize-whitespace
+  - postcss-ordered-values
+  - postcss-reduce-initial
+  - postcss-reduce-transforms
+  - postcss-unique-selectors
+  - stylehacks
   - chokidar@4.0.3
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
