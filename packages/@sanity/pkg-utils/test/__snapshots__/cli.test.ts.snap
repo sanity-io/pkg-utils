@@ -1064,7 +1064,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-KUBBY8G8.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-_eAq7Kv_.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -1151,8 +1151,8 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) =
 		};
 	}
 	exports.partition = partition;
-})), require_race = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) => {
-	var __read = exports && exports.__read || function(o, n) {
+})), require_race = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports, module, this$1) => {
+	var __read = this$1 && this$1.__read || function(o, n) {
 		var m = typeof Symbol == "function" && o[Symbol.iterator];
 		if (!m) return o;
 		var i = m.call(o), r, ar = [], e;
@@ -1168,7 +1168,7 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) =
 			}
 		}
 		return ar;
-	}, __spreadArray = exports && exports.__spreadArray || function(to, from) {
+	}, __spreadArray = this$1 && this$1.__spreadArray || function(to, from) {
 		for (var i = 0, il = from.length, j = to.length; i < il; i++, j++) to[j] = from[i];
 		return to;
 	};
@@ -4239,7 +4239,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-cbVHB2hn.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-D2hqzYHG.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
