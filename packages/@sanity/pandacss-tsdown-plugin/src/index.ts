@@ -1,4 +1,4 @@
-import {readFileSync} from 'node:fs'
+import {readFileSync, realpathSync} from 'node:fs'
 import path from 'node:path'
 import {createNodeDriver} from '@pandacss/compiler'
 import {createDiagnosticLog} from '@pandacss/compiler-shared'
@@ -191,9 +191,9 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   const warnDiagnostics = createDiagnosticLog()
 
   /**
-   * Ids of the modules Panda extracted styles from, for `inject`. Hosts may run several builds
-   * in parallel with a shared plugin instance (tsdown does, per output format), so the set is
-   * append-only.
+   * Ids of the modules that use Panda, for `inject`. Hosts may run several builds in parallel
+   * with a shared plugin instance (tsdown does, per output format); they transform the same
+   * modules to the same result, so the set converges.
    */
   const styledModules = new Set<string>()
 
@@ -201,6 +201,22 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   // hook (and tsdown awaits `tsdownConfigResolved` before building), so the populated filter is
   // the one it uses
   const idFilter: IdFilter = {exclude: [RE_DTS]}
+
+  /** The config file and its dependencies, watched so a change reloads the config. */
+  const configWatchFiles = new Set<string>()
+
+  async function reloadDriver(loaded: NodeDriver, warn: (message: string) => void): Promise<void> {
+    reloadConfig = false
+    const {hasChanged} = await loaded.reload()
+    if (!hasChanged) return
+    const previousFilter = idFilterKey(idFilter)
+    configureIdFilter(idFilter, loaded, cwd, options.outdir)
+    if (idFilterKey(idFilter) !== previousFilter) {
+      warn(
+        `[pandacss] The \`include\`/\`exclude\` globs of the Panda config changed. The stylesheet follows them right away, but watch mode keeps the transform filter it started with: restart it so newly matched files are transformed and injected.`,
+      )
+    }
+  }
 
   function loadDriver(): Promise<NodeDriver> {
     driverPromise ??= createNodeDriver({
@@ -297,24 +313,32 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
 
     async buildStart() {
       const loaded = await loadDriver()
-      if (reloadConfig) {
-        reloadConfig = false
-        await loaded.reload()
-      }
+      const warn = (message: string): void => this.warn(message)
+      if (reloadConfig) await reloadDriver(loaded, warn)
+
+      // Every parsed file is watched, not just the bundled modules: the stylesheet covers all of
+      // them, so editing one that no entry imports must rebuild it too
       for (const report of loaded.parseFiles()) {
-        warnDiagnostics((message) => this.warn(message), report.diagnostics, 'while parsing', {
+        this.addWatchFile(report.path)
+        warnDiagnostics(warn, report.diagnostics, 'while parsing', {
           file: report.path,
           onlyNew: true,
         })
       }
-      this.addWatchFile(loaded.configPath)
-      for (const dependency of loaded.configDependencies) {
-        this.addWatchFile(loaded.resolvePath(dependency))
+
+      configWatchFiles.clear()
+      for (const file of [
+        loaded.configPath,
+        ...loaded.configDependencies.map((dependency) => loaded.resolvePath(dependency)),
+      ]) {
+        const resolved = path.resolve(file)
+        configWatchFiles.add(resolved)
+        this.addWatchFile(resolved)
       }
     },
 
     watchChange(id) {
-      if (driver?.isConfigFile(id)) reloadConfig = true
+      if (configWatchFiles.has(path.resolve(id)) || driver?.isConfigFile(id)) reloadConfig = true
     },
 
     resolveId: {
@@ -338,13 +362,21 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
         const [file = id] = id.split('?')
         if (!RE_SOURCE.test(file)) return null
         const loaded = await loadDriver()
+        // Watch mode keeps the filter it started with, so after a config reload this is what
+        // applies the narrowed globs
+        if (!loaded.isSourceFile(file)) {
+          styledModules.delete(id)
+          return null
+        }
         const warn = (message: string): void => this.warn(message)
 
         const report = loaded.compiler.parseFileSource(file, code)
         warnDiagnostics(warn, report.diagnostics, 'while parsing', {file, onlyNew: true})
-        if (report.cssCalls + report.cvaCalls + report.svaCalls + report.jsxUsages > 0) {
-          styledModules.add(id)
-        }
+        // The parse report only counts `css`/`cva`/`sva` calls and JSX, while the extractor also
+        // matches patterns, config recipes and token lookups, which need the stylesheet too
+        const {calls, jsx} = loaded.compiler.extractFileSource(file, code)
+        if (calls.length > 0 || jsx.length > 0) styledModules.add(id)
+        else styledModules.delete(id)
         if (!transformEnabled) return null
 
         const compiler = loaded.compiler
@@ -474,7 +506,8 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
 /**
  * Scope the `transform` hook to the config's `include`/`exclude` globs, resolved against `cwd`
  * since rolldown matches them against absolute module ids. Without `include` the filter is not
- * scoped. The generated `outdir` is always excluded.
+ * scoped. The generated `outdir` is always excluded. Rewrites the filter in place, so it also
+ * picks up a reloaded config.
  */
 function configureIdFilter(
   idFilter: IdFilter,
@@ -482,21 +515,39 @@ function configureIdFilter(
   cwd: string,
   outdir: string | undefined,
 ): void {
-  const base = cwd.replaceAll('\\', '/')
+  // Module ids are real paths, so a symlinked `cwd` (e.g. macOS `/tmp`) must be resolved first
+  const realCwd = realpathOrSelf(cwd)
+  const base = realCwd.replaceAll('\\', '/')
   const toAbsolute = (glob: string): string =>
     path.posix.isAbsolute(glob) || /^[a-z]:\//i.test(glob) ? glob : path.posix.join(base, glob)
 
   const include: string[] = []
+  const exclude: (string | RegExp)[] = [RE_DTS]
   for (const glob of stringArray(driver.config['include'])) {
-    if (glob.startsWith('!')) idFilter.exclude.push(toAbsolute(glob.slice(1)))
+    if (glob.startsWith('!')) exclude.push(toAbsolute(glob.slice(1)))
     else include.push(toAbsolute(glob))
   }
   for (const glob of stringArray(driver.config['exclude'])) {
-    idFilter.exclude.push(toAbsolute(glob.replace(/^!/, '')))
+    exclude.push(toAbsolute(glob.replace(/^!/, '')))
   }
-  const resolvedOutdir = path.resolve(cwd, driver.getOutdir(outdir)).replaceAll('\\', '/')
-  idFilter.exclude.push(`${resolvedOutdir}/**`)
+  const outdirPath = path.relative(cwd, path.resolve(cwd, driver.getOutdir(outdir)))
+  exclude.push(`${path.resolve(realCwd, outdirPath).replaceAll('\\', '/')}/**`)
+
+  idFilter.exclude = exclude
   if (include.length > 0) idFilter.include = include
+  else delete idFilter.include
+}
+
+function idFilterKey(idFilter: IdFilter): string {
+  return JSON.stringify([idFilter.include ?? null, idFilter.exclude.map(String)])
+}
+
+function realpathOrSelf(file: string): string {
+  try {
+    return realpathSync(file)
+  } catch {
+    return file
+  }
 }
 
 function stringArray(value: unknown): string[] {

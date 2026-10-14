@@ -1,8 +1,16 @@
+import {mkdir, mkdtemp, realpath, rm, writeFile} from 'node:fs/promises'
+import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-import {rolldown, type ModuleFormat, type OutputAsset, type OutputChunk} from 'rolldown'
-import type {ResolvedConfig, UserConfig} from 'tsdown'
-import {describe, expect, test} from 'vitest'
+import {
+  rolldown,
+  type ModuleFormat,
+  type OutputAsset,
+  type OutputChunk,
+  type PluginContext,
+} from 'rolldown'
+import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
+import {afterEach, beforeEach, describe, expect, test} from 'vitest'
 import {DEFAULT_CSS_FILE_NAME, pandaPlugin, type Options} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -68,6 +76,14 @@ describe('pandaPlugin', () => {
 
     expect(css).toMatchInlineSnapshot(`
       "@layer base;
+
+      @layer recipes {
+        @layer base {
+          .badge {
+            font-weight: bold;
+          }
+        }
+      }
 
       @layer utilities {
         .padding-inline_4 {
@@ -179,11 +195,36 @@ describe('pandaPlugin', () => {
       )
     })
 
+    test('imports the stylesheet from entries that only use recipes', async () => {
+      // The parse report doesn't count recipe, pattern or token calls
+      const output = await build({inject: true}, {input: 'src/recipe.ts'})
+      expect(findChunk(output, 'recipe').code).toMatch(/^import "\.\/styles\.css";\n/)
+    })
+
     test('skips modules outside `include`', async () => {
       const output = await build({inject: true}, {input: 'outside.ts'})
       expect(findChunk(output, 'outside').code).not.toContain('styles.css')
       expect(findAsset(output, DEFAULT_CSS_FILE_NAME)).not.toContain('blue')
     })
+  })
+
+  test('watches the config and every parsed file, not just the bundled modules', async () => {
+    const bundle = await rolldown({
+      input: path.join(fixtureDir, 'src/plain.ts'),
+      plugins: [pandaPlugin({cwd: fixtureDir})],
+    })
+    try {
+      await bundle.generate({format: 'esm'})
+      expect(await bundle.watchFiles).toEqual(
+        expect.arrayContaining([
+          path.join(fixtureDir, 'panda.config.ts'),
+          path.join(fixtureDir, 'src/other.ts'),
+          path.join(fixtureDir, 'src/recipe.ts'),
+        ]),
+      )
+    } finally {
+      await bundle.close()
+    }
   })
 
   test('emits the node shims with `exports.nodeCompat`', async () => {
@@ -193,6 +234,95 @@ describe('pandaPlugin', () => {
 
     const plain = await build({exports: true})
     expect(plain.some((file) => file.fileName === 'styles-css.js')).toBe(false)
+  })
+})
+
+/** Calls the `watchChange` hook like rolldown's watcher does for a changed file. */
+async function notifyChange(plugin: TsdownPlugin, file: string): Promise<void> {
+  const hook = plugin.watchChange
+  if (typeof hook !== 'function') expect.unreachable('expected a `watchChange` function hook')
+  await hook.call({} as PluginContext, file, {event: 'update'})
+}
+
+describe('config reloads', () => {
+  let dir = ''
+
+  const writeTheme = (color: string) =>
+    writeFile(
+      path.join(dir, 'theme.ts'),
+      `export const recipes = {badge: {className: 'badge', base: {color: '${color}'}}}\n`,
+    )
+  const writeConfig = (extra = '') =>
+    writeFile(
+      path.join(dir, 'panda.config.ts'),
+      `import {recipes} from './theme'\n\nexport default {include: ['./src/**/*.ts'],${extra} outdir: 'styled-system', theme: {recipes}}\n`,
+    )
+
+  beforeEach(async () => {
+    // Real path: module ids are real paths, which the watch files are compared against
+    dir = await realpath(await mkdtemp(path.join(tmpdir(), 'pandacss-tsdown-plugin-')))
+    await mkdir(path.join(dir, 'src'))
+    await writeTheme('red')
+    await writeConfig()
+    await writeFile(
+      path.join(dir, 'src/index.ts'),
+      `import {badge} from '../styled-system/recipes'\n\nexport const label = badge()\n`,
+    )
+  })
+
+  afterEach(async () => {
+    if (dir) await rm(dir, {recursive: true, force: true})
+  })
+
+  /** Builds with a shared plugin instance, like the rebuilds of watch mode. */
+  async function rebuild(plugin: TsdownPlugin) {
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      input: path.join(dir, 'src/index.ts'),
+      external: [/styled-system/],
+      plugins: [plugin],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      return {
+        css: findAsset(output, DEFAULT_CSS_FILE_NAME),
+        entry: findChunk(output, 'index').code,
+        warnings,
+        watchFiles: await bundle.watchFiles,
+      }
+    } finally {
+      await bundle.close()
+    }
+  }
+
+  test('reloads the config when a file it imports changes', async () => {
+    const plugin = pandaPlugin({cwd: dir})
+    const first = await rebuild(plugin)
+    expect(first.css).toContain('color: red')
+    expect(first.watchFiles).toContain(path.join(dir, 'theme.ts'))
+
+    await writeTheme('blue')
+    await notifyChange(plugin, path.join(dir, 'theme.ts'))
+    expect((await rebuild(plugin)).css).toContain('color: #00f')
+  })
+
+  test('applies narrowed `include`/`exclude` globs after a reload', async () => {
+    const plugin = pandaPlugin({cwd: dir, inject: true})
+    const first = await rebuild(plugin)
+    expect(first.entry).toMatch(/^import "\.\/styles\.css";\n/)
+    expect(first.css).toContain('.badge')
+
+    await writeConfig(` exclude: ['./src/index.ts'],`)
+    await notifyChange(plugin, path.join(dir, 'panda.config.ts'))
+    const second = await rebuild(plugin)
+    expect(second.entry).not.toContain('styles.css')
+    expect(second.css).not.toContain('.badge')
+    expect(second.warnings).toEqual([
+      expect.stringContaining('The `include`/`exclude` globs of the Panda config changed'),
+    ])
   })
 })
 
