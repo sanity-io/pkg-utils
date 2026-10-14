@@ -211,7 +211,9 @@ describe('pandacssPlugin', () => {
       // … while the call with a dynamic value stays, running through Panda's runtime, which
       // rolldown bundles from the `styled-system` directory
       expect(entry.code).toMatch(/css\(\{\s*color\s*\}\)/)
-      expect(entry.moduleIds.some((id) => id.includes('/styled-system/css/'))).toBe(true)
+      expect(
+        entry.moduleIds.some((id) => id.replaceAll('\\', '/').includes('/styled-system/css/')),
+      ).toBe(true)
       // The module still counts as styled for `inject`
       expect(entry.code).toContain('import "./bundle.css";')
 
