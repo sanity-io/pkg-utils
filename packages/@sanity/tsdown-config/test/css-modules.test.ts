@@ -10,11 +10,12 @@ describe('vanilla-extract + css modules', () => {
   test('extracts vanilla-extract CSS into bundle.css independently of @tsdown/css', async () => {
     const bundleCss = await readFile(path.join(fixtureDir, 'dist/bundle.css'), 'utf-8')
 
-    // Same markers as the vanilla-extract-library fixture: lightningcss minifies/normalizes
-    // the VE styles, and chrome61 flattens `inset`
+    // Same markers as the vanilla-extract-library fixture: lightningcss lowers the VE styles
+    // (chrome61 flattens `inset`) without minifying them
     expect(bundleCss).toContain('#010203')
     expect(bundleCss).not.toContain('rgb(1, 2, 3)')
-    expect(bundleCss).toContain('top:0')
+    expect(bundleCss).toContain('top: 0')
+    expect(bundleCss).not.toContain('top:0')
     expect(bundleCss).not.toContain('inset:')
 
     // CSS modules markers must not leak into the vanilla-extract bundle

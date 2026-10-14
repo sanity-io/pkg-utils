@@ -118,13 +118,12 @@ describe('css option', () => {
     })
 
     expect(config.css).toEqual({
-      // Published Sanity libraries ship minified CSS, like `vanillaExtract`
-      minify: true,
       // `@tsdown/css`'s own injection emits a relative `import "./style.css"`, which throws in
       // runtimes that cannot load `.css` files - `cssNodeCompatPlugin` injects the
       // self-referential specifier of the conditional CSS export instead
       inject: false,
-      // Browserless targets fall back to `@sanity/browserslist-config`, like `vanillaExtract`
+      // Browserless targets fall back to `@sanity/browserslist-config`, like `vanillaExtract`.
+      // `minify` is left unset, so `@tsdown/css` keeps its own default (`false`)
       lightningcss: {targets: expect.any(Object)},
       modules: {localsConvention: 'camelCase'},
     })
@@ -133,7 +132,10 @@ describe('css option', () => {
     expect(pluginNames(config)).toContain('sanity-css-node-compat')
   })
 
-  test('respects an explicit `minify` and `target`', async () => {
+  test('forwards an explicit `minify` and respects `target`', async () => {
+    const minified = await defineConfig({css: {minify: true}})
+    expect(minified.css).toMatchObject({minify: true})
+
     const config = await defineConfig({css: {minify: false, target: 'chrome61'}})
 
     expect(config.css).toMatchObject({minify: false, target: 'chrome61'})

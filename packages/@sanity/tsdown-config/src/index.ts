@@ -34,21 +34,21 @@ export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
  * Options for the `vanillaExtract` option — the same options as
  * `@sanity/vanilla-extract-tsdown-plugin` (`identifiers`, `fileName`, `minify`, `target`,
  * `lightningcss`, `inject`, and `exports`, all modeled after the `css` options of
- * `@tsdown/css`), with three Sanity-flavored defaults on top:
+ * `@tsdown/css`), with two Sanity-flavored defaults on top:
  *
  * - `inject` and `exports` default to `true` and `{nodeCompat: true}` (instead of the plugin's
  *   `false` for both), wiring up the conditional CSS export pattern that Sanity libraries ship
  *   with. Set `exports: true` for a plain (browser-only) CSS export, `exports: false` for a
  *   relative CSS import, or `inject: false` to only extract the CSS.
- * - `minify` defaults to `true` (instead of the plugin's `false`, which matches `css.minify`
- *   in `@tsdown/css`): published Sanity libraries ship minified CSS. Set `minify: false` for
- *   readable output.
  * - When the effective CSS syntax lowering target (`target`, falling back to the top-level
  *   `target`) is undefined or names no browsers (e.g. `'node20'`, resolved from
  *   `engines.node`), the lowering targets are resolved from `@sanity/browserslist-config` and
  *   passed through `lightningcss.targets` — where the plugin (like `@tsdown/css`) would skip
  *   lowering. `target: false` stays the explicit off switch, and a user-provided
  *   `lightningcss.targets` wins over the fallback.
+ *
+ * `minify` is not set, so it stays the plugin's default (`false`, matching `css.minify` in
+ * `@tsdown/css`). Set `minify: true` to minify the extracted CSS.
  * @public
  */
 export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
@@ -57,18 +57,17 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  * Options for the `css` option — tsdown's experimental
  * [`css` options](https://tsdown.dev/options/css) from `@tsdown/css` (`splitting`, `fileName`,
  * `target`, `minify`, `lightningcss`, `postcss`, `modules`, `preprocessorOptions`,
- * `transformer`, `inject`), plus an `exports` option this config implements on top, with two
- * Sanity-flavored defaults:
+ * `transformer`, `inject`), plus an `exports` option this config implements on top. `exports`
+ * defaults to `{nodeCompat: true}`, wiring up the conditional CSS export pattern: the
+ * self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with a
+ * `style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
+ * `package.json`. `@tsdown/css` has no equivalent — its `inject` emits a relative
+ * `import "./style.css"`, which throws in runtimes that cannot load `.css` files. Set
+ * `exports: true` for a plain (browser-only) CSS export, or `exports: false` to fall back to
+ * `@tsdown/css`'s relative injection.
  *
- * - `exports` defaults to `{nodeCompat: true}`, wiring up the conditional CSS export pattern:
- *   the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with a
- *   `style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
- *   `package.json`. `@tsdown/css` has no equivalent — its `inject` emits a relative
- *   `import "./style.css"`, which throws in runtimes that cannot load `.css` files. Set
- *   `exports: true` for a plain (browser-only) CSS export, or `exports: false` to fall back to
- *   `@tsdown/css`'s relative injection.
- * - `minify` defaults to `true` (instead of `@tsdown/css`'s `false`): published Sanity
- *   libraries ship minified CSS. Set `minify: false` for readable output.
+ * `minify` is not set, so it stays `@tsdown/css`'s default (`false`). Set `minify: true` to
+ * minify the emitted CSS.
  *
  * The CSS syntax lowering target resolves exactly like
  * {@link PackageVanillaExtractOptions | `vanillaExtract`}'s: browserless targets fall back to
@@ -326,7 +325,7 @@ export interface PackageOptions extends Pick<
    * added `exports` option — requires
    * [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) to be installed in the project.
    *
-   * By default (`exports: {nodeCompat: true}`, `minify: true`) the emitted CSS gets the same
+   * By default (`exports: {nodeCompat: true}`) the emitted CSS gets the same
    * conditional CSS export treatment as {@link PackageOptions.vanillaExtract}: the
    * self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
    * `style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
@@ -389,7 +388,8 @@ export interface PackageOptions extends Pick<
   styledComponents?: boolean | StyledComponentsOptions
   /**
    * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS into a separate file,
-   * minified and lowered with `lightningcss`. The lowering targets come from the effective
+   * lowered with `lightningcss`. CSS is left unminified unless `minify: true` is set. The
+   * lowering targets come from the effective
    * `target` (`vanillaExtract.target`, falling back to the top-level `target`) when it names
    * browsers; when it's undefined or browserless (e.g. `'node20'`), they're resolved from
    * `@sanity/browserslist-config` instead — see {@link PackageVanillaExtractOptions}. Pass
@@ -674,7 +674,6 @@ async function resolvePackageConfig(
       vanillaExtractPlugin({
         inject: true,
         exports: {nodeCompat: true},
-        minify: true,
         ...vanillaExtract,
         lightningcss,
       }),
@@ -693,7 +692,7 @@ async function resolvePackageConfig(
       target,
       lightningcss: cssOptions.lightningcss,
     })
-    css = {minify: true, ...cssOptions, lightningcss}
+    css = {...cssOptions, lightningcss}
 
     const {cssNodeCompatPlugin} = await import('./cssNodeCompatPlugin.ts')
     plugins.push(

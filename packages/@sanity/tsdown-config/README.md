@@ -169,7 +169,7 @@ export default defineConfig({
 ## vanilla-extract
 
 The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
-`.css.ts` files into a separate file (`dist/bundle.css` by default), minified and lowered with
+`.css.ts` files into a separate file (`dist/bundle.css` by default), lowered with
 `lightningcss` for the
 [`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
 browsers by default. Under the hood it uses
@@ -239,17 +239,16 @@ export default defineConfig({
 })
 ```
 
-Two Sanity-flavored defaults diverge from the bare plugins (which match `@tsdown/css` exactly):
+`minify` is not enabled. Set `minify: true` to minify the extracted CSS; otherwise it stays
+readable, matching the bare plugin and `css.minify` in `@tsdown/css`.
 
-- `minify` defaults to `true` - published Sanity libraries ship minified CSS. Set
-  `minify: false` for readable output.
-- The CSS syntax lowering `target` defaults to tsdown's top-level `target`, and when the
-  effective target is undefined or names no browsers (e.g. `'node20'`, also what tsdown derives
-  from `engines.node` - it speaks to the JS runtime, not the browsers the extracted CSS runs
-  in), the lowering targets are resolved from `@sanity/browserslist-config` and passed through
-  `lightningcss.targets`. The bare plugins (like `@tsdown/css`) would skip lowering in that
-  case. `target: false` disables lowering entirely, and a user-provided `lightningcss.targets`
-  wins over the fallback.
+The CSS syntax lowering `target` still diverges from the bare plugins (which match `@tsdown/css`
+exactly). It defaults to tsdown's top-level `target`, and when the effective target is undefined
+or names no browsers (e.g. `'node20'`, also what tsdown derives from `engines.node` - it speaks
+to the JS runtime, not the browsers the extracted CSS runs in), the lowering targets are resolved
+from `@sanity/browserslist-config` and passed through `lightningcss.targets`. The bare plugins
+(like `@tsdown/css`) would skip lowering in that case. `target: false` disables lowering
+entirely, and a user-provided `lightningcss.targets` wins over the fallback.
 
 `vanillaExtract` can be combined with the [`css` option](#css) below when a package also uses
 CSS modules (or other `@tsdown/css` features) — the two pipelines write to different files by
@@ -277,8 +276,7 @@ export default defineConfig({
 })
 ```
 
-The options are `@tsdown/css`'s, plus an `exports` option this config implements on top, with the
-same two Sanity-flavored defaults as `vanillaExtract`:
+The options are `@tsdown/css`'s, plus an `exports` option this config implements on top:
 
 - `exports` defaults to `{nodeCompat: true}`, wiring up the same conditional CSS export pattern:
   the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
@@ -286,8 +284,8 @@ same two Sanity-flavored defaults as `vanillaExtract`:
   `@tsdown/css` has no equivalent — its own `inject` emits a relative `import "./style.css"`,
   which throws in runtimes that cannot load `.css` files. Set `exports: true` for a plain
   (browser-only) CSS export, or `exports: false` to fall back to the relative injection.
-- `minify` defaults to `true`, and browserless CSS syntax lowering targets fall back to
-  `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
+- `minify` is not enabled unless you set `minify: true`. Browserless CSS syntax lowering targets
+  fall back to `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
 
 Both `css` and `vanillaExtract` can be enabled in the same config. Use that when a package
 authors styles with vanilla-extract _and_ CSS modules (`.module.css`):
