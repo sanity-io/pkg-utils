@@ -1,0 +1,286 @@
+import path from 'node:path'
+import {fileURLToPath} from 'node:url'
+import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
+import type {ResolvedConfig, UserConfig} from 'tsdown'
+import {describe, expect, test} from 'vitest'
+import {pandacssPlugin, type Options} from '../src/index.ts'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
+const fixtureEntry = path.join(fixtureDir, 'src/index.ts')
+
+function findAsset(output: readonly (OutputAsset | OutputChunk)[], fileName: string): string {
+  const asset = output.find((assetOrChunk) => assetOrChunk.fileName === fileName)
+  if (!asset || asset.type !== 'asset') {
+    expect.unreachable(`expected an emitted \`${fileName}\` asset`)
+  }
+  const {source} = asset
+  return typeof source === 'string' ? source : new TextDecoder().decode(source)
+}
+
+function findEntryChunk(output: readonly (OutputAsset | OutputChunk)[]): OutputChunk {
+  const chunk = output.find((assetOrChunk) => assetOrChunk.type === 'chunk' && assetOrChunk.isEntry)
+  if (!chunk || chunk.type !== 'chunk') {
+    expect.unreachable('expected an entry chunk')
+  }
+  return chunk
+}
+
+async function generate(
+  options: Options,
+  format: 'esm' | 'cjs' = 'esm',
+): Promise<readonly (OutputAsset | OutputChunk)[]> {
+  const bundle = await rolldown({
+    cwd: fixtureDir,
+    input: fixtureEntry,
+    plugins: [pandacssPlugin(options)],
+  })
+  try {
+    const {output} = await bundle.generate({format})
+    return output
+  } finally {
+    await bundle.close()
+  }
+}
+
+describe('pandacssPlugin', () => {
+  test('rewrites the style calls into class names and extracts the stylesheet', async () => {
+    const output = await generate({cwd: fixtureDir, target: 'chrome61'})
+
+    const entry = findEntryChunk(output)
+    // The `css()` calls are gone, and with them the import of Panda's runtime
+    expect(entry.code).toContain('const brandText = "color_brand"')
+    expect(entry.code).toContain('const overlay = "display_flex inset_0"')
+    expect(entry.code).not.toContain('styled-system')
+    expect(entry.code).not.toMatch(/\bcss\(/)
+
+    const css = findAsset(output, 'bundle.css')
+    expect(css).toContain('--colors-brand: #f03e2f')
+    expect(css).toContain('color: var(--colors-brand)')
+    // lightningcss normalized the `rgb(1, 2, 3)` marker
+    expect(css).toContain('#010203')
+    // chrome61 predates the `inset` shorthand, so it is flattened into `top`/`right`/…
+    expect(css).not.toContain('inset:')
+    expect(css).toContain('top: 0')
+    // Minification is opt-in
+    expect(css).toContain('\n')
+  })
+
+  test('drops the `--made-with-panda` marker and the layers that leaves empty', async () => {
+    const output = await generate({cwd: fixtureDir})
+    const css = findAsset(output, 'bundle.css')
+
+    expect(css).not.toContain('--made-with-panda')
+    // No `@layer reset, base, …;` declaration, and no `@layer base;` statement left behind by
+    // the emptied `base` layer either: only the layers with rules, as blocks
+    expect(css).not.toMatch(/@layer\s+[^{};]+;/)
+    expect(css).not.toContain('@layer base')
+    expect(css).not.toContain('@layer reset')
+    expect(css).not.toContain('@layer recipes')
+    expect(css).toContain('@layer tokens {')
+    expect(css).toContain('@layer utilities {')
+  })
+
+  test('derives the `transform` hook filter from the config `include`/`exclude` globs', async () => {
+    const plugin = pandacssPlugin({cwd: fixtureDir})
+    expect(plugin.transform).toEqual({handler: expect.any(Function)})
+
+    const bundle = await rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]})
+    try {
+      // The config is loaded in the `options` hook, so the filter is in place before rolldown
+      // reads the plugin's hooks
+      expect(plugin.transform).toEqual({
+        filter: {
+          id: {
+            include: [path.posix.join(fixtureDir.replaceAll('\\', '/'), 'src/**/*.ts')],
+            exclude: [
+              expect.any(RegExp),
+              path.posix.join(fixtureDir.replaceAll('\\', '/'), 'src/**/*.test.ts'),
+            ],
+          },
+        },
+        handler: expect.any(Function),
+      })
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findEntryChunk(output).code).toContain('"color_brand"')
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test('`minify: true` minifies the stylesheet', async () => {
+    const output = await generate({cwd: fixtureDir, minify: true})
+    const css = findAsset(output, 'bundle.css')
+    expect(css).toContain('@layer tokens{:where(:root,:host){--colors-brand:#f03e2f}}')
+    expect(css.trim()).not.toContain('\n')
+  })
+
+  test('`transform: false` only extracts the stylesheet', async () => {
+    const output = await generate({cwd: fixtureDir, transform: false, inject: true})
+    const entry = findEntryChunk(output)
+    // The runtime `css()` calls stay (and bundle Panda's runtime through the `imports` map)
+    expect(entry.code).toMatch(/\bcss\(/)
+    expect(entry.code).not.toContain('"color_brand"')
+    // The modules still count as styled for `inject`
+    expect(entry.code).toContain('import "./bundle.css";')
+    expect(findAsset(output, 'bundle.css')).toContain('color: var(--colors-brand)')
+  })
+
+  test('`inject` prepends a relative CSS import, or a `require()` in CJS output', async () => {
+    const esm = await generate({cwd: fixtureDir, inject: true})
+    expect(findEntryChunk(esm).code.startsWith('import "./bundle.css";\n')).toBe(true)
+
+    const cjs = await generate({cwd: fixtureDir, inject: true}, 'cjs')
+    expect(findEntryChunk(cjs).code.startsWith('require("./bundle.css");\n')).toBe(true)
+
+    // Nothing is injected (and no CSS file is emitted) without `inject`/`exports`
+    const plain = await generate({cwd: fixtureDir})
+    expect(findEntryChunk(plain).code).not.toContain('bundle.css')
+  })
+
+  test('`exports.nodeCompat` emits the shims and injects the self-referential import', async () => {
+    const output = await generate({cwd: fixtureDir, inject: true, exports: {nodeCompat: true}})
+
+    expect(findEntryChunk(output).code).toContain('import "@fixtures/panda-basic/bundle.css";')
+    expect(findAsset(output, 'bundle-css.js')).toContain('No-op shim for `bundle.css`')
+    expect(findAsset(output, 'bundle-css.d.ts')).toContain('export {}')
+  })
+
+  test("`tsdownConfigResolved` forwards tsdown's package name, `target` and `cwd`", async () => {
+    // The self-referential import of `exports` uses the package name tsdown resolved, the CSS
+    // syntax lowering target defaults to tsdown's resolved top-level `target`, and the Panda
+    // config is discovered from tsdown's `cwd`
+    const plugin = pandacssPlugin({inject: true, exports: {nodeCompat: true}})
+    await plugin.tsdownConfigResolved?.({
+      target: ['chrome61'],
+      pkg: {name: '@fixtures/host-library'},
+      cwd: fixtureDir,
+    } as Partial<ResolvedConfig> as ResolvedConfig)
+
+    const bundle = await rolldown({input: fixtureEntry, plugins: [plugin]})
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findEntryChunk(output).code).toContain('import "@fixtures/host-library/bundle.css";')
+
+      const css = findAsset(output, 'bundle.css')
+      expect(css).not.toContain('inset:')
+      expect(css).toContain('top: 0')
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test('`lightningcss.targets` wins over `target`, and `target: false` skips lowering', async () => {
+    const lowered = await generate({
+      cwd: fixtureDir,
+      target: 'chrome120',
+      lightningcss: {targets: {chrome: 61 << 16}},
+    })
+    expect(findAsset(lowered, 'bundle.css')).not.toContain('inset:')
+
+    const raw = await generate({cwd: fixtureDir, target: false})
+    expect(findAsset(raw, 'bundle.css')).toContain('inset: 0')
+  })
+})
+
+const conditionalCssExport = {
+  types: './dist/bundle-css.d.ts',
+  browser: './dist/bundle.css',
+  style: './dist/bundle.css',
+  node: './dist/bundle-css.js',
+  default: './dist/bundle-css.js',
+}
+
+/** Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. */
+async function runTsdownConfigHook(
+  config: UserConfig,
+  options: Options = {inject: true, exports: {nodeCompat: true}},
+): Promise<UserConfig> {
+  const plugin = pandacssPlugin(options)
+  expect(typeof plugin.tsdownConfig).toBe('function')
+  const result = await plugin.tsdownConfig?.(config, {})
+  expect(result).toBeUndefined() // the hook mutates the config in place
+  return config
+}
+
+/** Resolves the `customExports` function the hook composed into the `exports` option. */
+function getCustomExports(config: UserConfig) {
+  const exportsOption = config.exports
+  if (typeof exportsOption !== 'object' || typeof exportsOption?.customExports !== 'function') {
+    expect.unreachable('expected `exports.customExports` to be a function')
+  }
+  return exportsOption.customExports
+}
+
+const customExportsContext = {
+  pkg: {packageJsonPath: 'package.json'},
+  chunks: [],
+  outDir: 'dist',
+  isPublish: false,
+} as unknown as Parameters<
+  Extract<NonNullable<Extract<UserConfig['exports'], object>['customExports']>, Function>
+>[1]
+
+describe('tsdownConfig hook', () => {
+  test('writes the conditional CSS export through `exports.customExports`', async () => {
+    const config = await runTsdownConfigHook({exports: true})
+    const customExports = getCustomExports(config)
+    await expect(
+      customExports(
+        {'.': './dist/index.mjs', './package.json': './package.json'},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './bundle.css': conditionalCssExport,
+      './package.json': './package.json',
+    })
+  })
+
+  test('writes a plain CSS export for `exports: true`', async () => {
+    const config = await runTsdownConfigHook({exports: true}, {inject: true, exports: true})
+    const customExports = getCustomExports(config)
+    await expect(customExports({'.': './dist/index.mjs'}, customExportsContext)).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './bundle.css': './dist/bundle.css',
+    })
+  })
+
+  test('respects `outDir` and `fileName`', async () => {
+    const config = await runTsdownConfigHook(
+      {exports: true, outDir: 'lib'},
+      {exports: {nodeCompat: true}, fileName: 'styles.css'},
+    )
+    const customExports = getCustomExports(config)
+    await expect(customExports({'.': './lib/index.mjs'}, customExportsContext)).resolves.toEqual({
+      '.': './lib/index.mjs',
+      './styles.css': {
+        types: './lib/styles-css.d.ts',
+        browser: './lib/styles.css',
+        style: './lib/styles.css',
+        node: './lib/styles-css.js',
+        default: './lib/styles-css.js',
+      },
+    })
+  })
+
+  test('composes with a pre-existing `customExports`', async () => {
+    const config = await runTsdownConfigHook({
+      exports: {customExports: (exportsMap) => ({...exportsMap, './extra': './dist/extra.mjs'})},
+    })
+    const customExports = getCustomExports(config)
+    await expect(customExports({'.': './dist/index.mjs'}, customExportsContext)).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './extra': './dist/extra.mjs',
+      './bundle.css': conditionalCssExport,
+    })
+  })
+
+  test('leaves the config alone without `exports`, or when tsdown `exports` is off', async () => {
+    const withoutCssExports = await runTsdownConfigHook({exports: true}, {inject: true})
+    expect(withoutCssExports.exports).toBe(true)
+
+    const withoutTsdownExports = await runTsdownConfigHook({})
+    expect(withoutTsdownExports.exports).toBeUndefined()
+  })
+})

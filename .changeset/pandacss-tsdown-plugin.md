@@ -1,0 +1,5 @@
+---
+'@sanity/pandacss-tsdown-plugin': minor
+---
+
+Initial release of `@sanity/pandacss-tsdown-plugin`, a tsdown plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm — the companion of the official `@pandacss/vite` plugin, which applications keep using in their `vite.config.ts`. It loads `panda.config.ts` with Panda's node driver, rewrites the `css()`/`cva()`/pattern/recipe calls of the sources the config's `include`/`exclude` globs cover into static class names with `@pandacss/transformer` (so the published JavaScript carries no Panda runtime), and emits the generated stylesheet as a single `lightningcss`-optimized CSS file: every Panda layer is requested without the `@layer` declaration, the `--made-with-panda` marker is removed through `unusedSymbols`, and the file can be lowered to the build's `target`, minified (opt-in), injected into the entry chunks, and published as a conditional `"./bundle.css"` export — the same `fileName`/`minify`/`target`/`lightningcss`/`inject`/`exports` options as `@sanity/vanilla-extract-tsdown-plugin`, next to `@pandacss/vite`'s `cwd`, `configPath` and `transform`.

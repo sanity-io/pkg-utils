@@ -1,0 +1,73 @@
+{
+  "name": "@sanity/pandacss-tsdown-plugin",
+  "version": "0.0.0",
+  "description": "tsdown plugin for Panda CSS that extracts the generated CSS into a lightningcss-optimized file, complementary to @pandacss/vite",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "pandacss",
+    "panda",
+    "tsdown",
+    "rolldown",
+    "css",
+    "lightningcss",
+    "plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/pandacss-tsdown-plugin"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "pnpm build",
+    "prepare": "panda codegen --cwd test/fixtures/basic",
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "lightningcss": "catalog:"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "catalog:",
+    "@pandacss/transformer": "catalog:",
+    "@sanity/tsconfig": "workspace:^",
+    "@sanity/tsdown-config": "workspace:^",
+    "@types/node": "catalog:",
+    "publint": "catalog:",
+    "rolldown": "~1.2.14",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@pandacss/dev": "^2.2.0",
+    "@pandacss/transformer": "^2.2.0",
+    "tsdown": "^0.23.0"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    }
+  }
+}
