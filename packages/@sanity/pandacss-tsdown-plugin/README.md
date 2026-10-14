@@ -24,6 +24,20 @@ export default defineConfig({
 })
 ```
 
+With [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme),
+enable it through the `panda` option instead, which also resolves browserless lowering targets
+from `@sanity/browserslist-config`:
+
+```ts
+// tsdown.config.ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: {exports: {nodeCompat: true}},
+})
+```
+
 The plugin loads `panda.config.*` with `@pandacss/compiler`, parses the files matched by its
 `include`/`exclude` globs, and emits every cascade layer (`reset`, `base`, `tokens`, `recipes` and
 `utilities`) without the layer order declaration. Panda's `--made-with-panda` marker is always

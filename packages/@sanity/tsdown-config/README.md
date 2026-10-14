@@ -254,6 +254,32 @@ entirely, and a user-provided `lightningcss.targets` wins over the fallback.
 CSS modules (or other `@tsdown/css` features) — the two pipelines write to different files by
 default (`bundle.css` vs `style.css`) and do not interfere with each other.
 
+## Panda CSS
+
+The `panda` option extracts the [Panda CSS](https://panda-css.com) stylesheet into a separate
+file (`dist/styles.css` by default) with
+[`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme).
+Install it in the project first — it is an optional peer dependency:
+
+```sh
+pnpm add --save-dev @sanity/pandacss-tsdown-plugin
+```
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: {exports: {nodeCompat: true}},
+})
+```
+
+The options are the plugin's (`cwd`, `configPath`, `outdir` and `transform` from
+`@pandacss/vite`, plus `fileName`, `minify`, `target`, `lightningcss`, `inject` and `exports`).
+The only default this config adds is the CSS syntax lowering fallback: browserless targets fall
+back to `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
+`minify`, `inject` and `exports` stay disabled unless you set them.
+
 ## css
 
 tsdown's experimental [`css` option](https://tsdown.dev/options/css) enables the `@tsdown/css`

@@ -1,4 +1,5 @@
 import path from 'node:path'
+import type {Options as PandaPluginOptions} from '@sanity/pandacss-tsdown-plugin'
 import type {
   CssExportsOptions,
   Options as VanillaExtractPluginOptions,
@@ -52,6 +53,23 @@ export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
  * @public
  */
 export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
+
+/**
+ * Options for the `panda` option — the same options as `@sanity/pandacss-tsdown-plugin`
+ * (`cwd`, `configPath`, `outdir` and `transform` from `@pandacss/vite`, plus `fileName`,
+ * `minify`, `target`, `lightningcss`, `inject`, and `exports`, modeled after the `css` options
+ * of `@tsdown/css`).
+ *
+ * The only default this config adds is the CSS syntax lowering fallback of
+ * {@link PackageVanillaExtractOptions | `vanillaExtract`}: when the effective target (`target`,
+ * falling back to the top-level `target`) is undefined or names no browsers (e.g. `'node20'`),
+ * the lowering targets are resolved from `@sanity/browserslist-config` and passed through
+ * `lightningcss.targets`. `target: false` stays the explicit off switch, and a user-provided
+ * `lightningcss.targets` wins over the fallback. Everything else keeps the plugin's defaults:
+ * `minify`, `inject`, and `exports` stay `false`.
+ * @public
+ */
+export type PackagePandaOptions = PandaPluginOptions
 
 /**
  * Options for the `css` option — tsdown's experimental
@@ -407,6 +425,16 @@ export interface PackageOptions extends Pick<
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
   /**
+   * Enables `@sanity/pandacss-tsdown-plugin` (an optional peer dependency: install it to use
+   * this option) to extract the [Panda CSS](https://panda-css.com) stylesheet into a separate
+   * file, lowered with `lightningcss`. The lowering targets come from the effective `target`
+   * (`panda.target`, falling back to the top-level `target`) when it names browsers; when it's
+   * undefined or browserless, they're resolved from `@sanity/browserslist-config` instead — see
+   * {@link PackagePandaOptions}. Pass `true` to use the defaults, or an object to customize.
+   * @alpha
+   */
+  panda?: boolean | PackagePandaOptions
+  /**
    * Runs `@microsoft/api-extractor` after the build (via tsdown's `build:done` hook) to check
    * that TSDoc tags are valid and release tags are correct. Useful for packages consumed by
    * TSDoc-based tooling. Off by default — set `tsdoc: true` to enable, or pass an options
@@ -678,6 +706,25 @@ async function resolvePackageConfig(
         lightningcss,
       }),
     )
+  }
+  if (options.panda) {
+    // Lazy loaded like `vanillaExtract`, but from an optional peer dependency: Panda's native
+    // compiler is only installed by the packages that use it
+    const [{pandaPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
+      import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
+        throw new Error('`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.', {cause})
+      }),
+      import('./cssLoweringTargets.ts'),
+    ])
+    const panda = options.panda === true ? {} : options.panda
+
+    const lightningcss = await resolveCssLoweringTargets({
+      cssTarget: panda.target,
+      target,
+      lightningcss: panda.lightningcss,
+    })
+
+    plugins.push(pandaPlugin({...panda, lightningcss}))
   }
 
   // `@tsdown/css` compiles CSS but has no node-shim concept, so the `exports` option (and the
