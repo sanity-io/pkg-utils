@@ -1,11 +1,12 @@
 /**
  * The no-op JS shim file name for a CSS file under `exports.nodeCompat`.
  *
- * `bundle.css` → `bundle-css.js` — deliberately not `${cssFileName}.js` (`bundle.css.js`),
- * which vanilla-extract's `cssFileFilter` (`/\.css\.(js|cjs|mjs|jsx|ts|tsx)$/`) would treat as
- * a stylesheet module. When a consumer later resolves `./bundle.css` to the shim (e.g. via
- * Vitest/Vite's `ModuleRunner` under the `node`/`default` export conditions), a `.css.js`
- * filename would be compiled as if it were `.css.ts` output and throw.
+ * `bundle.css` → `bundle-css.js` — deliberately not `${cssFileName}.js` (`bundle.css.js`), the
+ * same convention as `@sanity/vanilla-extract-tsdown-plugin`: a `.css.js` filename matches
+ * vanilla-extract's `cssFileFilter` (`/\.css\.(js|cjs|mjs|jsx|ts|tsx)$/`), so when a consumer
+ * later resolves `./bundle.css` to the shim (e.g. via Vitest/Vite's `ModuleRunner` under the
+ * `node`/`default` export conditions) in a project that also uses vanilla-extract, it would be
+ * compiled as if it were `.css.ts` output and throw.
  *
  * @public
  */

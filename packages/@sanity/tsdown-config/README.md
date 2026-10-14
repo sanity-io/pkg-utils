@@ -254,6 +254,74 @@ entirely, and a user-provided `lightningcss.targets` wins over the fallback.
 CSS modules (or other `@tsdown/css` features) — the two pipelines write to different files by
 default (`bundle.css` vs `style.css`) and do not interfere with each other.
 
+## panda
+
+The `panda` option is the [Panda CSS](https://panda-css.com) counterpart of `vanillaExtract`.
+Under the hood it uses
+[`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme),
+the library-build companion of the official `@pandacss/vite` plugin: applications keep
+`@pandacss/vite` in their `vite.config.ts` (and `vitest.config.ts`, `sanity.cli.ts`, …), while
+the tsdown build loads the same `panda.config.ts`, rewrites the `css()`/`cva()`/pattern/recipe
+calls of the sources its `include`/`exclude` globs cover into static class names (so the
+published JavaScript carries no Panda runtime), and extracts the generated stylesheet into a
+separate file (`dist/bundle.css` by default), lowered with `lightningcss` for the
+[`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
+browsers by default. Install the plugin together with its peers — it is an optional peer
+dependency of this config:
+
+```sh
+pnpm add --save-dev @sanity/pandacss-tsdown-plugin @pandacss/dev @pandacss/transformer
+```
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: true,
+})
+```
+
+The plugin does not run codegen: generate the `styled-system` directory from the package's
+`prepare` script, as in a Vite application, so it exists before tsdown (and the type checker)
+runs:
+
+```json
+{
+  "scripts": {
+    "prepare": "panda codegen"
+  },
+  "imports": {
+    "#styled-system/*": "./styled-system/*/index.js"
+  }
+}
+```
+
+The defaults match `vanillaExtract`: `inject: true` with `exports: {nodeCompat: true}` injects the
+self-referential `import "<pkg>/bundle.css"` into the entry chunks that use Panda styles, emits the
+no-op `bundle-css.js` shim (plus `bundle-css.d.ts`), and writes the conditional `"./bundle.css"`
+export to `package.json` — so list the CSS in `sideEffects` as described above. `minify` is not
+enabled (set `minify: true` to minify), and the CSS syntax lowering `target` resolves exactly like
+`vanillaExtract`'s. The stylesheet always goes through `lightningcss`, though, which also drops
+Panda's `--made-with-panda` marker (through `unusedSymbols`) and the empty rules and layers that
+leaves: every Panda layer is requested without the `@layer reset, base, …;` declaration, so only
+the layers the package uses end up in the file, as blocks, and ordering them stays the consuming
+application's call.
+
+Pass an options object instead of `true` to customize - the same `fileName`, `minify`, `target`,
+`lightningcss`, `inject` and `exports` options as `vanillaExtract`, plus `@pandacss/vite`'s
+`cwd`, `configPath` and `transform` (`transform: false` keeps the runtime calls and only extracts
+the CSS) and Panda's `polyfill`:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: {fileName: 'styles.css', configPath: 'panda.config.ts'},
+})
+```
+
 ## css
 
 tsdown's experimental [`css` option](https://tsdown.dev/options/css) enables the `@tsdown/css`
@@ -526,8 +594,9 @@ the browser - `'node'` makes CommonJS-interop emit a module-scope
 
 tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
 downlevels JS syntax for the given runtimes (esbuild-style target strings), and doubles as the
-default CSS syntax lowering target when `vanillaExtract` is enabled (browserless targets like
-`node20` don't affect the CSS - it falls back to `@sanity/browserslist-config`):
+default CSS syntax lowering target when `vanillaExtract`, `panda` or `css` is enabled
+(browserless targets like `node20` don't affect the CSS - it falls back to
+`@sanity/browserslist-config`):
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'

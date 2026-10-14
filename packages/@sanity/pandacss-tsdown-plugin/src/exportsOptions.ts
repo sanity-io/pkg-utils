@@ -7,8 +7,8 @@ export interface CssExportsOptions {
   /**
    * Emit a Node.js-compatible CSS entry point.
    *
-   * When enabled, the plugin writes a `styles-css.js` shim and a matching `styles-css.d.ts`
-   * declaration next to the CSS asset, and `tsdown` publishes `./styles.css` as a conditional
+   * When enabled, the plugin writes a `bundle-css.js` shim and a matching `bundle-css.d.ts`
+   * declaration next to the CSS asset, and `tsdown` publishes `./bundle.css` as a conditional
    * export: bundlers that understand CSS imports resolve the stylesheet directly, while Node.js
    * resolves the empty shim so the CSS import never throws on the server.
    *
