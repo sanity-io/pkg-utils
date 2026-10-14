@@ -37,7 +37,7 @@
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
-    "prepare": "panda codegen --cwd test/fixtures/basic",
+    "prepare": "panda codegen --cwd test/fixtures/basic && panda codegen --cwd test/fixtures/dynamic",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },

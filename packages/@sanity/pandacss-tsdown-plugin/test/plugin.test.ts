@@ -170,6 +170,43 @@ describe('pandacssPlugin', () => {
     }
   })
 
+  test('leaves the calls it cannot resolve statically to the runtime, with a warning', async () => {
+    const dynamicFixtureDir = path.resolve(__dirname, 'fixtures/dynamic')
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      cwd: dynamicFixtureDir,
+      input: path.join(dynamicFixtureDir, 'src/index.ts'),
+      plugins: [pandacssPlugin({cwd: dynamicFixtureDir, inject: true})],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      const entry = findEntryChunk(output)
+
+      // The conditional composition is resolved statically …
+      expect(entry.code).toContain('"display_flex" + (active ? " color_brand" : "")')
+      // … while the call with a dynamic value stays, running through Panda's runtime, which
+      // rolldown bundles from the `styled-system` directory
+      expect(entry.code).toMatch(/css\(\{\s*color\s*\}\)/)
+      expect(entry.moduleIds.some((id) => id.includes('/styled-system/css/'))).toBe(true)
+      // The module still counts as styled for `inject`
+      expect(entry.code).toContain('import "./bundle.css";')
+
+      // Panda's diagnostic is reported once, although both the parse and the transform of the
+      // module carry it
+      const unextractable = warnings.filter((message) =>
+        message.includes('received a dynamic argument'),
+      )
+      expect(unextractable).toHaveLength(1)
+      expect(unextractable[0]).toContain('[pandacss] Panda reported a warning while parsing')
+      expect(unextractable[0]).toContain('src/index.ts:11:')
+    } finally {
+      await bundle.close()
+    }
+  })
+
   test('`lightningcss.targets` wins over `target`, and `target: false` skips lowering', async () => {
     const lowered = await generate({
       cwd: fixtureDir,

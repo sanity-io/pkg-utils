@@ -331,14 +331,24 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     return name
   }
 
+  /**
+   * Reports Panda's diagnostics as build warnings, each once: the parse of a module and its
+   * transform report the same ones (the transform's without the `file`, which `defaultFile`
+   * fills in so they dedupe), and every build the host runs re-scans the sources.
+   */
   function warnDiagnostics(
     warn: (message: string) => void,
     diagnostics: readonly Diagnostic[] | undefined,
     context: string,
+    defaultFile?: string,
   ): void {
     if (!diagnostics?.length) return
     const cwd = resolveCwd()
-    for (const diagnostic of diagnostics) {
+    for (const reported of diagnostics) {
+      const diagnostic =
+        reported.file === undefined && defaultFile !== undefined
+          ? {...reported, file: defaultFile}
+          : reported
       const key = diagnosticKey(diagnostic)
       if (reportedDiagnostics.has(key)) continue
       reportedDiagnostics.add(key)
@@ -363,6 +373,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       (message) => this.warn(message),
       report.diagnostics,
       `while parsing ${displayPath(filePath, resolveCwd())}`,
+      filePath,
     )
     if (!transformEnabled) {
       if (report.cssCalls + report.cvaCalls + report.svaCalls + report.jsxUsages > 0) {
@@ -384,10 +395,11 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       (message) => this.warn(message),
       result.diagnostics,
       `while transforming ${displayPath(filePath, resolveCwd())}`,
+      filePath,
     )
     if (result.bailed) {
       this.warn(
-        `[pandacss] Panda could not statically rewrite every style call in "${displayPath(filePath, resolveCwd())}" — the remaining calls run at runtime, so Panda's runtime is bundled into the output for them.`,
+        `[pandacss] Panda could not rewrite the style calls in "${displayPath(filePath, resolveCwd())}" — they run at runtime, so Panda's runtime is bundled into the output for them.`,
       )
     }
     if (!result.changed) return undefined
