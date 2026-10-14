@@ -224,7 +224,7 @@ describe('pandacssPlugin', () => {
       )
       expect(unextractable).toHaveLength(1)
       expect(unextractable[0]).toContain('[pandacss] Panda reported a warning while parsing')
-      expect(unextractable[0]).toContain('src/index.ts:11:')
+      expect(unextractable[0]).toMatch(/src[\\/]index\.ts:11:/)
     } finally {
       await bundle.close()
     }
