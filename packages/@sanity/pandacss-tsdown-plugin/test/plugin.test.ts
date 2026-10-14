@@ -92,15 +92,36 @@ describe('pandacssPlugin', () => {
       expect(plugin.transform).toEqual({
         filter: {
           id: {
-            include: [path.posix.join(fixtureDir.replaceAll('\\', '/'), 'src/**/*.ts')],
-            exclude: [
-              expect.any(RegExp),
-              path.posix.join(fixtureDir.replaceAll('\\', '/'), 'src/**/*.test.ts'),
-            ],
+            include: [expect.any(RegExp)],
+            exclude: [expect.any(RegExp), expect.any(RegExp)],
           },
         },
         handler: expect.any(Function),
       })
+      const {transform} = plugin
+      if (typeof transform !== 'object' || !transform.filter || Array.isArray(transform.filter)) {
+        expect.unreachable('expected an object hook with a `HookFilter`')
+      }
+      const {id} = transform.filter
+      if (typeof id !== 'object' || id === null || id instanceof RegExp || Array.isArray(id)) {
+        expect.unreachable('expected an `include`/`exclude` id filter')
+      }
+      const [include] = Array.isArray(id.include) ? id.include : [id.include]
+      const [, exclude] = Array.isArray(id.exclude) ? id.exclude : [id.exclude]
+      if (!(include instanceof RegExp) || !(exclude instanceof RegExp)) {
+        expect.unreachable('expected the globs to be converted to RegExps')
+      }
+      // The globs are resolved against `cwd` and tested against POSIX ids, like rolldown does
+      // for RegExp filters on every OS
+      const posixFixtureDir = fixtureDir.replaceAll('\\', '/')
+      expect(include.test(`${posixFixtureDir}/src/index.ts`)).toBe(true)
+      expect(include.test(`${posixFixtureDir}/src/nested/deep/styles.css.ts`)).toBe(true)
+      expect(include.test(`${posixFixtureDir}/src/index.tsx`)).toBe(false)
+      expect(include.test(`${posixFixtureDir}/other/index.ts`)).toBe(false)
+      expect(include.test(`${posixFixtureDir}/src/index.ts?query`)).toBe(true)
+      expect(exclude.test(`${posixFixtureDir}/src/index.test.ts`)).toBe(true)
+      expect(exclude.test(`${posixFixtureDir}/src/index.ts`)).toBe(false)
+
       const {output} = await bundle.generate({format: 'esm'})
       expect(findEntryChunk(output).code).toContain('"color_brand"')
     } finally {

@@ -668,21 +668,21 @@ function createTransformFilter(driver: PandaDriver, cwd: string): TransformHookF
   const exclude = readGlobs(driver.config['exclude'])
   if (include.length === 0 && exclude.length === 0) return undefined
 
-  const includeGlobs: string[] = []
-  const excludeGlobs: string[] = []
+  const includePatterns: RegExp[] = []
+  const excludePatterns: RegExp[] = []
   for (const pattern of include) {
     // A negated include is an exclude
-    if (pattern.startsWith('!')) excludeGlobs.push(toAbsoluteGlob(pattern.slice(1), cwd))
-    else includeGlobs.push(toAbsoluteGlob(pattern, cwd))
+    if (pattern.startsWith('!')) excludePatterns.push(globToRegExp(pattern.slice(1), cwd))
+    else includePatterns.push(globToRegExp(pattern, cwd))
   }
   for (const pattern of exclude) {
-    excludeGlobs.push(toAbsoluteGlob(pattern.replace(/^!/, ''), cwd))
+    excludePatterns.push(globToRegExp(pattern.replace(/^!/, ''), cwd))
   }
 
   return {
     id: {
-      ...(includeGlobs.length > 0 ? {include: includeGlobs} : {}),
-      exclude: [RE_DTS, ...excludeGlobs],
+      ...(includePatterns.length > 0 ? {include: includePatterns} : {}),
+      exclude: [RE_DTS, ...excludePatterns],
     },
   }
 }
@@ -693,9 +693,82 @@ function readGlobs(value: unknown): string[] {
   return value.filter((entry): entry is string => typeof entry === 'string')
 }
 
-/** `./src/**\/*.ts` → `/abs/cwd/src/**\/*.ts`, with POSIX separators (globs always use them). */
-function toAbsoluteGlob(pattern: string, cwd: string): string {
-  return path.resolve(cwd, pattern).replaceAll('\\', '/')
+/**
+ * Convert one of the config's source globs (relative to the config's `cwd`, e.g.
+ * `./src/**\/*.css.ts`) into a RegExp over absolute module ids. A RegExp rather than rolldown's
+ * glob strings because rolldown tests RegExp filters against ids with their path separators
+ * normalized to `/`, which keeps the filter portable to Windows; the glob syntax covered is the
+ * fast-glob subset Panda configs use: `**`, `*`, `?`, `{a,b}` alternation and `[…]` classes.
+ */
+function globToRegExp(glob: string, cwd: string): RegExp {
+  const absolute = path.resolve(cwd, glob).replaceAll('\\', '/')
+  let source = ''
+  let inClass = false
+  let braceDepth = 0
+  for (let index = 0; index < absolute.length; index++) {
+    const char = absolute[index] ?? ''
+    if (inClass) {
+      if (char === ']') inClass = false
+      source += char
+      continue
+    }
+    switch (char) {
+      case '\\': {
+        const next = absolute[index + 1]
+        if (next === undefined) {
+          source += '\\\\'
+        } else {
+          source += escapeRegExp(next)
+          index++
+        }
+        break
+      }
+      case '*': {
+        if (absolute[index + 1] === '*') {
+          // `**` spans directories; `**/` also matches zero of them, so `src/**/*.ts` matches
+          // `src/a.ts` like fast-glob does
+          if (absolute[index + 2] === '/') {
+            source += '(?:.*/)?'
+            index += 2
+          } else {
+            source += '.*'
+            index += 1
+          }
+        } else {
+          source += '[^/]*'
+        }
+        break
+      }
+      case '?':
+        source += '[^/]'
+        break
+      case '[':
+        inClass = true
+        source += '['
+        break
+      case '{':
+        braceDepth++
+        source += '(?:'
+        break
+      case '}':
+        if (braceDepth > 0) {
+          braceDepth--
+          source += ')'
+        } else {
+          source += '\\}'
+        }
+        break
+      case ',':
+        source += braceDepth > 0 ? '|' : ','
+        break
+      default:
+        source += escapeRegExp(char)
+    }
+  }
+  // An id may carry a query (`?raw` and the like), which the handler strips before asking the
+  // driver. Windows paths are case-insensitive, and rolldown's ids may differ from the resolved
+  // config path in the drive letter's case.
+  return new RegExp(`^${source}(?:\\?.*)?$`, process.platform === 'win32' ? 'i' : '')
 }
 
 /** The layer names of a Panda config: the defaults, with the config's `layers` renames applied. */

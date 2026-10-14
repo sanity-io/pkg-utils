@@ -30,7 +30,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "panda codegen && tsdown"
+    "build": "tsdown",
+    "prepare": "panda codegen"
   },
   "devDependencies": {
     "@pandacss/dev": "catalog:",
