@@ -34,6 +34,12 @@
       "project": ["src/**/*.ts", "scripts/**/*.ts", "test/**/*.ts"],
       "ignoreBinaries": ["sanity-tsdoc"],
     },
+    "packages/@sanity/pandacss-tsdown-plugin": {
+      // The fixtures are rolldown build inputs referenced by path, not imported from the tests,
+      // and import the `panda codegen` output they stub with a declaration file
+      "entry": ["test/fixtures/*/{outside,panda.config}.ts", "test/fixtures/*/src/*.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+    },
     "packages/@sanity/parse-package-json": {
       "project": ["src/**/*.ts", "test/**/*.ts"],
     },
