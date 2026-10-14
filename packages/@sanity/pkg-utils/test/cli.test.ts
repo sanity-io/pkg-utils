@@ -574,7 +574,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     // A `.css` export subpath with a `source` builds through `@tsdown/css`, emitting the
     // stylesheet at the path its subpath promises
     expect(stdout).toContain('./src/ui/styles.css → ./dist/ui/styles.css')
-    // …minified, like `vanillaExtract` output
+    // …lowered with lightningcss, like `vanillaExtract` output (unminified unless `minify: true`)
     expect(distStylesCss).toContain('#010203')
     expect(distStylesCss).not.toContain('rgb(1, 2, 3)')
     // The pure-CSS entry leaves no JS chunk behind
@@ -619,7 +619,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
       project.readFile('package.json'),
     ])
 
-    // CSS imported from a JS entry merges into a single `style.css`, minified
+    // CSS imported from a JS entry merges into a single `style.css`, lowered but not minified
     expect(distIndexJs).not.toContain('color:')
     expect(distStyleCss).toContain('#040506')
     // `@tsdown/css` would inject a relative `import "./style.css"`, which throws in runtimes

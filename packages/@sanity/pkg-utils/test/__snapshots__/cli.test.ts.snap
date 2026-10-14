@@ -14,7 +14,9 @@ export { runtime };
 `;
 
 exports[`cli > should build \`css-entry\` package > ./dist/ui/styles.css 1`] = `
-".table{color:#010203}
+".table {
+  color: #010203;
+}
 "
 `;
 
@@ -32,7 +34,10 @@ export { buttonClassName };
 `;
 
 exports[`cli > should build \`css-import\` package > ./dist/style.css 1`] = `
-".button{color:#040506;inset:0}
+".button {
+  color: #040506;
+  inset: 0;
+}
 "
 `;
 
@@ -743,7 +748,51 @@ export { ColorInput as default };
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
-"._1n31tph0{cursor:pointer;box-sizing:border-box;background:var(--card-border-color);appearance:none;border:0 solid #0000;border-radius:2px;width:8ch;height:1.6rem;margin:0;padding:0;overflow:clip}._1n31tph0:hover{box-shadow:0 0 0 2px var(--card-focus-ring-color)}._1n31tph0::-webkit-color-swatch-wrapper{padding:0}._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px var(--card-fg-color);border:0 solid #0000;border-radius:2px;padding:0}@supports (color:rgb(from white r g b / 20%)){._1n31tph0::-webkit-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}._1n31tph0::-moz-color-swatch{box-shadow:inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%)}}
+"._1n31tph0 {
+  cursor: pointer;
+  box-sizing: border-box;
+  background: var(--card-border-color);
+  appearance: none;
+  border: 0 solid #0000;
+  border-radius: 2px;
+  width: 8ch;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0;
+  overflow: clip;
+}
+
+._1n31tph0:hover {
+  box-shadow: 0 0 0 2px var(--card-focus-ring-color);
+}
+
+._1n31tph0::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+._1n31tph0::-webkit-color-swatch {
+  box-shadow: inset 0 0 0 1px var(--card-fg-color);
+  border: 0 solid #0000;
+  border-radius: 2px;
+  padding: 0;
+}
+
+._1n31tph0::-moz-color-swatch {
+  box-shadow: inset 0 0 0 1px var(--card-fg-color);
+  border: 0 solid #0000;
+  border-radius: 2px;
+  padding: 0;
+}
+
+@supports (color: rgb(from white r g b / 20%)) {
+  ._1n31tph0::-webkit-color-swatch {
+    box-shadow: inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%);
+  }
+
+  ._1n31tph0::-moz-color-swatch {
+    box-shadow: inset 0 0 0 1px rgb(from var(--card-fg-color) r g b / 20%);
+  }
+}
 "
 `;
 
