@@ -135,11 +135,12 @@ export interface PkgConfigOptions {
   clean?: UserConfig['clean']
   /**
    * Enables the `@tsdown/css` pipeline (requires `@tsdown/css` to be installed): plain CSS,
-   * CSS modules, preprocessors, Lightning CSS / PostCSS. The emitted CSS is minified and
-   * lowered with the same settings as {@link PkgConfigOptions.vanillaExtract | `vanillaExtract`},
-   * and gets the same conditional CSS export treatment — the self-referential
-   * `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its `style-css.d.ts`
-   * declaration, and the conditional `"./style.css"` export written to `package.json`.
+   * CSS modules, preprocessors, Lightning CSS / PostCSS. The emitted CSS is lowered with the
+   * same settings as {@link PkgConfigOptions.vanillaExtract | `vanillaExtract`} and left
+   * unminified unless `minify: true` is set, and gets the same conditional CSS export
+   * treatment — the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim
+   * with its `style-css.d.ts` declaration, and the conditional `"./style.css"` export written
+   * to `package.json`.
    *
    * It is enabled automatically (with these defaults) for a package that declares a `.css`
    * export subpath with a `source`, e.g.
@@ -247,7 +248,8 @@ export interface PkgConfigOptions {
   tsdoc?: boolean | PackageTsdocOptions
   /**
    * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS from `.css.ts` files into a
-   * separate file (`dist/bundle.css` by default), minified and lowered with `lightningcss`.
+   * separate file (`dist/bundle.css` by default), lowered with `lightningcss`. CSS is left
+   * unminified unless `minify: true` is set.
    * By default the conditional CSS export pattern is wired up automatically: the
    * self-referential `import "<pkg>/bundle.css"` is injected into the entry chunks, a no-op
    * `bundle-css.js` shim is emitted, and the conditional `"./bundle.css"` export is written to

@@ -139,8 +139,9 @@ CSS. This uses Oxc's native transform; do not install `babel-plugin-styled-compo
 - `vanillaExtract: true` extracts `.css.ts` files to `dist/bundle.css`.
 - `css: {...}` enables plain CSS, CSS modules, preprocessors, and PostCSS through the optional
   `@tsdown/css` peer. Install it with `pnpm add -D @tsdown/css`.
-- Both default CSS minification to `true`, use Sanity browser targets when the JS target has no
-  browsers, and publish a conditional CSS export with a no-op Node shim.
+- Neither enables CSS minification. Set `minify: true` on `vanillaExtract` or `css` to minify.
+  Both use Sanity browser targets when the JS target has no browsers, and publish a conditional
+  CSS export with a no-op Node shim.
 - Both can be enabled together: vanilla-extract uses `bundle.css`; `css` uses `style.css`.
 - Add published CSS to `package.json#sideEffects`, for example `"sideEffects": ["*.css"]`.
 
