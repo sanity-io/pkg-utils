@@ -44,8 +44,14 @@ import {defineConfig, type Config} from '@pandacss/dev'
 
 export default defineConfig({
   include: ['./src/**/*.ts', './src/**/*.tsx'],
-  outdir: 'styled-system',
   importMap: '#styled-system',
+  hash: true,
+  preflight: false,
+  presets: [],
+  jsxStyleProps: 'none',
+  shorthands: false,
+  forceImportExtension: true,
+  strictPropertyValues: true,
   // …
 } satisfies Config)
 ```
