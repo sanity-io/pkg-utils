@@ -2,4 +2,21 @@
 '@sanity/pandacss-tsdown-plugin': minor
 ---
 
-Initial release of `@sanity/pandacss-tsdown-plugin`, a tsdown plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm — the companion of the official `@pandacss/vite` plugin, which applications keep using in their `vite.config.ts`. It loads `panda.config.ts` with Panda's node driver, runs Panda's codegen when the build starts (writing only the `styled-system` artifacts whose content changed, so the generated types and class name hashes always match the config the CSS is extracted with), rewrites the `css()`/`cva()`/pattern/recipe calls of the sources the config's `include`/`exclude` globs cover into static class names with `@pandacss/transformer` (so the published JavaScript carries no Panda runtime), and emits the generated stylesheet as a single `lightningcss`-optimized CSS file: every Panda layer is requested without the `@layer` declaration, the `--made-with-panda` marker is removed through `unusedSymbols`, and the file can be lowered to the build's `target`, minified (opt-in), injected into the entry chunks, and published as a conditional `"./bundle.css"` export — the same `fileName`/`minify`/`target`/`lightningcss`/`inject`/`exports` options as `@sanity/vanilla-extract-tsdown-plugin`, next to `@pandacss/vite`'s `cwd`, `configPath` and `transform`.
+Initial release: a [tsdown](https://tsdown.dev) plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm with a separate stylesheet.
+
+Add it to the `tsdown.config.ts` of a library build. Applications keep using `@pandacss/vite`.
+
+What it does when the library builds:
+
+- runs Panda's codegen, so the generated `styled-system` files match the config the build uses (`codegen: false` opts out)
+- rewrites the style calls that can be resolved statically — `css()`, `cva()`, patterns and recipes — into class name strings; calls with dynamic values stay as runtime calls and produce build warnings
+- extracts the generated CSS into a single stylesheet, optimized with Lightning CSS
+
+Optional, off by default:
+
+- `minify` to minify the stylesheet
+- `target` to transform the CSS syntax for specific browsers; it defaults to tsdown's `target` when that names browsers
+- `inject` to add an import of the stylesheet to the entry chunks that use Panda styles
+- `exports` to publish the stylesheet as the `./bundle.css` export of the package; `{nodeCompat: true}` makes it a conditional export whose `node` and `default` conditions resolve a no-op JS shim, so the import also loads in Node.js
+
+Setup: install `@sanity/pandacss-tsdown-plugin` next to `tsdown`. `@pandacss/dev` is recommended — for the usual `"prepare": "panda codegen"` script and the `panda` CLI — but not required.
