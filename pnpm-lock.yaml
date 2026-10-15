@@ -194,6 +194,9 @@ catalogs:
     oxc-transform-react:
       specifier: ^0.154.0
       version: 0.154.0
+    postcss:
+      specifier: ^8.5.29
+      version: 8.5.29
     publint:
       specifier: ^0.3.25
       version: 0.3.25
@@ -845,6 +848,9 @@ importers:
       lightningcss:
         specifier: 'catalog:'
         version: 1.33.0
+      postcss:
+        specifier: 'catalog:'
+        version: 8.5.29
     devDependencies:
       '@pandacss/dev':
         specifier: 'catalog:'

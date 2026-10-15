@@ -14,6 +14,7 @@ import {
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {PackageJsonWithPath, ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
 import {expandBaselineTarget, resolveComma, toArray} from 'tsdown/internal'
+import {unwrapCascadeLayers} from './cascadeLayers.ts'
 import {
   cssShimDtsFileName,
   cssShimDtsSource,
@@ -167,10 +168,34 @@ export interface Options {
   transform?: boolean
   /**
    * Emit the extracted CSS without cascade layers (Panda's `@layer` polyfill), for browsers
-   * that predate `@layer`.
+   * that predate `@layer`. The polyfill emulates the layer order by appending `:not(#\#)`
+   * chains to every selector, one ID selector's worth of specificity for each layer (up to ten
+   * for utilities), so consumer CSS can no longer override the library's rules. To publish a
+   * stylesheet consumers can override, use {@link Options.cascadeLayers | `cascadeLayers: false`}
+   * instead.
    * @defaultValue the `polyfill` option of the Panda config
    */
   polyfill?: boolean
+  /**
+   * Keep Panda's cascade layers (`@layer reset`, `base`, `tokens`, `recipes`, `utilities`) in
+   * the extracted CSS. Set to `false` to remove every `@layer` block and statement, with the
+   * rules ordered so that source order gives them the precedence the layers gave them.
+   *
+   * Without layers, the library's rules cascade like any other unlayered CSS: by specificity,
+   * then source order. A consumer's rule can then override a base style with a selector at
+   * least as specific, loaded after the library's stylesheet, while the library's `:hover`,
+   * `:focus-visible` and other state rules, which are more specific, keep winning. Unlayered
+   * consumer CSS, by contrast, beats every rule of a layered stylesheet, states included.
+   *
+   * Source order cannot reproduce everything layers do: a more specific rule in an earlier
+   * layer, which lost to a later layer, wins without layers (such as a recipe's base `_hover`
+   * style over its variants or over a utility), and `!important` declarations no longer
+   * reverse the layer order. Unlike {@link Options.polyfill | `polyfill`}, it leaves every
+   * selector, and so its specificity, as Panda wrote it. It takes precedence over the Panda
+   * config's `polyfill`, and cannot be combined with the `polyfill` option.
+   * @defaultValue true
+   */
+  cascadeLayers?: boolean
   /**
    * Name of the emitted CSS file that the extracted CSS is written to, like `css.fileName`
    * in `@tsdown/css` (which defaults to `"style.css"`).
@@ -245,6 +270,31 @@ export interface Options {
    */
   exports?: boolean | CssExportsOptions
 }
+
+/**
+ * The name of every option of {@link pandacssPlugin} (the keys of {@link Options}). A host that
+ * passes options through from a config of its own — `@sanity/tsdown-config`'s `panda` — checks
+ * them against the set of the plugin version it finds installed, so an option that version
+ * doesn't have is reported instead of ignored. {@link pandacssPlugin} rejects such an option
+ * itself as well; versions before 0.2.0 don't export the set, and ignore the options they don't
+ * know.
+ * @public
+ */
+export const PANDACSS_PLUGIN_OPTION_NAMES: ReadonlySet<string> = new Set<keyof Options>([
+  'cwd',
+  'configPath',
+  'codegen',
+  'outdir',
+  'transform',
+  'polyfill',
+  'cascadeLayers',
+  'fileName',
+  'minify',
+  'target',
+  'lightningcss',
+  'inject',
+  'exports',
+])
 
 /**
  * Build context resolved by the host build tool, providing defaults the plugin cannot know on
@@ -330,12 +380,27 @@ const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DT
  * @public
  */
 export function pandacssPlugin(options: Options = {}): PandacssPlugin {
+  // An option this version doesn't have — a typo, or one a newer host passes through — would
+  // otherwise be ignored without a word. `undefined` is an option left out.
+  for (const [name, value] of Object.entries(options)) {
+    if (value !== undefined && !PANDACSS_PLUGIN_OPTION_NAMES.has(name)) {
+      throw new Error(
+        `[pandacss] \`${name}\` is not an option of this version of @sanity/pandacss-tsdown-plugin. Upgrade the plugin if a newer host passes it; the options are ${[...PANDACSS_PLUGIN_OPTION_NAMES].map((option) => `\`${option}\``).join(', ')}.`,
+      )
+    }
+  }
   const fileName = normalizeFileName(options.fileName ?? DEFAULT_CSS_FILE_NAME)
   const minify = options.minify ?? false
   const transformEnabled = options.transform ?? true
   const codegenEnabled = options.codegen ?? true
+  const cascadeLayers = readCascadeLayers(options.cascadeLayers)
   const lightningcss = options.lightningcss
   const {inject, exports: exportsCss, nodeCompat} = resolveCssExportOptions(options)
+  if (!cascadeLayers && options.polyfill === true) {
+    throw new Error(
+      '[pandacss] `cascadeLayers: false` and `polyfill: true` both remove the cascade layers, in different ways: `cascadeLayers: false` keeps the specificity of every selector, while `polyfill` raises it to emulate the layer order. Set only one of them.',
+    )
+  }
 
   /** The host-resolved default for the `target` option (e.g. tsdown's top-level `target`). */
   let contextTarget: string | string[] | undefined
@@ -826,12 +891,13 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       // Every layer is requested (the sources decide which ones have content) but the
       // `@layer reset, base, …;` declaration isn't: it would declare layers the stylesheet
       // doesn't use, and ordering the layers is the consuming application's call. Panda's own
-      // minification is left off in favor of lightningcss below.
+      // minification is left off in favor of lightningcss below. Without `cascadeLayers`, the
+      // layers are removed from lightningcss's output instead, so Panda's polyfill stays off.
       const output = driver.getLayerCss({
         layers: ALL_LAYERS,
         emitLayerDeclaration: false,
         minify: false,
-        polyfill: options.polyfill ?? driver.config['polyfill'] === true,
+        polyfill: cascadeLayers && (options.polyfill ?? driver.config['polyfill'] === true),
       })
       warnDiagnostics(
         (message) => this.warn(message),
@@ -852,6 +918,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
           minify,
           targets: resolveTargets(),
           lightningcss,
+          cascadeLayers,
           layerNames: resolveLayerNames(driver.config),
           warn: (message) => this.warn(`[pandacss] ${message}`),
         })
@@ -1258,17 +1325,20 @@ interface OptimizeCssOptions {
   minify: boolean
   targets: Targets | undefined
   lightningcss: LightningCSSOptions | undefined
+  cascadeLayers: boolean
   layerNames: ReadonlySet<string>
   warn: (message: string) => void
 }
 
 /**
- * Run the stylesheet through lightningcss: syntax lowering to the targets, the removal of the
+ * Run the stylesheet through lightningcss — syntax lowering to the targets, the removal of the
  * `--made-with-panda` marker (and whatever else `unusedSymbols` names) and of the rules and
- * layers that leaves empty, and minification when enabled.
+ * layers that leaves empty, and minification when enabled — and, without `cascadeLayers`, remove
+ * the layers from the result: the last step, on the final CSS, so lightningcss and the
+ * `lightningcss.visitor` of the options see Panda's layered stylesheet as Panda wrote it.
  */
 function optimizeCss(css: string, optimizeOptions: OptimizeCssOptions): string {
-  const {fileName, minify, targets, lightningcss, layerNames, warn} = optimizeOptions
+  const {fileName, minify, targets, lightningcss, cascadeLayers, layerNames, warn} = optimizeOptions
 
   // The spread order matches `@tsdown/css`: the plugin-managed fields (`targets` from the
   // resolved `target`, `minify`, `cssModules`, which Panda's own class naming makes redundant,
@@ -1288,13 +1358,16 @@ function optimizeCss(css: string, optimizeOptions: OptimizeCssOptions): string {
   }
   let optimized = new TextDecoder().decode(result.code)
 
-  // A layer the optimization empties (`base`, once the marker is gone) survives as a
-  // `@layer base;` statement: lightningcss keeps it because an empty layer block still orders
-  // the cascade. The layer holds no rules of the library's, though, so it is exactly the kind
-  // of declaration `emitLayerDeclaration: false` leaves to the consuming application — strip
-  // the statements of Panda's layers in a second pass (the first one's visitors already ran,
-  // so only this plugin's runs here).
-  if (RE_LAYER_STATEMENT.test(optimized)) {
+  if (!cascadeLayers) {
+    // Every `@layer` goes, the statements of the layers the optimization emptied included
+    optimized = unwrapCascadeLayers(optimized)
+  } else if (RE_LAYER_STATEMENT.test(optimized)) {
+    // A layer the optimization empties (`base`, once the marker is gone) survives as a
+    // `@layer base;` statement: lightningcss keeps it because an empty layer block still orders
+    // the cascade. The layer holds no rules of the library's, though, so it is exactly the kind
+    // of declaration `emitLayerDeclaration: false` leaves to the consuming application — strip
+    // the statements of Panda's layers in a second pass (the first one's visitors already ran,
+    // so only this plugin's runs here).
     const stripped = transform({
       filename: fileName,
       code: new TextEncoder().encode(optimized),
@@ -1396,6 +1469,19 @@ function relativeImportPath(chunkFileName: string, cssFileName: string): string 
   const relativePath = path.posix.relative(path.posix.dirname(chunkFileName), cssFileName)
   // Only `./` and `../` make a specifier relative: `.assets/bundle.css` would name a package
   return relativePath.startsWith('../') ? relativePath : `./${relativePath}`
+}
+
+/**
+ * The `cascadeLayers` option as this version reads it: `true` or `false`. A later version may
+ * take an object as well (the layers to keep), which a host newer than the plugin could pass
+ * through: it must not read as "keep the layers".
+ */
+function readCascadeLayers(value: unknown): boolean {
+  if (value === undefined) return true
+  if (typeof value === 'boolean') return value
+  throw new Error(
+    `[pandacss] \`cascadeLayers\` must be \`true\` or \`false\` in this version of @sanity/pandacss-tsdown-plugin, not ${JSON.stringify(value)}. Upgrade the plugin if a newer host passes it.`,
+  )
 }
 
 /**

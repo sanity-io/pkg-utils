@@ -37,14 +37,15 @@
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
-    "prepare": "panda codegen --cwd test/fixtures/basic && panda codegen --cwd test/fixtures/dynamic && panda codegen --cwd test/fixtures/codegen && panda codegen --cwd test/fixtures/recipes",
+    "prepare": "panda codegen --cwd test/fixtures/basic && panda codegen --cwd test/fixtures/dynamic && panda codegen --cwd test/fixtures/codegen && panda codegen --cwd test/fixtures/recipes && panda codegen --cwd test/fixtures/cascade-layers",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
   "dependencies": {
     "@pandacss/compiler": "catalog:",
     "@pandacss/transformer": "catalog:",
-    "lightningcss": "catalog:"
+    "lightningcss": "catalog:",
+    "postcss": "catalog:"
   },
   "devDependencies": {
     "@pandacss/dev": "catalog:",

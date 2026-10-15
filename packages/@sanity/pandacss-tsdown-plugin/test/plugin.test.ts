@@ -16,22 +16,28 @@ import os from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import vm from 'node:vm'
+import {transform as transformCss} from 'lightningcss'
 import {rolldown, watch, type OutputAsset, type OutputChunk, type Plugin} from 'rolldown'
 import {transform as transformWithOxc} from 'rolldown/experimental'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
 import {describe, expect, test, vi} from 'vitest'
+import {unwrapCascadeLayers} from '../src/cascadeLayers.ts'
 import {directoryPattern} from '../src/directoryPattern.ts'
 import {
   esbuildTargetToLightningCSS,
+  PANDACSS_PLUGIN_OPTION_NAMES,
   pandacssPlugin,
   type LightningCSSOptions,
   type Options,
 } from '../src/index.ts'
+import {cascadeWinner, type CascadeElement} from './cascade.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
 const fixtureEntry = path.join(fixtureDir, 'src/index.ts')
 const recipesFixtureDir = path.resolve(__dirname, 'fixtures/recipes')
+const cascadeLayersFixtureDir = path.resolve(__dirname, 'fixtures/cascade-layers')
+const cascadeLayersFixtureEntry = path.join(cascadeLayersFixtureDir, 'src/index.ts')
 
 /**
  * A throwaway copy of the `codegen` fixture under `test/fixtures/<name>.local` (gitignored
@@ -894,6 +900,674 @@ describe('pandacssPlugin', () => {
   })
 })
 
+describe('options', () => {
+  test('`PANDACSS_PLUGIN_OPTION_NAMES` lists every option', () => {
+    // A `Record` over the keys of `Options` has to name each of them, and nothing else
+    const options: Record<keyof Options, true> = {
+      cwd: true,
+      configPath: true,
+      codegen: true,
+      outdir: true,
+      transform: true,
+      polyfill: true,
+      cascadeLayers: true,
+      fileName: true,
+      minify: true,
+      target: true,
+      lightningcss: true,
+      inject: true,
+      exports: true,
+    }
+    expect([...PANDACSS_PLUGIN_OPTION_NAMES].toSorted()).toEqual(Object.keys(options).toSorted())
+  })
+
+  test('rejects an option it does not have, rather than ignoring it', () => {
+    // A host newer than the plugin (`@sanity/tsdown-config`) may pass an option this version
+    // doesn't know, which must not be dropped without a word; `undefined` is an option left out
+    const unknown: Record<string, unknown> = {inject: true, keepLayers: ['reset']}
+    expect(() => pandacssPlugin(unknown as Options)).toThrow(
+      '`keepLayers` is not an option of this version of @sanity/pandacss-tsdown-plugin',
+    )
+    const unset: Record<string, unknown> = {inject: true, keepLayers: undefined}
+    expect(() => pandacssPlugin(unset as Options)).not.toThrow()
+  })
+
+  test('rejects a `cascadeLayers` value it does not read, rather than keeping the layers', () => {
+    // A later version may take the layers to keep; this one only knows `true` and `false`
+    const keepList: Record<string, unknown> = {cascadeLayers: {keep: ['reset']}}
+    expect(() => pandacssPlugin(keepList as Options)).toThrow(
+      '`cascadeLayers` must be `true` or `false` in this version',
+    )
+  })
+})
+
+/** The stylesheet of the `cascade-layers` fixture, which has rules in every Panda layer. */
+async function generateCascadeLayersCss(options: Options = {}): Promise<string> {
+  const output = await generate(
+    {cwd: cascadeLayersFixtureDir, ...options},
+    'esm',
+    cascadeLayersFixtureEntry,
+  )
+  return findAsset(output, 'bundle.css')
+}
+
+/**
+ * Every selector of a stylesheet's style rules paired with each of the rule's declarations, and
+ * the names of its `@keyframes`: what a stylesheet styles, regardless of its layers.
+ */
+function styledDeclarations(css: string): Set<string> {
+  const declarations = new Set<string>()
+  transformCss({
+    filename: 'bundle.css',
+    code: new TextEncoder().encode(css),
+    visitor: {
+      Rule: {
+        style(rule) {
+          const {declarations: block, selectors} = rule.value
+          const all = [
+            ...(block?.declarations ?? []),
+            ...(block?.importantDeclarations ?? []).map((declaration) => ({
+              important: declaration,
+            })),
+          ]
+          for (const selector of selectors) {
+            for (const declaration of all) {
+              declarations.add(`${JSON.stringify(selector)} ${JSON.stringify(declaration)}`)
+            }
+          }
+        },
+        keyframes(rule) {
+          declarations.add(`@keyframes ${JSON.stringify(rule.value.name)}`)
+        },
+      },
+    },
+  })
+  return declarations
+}
+
+/**
+ * The selector and declaration lines of a pretty-printed stylesheet, trimmed and sorted: what it
+ * says, regardless of layers, order and indentation.
+ */
+function ruleLines(css: string): string[] {
+  return css
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line !== '' && line !== '}' && !line.startsWith('@layer'))
+    .toSorted()
+}
+
+/** A consumer stylesheet, loaded after the library's: an element rule and a one-class override. */
+const consumerCss = `button {
+  color: red;
+  font-weight: 400;
+}
+
+.override {
+  color: green;
+  outline-width: 0;
+}
+`
+
+const hovered = {'data-hover': ''}
+
+/** The {@link cascadeWinner} with a library stylesheet, then {@link consumerCss}. */
+function consumerCascadeWinner(
+  css: string,
+  element: CascadeElement,
+  property: string,
+): string | undefined {
+  return cascadeWinner(
+    [
+      ['library', css],
+      ['consumer', consumerCss],
+    ],
+    element,
+    property,
+  )
+}
+
+describe('`cascadeLayers: false`', () => {
+  test('removes every `@layer` block and statement, and keeps every rule as Panda wrote it', async () => {
+    const layered = await generateCascadeLayersCss()
+    const unlayered = await generateCascadeLayersCss({cascadeLayers: false})
+
+    for (const layer of ['reset', 'base', 'tokens', 'recipes', 'recipes.slots', 'utilities']) {
+      expect(layered).toContain(`@layer ${layer} {`)
+    }
+    expect(layered).toContain('@layer compositions {')
+    expect(unlayered).not.toContain('@layer')
+    // The same selectors, so the same specificity, with the same declarations
+    expect(styledDeclarations(unlayered)).toEqual(styledDeclarations(layered))
+    expect(unlayered).not.toContain('--made-with-panda')
+  })
+
+  test("orders the rules like the layers did, sublayers before their layer's own rules", async () => {
+    // Each rule is matched at the start of a line
+    const css = `\n${await generateCascadeLayersCss({cascadeLayers: false})}`
+    const positions = [
+      // reset
+      '\nhtml, :host {',
+      '\n@supports',
+      // base
+      '\nbutton {',
+      // tokens
+      '\n:where(:root, :host) {',
+      '\n@keyframes spin {',
+      // recipes: the `base`, `variants` and `compound_variants` sublayers, then `recipes.slots`
+      '\n.button {',
+      '\n.button:is(:focus-visible, [data-focus-visible]) {',
+      '\n.button--size_lg {',
+      '\n.button--compound__size_lg__tone_brand {',
+      '\n.card__root {',
+      '\n.card__root--tone_brand {',
+      // utilities: `compositions`, which Panda emits last, comes before the utilities it loses to
+      '\n.textStyle_body {',
+      '\n.animation_spin_1s {',
+      '\n.font-weight_300 {',
+      '\n@media (width >= 48rem) {',
+    ].map((rule) => {
+      expect(css).toContain(rule)
+      return css.indexOf(rule)
+    })
+    expect(positions).toEqual(positions.toSorted((a, b) => a - b))
+  })
+
+  test('keeps the precedence of utilities over recipes and the base, and within recipes', async () => {
+    const layered = await generateCascadeLayersCss()
+    const unlayered = await generateCascadeLayersCss({cascadeLayers: false})
+    const brandLarge = [
+      'button',
+      'button--size_lg',
+      'button--tone_brand',
+      'button--compound__size_lg__tone_brand',
+    ]
+    for (const css of [layered, unlayered]) {
+      const winner = (element: CascadeElement, property: string) =>
+        cascadeWinner([['library', css]], element, property)
+      // A variant beats the recipe's base, and a compound variant the variants
+      expect(winner({tag: 'button', classes: ['button', 'button--tone_brand']}, 'color')).toBe(
+        'library: .button--tone_brand',
+      )
+      expect(winner({tag: 'button', classes: brandLarge}, 'font-weight')).toBe(
+        'library: .button--compound__size_lg__tone_brand',
+      )
+      // A utility beats all of them, the base layer's global style and a text style
+      expect(winner({tag: 'button', classes: [...brandLarge, 'color_ink']}, 'color')).toBe(
+        'library: .color_ink',
+      )
+      expect(
+        winner({tag: 'button', classes: [...brandLarge, 'font-weight_300']}, 'font-weight'),
+      ).toBe('library: .font-weight_300')
+      expect(winner({tag: 'button', classes: ['font-weight_300']}, 'font-weight')).toBe(
+        'library: .font-weight_300',
+      )
+      expect(winner({tag: 'p', classes: ['textStyle_body', 'font-size_12px']}, 'font-size')).toBe(
+        'library: .font-size_12px',
+      )
+    }
+  })
+
+  test("lets a recipe's base state beat its variants and utilities, which only layers prevent", async () => {
+    // Without layers, specificity decides before source order: the base `_hover` style
+    // (`.button:is(:hover, [data-hover])`, 0-2-0) beats a variant or utility (0-1-0), where the
+    // later `variants` and `utilities` layers made those win
+    const layered = await generateCascadeLayersCss()
+    const unlayered = await generateCascadeLayersCss({cascadeLayers: false})
+    for (const classes of [
+      ['button', 'button--tone_brand'],
+      ['button', 'color_ink'],
+    ]) {
+      const element = {tag: 'button', classes, attributes: hovered}
+      expect(cascadeWinner([['library', layered]], element, 'color')).toBe(
+        `library: .${classes[1]}`,
+      )
+      expect(cascadeWinner([['library', unlayered]], element, 'color')).toBe(
+        'library: .button:is(:hover, [data-hover])',
+      )
+    }
+  })
+
+  test("lets consumer CSS override the library's base styles, but not its states", async () => {
+    const layered = await generateCascadeLayersCss()
+    const unlayered = await generateCascadeLayersCss({cascadeLayers: false})
+    const winner = consumerCascadeWinner
+    const selectedButton = {
+      tag: 'button',
+      classes: ['button'],
+      attributes: {'aria-selected': 'true'},
+    }
+    const hoveredButton = {tag: 'button', classes: ['button'], attributes: hovered}
+    const focusedOverride = {
+      tag: 'button',
+      classes: ['button', 'override'],
+      attributes: {'data-focus-visible': ''},
+    }
+
+    // An unlayered `button {…}` (Tailwind's preflight is one) beats the base layer's global
+    // `button` style, which is no more specific and comes first…
+    expect(winner(unlayered, {tag: 'button'}, 'font-weight')).toBe('consumer: button')
+    // …but neither the recipe's `:hover` nor its selected state, which are more specific
+    expect(winner(unlayered, hoveredButton, 'color')).toBe(
+      'library: .button:is(:hover, [data-hover])',
+    )
+    expect(winner(unlayered, selectedButton, 'font-weight')).toBe(
+      'library: .button:is([aria-selected="true"], [data-selected])',
+    )
+    // A one-class override (`styled(Button)`) beats the recipe's base, but not its states
+    expect(winner(unlayered, {tag: 'button', classes: ['button', 'override']}, 'color')).toBe(
+      'consumer: .override',
+    )
+    expect(
+      winner(
+        unlayered,
+        {tag: 'button', classes: ['button', 'override'], attributes: hovered},
+        'color',
+      ),
+    ).toBe('library: .button:is(:hover, [data-hover])')
+    expect(winner(unlayered, focusedOverride, 'outline-width')).toBe(
+      'library: .button:is(:focus-visible, [data-focus-visible])',
+    )
+
+    // With layers, unlayered consumer CSS beats every rule of the library, its states included:
+    // the hover color, the selected weight and the focus ring are lost
+    expect(winner(layered, hoveredButton, 'color')).toBe('consumer: button')
+    expect(winner(layered, selectedButton, 'font-weight')).toBe('consumer: button')
+    expect(winner(layered, focusedOverride, 'outline-width')).toBe('consumer: .override')
+  })
+
+  test("is what Panda's `polyfill` is not: it raises the specificity of every rule", async () => {
+    // The polyfill emulates the layer order with `:not(#\#)` chains — one more ID for each
+    // layer — so the library keeps its own precedence, and consumers can't override its base
+    const polyfilled = await generateCascadeLayersCss({polyfill: true})
+    expect(polyfilled).not.toContain('@layer')
+    expect(polyfilled).toContain('\nbutton:not(#\\#) {')
+    expect(polyfilled).toContain('\n.button:not(#\\##\\##\\#) {')
+    expect(consumerCascadeWinner(polyfilled, {tag: 'button'}, 'font-weight')).toBe(
+      'library: button:not(#\\#)',
+    )
+    const override = {tag: 'button', classes: ['button', 'override']}
+    expect(consumerCascadeWinner(polyfilled, override, 'color')).toBe(
+      'library: .button:not(#\\##\\##\\#)',
+    )
+  })
+
+  test("cannot be combined with `polyfill: true`, and wins over the Panda config's", async () => {
+    expect(() => pandacssPlugin({cascadeLayers: false, polyfill: true})).toThrow(
+      'Set only one of them',
+    )
+
+    const cwd = copyFixture(
+      'config-polyfill',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+        'presets: [],',
+        'presets: [],\n  polyfill: true,',
+      ),
+    )
+    try {
+      const input = path.join(cwd, 'src/index.ts')
+      const polyfilled = findAsset(await generate({cwd}, 'esm', input), 'bundle.css')
+      expect(polyfilled).toContain('.color_brand:not(#\\#')
+      const unlayered = findAsset(
+        await generate({cwd, cascadeLayers: false}, 'esm', input),
+        'bundle.css',
+      )
+      expect(unlayered).toContain('.color_brand {')
+      expect(unlayered).not.toContain(':not(#')
+      expect(unlayered).not.toContain('@layer')
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
+  test('works with `minify`, `target`, `inject` and `exports`', async () => {
+    const output = await generate(
+      {
+        cwd: cascadeLayersFixtureDir,
+        cascadeLayers: false,
+        minify: true,
+        target: 'chrome61',
+        inject: true,
+        exports: {nodeCompat: true},
+      },
+      'esm',
+      cascadeLayersFixtureEntry,
+    )
+    const css = findAsset(output, 'bundle.css')
+    expect(css).not.toContain('@layer')
+    expect(css.trimEnd()).not.toContain('\n')
+    // chrome61 predates media query ranges and `:is()`, which lightningcss lowered
+    expect(css).toContain('@media (min-width:48rem)')
+    expect(css).toContain('.button:-webkit-any(:hover,[data-hover])')
+    const positions = [
+      'button{font-weight:600}',
+      '.button{',
+      '.button--tone_brand{',
+      '.textStyle_body{',
+      '.color_ink{',
+    ].map((rule) => {
+      expect(css).toContain(rule)
+      return css.indexOf(rule)
+    })
+    expect(positions).toEqual(positions.toSorted((a, b) => a - b))
+    const hoveredOverride = {tag: 'button', classes: ['button', 'override'], attributes: hovered}
+    expect(consumerCascadeWinner(css, hoveredOverride, 'color')).toBe(
+      'library: .button:is(:hover,[data-hover])',
+    )
+
+    expect(findEntryChunk(output).code).toContain(
+      'import "@fixtures/panda-cascade-layers/bundle.css";',
+    )
+    expect(findAsset(output, 'bundle-css.js')).toContain('No-op shim for `bundle.css`')
+  })
+
+  test('removes the layers after lightningcss, whose visitors see the layered stylesheet', async () => {
+    // The layers go last, from the final CSS: lightningcss (and the `lightningcss.visitor` of
+    // the options) still processes Panda's output as Panda wrote it, layers included
+    const visited: string[] = []
+    const css = await generateCascadeLayersCss({
+      cascadeLayers: false,
+      lightningcss: {
+        visitor: {
+          Rule: {
+            'layer-block'() {
+              visited.push('layer-block')
+            },
+            'style'() {
+              visited.push('style')
+            },
+          },
+        },
+      },
+    })
+    expect(visited).toContain('style')
+    expect(visited).toContain('layer-block')
+    expect(css).not.toContain('@layer')
+  })
+
+  test('keeps every line as lightningcss printed it, at the indentation of its new depth', async () => {
+    const layered = await generateCascadeLayersCss()
+    const unlayered = await generateCascadeLayersCss({cascadeLayers: false})
+    // The same selector and declaration lines, text for text: only the `@layer` lines (and
+    // their closing braces) are gone, and the indentation differs
+    expect(ruleLines(unlayered)).toEqual(ruleLines(layered))
+    // Rules that were nested in a layer block sit at the top level now, with their
+    // declarations indented once, in lightningcss's own style: an empty line between rules
+    expect(unlayered).toContain('\nbutton {\n  font-weight: 600;\n}\n\n')
+    expect(unlayered).toContain(
+      '\n@media (width >= 48rem) {\n  .md\\:font-size_24px {\n    font-size: 24px;\n  }\n}\n',
+    )
+    expect(unlayered.startsWith('html, :host {\n  ')).toBe(true)
+    expect(unlayered.endsWith('}\n')).toBe(true)
+  })
+})
+
+describe('unwrapCascadeLayers', () => {
+  test("emits a layer's sublayers before its own rules, and the unlayered rules last", () => {
+    expect(
+      unwrapCascadeLayers(
+        '.top{a:1}@layer a{.a1{a:1}@layer b{.b{a:1}}.a2{a:1}}@layer a.c{.c{a:1}}@layer a{@layer b{.b2{a:1}}}',
+      ),
+    ).toBe('.b{a:1}.b2{a:1}.c{a:1}.a1{a:1}.a2{a:1}.top{a:1}')
+  })
+
+  test('orders the layers by their first declaration, statements included', () => {
+    expect(unwrapCascadeLayers('@layer z, y.x;@layer y{.y{}}@layer y.x{.x{}}@layer z{.z{}}')).toBe(
+      '.z{}.x{}.y{}',
+    )
+  })
+
+  test('keeps every anonymous layer a layer of its own', () => {
+    expect(unwrapCascadeLayers('@layer{.a{}}@layer named{.n{}}@layer{.b{}}')).toBe('.a{}.n{}.b{}')
+    expect(unwrapCascadeLayers('@layer x{.x{}@layer{.a{}}}')).toBe('.a{}.x{}')
+  })
+
+  test("keeps a layer's rules ahead of its own across a conditional rule", () => {
+    // `utilities.compositions` loses to `utilities` when printing too: blue wins
+    expect(
+      unwrapCascadeLayers(
+        '@layer utilities{.x{color:blue}@media print{@layer compositions{.x{color:red}}}}',
+      ),
+    ).toBe('@media print{.x{color:red}}.x{color:blue}')
+  })
+
+  test('orders a layer split across conditional and unconditional blocks as one', () => {
+    // `a` comes before `b`, also for the rules of `a` in `@media print`: blue wins
+    expect(
+      unwrapCascadeLayers(
+        '@layer a, b;@media print{@layer a{.x{color:red}}}@layer b{.x{color:blue}}',
+      ),
+    ).toBe('@media print{.x{color:red}}.x{color:blue}')
+    expect(
+      unwrapCascadeLayers(
+        '@layer b{.x{color:blue}}@layer a{.y{}}@media print{@layer b{.x{color:red}}@layer a{.z{}}}',
+      ),
+    ).toBe('.x{color:blue}@media print{.x{color:red}}.y{}@media print{.z{}}')
+  })
+
+  test('splits a conditional rule across the layers of its rules, in copies of it', () => {
+    expect(
+      unwrapCascadeLayers(
+        '@layer u{@supports (display:grid){@media print{.p{} @layer s{.s{}} .q{}}}@layer t{.t{}}.u{}}',
+      ),
+    ).toBe(
+      '@supports (display:grid){@media print{.s{}}}.t{}@supports (display:grid){@media print{.p{} .q{}}}.u{}',
+    )
+    // Parts that end up next to each other share a copy
+    expect(unwrapCascadeLayers('@layer u{@media print{.p{}@layer s{.s{}}}}')).toBe(
+      '@media print{.s{}.p{}}',
+    )
+    // A block without layers stays as it is
+    expect(unwrapCascadeLayers('@layer u{@media print{ .p{} }}')).toBe('@media print{ .p{} }')
+  })
+
+  test('splits a style rule with a nested layer the same way', () => {
+    // The rule's own declarations, in `a`, beat those of its nested layer, `a.s`: red wins.
+    // Both parts land next to each other, so they share one copy of the rule.
+    expect(unwrapCascadeLayers('@layer a{.n{color:red;@layer s{color:blue}}}')).toBe(
+      '.n{color:blue;color:red}',
+    )
+    expect(unwrapCascadeLayers('@layer a{.n{@layer s{color:blue}color:red}@layer t{.t{}}}')).toBe(
+      '.n{color:blue}.t{}.n{color:red}',
+    )
+    expect(unwrapCascadeLayers('@layer a{.n{@media print{color:blue;@layer s{color:red}}}}')).toBe(
+      '.n{@media print{color:red;color:blue}}',
+    )
+  })
+
+  test('only reads braces and semicolons outside strings, comments, escapes and urls', () => {
+    const rules = [
+      '.a\\{b{content:"}{;";background:url(data:image/svg+xml;utf8,<svg>{</svg>)}',
+      "/* } @layer x; { */.c[title='@layer y{']{d:e}",
+      '.f{background:url( "a;b}.png" )}',
+      ':is(.g, .h){--x:fn(a;b)}',
+      '.i/*@layer x{*/{content:"\\"}"}',
+    ].join('')
+    expect(unwrapCascadeLayers(`@layer a{${rules}}`)).toBe(rules)
+  })
+
+  test('keeps custom property values opaque, `@layer` in them included', () => {
+    const css = ':root{--rules:{@layer theme{color:red}};--color:blue}'
+    expect(unwrapCascadeLayers(css)).toBe(css)
+    expect(unwrapCascadeLayers(`@layer a{${css}}`)).toBe(css)
+    // A value that ends its block, one with nested blocks, and one with braces in a comment
+    expect(unwrapCascadeLayers('@layer a{.v{--x:{@layer t{a:b}}}}')).toBe('.v{--x:{@layer t{a:b}}}')
+    expect(unwrapCascadeLayers('@layer a{.v{--x:{a:{b:{@layer t{}}}}}}')).toBe(
+      '.v{--x:{a:{b:{@layer t{}}}}}',
+    )
+    expect(unwrapCascadeLayers('@layer a{.v{--x: /* } */ {a:b};top:0}}')).toBe(
+      '.v{--x: /* } */ {a:b};top:0}',
+    )
+    // Next to a nested layer, the value goes along as it is
+    expect(
+      unwrapCascadeLayers('@layer a{.n{--v:{@layer z{}};color:red;@layer s{color:blue}}}'),
+    ).toBe('.n{color:blue;--v:{@layer z{}};color:red}')
+    // `a:hover {…}` is a nested rule, not a declaration
+    expect(unwrapCascadeLayers('@layer a{.n{a:hover{@layer s{color:blue}}}}')).toBe(
+      '.n{a:hover{color:blue}}',
+    )
+  })
+
+  test('reads a custom property with a comment between its name and colon as one', () => {
+    // The text scanner this replaced looked for `--name:` and read the value as nested rules
+    // when a comment sat in between, so `@layer data` was unwrapped out of the value
+    const css = '.n{--v /**/: {@layer data{color:red}};color:green}'
+    expect(unwrapCascadeLayers(`@layer a{${css}}`)).toBe(css)
+    expect(unwrapCascadeLayers(`@layer a{.n{--v/**/ :{@layer data{color:red}}}}`)).toBe(
+      '.n{--v/**/ :{@layer data{color:red}}}',
+    )
+  })
+
+  test('reads a layer name with a comment around its dot as the same layer', () => {
+    // `a/**/.b` is `a.b`: a comment is not part of either segment. The text scanner this
+    // replaced turned it into a space, which made `a ` a layer of its own, so green beat the
+    // later `c` layer.
+    expect(
+      unwrapCascadeLayers(
+        '@layer a.b{.x{color:red}}@layer c{.x{color:blue}}@layer a/**/.b{.x{color:green}}',
+      ),
+    ).toBe('.x{color:red}.x{color:green}.x{color:blue}')
+    expect(
+      unwrapCascadeLayers('@layer a./**/b, c;@layer c{.x{color:blue}}@layer a.b{.x{color:red}}'),
+    ).toBe('.x{color:red}.x{color:blue}')
+  })
+
+  test('tells an escaped dot in a layer name from a sublayer', () => {
+    // `a\.b` is one layer named `a.b`, not `b` inside `a`
+    expect(
+      unwrapCascadeLayers('@layer a\\.b{.x{color:red}}@layer a.b{.y{}}@layer a\\.b{.z{}}'),
+    ).toBe('.x{color:red}.z{}.y{}')
+  })
+
+  test('ignores an invalid `@layer` rule, like a browser does', () => {
+    // A name list in a block, or two identifiers without a separator, is no layer at all;
+    // lightningcss rejects both before the plugin gets here
+    expect(unwrapCascadeLayers('@layer a, b{.x{}}.y{}')).toBe('.y{}')
+    expect(unwrapCascadeLayers('@layer a b{.x{}}@layer c{.c{}}')).toBe('.c{}')
+    // Case-insensitive at-keyword, case-sensitive names
+    expect(unwrapCascadeLayers('@LAYER A{.x{}}@layer a{.y{}}@LAYER A{.z{}}')).toBe('.x{}.z{}.y{}')
+  })
+
+  test('tells escaped commas in layer names apart', () => {
+    // `a\,b` and `a\,c` are two layers: blue, in the later one, wins
+    expect(
+      unwrapCascadeLayers(
+        '@layer a\\,b{.x{color:red}}@layer a\\,c{.x{color:blue}}@layer a\\,b{.x{color:green}}',
+      ),
+    ).toBe('.x{color:red}.x{color:green}.x{color:blue}')
+    // `a\2c b` is `a\,b` with a hexadecimal escape, in a block and in a statement
+    expect(
+      unwrapCascadeLayers(
+        '@layer a\\,b{.x{color:red}}@layer a\\,c{.x{color:blue}}@layer a\\2c b{.x{color:green}}',
+      ),
+    ).toBe('.x{color:red}.x{color:green}.x{color:blue}')
+    expect(
+      unwrapCascadeLayers(
+        '@layer a\\,c, a\\2C b;@layer a\\,b{.x{color:red}}@layer a\\,c{.x{color:blue}}',
+      ),
+    ).toBe('.x{color:blue}.x{color:red}')
+    // An escaped space is part of the name: `a\ ` isn't `a`
+    expect(
+      unwrapCascadeLayers('@layer a\\ {.x{color:red}}@layer b{.y{}}@layer a{.x{color:blue}}'),
+    ).toBe('.x{color:red}.y{}.x{color:blue}')
+  })
+
+  test('resolves escapes in layer names', () => {
+    expect(unwrapCascadeLayers('@layer u\\-a{.a{}}@layer b{.b{}}@layer u-a{.c{}}')).toBe(
+      '.a{}.c{}.b{}',
+    )
+    expect(unwrapCascadeLayers('@layer \\75-a{.a{}}@layer b{.b{}}@layer u-a{.c{}}')).toBe(
+      '.a{}.c{}.b{}',
+    )
+  })
+
+  test('keeps `@charset`, `@import` and `@namespace` ahead of the other rules', () => {
+    expect(
+      unwrapCascadeLayers(
+        '@charset "utf-8";@layer a;@import "x.css";@namespace svg url(x);.top{}@layer a{.a{}}',
+      ),
+    ).toBe('@charset "utf-8";@import "x.css";@namespace svg url(x);.a{}.top{}')
+  })
+
+  test('leaves a stylesheet without layers as it is', () => {
+    const css = '.a {\n  color: red;\n}\n\n@media print {\n  .b {\n    color: blue;\n  }\n}\n'
+    expect(unwrapCascadeLayers(css)).toBe(css)
+    // Also when `@layer` only occurs as text
+    const text = ':root {\n  --rules: {@layer x{}};\n}\n\n.c[title="@layer y{"] {\n  d: e;\n}\n'
+    expect(unwrapCascadeLayers(text)).toBe(text)
+  })
+
+  test("indents a pretty-printed stylesheet in lightningcss's style, at the new depth", () => {
+    expect(
+      unwrapCascadeLayers(
+        [
+          '@layer reset {',
+          '  html {',
+          '    color: red;',
+          '  }',
+          '',
+          '  @media print {',
+          '    .p {',
+          '      color: blue;',
+          '    }',
+          '  }',
+          '}',
+          '',
+          '@layer base;',
+          '',
+          '@layer utilities {',
+          '  .u {',
+          '    color: red;',
+          '    top: 0;',
+          '  }',
+          '',
+          '  @layer compositions {',
+          '    .c {',
+          '      font-size: 1px;',
+          '    }',
+          '  }',
+          '}',
+          '',
+          '.top {',
+          '  color: green;',
+          '}',
+          '',
+        ].join('\n'),
+      ),
+    ).toBe(
+      [
+        'html {',
+        '  color: red;',
+        '}',
+        '',
+        '@media print {',
+        '  .p {',
+        '    color: blue;',
+        '  }',
+        '}',
+        '',
+        '.c {',
+        '  font-size: 1px;',
+        '}',
+        '',
+        '.u {',
+        '  color: red;',
+        '  top: 0;',
+        '}',
+        '',
+        '.top {',
+        '  color: green;',
+        '}',
+        '',
+      ].join('\n'),
+    )
+    // The indentation unit is the stylesheet's own
+    expect(unwrapCascadeLayers('@layer a {\n\t.a {\n\t\tcolor: red;\n\t}\n}\n')).toBe(
+      '.a {\n\tcolor: red;\n}\n',
+    )
+  })
+})
+
 /** Records the directories created with `fs.mkdtempSync` (by the plugin) and their modes. */
 function spyOnTempDirs(): {created: {dir: string; mode: number}[]; restore(): void} {
   const createTempDir = fs.mkdtempSync
@@ -1362,6 +2036,39 @@ describe('watch mode', () => {
         expect(after.js).not.toContain('"color_brand"')
         expect(after.css).toContain('.v2-color_brand {')
         expect(after.css).not.toContain('.color_brand {')
+      } finally {
+        await watcher.close()
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test(
+    '`cascadeLayers: false` unwraps the stylesheet of every rebuild',
+    {timeout: 60_000},
+    async () => {
+      const cwd = copyFixture('watch-unlayered')
+      const sourcePath = path.join(cwd, 'src/index.ts')
+      const originalSource = readFileSync(sourcePath, 'utf-8')
+      const watcher = startWatcher(cwd, {cascadeLayers: false})
+      try {
+        await watcher.nextBuild()
+        const before = watcher.readOutput().css
+        expect(before).toContain('.color_brand {')
+        expect(before).not.toContain('@layer')
+
+        const secondBuild = watcher.nextBuild()
+        await settleWatcher()
+        await rebuildAfter(secondBuild, () =>
+          writeFileSync(
+            sourcePath,
+            `${originalSource}\nexport const later: string = css({display: 'flex'})\n`,
+          ),
+        )
+
+        const after = watcher.readOutput().css
+        expect(after).toContain('.display_flex {')
+        expect(after).not.toContain('@layer')
       } finally {
         await watcher.close()
         rmSync(cwd, {recursive: true, force: true})

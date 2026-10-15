@@ -294,6 +294,13 @@ The Sanity defaults on top of the plugin's own:
   tsdown's `'baseline-widely-available'` work as well; `lightningcss.targets` wins over
   everything and `target: false` disables the transform.
 - `minify` stays off; `transform` stays on (unlike in `@pandacss/vite`).
+- `cascadeLayers` defaults to `true`, like in the plugin: the stylesheet keeps Panda's `@layer`
+  blocks. Set `panda: {cascadeLayers: false}` to publish it without layers, so consumers can
+  override its base styles without also overriding its `:hover`, `:focus-visible` and other
+  states — see
+  [Cascade layers](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#cascade-layers)
+  in the plugin README for the trade-offs. Switching this default to `false` is planned for a
+  later release of its own, once `@sanity/ui` and `sanity` have adopted the option.
 
 Pass an object to customize, with the same options as the plugin:
 
@@ -305,6 +312,13 @@ export default defineConfig({
   panda: {minify: true, fileName: 'styles.css'},
 })
 ```
+
+The options are those of the plugin version this config was written against. The peer range
+accepts every version of the plugin, so an option can be newer than the plugin that is installed;
+the config then fails with the option's name and the upgrade to make (`pnpm add -D
+@sanity/pandacss-tsdown-plugin@latest`), rather than letting the plugin ignore the option (an
+old plugin would keep the layers `cascadeLayers: false` asks it to remove). Plugin releases from
+0.2.0 name their options for this check, and reject the ones they don't have themselves.
 
 Setup reminders, in the package being built:
 
