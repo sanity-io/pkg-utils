@@ -17,6 +17,7 @@ import vm from 'node:vm'
 import {rolldown, watch, type OutputAsset, type OutputChunk, type Plugin} from 'rolldown'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
+import {directoryPattern} from '../src/directoryPattern.ts'
 import {esbuildTargetToLightningCSS, pandacssPlugin, type Options} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -919,6 +920,37 @@ describe('codegen', () => {
       expect(seen).toEqual([true])
     } finally {
       rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+})
+
+describe('directoryPattern', () => {
+  test('matches a directory and everything in it, with either separator', () => {
+    for (const [dir, inside, outside] of [
+      [
+        '/home/user/lib/dist',
+        ['/home/user/lib/dist', '/home/user/lib/dist/index.js'],
+        ['/home/user/lib/dist2/index.js', '/home/user/lib'],
+      ],
+      [
+        'C:\\work\\lib\\dist',
+        ['C:\\work\\lib\\dist\\index.js', 'C:/work/lib/dist/index.js'],
+        ['C:\\work\\lib\\distx\\index.js'],
+      ],
+      // A UNC directory keeps its double leading separator, in either spelling
+      [
+        '\\\\server\\share\\lib\\dist',
+        [
+          '\\\\server\\share\\lib\\dist',
+          '\\\\server\\share\\lib\\dist\\index.js',
+          '//server/share/lib/dist/index.js',
+        ],
+        ['\\\\server\\share\\lib\\distx\\index.js', '\\\\server\\share\\lib\\index.js'],
+      ],
+    ] as const) {
+      const pattern = directoryPattern(dir)
+      for (const file of inside) expect(pattern.test(file), file).toBe(true)
+      for (const file of outside) expect(pattern.test(file), file).toBe(false)
     }
   })
 })

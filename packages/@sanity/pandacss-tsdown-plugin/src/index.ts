@@ -18,6 +18,7 @@ import {
   cssShimFileName,
   cssShimSource,
 } from './cssShimFileName.ts'
+import {directoryPattern} from './directoryPattern.ts'
 import {createConditionalCssExport, createCssExport, insertCssExport} from './exports.ts'
 import {resolveCssExportOptions, type CssExportsOptions} from './exportsOptions.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
@@ -581,7 +582,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // `styled-system`, and the output directory the host resolved — may sit inside them
         // (e.g. `include: ['./**/*.tsx']`), and every write there would trigger the next
         // rebuild: exclude them from watching.
-        const excluded = [currentDriver.getOutdir(options.outdir)]
+        const excluded = [resolveGeneratedDir(currentDriver)]
         // Real, like the watched directories, which come from the (real) project root
         if (contextOutDir !== undefined) {
           excluded.push(realpathOrSelf(path.resolve(cwd, contextOutDir)))
@@ -1074,20 +1075,6 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   // driver. Windows paths are case-insensitive, and rolldown's ids may differ from the resolved
   // config path in the drive letter's case.
   return new RegExp(`^${source}(?:\\?.*)?$`, process.platform === 'win32' ? 'i' : '')
-}
-
-/**
- * A `watch.exclude` pattern for a directory and everything in it, matching the path with either
- * separator (rolldown hands watch paths over as the OS spells them).
- */
-function directoryPattern(dir: string): RegExp {
-  const segments = path
-    .resolve(dir)
-    .split(/[\\/]+/)
-    .filter((segment) => segment !== '')
-    .map(escapeRegExp)
-  const prefix = path.isAbsolute(dir) && !/^[A-Za-z]:/.test(segments[0] ?? '') ? '[\\\\/]' : ''
-  return new RegExp(`^${prefix}${segments.join('[\\\\/]')}(?:[\\\\/]|$)`)
 }
 
 /** Whether a file is inside a directory (or is the directory itself). */
