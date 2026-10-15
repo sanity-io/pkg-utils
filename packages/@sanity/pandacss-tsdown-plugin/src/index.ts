@@ -124,14 +124,14 @@ export interface Options {
    */
   configPath?: string
   /**
-   * Run Panda's codegen when a build starts (and again after the config reloads in watch
+   * Run Panda's codegen before the build starts (and again after a config change in watch
    * mode), writing the `styled-system` artifacts of the loaded config before any module is
    * transformed — like `@pandacss/vite` does when Vite's config is resolved. The generated
-   * types, runtime and class name hashes the sources import then always match the config the
+   * types, runtime and class name hashes the sources import then match the config the
    * stylesheet is extracted with, even when the package's `prepare` script (`panda codegen`)
-   * ran against an older config. Panda only writes the files whose content changed, so the
-   * builds a host runs (one per output format) and watch rebuilds leave current artifacts
-   * untouched.
+   * ran against an older config. Under tsdown it runs once for the builds of every format,
+   * after tsdown's `clean` step, so `clean` may list the generated directory. Panda only
+   * writes the files whose content changed, so current artifacts stay untouched.
    *
    * Set to `false` when codegen is managed elsewhere.
    * @defaultValue true
@@ -309,7 +309,7 @@ const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DT
  * architecture (and option vocabulary) as `@tsdown/css` and
  * `@sanity/vanilla-extract-tsdown-plugin`.
  *
- * Like `@pandacss/vite`, it also runs Panda's codegen when a build starts, so the generated
+ * Like `@pandacss/vite`, it also runs Panda's codegen before the build starts, so the generated
  * `styled-system` directory the sources import is in sync with the config the stylesheet is
  * extracted with. Packages keep their `prepare` script (`panda codegen`) for the type checker,
  * the test runner and the editor, which need the artifacts before any build runs.
@@ -342,6 +342,11 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let transformerCompiler: PandaDriver['compiler'] | undefined
   /** Whether a build already ran, so a later `buildStart` (watch mode) reloads the config. */
   let built = false
+  /**
+   * The codegen tsdown's `build:before` hook runs once for the builds of every format; when
+   * set, the rolldown `options` hook leaves the first codegen to it.
+   */
+  let codegenBeforeBuilds: Promise<void> | undefined
 
   /**
    * The ids of the modules with Panda styles — rewritten by the transformer, or left to the
@@ -361,6 +366,10 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     driverPromise ??= createNodeDriver({cwd, configPath: options.configPath})
     driver = await driverPromise
     return driver
+  }
+
+  function runCodegen(currentDriver: PandaDriver): void {
+    currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
   }
 
   function resolveTransformer(currentDriver: PandaDriver): SourceTransformer {
@@ -533,6 +542,10 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     async options(inputOptions) {
       const cwd = resolveCwd(inputOptions.cwd)
       const currentDriver = await resolveDriver(cwd)
+      // Outside tsdown (whose `build:before` hook already ran it), the first codegen runs here,
+      // ahead of every plugin's `buildStart`: rolldown runs those in parallel, and a
+      // declaration plugin reads the generated types from its own
+      if (codegenEnabled && codegenBeforeBuilds === undefined) runCodegen(currentDriver)
       const filter = this.meta.watchMode
         ? CONSERVATIVE_TRANSFORM_FILTER
         : createTransformFilter(currentDriver, cwd)
@@ -571,21 +584,23 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       return nextOptions === inputOptions ? undefined : nextOptions
     },
 
-    // Regenerate the `styled-system` artifacts and scan every source the config covers before
-    // any module is transformed. The codegen keeps the generated types, runtime and class name
-    // hashes in sync with the config the stylesheet is extracted with (Panda only writes the
-    // files whose content changed, so a current directory stays untouched); the scan matters
-    // because the transformer folds tokens and style objects across files, so a module's
-    // dependencies must be known when it is rewritten, regardless of the order rolldown
-    // discovers modules in. The stylesheet then covers the whole `include` set, like
-    // `panda cssgen` — and like `@pandacss/vite`, which runs codegen and scans the project the
-    // same way when Vite's config is resolved.
+    // Scan every source the config covers before any module is transformed: the transformer
+    // folds tokens and style objects across files, so a module's dependencies must be known
+    // when it is rewritten, regardless of the order rolldown discovers modules in. The
+    // stylesheet then covers the whole `include` set, like `panda cssgen` — and like
+    // `@pandacss/vite`, which scans the project the same way when Vite's config is resolved.
+    // The first codegen already ran (in tsdown's `build:before` hook or the `options` hook);
+    // a watch rebuild regenerates after a config change, so the generated types, runtime and
+    // class name hashes stay in sync with the config the stylesheet is extracted with.
     async buildStart() {
       const currentDriver = await resolveDriver(resolveCwd())
       if (built && this.meta.watchMode) {
         // A rebuild may follow a config change: reload it (which swaps the compiler when it
-        // changed) so the codegen, the scan and the transforms below use the current config
-        await currentDriver.reload()
+        // changed) so the codegen, the scan and the transforms below use the current config.
+        // Panda only writes the files whose content changed, so a current directory stays
+        // untouched either way.
+        const {hasChanged} = await currentDriver.reload()
+        if (hasChanged && codegenEnabled) runCodegen(currentDriver)
       }
       built = true
 
@@ -594,9 +609,6 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         currentDriver.designSystemDiagnostics,
         'while loading the design system',
       )
-      if (codegenEnabled) {
-        currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
-      }
       const cwd = resolveCwd()
       for (const report of currentDriver.parseFiles()) {
         warnDiagnostics(
@@ -764,12 +776,32 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       }
     },
 
-    // With `exports`, write the `./<fileName>` export to `package.json` (and, through tsdown,
-    // to `publishConfig.exports`) by composing into `exports.customExports` before the config
-    // is resolved — the tsdown analogue of a Vite plugin extending the user config from its
-    // `config` hook. tsdown's `exports` feature is opt-in, so nothing is written (and the
-    // export has to be maintained manually) when it's not enabled.
+    // Compose into the user config before it is resolved — the tsdown analogue of a Vite plugin
+    // extending the user config from its `config` hook:
+    // - With `codegen`, the first codegen joins tsdown's hooks as a `build:before` hook. tsdown
+    //   cleans after resolving the config (and `clean` may list the generated directory), then
+    //   calls `build:before` before any build of a format starts — including the separate CJS
+    //   declaration build, which runs without the user plugins and reads the generated types.
+    //   It is registered ahead of the user's own hooks, so theirs see the generated files.
+    // - With `exports`, write the `./<fileName>` export to `package.json` (and, through tsdown,
+    //   to `publishConfig.exports`) through `exports.customExports`. tsdown's `exports` feature
+    //   is opt-in, so nothing is written (and the export has to be maintained manually) when
+    //   it's not enabled.
     tsdownConfig(config: UserConfig) {
+      if (codegenEnabled) {
+        codegenBeforeBuilds = undefined
+        const userHooks = config.hooks
+        config.hooks = async (hooks) => {
+          // Every format calls it; the first runs the codegen, and all of them wait for it
+          hooks.hook('build:before', async () => {
+            codegenBeforeBuilds ??= resolveDriver(resolveCwd()).then(runCodegen)
+            await codegenBeforeBuilds
+          })
+          if (typeof userHooks === 'function') await userHooks(hooks)
+          else if (userHooks) hooks.addHooks(userHooks)
+        }
+      }
+
       if (!exportsCss) return undefined
       const exportsOption = config.exports
       if (!exportsOption) return undefined
@@ -807,21 +839,14 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // syntax lowering target, like `css.target` in `@tsdown/css`), the package name (for the
     // self-referential import injected by `inject` with `exports`), and the working directory
     // the Panda config is discovered from. The hook fires once per output format with the
-    // same values, and tsdown awaits it before any build starts — which is why the first
-    // codegen runs here as well: for `format: 'cjs'` with declarations, tsdown runs a separate
-    // declaration build without the user plugins (so without this plugin's `buildStart`), and
-    // that build must find the generated types already in place.
-    async tsdownConfigResolved(config: ResolvedConfig) {
+    // same values. The first codegen doesn't run here: tsdown calls it before its `clean` step.
+    tsdownConfigResolved(config: ResolvedConfig) {
       plugin.api.setBuildContext({
         target: config.target,
         packageName: config.pkg?.name,
         cwd: config.cwd,
         outDir: config.outDir,
       })
-      if (codegenEnabled) {
-        const currentDriver = await resolveDriver(resolveCwd())
-        currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
-      }
     },
   }
 

@@ -13,7 +13,7 @@ import os from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import vm from 'node:vm'
-import {rolldown, watch, type OutputAsset, type OutputChunk} from 'rolldown'
+import {rolldown, watch, type OutputAsset, type OutputChunk, type Plugin} from 'rolldown'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {esbuildTargetToLightningCSS, pandacssPlugin, type Options} from '../src/index.ts'
@@ -675,11 +675,15 @@ describe('codegen', () => {
     {timeout: 60_000},
     async () => {
       // For `format: 'cjs'` with declarations, tsdown 0.23 runs a separate declaration build
-      // first, without the user plugins — so a codegen gated on this plugin's `buildStart`
-      // would come too late for it. The first codegen runs from the awaited
-      // `tsdownConfigResolved` hook instead, before any build: on a clean checkout (no
-      // `styled-system` yet) the artifacts exist by the time the declarations are generated.
+      // next to the JS build, without the user plugins — so a codegen gated on this plugin's
+      // `buildStart` would come too late for it. The first codegen runs from tsdown's awaited
+      // `build:before` hook instead, after `clean` (which deletes the generated directory here)
+      // and before any build: the artifacts exist by the time the declarations are generated.
       const cwd = copyFixture('clean-cjs-dts')
+      writeFileSync(
+        path.join(cwd, 'src/index.ts'),
+        `${readFileSync(path.join(cwd, 'src/index.ts'), 'utf-8')}\nexport type {SystemStyleObject} from '#styled-system/types'\n`,
+      )
       writeFileSync(
         path.join(cwd, 'tsconfig.json'),
         JSON.stringify({
@@ -703,13 +707,15 @@ describe('codegen', () => {
           format: ['cjs'],
           dts: true,
           outDir: 'dist',
+          clean: ['dist', 'styled-system'],
           plugins: [pandacssPlugin({cwd})],
           logLevel: 'silent',
           publint: false,
         })
-        expect(readFileSync(path.join(cwd, 'dist/index.d.cts'), 'utf-8')).toContain(
-          'export declare const brandText: string;',
-        )
+        const declarations = readFileSync(path.join(cwd, 'dist/index.d.cts'), 'utf-8')
+        expect(declarations).toContain('export declare const brandText: string;')
+        // The re-exported type was bundled from the generated declarations of this config
+        expect(declarations).toContain('type ColorToken = "brand"')
         expect(readFileSync(path.join(cwd, 'dist/index.cjs'), 'utf-8')).toContain('"color_brand"')
         // The artifacts were written before the declaration build started
         const generatedAt = statSync(path.join(cwd, 'styled-system/css/index.js')).mtimeMs
@@ -720,6 +726,77 @@ describe('codegen', () => {
       }
     },
   )
+
+  test(
+    "runs after tsdown's `clean` step, ahead of the user's `build:before` hooks",
+    {timeout: 60_000},
+    async () => {
+      // tsdown cleans after resolving the config, so a codegen before then is deleted again by
+      // `clean: ['dist', 'styled-system']`. The user's hooks (object or function form) keep
+      // running, and see the generated files.
+      const cwd = copyFixture('clean-order')
+      const generatedFile = path.join(cwd, 'styled-system/css/index.js')
+      const staleFile = path.join(cwd, 'dist/stale.txt')
+      try {
+        for (const form of ['object', 'function'] as const) {
+          mkdirSync(path.dirname(staleFile), {recursive: true})
+          writeFileSync(staleFile, '')
+          const observed: {generated: boolean; stale: boolean}[] = []
+          const observe = (): void => {
+            observed.push({generated: existsSync(generatedFile), stale: existsSync(staleFile)})
+          }
+          await tsdownBuild({
+            config: false,
+            cwd,
+            entry: ['src/index.ts'],
+            format: ['esm'],
+            outDir: 'dist',
+            clean: ['dist', 'styled-system'],
+            hooks:
+              form === 'object'
+                ? {'build:before': observe}
+                : (hooks) => {
+                    hooks.hook('build:before', observe)
+                  },
+            plugins: [pandacssPlugin({cwd})],
+            logLevel: 'silent',
+            publint: false,
+          })
+          expect(observed, form).toEqual([{generated: true, stale: false}])
+        }
+      } finally {
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test("runs before every plugin's `buildStart`, outside tsdown too", async () => {
+    // rolldown runs the `buildStart` hooks in parallel, and a declaration plugin reads the
+    // generated types from its own, so the first codegen must be done before any of them
+    const cwd = copyFixture('codegen-order')
+    const seen: boolean[] = []
+    const probe: Plugin = {
+      name: 'probe',
+      buildStart() {
+        seen.push(existsSync(path.join(cwd, 'styled-system/css/index.js')))
+      },
+    }
+    try {
+      const bundle = await rolldown({
+        cwd,
+        input: path.join(cwd, 'src/index.ts'),
+        plugins: [probe, pandacssPlugin({cwd})],
+      })
+      try {
+        await bundle.generate({format: 'esm'})
+      } finally {
+        await bundle.close()
+      }
+      expect(seen).toEqual([true])
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
 })
 
 describe('esbuildTargetToLightningCSS', () => {
