@@ -33,9 +33,10 @@ function parseVersion(version: string): number | null {
 
 /**
  * Convert esbuild-style target strings (e.g. `'chrome90'`, `'safari16.2'`) into lightningcss
- * `Targets`, with the same conversion as `css.target` in `@tsdown/css`. Targets that don't map
- * to a browser (e.g. `'node20'`, `'es2022'`) are ignored — `undefined` is returned when none of
- * them do, which skips syntax lowering.
+ * `Targets`, like `css.target` in `@tsdown/css`, except that a browser listed more than once
+ * keeps its lowest version instead of the last one. Targets that don't map to a browser (e.g.
+ * `'node20'`, `'es2022'`) are ignored — `undefined` is returned when none of them do, which
+ * skips syntax lowering.
  * @internal
  */
 export function esbuildTargetToLightningCSS(target: string | string[]): Targets | undefined {
@@ -61,7 +62,9 @@ function convert(target: string[]): Targets | undefined {
     }
 
     targets = targets || {}
-    targets[browser] = versionInt
+    // A repeated browser keeps its lowest version, so the output supports every target
+    const previous = targets[browser]
+    targets[browser] = previous === undefined ? versionInt : Math.min(previous, versionInt)
   }
 
   return targets
