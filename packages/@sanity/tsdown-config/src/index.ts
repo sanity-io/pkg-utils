@@ -1,7 +1,7 @@
 import path from 'node:path'
-import type {Options as PandaPluginOptions} from '@sanity/pandacss-tsdown-plugin'
 import type {
   CssExportsOptions,
+  LightningCSSOptions,
   Options as VanillaExtractPluginOptions,
 } from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as BabelReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
@@ -67,9 +67,69 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  * `lightningcss.targets`. `target: false` stays the explicit off switch, and a user-provided
  * `lightningcss.targets` wins over the fallback. Everything else keeps the plugin's defaults:
  * `minify`, `inject`, and `exports` stay `false`.
+ *
+ * Defined here rather than imported from the plugin, an optional peer dependency: the published
+ * declarations must not reference it, so consumers without it installed still type-check them
+ * (`skipLibCheck: false`). `test/panda.test.ts` asserts that both stay the same type.
  * @public
  */
-export type PackagePandaOptions = PandaPluginOptions
+export interface PackagePandaOptions {
+  /**
+   * The directory the Panda config is discovered from, and that its `include`/`exclude` globs
+   * are relative to. Resolved against tsdown's `cwd`.
+   * @defaultValue tsdown's `cwd`
+   */
+  cwd?: string
+  /**
+   * An explicit Panda config file, relative to {@link PackagePandaOptions.cwd | `cwd`}.
+   * Otherwise `panda.config.*` is discovered upward from `cwd`.
+   */
+  configPath?: string
+  /**
+   * Overrides the config's `outdir`, the `styled-system` directory that Panda's codegen writes
+   * to, like `outdir` in `@pandacss/vite`. Modules in it are never parsed or transformed.
+   */
+  outdir?: string
+  /**
+   * Statically transform the style calls of the bundled modules into class name strings, like
+   * `transform` in `@pandacss/vite`.
+   * @defaultValue false
+   */
+  transform?: boolean
+  /**
+   * Name of the emitted stylesheet.
+   * @defaultValue "styles.css"
+   */
+  fileName?: string
+  /**
+   * Minify the stylesheet with `lightningcss`.
+   * @defaultValue false
+   */
+  minify?: boolean
+  /**
+   * The target environment for CSS syntax lowering, as esbuild-style target strings (e.g.
+   * `'chrome90'`), or `false` to disable syntax lowering. Defaults to tsdown's top-level `target`,
+   * with the `@sanity/browserslist-config` fallback described above.
+   */
+  target?: string | string[] | false
+  /**
+   * Options passed through to `lightningcss`'s `transform()`. `lightningcss.targets` takes
+   * precedence over {@link PackagePandaOptions.target | `target`}, and `unusedSymbols` is merged
+   * with Panda's `--made-with-panda` marker, which is always removed.
+   */
+  lightningcss?: LightningCSSOptions
+  /**
+   * Import the stylesheet from every entry chunk that uses Panda styles (`require()` in CJS).
+   * @defaultValue false
+   */
+  inject?: boolean
+  /**
+   * Publish the stylesheet as the `"./<fileName>"` export subpath. `{nodeCompat: true}` declares
+   * a conditional export backed by a no-op JS shim for runtimes that can't load `.css` files.
+   * @defaultValue false
+   */
+  exports?: boolean | CssExportsOptions
+}
 
 /**
  * Options for the `css` option — tsdown's experimental

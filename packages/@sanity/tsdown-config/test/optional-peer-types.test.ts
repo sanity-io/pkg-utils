@@ -15,9 +15,15 @@ const repoRoot = path.resolve(packageDir, '../../..')
  * Typechecks a consumer module against the built `dist/index.d.mts` (built by `pretest`),
  * with resolution failing for `blockedModules` — like a consumer that didn't install those
  * peers. Expected errors carry `@ts-expect-error`, so "no diagnostics" asserts both ways
- * (a vanished expected error fails via the unused directive).
+ * (a vanished expected error fails via the unused directive). With `libCheck`, the built
+ * declarations are checked too (`skipLibCheck: false`), like a consumer that type-checks its
+ * dependencies.
  */
-function typecheckConsumer(consumerCode: string, blockedModules: string[]): string {
+function typecheckConsumer(
+  consumerCode: string,
+  blockedModules: string[],
+  {libCheck = false}: {libCheck?: boolean} = {},
+): string {
   // Forward slashes: TypeScript normalizes paths before host callbacks see them, so a
   // backslash path would never match the `===` checks below on Windows
   const consumerPath = path.join(packageDir, '__optional-peer-consumer__.ts').replaceAll('\\', '/')
@@ -27,7 +33,7 @@ function typecheckConsumer(consumerCode: string, blockedModules: string[]): stri
     target: ts.ScriptTarget.ESNext,
     strict: true,
     // What makes a missing peer degrade silently instead of erroring with TS2307
-    skipLibCheck: true,
+    skipLibCheck: !libCheck,
     noEmit: true,
     types: [],
   }
@@ -52,10 +58,19 @@ function typecheckConsumer(consumerCode: string, blockedModules: string[]): stri
   const program = ts.createProgram({rootNames: [consumerPath], options: compilerOptions, host})
   const consumerFile = program.getSourceFile(consumerPath)
   if (!consumerFile) return expect.unreachable('expected the consumer source file')
-  const diagnostics = [
-    ...program.getSyntacticDiagnostics(consumerFile),
-    ...program.getSemanticDiagnostics(consumerFile),
-  ]
+  const distDir = `${path.join(packageDir, 'dist').replaceAll('\\', '/')}/`
+  const checkedFiles = libCheck
+    ? program
+        .getSourceFiles()
+        .filter((file) => file === consumerFile || file.fileName.startsWith(distDir))
+    : [consumerFile]
+  const diagnostics: ts.Diagnostic[] = []
+  for (const file of checkedFiles) {
+    diagnostics.push(
+      ...program.getSyntacticDiagnostics(file),
+      ...program.getSemanticDiagnostics(file),
+    )
+  }
   return ts.formatDiagnostics(diagnostics, {
     getCanonicalFileName: (fileName) => fileName,
     getCurrentDirectory: () => packageDir,
@@ -154,6 +169,26 @@ const degraded = defineConfig({reactCompiler: {compilationMode: 'infer'}})
 export {degraded, dual, enabled, single}
 `,
       ['babel-plugin-react-compiler', 'oxc-transform-react'],
+    )
+    expect(diagnostics).toBe('')
+  })
+
+  test('the declarations type-check without @sanity/pandacss-tsdown-plugin installed', () => {
+    // `panda` is an optional peer: a consumer that never installs it must be able to type-check
+    // the declarations themselves (`skipLibCheck: false`), and the options keep their typings
+    const diagnostics = typecheckConsumer(
+      `${consumerPreamble}
+const config: Promise<UserConfig> = defineConfig({
+  panda: {fileName: 'panda.css', transform: true, exports: {nodeCompat: true}},
+})
+
+// @ts-expect-error -- 'nope' is not a panda option
+const invalid = defineConfig({panda: {nope: true}})
+
+export {config, invalid}
+`,
+      ['@sanity/pandacss-tsdown-plugin'],
+      {libCheck: true},
     )
     expect(diagnostics).toBe('')
   })

@@ -1,10 +1,11 @@
 import {mkdir, mkdtemp, rm, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
+import type {Options as PandaPluginOptions} from '@sanity/pandacss-tsdown-plugin'
 import {rolldown} from 'rolldown'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
-import {afterAll, beforeAll, describe, expect, test} from 'vitest'
-import {defineConfig, type PackageOptions} from '../src/index.ts'
+import {afterAll, beforeAll, describe, expect, expectTypeOf, test} from 'vitest'
+import {defineConfig, type PackageOptions, type PackagePandaOptions} from '../src/index.ts'
 
 // Written to a temporary directory: the fixture imports the `styled-system` directory that
 // `panda codegen` would generate, which the plugin never generates (the builds mark it external)
@@ -78,6 +79,11 @@ async function buildCssWithConfig(options: PackageOptions): Promise<string> {
 }
 
 describe('panda option', () => {
+  test('`PackagePandaOptions` stays the same type as the plugin options', () => {
+    // Defined separately so the declarations don't reference the optional peer
+    expectTypeOf<PackagePandaOptions>().toEqualTypeOf<PandaPluginOptions>()
+  })
+
   test('lazily loads the panda plugin when enabled', async () => {
     expect(getPluginNames(await defineConfig())).toEqual([])
     expect(getPluginNames(await defineConfig({panda: true}))).toEqual(['pandacss'])
