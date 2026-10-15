@@ -61,9 +61,13 @@
       "project": ["src/**/*.ts", "test/**/*.ts"],
     },
     "packages/@sanity/pandacss-tsdown-plugin": {
-      "entry": ["src/**/*.test.ts"],
-      // Declared as optional peerDependencies across the package family
-      "ignoreDependencies": ["@pandacss/dev", "@pandacss/transformer", "lightningcss", "tsdown"],
+      // The fixtures are tsdown build inputs referenced by path, not imported from the tests
+      "entry": [
+        "test/fixtures/*/panda.config.ts",
+        "test/fixtures/*/src/index.ts",
+        "test/fixtures/*/styled-system/css/index.d.ts",
+      ],
+      "project": ["src/**/*.ts", "test/**/*.ts"],
     },
     "packages/@sanity/vanilla-extract-vite-plugin": {
       // The fixture app is a vite build input referenced by path, not imported from the tests,

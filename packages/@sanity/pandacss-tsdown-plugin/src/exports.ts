@@ -1,9 +1,17 @@
 import path from 'node:path'
 
-import type {CustomExportsContext, ExportsSubpaths, UserConfig} from 'tsdown'
+import type {UserConfig} from 'tsdown'
 
 import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
 import {type CssExportsOptions, normalizeCssExportsOptions} from './exportsOptions.ts'
+
+type ExportsOptions = Extract<NonNullable<UserConfig['exports']>, object>
+type CustomExportsFunction = Extract<
+  NonNullable<ExportsOptions['customExports']>,
+  (...args: never[]) => unknown
+>
+type ExportsSubpaths = Parameters<CustomExportsFunction>[0]
+type CustomExportsContext = Parameters<CustomExportsFunction>[1]
 
 /**
  * Default emitted CSS asset file name.
@@ -51,7 +59,7 @@ function toPosixRelativeOutDir(pkgRoot?: string, outDir?: string): string {
  *
  * @internal
  */
-export function buildCssExportEntry(
+function buildCssExportEntry(
   relOutDir: string,
   normalizedFileName: string,
   options: {nodeCompat: boolean; conditions: readonly string[]},
@@ -94,6 +102,7 @@ export function withCssCustomExports(
   existingExports: UserConfig['exports'],
   fileName: string = DEFAULT_CSS_FILE_NAME,
   enableExports: boolean | CssExportsOptions = false,
+  outDir?: string,
 ): UserConfig['exports'] {
   if (existingExports === false) {
     return existingExports
@@ -108,18 +117,41 @@ export function withCssCustomExports(
   const normalizedFileName = normalizeAssetFileName(fileName)
   const exportKey = `./${normalizedFileName}`
 
-  const resolvedExports =
-    existingExports === undefined || existingExports === true ? {} : existingExports
+  const resolvedExports: ExportsOptions =
+    existingExports === undefined || existingExports === true
+      ? {}
+      : typeof existingExports === 'string'
+        ? {enabled: existingExports}
+        : existingExports
   const prevCustomExports = resolvedExports.customExports
 
   return {
     ...resolvedExports,
     async customExports(subpaths: ExportsSubpaths, context: CustomExportsContext) {
-      const base = prevCustomExports ? await prevCustomExports(subpaths, context) : subpaths
+      const base =
+        typeof prevCustomExports === 'function'
+          ? await prevCustomExports(subpaths, context)
+          : prevCustomExports
+            ? {...subpaths, ...prevCustomExports}
+            : subpaths
       const next: ExportsSubpaths = {...base}
 
       if (!(exportKey in next)) {
-        const relOutDir = toPosixRelativeOutDir(context.pkgRoot, context.outDir)
+    const pkgRoot =
+      typeof context === 'object' &&
+      context !== null &&
+      'pkgRoot' in context &&
+      typeof context.pkgRoot === 'string'
+        ? context.pkgRoot
+        : undefined
+    const ctxOutDir =
+      typeof context === 'object' &&
+      context !== null &&
+      'outDir' in context &&
+      typeof context.outDir === 'string'
+        ? context.outDir
+        : undefined
+    const relOutDir = toPosixRelativeOutDir(pkgRoot, outDir ?? ctxOutDir)
         next[exportKey] = buildCssExportEntry(relOutDir, normalizedFileName, normalizedExports)
       }
 

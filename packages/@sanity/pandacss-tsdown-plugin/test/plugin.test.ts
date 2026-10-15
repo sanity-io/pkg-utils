@@ -2,7 +2,7 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
 import {describe, expect, it} from 'vitest'
-import {pandaCssPlugin} from '../src/index.ts'
+import {pandaCssPlugin, withCssCustomExports} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const basicFixtureDir = path.join(__dirname, 'fixtures/basic')
@@ -126,18 +126,24 @@ describe('@sanity/pandacss-tsdown-plugin', () => {
     expect(shimJs).toBeUndefined()
   })
 
-  it('configures package.json exports via tsdownConfig hook', async () => {
-    const plugin = pandaCssPlugin({cwd: basicFixtureDir})
-    const config: Record<string, any> = {exports: true}
-    await plugin.tsdownConfig!(config)
+  it('configures package.json exports via withCssCustomExports', async () => {
+    const exportsConfig = withCssCustomExports(true, 'styles.css', false, undefined)
 
-    expect(config.exports).toEqual({
+    expect(exportsConfig).toEqual({
       customExports: expect.any(Function),
     })
 
-    const result = await config.exports.customExports(
+    if (
+      typeof exportsConfig !== 'object' ||
+      exportsConfig === null ||
+      typeof exportsConfig.customExports !== 'function'
+    ) {
+      throw new Error('Expected customExports function')
+    }
+
+    const result = await exportsConfig.customExports(
       {'.': './dist/index.js'},
-      {pkg: {name: '@fixtures/pandacss-basic'}, isPublish: true},
+      {pkg: {name: '@fixtures/pandacss-basic'}, chunks: {}, isPublish: true},
     )
 
     expect(result).toEqual({

@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import {createNodeDriver, type Driver, type LayerName} from '@pandacss/dev/node'
+import {createNodeDriver, type Driver} from '@pandacss/dev/node'
 import {transformSource} from '@pandacss/transformer'
-import {transform as lightningcss, type TransformOptions} from 'lightningcss'
+import {type CustomAtRules, transform as lightningcss, type TransformOptions} from 'lightningcss'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
 
 import {
@@ -39,10 +39,7 @@ export {
  *
  * @public
  */
-export type LightningCSSOptions = Omit<
-  TransformOptions<Record<string, never>>,
-  'filename' | 'code' | 'minify' | 'targets' | 'sourceMap' | 'inputSourceMap'
->
+export type LightningCSSOptions = Omit<TransformOptions<CustomAtRules>, 'filename' | 'code'>
 
 /**
  * Options for `pandaCssPlugin`.
@@ -132,7 +129,7 @@ export interface Options {
    * Accepts an esbuild-style target (`'chrome120'`, `['chrome102', 'safari16.4']`),
    * a browserslist query (`'defaults'`), or `false` to disable lowering.
    */
-  target?: string | readonly string[] | false
+  target?: string | string[] | false
   /**
    * Additional options forwarded to `lightningcss.transform()`.
    */
@@ -144,7 +141,8 @@ export interface Options {
   packageName?: string
 }
 
-const PANDA_LAYERS: LayerName[] = ['reset', 'base', 'tokens', 'recipes', 'utilities']
+type StylesheetLayerName = NonNullable<Parameters<Driver['getLayerCss']>[0]['layers']>[number]
+const PANDA_LAYERS: StylesheetLayerName[] = ['reset', 'base', 'tokens', 'recipes', 'utilities']
 const DTS_ID_RE = /\.d\.[cm]?ts$/
 
 async function readPackageName(cwd: string): Promise<string | undefined> {
@@ -152,8 +150,14 @@ async function readPackageName(cwd: string): Promise<string | undefined> {
   while (true) {
     try {
       const raw = await fs.readFile(path.join(dir, 'package.json'), 'utf8')
-      const parsed = JSON.parse(raw) as {name?: unknown}
-      if (typeof parsed.name === 'string' && parsed.name.length > 0) {
+      const parsed: unknown = JSON.parse(raw)
+      if (
+        typeof parsed === 'object' &&
+        parsed !== null &&
+        'name' in parsed &&
+        typeof parsed.name === 'string' &&
+        parsed.name.length > 0
+      ) {
         return parsed.name
       }
     } catch {
@@ -211,7 +215,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   const emitNodeCompatShim = normalizedExports.nodeCompat || (injectEnabled && injectNodeCompat)
 
   let resolvedCwd = cwd ? path.resolve(cwd) : process.cwd()
-  let contextTarget: string | readonly string[] | false | undefined
+  let contextTarget: string | string[] | false | undefined
   let contextPackageName: string | undefined = optionPackageName
   let driver: Driver | undefined
   let packageNamePromise: Promise<string | undefined> | undefined
@@ -230,7 +234,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       ...(configPath ? {configPath} : {}),
     })
     if (outdir) {
-      nextDriver.config.outdir = outdir
+      nextDriver.config['outdir'] = outdir
     }
     nextDriver.parseFiles()
     driver = nextDriver
@@ -241,7 +245,12 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
     name: 'sanity:pandacss-tsdown',
 
     tsdownConfig(config: UserConfig) {
-      config.exports = withCssCustomExports(config.exports, normalizedFileName, enableExports ?? false)
+      config.exports = withCssCustomExports(
+        config.exports,
+        normalizedFileName,
+        enableExports ?? false,
+        config.outDir,
+      )
     },
 
     async tsdownConfigResolved(config: ResolvedConfig) {
@@ -284,7 +293,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       handler(code, id) {
         if (!driver) return null
 
-        const cleanId = id.split('?')[0]
+        const cleanId = id.split('?')[0] ?? id
         driver.compiler.parseFileSource(cleanId, code)
         parsedIds.add(cleanId)
 
@@ -299,13 +308,13 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
           mode: 'build',
         })
 
-        if (!result.changed || result.bailed) {
+        if (!result.changed || result.bailed || typeof result.code !== 'string') {
           return null
         }
 
         return {
           code: result.code,
-          map: (result.map as unknown as null) ?? null,
+          map: null,
         }
       },
     },
@@ -322,7 +331,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       }
 
       const format = outputOptions.format
-      if (format && format !== 'es' && format !== 'esm' && format !== 'cjs') {
+      if (format && format !== 'es' && format !== 'cjs') {
         return null
       }
 
@@ -361,7 +370,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         emitLayerDeclaration: false,
       })
 
-      let finalCss: string | Uint8Array = rawCss
+      let finalCss = rawCss
 
       if (rawCss.length > 0) {
         const targets =
@@ -377,10 +386,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         finalCss = Buffer.from(result.code).toString('utf8')
       }
 
-      if (
-        (typeof finalCss === 'string' ? finalCss.length > 0 : finalCss.byteLength > 0) ||
-        normalizedExports.enabled
-      ) {
+      if (finalCss.length > 0 || normalizedExports.enabled) {
         this.emitFile({
           type: 'asset',
           fileName: normalizedFileName,
@@ -403,5 +409,3 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
     },
   }
 }
-
-export default pandaCssPlugin
