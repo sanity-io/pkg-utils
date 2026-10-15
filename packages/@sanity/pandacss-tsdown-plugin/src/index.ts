@@ -445,8 +445,12 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       }
     }
     // The files the config doesn't cover aren't scanned by Panda — rewriting them would
-    // produce class names the stylesheet doesn't have
-    if (!driver.isSourceFile(filePath)) return undefined
+    // produce class names the stylesheet doesn't have. A module a reloaded config no longer
+    // covers stops counting as styled, too.
+    if (!driver.isSourceFile(filePath)) {
+      pandaModules.delete(id)
+      return undefined
+    }
 
     // Parse the module from the code rolldown hands over (which may differ from the file on
     // disk after other plugins' transforms), so the stylesheet matches the published code.
@@ -491,7 +495,18 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       if (result.changed) transformed = {code: result.code, map: result.map}
     }
 
+    if (!usesStyles) {
+      // The parse report doesn't count pattern, config recipe or `token()` calls, so a module
+      // using only those looks style-free — and without the transform nothing else notices
+      // them. The extraction lists every call Panda matched.
+      const extracted = driver.compiler.extractFileSource(filePath, code)
+      usesStyles = extracted.calls.length > 0 || extracted.jsx.length > 0
+    }
+
+    // Deleted as well as added: in watch mode a module can stop using Panda styles, and its
+    // entry chunks then no longer need the CSS import
     if (usesStyles) pandaModules.add(id)
+    else pandaModules.delete(id)
     return transformed
   }
 

@@ -21,6 +21,7 @@ import {esbuildTargetToLightningCSS, pandacssPlugin, type Options} from '../src/
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
 const fixtureEntry = path.join(fixtureDir, 'src/index.ts')
+const recipesFixtureDir = path.resolve(__dirname, 'fixtures/recipes')
 
 /**
  * A throwaway copy of the `codegen` fixture under `test/fixtures/<name>.local` (gitignored
@@ -338,6 +339,61 @@ describe('pandacssPlugin', () => {
     // The modules still count as styled for `inject`
     expect(entry.code).toContain('import "./bundle.css";')
     expect(findAsset(output, 'bundle.css')).toContain('color: var(--colors-brand)')
+  })
+
+  test('counts pattern, config recipe and `token()` calls as Panda styles', async () => {
+    // Panda's parse report only counts `css()`/`cva()`/`sva()` calls and JSX, so an entry that
+    // only calls a pattern, a config recipe or `token()` must still get the CSS import — also
+    // without the transform, whose rewrite would otherwise be the only sign of them
+    for (const [file, className] of [
+      ['pattern', '.gap_2'],
+      ['recipe', '.button--tone_brand'],
+      ['token', '--colors-brand'],
+    ] as const) {
+      for (const transform of [false, true]) {
+        const output = await generate(
+          {cwd: recipesFixtureDir, inject: true, transform},
+          'esm',
+          path.join(recipesFixtureDir, `src/${file}.ts`),
+        )
+        const entry = findEntryChunk(output)
+        expect(
+          entry.code.startsWith('import "./bundle.css";\n'),
+          `${file}, transform: ${transform}`,
+        ).toBe(true)
+        if (!transform) {
+          // The call stayed, so the generated runtime is bundled for it
+          expect(
+            entry.moduleIds.some((id) => id.replaceAll('\\', '/').includes('/styled-system/')),
+          ).toBe(true)
+        }
+        expect(findAsset(output, 'bundle.css')).toContain(className)
+      }
+    }
+  })
+
+  test('drops the CSS import once a module stops using Panda styles', async () => {
+    // A plugin instance outlives a build in watch mode, so which modules use Panda styles must
+    // follow their current code, not what an earlier build saw
+    const cwd = copyFixture('stops-styling')
+    const entry = path.join(cwd, 'src/index.ts')
+    const plugin = pandacssPlugin({cwd, inject: true})
+    const build = async (): Promise<string> => {
+      const bundle = await rolldown({cwd, input: entry, plugins: [plugin]})
+      try {
+        const {output} = await bundle.generate({format: 'esm'})
+        return findEntryChunk(output).code
+      } finally {
+        await bundle.close()
+      }
+    }
+    try {
+      expect((await build()).startsWith('import "./bundle.css";\n')).toBe(true)
+      writeFileSync(entry, "export const plain: string = 'no Panda styles here'\n")
+      expect(await build()).not.toContain('bundle.css')
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
   })
 
   test('`inject` prepends a relative CSS import, or a `require()` in CJS output', async () => {
