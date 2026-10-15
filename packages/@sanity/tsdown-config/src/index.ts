@@ -64,10 +64,11 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  * {@link PackageVanillaExtractOptions | `vanillaExtract`}: when the effective target (`target`,
  * falling back to the top-level `target`) is undefined or names no browsers (e.g. `'node20'`),
  * the lowering targets are resolved from `@sanity/browserslist-config` and passed through
- * `lightningcss.targets`. `target: false` stays the explicit off switch, and a user-provided
- * `lightningcss.targets` wins over the fallback. Everything else keeps the plugin's defaults:
- * `transform` is enabled (unlike in `@pandacss/vite`), while `minify`, `inject`, and `exports`
- * stay `false`.
+ * `lightningcss.targets`. `target` also accepts browserslist queries (e.g. `'defaults'`), which
+ * this config resolves and passes through `lightningcss.targets` the same way. `target: false`
+ * stays the explicit off switch, and a user-provided `lightningcss.targets` wins over both.
+ * Everything else keeps the plugin's defaults: `transform` is enabled (unlike in
+ * `@pandacss/vite`), while `minify`, `inject`, and `exports` stay `false`.
  *
  * Defined here rather than imported from the plugin, an optional peer dependency: the published
  * declarations must not reference it, so consumers without it installed still type-check them
@@ -110,9 +111,10 @@ export interface PackagePandaOptions {
    */
   minify?: boolean
   /**
-   * The target environment for CSS syntax lowering, as esbuild-style target strings (e.g.
-   * `'chrome90'`), or `false` to disable syntax lowering. Defaults to tsdown's top-level `target`,
-   * with the `@sanity/browserslist-config` fallback described above.
+   * The target environment for CSS syntax lowering: esbuild-style target strings (e.g.
+   * `'chrome90'`), browserslist queries (e.g. `'defaults'`, `'> 0.5%'`), or `false` to disable
+   * syntax lowering. Defaults to tsdown's top-level `target`, with the
+   * `@sanity/browserslist-config` fallback described above.
    */
   target?: string | string[] | false
   /**
@@ -786,6 +788,7 @@ async function resolvePackageConfig(
       cssTarget: panda.target,
       target,
       lightningcss: panda.lightningcss,
+      browserslistQueries: true,
     })
 
     plugins.push(pandaPlugin({...panda, lightningcss}))

@@ -133,6 +133,28 @@ describe('panda option', () => {
     expect(pandaLevel).toContain('padding-inline: 8px')
   })
 
+  test('resolves browserslist queries in `panda.target` instead of the fallback', async () => {
+    // `chrome 61` is a browserslist query (esbuild's format has no space), not a target that
+    // names no browsers
+    const query = await buildCssWithConfig({panda: {target: 'chrome 61'}})
+    expect(query).toContain('padding-left: 8px')
+    expect(query).not.toContain('-webkit-backdrop-filter')
+
+    // Mixed with esbuild-style targets, each browser keeps its lowest version
+    const mixed = await buildCssWithConfig({panda: {target: ['chrome120', 'chrome 61']}})
+    expect(mixed).toContain('padding-left: 8px')
+
+    // A query that names no browsers still gets the fallback
+    const node = await buildCssWithConfig({panda: {target: 'node 20'}})
+    expect(node).toContain('-webkit-backdrop-filter: blur(4px)')
+
+    // Explicit `lightningcss.targets` still win
+    const explicit = await buildCssWithConfig({
+      panda: {target: 'chrome 61', lightningcss: {targets: {chrome: 120 << 16}}},
+    })
+    expect(explicit).toContain('padding-inline: 8px')
+  })
+
   test('a user-provided `lightningcss.targets` wins over the fallback', async () => {
     const css = await buildCssWithConfig({panda: {lightningcss: {targets: {chrome: 61 << 16}}}})
     expect(css).toContain('padding-left: 8px')
