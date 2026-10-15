@@ -55,12 +55,12 @@ describe('@sanity/pandacss-tsdown-plugin', () => {
     expect(pkg.dependencies).toMatchObject({
       '@pandacss/compiler': expect.any(String),
       '@pandacss/transformer': expect.any(String),
-      browserslist: expect.any(String),
-      lightningcss: expect.any(String),
+      'browserslist': expect.any(String),
+      'lightningcss': expect.any(String),
     })
     expect(pkg.peerDependencies).toEqual({
       '@pandacss/dev': '*',
-      tsdown: '^0.23.0',
+      'tsdown': '^0.23.0',
     })
     expect(pkg.peerDependenciesMeta).toEqual({
       '@pandacss/dev': {optional: true},
@@ -324,11 +324,11 @@ export function getReceiver() {
         requiredIds.push(id)
         return {}
       }
-      Reflect.apply(
-        compileFunction(executableCode, ['require', 'module', 'exports']),
-        undefined,
-        [customRequire, mod, mod.exports],
-      )
+      Reflect.apply(compileFunction(executableCode, ['require', 'module', 'exports']), undefined, [
+        customRequire,
+        mod,
+        mod.exports,
+      ])
       expect(requiredIds).toEqual(['./styles.css'])
       const getReceiver = mod.exports['getReceiver']
       expect(typeof getReceiver).toBe('function')
@@ -672,9 +672,9 @@ export const badge = css({color: 'brand'})
       const second = await runBuild()
       expect(second.css).toContain('#040506')
       expect(second.css).not.toContain('#010203')
-      expect(
-        readFileSync(path.join(tmpDir, 'styled-system/types/tokens.d.ts'), 'utf8'),
-      ).toContain('"accent"')
+      expect(readFileSync(path.join(tmpDir, 'styled-system/types/tokens.d.ts'), 'utf8')).toContain(
+        '"accent"',
+      )
 
       writeConfig(`exclude: ['./src/index.ts'],`)
       await watchChangeHook?.call({} as never, configPath, {event: 'update'})

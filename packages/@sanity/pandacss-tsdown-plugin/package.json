@@ -2,7 +2,13 @@
   "name": "@sanity/pandacss-tsdown-plugin",
   "version": "0.0.0",
   "description": "Panda CSS plugin for tsdown",
-  "keywords": ["sanity", "pandacss", "tsdown", "rolldown", "css"],
+  "keywords": [
+    "sanity",
+    "pandacss",
+    "tsdown",
+    "rolldown",
+    "css"
+  ],
   "homepage": "https://github.com/sanity-io/pkg-utils#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/pkg-utils/issues"
@@ -21,7 +27,9 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
@@ -55,13 +63,13 @@
       "optional": true
     }
   },
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
       "./package.json": "./package.json"
     }
-  },
-  "engines": {
-    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   }
 }

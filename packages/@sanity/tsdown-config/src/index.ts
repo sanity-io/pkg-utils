@@ -806,10 +806,7 @@ async function resolvePackageConfig(
       {resolveCssLoweringTargets},
     ] = await Promise.all([
       import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
-        throw new Error(
-          '`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.',
-          {cause},
-        )
+        throw new Error('`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.', {cause})
       }),
       import('./cssLoweringTargets.ts'),
     ])

@@ -1,9 +1,7 @@
 import path from 'node:path'
-
 import type {PackageJsonWithPath, UserConfig} from 'tsdown'
-
 import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
-import {type CssExportsOptions, normalizeCssExportsOptions} from './exportsOptions.ts'
+import {normalizeCssExportsOptions, type CssExportsOptions} from './exportsOptions.ts'
 
 type ExportsOptions = Extract<NonNullable<UserConfig['exports']>, object>
 type CustomExportsFunction = Extract<
@@ -46,7 +44,12 @@ function findEmittedOutDir(
   for (const formatChunks of Object.values(chunks)) {
     if (!Array.isArray(formatChunks)) continue
     for (const chunk of formatChunks) {
-      if (!chunk || typeof chunk !== 'object' || typeof chunk.outDir !== 'string' || !chunk.outDir) {
+      if (
+        !chunk ||
+        typeof chunk !== 'object' ||
+        typeof chunk.outDir !== 'string' ||
+        !chunk.outDir
+      ) {
         continue
       }
       fallbackOutDir ??= chunk.outDir
@@ -81,7 +84,10 @@ function resolveRelativeOutDir(
     if (!rel || rel === '.') {
       return ''
     }
-    return path.posix.normalize(rel).replace(/^(\.\/)+/, '').replace(/^\/+|\/+$/g, '')
+    return path.posix
+      .normalize(rel)
+      .replace(/^(\.\/)+/, '')
+      .replace(/^\/+|\/+$/g, '')
   }
 
   if (path.isAbsolute(rawOutDir)) {
@@ -89,7 +95,10 @@ function resolveRelativeOutDir(
     if (!rel || rel === '.') {
       return ''
     }
-    return path.posix.normalize(rel).replace(/^(\.\/)+/, '').replace(/^\/+|\/+$/g, '')
+    return path.posix
+      .normalize(rel)
+      .replace(/^(\.\/)+/, '')
+      .replace(/^\/+|\/+$/g, '')
   }
 
   const posixOutDir = path.posix
@@ -102,7 +111,10 @@ function resolveRelativeOutDir(
 
 function formatExportTarget(relOutDir: string, fileName: string): string {
   const joined = relOutDir ? path.posix.join(relOutDir, fileName) : fileName
-  const normalized = path.posix.normalize(joined).replace(/^(\.\/)+/, '').replace(/^\/+/, '')
+  const normalized = path.posix
+    .normalize(joined)
+    .replace(/^(\.\/)+/, '')
+    .replace(/^\/+/, '')
   return `./${normalized}`
 }
 

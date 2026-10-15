@@ -1,7 +1,6 @@
 import {existsSync, realpathSync} from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-
 import {createNodeDriver, type Driver} from '@pandacss/compiler'
 import {
   createSourceTransformer,
@@ -9,13 +8,12 @@ import {
   INTERNAL_CSS_IMPORT,
   INTERNAL_CSS_RESOLVED_ID,
   resolveCxSeparator,
-  type SourceTransformer,
   transformSource,
+  type SourceTransformer,
 } from '@pandacss/transformer'
-import {type CustomAtRules, transform as lightningcss, type TransformOptions} from 'lightningcss'
+import {transform as lightningcss, type CustomAtRules, type TransformOptions} from 'lightningcss'
 import type {OutputChunk, PluginContext, RenderedChunk} from 'rolldown'
 import type {ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
-
 import {
   cssShimDtsFileName,
   cssShimDtsSource,
@@ -24,9 +22,9 @@ import {
 } from './cssShimFileName.ts'
 import {DEFAULT_CSS_FILE_NAME, normalizeAssetFileName, withCssCustomExports} from './exports.ts'
 import {
-  type CssExportsOptions,
   DEFAULT_CSS_EXPORT_CONDITIONS,
   normalizeCssExportsOptions,
+  type CssExportsOptions,
 } from './exportsOptions.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
 
@@ -211,8 +209,7 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   }
   const normalizedGlob = glob.replace(/\\/g, '/').replace(/^(\.\/)+/, '')
   const realBase = realpathOrSelf(cwd).replace(/\\/g, '/').replace(/\/+$/, '')
-  const isAbsoluteGlob =
-    path.posix.isAbsolute(normalizedGlob) || /^[a-z]:\//i.test(normalizedGlob)
+  const isAbsoluteGlob = path.posix.isAbsolute(normalizedGlob) || /^[a-z]:\//i.test(normalizedGlob)
 
   let source = isAbsoluteGlob ? '' : `${escapeRegExp(realBase)}/`
   let inClass = false
@@ -354,8 +351,7 @@ function matchesSourceFilter(
     return driver.isSourceFile(filePath)
   }
   const hasIncludeOrExclude =
-    readGlobs(driver.config['include']).length > 0 ||
-    readGlobs(driver.config['exclude']).length > 0
+    readGlobs(driver.config['include']).length > 0 || readGlobs(driver.config['exclude']).length > 0
   if (hasIncludeOrExclude) {
     return driver.isSourceFile(filePath)
   }
@@ -601,10 +597,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
     const parseReport = driver.compiler.parseFileSource(cleanId, code)
     const extracted = driver.compiler.extractFileSource(cleanId, code)
     const hasStyles =
-      parseReport.cssCalls +
-        parseReport.cvaCalls +
-        parseReport.svaCalls +
-        parseReport.jsxUsages >
+      parseReport.cssCalls + parseReport.cvaCalls + parseReport.svaCalls + parseReport.jsxUsages >
         0 ||
       parseReport.diagnostics.length > 0 ||
       extracted.calls.length > 0 ||
