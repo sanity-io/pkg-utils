@@ -139,6 +139,36 @@ describe('panda-library', () => {
   })
 })
 
+describe('panda-runtime-library', () => {
+  const runtimeFixtureDir = path.resolve(__dirname, 'fixtures/panda-runtime-library')
+
+  test('`transform: false` keeps the style calls and ships the runtime', async () => {
+    const [distIndexJs, distIndexCjs, bundleCss] = await Promise.all([
+      readFile(path.join(runtimeFixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(runtimeFixtureDir, 'dist/index.cjs'), 'utf-8'),
+      readFile(path.join(runtimeFixtureDir, 'dist/bundle.css'), 'utf-8'),
+    ])
+
+    for (const code of [distIndexJs, distIndexCjs]) {
+      // The opt-out of the default rewrite: the call stays, with Panda's `css()` runtime
+      // bundled in from the `styled-system` directory, and no static class name string
+      expect(code).toMatch(/\bcss\(\{/)
+      expect(code).not.toContain('"color_brand display_flex"')
+      // The stylesheet is still extracted and loaded
+      expect(code).toMatch(/@fixtures\/panda-runtime-library\/bundle\.css/)
+    }
+    expect(bundleCss).toContain('color: var(--colors-brand)')
+    expect(bundleCss).toContain('.display_flex {')
+
+    // The runtime produces the same class names the stylesheet has
+    await expect(
+      runNode(
+        `console.log(require(${JSON.stringify(path.join(runtimeFixtureDir, 'dist/index.cjs'))}).getBoxClassName())`,
+      ),
+    ).resolves.toBe('color_brand display_flex')
+  })
+})
+
 describe('panda-library runtime', () => {
   // `"type": "module"` package: `.js` files are ESM, so the `node`/`default` conditions of the
   // conditional `./bundle.css` export resolve the shim as an ES module.

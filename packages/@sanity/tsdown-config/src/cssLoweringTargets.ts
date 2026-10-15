@@ -8,8 +8,8 @@ interface LightningCSSOptionsWithTargets {
 
 /**
  * Resolves the CSS syntax lowering targets for a CSS pipeline
- * (`vanillaExtract`/`css`), applying the Sanity-flavored fallback on top of the
- * `@tsdown/css` behavior both pipelines otherwise follow.
+ * (`vanillaExtract`/`panda`/`css`), applying the Sanity-flavored fallback on top of the
+ * `@tsdown/css` behavior the pipelines otherwise follow.
  *
  * `@tsdown/css` skips syntax lowering when it has no browser targets. Extracted CSS always runs
  * in browsers though, so when the effective target (the pipeline's own `target`, falling back to
@@ -18,8 +18,10 @@ interface LightningCSSOptionsWithTargets {
  * are resolved from `@sanity/browserslist-config` and passed through `lightningcss.targets`
  * instead.
  *
+ * A target that isn't esbuild-style but is a browserslist query (`'defaults'`, `'> 0.5%'`,
+ * `'last 2 versions'`) is resolved with browserslist rather than overridden by that fallback.
  * `target: false` stays the explicit off switch, and a user-provided `lightningcss.targets`
- * wins over the fallback.
+ * wins over everything.
  *
  * @internal
  */
@@ -50,6 +52,19 @@ export async function resolveCssLoweringTargets(options: {
       import('@sanity/browserslist-config'),
       import('lightningcss'),
     ])
+
+  if (cssTarget !== undefined) {
+    // A target that isn't esbuild-style may be browserslist queries (`'defaults'`,
+    // `'> 0.5%'`): the browsers they name are what the CSS is lowered for, not the fallback.
+    // browserslist throws for queries it doesn't know (`'node20'`, `'es2022'`), and
+    // `'node 20'` resolves to no browser (`browserslistToTargets` keeps `node` as a target).
+    try {
+      const targets = browserslistToTargets(browserslist(cssTarget))
+      if (Object.keys(targets).some((name) => name !== 'node')) return {...lightningcss, targets}
+    } catch {
+      // Not browserslist queries either: the fallback below applies
+    }
+  }
   return {
     ...lightningcss,
     targets: browserslistToTargets(browserslist(browserslistConfig)),
