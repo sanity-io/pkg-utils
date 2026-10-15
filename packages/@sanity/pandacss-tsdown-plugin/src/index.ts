@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import {createNodeDriver} from '@pandacss/dev/node'
+import {createNodeDriver} from '@pandacss/compiler'
 import {
   createSourceTransformer,
   getInternalCssRuntimeSource,
@@ -79,14 +79,30 @@ const ALL_LAYERS: StylesheetLayerName[] = ['reset', 'base', 'tokens', 'recipes',
 /** Matches rendered `.d.ts`/`.d.mts`/`.d.cts` chunk file names and module ids. */
 const RE_DTS = /\.d\.[cm]?ts$/
 
-/** Matches extglob groups (`@(ts|tsx)`, `+(…)`, `!(…)`, …), which {@link globToRegExp} leaves alone. */
-const RE_EXTGLOB = /[?*+@!]\(/
+/**
+ * Matches the glob syntax {@link globToRegExp} leaves to Panda's own matcher: extglob groups
+ * (`@(ts|tsx)`, `+(…)`, `!(…)`, …), negated classes (`[!a]`, `[^a]`) and brace ranges (`{1..3}`).
+ */
+const RE_UNSUPPORTED_GLOB = /[?*+@!]\(|\[[!^]|\{[^{}]*\.\.[^{}]*\}/
 
-/** Matches a Windows drive at the start of a glob (`C:/…`), i.e. an absolute pattern. */
-const RE_WINDOWS_DRIVE = /^[A-Za-z]:\//
+/** Matches a Windows drive at the start of a glob (`C:/…` or `C:\…`), i.e. an absolute pattern. */
+const RE_WINDOWS_DRIVE = /^[A-Za-z]:[\\/]/
+
+/** Matches a filesystem root in POSIX form: `/`, or a Windows drive like `C:` or `C:/`. */
+const RE_FS_ROOT = /^(?:[A-Za-z]:)?\/?$/
 
 /** Matches a `@layer <names>;` statement (as opposed to a `@layer <name> { … }` block). */
 const RE_LAYER_STATEMENT = /@layer\s+[^{};]+;/
+
+/** Matches the hashbang line a chunk may start with. */
+const RE_HASHBANG = /^#![^\n]*\n?/
+
+/**
+ * Matches one directive of a chunk's prologue — a string-literal expression statement such as
+ * `"use strict";` or `'use client'` — together with the whitespace and comments before it.
+ */
+const RE_DIRECTIVE =
+  /^(?:\s|\/\/[^\n]*\n|\/\*[\s\S]*?\*\/)*(?:"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')[^\S\n]*(?:;|(?=\r?\n)|$)/
 
 /**
  * Options for {@link pandacssPlugin}: the options of the official `@pandacss/vite` plugin for
@@ -230,6 +246,12 @@ export interface BuildContext {
   packageName?: string | undefined
   /** The default working directory the Panda config is discovered from. */
   cwd?: string | undefined
+  /**
+   * The build's output directory, which watch mode must not watch: with an `include` glob
+   * rooted at the package (`./**\/*.tsx`), the written output would otherwise trigger the
+   * next rebuild, and so on.
+   */
+  outDir?: string | undefined
 }
 
 /**
@@ -307,6 +329,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let packageName: string | undefined
   /** The host-resolved default working directory (e.g. tsdown's `cwd`). */
   let contextCwd: string | undefined
+  /** The host-resolved output directory (tsdown's `outDir`), excluded from watching. */
+  let contextOutDir: string | undefined
 
   /**
    * The Panda driver (config, compiler and source scanner), created once per plugin instance and
@@ -417,7 +441,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       // `buildStart` only makes them trigger a rebuild.
       this.addWatchFile(driver.configPath)
       for (const dependency of driver.configDependencies) {
-        this.addWatchFile(dependency)
+        this.addWatchFile(driver.resolvePath(dependency))
       }
     }
     // The files the config doesn't cover aren't scanned by Panda — rewriting them would
@@ -479,6 +503,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         if (context.target !== undefined) contextTarget = context.target
         if (context.packageName !== undefined) packageName = context.packageName
         if (context.cwd !== undefined) contextCwd = context.cwd
+        if (context.outDir !== undefined) contextOutDir = context.outDir
       },
     },
 
@@ -498,11 +523,37 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         : createTransformFilter(currentDriver, cwd)
       plugin.transform = filter ? {filter, handler: transformHandler} : {handler: transformHandler}
 
-      if (!inject) return undefined
-      return {
-        ...inputOptions,
-        experimental: {...inputOptions.experimental, nativeMagicString: true},
+      let nextOptions = inputOptions
+      if (this.meta.watchMode) {
+        // `buildStart` watches the directories the `include` globs are rooted in, so sources
+        // added later are picked up. The directories this build writes to — Panda's generated
+        // `styled-system`, and the output directory the host resolved — may sit inside them
+        // (e.g. `include: ['./**/*.tsx']`), and every write there would trigger the next
+        // rebuild: exclude them from watching.
+        const excluded = [currentDriver.getOutdir(options.outdir)]
+        if (contextOutDir !== undefined) excluded.push(path.resolve(cwd, contextOutDir))
+        // `watch: false` is rolldown's way to disable watching, and nothing to add to then
+        if (inputOptions.watch !== false) {
+          const previous = inputOptions.watch?.exclude
+          nextOptions = {
+            ...nextOptions,
+            watch: {
+              ...inputOptions.watch,
+              exclude: [
+                ...(previous === undefined ? [] : Array.isArray(previous) ? previous : [previous]),
+                ...excluded.map(directoryPattern),
+              ],
+            },
+          }
+        }
       }
+      if (inject) {
+        nextOptions = {
+          ...nextOptions,
+          experimental: {...nextOptions.experimental, nativeMagicString: true},
+        }
+      }
+      return nextOptions === inputOptions ? undefined : nextOptions
     },
 
     // Regenerate the `styled-system` artifacts and scan every source the config covers before
@@ -543,10 +594,18 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // through the module graph anyway)
         this.addWatchFile(report.path)
       }
-      // The config and its imports aren't part of the module graph either
-      this.addWatchFile(currentDriver.configPath)
-      for (const dependency of currentDriver.configDependencies) {
-        this.addWatchFile(dependency)
+      if (this.meta.watchMode) {
+        // A source added later is only noticed when the directories the `include` globs are
+        // rooted in are watched too; the next scan then decides whether it is covered. The
+        // config and its imports aren't part of the module graph either.
+        const targets = currentDriver.watchTargets()
+        for (const dir of targets.dirs) {
+          this.addWatchFile(currentDriver.resolvePath(dir))
+        }
+        this.addWatchFile(currentDriver.configPath)
+        for (const dependency of currentDriver.configDependencies) {
+          this.addWatchFile(currentDriver.resolvePath(dependency))
+        }
       }
     },
 
@@ -593,11 +652,21 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
           ? `${resolvePackageName(chunk.facadeModuleId)}/${fileName}`
           : relativeImportPath(chunk.fileName, fileName),
       )
-      const statement = format === 'cjs' ? `require(${specifier});\n` : `import ${specifier};\n`
+      // After the hashbang and the directive prologue (`"use strict"`, `"use client"`, …):
+      // a statement before them would end the prologue, turning strict mode off in CJS output
+      // and hiding the directives from the tools that read them
+      let offset = prologueEnd(code)
+      if (offset > 0) {
+        // On the line after the prologue, when it ends with a line break
+        if (code.startsWith('\r\n', offset)) offset += 2
+        else if (code[offset] === '\n') offset += 1
+      }
+      const statement = `${format === 'cjs' ? `require(${specifier});` : `import ${specifier};`}\n`
 
       const {magicString} = meta
       if (magicString) {
-        magicString.prepend(statement)
+        if (offset > 0) magicString.appendLeft(offset, statement)
+        else magicString.prepend(statement)
         return magicString
       }
       // Fallback when another `options` hook disabled `experimental.nativeMagicString`: the
@@ -608,7 +677,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
           `[pandacss] rolldown's native magic-string is unavailable (another plugin's \`options\` hook may have disabled \`experimental.nativeMagicString\`), so the CSS import injected into "${chunk.fileName}" shifts its sourcemap by one line.`,
         )
       }
-      return {code: statement + code}
+      return {code: code.slice(0, offset) + statement + code.slice(offset)}
     },
 
     // Emit the stylesheet (optimized with lightningcss) and, with `exports.nodeCompat`, the JS
@@ -729,6 +798,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         target: config.target,
         packageName: config.pkg?.name,
         cwd: config.cwd,
+        outDir: config.outDir,
       })
     },
   }
@@ -784,15 +854,20 @@ function readGlobs(value: unknown): string[] {
  * normalized to `/`, which keeps the filter portable to Windows. Only the glob itself is glob
  * syntax: the directory it is resolved against is matched literally, brackets and all. The
  * syntax covered is the fast-glob subset Panda configs use — `**`, `*`, `?`, `{a,b}`
- * alternation and `[…]` classes; a glob using anything else (extglob groups) returns
- * `undefined`, so the caller can leave the native filter unscoped instead of guessing.
+ * alternation and plain `[…]` classes; a glob using anything else (extglob groups, negated
+ * classes, brace ranges) returns `undefined`, so the caller can leave the native filter
+ * unscoped instead of guessing.
  */
 function globToRegExp(glob: string, cwd: string): RegExp | undefined {
-  if (RE_EXTGLOB.test(glob)) return undefined
+  if (RE_UNSUPPORTED_GLOB.test(glob)) return undefined
 
+  // Windows paths use backslashes, which fast-glob only reads as escapes: on Windows (where a
+  // glob built with `path.join` or `path.resolve` has them) and in a glob starting with a
+  // drive letter, they are separators like in the working directory and rolldown's ids
+  let pattern =
+    process.platform === 'win32' || RE_WINDOWS_DRIVE.test(glob) ? glob.replaceAll('\\', '/') : glob
   // `./` and `../` prefixes address the literal base directory, which an absolute glob replaces
   let base: string | undefined = path.resolve(cwd).replaceAll('\\', '/')
-  let pattern = glob
   if (pattern.startsWith('/') || RE_WINDOWS_DRIVE.test(pattern)) {
     base = undefined
   } else {
@@ -800,7 +875,7 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
       if (pattern.startsWith('./')) {
         pattern = pattern.slice(2)
       } else if (pattern.startsWith('../')) {
-        base = path.posix.dirname(base)
+        base = parentDirectory(base)
         pattern = pattern.slice(3)
       } else {
         break
@@ -808,7 +883,9 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
     }
   }
 
-  let source = base === undefined ? '' : base === '/' ? '/' : `${escapeRegExp(base)}/`
+  // The base ends with exactly one `/`, also when it is a root (`/`, `C:/`) — which already
+  // ends with one, so that slash is dropped first
+  let source = base === undefined ? '' : `${escapeRegExp(base.replace(/\/+$/, ''))}/`
   let inClass = false
   let braceDepth = 0
   for (let index = 0; index < pattern.length; index++) {
@@ -880,6 +957,27 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   // driver. Windows paths are case-insensitive, and rolldown's ids may differ from the resolved
   // config path in the drive letter's case.
   return new RegExp(`^${source}(?:\\?.*)?$`, process.platform === 'win32' ? 'i' : '')
+}
+
+/**
+ * A `watch.exclude` pattern for a directory and everything in it, matching the path with either
+ * separator (rolldown hands watch paths over as the OS spells them).
+ */
+function directoryPattern(dir: string): RegExp {
+  const segments = path
+    .resolve(dir)
+    .split(/[\\/]+/)
+    .filter((segment) => segment !== '')
+    .map(escapeRegExp)
+  const prefix = path.isAbsolute(dir) && !/^[A-Za-z]:/.test(segments[0] ?? '') ? '[\\\\/]' : ''
+  return new RegExp(`^${prefix}${segments.join('[\\\\/]')}(?:[\\\\/]|$)`)
+}
+
+/** The parent of a POSIX-form directory, stopping at the filesystem root (`/`, `C:`). */
+function parentDirectory(dir: string): string {
+  if (RE_FS_ROOT.test(dir)) return dir
+  const parent = path.posix.dirname(dir)
+  return parent === '.' ? dir : parent
 }
 
 /**
@@ -1046,6 +1144,19 @@ function readPackageName(startDir: string): string | undefined {
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * The offset right after a chunk's hashbang and directive prologue — where a statement can be
+ * inserted without ending the prologue — or `0` when the chunk has neither.
+ */
+function prologueEnd(code: string): number {
+  let offset = RE_HASHBANG.exec(code)?.[0].length ?? 0
+  for (;;) {
+    const directive = RE_DIRECTIVE.exec(code.slice(offset))
+    if (!directive) return offset
+    offset += directive[0].length
+  }
 }
 
 /**

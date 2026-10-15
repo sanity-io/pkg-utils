@@ -42,11 +42,12 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
+    "@pandacss/compiler": "catalog:",
+    "@pandacss/transformer": "catalog:",
     "lightningcss": "catalog:"
   },
   "devDependencies": {
     "@pandacss/dev": "catalog:",
-    "@pandacss/transformer": "catalog:",
     "@sanity/tsconfig": "workspace:^",
     "@sanity/tsdown-config": "workspace:^",
     "@types/node": "catalog:",
@@ -57,9 +58,13 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@pandacss/dev": "^2.2.0",
-    "@pandacss/transformer": "^2.2.0",
+    "@pandacss/dev": "*",
     "tsdown": "^0.23.0"
+  },
+  "peerDependenciesMeta": {
+    "@pandacss/dev": {
+      "optional": true
+    }
   },
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"

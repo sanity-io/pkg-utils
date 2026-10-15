@@ -1,9 +1,8 @@
-import {defineConfig} from '@pandacss/dev'
+import {defineConfig, type Config} from '@pandacss/dev'
 
 // A minimal, preset-free config (like a design system that ejects Panda's presets): the
 // `color` utility resolves the `colors` tokens, the others take raw values.
 export default defineConfig({
-  eject: true,
   presets: [],
   preflight: false,
   include: ['./src/**/*.ts'],
@@ -21,4 +20,4 @@ export default defineConfig({
     display: {},
     inset: {},
   },
-})
+} satisfies Config)

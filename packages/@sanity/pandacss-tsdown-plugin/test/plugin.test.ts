@@ -12,6 +12,7 @@ import {
 import os from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import vm from 'node:vm'
 import {rolldown, watch, type OutputAsset, type OutputChunk} from 'rolldown'
 import type {ResolvedConfig, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
@@ -39,6 +40,24 @@ function copyFixture(name: string, pandaConfig?: string): string {
     pandaConfig ?? readFileSync(path.join(source, 'panda.config.ts'), 'utf-8'),
   )
   return target
+}
+
+/** The `codegen` fixture's Panda config with another `include`. */
+function withInclude(include: string): string {
+  return readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+    "include: ['./src/**/*.ts']",
+    `include: [${JSON.stringify(include)}]`,
+  )
+}
+
+/**
+ * Runs a built CommonJS chunk the way Node would (a module wrapper with a stub `require`, so
+ * the injected CSS load is a no-op) and returns its exports.
+ */
+function evaluateCommonJs(source: string): {isStrict(): boolean; strictBox: string} {
+  const module = {exports: {} as {isStrict(): boolean; strictBox: string}}
+  vm.compileFunction(source, ['require', 'module', 'exports'])(() => ({}), module, module.exports)
+  return module.exports
 }
 
 /** The `include`/`exclude` RegExps of a plugin's derived `transform` filter. */
@@ -84,10 +103,11 @@ function findEntryChunk(output: readonly (OutputAsset | OutputChunk)[]): OutputC
 async function generate(
   options: Options,
   format: 'esm' | 'cjs' = 'esm',
+  input: string = fixtureEntry,
 ): Promise<readonly (OutputAsset | OutputChunk)[]> {
   const bundle = await rolldown({
     cwd: fixtureDir,
-    input: fixtureEntry,
+    input,
     plugins: [pandacssPlugin(options)],
   })
   try {
@@ -199,61 +219,101 @@ describe('pandacssPlugin', () => {
     }
   })
 
-  test('supports brace alternation, and leaves extglobs to the handler', async () => {
-    const braces = copyFixture(
-      'braces',
+  test('accepts globs built with `path.join`/`path.resolve`, and roots', async () => {
+    // Globs assembled from path segments use the platform's separators — backslashes on
+    // Windows, which fast-glob would read as escapes — and an absolute one starts with the
+    // drive. The exclude climbs to the filesystem root, which must end up as a single slash
+    // (`/…`, `C:/…`), not a double one.
+    const joinedDir = path.resolve(__dirname, 'fixtures/joined.local')
+    const toRoot = '../'.repeat(joinedDir.split(path.sep).length + 2)
+    const cwd = copyFixture(
+      'joined',
       readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
-        "include: ['./src/**/*.ts']",
-        "include: ['./src/**/*.{ts,tsx}']",
-      ),
-    )
-    const extglob = copyFixture(
-      'extglob',
-      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
-        "include: ['./src/**/*.ts']",
-        "include: ['./src/**/*.@(ts|tsx)']",
+        "include: ['./src/**/*.ts'],\n  exclude: ['./src/**/*.test.ts'],",
+        `include: [${JSON.stringify(path.join('.', 'src', '**', '*.ts'))}, ${JSON.stringify(path.join(joinedDir, 'src', '**', '*.ts'))}],\n  exclude: [${JSON.stringify(`${toRoot}tmp/**`)}],`,
       ),
     )
     try {
-      const bracesPlugin = pandacssPlugin({cwd: braces})
-      const bracesBundle = await rolldown({
+      const plugin = pandacssPlugin({cwd})
+      const bundle = await rolldown({cwd, input: path.join(cwd, 'src/index.ts'), plugins: [plugin]})
+      try {
+        const {include, exclude} = transformFilterPatterns(plugin)
+        const posixCwd = cwd.replaceAll('\\', '/')
+        expect(include).toHaveLength(2)
+        for (const pattern of include) {
+          expect(pattern.test(`${posixCwd}/src/index.ts`)).toBe(true)
+          expect(pattern.test(`${posixCwd}/other/index.ts`)).toBe(false)
+        }
+        const root = path.parse(cwd).root.replaceAll('\\', '/')
+        expect(exclude[1]?.test(`${root}tmp/x.ts`)).toBe(true)
+        expect(exclude[1]?.test(`${root}/tmp/x.ts`)).toBe(false)
+
+        const {output} = await bundle.generate({format: 'esm'})
+        expect(findEntryChunk(output).code).toContain('"color_brand"')
+      } finally {
+        await bundle.close()
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
+  test('supports brace alternation, and leaves the rest of the syntax to the handler', async () => {
+    const braces = copyFixture('braces', withInclude('./src/**/*.{ts,tsx}'))
+    try {
+      const plugin = pandacssPlugin({cwd: braces})
+      const bundle = await rolldown({
         cwd: braces,
         input: path.join(braces, 'src/index.ts'),
-        plugins: [bracesPlugin],
+        plugins: [plugin],
       })
       try {
         const {
           include: [include],
-        } = transformFilterPatterns(bracesPlugin)
+        } = transformFilterPatterns(plugin)
         const posixCwd = braces.replaceAll('\\', '/')
         expect(include?.test(`${posixCwd}/src/index.ts`)).toBe(true)
         expect(include?.test(`${posixCwd}/src/index.tsx`)).toBe(true)
         expect(include?.test(`${posixCwd}/src/index.js`)).toBe(false)
-        const {output} = await bracesBundle.generate({format: 'esm'})
+        const {output} = await bundle.generate({format: 'esm'})
         expect(findEntryChunk(output).code).toContain('"color_brand"')
       } finally {
-        await bracesBundle.close()
-      }
-
-      // An extglob is beyond the converter, so the native filter only skips declaration
-      // files and the handler decides with Panda's own matcher
-      const extglobPlugin = pandacssPlugin({cwd: extglob})
-      const extglobBundle = await rolldown({
-        cwd: extglob,
-        input: path.join(extglob, 'src/index.ts'),
-        plugins: [extglobPlugin],
-      })
-      try {
-        expect(transformFilterPatterns(extglobPlugin)).toEqual({
-          include: [],
-          exclude: [expect.any(RegExp)],
-        })
-      } finally {
-        await extglobBundle.close()
+        await bundle.close()
       }
     } finally {
       rmSync(braces, {recursive: true, force: true})
-      rmSync(extglob, {recursive: true, force: true})
+    }
+
+    // Extglobs, negated classes and brace ranges are beyond the converter (a `[!a]` class
+    // would even become a RegExp class matching `!` or `a`), so the native filter only skips
+    // declaration files and the handler decides with Panda's own matcher — which covers
+    // `[!a]*.ts` (so `index.ts` is still rewritten) but not the brace range
+    for (const [name, include, rewritten] of [
+      ['extglob', './src/**/*.@(ts|tsx)', false],
+      ['negated-class', './src/**/[!a]*.ts', true],
+      ['brace-range', './src/**/index{1..3}.ts', false],
+    ] as const) {
+      const cwd = copyFixture(name, withInclude(include))
+      try {
+        const plugin = pandacssPlugin({cwd})
+        const bundle = await rolldown({
+          cwd,
+          input: path.join(cwd, 'src/index.ts'),
+          plugins: [plugin],
+        })
+        try {
+          expect(transformFilterPatterns(plugin)).toEqual({
+            include: [],
+            exclude: [expect.any(RegExp)],
+          })
+          const {output} = await bundle.generate({format: 'esm'})
+          expect(findEntryChunk(output).code.includes('"color_brand"')).toBe(rewritten)
+        } finally {
+          await bundle.close()
+        }
+      } finally {
+        rmSync(cwd, {recursive: true, force: true})
+      }
     }
   })
 
@@ -285,6 +345,35 @@ describe('pandacssPlugin', () => {
     // Nothing is injected (and no CSS file is emitted) without `inject`/`exports`
     const plain = await generate({cwd: fixtureDir})
     expect(findEntryChunk(plain).code).not.toContain('bundle.css')
+  })
+
+  test('inserts the CSS load after the directive prologue, so CJS output stays strict', async () => {
+    // A `require()` before `"use strict"` would end the directive prologue and turn strict
+    // mode off for the whole chunk — silently, since the string stays valid code
+    const output = await generate(
+      {cwd: fixtureDir, inject: true},
+      'cjs',
+      path.join(fixtureDir, 'src/strict.ts'),
+    )
+    const {code} = findEntryChunk(output)
+    expect(code.startsWith('"use strict";\nrequire("./bundle.css");\n')).toBe(true)
+
+    // Observed, not inferred: `this` is only `undefined` in a plain call under strict mode
+    const built = evaluateCommonJs(code)
+    expect(built.isStrict()).toBe(true)
+    expect(built.strictBox).toBe('display_flex')
+    // The control: the same chunk with the load prepended before the directive runs sloppy
+    expect(evaluateCommonJs(`require("./bundle.css");\n${code}`).isStrict()).toBe(false)
+  })
+
+  test('keeps `"use client"` the first statement of the chunk', async () => {
+    // Directives other than `"use strict"` are read by tools (React Server Components
+    // bundlers) that only look at the prologue
+    const entry = path.join(fixtureDir, 'src/client.ts')
+    const esm = findEntryChunk(await generate({cwd: fixtureDir, inject: true}, 'esm', entry))
+    expect(esm.code.startsWith('"use client";\nimport "./bundle.css";\n')).toBe(true)
+    const cjs = findEntryChunk(await generate({cwd: fixtureDir, inject: true}, 'cjs', entry))
+    expect(cjs.code.startsWith('"use client";\nrequire("./bundle.css");\n')).toBe(true)
   })
 
   test('`exports.nodeCompat` emits the shims and injects the self-referential import', async () => {
@@ -494,6 +583,65 @@ const conditionalCssExport = {
   default: './dist/bundle-css.js',
 }
 
+/**
+ * A rolldown watcher over a fixture copy, with `experimental.incrementalBuild` (which reuses the
+ * transforms of unchanged modules) and the plugin told about the output directory, like tsdown
+ * tells it. `nextBuild()` resolves when the next build completes, and `builds` counts them.
+ */
+function startWatcher(cwd: string) {
+  const outDir = path.join(cwd, 'dist')
+  let settle: (() => void) | undefined
+  let fail: ((error: Error) => void) | undefined
+  const state = {builds: 0}
+  const nextBuild = () =>
+    new Promise<void>((resolve, reject) => {
+      settle = resolve
+      fail = reject
+    })
+  const plugin = pandacssPlugin({cwd, inject: true})
+  plugin.api.setBuildContext({outDir})
+  const watcher = watch({
+    cwd,
+    input: path.join(cwd, 'src/index.ts'),
+    plugins: [plugin],
+    output: {dir: outDir, format: 'esm'},
+    experimental: {incrementalBuild: true},
+  })
+  watcher.on('event', (event) => {
+    if (event.code === 'BUNDLE_END') void event.result.close()
+    if (event.code === 'ERROR') fail?.(event.error)
+    if (event.code === 'END') {
+      state.builds++
+      settle?.()
+    }
+  })
+  return {
+    state,
+    nextBuild,
+    readOutput: () => ({
+      js: readFileSync(path.join(outDir, 'index.js'), 'utf-8'),
+      css: readFileSync(path.join(outDir, 'bundle.css'), 'utf-8'),
+    }),
+    close: () => watcher.close(),
+  }
+}
+
+/** Waits long enough for the watcher to pick up the files the last build registered. */
+const settleWatcher = () => new Promise((resolve) => setTimeout(resolve, 500))
+
+/**
+ * Awaits a rebuild triggered by `change()`, repeating the change once if the watcher missed
+ * the first one (file watchers on CI runners occasionally drop an event right after starting).
+ */
+async function rebuildAfter(nextBuild: Promise<void>, change: () => void): Promise<void> {
+  change()
+  const timeout = new Promise<'timeout'>((resolve) => setTimeout(() => resolve('timeout'), 5_000))
+  if ((await Promise.race([nextBuild, timeout])) === 'timeout') {
+    change()
+    await nextBuild
+  }
+}
+
 describe('watch mode', () => {
   test(
     'a config change renames the classes in the JavaScript and the stylesheet together',
@@ -506,55 +654,73 @@ describe('watch mode', () => {
       // stylesheet has the new ones, and nothing is styled.
       const cwd = copyFixture('watch')
       const configPath = path.join(cwd, 'panda.config.ts')
-      const outDir = path.join(cwd, 'dist')
       const originalConfig = readFileSync(configPath, 'utf-8')
-
-      let settle: (() => void) | undefined
-      let fail: ((error: Error) => void) | undefined
-      const nextBuild = () =>
-        new Promise<void>((resolve, reject) => {
-          settle = resolve
-          fail = reject
-        })
-      const firstBuild = nextBuild()
-      const watcher = watch({
-        cwd,
-        input: path.join(cwd, 'src/index.ts'),
-        plugins: [pandacssPlugin({cwd, inject: true})],
-        output: {dir: outDir, format: 'esm'},
-        experimental: {incrementalBuild: true},
-      })
-      watcher.on('event', (event) => {
-        if (event.code === 'BUNDLE_END') void event.result.close()
-        if (event.code === 'ERROR') fail?.(event.error)
-        if (event.code === 'END') settle?.()
-      })
-      const readOutput = () => ({
-        js: readFileSync(path.join(outDir, 'index.js'), 'utf-8'),
-        css: readFileSync(path.join(outDir, 'bundle.css'), 'utf-8'),
-      })
-
+      const watcher = startWatcher(cwd)
       try {
+        const firstBuild = watcher.nextBuild()
         await firstBuild
-        const before = readOutput()
+        const before = watcher.readOutput()
         expect(before.js).toContain('"color_brand"')
         expect(before.css).toContain('.color_brand {')
 
-        // The config and its imports are watched, so the edit triggers a rebuild; the watcher
-        // takes a moment to pick up the files the first build registered
-        const secondBuild = nextBuild()
-        await new Promise((resolve) => setTimeout(resolve, 500))
-        writeFileSync(
-          configPath,
-          originalConfig.replace('eject: true,', "eject: true,\n  prefix: 'v2',"),
+        // The config and its imports are watched, so the edit triggers a rebuild
+        const secondBuild = watcher.nextBuild()
+        await settleWatcher()
+        await rebuildAfter(secondBuild, () =>
+          writeFileSync(
+            configPath,
+            originalConfig.replace('presets: [],', "presets: [],\n  prefix: 'v2',"),
+          ),
         )
-        await secondBuild
 
-        const after = readOutput()
+        const after = watcher.readOutput()
         expect(after.js).toContain('"v2-color_brand"')
         expect(after.js).not.toContain('"color_brand"')
         expect(after.css).toContain('.v2-color_brand {')
         expect(after.css).not.toContain('.color_brand {')
+      } finally {
+        await watcher.close()
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test(
+    'a source added to an `include` directory reaches the stylesheet, without a rebuild loop',
+    {timeout: 60_000},
+    async () => {
+      // The stylesheet covers every scanned source, imported or not, so the directories the
+      // `include` globs are rooted in are watched for additions. Here that root is the package
+      // itself, which also holds the generated `styled-system` and the output directory: the
+      // build writes there on every run, and those writes must not trigger the next one.
+      const cwd = copyFixture(
+        'watch-additions',
+        readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+          "include: ['./src/**/*.ts'],\n  exclude: ['./src/**/*.test.ts'],",
+          "include: ['./**/*.ts'],\n  exclude: ['./styled-system/**', './dist/**', './panda.config.ts'],",
+        ),
+      )
+      const watcher = startWatcher(cwd)
+      try {
+        await watcher.nextBuild()
+        expect(watcher.readOutput().css).not.toContain('.display_grid {')
+
+        const secondBuild = watcher.nextBuild()
+        await settleWatcher()
+        // Not imported by the entry, only covered by `include`
+        await rebuildAfter(secondBuild, () =>
+          writeFileSync(
+            path.join(cwd, 'src/added.ts'),
+            "import {css} from '#styled-system/css'\n\nexport const grid: string = css({display: 'grid'})\n",
+          ),
+        )
+        expect(watcher.readOutput().css).toContain('.display_grid {')
+
+        // The rebuild wrote the output and (possibly) generated artifacts into the watched
+        // root — and stops there
+        const builds = watcher.state.builds
+        await new Promise((resolve) => setTimeout(resolve, 1_500))
+        expect(watcher.state.builds).toBe(builds)
       } finally {
         await watcher.close()
         rmSync(cwd, {recursive: true, force: true})
