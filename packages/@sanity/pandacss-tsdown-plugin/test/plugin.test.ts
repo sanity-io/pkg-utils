@@ -1375,6 +1375,41 @@ describe('tsdownConfig hook', () => {
     })
   })
 
+  test('rejects an output directory outside the package', async () => {
+    // `./../elsewhere/bundle.css` is not a valid export target, which Node rejects
+    const config = await runTsdownConfigHook(
+      {exports: true, outDir: '../elsewhere'},
+      {exports: true},
+    )
+    await expect(
+      getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+    ).rejects.toThrow('can only publish the stylesheet from inside the package')
+  })
+
+  test("keeps the entry a user's own `customExports` writes for the CSS subpath", async () => {
+    const custom = {style: './dist/bundle.css', default: './dist/bundle.css'}
+    for (const customExports of [
+      (exportsMap: Record<string, unknown>) => ({...exportsMap, './bundle.css': custom}),
+      {'./bundle.css': custom},
+    ]) {
+      const config = await runTsdownConfigHook({exports: {customExports}})
+      await expect(
+        getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+      ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': custom})
+    }
+
+    // An entry tsdown itself passed in is not the user's, and gets the CSS export
+    const passedThrough = await runTsdownConfigHook({
+      exports: {customExports: (exportsMap) => ({...exportsMap})},
+    })
+    await expect(
+      getCustomExports(passedThrough)(
+        {'.': './dist/index.mjs', './bundle.css': './dist/bundle.css'},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': conditionalCssExport})
+  })
+
   test('leaves the config alone without `exports`, or when tsdown `exports` is off', async () => {
     const withoutCssExports = await runTsdownConfigHook({exports: true}, {inject: true})
     expect(withoutCssExports.exports).toBe(true)

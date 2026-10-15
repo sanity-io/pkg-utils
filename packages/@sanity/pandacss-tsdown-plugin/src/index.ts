@@ -865,17 +865,25 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       exportsOptions.customExports = async (exportsMap, context) => {
         // Apply a pre-existing `customExports` first (both its function and record forms,
         // mirroring how tsdown itself applies them), then insert the CSS export
+        const exportKey = `./${fileName}`
         const base =
           typeof previousCustomExports === 'function'
             ? await previousCustomExports(exportsMap, context)
             : previousCustomExports
               ? {...exportsMap, ...previousCustomExports}
               : exportsMap
+        // An entry the user's own `customExports` wrote for the CSS subpath (to add conditions,
+        // say) is theirs to shape, so it is kept as is
+        const userDefined =
+          typeof previousCustomExports === 'function'
+            ? base[exportKey] !== exportsMap[exportKey]
+            : previousCustomExports !== undefined && exportKey in previousCustomExports
+        if (userDefined) return base
         const outDir = resolveOutDir(config, context, fileName)
         const cssExport = nodeCompat
           ? createConditionalCssExport(fileName, outDir)
           : createCssExport(fileName, outDir)
-        return insertCssExport(base, `./${fileName}`, cssExport)
+        return insertCssExport(base, exportKey, cssExport)
       }
       config.exports = exportsOptions
       return undefined
@@ -1155,7 +1163,18 @@ function resolveOutDir(
     }
   }
   outDir ??= path.resolve(cwd, config.outDir ?? 'dist')
-  return path.relative(pkgRoot, outDir).replaceAll('\\', '/')
+  const relativeOutDir = path.relative(pkgRoot, outDir)
+  // An export target must stay inside the package: Node rejects `./../elsewhere/bundle.css`
+  if (
+    relativeOutDir === '..' ||
+    relativeOutDir.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativeOutDir)
+  ) {
+    throw new Error(
+      `[pandacss] \`exports\` can only publish the stylesheet from inside the package, but it is written to "${outDir}", outside "${pkgRoot}". Move tsdown's \`outDir\` into the package, or disable \`exports\` and load the stylesheet another way.`,
+    )
+  }
+  return relativeOutDir.replaceAll('\\', '/')
 }
 
 /** The layer names of a Panda config: the defaults, with the config's `layers` renames applied. */
