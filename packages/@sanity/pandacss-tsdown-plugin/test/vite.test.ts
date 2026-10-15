@@ -7,7 +7,7 @@ import {promisify, stripVTControlCharacters} from 'node:util'
 import {chromium} from 'playwright'
 import {rolldown} from 'rolldown'
 import {build, createServer, type Plugin, type ServerOptions, type ViteDevServer} from 'vite'
-import {describe, expect, onTestFinished, test} from 'vitest'
+import {describe, expect, onTestFinished, test, vi} from 'vitest'
 import {PANDA_STYLESHEET, pandacss, type Options} from '../src/vite.ts'
 import {cascadeWinner, ruleLines} from './cascade.ts'
 
@@ -22,6 +22,15 @@ const RENAMED_LAYERS = {
   utilities: 'app-utilities',
 }
 
+/** The start of the error that rejects the Panda config's `polyfill` where it breaks the plugin. */
+const POLYFILL_ERROR =
+  '`polyfill: true` in the Panda config only works with a single `pandacss()` plugin'
+
+/** A Panda config: the `cascade-layers` fixture's, extended by `overrides`. */
+function pandaConfigSource(overrides: Record<string, unknown>): string {
+  return `import config from '../cascade-layers/panda.config.ts'\n\nexport default {...config, ...${JSON.stringify(overrides)}}\n`
+}
+
 /**
  * A throwaway copy of the `vite` fixture under `test/fixtures/vite-<name>.local` (gitignored
  * through `*.local`), with the `cascade-layers` fixture's Panda config extended by `overrides`.
@@ -34,10 +43,7 @@ function copyFixture(name: string, overrides: Record<string, unknown>): string {
     cpSync(path.join(fixtureDir, file), path.join(target, file))
   }
   cpSync(path.join(fixtureDir, 'src'), path.join(target, 'src'), {recursive: true})
-  writeFileSync(
-    path.join(target, 'panda.config.ts'),
-    `import config from '../cascade-layers/panda.config.ts'\n\nexport default {...config, ...${JSON.stringify(overrides)}}\n`,
-  )
+  writeFileSync(path.join(target, 'panda.config.ts'), pandaConfigSource(overrides))
   onTestFinished(() => rmSync(target, {recursive: true, force: true}))
   return target
 }
@@ -274,13 +280,6 @@ describe('`cascadeLayers: false`', () => {
     expect(css).toContain('.button--tone_brand {')
     expect(css).not.toContain('@layer')
   })
-
-  test("can't be combined with the Panda config's `polyfill`", async () => {
-    const root = copyFixture('polyfill', {polyfill: true})
-    await expect(startDevServer(pandacss({cascadeLayers: false}), root)).rejects.toThrow(
-      "`cascadeLayers: false` can't be combined with `polyfill: true`",
-    )
-  })
 })
 
 describe('`banner`', () => {
@@ -346,14 +345,68 @@ describe('the dev server', () => {
       '@layer reset, base, tokens, recipes, utilities;',
     )
 
-    writeFileSync(
-      path.join(root, 'panda.config.ts'),
-      `import config from '../cascade-layers/panda.config.ts'\n\nexport default {...config, layers: ${JSON.stringify(RENAMED_LAYERS)}}\n`,
-    )
+    writeFileSync(path.join(root, 'panda.config.ts'), pandaConfigSource({layers: RENAMED_LAYERS}))
     await expect
       .poll(() => transformCss(server, PANDA_STYLESHEET), {timeout: 20_000, interval: 100})
       .toContain('@layer app-utilities {')
   })
+})
+
+// `@pandacss/vite` applies the polyfill by removing the `@layer` statement that the plugin, and the
+// `@pandacss/vite` of other projects, recognize the stylesheet by
+describe("the Panda config's `polyfill`", () => {
+  test('works with a single project, the layers kept and no banner', async () => {
+    const root = copyFixture('polyfill', {polyfill: true})
+    const css = await devStylesheet({transform: true}, root)
+    expect(css).toContain('.button:not(#\\#')
+    expect(css).not.toContain('@layer')
+  })
+
+  test("can't be combined with `cascadeLayers: false`", async () => {
+    const root = copyFixture('polyfill-unlayered', {polyfill: true})
+    await expect(startDevServer(pandacss({cascadeLayers: false}), root)).rejects.toThrow(
+      POLYFILL_ERROR,
+    )
+  })
+
+  test("can't be combined with a `banner`, which would be dropped", async () => {
+    const root = copyFixture('polyfill-banner', {polyfill: true})
+    await expect(startDevServer(pandacss({banner: '@layer sui;'}), root)).rejects.toThrow(
+      POLYFILL_ERROR,
+    )
+  })
+
+  test("can't be combined with other projects, whose CSS would be left out", async () => {
+    const polyfilled = copyFixture('polyfill-first-project', {polyfill: true})
+    const other = copyFixture('polyfill-second-project', {prefix: 'second'})
+    await expect(
+      startDevServer([...pandacss({cwd: polyfilled}), ...pandacss({cwd: other})]),
+    ).rejects.toThrow(POLYFILL_ERROR)
+  })
+
+  test(
+    'is rejected when the config turns it on while the dev server runs',
+    {timeout: 30_000},
+    async () => {
+      const root = copyFixture('polyfill-edited', {})
+      const server = await startDevServer(pandacss({cascadeLayers: false}), root, {
+        watch: {usePolling: true, interval: 50},
+      })
+      expect(await transformCss(server, PANDA_STYLESHEET)).not.toContain('@layer')
+      // Where Vite sends the errors of `hotUpdate` hooks, to show them in the browser
+      const send = vi.spyOn(server.environments.client.hot, 'send')
+
+      writeFileSync(path.join(root, 'panda.config.ts'), pandaConfigSource({polyfill: true}))
+      await expect
+        .poll(() => send.mock.calls.flat(), {timeout: 20_000, interval: 100})
+        .toContainEqual(
+          expect.objectContaining({
+            type: 'error',
+            err: expect.objectContaining({message: expect.stringContaining(POLYFILL_ERROR)}),
+          }),
+        )
+    },
+  )
 })
 
 /** Whether the Chromium that `playwright install chromium` downloads is there to run tests in. */

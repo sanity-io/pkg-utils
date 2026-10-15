@@ -52,7 +52,7 @@ export interface Options extends PandaPluginOptions {
   /**
    * CSS prepended to the generated stylesheet, on a line of its own, such as a `@layer` statement
    * that orders the layers of other libraries' stylesheets (`@layer sui;`), which is then the first
-   * statement of the page to name them.
+   * statement of the page to name them. Can't be combined with the Panda config's `polyfill`.
    */
   banner?: string
 }
@@ -120,21 +120,31 @@ function companionPlugin(
     hasLayerDeclaration: (css) => driver?.compiler.hasLayerDeclaration(css) ?? false,
   }
 
+  /**
+   * Rejects the Panda config's `polyfill` where it breaks the plugin. `@pandacss/vite` applies it by
+   * removing the `@layer` statement that the stylesheet is recognized by: by this plugin, which
+   * removes the layers and prepends the banner after `@pandacss/vite`, and by the `@pandacss/vite`
+   * of every other project that generates its CSS into the same stylesheet.
+   */
+  function assertPolyfillSupported(currentDriver: PandaDriver): void {
+    if (currentDriver.config['polyfill'] !== true) return
+    if (instances.length === 1 && cascadeLayers && banner === undefined) return
+    throw new Error(
+      "[pandacss] `polyfill: true` in the Panda config only works with a single `pandacss()` plugin of `@sanity/pandacss-tsdown-plugin/vite`, `cascadeLayers: true` and no `banner`: `@pandacss/vite` applies the polyfill by removing the `@layer` statement that the plugin, and the other Panda projects generating their CSS into the same stylesheet, recognize it by. Remove `polyfill` (`cascadeLayers: false` publishes the CSS without layers while keeping every selector's specificity), or those options.",
+    )
+  }
+
   const plugin: Plugin = {
     name: COMPANION_PLUGIN_NAME,
     enforce: 'pre',
 
     async configResolved(config) {
       // The config `@pandacss/vite` loads, from the same options
-      driver = await createNodeDriver({
+      const currentDriver = await createNodeDriver({
         cwd: pandaOptions.cwd ?? config.root,
         configPath: pandaOptions.configPath,
       })
-      if (!cascadeLayers && driver.config['polyfill'] === true) {
-        throw new Error(
-          "[pandacss] `cascadeLayers: false` can't be combined with `polyfill: true` in the Panda config: both remove the cascade layers, and `@pandacss/vite` applies the polyfill, which raises the specificity of every rule. Remove one of them.",
-        )
-      }
+      driver = currentDriver
       instances = config.plugins.flatMap((listed) => companions.get(listed) ?? [])
       if (
         instances.some(
@@ -145,6 +155,7 @@ function companionPlugin(
           '[pandacss] Every `pandacss()` plugin of `@sanity/pandacss-tsdown-plugin/vite` in a Vite config generates its CSS into the same stylesheet, so they must have the same `cascadeLayers` and `banner` options.',
         )
       }
+      assertPolyfillSupported(currentDriver)
     },
 
     resolveId: {
@@ -179,10 +190,13 @@ function companionPlugin(
       },
     },
 
-    // A config change can rename the layers that `virtual:panda.css` declares
+    // A config change can rename the layers that `virtual:panda.css` declares, or turn on the
+    // `polyfill`. An error thrown here keeps `@pandacss/vite` from reloading the page, and Vite
+    // shows it in the browser.
     async hotUpdate({file, server}) {
       if (!driver || this.environment !== server.environments.client) return undefined
       if (!driver.isConfigFile(file) || !(await driver.reload()).hasChanged) return undefined
+      assertPolyfillSupported(driver)
       const {moduleGraph} = this.environment
       for (const module of moduleGraph.getModulesByFile(RESOLVED_PANDA_STYLESHEET) ?? []) {
         moduleGraph.invalidateModule(module)

@@ -228,14 +228,14 @@ import {createRoot} from 'react-dom/client'
 - **Vitest browser mode.** Add the plugin to the Vitest config, and import the stylesheet in a [setup file](https://vitest.dev/config/setupfiles) (`test.setupFiles`), which runs before every test file.
 - **TypeScript.** The `vite/client` types (`/// <reference types="vite/client" />`) declare every `*.css` import, `virtual:panda.css` included. `PANDA_STYLESHEET` exports the specifier, for tooling that adds the import itself.
 
-| Option          | Type      | Default                      | Description                                                                                                                                                                    |
-| --------------- | --------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `cwd`           | `string`  | Vite's `root`                | Passed to `@pandacss/vite`: where `panda.config.ts` is looked up.                                                                                                              |
-| `configPath`    | `string`  | discovered upward from `cwd` | Passed to `@pandacss/vite`: an explicit Panda config file, relative to `cwd`.                                                                                                  |
-| `outdir`        | `string`  | the Panda config's `outdir`  | Passed to `@pandacss/vite`: where the generated files are written.                                                                                                             |
-| `transform`     | `boolean` | `false`                      | Passed to `@pandacss/vite`: rewrite the style calls into class names.                                                                                                          |
-| `cascadeLayers` | `boolean` | `true`                       | Mirrors the tsdown `cascadeLayers` option: pass the value the build uses. `false` removes the layers with the same pass. Can't be combined with the Panda config's `polyfill`. |
-| `banner`        | `string`  | —                            | CSS prepended to the stylesheet, on a line of its own, such as a `@layer` statement that orders the layers of other libraries' stylesheets (`@layer sui;`) ahead of their CSS. |
+| Option          | Type      | Default                      | Description                                                                                                                                                                                                                          |
+| --------------- | --------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `cwd`           | `string`  | Vite's `root`                | Passed to `@pandacss/vite`: where `panda.config.ts` is looked up.                                                                                                                                                                    |
+| `configPath`    | `string`  | discovered upward from `cwd` | Passed to `@pandacss/vite`: an explicit Panda config file, relative to `cwd`.                                                                                                                                                        |
+| `outdir`        | `string`  | the Panda config's `outdir`  | Passed to `@pandacss/vite`: where the generated files are written.                                                                                                                                                                   |
+| `transform`     | `boolean` | `false`                      | Passed to `@pandacss/vite`: rewrite the style calls into class names.                                                                                                                                                                |
+| `cascadeLayers` | `boolean` | `true`                       | Mirrors the tsdown `cascadeLayers` option: pass the value the build uses. `false` removes the layers with the same pass. Can't be combined with the Panda config's `polyfill`.                                                       |
+| `banner`        | `string`  | —                            | CSS prepended to the stylesheet, on a line of its own, such as a `@layer` statement that orders the layers of other libraries' stylesheets (`@layer sui;`) ahead of their CSS. Can't be combined with the Panda config's `polyfill`. |
 
 How it works:
 
@@ -243,6 +243,7 @@ How it works:
 - A hand-written stylesheet that declares the layers keeps working: `@pandacss/vite` still fills it, and the companion rewrites it too. Replace its import with `virtual:panda.css` to delete the file. The layers of other stylesheets are left alone, including the ones a rewritten stylesheet `@import`s.
 - In `vite dev`, an edit to the Panda config that renames the layers updates `virtual:panda.css` before `@pandacss/vite` reloads the page.
 - An app that builds several Panda projects registers one `pandacss()` per project. They share `virtual:panda.css`, which declares the layers of every project's config, in the order of the plugins, and is rewritten once, so the instances must have the same `cascadeLayers` and `banner`.
+- `polyfill: true` in the Panda config works with a single `pandacss()`, `cascadeLayers: true` and no `banner`. `@pandacss/vite` applies the polyfill by removing the `@layer` statement that the companion, and the `@pandacss/vite` of other projects, recognize the stylesheet by, so the plugin reports any other combination when the dev server starts, and when a config change turns the polyfill on while it runs.
 
 ## Advanced
 
