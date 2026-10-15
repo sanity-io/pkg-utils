@@ -13,12 +13,15 @@ import {
   type Plugin,
   type PluginContext,
 } from 'rolldown'
-import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
+import {build as tsdownBuild, type ResolvedConfig, type TsdownPlugin, type UserConfig} from 'tsdown'
 import {afterEach, beforeEach, describe, expect, test} from 'vitest'
 import {DEFAULT_CSS_FILE_NAME, pandaPlugin, type Options} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
+
+/** Stands in for tsdown's logger in the partial configs the tests resolve. */
+const logger = {info: () => {}, warn: () => {}}
 
 type Output = readonly (OutputAsset | OutputChunk)[]
 
@@ -35,7 +38,7 @@ async function build(
 ): Promise<Output> {
   const plugin = pandaPlugin({cwd: fixtureDir, ...options})
   if (tsdown) {
-    await plugin.tsdownConfigResolved?.({cwd: fixtureDir, ...tsdown} as ResolvedConfig)
+    await plugin.tsdownConfigResolved?.({cwd: fixtureDir, logger, ...tsdown} as ResolvedConfig)
   }
   const bundle = await rolldown({
     cwd: fixtureDir,
@@ -733,6 +736,65 @@ describe('config reloads', () => {
   })
 })
 
+/** A project that imports codegen output, which the tests delete so tsdown builds it clean. */
+const declarationsFixtureDir = path.resolve(__dirname, 'fixtures/declarations')
+
+describe('tsdown builds', () => {
+  let dir = ''
+
+  beforeEach(async () => {
+    await mkdir(temporaryDir, {recursive: true})
+    dir = await realpath(await mkdtemp(path.join(temporaryDir, 'tsdown-')))
+    await cp(declarationsFixtureDir, dir, {recursive: true})
+    await rm(path.join(dir, 'styled-system'), {recursive: true, force: true})
+    const compilerOptions = {
+      strict: true,
+      target: 'esnext',
+      module: 'preserve',
+      moduleResolution: 'bundler',
+      skipLibCheck: true,
+    }
+    await writeFile(
+      path.join(dir, 'tsconfig.json'),
+      `${JSON.stringify({compilerOptions, include: ['src']})}\n`,
+    )
+  })
+
+  afterEach(async () => {
+    if (dir) await rm(dir, {recursive: true, force: true})
+  })
+
+  test('runs codegen before the separate CJS declaration build', {timeout: 60_000}, async () => {
+    // tsdown emits CJS declarations from a second build, without the user plugins, that runs in
+    // parallel with the JS build. The slow `options` hook of an earlier plugin holds up the
+    // later hooks of the JS build
+    const slowOptions: Plugin = {
+      name: 'slow-options',
+      async options() {
+        await delay(1_000)
+      },
+    }
+    await tsdownBuild({
+      cwd: dir,
+      config: false,
+      entry: ['src/index.ts'],
+      format: 'cjs',
+      dts: true,
+      logLevel: 'silent',
+      plugins: [slowOptions, pandaPlugin()],
+    })
+
+    // The inferred type comes from the generated `css` declaration, or is `any` without it
+    expect(await readFile(path.join(dir, 'dist/index.d.cts'), 'utf8')).toMatch(
+      /declare const button: string;/,
+    )
+    expect(await readFile(path.join(dir, 'dist/index.cjs'), 'utf8')).toContain('"color_tomato"')
+    expect(await readFile(path.join(dir, `dist/${DEFAULT_CSS_FILE_NAME}`), 'utf8')).toContain(
+      '.color_tomato',
+    )
+  })
+})
+
 async function runTsdownConfigHook(
   config: UserConfig,
   options: Options = {exports: {nodeCompat: true}},
@@ -842,6 +904,7 @@ describe('tsdownConfig hook', () => {
     await plugin.tsdownConfig?.(config, {})
     await plugin.tsdownConfigResolved?.({
       cwd: fixtureDir,
+      logger,
       outDir: path.join(fixtureDir, 'lib'),
     } as ResolvedConfig)
     const context = {

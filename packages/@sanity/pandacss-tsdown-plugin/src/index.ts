@@ -203,6 +203,8 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
 
   let driver: NodeDriver | undefined
   let driverPromise: Promise<NodeDriver> | undefined
+  /** Whether tsdown's config resolution already ran the initial codegen, ahead of every build. */
+  let generatedAtConfigResolution = false
   let reloadConfig = false
   /**
    * The in-flight (or last) config reload. Hosts may run several builds with a shared plugin
@@ -432,19 +434,31 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
       if (config.pkg?.name !== undefined) packageName = config.pkg.name
       if (config.outDir !== undefined) resolvedOutDir = config.outDir
       if (!driverPromise) cwd = path.resolve(config.cwd, options.cwd ?? '.')
-      await loadDriver()
+      const loaded = await readyDriver()
+      // tsdown awaits this hook before starting any build, including the separate build it emits
+      // CJS declarations from, which runs without the user plugins. The config of every format
+      // resolves with the same plugin instance, so one codegen run covers them all
+      if (generatedAtConfigResolution) return
+      generatedAtConfigResolution = true
+      generate(loaded, {
+        info: (message) => config.logger.info(config.nameLabel, message),
+        warn: (message) => config.logger.warn(config.nameLabel, message),
+      })
     },
 
-    // Codegen runs here, before any `buildStart` hook: the declaration build (tsdown's `dts`)
-    // reads the generated types in its own `buildStart`, which runs in parallel with the others.
+    // Without tsdown, codegen runs here, before any `buildStart` hook: a declaration plugin
+    // (rolldown-plugin-dts) reads the generated types in its own `buildStart`, which runs in
+    // parallel with the others.
     // `inject` prepends the CSS import in `renderChunk` through rolldown's native MagicString
     // (`meta.magicString`), which keeps sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
       const loaded = await readyDriver()
-      generate(loaded, {
-        info: (message) => this.info(message),
-        warn: (message) => this.warn(message),
-      })
+      if (!generatedAtConfigResolution) {
+        generate(loaded, {
+          info: (message) => this.info(message),
+          warn: (message) => this.warn(message),
+        })
+      }
       const watch =
         this.meta.watchMode && inputOptions.watch !== false
           ? {

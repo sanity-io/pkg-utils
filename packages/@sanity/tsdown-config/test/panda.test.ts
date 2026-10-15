@@ -37,7 +37,8 @@ async function buildWithConfig(options: PackageOptions): Promise<{css: string; e
   )
   if (!plugin) expect.unreachable('expected the pandacss plugin')
   const target = typeof config.target === 'string' ? [config.target] : config.target || undefined
-  await plugin.tsdownConfigResolved?.({cwd: fixtureDir, target} as ResolvedConfig)
+  const logger = {info: () => {}, warn: () => {}}
+  await plugin.tsdownConfigResolved?.({cwd: fixtureDir, logger, target} as ResolvedConfig)
 
   const bundle = await rolldown({
     input: path.join(fixtureDir, 'src/index.ts'),
