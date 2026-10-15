@@ -1,7 +1,7 @@
 import {readdirSync, readFileSync, realpathSync, statSync} from 'node:fs'
 import path from 'node:path'
 import {createNodeDriver} from '@pandacss/compiler'
-import {createDiagnosticLog} from '@pandacss/compiler-shared'
+import {createDiagnosticLog, type ParseFileReport} from '@pandacss/compiler-shared'
 import {
   createPandaSourcePluginHooks,
   createSourceTransformer,
@@ -223,6 +223,36 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   /** The config file and its dependencies, watched so a change reloads the config. */
   const configWatchFiles = new Set<string>()
 
+  /** The files the last scan with options parsed, which Panda doesn't reconcile on its own. */
+  let scannedFiles = new Set<string>()
+
+  /**
+   * Scans and parses the files matched by the config's `include`/`exclude` globs. Panda's own
+   * scan only skips the config's `outdir`, so with the plugin's `outdir` override the generated
+   * directory codegen writes to is excluded too. A scan with options doesn't drop the files
+   * deleted since the last one, so that is done here.
+   */
+  function scanSources(loaded: NodeDriver): ParseFileReport[] {
+    const configOutdir = path.resolve(cwd, loaded.getOutdir())
+    const outdir = path.resolve(cwd, loaded.getOutdir(options.outdir))
+    if (outdir === configOutdir) return loaded.parseFiles()
+
+    const reports = loaded.parseFiles({
+      exclude: [
+        ...stringArray(loaded.config['exclude']),
+        ...[configOutdir, outdir].map(
+          (dir) => `${path.relative(cwd, dir).replaceAll('\\', '/')}/**`,
+        ),
+      ],
+    })
+    const parsed = new Set(reports.map((report) => report.path))
+    for (const file of scannedFiles) {
+      if (!parsed.has(file)) loaded.compiler.removeFile(file)
+    }
+    scannedFiles = parsed
+    return reports
+  }
+
   /**
    * Runs Panda's codegen into `outdir`. The native writer only rewrites files whose content
    * changed, so repeated runs leave watchers alone; the files it did write are reported.
@@ -396,7 +426,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
 
         // Every parsed file is watched, not just the bundled modules: the stylesheet covers all
         // of them, so editing one that no entry imports must rebuild it too
-        for (const report of loaded.parseFiles()) {
+        for (const report of scanSources(loaded)) {
           this.addWatchFile(report.path)
           warnDiagnostics(logger.warn, report.diagnostics, 'while parsing', {
             file: report.path,

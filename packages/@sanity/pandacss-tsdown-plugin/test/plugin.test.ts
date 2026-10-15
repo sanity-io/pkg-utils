@@ -363,6 +363,37 @@ describe('config reloads', () => {
     }
   })
 
+  test('keeps the overridden `outdir` out of the scan', async () => {
+    // Codegen writes into `src/generated`, which the config's `include` matches
+    await writeFile(
+      path.join(dir, 'panda.config.ts'),
+      `export default {include: ['./src/**/*'], exclude: ['./src/ignored/**'], outdir: 'styled-system'}\n`,
+    )
+    const source = (name: string, color: string) =>
+      `import {css} from '../styled-system/css'\n\nexport const ${name} = css({color: '${color}'})\n`
+    await writeFile(path.join(dir, 'src/index.ts'), source('box', 'red'))
+    await writeFile(path.join(dir, 'src/extra.ts'), source('extra', 'blue'))
+    await mkdir(path.join(dir, 'src/ignored'))
+    await writeFile(path.join(dir, 'src/ignored/skipped.ts'), source('skipped', 'orange'))
+
+    const plugin = pandaPlugin({cwd: dir, outdir: 'src/generated'})
+    const first = await rebuild(plugin, {external: true})
+    expect(await readFile(path.join(dir, 'src/generated/css/index.js'), 'utf8')).toBeTruthy()
+    // Every parsed file is watched: nothing generated, and the config's own exclusions still apply
+    const scanned = first.watchFiles.map((file) => path.relative(dir, file).replaceAll('\\', '/'))
+    expect(scanned.filter((file) => file.startsWith('src/'))).toEqual(
+      expect.arrayContaining(['src/index.ts', 'src/extra.ts']),
+    )
+    expect(scanned.filter((file) => file.startsWith('src/generated/'))).toEqual([])
+    expect(scanned).not.toContain('src/ignored/skipped.ts')
+    expect(first.css).toContain('color: #00f')
+    expect(first.css).not.toContain('orange')
+
+    // Deleted files drop out of the stylesheet, which a scan with options doesn't do on its own
+    await rm(path.join(dir, 'src/extra.ts'))
+    expect((await rebuild(plugin, {external: true})).css).not.toContain('#00f')
+  })
+
   test('reloads the config when a file it imports changes', async () => {
     const plugin = pandaPlugin({cwd: dir})
     const first = await rebuild(plugin)
