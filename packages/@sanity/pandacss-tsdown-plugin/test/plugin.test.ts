@@ -1124,4 +1124,112 @@ export const sharedCard = css({color: 'brand'})
     expect(entryChunk!.code).toContain('color_brand')
     expect(entryChunk!.code).toContain('padding_sm')
   })
+
+  it('prepends ./ to dot-prefixed fileName values (.styles.css, .assets/styles.css) for relative injection', async () => {
+    for (const fileName of ['.styles.css', '.assets/styles.css']) {
+      const build = await rolldown({
+        cwd: basicFixtureDir,
+        input: basicEntry,
+        external: [`./${fileName}`],
+        plugins: [
+          pandaCssPlugin({
+            cwd: basicFixtureDir,
+            fileName,
+            inject: {nodeCompat: false},
+          }),
+        ],
+      })
+      const {output} = await build.generate({format: 'esm'})
+      await build.close()
+
+      const entryChunk = output.find(
+        (item): item is OutputChunk => item.type === 'chunk' && item.isEntry,
+      )
+      expect(entryChunk?.code.startsWith(`import "./${fileName}";\n`)).toBe(true)
+    }
+  })
+
+  it('injects CSS import when transform: false and entry only uses generated patterns or config recipes', async () => {
+    const tmpDir = createTempProjectDir('panda-patterns-recipes-')
+    try {
+      writeFileSync(
+        path.join(tmpDir, 'panda.config.ts'),
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
+  preflight: false,
+  include: ['./src/**/*.ts'],
+  outdir: 'styled-system',
+  theme: {
+    extend: {
+      tokens: {
+        colors: {
+          brand: {value: 'rgb(1, 2, 3)'},
+        },
+        spacing: {
+          sm: {value: '8px'},
+        },
+      },
+      recipes: {
+        badge: {
+          className: 'badge',
+          base: {color: 'brand'},
+        },
+      },
+    },
+  },
+  patterns: {
+    extend: {
+      row: {
+        properties: {
+          gap: {type: 'property', value: 'gap'},
+        },
+        transform(props) {
+          return {display: 'flex', gap: props.gap}
+        },
+      },
+    },
+  },
+} satisfies Config)
+`,
+      )
+      writeFileSync(
+        path.join(tmpDir, 'src/recipe-entry.ts'),
+        `import {badge} from '../styled-system/recipes/index.js'
+export const badgeClass = badge()
+`,
+      )
+      writeFileSync(
+        path.join(tmpDir, 'src/pattern-entry.ts'),
+        `import {row} from '../styled-system/patterns/index.js'
+export const rowClass = row({gap: 'sm'})
+`,
+      )
+
+      for (const entryFile of ['src/recipe-entry.ts', 'src/pattern-entry.ts']) {
+        const build = await rolldown({
+          cwd: tmpDir,
+          input: path.join(tmpDir, entryFile),
+          external: ['./styles.css'],
+          plugins: [
+            pandaCssPlugin({
+              cwd: tmpDir,
+              transform: false,
+              inject: {nodeCompat: false},
+            }),
+          ],
+        })
+        const {output} = await build.generate({format: 'esm'})
+        await build.close()
+
+        const entryChunk = output.find(
+          (item): item is OutputChunk => item.type === 'chunk' && item.isEntry,
+        )
+        expect(entryChunk).toBeDefined()
+        expect(entryChunk!.code.startsWith('import "./styles.css";\n')).toBe(true)
+      }
+    } finally {
+      rmSync(tmpDir, {recursive: true, force: true})
+    }
+  })
 })

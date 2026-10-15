@@ -416,7 +416,7 @@ function toPosixRelativeImport(fromChunkFileName: string, toAssetFileName: strin
   const fromDir = path.posix.dirname(fromChunkFileName.replace(/\\/g, '/'))
   const rel = path.posix.relative(fromDir === '.' ? '' : fromDir, toAssetFileName)
 
-  return rel.startsWith('.') ? rel : `./${rel}`
+  return rel.startsWith('./') || rel.startsWith('../') ? rel : `./${rel}`
 }
 
 /** Where a chunk's hashbang and leading directives end: `0` when it has neither. */
