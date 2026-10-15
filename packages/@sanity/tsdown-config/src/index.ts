@@ -57,8 +57,8 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
 
 /**
  * Options for the `panda` option — the same options as `@sanity/pandacss-tsdown-plugin`
- * (`cwd`, `configPath`, `outdir` and `transform` from `@pandacss/vite`, `codegen` and
- * `polyfill`, plus `fileName`, `minify`, `target`, `lightningcss`, `inject`, and `exports`,
+ * (`cwd`, `configPath`, `outdir` and `transform` from `@pandacss/vite`, `codegen`, `polyfill`
+ * and `cascadeLayers`, plus `fileName`, `minify`, `target`, `lightningcss`, `inject`, and `exports`,
  * modeled after the `css` options of `@tsdown/css`), with the same Sanity-flavored defaults as
  * {@link PackageVanillaExtractOptions | `vanillaExtract`} on top:
  *
@@ -118,10 +118,26 @@ export interface PackagePandaOptions {
    */
   transform?: boolean
   /**
-   * Emit the extracted CSS without cascade layers (Panda's `@layer` polyfill).
+   * Emit the extracted CSS without cascade layers (Panda's `@layer` polyfill). The polyfill
+   * appends `:not(#\#)` chains to every selector, raising its specificity so far that consumer
+   * CSS can no longer override the library's rules; see `cascadeLayers` instead.
    * @defaultValue the `polyfill` option of the Panda config
    */
   polyfill?: boolean
+  /**
+   * Keep Panda's cascade layers in the extracted CSS. Set to `false` to remove every `@layer`
+   * block and statement, with the rules ordered so that source order gives them the precedence
+   * the layers gave them, and every selector left as Panda wrote it. Consumer CSS can then
+   * override a base style with a selector at least as specific, loaded after the library's
+   * stylesheet, without also overriding the library's more specific `:hover`, `:focus-visible`
+   * and other state rules — unlike with layers, where any unlayered consumer rule beats them all.
+   * Source order can't reproduce everything layers do: a more specific rule in an earlier layer
+   * now beats a later layer (a recipe's base `_hover` style beats its variants and utilities),
+   * and `!important` declarations no longer reverse the layer order. Takes precedence over the
+   * Panda config's `polyfill`, and cannot be combined with the `polyfill` option.
+   * @defaultValue true
+   */
+  cascadeLayers?: boolean
   /**
    * Name of the emitted CSS file, like `css.fileName` in `@tsdown/css`.
    * @defaultValue "bundle.css"

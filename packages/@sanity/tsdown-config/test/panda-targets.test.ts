@@ -134,3 +134,23 @@ describe('panda CSS targets', () => {
     }
   })
 })
+
+describe('panda cascade layers', () => {
+  test('are kept by default, and removed with `cascadeLayers: false`', async () => {
+    const cwd = scratchProject('cascade-layers')
+    const layered = await buildStylesheet(
+      cwd,
+      await defineConfig(packageOptions(cwd, {panda: true})),
+    )
+    expect(layered).toContain('@layer utilities {')
+
+    const unlayered = await buildStylesheet(
+      cwd,
+      await defineConfig(packageOptions(cwd, {panda: {cascadeLayers: false}})),
+    )
+    expect(unlayered).not.toContain('@layer')
+    expect(unlayered).toContain('.inset_0 {')
+    // The `@sanity/browserslist-config` fallback still applies: its browsers keep `inset`
+    expect(unlayered).toContain('inset: 0')
+  })
+})
