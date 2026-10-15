@@ -808,6 +808,25 @@ async function resolvePackageConfig(
     )
   }
   if (options.panda) {
+    const panda = options.panda === true ? {} : options.panda
+    // Each CSS pipeline emits its own stylesheet and claims its export subpath; two pipelines
+    // writing the same file would overwrite each other's CSS (neither merges the other's), so
+    // a shared effective file name is a configuration error rather than a silent loss
+    const pandaFileName = panda.fileName ?? 'bundle.css'
+    if (options.vanillaExtract) {
+      const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
+      if ((vanillaExtract.fileName ?? 'bundle.css') === pandaFileName) {
+        throw new Error(
+          `\`panda\` and \`vanillaExtract\` both extract their CSS into "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
+        )
+      }
+    }
+    if (options.css && (options.css.fileName ?? 'style.css') === pandaFileName) {
+      throw new Error(
+        `\`panda\` and \`css\` both write their CSS to "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
+      )
+    }
+
     // Lazy loaded, like `vanillaExtract`, so Panda's toolchain (the `@pandacss/compiler` node
     // driver, `@pandacss/transformer` and the native `lightningcss` binary) is only paid for when the
     // option is enabled. The plugin's `inject`/`exports` options follow `css.inject` in
@@ -818,7 +837,6 @@ async function resolvePackageConfig(
       import('@sanity/pandacss-tsdown-plugin'),
       import('./cssLoweringTargets.ts'),
     ])
-    const panda = options.panda === true ? {} : options.panda
 
     const lightningcss = await resolveCssLoweringTargets({
       cssTarget: panda.target,

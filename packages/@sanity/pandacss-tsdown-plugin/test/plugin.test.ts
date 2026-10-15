@@ -292,6 +292,11 @@ describe('pandacssPlugin', () => {
       ['extglob', './src/**/*.@(ts|tsx)', false],
       ['negated-class', './src/**/[!a]*.ts', true],
       ['brace-range', './src/**/index{1..3}.ts', false],
+      // A globstar at a brace boundary: valid for Panda, beyond the converter. (Panda reads
+      // `src/**` followed by `/index.ts` as needing a directory in between, so the fixture's
+      // `src/index.ts` isn't covered by the second pattern — the point is the filter.)
+      ['brace-globstar', './src/{**/*.ts,**/*.tsx}', true],
+      ['brace-globstar-prefix', './{src/**,lib}/index.ts', false],
     ] as const) {
       const cwd = copyFixture(name, withInclude(include))
       try {
@@ -482,6 +487,16 @@ describe('pandacssPlugin', () => {
     } finally {
       await bundle.close()
     }
+  })
+
+  test('ignores `lightningcss.cssModules`, which would rename the classes', async () => {
+    // Panda names the classes, and the JavaScript already carries them; a CSS-modules pass
+    // would rename them in the stylesheet only
+    const output = await generate({cwd: fixtureDir, lightningcss: {cssModules: true}})
+    const css = findAsset(output, 'bundle.css')
+    expect(css).toContain('.color_brand {')
+    expect(css).toContain('.inset_0 {')
+    expect(findEntryChunk(output).code).toContain('"color_brand"')
   })
 
   test('`lightningcss.targets` wins over `target`, and `target: false` skips lowering', async () => {

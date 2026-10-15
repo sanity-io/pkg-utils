@@ -862,8 +862,8 @@ function readGlobs(value: unknown): string[] {
  * syntax: the directory it is resolved against is matched literally, brackets and all. The
  * syntax covered is the fast-glob subset Panda configs use — `**`, `*`, `?`, `{a,b}`
  * alternation and plain `[…]` classes; a glob using anything else (extglob groups, negated
- * classes, brace ranges) returns `undefined`, so the caller can leave the native filter
- * unscoped instead of guessing.
+ * classes, brace ranges, a globstar at a brace boundary) returns `undefined`, so the caller can
+ * leave the native filter unscoped instead of guessing.
  */
 function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   if (RE_UNSUPPORTED_GLOB.test(glob)) return undefined
@@ -915,23 +915,40 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
       }
       case '*': {
         const previous = pattern[index - 1]
-        if (
-          pattern[index + 1] === '*' &&
-          (previous === undefined || previous === '/') &&
-          (pattern[index + 2] === undefined || pattern[index + 2] === '/')
-        ) {
-          // A `**` segment spans directories; `**/` also matches zero of them, so `src/**/*.ts`
-          // matches `src/a.ts` like fast-glob does
-          if (pattern[index + 2] === '/') {
-            source += '(?:.*/)?'
-            index += 2
-          } else {
-            source += '.*'
-            index += 1
+        const afterStar = pattern[index + 2]
+        if (pattern[index + 1] === '*') {
+          if (
+            (previous === undefined || previous === '/') &&
+            (afterStar === undefined || afterStar === '/')
+          ) {
+            // A `**` segment spans directories; `**/` also matches zero of them, so
+            // `src/**/*.ts` matches `src/a.ts` like fast-glob does
+            if (afterStar === '/') {
+              source += '(?:.*/)?'
+              index += 2
+            } else {
+              source += '.*'
+              index += 1
+            }
+            break
           }
-        } else {
+          // `**` next to a brace boundary (`{**/*.ts,…}`, `{src/**,lib}`) is a globstar whose
+          // segment semantics depend on the alternative it is in — left to Panda's matcher
+          if (
+            previous === '{' ||
+            previous === ',' ||
+            afterStar === ',' ||
+            afterStar === '}' ||
+            (braceDepth > 0 && (previous === undefined || afterStar === undefined))
+          ) {
+            return undefined
+          }
+          // Otherwise `**` inside a segment (`a**b`) is just `*`, like fast-glob
           source += '[^/]*'
+          index += 1
+          break
         }
+        source += '[^/]*'
         break
       }
       case '?':
