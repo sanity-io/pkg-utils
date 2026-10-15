@@ -9,6 +9,7 @@
     "panda",
     "tsdown",
     "rolldown",
+    "vite",
     "css",
     "lightningcss",
     "plugin"
@@ -28,6 +29,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./vite": "./src/vite.ts",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
@@ -37,7 +39,7 @@
   "scripts": {
     "build": "tsdown",
     "prepack": "pnpm build",
-    "prepare": "panda codegen --cwd test/fixtures/basic && panda codegen --cwd test/fixtures/dynamic && panda codegen --cwd test/fixtures/codegen && panda codegen --cwd test/fixtures/recipes && panda codegen --cwd test/fixtures/cascade-layers",
+    "prepare": "panda codegen --cwd test/fixtures/basic && panda codegen --cwd test/fixtures/dynamic && panda codegen --cwd test/fixtures/codegen && panda codegen --cwd test/fixtures/recipes && panda codegen --cwd test/fixtures/cascade-layers && panda codegen --cwd test/fixtures/vite",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
@@ -49,21 +51,29 @@
   },
   "devDependencies": {
     "@pandacss/dev": "catalog:",
+    "@pandacss/vite": "catalog:",
     "@sanity/tsconfig": "workspace:^",
     "@sanity/tsdown-config": "workspace:^",
     "@types/node": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "playwright": "catalog:",
     "publint": "catalog:",
     "rolldown": "~1.2.14",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "^8.3.4",
     "vitest": "catalog:"
   },
   "peerDependencies": {
     "@pandacss/dev": "*",
-    "tsdown": "^0.23.0"
+    "tsdown": "^0.23.0",
+    "vite": "*"
   },
   "peerDependenciesMeta": {
     "@pandacss/dev": {
+      "optional": true
+    },
+    "vite": {
       "optional": true
     }
   },
@@ -73,6 +83,7 @@
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
+      "./vite": "./dist/vite.mjs",
       "./package.json": "./package.json"
     }
   }

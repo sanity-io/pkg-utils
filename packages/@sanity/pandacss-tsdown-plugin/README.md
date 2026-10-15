@@ -2,7 +2,7 @@
 
 A [tsdown](https://tsdown.dev) plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm with a separate stylesheet.
 
-It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config; the two load the same `panda.config.ts`.
+It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config; the two load the same `panda.config.ts`. A package built with this plugin with `cascadeLayers: false` that also runs its sources through Vite (a dev server, Storybook, Vitest) can add the [`removeCascadeLayers()`](#vite-plugin) plugin next to `@pandacss/vite` there, so that CSS cascades like the published build.
 
 ## Installation
 
@@ -144,6 +144,8 @@ Keep the layers when the consumers are Panda apps, or other apps that declare a 
 
 Panda's own `polyfill` option is no substitute: it emulates the layer order by appending `:not(#\#)` chains to every selector, one more ID for each layer. That keeps the library's own precedence, but even its global `button` style becomes as specific as an ID selector (and its utilities as ten), so no consumer rule short of `!important` can override it. The two options can't be combined.
 
+The library's own Vite setups, such as its Storybook or Vitest browser suite, which build its sources with `@pandacss/vite` instead of loading `bundle.css`, get the same unlayered CSS from the [Vite plugin](#vite-plugin).
+
 ### Browser targets
 
 Which syntax Lightning CSS transforms depends on the targets:
@@ -186,6 +188,31 @@ In `tsdown --watch`, the plugin watches every scanned source (imported or not), 
 `@pandacss/vite`'s `cwd`, `configPath` and `outdir` have the same meaning here. Its `transform` exists too but is on by default, since a published package should not depend on Panda's runtime where it can avoid it.
 
 An option the plugin doesn't have is an error, not something it ignores — a typo, or an option of a newer `@sanity/tsdown-config` than the installed plugin supports (`cascadeLayers` set to anything but a boolean is one). `PANDACSS_PLUGIN_OPTION_NAMES` exports the names of the options, for hosts that pass options through and want to check them the same way.
+
+## Vite plugin
+
+`@sanity/pandacss-tsdown-plugin/vite` is for packages that build with this plugin and `cascadeLayers: false` (directly or through the `panda` option of `@sanity/tsdown-config`), and also run their Panda sources through the official `@pandacss/vite` plugin, in a dev server, a Storybook or a Vitest browser suite. Its `removeCascadeLayers()` is the Vite counterpart of `cascadeLayers: false`: registered next to `@pandacss/vite`, it removes the layers from the CSS `@pandacss/vite` generates with the same pass as the build, so the Vite output cascades like the published `bundle.css`. It isn't a standalone Vite plugin: it neither replaces nor wraps `@pandacss/vite`, and `tsdown` stays a required peer.
+
+The package already has the plugin and `tsdown` for its build, and `@pandacss/vite` for its Vite setups. The entry also needs `vite`, an optional peer dependency of the plugin, so builds that don't use the entry don't install it.
+
+```ts
+// vite.config.ts
+import pandacss from '@pandacss/vite'
+import {removeCascadeLayers} from '@sanity/pandacss-tsdown-plugin/vite'
+import {defineConfig} from 'vite'
+
+export default defineConfig({
+  plugins: [
+    pandacss({transform: true}),
+    removeCascadeLayers(['reset', 'base', 'tokens', 'recipes', 'utilities']),
+  ],
+})
+```
+
+- **The layer names** are the ones the Panda config gives its layers: Panda's defaults above, or the names its `layers` option renames them to, such as `u-reset` for `reset`. The names are top-level layer names, which remove their sublayers too: a config that puts Panda's layers under a layer of its own (`layers: {base: 'panda.base', …}`) passes `panda`. A dotted name such as `panda.base` throws, since a sublayer's order depends on the layers it is declared next to.
+- **The stylesheet `@pandacss/vite` fills** stays the app's own: a CSS file that declares the layers, such as `@layer reset, base, tokens, recipes, utilities;`, imported at the top of the app's entry, `.storybook/preview.tsx` or a Vitest [setup file](https://vitest.dev/config/setupfiles), before anything that loads other CSS. Without layers, Panda's rules compete with the app's other CSS by specificity and source order, so they have to load first, before the `<style>` elements styled-components adds at runtime, for example. `removeCascadeLayers()` removes the declaration of the named layers from it too.
+- **Only the named layers go**, together with their sublayers (Panda's `recipes.slots` and `utilities.compositions`): their `@layer` blocks, and their names in `@layer` statements. Other layers stay as they are, such as the ones another library's stylesheet declares, or a `@layer` statement ahead of the declaration that orders other libraries' layers (`@layer sui;`). That applies to every CSS module, so the names should be the Panda config's own when other CSS on the page uses the same ones, such as Tailwind's `base` and `utilities`.
+- **It runs after `@pandacss/vite`**, whose transform comes first (`order: 'pre'`), wherever it is registered, and before Vite's own CSS pipeline (PostCSS, `@import` inlining, Lightning CSS minification), so the stylesheets the app's stylesheet `@import`s keep their layers. That holds in `vite dev`, `vite build` and Vitest's browser mode alike.
 
 ## Advanced
 

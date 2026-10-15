@@ -36,8 +36,13 @@
     },
     "packages/@sanity/pandacss-tsdown-plugin": {
       // The fixtures are rolldown build inputs referenced by path, not imported from the tests,
-      // and their Panda configs are loaded by Panda's node driver
-      "entry": ["test/fixtures/*/src/*.ts", "test/fixtures/*/panda.config.ts"],
+      // their Panda configs are loaded by Panda's node driver, and the Vitest config of the
+      // `vite` fixture is run by a Vitest the tests start
+      "entry": [
+        "test/fixtures/*/src/*.ts",
+        "test/fixtures/*/panda.config.ts",
+        "test/fixtures/*/vitest.config.ts",
+      ],
       "project": ["src/**/*.ts", "test/**/*.ts"],
     },
     "packages/@sanity/parse-package-json": {

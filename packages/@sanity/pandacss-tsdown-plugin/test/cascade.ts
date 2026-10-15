@@ -116,6 +116,18 @@ export function cascadeWinner(
   return winner && `${winner.label}: ${winner.selector}`
 }
 
+/**
+ * The selector and declaration lines of a pretty-printed stylesheet, trimmed and sorted: what it
+ * says, regardless of layers, order and indentation.
+ */
+export function ruleLines(css: string): string[] {
+  return css
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line !== '' && line !== '}' && !line.startsWith('@layer'))
+    .toSorted()
+}
+
 function resolveLayer(parent: LayerNode, name: readonly string[]): LayerNode {
   let node = parent
   for (const segment of name) {

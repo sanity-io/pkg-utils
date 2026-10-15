@@ -30,7 +30,7 @@ import {
   type LightningCSSOptions,
   type Options,
 } from '../src/index.ts'
-import {cascadeWinner, type CascadeElement} from './cascade.ts'
+import {cascadeWinner, ruleLines, type CascadeElement} from './cascade.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
@@ -985,18 +985,6 @@ function styledDeclarations(css: string): Set<string> {
   return declarations
 }
 
-/**
- * The selector and declaration lines of a pretty-printed stylesheet, trimmed and sorted: what it
- * says, regardless of layers, order and indentation.
- */
-function ruleLines(css: string): string[] {
-  return css
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line !== '' && line !== '}' && !line.startsWith('@layer'))
-    .toSorted()
-}
-
 /** A consumer stylesheet, loaded after the library's: an element rule and a one-class override. */
 const consumerCss = `button {
   color: red;
@@ -1565,6 +1553,73 @@ describe('unwrapCascadeLayers', () => {
     expect(unwrapCascadeLayers('@layer a {\n\t.a {\n\t\tcolor: red;\n\t}\n}\n')).toBe(
       '.a {\n\tcolor: red;\n}\n',
     )
+  })
+
+  test('recognizes `@layer` in any case', () => {
+    expect(unwrapCascadeLayers('@LAYER a{.a{}}.top{}')).toBe('.a{}.top{}')
+    expect(unwrapCascadeLayers('@Layer a{.a{}}.top{}', new Set(['a']))).toBe('.a{}.top{}')
+  })
+
+  test('with layer names, keeps the order every declaration gives the removed layers', () => {
+    // `b` is declared first, so the rules of `a` still win
+    expect(
+      unwrapCascadeLayers(
+        '@layer b, kept, a;@layer a{.x{color:red}}@layer kept{.k{}}@layer b{.x{color:blue}}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('@layer kept;.x{color:blue}.x{color:red}@layer kept{.k{}}')
+    // A statement that only names kept layers stays as it is
+    expect(
+      unwrapCascadeLayers(
+        '@layer kept, other;@layer b{.b{}}@layer kept{.k{}}@layer a{.a{}}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('@layer kept, other;.b{}.a{}@layer kept{.k{}}')
+  })
+
+  test('keeps the comments ahead of the first rule there', () => {
+    expect(unwrapCascadeLayers('/* head */@layer a{.a{}}/* mid */.top{}')).toBe(
+      '/* head */.a{}/* mid */.top{}',
+    )
+  })
+
+  test('with layer names, removes only those layers, with their sublayers', () => {
+    // `other.a` is a sublayer of a kept layer, which stays after the rules of the removed ones,
+    // since they beat it now
+    expect(
+      unwrapCascadeLayers(
+        '@layer a{@layer s{.s{}}.a{}}@layer other{@layer a{.oa{}}}@layer b{.b{}}.top{}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('.s{}.a{}.b{}@layer other{@layer a{.oa{}}}.top{}')
+  })
+
+  test('with layer names, keeps the names of the other layers in the statements', () => {
+    // A statement ahead of the first rule stays there, so it still names its layers first
+    expect(
+      unwrapCascadeLayers(
+        '@layer sui, a;.x{}@layer b, other;@layer other{.o{}}@layer a{.a{}}@layer b{.b{}}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('@layer sui;.a{}.b{}.x{}@layer other;@layer other{.o{}}')
+    // Also when the statement ends up last
+    expect(unwrapCascadeLayers('.x{}@layer a, other;@layer a{.a{}}', new Set(['a']))).toBe(
+      '.a{}.x{}@layer other;',
+    )
+  })
+
+  test('with layer names, only splits the conditional rules around those layers', () => {
+    expect(
+      unwrapCascadeLayers('@media print{@layer other{.o{}}@layer a{.a{}}}', new Set(['a'])),
+    ).toBe('@media print{.a{}@layer other{.o{}}}')
+    expect(
+      unwrapCascadeLayers('@media print{@layer other{.o{}}}@layer a{.a{}}', new Set(['a'])),
+    ).toBe('.a{}@media print{@layer other{.o{}}}')
+  })
+
+  test('with layer names, leaves a stylesheet without them as it is', () => {
+    const css = '@layer other {\n  .o {\n    color: red;\n  }\n}\n\n@layer other.a;\n'
+    expect(unwrapCascadeLayers(css, new Set(['a']))).toBe(css)
   })
 })
 

@@ -128,5 +128,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: pnpm install
+      # For the Vitest browser mode test of @sanity/pandacss-tsdown-plugin/vite
+      - run: pnpm --filter @sanity/pandacss-tsdown-plugin exec playwright install --with-deps chromium
       - run: pnpm build
       - run: pnpm test
