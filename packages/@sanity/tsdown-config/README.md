@@ -313,6 +313,13 @@ export default defineConfig({
 })
 ```
 
+The options are those of the plugin version this config was written against. The peer range
+accepts every version of the plugin, so an option can be newer than the plugin that is installed;
+the config then fails with the option's name and the upgrade to make (`pnpm add -D
+@sanity/pandacss-tsdown-plugin@latest`), rather than letting the plugin ignore the option (an
+old plugin would keep the layers `cascadeLayers: false` asks it to remove). Plugin releases from
+0.2.0 name their options for this check, and reject the ones they don't have themselves.
+
 Setup reminders, in the package being built:
 
 - `"prepare": "panda codegen"` (from `@pandacss/dev`, recommended but not required) so the

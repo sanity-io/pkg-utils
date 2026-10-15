@@ -116,6 +116,7 @@ The CSS is extracted into `bundle.css` (the `fileName` option) once per output f
 - Every Panda cascade layer is requested, and the output keeps the `@layer` blocks of the layers that have rules — but not the `@layer reset, base, tokens, recipes, utilities;` order declaration. Declaring the order is the consuming application's job (Panda apps do this in their own CSS). Set `cascadeLayers: false` to publish the CSS without layers instead (see [Cascade layers](#cascade-layers)).
 - Lightning CSS always processes the result: it transforms the syntax for the configured browsers (see [Browser targets](#browser-targets)), normalizes it, and removes Panda's `--made-with-panda` marker together with the rules and layers that leaves empty.
 - Minification is separate and off by default; set `minify: true`.
+- With `cascadeLayers: false`, the layers are removed last, from the CSS Lightning CSS printed (minified or not), so Lightning CSS and any `lightningcss.visitor` still see Panda's layered stylesheet.
 
 ### Cascade layers
 
@@ -129,7 +130,9 @@ For a published library, the layers have a cost: CSS outside any layer beats eve
 - The library's state rules (`.button:is(:hover, [data-hover])`) are more specific than a one-class override, so they keep winning.
 - Every selector is left as Panda wrote it, so no rule gets more specific than it was.
 
-The rules are reordered so that source order gives them the precedence the layers gave them: `reset`, `base`, `tokens`, `recipes` and `utilities` in that order, and within a layer, its sublayers before its own rules. Panda depends on the latter: it emits the `compositions` sublayer (text and layer styles) after the utilities that must beat it, and recipes as `base`, `variants` and `compound_variants` sublayers, with slot recipes in a separate `recipes.slots` block.
+The rules are reordered so that source order gives them the precedence the layers gave them: `reset`, `base`, `tokens`, `recipes` and `utilities` in that order, and within a layer, its sublayers before its own rules. Panda depends on the latter: it emits the `compositions` sublayer (text and layer styles) after the utilities that must beat it, and recipes as `base`, `variants` and `compound_variants` sublayers, with slot recipes in a separate `recipes.slots` block. A `@media`, `@supports` or `@container` block that holds layers is split along them, each part keeping its condition, so the order holds across it too.
+
+This is the last step of the build, on the CSS Lightning CSS printed: the stylesheet is parsed with [PostCSS](https://postcss.org), the rules are moved out of their `@layer` blocks and the result is printed again, so every rule keeps the text Lightning CSS gave it — the same syntax transforms, merging and minification as with the layers on, and the same formatting at the rules' new indentation. Nothing is matched textually: a `@layer` inside a custom property's value or a string is data, and the layer names (escapes, comments and all) are read by Lightning CSS's parser.
 
 Source order can't reproduce everything layers do, though:
 
@@ -181,6 +184,8 @@ In `tsdown --watch`, the plugin watches every scanned source (imported or not), 
 | `exports`       | `boolean \| {nodeCompat?: boolean}`            | `false`                       | Publish the stylesheet as the `./<fileName>` export, conditional with a Node.js shim when `nodeCompat` is set. See [Loading the stylesheet](#loading-the-stylesheet).                                            |
 
 `@pandacss/vite`'s `cwd`, `configPath` and `outdir` have the same meaning here. Its `transform` exists too but is on by default, since a published package should not depend on Panda's runtime where it can avoid it.
+
+An option the plugin doesn't have is an error, not something it ignores — a typo, or an option of a newer `@sanity/tsdown-config` than the installed plugin supports (`cascadeLayers` set to anything but a boolean is one). `PANDACSS_PLUGIN_OPTION_NAMES` exports the names of the options, for hosts that pass options through and want to check them the same way.
 
 ## Advanced
 

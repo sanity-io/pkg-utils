@@ -858,13 +858,29 @@ async function resolvePackageConfig(
     // `@tsdown/css` (disabled by default), so this config supplies the same defaults as for
     // `vanillaExtract`: the conditional CSS export pattern, written through this config's
     // `exports` option (which the plugin's `tsdownConfig` hook composes into).
-    const [{pandacssPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
+    const [pluginModule, {resolveCssLoweringTargets}] = await Promise.all([
       // An optional peer dependency: only the packages that use Panda install it
       import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
         throw new Error('`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.', {cause})
       }),
       import('./cssLoweringTargets.ts'),
     ])
+    const {pandacssPlugin} = pluginModule
+    // The peer range accepts any version of the plugin, and `PackagePandaOptions` mirrors the
+    // options of the one this package was written against: an option the installed version
+    // doesn't have would otherwise reach a plugin that ignores it, silently (`cascadeLayers`
+    // would leave the layers in). The plugin names its options since 0.2.0; before that, the
+    // options were the ones of 0.1, and the plugin ignored the rest.
+    const supportedOptions: ReadonlySet<string> =
+      (pluginModule as Partial<typeof pluginModule>).PANDACSS_PLUGIN_OPTION_NAMES ??
+      PANDACSS_PLUGIN_0_1_OPTION_NAMES
+    for (const [name, value] of Object.entries(panda)) {
+      if (value !== undefined && !supportedOptions.has(name)) {
+        throw new Error(
+          `\`panda.${name}\` needs a newer \`@sanity/pandacss-tsdown-plugin\`: the installed version has no \`${name}\` option, and would ignore it. Upgrade it with \`pnpm add -D @sanity/pandacss-tsdown-plugin@latest\`.`,
+        )
+      }
+    }
 
     // The automatic targets depend on the final config's `target`, which a config composed
     // after this one (`mergeConfig()`) may still override, and which tsdown resolves (from
@@ -1055,6 +1071,25 @@ async function resolvePackageConfig(
  * extensions `rolldown-plugin-dts` gives the modules of the declaration bundling pass.
  */
 const RE_DTS_FILE = /\.d\.(ts|mts|cts)$/
+
+/**
+ * The options of `@sanity/pandacss-tsdown-plugin` 0.1: the releases that don't export
+ * `PANDACSS_PLUGIN_OPTION_NAMES`, and ignore the options they don't have.
+ */
+const PANDACSS_PLUGIN_0_1_OPTION_NAMES: ReadonlySet<string> = new Set([
+  'cwd',
+  'configPath',
+  'codegen',
+  'outdir',
+  'transform',
+  'polyfill',
+  'fileName',
+  'minify',
+  'target',
+  'lightningcss',
+  'inject',
+  'exports',
+])
 
 /** Strips the SGR color codes rolldown formats warning messages with. */
 // oxlint-disable-next-line eslint/no-control-regex -- matching the ESC of a CSI sequence
