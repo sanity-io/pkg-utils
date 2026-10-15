@@ -11,5 +11,5 @@ Fix several cases where styles were missed or the build output was wrong:
 - `target` accepts tsdown's `'baseline-widely-available'` alias, like `css.target` in `@tsdown/css`.
 - A symlinked project directory, a relative `cwd` and `include` globs with `..` segments no longer leave modules untransformed.
 - `fileName` accepts a `./` prefix and dot-prefixed names, and a name outside the output directory is rejected.
-- With `exports`, an output directory outside the package fails with an explanation instead of writing an invalid export, and an entry your own `customExports` writes for the stylesheet is kept, also when it changes the map in place.
+- With `exports`, an output directory outside the package fails with an explanation instead of writing an invalid export, and your own `customExports` now runs after the stylesheet export is added, so an entry it writes for the stylesheet wins.
 - Watch mode keeps a Windows network-share (UNC) output directory out of the watcher.

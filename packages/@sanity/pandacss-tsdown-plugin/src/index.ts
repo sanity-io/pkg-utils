@@ -2,7 +2,6 @@ import {createHash} from 'node:crypto'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import {isDeepStrictEqual} from 'node:util'
 import {createNodeDriver} from '@pandacss/compiler'
 import {
   createSourceTransformer,
@@ -871,30 +870,19 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
       const previousCustomExports = exportsOptions.customExports
       exportsOptions.customExports = async (exportsMap, context) => {
-        // Apply a pre-existing `customExports` first (both its function and record forms,
-        // mirroring how tsdown itself applies them), then insert the CSS export
-        const exportKey = `./${fileName}`
-        // A copy of the entry tsdown passed in, nested conditions included: the callback may
-        // change it in place and return the same map
-        const passedEntry = structuredClone(exportsMap[exportKey])
-        const base =
-          typeof previousCustomExports === 'function'
-            ? await previousCustomExports(exportsMap, context)
-            : previousCustomExports
-              ? {...exportsMap, ...previousCustomExports}
-              : exportsMap
-        // An entry the user's own `customExports` wrote for the CSS subpath (to add conditions,
-        // say) is theirs to shape, so it is kept as is
-        const userDefined =
-          typeof previousCustomExports === 'function'
-            ? !isDeepStrictEqual(base[exportKey], passedEntry)
-            : previousCustomExports !== undefined && exportKey in previousCustomExports
-        if (userDefined) return base
+        // The CSS export goes in first, and a pre-existing `customExports` (its function and
+        // record forms, applied like tsdown applies them) runs on the result: whatever it writes
+        // for the CSS subpath (to add conditions, say) wins, and passing the map through keeps
+        // the CSS export
         const outDir = resolveOutDir(config, context, fileName)
         const cssExport = nodeCompat
           ? createConditionalCssExport(fileName, outDir)
           : createCssExport(fileName, outDir)
-        return insertCssExport(base, exportKey, cssExport)
+        const withCssExport = insertCssExport(exportsMap, `./${fileName}`, cssExport)
+        if (typeof previousCustomExports === 'function') {
+          return previousCustomExports(withCssExport, context)
+        }
+        return previousCustomExports ? {...withCssExport, ...previousCustomExports} : withCssExport
       }
       config.exports = exportsOptions
       return undefined

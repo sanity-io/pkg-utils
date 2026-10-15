@@ -1569,9 +1569,29 @@ describe('tsdownConfig hook', () => {
     ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': conditionalCssExport})
   })
 
+  test("keeps an entry the user's `customExports` returns, even tsdown's own", async () => {
+    // The callback receives the CSS export, so writing back the entry tsdown passed in is an
+    // explicit choice too
+    const received: unknown[] = []
+    const config = await runTsdownConfigHook({
+      exports: {
+        customExports: (exportsMap) => {
+          received.push(exportsMap['./bundle.css'])
+          return {...exportsMap, './bundle.css': './dist/bundle.css'}
+        },
+      },
+    })
+    await expect(
+      getCustomExports(config)(
+        {'.': './dist/index.mjs', './bundle.css': './dist/bundle.css'},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': './dist/bundle.css'})
+    expect(received).toEqual([conditionalCssExport])
+  })
+
   test("keeps a CSS entry the user's `customExports` changes in place", async () => {
-    // A callback may mutate the map it receives and return it, so the entry tsdown passed in is
-    // compared by its contents, nested conditions included
+    // A callback may mutate the map it receives and return it
     const replaced = await runTsdownConfigHook({
       exports: {
         customExports: (exportsMap) => {
@@ -1605,7 +1625,7 @@ describe('tsdownConfig hook', () => {
       ),
     ).resolves.toEqual({
       '.': './dist/index.mjs',
-      './bundle.css': {default: './dist/bundle.css', module: './dist/bundle.css'},
+      './bundle.css': {...conditionalCssExport, module: './dist/bundle.css'},
     })
   })
 
