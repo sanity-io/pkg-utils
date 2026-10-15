@@ -1,9 +1,11 @@
 import {mkdir, mkdtemp, readFile, realpath, rm, stat, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
+import {setTimeout as delay} from 'node:timers/promises'
 import {fileURLToPath} from 'node:url'
 import {
   rolldown,
+  watch,
   type ModuleFormat,
   type OutputAsset,
   type OutputChunk,
@@ -250,6 +252,50 @@ function cssSource(name: string, color: string): string {
   return `import {css} from '../styled-system/css'\n\nexport const ${name} = css({color: '${color}'})\n`
 }
 
+/**
+ * Runs rolldown's watcher (polling, so file events behave the same on every OS), counting the
+ * finished builds.
+ */
+function startWatcher(plugin: TsdownPlugin, input: string, outDir: string) {
+  const watcher = watch({
+    input,
+    plugins: [plugin],
+    output: {dir: outDir, format: 'esm'},
+    watch: {watcher: {usePolling: true, pollInterval: 50}},
+  })
+  let builds = 0
+  let failure: unknown
+  let waiting: {count: number; resolve: () => void; reject: (error: unknown) => void}[] = []
+  const settle = (): void => {
+    waiting = waiting.filter((waiter) => {
+      if (failure !== undefined) waiter.reject(failure)
+      else if (builds >= waiter.count) waiter.resolve()
+      else return true
+      return false
+    })
+  }
+  watcher.on('event', (event) => {
+    if (event.code === 'BUNDLE_END') {
+      void event.result.close()
+      builds++
+      settle()
+    } else if (event.code === 'ERROR') {
+      void event.result.close()
+      failure = event.error
+      settle()
+    }
+  })
+  return {
+    builds: (): number => builds,
+    waitForBuild: (count: number): Promise<void> =>
+      new Promise((resolve, reject) => {
+        waiting.push({count, resolve, reject})
+        settle()
+      }),
+    close: (): Promise<void> => watcher.close(),
+  }
+}
+
 describe('config reloads', () => {
   let dir = ''
 
@@ -396,6 +442,61 @@ describe('config reloads', () => {
     await rm(path.join(dir, 'src/extra.ts'))
     expect((await rebuild(plugin, {external: true})).css).not.toContain('#00f')
   })
+
+  test(
+    'rebuilds when a new file matches `include`, even if no entry imports it',
+    {timeout: 30_000},
+    async () => {
+      const watcher = startWatcher(
+        pandaPlugin({cwd: dir}),
+        path.join(dir, 'src/index.ts'),
+        path.join(dir, 'dist'),
+      )
+      try {
+        await watcher.waitForBuild(1)
+        expect(await readFile(path.join(dir, 'dist/styles.css'), 'utf8')).not.toContain('purple')
+
+        await delay(300)
+        await writeFile(path.join(dir, 'src/extra.ts'), cssSource('extra', 'purple'))
+        await watcher.waitForBuild(2)
+        expect(await readFile(path.join(dir, 'dist/styles.css'), 'utf8')).toContain('purple')
+      } finally {
+        await watcher.close()
+      }
+    },
+  )
+
+  test(
+    'keeps the build output out of the watched `include` directories',
+    {timeout: 30_000},
+    async () => {
+      // `./**/*.ts` makes the project root an `include` base, holding `dist` and `styled-system`
+      await writeFile(
+        path.join(dir, 'panda.config.ts'),
+        `import {recipes} from './theme'\n\nexport default {include: ['./**/*.ts'], outdir: 'styled-system', theme: {recipes}}\n`,
+      )
+      await mkdir(path.join(dir, 'lib'))
+      const watcher = startWatcher(
+        pandaPlugin({cwd: dir}),
+        path.join(dir, 'src/index.ts'),
+        path.join(dir, 'dist'),
+      )
+      try {
+        await watcher.waitForBuild(1)
+        // Writing `dist` must not trigger the next build
+        await delay(1500)
+        expect(watcher.builds()).toBe(1)
+
+        await writeFile(path.join(dir, 'lib/extra.ts'), cssSource('extra', 'purple'))
+        await watcher.waitForBuild(2)
+        expect(await readFile(path.join(dir, 'dist/styles.css'), 'utf8')).toContain('purple')
+        await delay(1500)
+        expect(watcher.builds()).toBe(2)
+      } finally {
+        await watcher.close()
+      }
+    },
+  )
 
   test('reloads the config when a file it imports changes', async () => {
     const plugin = pandaPlugin({cwd: dir})

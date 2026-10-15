@@ -11,7 +11,7 @@ import {
   type SourceTransformer,
 } from '@pandacss/transformer'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
-import type {OutputChunk, RenderedChunk} from 'rolldown'
+import type {InputOptions, OutputChunk, RenderedChunk} from 'rolldown'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
 import {cssShimDtsFileName, cssShimDtsSource, cssShimFileName, cssShimSource} from './cssShim.ts'
 import {
@@ -226,6 +226,41 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   /** The files the last scan with options parsed, which Panda doesn't reconcile on its own. */
   let scannedFiles = new Set<string>()
 
+  /** The output directories of the watch build, which every rebuild writes to. */
+  let watchOutputDirs: string[] = []
+  /** The directories excluded from the watcher. */
+  let watchExcludedDirs: string[] = []
+
+  /**
+   * The `watch.exclude` patterns for the build output and the generated directories. The
+   * include-glob base directories are watched for new files, so output a rebuild writes inside
+   * one of them would otherwise trigger the next rebuild, forever.
+   */
+  function watchExclusions(loaded: NodeDriver, inputOptions: InputOptions): RegExp[] {
+    watchOutputDirs = [
+      ...(resolvedOutDir === undefined ? [] : [resolvedOutDir]),
+      ...rolldownOutputDirs(Reflect.get(inputOptions, 'output')),
+    ].map((dir) => path.resolve(cwd, dir))
+    const generatedDirs = [loaded.getOutdir(), loaded.getOutdir(options.outdir)].map((dir) =>
+      path.resolve(cwd, dir),
+    )
+    // A directory containing the project can't be excluded without unwatching all of it
+    watchExcludedDirs = [...new Set([...watchOutputDirs, ...generatedDirs])].filter(
+      (dir) => !isInsideOrEqual(cwd, dir),
+    )
+    return watchExcludedDirs.map(directoryPattern)
+  }
+
+  /**
+   * Whether watching `dir` would watch an output directory that couldn't be excluded, which
+   * would rebuild forever.
+   */
+  function watchesOutput(dir: string): boolean {
+    return watchOutputDirs.some(
+      (outputDir) => isInsideOrEqual(outputDir, dir) && !watchExcludedDirs.includes(outputDir),
+    )
+  }
+
   /**
    * Scans and parses the files matched by the config's `include`/`exclude` globs. Panda's own
    * scan only skips the config's `outdir`, so with the plugin's `outdir` override the generated
@@ -404,10 +439,25 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
         info: (message) => this.info(message),
         warn: (message) => this.warn(message),
       })
-      if (!inject) return undefined
+      const watch =
+        this.meta.watchMode && inputOptions.watch !== false
+          ? {
+              ...inputOptions.watch,
+              exclude: [
+                ...(inputOptions.watch?.exclude === undefined
+                  ? []
+                  : [inputOptions.watch.exclude].flat()),
+                ...watchExclusions(loaded, inputOptions),
+              ],
+            }
+          : undefined
+      if (!inject && !watch) return undefined
       return {
         ...inputOptions,
-        experimental: {...inputOptions.experimental, nativeMagicString: true},
+        ...(inject
+          ? {experimental: {...inputOptions.experimental, nativeMagicString: true}}
+          : undefined),
+        ...(watch ? {watch} : undefined),
       }
     },
 
@@ -432,6 +482,11 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
             file: report.path,
             onlyNew: true,
           })
+        }
+        // So are the base directories of the `include` globs, for new files no entry imports
+        for (const dir of loaded.watchTargets().dirs) {
+          const resolved = path.resolve(loaded.resolvePath(dir))
+          if (!watchesOutput(resolved)) this.addWatchFile(resolved)
         }
 
         configWatchFiles.clear()
@@ -692,8 +747,43 @@ function stringArray(value: unknown): string[] {
     : []
 }
 
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')
+}
+
 function exactRegex(value: string): RegExp {
-  return new RegExp(`^${value.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}$`)
+  return new RegExp(`^${escapeRegex(value)}$`)
+}
+
+/** Matches `dir` and everything inside it, with either path separator. */
+function directoryPattern(dir: string): RegExp {
+  const source = dir
+    .split(/[\\/]+/)
+    .map(escapeRegex)
+    .join('[\\\\/]')
+  return new RegExp(`^${source}(?:[\\\\/]|$)`, process.platform === 'win32' ? 'i' : '')
+}
+
+function isInsideOrEqual(child: string, parent: string): boolean {
+  const relative = path.relative(parent, child)
+  return (
+    relative === '' ||
+    (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+  )
+}
+
+/** The output directories of rolldown's `output` option, an object or an array of them. */
+function rolldownOutputDirs(output: unknown): string[] {
+  const entries: unknown[] = Array.isArray(output) ? output : [output]
+  const dirs: string[] = []
+  for (const entry of entries) {
+    if (typeof entry !== 'object' || entry === null) continue
+    const dir: unknown = Reflect.get(entry, 'dir')
+    const file: unknown = Reflect.get(entry, 'file')
+    if (typeof dir === 'string') dirs.push(dir)
+    else if (typeof file === 'string') dirs.push(path.dirname(file))
+  }
+  return dirs
 }
 
 /** The name of the nearest `package.json` at or above `cwd`, for builds outside tsdown. */
