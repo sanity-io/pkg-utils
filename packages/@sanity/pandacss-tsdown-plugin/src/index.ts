@@ -4,8 +4,7 @@ import path from 'node:path'
 import {createNodeDriver, type Driver, type LayerName} from '@pandacss/dev/node'
 import {transformSource} from '@pandacss/transformer'
 import {transform as lightningcss, type TransformOptions} from 'lightningcss'
-import type {Plugin} from 'rolldown'
-import type {UserConfig} from 'tsdown'
+import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
 
 import {
   cssShimDtsFileName,
@@ -23,9 +22,16 @@ import {esbuildTargetToLightningCSS} from './targets.ts'
 
 export {
   type CssExportsOptions,
+  cssShimDtsFileName,
+  cssShimDtsSource,
+  cssShimFileName,
+  cssShimSource,
   DEFAULT_CSS_EXPORT_CONDITIONS,
   DEFAULT_CSS_FILE_NAME,
   esbuildTargetToLightningCSS,
+  normalizeAssetFileName,
+  normalizeCssExportsOptions,
+  withCssCustomExports,
 }
 
 /**
@@ -131,6 +137,11 @@ export interface Options {
    * Additional options forwarded to `lightningcss.transform()`.
    */
   lightningcss?: LightningCSSOptions
+  /**
+   * Explicit package name for self-referencing `inject` imports when running
+   * outside tsdown (e.g. direct Rolldown builds without a `package.json`).
+   */
+  packageName?: string
 }
 
 const PANDA_LAYERS: LayerName[] = ['reset', 'base', 'tokens', 'recipes', 'utilities']
@@ -177,7 +188,7 @@ function toPosixRelativeImport(fromChunkFileName: string, toAssetFileName: strin
  *
  * @public
  */
-export function pandaCssPlugin(options: Options = {}): Plugin {
+export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   const {
     cwd,
     configPath,
@@ -185,23 +196,23 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
     transform: shouldTransform = false,
     fileName = DEFAULT_CSS_FILE_NAME,
     inject = false,
-    exports: enableExports = false,
+    exports: enableExports,
     minify = false,
     target,
     lightningcss: lightningcssOptions,
+    packageName: optionPackageName,
   } = options
 
   const normalizedFileName = normalizeAssetFileName(fileName)
-  const normalizedExports = normalizeCssExportsOptions(enableExports, false)
+  const normalizedExports = normalizeCssExportsOptions(enableExports, true)
   const injectEnabled = Boolean(inject)
   const injectNodeCompat =
     typeof inject === 'object' ? (inject.nodeCompat ?? true) : normalizedExports.nodeCompat
-  const emitNodeCompatShim =
-    (normalizedExports.enabled && normalizedExports.nodeCompat) ||
-    (injectEnabled && injectNodeCompat)
-  const targets = esbuildTargetToLightningCSS(target)
+  const emitNodeCompatShim = normalizedExports.nodeCompat || (injectEnabled && injectNodeCompat)
 
   let resolvedCwd = cwd ? path.resolve(cwd) : process.cwd()
+  let contextTarget: string | readonly string[] | false | undefined
+  let contextPackageName: string | undefined = optionPackageName
   let driver: Driver | undefined
   let packageNamePromise: Promise<string | undefined> | undefined
   let parsedIds = new Set<string>()
@@ -209,18 +220,6 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
   const getPackageName = (): Promise<string | undefined> => {
     packageNamePromise ??= readPackageName(resolvedCwd)
     return packageNamePromise
-  }
-
-  const transformFilter: {
-    id: {
-      include: (string | RegExp)[]
-      exclude: (string | RegExp)[]
-    }
-  } = {
-    id: {
-      include: [],
-      exclude: [DTS_ID_RE],
-    },
   }
 
   const initDriver = async (baseCwd: string): Promise<Driver> => {
@@ -234,31 +233,25 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
       nextDriver.config.outdir = outdir
     }
     nextDriver.parseFiles()
-    transformFilter.id.include = [...nextDriver.config.include]
-    transformFilter.id.exclude = [...(nextDriver.config.exclude ?? []), DTS_ID_RE]
     driver = nextDriver
     return nextDriver
   }
 
-  const plugin: Plugin & {
-    tsdownConfig?: (config: UserConfig) => void
-    tsdownConfigResolved?: (config: unknown) => Promise<void>
-  } = {
+  return {
     name: 'sanity:pandacss-tsdown',
 
     tsdownConfig(config: UserConfig) {
-      config.exports = withCssCustomExports(config.exports, normalizedFileName, enableExports)
+      config.exports = withCssCustomExports(config.exports, normalizedFileName, enableExports ?? false)
     },
 
-    async tsdownConfigResolved(config: unknown) {
-      const cfgCwd =
-        config &&
-        typeof config === 'object' &&
-        'cwd' in config &&
-        typeof (config as {cwd?: unknown}).cwd === 'string'
-          ? (config as {cwd: string}).cwd
-          : process.cwd()
-      await initDriver(cfgCwd)
+    async tsdownConfigResolved(config: ResolvedConfig) {
+      if (config.target !== undefined) {
+        contextTarget = config.target
+      }
+      if (typeof config.pkg?.name === 'string' && config.pkg.name.length > 0) {
+        contextPackageName = config.pkg.name
+      }
+      await initDriver(config.cwd || process.cwd())
     },
 
     options(inputOptions) {
@@ -282,12 +275,18 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
     },
 
     transform: {
-      filter: transformFilter,
+      filter: {
+        id: {
+          include: [/\.[cm]?[jt]sx?$/],
+          exclude: [/node_modules/, DTS_ID_RE],
+        },
+      },
       handler(code, id) {
         if (!driver) return null
 
-        driver.compiler.parseFileSource(id, code)
-        parsedIds.add(id)
+        const cleanId = id.split('?')[0]
+        driver.compiler.parseFileSource(cleanId, code)
+        parsedIds.add(cleanId)
 
         if (!shouldTransform) {
           return null
@@ -295,7 +294,7 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
 
         const result = transformSource({
           compiler: driver.compiler,
-          path: id,
+          path: cleanId,
           source: code,
           mode: 'build',
         })
@@ -312,7 +311,13 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
     },
 
     async renderChunk(code, chunk, outputOptions, meta) {
-      if (!injectEnabled || !chunk.isEntry || parsedIds.size === 0) {
+      if (
+        !injectEnabled ||
+        !chunk.isEntry ||
+        chunk.name.endsWith('.d') ||
+        DTS_ID_RE.test(chunk.fileName) ||
+        parsedIds.size === 0
+      ) {
         return null
       }
 
@@ -321,7 +326,9 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
         return null
       }
 
-      const pkgName = injectNodeCompat ? await getPackageName() : undefined
+      const pkgName = injectNodeCompat
+        ? (contextPackageName ?? (await getPackageName()))
+        : undefined
       const cssImportPath = pkgName
         ? `${pkgName}/${normalizedFileName}`
         : toPosixRelativeImport(chunk.fileName, normalizedFileName)
@@ -332,9 +339,7 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
 
       if (meta?.magicString) {
         meta.magicString.prepend(statement)
-        return {
-          code: meta.magicString,
-        }
+        return meta.magicString
       }
 
       return {
@@ -343,17 +348,24 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
       }
     },
 
-    generateBundle() {
+    generateBundle(_outputOptions, bundle) {
       if (!driver) return
 
-      const rawCss = driver.getLayerCss({
+      const hasJsChunk = Object.values(bundle).some(
+        (item) => item.type === 'chunk' && !DTS_ID_RE.test(item.fileName),
+      )
+      if (!hasJsChunk) return
+
+      const {css: rawCss} = driver.getLayerCss({
         layers: PANDA_LAYERS,
         emitLayerDeclaration: false,
       })
 
       let finalCss: string | Uint8Array = rawCss
 
-      if (rawCss.length > 0 && (targets || minify || lightningcssOptions)) {
+      if (rawCss.length > 0) {
+        const targets =
+          target === false ? undefined : esbuildTargetToLightningCSS(target ?? contextTarget)
         const result = lightningcss({
           ...lightningcssOptions,
           filename: normalizedFileName,
@@ -365,7 +377,10 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
         finalCss = Buffer.from(result.code).toString('utf8')
       }
 
-      if (typeof finalCss === 'string' ? finalCss.length > 0 : finalCss.byteLength > 0) {
+      if (
+        (typeof finalCss === 'string' ? finalCss.length > 0 : finalCss.byteLength > 0) ||
+        normalizedExports.enabled
+      ) {
         this.emitFile({
           type: 'asset',
           fileName: normalizedFileName,
@@ -387,8 +402,6 @@ export function pandaCssPlugin(options: Options = {}): Plugin {
       }
     },
   }
-
-  return plugin
 }
 
 export default pandaCssPlugin

@@ -1,10 +1,7 @@
 {
-  "extends": "@sanity/tsconfig/strict-bundler",
-  "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["node_modules", "dist"],
+  "extends": "@sanity/tsconfig/strictest",
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./dist",
-    "noEmit": true
-  }
+    "rootDir": "."
+  },
+  "exclude": ["**/dist/**"]
 }

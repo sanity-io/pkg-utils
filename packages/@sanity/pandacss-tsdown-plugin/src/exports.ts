@@ -29,7 +29,10 @@ export function normalizeAssetFileName(fileName: string): string {
   return normalized
 }
 
-function toPosixRelativeOutDir(pkgRoot: string, outDir: string): string {
+function toPosixRelativeOutDir(pkgRoot?: string, outDir?: string): string {
+  if (!pkgRoot || !outDir) {
+    return 'dist'
+  }
   const rel = path.relative(pkgRoot, path.resolve(pkgRoot, outDir))
   const posixRel = rel.split(path.sep).join('/').replace(/^\/+/, '')
 

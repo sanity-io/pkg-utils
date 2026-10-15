@@ -1,5 +1,5 @@
 import browserslist from 'browserslist'
-import {browserslistToTargets} from 'lightningcss'
+import {browserslistToTargets, type Targets} from 'lightningcss'
 
 const ESBUILD_TARGET_RE = /^(chrome|edge|firefox|ie|ios|node|opera|safari)(\d+(?:\.\d+)*)$/i
 
@@ -28,7 +28,7 @@ const ENGINE_TO_BROWSERSLIST: Record<string, string | null> = {
  */
 export function esbuildTargetToLightningCSS(
   target: string | readonly string[] | false | undefined,
-): ReturnType<typeof browserslistToTargets> | undefined {
+): Targets | undefined {
   if (!target) return undefined
 
   const items = typeof target === 'string' ? [target] : target
