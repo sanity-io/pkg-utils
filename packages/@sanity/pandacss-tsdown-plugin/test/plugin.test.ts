@@ -691,7 +691,15 @@ export const badge = css({color: 'brand'})
     expect(edgeTargets).toBeDefined()
     expect(edgeTargets?.edge).toBe(100 << 16)
 
-    const mixedTargets = esbuildTargetToLightningCSS(['chrome102', 'edge105', 'node22', 'es2022'])
+    const mixedTargets = esbuildTargetToLightningCSS([
+      'chrome102',
+      'edge105',
+      'node22',
+      'deno2',
+      'hermes0.13',
+      'rhino1.7',
+      'es2022',
+    ])
     expect(mixedTargets).toBeDefined()
     expect(mixedTargets?.chrome).toBe(102 << 16)
     expect(mixedTargets?.edge).toBe(105 << 16)
@@ -699,7 +707,16 @@ export const badge = css({color: 'brand'})
     expect(esbuildTargetToLightningCSS(['chrome61', 'chrome120'])?.chrome).toBe(61 << 16)
     expect(esbuildTargetToLightningCSS(['chrome120', 'chrome61'])?.chrome).toBe(61 << 16)
 
-    expect(esbuildTargetToLightningCSS(['node22', 'es2022', 'esnext'])).toBeUndefined()
+    expect(
+      esbuildTargetToLightningCSS([
+        'node22',
+        'deno2',
+        'hermes0.13',
+        'rhino1.7',
+        'es2022',
+        'esnext',
+      ]),
+    ).toBeUndefined()
     expect(esbuildTargetToLightningCSS('defaults')).toBeDefined()
   })
 
@@ -925,6 +942,157 @@ export function makeBrandBox(overrides?: SystemStyleObject): string {
       expect(dctsCode).not.toContain('styles.css')
     } finally {
       rmSync(tmpDir, {recursive: true, force: true})
+    }
+  })
+
+  it('uses relative CSS import for standalone inject: true without CSS export, and bare import when package.json exports ./styles.css', async () => {
+    // basicFixtureDir has name "@fixtures/pandacss-basic" but no exports["./styles.css"]
+    const relativeBuild = await rolldown({
+      cwd: basicFixtureDir,
+      input: basicEntry,
+      external: ['./styles.css'],
+      plugins: [
+        pandaCssPlugin({
+          cwd: basicFixtureDir,
+          inject: true,
+        }),
+      ],
+    })
+    const {output: relativeOutput} = await relativeBuild.generate({format: 'esm'})
+    await relativeBuild.close()
+
+    const relativeEntry = relativeOutput.find(
+      (item): item is OutputChunk => item.type === 'chunk' && item.isEntry,
+    )
+    expect(relativeEntry?.code.startsWith('import "./styles.css";\n')).toBe(true)
+
+    // When package.json manually defines exports["./styles.css"], standalone inject: true uses the bare specifier
+    const tmpDir = createTempProjectDir('panda-manual-exports-')
+    try {
+      writeFileSync(
+        path.join(tmpDir, 'package.json'),
+        JSON.stringify(
+          {
+            name: '@fixtures/panda-manual-exports',
+            version: '1.0.0',
+            type: 'module',
+            exports: {
+              '.': './dist/index.js',
+              './styles.css': './dist/styles.css',
+            },
+            imports: {
+              '#styled-system/*': './styled-system/*/index.js',
+            },
+          },
+          null,
+          2,
+        ),
+      )
+      writeFileSync(
+        path.join(tmpDir, 'panda.config.ts'),
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
+  preflight: false,
+  include: ['./src/**/*.ts'],
+  outdir: 'styled-system',
+  importMap: '#styled-system',
+  theme: {extend: {tokens: {colors: {brand: {value: 'rgb(1, 2, 3)'}}}}},
+} satisfies Config)
+`,
+      )
+      writeFileSync(
+        path.join(tmpDir, 'src/index.ts'),
+        `import {css} from '#styled-system/css'
+export const c = css({color: 'brand'})
+`,
+      )
+
+      const manualBuild = await rolldown({
+        cwd: tmpDir,
+        input: path.join(tmpDir, 'src/index.ts'),
+        external: ['@fixtures/panda-manual-exports/styles.css'],
+        plugins: [
+          pandaCssPlugin({
+            cwd: tmpDir,
+            inject: true,
+          }),
+        ],
+      })
+      const {output: manualOutput} = await manualBuild.generate({format: 'esm'})
+      await manualBuild.close()
+
+      const manualEntry = manualOutput.find(
+        (item): item is OutputChunk => item.type === 'chunk' && item.isEntry,
+      )
+      expect(
+        manualEntry?.code.startsWith('import "@fixtures/panda-manual-exports/styles.css";\n'),
+      ).toBe(true)
+    } finally {
+      rmSync(tmpDir, {recursive: true, force: true})
+    }
+  })
+
+  it('transforms and tracks parent-relative include globs such as ../shared/**/*.ts', async () => {
+    const rootDir = mkdtempSync(path.join(os.tmpdir(), 'panda-parent-rel-'))
+    try {
+      const pkgDir = path.join(rootDir, 'pkg')
+      const sharedDir = path.join(rootDir, 'shared')
+      mkdirSync(path.join(pkgDir, 'src'), {recursive: true})
+      mkdirSync(sharedDir, {recursive: true})
+      symlinkSync(
+        path.resolve(__dirname, '../node_modules'),
+        path.join(rootDir, 'node_modules'),
+        'junction',
+      )
+
+      writeFileSync(
+        path.join(pkgDir, 'panda.config.ts'),
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
+  preflight: false,
+  include: ['./src/**/*.ts', '../shared/**/*.ts'],
+  outdir: 'styled-system',
+  theme: {extend: {tokens: {colors: {brand: {value: 'rgb(1, 2, 3)'}}}}},
+} satisfies Config)
+`,
+      )
+      writeFileSync(
+        path.join(sharedDir, 'card.ts'),
+        `import {css} from '../pkg/styled-system/css/index.js'
+export const sharedCard = css({color: 'brand'})
+`,
+      )
+      writeFileSync(
+        path.join(pkgDir, 'src/index.ts'),
+        `export {sharedCard} from '../../shared/card.ts'
+`,
+      )
+
+      const build = await rolldown({
+        cwd: pkgDir,
+        input: path.join(pkgDir, 'src/index.ts'),
+        external: ['./styles.css'],
+        plugins: [
+          pandaCssPlugin({
+            cwd: pkgDir,
+            inject: true,
+          }),
+        ],
+      })
+      const {output} = await build.generate({format: 'esm'})
+      await build.close()
+
+      const entryChunk = output.find(
+        (item): item is OutputChunk => item.type === 'chunk' && item.isEntry,
+      )
+      expect(entryChunk).toBeDefined()
+      expect(entryChunk!.code.startsWith('import "./styles.css";\n')).toBe(true)
+      expect(entryChunk!.code).toContain('color_brand')
+      expect(entryChunk!.code).not.toContain('createCss')
+    } finally {
+      rmSync(rootDir, {recursive: true, force: true})
     }
   })
 })

@@ -196,7 +196,7 @@ function readGlobs(value: unknown): string[] {
   return value.filter((entry): entry is string => typeof entry === 'string')
 }
 
-const UNSUPPORTED_FILTER_GLOB_RE = /[?+*@!]\(|\[[!^]|\{[^}]*\.\.[^}]*\}/
+const UNSUPPORTED_FILTER_GLOB_RE = /[?+*@!]\(|\[[!^]|\{[^}]*\.\.[^}]*\}|(?:^|\/)\.\.?(?:\/|$)/
 
 /**
  * Convert a Panda config glob (relative to `cwd`) into a `RegExp` matching
@@ -204,10 +204,10 @@ const UNSUPPORTED_FILTER_GLOB_RE = /[?+*@!]\(|\[[!^]|\{[^}]*\.\.[^}]*\}/
  * separately so characters like `[1]` in `cwd` are never treated as glob syntax.
  */
 function globToRegExp(glob: string, cwd: string): RegExp | undefined {
-  if (UNSUPPORTED_FILTER_GLOB_RE.test(glob)) {
+  const normalizedGlob = glob.replace(/\\/g, '/').replace(/^(\.\/)+/, '')
+  if (!normalizedGlob || UNSUPPORTED_FILTER_GLOB_RE.test(normalizedGlob)) {
     return undefined
   }
-  const normalizedGlob = glob.replace(/\\/g, '/').replace(/^(\.\/)+/, '')
   const realBase = realpathOrSelf(cwd).replace(/\\/g, '/').replace(/\/+$/, '')
   const isAbsoluteGlob = path.posix.isAbsolute(normalizedGlob) || /^[a-z]:\//i.test(normalizedGlob)
 
@@ -358,26 +358,53 @@ function matchesSourceFilter(
   return !NODE_MODULES_RE.test(filePath)
 }
 
-async function readPackageName(cwd: string): Promise<string | undefined> {
+interface PackageMetadata {
+  name?: string
+  hasCssExport: boolean
+}
+
+function exportsMapHasSubpath(exportsField: unknown, exportKey: string): boolean {
+  if (!exportsField || typeof exportsField !== 'object' || Array.isArray(exportsField)) {
+    return false
+  }
+  return exportKey in exportsField || './*' in exportsField
+}
+
+async function readPackageMetadata(
+  cwd: string,
+  normalizedFileName: string,
+): Promise<PackageMetadata> {
+  const exportKey = `./${normalizedFileName}`
   let dir = path.resolve(cwd)
   while (true) {
     try {
       const raw = await fs.readFile(path.join(dir, 'package.json'), 'utf8')
       const parsed: unknown = JSON.parse(raw)
-      if (
-        typeof parsed === 'object' &&
-        parsed !== null &&
-        'name' in parsed &&
-        typeof parsed.name === 'string' &&
-        parsed.name.length > 0
-      ) {
-        return parsed.name
+      if (typeof parsed === 'object' && parsed !== null) {
+        const name =
+          'name' in parsed && typeof parsed.name === 'string' && parsed.name.length > 0
+            ? parsed.name
+            : undefined
+        const publishConfig =
+          'publishConfig' in parsed &&
+          typeof parsed.publishConfig === 'object' &&
+          parsed.publishConfig !== null
+            ? parsed.publishConfig
+            : undefined
+        const hasCssExport =
+          ('exports' in parsed && exportsMapHasSubpath(parsed.exports, exportKey)) ||
+          (publishConfig !== undefined &&
+            'exports' in publishConfig &&
+            exportsMapHasSubpath(publishConfig.exports, exportKey))
+        if (name || hasCssExport) {
+          return {name, hasCssExport}
+        }
       }
     } catch {
       // keep walking up until filesystem root
     }
     const parent = path.dirname(dir)
-    if (parent === dir) return undefined
+    if (parent === dir) return {hasCssExport: false}
     dir = parent
   }
 }
@@ -472,7 +499,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   let transformer: SourceTransformer | undefined
   let transformerCompiler: Driver['compiler'] | undefined
   let sourceFilter: DerivedSourceFilter | undefined
-  let packageNamePromise: Promise<string | undefined> | undefined
+  let packageMetadataPromise: Promise<PackageMetadata> | undefined
   let needsConfigReload = false
   let hasBuiltOnce = false
   let parsedIds = new Set<string>()
@@ -480,9 +507,9 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   let scannedWatchFiles: string[] = []
   let scannedWatchDirs: string[] = []
 
-  const getPackageName = (): Promise<string | undefined> => {
-    packageNamePromise ??= readPackageName(resolvedCwd)
-    return packageNamePromise
+  const getPackageMetadata = (): Promise<PackageMetadata> => {
+    packageMetadataPromise ??= readPackageMetadata(resolvedCwd, normalizedFileName)
+    return packageMetadataPromise
   }
 
   const resolveTransformer = (activeDriver: Driver): SourceTransformer => {
@@ -539,7 +566,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       return driverPromise
     }
     resolvedCwd = nextCwd
-    packageNamePromise = undefined
+    packageMetadataPromise = undefined
     driverPromise = createNodeDriver({
       cwd: resolvedCwd,
       ...(configPath ? {configPath} : {}),
@@ -750,9 +777,20 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         return null
       }
 
-      const pkgName = injectNodeCompat
-        ? (contextPackageName ?? (await getPackageName()))
-        : undefined
+      const explicitBareInject =
+        (typeof inject === 'object' && inject.nodeCompat === true) ||
+        optionPackageName !== undefined
+      let pkgName: string | undefined
+      if (injectNodeCompat) {
+        if (exportsEnabled || explicitBareInject) {
+          pkgName = contextPackageName ?? (await getPackageMetadata()).name
+        } else {
+          const pkgMeta = await getPackageMetadata()
+          if (pkgMeta.hasCssExport) {
+            pkgName = contextPackageName ?? pkgMeta.name
+          }
+        }
+      }
       const cssImportPath = pkgName
         ? `${pkgName}/${normalizedFileName}`
         : toPosixRelativeImport(chunk.fileName, normalizedFileName)

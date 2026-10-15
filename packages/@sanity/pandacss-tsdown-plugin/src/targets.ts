@@ -2,18 +2,22 @@ import browserslist from 'browserslist'
 import {browserslistToTargets, type Targets} from 'lightningcss'
 
 const ES_VERSION_TARGET_RE = /^es(?:\d+|next)$/i
-const ESBUILD_TARGET_RE = /^(chrome|edge|firefox|ie|ios|node|opera|safari)(\d+(?:\.\d+)*)$/i
+const ESBUILD_TARGET_RE =
+  /^(chrome|deno|edge|firefox|hermes|ie|ios|node|opera|rhino|safari)(\d+(?:\.\d+)*)$/i
 
 const ENGINE_TO_BROWSERSLIST: Record<string, string | null> = {
   chrome: 'Chrome',
+  deno: null,
   edge: 'Edge',
   firefox: 'Firefox',
+  hermes: null,
   ie: 'IE',
   ios: 'iOS',
-  opera: 'Opera',
-  safari: 'Safari',
-  // Node is not a CSS engine — ignore it when converting mixed JS/CSS target arrays.
+  // Non-browser JS runtimes — ignore them when converting mixed JS/CSS target arrays.
   node: null,
+  opera: 'Opera',
+  rhino: null,
+  safari: 'Safari',
 }
 
 /**
@@ -22,8 +26,9 @@ const ENGINE_TO_BROWSERSLIST: Record<string, string | null> = {
  * (e.g. `'defaults'`, `'> 0.5%'`) to LightningCSS browser `targets`.
  *
  * Returns `undefined` when `target` is `false`, `'esnext'`, or contains only
- * non-browser engines (such as `'node22'`) or generic ES version strings
- * (`'es2022'`), in which case LightningCSS performs no syntax downleveling.
+ * non-browser engines (such as `'node22'`, `'deno2'`, `'hermes0.13'`, `'rhino1.7'`)
+ * or generic ES version strings (`'es2022'`), in which case LightningCSS performs
+ * no syntax downleveling.
  *
  * @public
  */
