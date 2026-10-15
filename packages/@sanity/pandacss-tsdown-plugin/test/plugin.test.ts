@@ -387,7 +387,7 @@ describe('config reloads', () => {
       path.join(dir, 'theme.ts'),
       `export const recipes = {badge: {className: 'badge', base: {color: '${color}'}, variants: ${variants}}}\n`,
     )
-  const useConfig = (variant: 'narrowed' | 'prefixed' | 'root' | 'scan') =>
+  const useConfig = (variant: 'narrowed' | 'prefixed' | 'root' | 'scan' | 'windows') =>
     cp(path.join(dir, `panda.${variant}.ts`), path.join(dir, 'panda.config.ts'))
 
   beforeEach(async () => {
@@ -715,6 +715,22 @@ describe('config reloads', () => {
         exclude: expect.arrayContaining([
           expect.stringMatching(/\/lib\\\[1\\\]\/styled-system\/\*\*$/),
         ]),
+      },
+    })
+  })
+
+  test('keeps Windows absolute globs absolute, with forward slashes', async () => {
+    // Backslash separators are escapes in rolldown's globs, and must not get the project path
+    // prefixed like a relative glob
+    await useConfig('windows')
+    const plugin = pandaPlugin({cwd: dir})
+    await plugin.tsdownConfigResolved?.({cwd: dir, logger} as ResolvedConfig)
+    const {transform} = plugin
+    if (typeof transform !== 'object') expect.unreachable('expected an object `transform` hook')
+    expect(transform.filter).toMatchObject({
+      id: {
+        include: ['C:/work/lib/src/**/*.ts'],
+        exclude: expect.arrayContaining(['C:/work/lib/src/drafts/**', '//server/share/lib/**']),
       },
     })
   })

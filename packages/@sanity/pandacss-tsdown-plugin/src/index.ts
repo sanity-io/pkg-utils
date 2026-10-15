@@ -156,6 +156,9 @@ const RE_DTS = /\.d\.[cm]?ts$/
 /** Matches the JS/TS modules Panda extracts styles from. */
 const RE_SOURCE = /\.[cm]?[jt]sx?$/
 
+/** Matches Windows absolute paths: a drive letter (`C:\`, `C:/`) or a UNC prefix (`\\`). */
+const RE_WINDOWS_ABSOLUTE = /^(?:[a-z]:[\\/]|\\\\)/i
+
 type NodeDriver = Awaited<ReturnType<typeof createNodeDriver>>
 
 type Program = ReturnType<PluginContext['parse']>
@@ -718,8 +721,12 @@ function configureIdFilter(
   // The project path is literal, the configured globs aren't: only the former is escaped, so a
   // directory like `lib[1]` doesn't turn into a character class
   const base = escapeGlob(realCwd.replaceAll('\\', '/'))
-  const toAbsolute = (glob: string): string =>
-    path.posix.isAbsolute(glob) || /^[a-z]:\//i.test(glob) ? glob : path.posix.join(base, glob)
+  const toAbsolute = (glob: string): string => {
+    // Windows absolute paths (e.g. from `path.resolve()`) may use backslash separators, which
+    // are escapes in rolldown's globs
+    if (RE_WINDOWS_ABSOLUTE.test(glob)) return glob.replaceAll('\\', '/')
+    return path.posix.isAbsolute(glob) ? glob : path.posix.join(base, glob)
+  }
 
   const include: string[] = []
   const exclude: (string | RegExp)[] = [RE_DTS]
