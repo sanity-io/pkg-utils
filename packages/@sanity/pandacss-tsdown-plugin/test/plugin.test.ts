@@ -822,6 +822,39 @@ describe('codegen', () => {
     },
   )
 
+  test(
+    'runs again for every tsdown build that reuses the plugin instance',
+    {timeout: 60_000},
+    async () => {
+      // Each programmatic `build()` cleans the generated directory again, so the codegen the
+      // first build ran must not stand in for the second's. `transform: false` bundles the
+      // runtime, so a missing directory fails the build.
+      const cwd = copyFixture('clean-twice')
+      const plugin = pandacssPlugin({cwd, transform: false})
+      try {
+        for (const run of [1, 2]) {
+          await tsdownBuild({
+            config: false,
+            cwd,
+            entry: ['src/index.ts'],
+            format: ['esm', 'cjs'],
+            outDir: 'dist',
+            clean: ['dist', 'styled-system'],
+            plugins: [plugin],
+            logLevel: 'silent',
+            publint: false,
+          })
+          expect(existsSync(path.join(cwd, 'styled-system/css/index.js')), `build ${run}`).toBe(
+            true,
+          )
+          expect(readFileSync(path.join(cwd, 'dist/index.mjs'), 'utf-8')).toMatch(/\bcss\(/)
+        }
+      } finally {
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+
   test("runs before every plugin's `buildStart`, outside tsdown too", async () => {
     // rolldown runs the `buildStart` hooks in parallel, and a declaration plugin reads the
     // generated types from its own, so the first codegen must be done before any of them

@@ -804,6 +804,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     //   it's not enabled.
     tsdownConfig(config: UserConfig) {
       if (codegenEnabled) {
+        // Every `build()` (and watch restart) resolves the config again and may clean the
+        // generated directory again, so the deduplication only spans one resolved config
         codegenBeforeBuilds = undefined
         const userHooks = config.hooks
         config.hooks = async (hooks) => {
