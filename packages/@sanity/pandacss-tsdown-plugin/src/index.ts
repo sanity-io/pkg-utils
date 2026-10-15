@@ -573,7 +573,9 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       const filter = this.meta.watchMode
         ? CONSERVATIVE_TRANSFORM_FILTER
         : createTransformFilter(currentDriver, cwd, options.outdir)
-      plugin.transform = filter ? {filter, handler: transformHandler} : {handler: transformHandler}
+      plugin.transform = filter
+        ? {order: 'pre', filter, handler: transformHandler}
+        : {order: 'pre', handler: transformHandler}
 
       let nextOptions = inputOptions
       if (this.meta.watchMode) {
@@ -692,8 +694,11 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       },
     },
 
-    // Replaced in the `options` hook with the filtered version once the config is known
-    transform: {handler: transformHandler},
+    // Replaced in the `options` hook with the filtered version once the config is known. Runs
+    // ahead of the other plugins' transforms (like `enforce: 'pre'` on `@pandacss/transformer`'s
+    // own bundler plugin): Panda extracts from the authored source, which a plugin lowering
+    // JSX first (`React.createElement(Box, {color: 'brand'})`) would hide from it.
+    transform: {order: 'pre', handler: transformHandler},
 
     // Inject the CSS import into entry chunks that reach Panda styles: relative by default
     // (like `css.inject` in `@tsdown/css`), or the self-referential bare specifier when the

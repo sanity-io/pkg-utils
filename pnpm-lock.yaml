@@ -1133,6 +1133,21 @@ importers:
         specifier: 'catalog:'
         version: 2.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(postcss@8.5.29)
 
+  packages/@sanity/tsdown-config/test/fixtures/panda-react-compiler-library:
+    devDependencies:
+      '@pandacss/dev':
+        specifier: 'catalog:'
+        version: 2.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(postcss@8.5.29)
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      oxc-transform-react:
+        specifier: 'catalog:'
+        version: 0.154.0
+      react:
+        specifier: ^19.3.1
+        version: 19.3.1
+
   packages/@sanity/tsdown-config/test/fixtures/panda-runtime-library:
     devDependencies:
       '@pandacss/dev':

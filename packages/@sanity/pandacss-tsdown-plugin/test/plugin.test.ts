@@ -15,6 +15,7 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import vm from 'node:vm'
 import {rolldown, watch, type OutputAsset, type OutputChunk, type Plugin} from 'rolldown'
+import {transform as transformWithOxc} from 'rolldown/experimental'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {directoryPattern} from '../src/directoryPattern.ts'
@@ -161,13 +162,14 @@ describe('pandacssPlugin', () => {
 
   test('derives the `transform` hook filter from the config `include`/`exclude` globs', async () => {
     const plugin = pandacssPlugin({cwd: fixtureDir})
-    expect(plugin.transform).toEqual({handler: expect.any(Function)})
+    expect(plugin.transform).toEqual({order: 'pre', handler: expect.any(Function)})
 
     const bundle = await rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]})
     try {
       // The config is loaded in the `options` hook, so the filter is in place before rolldown
       // reads the plugin's hooks
       expect(plugin.transform).toEqual({
+        order: 'pre',
         filter: {
           id: {
             include: [expect.any(RegExp)],
@@ -461,6 +463,48 @@ describe('pandacssPlugin', () => {
         }
         expect(findAsset(output, 'bundle.css')).toContain(className)
       }
+    }
+  })
+
+  test('extracts Panda JSX before another plugin lowers it', async () => {
+    // A plugin listed first that lowers JSX into `React.createElement(Box, {color: 'brand'})`
+    // hides the JSX Panda extracts styles from, so Panda's transform runs ahead of it
+    const cwd = copyFixture(
+      'jsx-lowered',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8')
+        .replace("include: ['./src/**/*.ts']", "include: ['./src/**/*.{ts,tsx}']")
+        .replace(
+          'presets: [],',
+          "presets: [],\n  jsxFramework: 'react',\n  patterns: {box: {properties: {}, transform: (props: Record<string, unknown>) => props}},",
+        ),
+    )
+    writeFileSync(
+      path.join(cwd, 'src/badge.tsx'),
+      'import {Box} from \'#styled-system/jsx\'\n\nexport const badge = <Box color="brand">New</Box>\n',
+    )
+    const lowerJsx: Plugin = {
+      name: 'lower-jsx',
+      transform: {
+        filter: {id: /\.tsx$/},
+        async handler(code, id) {
+          const result = await transformWithOxc(id, code, {jsx: {runtime: 'classic'}})
+          return {code: result.code, map: result.map}
+        },
+      },
+    }
+    const bundle = await rolldown({
+      cwd,
+      input: path.join(cwd, 'src/badge.tsx'),
+      external: [/^react/],
+      plugins: [lowerJsx, pandacssPlugin({cwd, inject: true, transform: false})],
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findEntryChunk(output).code.startsWith('import "./bundle.css";\n')).toBe(true)
+      expect(findAsset(output, 'bundle.css')).toContain('.color_brand {')
+    } finally {
+      await bundle.close()
+      rmSync(cwd, {recursive: true, force: true})
     }
   })
 

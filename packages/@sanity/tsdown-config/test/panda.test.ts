@@ -169,6 +169,30 @@ describe('panda-runtime-library', () => {
   })
 })
 
+describe('panda-react-compiler-library', () => {
+  const reactCompilerFixtureDir = path.resolve(__dirname, 'fixtures/panda-react-compiler-library')
+
+  test('extracts the styles of Panda JSX components next to the React Compiler', async () => {
+    // The default `oxc` React Compiler lowers JSX in the same pass as it compiles, while
+    // `<Box color="brand">` carries its styles only in the JSX: Panda runs first
+    const [bundleCss, distIndexJs, distIndexCjs] = await Promise.all([
+      readFile(path.join(reactCompilerFixtureDir, 'dist/bundle.css'), 'utf-8'),
+      readFile(path.join(reactCompilerFixtureDir, 'dist/index.js'), 'utf-8'),
+      readFile(path.join(reactCompilerFixtureDir, 'dist/index.cjs'), 'utf-8'),
+    ])
+    expect(bundleCss).toContain('.color_brand {')
+    expect(bundleCss).toContain('--colors-brand: #f03e2f')
+
+    for (const code of [distIndexJs, distIndexCjs]) {
+      // The component was compiled, and its module counts as styled for the CSS import
+      expect(code).toContain('react/compiler-runtime')
+      expect(code).toContain('@fixtures/panda-react-compiler-library/bundle.css')
+      // The transform rewrote the JSX component into an element with its class name
+      expect(code).toContain('className: "color_brand"')
+    }
+  })
+})
+
 describe('panda-library runtime', () => {
   // `"type": "module"` package: `.js` files are ESM, so the `node`/`default` conditions of the
   // conditional `./bundle.css` export resolve the shim as an ES module.
