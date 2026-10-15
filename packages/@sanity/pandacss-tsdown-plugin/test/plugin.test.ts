@@ -245,6 +245,11 @@ async function notifyChange(plugin: TsdownPlugin, file: string): Promise<void> {
   await hook.call({} as PluginContext, file, {event: 'update'})
 }
 
+/** A module under `src/` that styles one value with `css()` from the generated runtime. */
+function cssSource(name: string, color: string): string {
+  return `import {css} from '../styled-system/css'\n\nexport const ${name} = css({color: '${color}'})\n`
+}
+
 describe('config reloads', () => {
   let dir = ''
 
@@ -369,12 +374,10 @@ describe('config reloads', () => {
       path.join(dir, 'panda.config.ts'),
       `export default {include: ['./src/**/*'], exclude: ['./src/ignored/**'], outdir: 'styled-system'}\n`,
     )
-    const source = (name: string, color: string) =>
-      `import {css} from '../styled-system/css'\n\nexport const ${name} = css({color: '${color}'})\n`
-    await writeFile(path.join(dir, 'src/index.ts'), source('box', 'red'))
-    await writeFile(path.join(dir, 'src/extra.ts'), source('extra', 'blue'))
+    await writeFile(path.join(dir, 'src/index.ts'), cssSource('box', 'red'))
+    await writeFile(path.join(dir, 'src/extra.ts'), cssSource('extra', 'blue'))
     await mkdir(path.join(dir, 'src/ignored'))
-    await writeFile(path.join(dir, 'src/ignored/skipped.ts'), source('skipped', 'orange'))
+    await writeFile(path.join(dir, 'src/ignored/skipped.ts'), cssSource('skipped', 'orange'))
 
     const plugin = pandaPlugin({cwd: dir, outdir: 'src/generated'})
     const first = await rebuild(plugin, {external: true})
