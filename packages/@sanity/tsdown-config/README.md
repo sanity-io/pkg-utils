@@ -308,6 +308,33 @@ emits its own shim, so they never collide. See the
 [`InlineConfig.css`](https://tsdown.dev/reference/api/Interface.InlineConfig#css) API reference
 for the full option surface.
 
+## panda
+
+The `panda` option enables [`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme)
+to run Panda CSS codegen (`styled-system/`), scan source files matched by `panda.config.ts`,
+rewrite `css({...})` calls into static class names at build time by default (`transform: true`,
+unlike `@pandacss/vite` which defaults to `false`; set `transform: false` to opt out), extract all
+Panda layers into `dist/styles.css`, and lower the CSS with `lightningcss`. Install
+`@sanity/pandacss-tsdown-plugin` in the project first — it is an optional peer dependency:
+
+```sh
+pnpm add --save-dev @sanity/pandacss-tsdown-plugin
+```
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: true,
+})
+```
+
+By default (`inject: true` with `exports: {nodeCompat: true}`), `panda` wires up the same
+conditional CSS export pattern on `"./styles.css"` as `vanillaExtract` does on `"./bundle.css"`,
+and resolves browserless CSS syntax lowering targets from `@sanity/browserslist-config` (while
+leaving `minify` opt-in).
+
 ## dts
 
 tsdown's [`dts` option](https://tsdown.dev/options/dts) is passed through as-is. By default tsdown

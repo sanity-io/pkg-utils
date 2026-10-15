@@ -1,10 +1,20 @@
+import {existsSync, realpathSync} from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import {createNodeDriver, type Driver} from '@pandacss/dev/node'
-import {transformSource} from '@pandacss/transformer'
+import {
+  createSourceTransformer,
+  getInternalCssRuntimeSource,
+  INTERNAL_CSS_IMPORT,
+  INTERNAL_CSS_RESOLVED_ID,
+  resolveCxSeparator,
+  type SourceTransformer,
+  transformSource,
+} from '@pandacss/transformer'
 import {type CustomAtRules, transform as lightningcss, type TransformOptions} from 'lightningcss'
-import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
+import type {OutputChunk, RenderedChunk} from 'rolldown'
+import type {ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
 
 import {
   cssShimDtsFileName,
@@ -58,17 +68,29 @@ export interface Options {
    */
   configPath?: string
   /**
+   * Run Panda's codegen (`driver.codegen()`) at build start and again when the
+   * Panda config reloads in watch mode, keeping `styled-system/` types and
+   * runtime artifacts in sync with the config.
+   *
+   * Codegen only writes files whose contents changed and stays quiet when
+   * nothing changed.
+   *
+   * @defaultValue `true`
+   */
+  codegen?: boolean
+  /**
    * Override the `outdir` configured in `panda.config.*` (e.g. `'styled-system'`).
    */
   outdir?: string
   /**
    * Rewrite `css({...})` calls at build time into atomic class name strings via
-   * `@pandacss/transformer` (same as `@pandacss/vite`'s `transform: true`).
+   * `@pandacss/transformer` (like `@pandacss/vite`'s `transform: true`, but
+   * enabled by default here so published library bundles do not carry the
+   * `styled-system` runtime).
    *
-   * Keep `false` when `styled-system/css` is bundled so the runtime handles
-   * dynamic and conditional styles.
+   * Set to `false` to opt out and keep `styled-system/css` runtime calls.
    *
-   * @defaultValue `false`
+   * @defaultValue `true`
    */
   transform?: boolean
   /**
@@ -142,8 +164,187 @@ export interface Options {
 }
 
 type StylesheetLayerName = NonNullable<Parameters<Driver['getLayerCss']>[0]['layers']>[number]
+type TransformHook = Extract<NonNullable<Rolldown.Plugin['transform']>, {handler: unknown}>
+type TransformHookFilter = NonNullable<TransformHook['filter']>
+type TransformHandler = TransformHook['handler']
+
 const PANDA_LAYERS: StylesheetLayerName[] = ['reset', 'base', 'tokens', 'recipes', 'utilities']
 const DTS_ID_RE = /\.d\.[cm]?ts$/
+const SOURCE_ID_RE = /\.[cm]?[jt]sx?$/
+const NODE_MODULES_RE = /[\\/]node_modules[\\/]/
+
+interface DerivedSourceFilter {
+  hookFilter: TransformHookFilter | undefined
+  includePatterns: RegExp[]
+  excludePatterns: RegExp[]
+  resolvedOutdir: string
+}
+
+function realpathOrSelf(filePath: string): string {
+  try {
+    return realpathSync(filePath)
+  } catch {
+    return filePath
+  }
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function readGlobs(value: unknown): string[] {
+  if (typeof value === 'string') return [value]
+  if (!Array.isArray(value)) return []
+  return value.filter((entry): entry is string => typeof entry === 'string')
+}
+
+/**
+ * Convert a Panda config glob (relative to `cwd`) into a `RegExp` matching
+ * Rolldown's normalized POSIX module IDs.
+ */
+function globToRegExp(glob: string, cwd: string): RegExp {
+  const realBase = realpathOrSelf(cwd)
+  const absolute = path.resolve(realBase, glob).replace(/\\/g, '/')
+  let source = ''
+  let inClass = false
+  let braceDepth = 0
+
+  for (let index = 0; index < absolute.length; index++) {
+    const char = absolute[index] ?? ''
+    if (inClass) {
+      if (char === ']') inClass = false
+      source += char
+      continue
+    }
+    switch (char) {
+      case '\\': {
+        const next = absolute[index + 1]
+        if (next === undefined) {
+          source += '\\\\'
+        } else {
+          source += escapeRegExp(next)
+          index++
+        }
+        break
+      }
+      case '*': {
+        if (absolute[index + 1] === '*') {
+          if (absolute[index + 2] === '/') {
+            source += '(?:.*/)?'
+            index += 2
+          } else {
+            source += '.*'
+            index += 1
+          }
+        } else {
+          source += '[^/]*'
+        }
+        break
+      }
+      case '?':
+        source += '[^/]'
+        break
+      case '[':
+        inClass = true
+        source += '['
+        break
+      case '{':
+        braceDepth++
+        source += '(?:'
+        break
+      case '}':
+        if (braceDepth > 0) {
+          braceDepth--
+          source += ')'
+        } else {
+          source += '\\}'
+        }
+        break
+      case ',':
+        source += braceDepth > 0 ? '|' : ','
+        break
+      default:
+        source += escapeRegExp(char)
+    }
+  }
+
+  return new RegExp(`^${source}(?:\\?.*)?$`, process.platform === 'win32' ? 'i' : '')
+}
+
+function isInsideDir(filePath: string, dirPath: string): boolean {
+  const rel = path.relative(realpathOrSelf(dirPath), realpathOrSelf(filePath))
+  return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel))
+}
+
+function deriveSourceFilter(
+  driver: Driver,
+  cwd: string,
+  outdirOverride: string | undefined,
+): DerivedSourceFilter {
+  const rawInclude = readGlobs(driver.config['include'])
+  const rawExclude = readGlobs(driver.config['exclude'])
+  const resolvedOutdir = path.resolve(cwd, driver.getOutdir(outdirOverride))
+
+  const includePatterns: RegExp[] = []
+  const excludePatterns: RegExp[] = []
+
+  for (const pattern of rawInclude) {
+    if (pattern.startsWith('!')) {
+      excludePatterns.push(globToRegExp(pattern.slice(1), cwd))
+    } else {
+      includePatterns.push(globToRegExp(pattern, cwd))
+    }
+  }
+  for (const pattern of rawExclude) {
+    excludePatterns.push(globToRegExp(pattern.replace(/^!/, ''), cwd))
+  }
+
+  if (rawInclude.length === 0 && rawExclude.length === 0) {
+    return {
+      hookFilter: undefined,
+      includePatterns,
+      excludePatterns,
+      resolvedOutdir,
+    }
+  }
+
+  const outdirExcludePattern = globToRegExp(
+    `${path.relative(cwd, resolvedOutdir).replace(/\\/g, '/') || '.'}/**`,
+    cwd,
+  )
+
+  return {
+    hookFilter: {
+      id: {
+        ...(includePatterns.length > 0 ? {include: includePatterns} : {}),
+        exclude: [DTS_ID_RE, outdirExcludePattern, ...excludePatterns],
+      },
+    },
+    includePatterns,
+    excludePatterns,
+    resolvedOutdir,
+  }
+}
+
+function matchesSourceFilter(filePath: string, filter: DerivedSourceFilter | undefined): boolean {
+  if (DTS_ID_RE.test(filePath) || !SOURCE_ID_RE.test(filePath)) {
+    return false
+  }
+  if (!filter) {
+    return !NODE_MODULES_RE.test(filePath)
+  }
+  if (isInsideDir(filePath, filter.resolvedOutdir)) {
+    return false
+  }
+  const normalized = realpathOrSelf(filePath).replace(/\\/g, '/')
+  if (filter.excludePatterns.some((re) => re.test(normalized) || re.test(filePath))) {
+    return false
+  }
+  if (filter.includePatterns.length > 0) {
+    return filter.includePatterns.some((re) => re.test(normalized) || re.test(filePath))
+  }
+  return !NODE_MODULES_RE.test(filePath)
+}
 
 async function readPackageName(cwd: string): Promise<string | undefined> {
   let dir = path.resolve(cwd)
@@ -176,19 +377,44 @@ function toPosixRelativeImport(fromChunkFileName: string, toAssetFileName: strin
   return rel.startsWith('.') ? rel : `./${rel}`
 }
 
+function chunkHasStyles(
+  chunk: RenderedChunk,
+  chunks: Record<string, RenderedChunk> | undefined,
+  styledModules: ReadonlySet<string>,
+): boolean {
+  if (chunk.moduleIds.length === 0) {
+    return styledModules.size > 0
+  }
+  const seen = new Set<string>()
+  const queue: RenderedChunk[] = [chunk]
+  for (let current = queue.pop(); current; current = queue.pop()) {
+    if (seen.has(current.fileName)) continue
+    seen.add(current.fileName)
+    if (current.moduleIds.some((id) => styledModules.has(id.split('?')[0] ?? id))) {
+      return true
+    }
+    if (!chunks) continue
+    for (const imported of [...current.imports, ...current.dynamicImports]) {
+      const importedChunk = chunks[imported]
+      if (importedChunk) queue.push(importedChunk)
+    }
+  }
+  return false
+}
+
 /**
  * Official Panda CSS plugin for tsdown (and Rolldown).
  *
- * Scans source files with `@pandacss/dev/node` (`createNodeDriver`), optionally
- * rewrites `css({...})` calls at build time via `@pandacss/transformer`,
- * extracts all Panda CSS layers (`reset`, `base`, `tokens`, `recipes`,
- * `utilities`), processes the stylesheet with LightningCSS (`--made-with-panda`
- * stripped via `unusedSymbols`), emits `styles.css` (plus optional Node.js
- * `styles-css.js` / `styles-css.d.ts` shims), and registers `"./styles.css"`
- * in `package.json#exports` via tsdown's `tsdownConfig` hook.
- *
- * Does **not** run `driver.codegen()` — run `panda codegen` in your package's
- * `prepare` script so `styled-system/` exists before the build starts.
+ * Loads `panda.config.*` with `@pandacss/dev/node` (`createNodeDriver`), runs
+ * Panda's codegen (`driver.codegen()`) at build start and on watch-mode config
+ * reloads so `styled-system/` stays in sync, scans project source files,
+ * optionally rewrites `css({...})` calls at build time via
+ * `@pandacss/transformer`, extracts all Panda CSS layers (`reset`, `base`,
+ * `tokens`, `recipes`, `utilities`) with `emitLayerDeclaration: false`,
+ * processes the stylesheet with LightningCSS (`--made-with-panda` stripped via
+ * `unusedSymbols`), emits `styles.css` (plus optional Node.js `styles-css.js` /
+ * `styles-css.d.ts` shims), and registers `"./styles.css"` in
+ * `package.json#exports` via tsdown's `tsdownConfig` hook.
  *
  * @public
  */
@@ -196,8 +422,9 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   const {
     cwd,
     configPath,
+    codegen: shouldCodegen = true,
     outdir,
-    transform: shouldTransform = false,
+    transform: shouldTransform = true,
     fileName = DEFAULT_CSS_FILE_NAME,
     inject = false,
     exports: enableExports,
@@ -212,39 +439,197 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   const injectEnabled = Boolean(inject)
   const injectNodeCompat =
     typeof inject === 'object' ? (inject.nodeCompat ?? true) : normalizedExports.nodeCompat
-  const emitNodeCompatShim = normalizedExports.nodeCompat || (injectEnabled && injectNodeCompat)
+  const emitNodeCompatShim =
+    (normalizedExports.enabled && normalizedExports.nodeCompat) ||
+    (injectEnabled && injectNodeCompat)
 
   let resolvedCwd = cwd ? path.resolve(cwd) : process.cwd()
   let contextTarget: string | string[] | false | undefined
   let contextPackageName: string | undefined = optionPackageName
   let driver: Driver | undefined
+  let driverPromise: Promise<Driver> | undefined
+  let reloadPromise: Promise<void> | undefined
+  let transformer: SourceTransformer | undefined
+  let transformerCompiler: Driver['compiler'] | undefined
+  let sourceFilter: DerivedSourceFilter | undefined
   let packageNamePromise: Promise<string | undefined> | undefined
+  let needsConfigReload = false
+  let hasBuiltOnce = false
   let parsedIds = new Set<string>()
+  const configWatchFiles = new Set<string>()
+  let scannedWatchFiles: string[] = []
+  let scannedWatchDirs: string[] = []
 
   const getPackageName = (): Promise<string | undefined> => {
     packageNamePromise ??= readPackageName(resolvedCwd)
     return packageNamePromise
   }
 
-  const initDriver = async (baseCwd: string): Promise<Driver> => {
-    resolvedCwd = cwd ? path.resolve(cwd) : path.resolve(baseCwd)
-    packageNamePromise = undefined
-    const nextDriver = await createNodeDriver({
-      cwd: resolvedCwd,
-      ...(configPath ? {configPath} : {}),
-    })
-    if (outdir) {
-      nextDriver.config['outdir'] = outdir
+  const resolveTransformer = (activeDriver: Driver): SourceTransformer => {
+    if (!transformer || transformerCompiler !== activeDriver.compiler) {
+      transformer = createSourceTransformer(activeDriver.compiler)
+      transformerCompiler = activeDriver.compiler
     }
-    nextDriver.parseFiles()
-    driver = nextDriver
-    return nextDriver
+    return transformer
   }
 
-  return {
+  const runCodegen = (activeDriver: Driver): void => {
+    if (!shouldCodegen) return
+    activeDriver.codegen({
+      cwd: resolvedCwd,
+      ...(outdir ? {outdir} : {}),
+    })
+  }
+
+  const updateConfigWatchFiles = (activeDriver: Driver): void => {
+    configWatchFiles.clear()
+    if (activeDriver.configPath) {
+      const resolvedConfigPath = path.resolve(resolvedCwd, activeDriver.configPath)
+      configWatchFiles.add(resolvedConfigPath)
+      configWatchFiles.add(realpathOrSelf(resolvedConfigPath))
+    }
+    for (const dep of activeDriver.configDependencies) {
+      const resolvedDep = path.resolve(resolvedCwd, dep)
+      configWatchFiles.add(resolvedDep)
+      configWatchFiles.add(realpathOrSelf(resolvedDep))
+    }
+  }
+
+  const scanSources = (activeDriver: Driver): void => {
+    const resolvedOutdir = path.resolve(resolvedCwd, activeDriver.getOutdir(outdir))
+    const files: string[] = []
+    for (const report of activeDriver.parseFiles()) {
+      if (isInsideDir(report.path, resolvedOutdir)) {
+        activeDriver.compiler.removeFile(report.path)
+        continue
+      }
+      files.push(report.path)
+    }
+    scannedWatchFiles = files
+    scannedWatchDirs = activeDriver.watchTargets().dirs.filter((dir) => existsSync(dir))
+  }
+
+  const refreshTransformFilter = (activeDriver: Driver): void => {
+    sourceFilter = deriveSourceFilter(activeDriver, resolvedCwd, outdir)
+    plugin.transform = sourceFilter.hookFilter
+      ? {filter: sourceFilter.hookFilter, handler: transformHandler}
+      : {handler: transformHandler}
+  }
+
+  const initDriver = (baseCwd: string): Promise<Driver> => {
+    const nextCwd = cwd ? path.resolve(cwd) : path.resolve(baseCwd)
+    if (driverPromise && nextCwd === resolvedCwd) {
+      return driverPromise
+    }
+    resolvedCwd = nextCwd
+    packageNamePromise = undefined
+    driverPromise = createNodeDriver({
+      cwd: resolvedCwd,
+      ...(configPath ? {configPath} : {}),
+    }).then((nextDriver) => {
+      if (outdir) {
+        nextDriver.config['outdir'] = outdir
+      }
+      refreshTransformFilter(nextDriver)
+      runCodegen(nextDriver)
+      scanSources(nextDriver)
+      updateConfigWatchFiles(nextDriver)
+      driver = nextDriver
+      return nextDriver
+    })
+    return driverPromise
+  }
+
+  const reloadDriver = async (activeDriver: Driver): Promise<void> => {
+    if (reloadPromise) {
+      await reloadPromise
+      return
+    }
+    reloadPromise = (async () => {
+      needsConfigReload = false
+      const diff = await activeDriver.reload()
+      if (outdir) {
+        activeDriver.config['outdir'] = outdir
+      }
+      if (diff.hasChanged) {
+        refreshTransformFilter(activeDriver)
+        runCodegen(activeDriver)
+      }
+      scanSources(activeDriver)
+      updateConfigWatchFiles(activeDriver)
+    })()
+    try {
+      await reloadPromise
+    } finally {
+      reloadPromise = undefined
+    }
+  }
+
+  const transformHandler: TransformHandler = function transformHandler(code, id) {
+    for (const file of configWatchFiles) {
+      this.addWatchFile?.(file)
+    }
+    if (!driver) return null
+
+    const cleanId = id.split('?')[0] ?? id
+    if (!matchesSourceFilter(cleanId, sourceFilter)) {
+      parsedIds.delete(cleanId)
+      return null
+    }
+
+    const parseReport = driver.compiler.parseFileSource(cleanId, code)
+    const extracted = driver.compiler.extractFileSource(cleanId, code)
+    const hasStyles =
+      parseReport.cssCalls +
+        parseReport.cvaCalls +
+        parseReport.svaCalls +
+        parseReport.jsxUsages >
+        0 ||
+      parseReport.diagnostics.length > 0 ||
+      extracted.calls.length > 0 ||
+      extracted.jsx.length > 0
+
+    if (!shouldTransform) {
+      if (hasStyles) {
+        parsedIds.add(cleanId)
+      } else {
+        parsedIds.delete(cleanId)
+      }
+      return null
+    }
+
+    const result = transformSource({
+      transformer: resolveTransformer(driver),
+      path: cleanId,
+      source: code,
+      mode: 'build',
+    })
+
+    for (const dep of result.dependencies) {
+      this.addWatchFile?.(dep)
+    }
+
+    if (hasStyles || result.changed || result.bailed) {
+      parsedIds.add(cleanId)
+    } else {
+      parsedIds.delete(cleanId)
+    }
+
+    if (!result.changed || result.bailed || typeof result.code !== 'string') {
+      return null
+    }
+
+    return {
+      code: result.code,
+      map: result.map ?? null,
+    }
+  }
+
+  const plugin: TsdownPlugin = {
     name: 'sanity:pandacss-tsdown',
 
     tsdownConfig(config: UserConfig) {
+      if (enableExports === false) return
       config.exports = withCssCustomExports(
         config.exports,
         normalizedFileName,
@@ -263,7 +648,8 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       await initDriver(config.cwd || process.cwd())
     },
 
-    options(inputOptions) {
+    async options(inputOptions) {
+      await initDriver(inputOptions.cwd || resolvedCwd)
       if (!injectEnabled) return undefined
       return {
         ...inputOptions,
@@ -274,50 +660,62 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       }
     },
 
-    async buildStart() {
-      parsedIds = new Set<string>()
-      // When running inside tsdown, `tsdownConfigResolved` already initialized
-      // the driver; initialize here as a fallback for direct Rolldown usage.
-      if (!driver) {
-        await initDriver(resolvedCwd)
+    buildStart: {
+      order: 'pre',
+      sequential: true,
+      async handler() {
+        const activeDriver = driver ?? (await initDriver(resolvedCwd))
+        if (needsConfigReload || (hasBuiltOnce && this.meta?.watchMode)) {
+          await reloadDriver(activeDriver)
+        } else if (hasBuiltOnce) {
+          runCodegen(activeDriver)
+          scanSources(activeDriver)
+        }
+        hasBuiltOnce = true
+
+        for (const file of configWatchFiles) {
+          this.addWatchFile?.(file)
+        }
+        for (const file of scannedWatchFiles) {
+          this.addWatchFile?.(file)
+        }
+        for (const dir of scannedWatchDirs) {
+          this.addWatchFile?.(dir)
+        }
+      },
+    },
+
+    watchChange(id) {
+      const cleanId = id.split('?')[0] ?? id
+      const resolvedId = path.resolve(resolvedCwd, cleanId)
+      if (
+        configWatchFiles.has(resolvedId) ||
+        configWatchFiles.has(realpathOrSelf(resolvedId)) ||
+        driver?.isConfigFile(resolvedId)
+      ) {
+        needsConfigReload = true
       }
     },
 
-    transform: {
-      filter: {
-        id: {
-          include: [/\.[cm]?[jt]sx?$/],
-          exclude: [/node_modules/, DTS_ID_RE],
-        },
+    resolveId: {
+      filter: {id: {include: [new RegExp(`^${escapeRegExp(INTERNAL_CSS_IMPORT)}$`)]}},
+      handler(id) {
+        return shouldTransform && id === INTERNAL_CSS_IMPORT ? INTERNAL_CSS_RESOLVED_ID : null
       },
-      handler(code, id) {
-        if (!driver) return null
+    },
 
-        const cleanId = id.split('?')[0] ?? id
-        driver.compiler.parseFileSource(cleanId, code)
-        parsedIds.add(cleanId)
-
-        if (!shouldTransform) {
-          return null
-        }
-
-        const result = transformSource({
-          compiler: driver.compiler,
-          path: cleanId,
-          source: code,
-          mode: 'build',
-        })
-
-        if (!result.changed || result.bailed || typeof result.code !== 'string') {
-          return null
-        }
-
+    load: {
+      filter: {id: {include: [new RegExp(`^${escapeRegExp(INTERNAL_CSS_RESOLVED_ID)}$`)]}},
+      handler(id) {
+        if (!shouldTransform || id !== INTERNAL_CSS_RESOLVED_ID) return null
         return {
-          code: result.code,
-          map: null,
+          code: getInternalCssRuntimeSource(resolveCxSeparator(driver?.config)),
+          moduleType: 'js',
         }
       },
     },
+
+    transform: {handler: transformHandler},
 
     async renderChunk(code, chunk, outputOptions, meta) {
       if (
@@ -325,7 +723,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         !chunk.isEntry ||
         chunk.name.endsWith('.d') ||
         DTS_ID_RE.test(chunk.fileName) ||
-        parsedIds.size === 0
+        !chunkHasStyles(chunk, meta?.chunks, parsedIds)
       ) {
         return null
       }
@@ -361,7 +759,8 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       if (!driver) return
 
       const hasJsChunk = Object.values(bundle).some(
-        (item) => item.type === 'chunk' && !DTS_ID_RE.test(item.fileName),
+        (item): item is OutputChunk =>
+          item.type === 'chunk' && !item.name.endsWith('.d') && !DTS_ID_RE.test(item.fileName),
       )
       if (!hasJsChunk) return
 
@@ -374,7 +773,8 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
 
       if (rawCss.length > 0) {
         const targets =
-          target === false ? undefined : esbuildTargetToLightningCSS(target ?? contextTarget)
+          lightningcssOptions?.targets ??
+          (target === false ? undefined : esbuildTargetToLightningCSS(target ?? contextTarget))
         const result = lightningcss({
           ...lightningcssOptions,
           filename: normalizedFileName,
@@ -408,4 +808,6 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       }
     },
   }
+
+  return plugin
 }

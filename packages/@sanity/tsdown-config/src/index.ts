@@ -56,8 +56,8 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
 
 /**
  * Options for the `panda` option — the same options as `@sanity/pandacss-tsdown-plugin`
- * (`cwd`, `configPath`, `outdir`, `transform`, `fileName`, `minify`, `target`, `lightningcss`,
- * `inject`, and `exports`), with two Sanity-flavored defaults on top:
+ * (`cwd`, `configPath`, `codegen`, `outdir`, `transform`, `fileName`, `minify`, `target`,
+ * `lightningcss`, `inject`, and `exports`), with two Sanity-flavored defaults on top:
  *
  * - `inject` and `exports` default to `true` and `{nodeCompat: true}` (instead of the plugin's
  *   `false` for both), wiring up the conditional CSS export pattern (`./styles.css`) that Sanity
@@ -424,9 +424,9 @@ export interface PackageOptions extends Pick<
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
   /**
-   * Enables `@sanity/pandacss-tsdown-plugin` to scan source files with Panda CSS, extract layers
-   * into `styles.css`, and lower the CSS with `lightningcss`. Pass `true` to use the defaults,
-   * or an object to customize.
+   * Enables `@sanity/pandacss-tsdown-plugin` to run Panda codegen, scan source files with Panda
+   * CSS, extract layers into `styles.css`, and lower the CSS with `lightningcss`. Pass `true` to
+   * use the defaults, or an object to customize.
    *
    * By default (`inject: true` with `exports: {nodeCompat: true}`) the plugin also injects the
    * self-referential `import "<pkg>/styles.css"`, emits a `styles-css.js` shim, and writes the
