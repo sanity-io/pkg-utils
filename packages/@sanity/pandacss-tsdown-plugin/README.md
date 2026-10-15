@@ -60,6 +60,16 @@ stale generated code can't leak into the published JS or `.d.ts` files:
 Keep the generated directory out of git, like with `panda codegen`. Enable `transform` to compile
 the style calls away, so the published JS doesn't import the generated runtime.
 
+## Watch mode
+
+- Every file the config's `include` globs match is watched, and so are their base directories,
+  so editing or adding a file that no entry imports still rebuilds the stylesheet.
+- The build output and the generated directory are excluded from the watcher, so writing them
+  never triggers another rebuild.
+- Changing the config or a file it imports reloads the config and runs codegen again before the
+  rebuild. Builds that share the plugin, like tsdown's builds per output format, wait for the
+  reload before parsing or transforming anything.
+
 ## Options
 
 | Option         | Default           | Description                                                                                                                                                                   |
