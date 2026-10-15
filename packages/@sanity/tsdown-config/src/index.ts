@@ -802,7 +802,12 @@ async function resolvePackageConfig(
   }
   if (options.panda) {
     const [
-      {pandaCssPlugin, esbuildTargetToLightningCSS: pandaTargetToLightningCSS},
+      {
+        DEFAULT_CSS_FILE_NAME: DEFAULT_PANDA_FILE_NAME,
+        esbuildTargetToLightningCSS: pandaTargetToLightningCSS,
+        normalizeAssetFileName,
+        pandaCssPlugin,
+      },
       {resolveCssLoweringTargets},
     ] = await Promise.all([
       import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
@@ -811,6 +816,27 @@ async function resolvePackageConfig(
       import('./cssLoweringTargets.ts'),
     ])
     const panda = options.panda === true ? {} : options.panda
+    const pandaFileName = normalizeAssetFileName(panda.fileName ?? DEFAULT_PANDA_FILE_NAME)
+
+    if (options.vanillaExtract) {
+      const vanillaExtractFileName = normalizeAssetFileName(
+        (options.vanillaExtract === true ? undefined : options.vanillaExtract.fileName) ??
+          'bundle.css',
+      )
+      if (pandaFileName === vanillaExtractFileName) {
+        throw new Error(
+          `\`panda\` and \`vanillaExtract\` both emit "${pandaFileName}", which would overwrite each other's CSS asset and export subpath. Configure a distinct \`fileName\` on one of them.`,
+        )
+      }
+    }
+    if (options.css && !options.css.splitting) {
+      const cssFileName = normalizeAssetFileName(options.css.fileName ?? 'style.css')
+      if (pandaFileName === cssFileName) {
+        throw new Error(
+          `\`panda\` and \`css\` both emit "${pandaFileName}", which would overwrite each other's CSS asset and export subpath. Configure a distinct \`fileName\` on one of them.`,
+        )
+      }
+    }
 
     const lightningcss = await resolveCssLoweringTargets({
       cssTarget: panda.target,

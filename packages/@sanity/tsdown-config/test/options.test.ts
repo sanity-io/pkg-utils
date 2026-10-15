@@ -231,6 +231,42 @@ describe('panda option', () => {
     })
     expect(fallbackResult).toEqual({targets: expect.any(Object)})
   })
+
+  test('can be enabled alongside vanillaExtract and css when fileNames are distinct, and rejects colliding fileNames', async () => {
+    const combined = await defineConfig({
+      panda: true,
+      vanillaExtract: true,
+      css: {},
+    })
+    expect(pluginNames(combined)).toEqual(
+      expect.arrayContaining([
+        'vanilla-extract',
+        'sanity:pandacss-tsdown',
+        'sanity-css-node-compat',
+      ]),
+    )
+
+    await expect(
+      defineConfig({
+        panda: {fileName: 'bundle.css'},
+        vanillaExtract: true,
+      }),
+    ).rejects.toThrow(/both emit "bundle\.css".*distinct `fileName`/)
+
+    await expect(
+      defineConfig({
+        panda: true,
+        vanillaExtract: {fileName: 'styles.css'},
+      }),
+    ).rejects.toThrow(/both emit "styles\.css".*distinct `fileName`/)
+
+    await expect(
+      defineConfig({
+        panda: {fileName: 'style.css'},
+        css: {},
+      }),
+    ).rejects.toThrow(/both emit "style\.css".*distinct `fileName`/)
+  })
 })
 
 function pluginNames(config: UserConfig): string[] {
