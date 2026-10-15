@@ -1,0 +1,63 @@
+{
+  "name": "@sanity/pandacss-tsdown-plugin",
+  "version": "0.1.0",
+  "description": "Panda CSS plugin for tsdown",
+  "keywords": [
+    "pandacss",
+    "panda-css",
+    "tsdown",
+    "rolldown",
+    "css",
+    "plugin",
+    "sanity"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/pandacss-tsdown-plugin"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown"
+  },
+  "dependencies": {
+    "@pandacss/dev": "catalog:",
+    "@pandacss/transformer": "catalog:",
+    "lightningcss": "catalog:"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "workspace:*",
+    "@sanity/tsconfig": "workspace:*",
+    "@sanity/tsdown-config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@pandacss/dev": "^2.0.0",
+    "tsdown": ">=0.20.0"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
+  }
+}

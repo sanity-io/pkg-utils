@@ -59,6 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@rolldown/plugin-babel": "^0.2.4",
+    "@sanity/pandacss-tsdown-plugin": "workspace:^",
     "@sanity/pkg-utils": "workspace:^",
     "@sanity/tsconfig": "workspace:^",
     "@tsdown/css": "catalog:",
@@ -73,6 +74,7 @@
   "peerDependencies": {
     "@babel/core": "*",
     "@rolldown/plugin-babel": "*",
+    "@sanity/pandacss-tsdown-plugin": "*",
     "@tsdown/css": "*",
     "babel-plugin-react-compiler": "*",
     "oxc-transform-react": "*",
@@ -84,6 +86,9 @@
       "optional": true
     },
     "@rolldown/plugin-babel": {
+      "optional": true
+    },
+    "@sanity/pandacss-tsdown-plugin": {
       "optional": true
     },
     "@tsdown/css": {

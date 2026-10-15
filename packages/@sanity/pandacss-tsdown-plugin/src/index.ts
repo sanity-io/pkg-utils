@@ -1,0 +1,394 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
+import {createNodeDriver, type Driver, type LayerName} from '@pandacss/dev/node'
+import {transformSource} from '@pandacss/transformer'
+import {transform as lightningcss, type TransformOptions} from 'lightningcss'
+import type {Plugin} from 'rolldown'
+import type {UserConfig} from 'tsdown'
+
+import {
+  cssShimDtsFileName,
+  cssShimDtsSource,
+  cssShimFileName,
+  cssShimSource,
+} from './cssShimFileName.ts'
+import {DEFAULT_CSS_FILE_NAME, normalizeAssetFileName, withCssCustomExports} from './exports.ts'
+import {
+  type CssExportsOptions,
+  DEFAULT_CSS_EXPORT_CONDITIONS,
+  normalizeCssExportsOptions,
+} from './exportsOptions.ts'
+import {esbuildTargetToLightningCSS} from './targets.ts'
+
+export {
+  type CssExportsOptions,
+  DEFAULT_CSS_EXPORT_CONDITIONS,
+  DEFAULT_CSS_FILE_NAME,
+  esbuildTargetToLightningCSS,
+}
+
+/**
+ * Advanced LightningCSS options forwarded to `lightningcss.transform()`.
+ *
+ * @public
+ */
+export type LightningCSSOptions = Omit<
+  TransformOptions<Record<string, never>>,
+  'filename' | 'code' | 'minify' | 'targets' | 'sourceMap' | 'inputSourceMap'
+>
+
+/**
+ * Options for `pandaCssPlugin`.
+ *
+ * @public
+ */
+export interface Options {
+  /**
+   * Working directory used to resolve `panda.config.*`.
+   *
+   * When omitted, falls back to tsdown's resolved `cwd` (or `process.cwd()`).
+   */
+  cwd?: string
+  /**
+   * Explicit path to the Panda CSS config file (`panda.config.ts`).
+   */
+  configPath?: string
+  /**
+   * Override the `outdir` configured in `panda.config.*` (e.g. `'styled-system'`).
+   */
+  outdir?: string
+  /**
+   * Rewrite `css({...})` calls at build time into atomic class name strings via
+   * `@pandacss/transformer` (same as `@pandacss/vite`'s `transform: true`).
+   *
+   * Keep `false` when `styled-system/css` is bundled so the runtime handles
+   * dynamic and conditional styles.
+   *
+   * @defaultValue `false`
+   */
+  transform?: boolean
+  /**
+   * File name for the emitted CSS asset in the output bundle.
+   *
+   * Uses `'styles.css'` by default so it matches `@sanity/ui/styles.css` and
+   * does not collide with `@sanity/vanilla-extract-tsdown-plugin`'s
+   * `'bundle.css'` or Vite's default `'style.css'`.
+   *
+   * @defaultValue `'styles.css'`
+   */
+  fileName?: string
+  /**
+   * Prepend a side-effect CSS import to emitted entry chunks that contribute
+   * Panda CSS rules, so consumers' bundlers automatically discover the
+   * stylesheet via the module graph.
+   *
+   * - `false` (standalone default): do not modify emitted JS chunks; consumers
+   *   opt in explicitly with `import '<pkg>/styles.css'`.
+   * - `true` or `{nodeCompat: true}` (the `@sanity/tsdown-config` default):
+   *   emit a bare package self-reference (`import '<pkg-name>/styles.css'`) on
+   *   entry chunks when `package.json#name` is available, which resolves
+   *   through `package.json#exports["./styles.css"]` — loading the no-op JS
+   *   shim under the `"node"` condition in Node.js while bundlers and browsers
+   *   resolve the real `./dist/styles.css` stylesheet. Falls back to a relative
+   *   import (`import './styles.css'`) when `nodeCompat` is `false` or no
+   *   package name is found.
+   *
+   * @defaultValue `false`
+   */
+  inject?: boolean | {nodeCompat?: boolean}
+  /**
+   * Automatically register `"./<fileName>": "./<outDir>/<fileName>"` (or a
+   * conditional export map when `nodeCompat` is enabled) in `UserConfig.exports`
+   * via tsdown's `customExports` hook, and emit the corresponding Node.js no-op
+   * JS shim (`styles-css.js`) alongside `styles.css`.
+   *
+   * - If `UserConfig.exports` is already enabled in `tsdown.config.ts`, the CSS
+   *   export entry is always added to `customExports` (unless `exports: false`
+   *   is set on the user's tsdown config).
+   * - Setting `exports: true` or passing a {@link CssExportsOptions} object
+   *   also enables `UserConfig.exports` when it wasn't otherwise configured, and
+   *   controls whether the `nodeCompat` shim and conditional export map are
+   *   emitted.
+   *
+   * @defaultValue `false`
+   */
+  exports?: boolean | CssExportsOptions
+  /**
+   * Minify the emitted CSS bundle with LightningCSS.
+   *
+   * @defaultValue `false`
+   */
+  minify?: boolean
+  /**
+   * Target browsers for LightningCSS syntax lowering.
+   *
+   * Accepts an esbuild-style target (`'chrome120'`, `['chrome102', 'safari16.4']`),
+   * a browserslist query (`'defaults'`), or `false` to disable lowering.
+   */
+  target?: string | readonly string[] | false
+  /**
+   * Additional options forwarded to `lightningcss.transform()`.
+   */
+  lightningcss?: LightningCSSOptions
+}
+
+const PANDA_LAYERS: LayerName[] = ['reset', 'base', 'tokens', 'recipes', 'utilities']
+const DTS_ID_RE = /\.d\.[cm]?ts$/
+
+async function readPackageName(cwd: string): Promise<string | undefined> {
+  let dir = path.resolve(cwd)
+  while (true) {
+    try {
+      const raw = await fs.readFile(path.join(dir, 'package.json'), 'utf8')
+      const parsed = JSON.parse(raw) as {name?: unknown}
+      if (typeof parsed.name === 'string' && parsed.name.length > 0) {
+        return parsed.name
+      }
+    } catch {
+      // keep walking up until filesystem root
+    }
+    const parent = path.dirname(dir)
+    if (parent === dir) return undefined
+    dir = parent
+  }
+}
+
+function toPosixRelativeImport(fromChunkFileName: string, toAssetFileName: string): string {
+  const fromDir = path.posix.dirname(fromChunkFileName.replace(/\\/g, '/'))
+  const rel = path.posix.relative(fromDir === '.' ? '' : fromDir, toAssetFileName)
+
+  return rel.startsWith('.') ? rel : `./${rel}`
+}
+
+/**
+ * Official Panda CSS plugin for tsdown (and Rolldown).
+ *
+ * Scans source files with `@pandacss/dev/node` (`createNodeDriver`), optionally
+ * rewrites `css({...})` calls at build time via `@pandacss/transformer`,
+ * extracts all Panda CSS layers (`reset`, `base`, `tokens`, `recipes`,
+ * `utilities`), processes the stylesheet with LightningCSS (`--made-with-panda`
+ * stripped via `unusedSymbols`), emits `styles.css` (plus optional Node.js
+ * `styles-css.js` / `styles-css.d.ts` shims), and registers `"./styles.css"`
+ * in `package.json#exports` via tsdown's `tsdownConfig` hook.
+ *
+ * Does **not** run `driver.codegen()` — run `panda codegen` in your package's
+ * `prepare` script so `styled-system/` exists before the build starts.
+ *
+ * @public
+ */
+export function pandaCssPlugin(options: Options = {}): Plugin {
+  const {
+    cwd,
+    configPath,
+    outdir,
+    transform: shouldTransform = false,
+    fileName = DEFAULT_CSS_FILE_NAME,
+    inject = false,
+    exports: enableExports = false,
+    minify = false,
+    target,
+    lightningcss: lightningcssOptions,
+  } = options
+
+  const normalizedFileName = normalizeAssetFileName(fileName)
+  const normalizedExports = normalizeCssExportsOptions(enableExports, false)
+  const injectEnabled = Boolean(inject)
+  const injectNodeCompat =
+    typeof inject === 'object' ? (inject.nodeCompat ?? true) : normalizedExports.nodeCompat
+  const emitNodeCompatShim =
+    (normalizedExports.enabled && normalizedExports.nodeCompat) ||
+    (injectEnabled && injectNodeCompat)
+  const targets = esbuildTargetToLightningCSS(target)
+
+  let resolvedCwd = cwd ? path.resolve(cwd) : process.cwd()
+  let driver: Driver | undefined
+  let packageNamePromise: Promise<string | undefined> | undefined
+  let parsedIds = new Set<string>()
+
+  const getPackageName = (): Promise<string | undefined> => {
+    packageNamePromise ??= readPackageName(resolvedCwd)
+    return packageNamePromise
+  }
+
+  const transformFilter: {
+    id: {
+      include: (string | RegExp)[]
+      exclude: (string | RegExp)[]
+    }
+  } = {
+    id: {
+      include: [],
+      exclude: [DTS_ID_RE],
+    },
+  }
+
+  const initDriver = async (baseCwd: string): Promise<Driver> => {
+    resolvedCwd = cwd ? path.resolve(cwd) : path.resolve(baseCwd)
+    packageNamePromise = undefined
+    const nextDriver = await createNodeDriver({
+      cwd: resolvedCwd,
+      ...(configPath ? {configPath} : {}),
+    })
+    if (outdir) {
+      nextDriver.config.outdir = outdir
+    }
+    nextDriver.parseFiles()
+    transformFilter.id.include = [...nextDriver.config.include]
+    transformFilter.id.exclude = [...(nextDriver.config.exclude ?? []), DTS_ID_RE]
+    driver = nextDriver
+    return nextDriver
+  }
+
+  const plugin: Plugin & {
+    tsdownConfig?: (config: UserConfig) => void
+    tsdownConfigResolved?: (config: unknown) => Promise<void>
+  } = {
+    name: 'sanity:pandacss-tsdown',
+
+    tsdownConfig(config: UserConfig) {
+      config.exports = withCssCustomExports(config.exports, normalizedFileName, enableExports)
+    },
+
+    async tsdownConfigResolved(config: unknown) {
+      const cfgCwd =
+        config &&
+        typeof config === 'object' &&
+        'cwd' in config &&
+        typeof (config as {cwd?: unknown}).cwd === 'string'
+          ? (config as {cwd: string}).cwd
+          : process.cwd()
+      await initDriver(cfgCwd)
+    },
+
+    options(inputOptions) {
+      if (!injectEnabled) return undefined
+      return {
+        ...inputOptions,
+        experimental: {
+          ...inputOptions.experimental,
+          nativeMagicString: true,
+        },
+      }
+    },
+
+    async buildStart() {
+      parsedIds = new Set<string>()
+      // When running inside tsdown, `tsdownConfigResolved` already initialized
+      // the driver; initialize here as a fallback for direct Rolldown usage.
+      if (!driver) {
+        await initDriver(resolvedCwd)
+      }
+    },
+
+    transform: {
+      filter: transformFilter,
+      handler(code, id) {
+        if (!driver) return null
+
+        driver.compiler.parseFileSource(id, code)
+        parsedIds.add(id)
+
+        if (!shouldTransform) {
+          return null
+        }
+
+        const result = transformSource({
+          compiler: driver.compiler,
+          path: id,
+          source: code,
+          mode: 'build',
+        })
+
+        if (!result.changed || result.bailed) {
+          return null
+        }
+
+        return {
+          code: result.code,
+          map: (result.map as unknown as null) ?? null,
+        }
+      },
+    },
+
+    async renderChunk(code, chunk, outputOptions, meta) {
+      if (!injectEnabled || !chunk.isEntry || parsedIds.size === 0) {
+        return null
+      }
+
+      const format = outputOptions.format
+      if (format && format !== 'es' && format !== 'esm' && format !== 'cjs') {
+        return null
+      }
+
+      const pkgName = injectNodeCompat ? await getPackageName() : undefined
+      const cssImportPath = pkgName
+        ? `${pkgName}/${normalizedFileName}`
+        : toPosixRelativeImport(chunk.fileName, normalizedFileName)
+      const statement =
+        format === 'cjs'
+          ? `require(${JSON.stringify(cssImportPath)});\n`
+          : `import ${JSON.stringify(cssImportPath)};\n`
+
+      if (meta?.magicString) {
+        meta.magicString.prepend(statement)
+        return {
+          code: meta.magicString,
+        }
+      }
+
+      return {
+        code: `${statement}${code}`,
+        map: null,
+      }
+    },
+
+    generateBundle() {
+      if (!driver) return
+
+      const rawCss = driver.getLayerCss({
+        layers: PANDA_LAYERS,
+        emitLayerDeclaration: false,
+      })
+
+      let finalCss: string | Uint8Array = rawCss
+
+      if (rawCss.length > 0 && (targets || minify || lightningcssOptions)) {
+        const result = lightningcss({
+          ...lightningcssOptions,
+          filename: normalizedFileName,
+          code: Buffer.from(rawCss),
+          minify,
+          ...(targets ? {targets} : {}),
+          unusedSymbols: ['--made-with-panda', ...(lightningcssOptions?.unusedSymbols ?? [])],
+        })
+        finalCss = Buffer.from(result.code).toString('utf8')
+      }
+
+      if (typeof finalCss === 'string' ? finalCss.length > 0 : finalCss.byteLength > 0) {
+        this.emitFile({
+          type: 'asset',
+          fileName: normalizedFileName,
+          source: finalCss,
+        })
+
+        if (emitNodeCompatShim) {
+          this.emitFile({
+            type: 'asset',
+            fileName: cssShimFileName(normalizedFileName),
+            source: cssShimSource,
+          })
+          this.emitFile({
+            type: 'asset',
+            fileName: cssShimDtsFileName(normalizedFileName),
+            source: cssShimDtsSource,
+          })
+        }
+      }
+    },
+  }
+
+  return plugin
+}
+
+export default pandaCssPlugin
