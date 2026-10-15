@@ -22,21 +22,20 @@ function viteConfig(plugins: Plugin[], config: InlineConfig = {}): InlineConfig 
   return {root: fixtureDir, configFile: false, logLevel: 'silent', plugins, ...config}
 }
 
-/** The stylesheets of the fixture as the dev server serves them to a `<link>`. */
-async function devStylesheets(
+/** A dev server of the fixture, serving its stylesheets the way it serves them to a `<link>`. */
+async function startDevServer(
   plugins: Plugin[],
   config: InlineConfig = {},
-): Promise<{panda: string; other: string}> {
+): Promise<(file: string) => Promise<string>> {
   const server = await createServer(
     viteConfig(plugins, {server: {middlewareMode: true, ws: false, watch: null}, ...config}),
   )
   onTestFinished(() => server.close())
-  const transform = async (file: string): Promise<string> => {
+  return async (file) => {
     const result = await server.environments.client.transformRequest(`${file}?direct`)
     if (!result) expect.unreachable(`expected the dev server to transform ${file}`)
     return result.code
   }
-  return {panda: await transform('/panda.css'), other: await transform('/other.css')}
 }
 
 /** The CSS asset of a `vite build` of the fixture's `src/main.ts`. */
@@ -95,15 +94,14 @@ describe('`removeCascadeLayers`', () => {
   })
 
   test('removes the layers of the CSS `@pandacss/vite` generates in `vite dev`', async () => {
-    const layered = await devStylesheets([pandacss({transform: true})])
-    const {panda} = await devStylesheets([
-      pandacss({transform: true}),
-      removeCascadeLayers(PANDA_LAYERS),
-    ])
-    expect(layered.panda).toContain('@layer utilities {')
+    const layered = await (await startDevServer([pandacss({transform: true})]))('/panda.css')
+    const panda = await (
+      await startDevServer([pandacss({transform: true}), removeCascadeLayers(PANDA_LAYERS)])
+    )('/panda.css')
+    expect(layered).toContain('@layer utilities {')
     expect(panda).not.toContain('@layer')
     // The same rules, ordered like the layers did, sublayers before their layer's own rules
-    expect(ruleLines(panda)).toEqual(ruleLines(layered.panda))
+    expect(ruleLines(panda)).toEqual(ruleLines(layered))
     const positions = positionsOf(panda, [
       'html, :host {',
       'button {',
@@ -127,10 +125,11 @@ describe('`removeCascadeLayers`', () => {
         received.set(path.basename(result.opts.from ?? ''), root.toString())
       },
     }
-    const {panda} = await devStylesheets(
-      [removeCascadeLayers(PANDA_LAYERS), pandacss({transform: true})],
-      {css: {postcss: {plugins: [observer]}}},
-    )
+    const panda = await (
+      await startDevServer([removeCascadeLayers(PANDA_LAYERS), pandacss({transform: true})], {
+        css: {postcss: {plugins: [observer]}},
+      })
+    )('/panda.css')
     expect(panda).toContain('.button--tone_brand {')
     expect(panda).not.toContain('@layer')
     expect(received.get('panda.css')).toContain('.button--tone_brand {')
@@ -138,15 +137,23 @@ describe('`removeCascadeLayers`', () => {
   })
 
   test('keeps the layers it is not given, here and in other stylesheets', async () => {
-    const {panda, other} = await devStylesheets([
+    const transform = await startDevServer([
       pandacss({transform: true}),
       removeCascadeLayers(['reset', 'base', 'tokens', 'recipes']),
     ])
+    const panda = await transform('/panda.css')
+    const other = await transform('/other.css')
     expect(panda).toMatch(/^@layer utilities;$/m)
     expect(panda).toContain('@layer utilities {')
     expect(panda).not.toMatch(/@layer (?:reset|base|tokens|recipes)\b/)
     expect(panda).toContain('.button--tone_brand {')
     expect(other).toContain('@layer other {')
+  })
+
+  test('recognizes `@layer` in any case, since authored CSS reaches it as written', async () => {
+    const css = await (await startDevServer([removeCascadeLayers(['base'])]))('/uppercase.css')
+    expect(css).not.toContain('@LAYER')
+    expect(css).toMatch(/^\.base \{$/m)
   })
 
   test('removes the layers in `vite build` too', async () => {

@@ -43,6 +43,8 @@ const LEADING_STATEMENTS = new Set(['charset', 'import', 'namespace'])
 
 const encoder = new TextEncoder()
 
+const RE_LAYER_KEYWORD = /@layer/i
+
 /**
  * Removes every `@layer` block and statement from a stylesheet, ordering the rules so that source
  * order alone gives them the precedence the layers gave them: a layer's sublayers come in the
@@ -80,8 +82,9 @@ const encoder = new TextEncoder()
  * read back any `var()` it serialized, so the rules cannot be returned to it reordered.
  */
 export function unwrapCascadeLayers(css: string, layers?: ReadonlySet<string>): string {
-  // The common case for a stylesheet without layers: nothing to parse
-  if (!css.includes('@layer')) return css
+  // The common case for a stylesheet without layers: nothing to parse. At-keywords are
+  // case-insensitive, and the Vite plugin passes authored CSS.
+  if (!RE_LAYER_KEYWORD.test(css)) return css
 
   const root = parse(css)
   const collection = collectLayers(root, layers)

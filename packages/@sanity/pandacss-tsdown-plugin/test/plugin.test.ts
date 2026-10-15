@@ -1555,6 +1555,11 @@ describe('unwrapCascadeLayers', () => {
     )
   })
 
+  test('recognizes `@layer` in any case', () => {
+    expect(unwrapCascadeLayers('@LAYER a{.a{}}.top{}')).toBe('.a{}.top{}')
+    expect(unwrapCascadeLayers('@Layer a{.a{}}.top{}', new Set(['a']))).toBe('.a{}.top{}')
+  })
+
   test('keeps the comments ahead of the first rule there', () => {
     expect(unwrapCascadeLayers('/* head */@layer a{.a{}}/* mid */.top{}')).toBe(
       '/* head */.a{}/* mid */.top{}',
