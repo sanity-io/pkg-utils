@@ -1,4 +1,4 @@
-import {readFileSync, realpathSync} from 'node:fs'
+import {readdirSync, readFileSync, realpathSync, statSync} from 'node:fs'
 import path from 'node:path'
 import {createNodeDriver} from '@pandacss/compiler'
 import {createDiagnosticLog} from '@pandacss/compiler-shared'
@@ -65,9 +65,8 @@ export interface Options {
    */
   configPath?: string
   /**
-   * Overrides the config's `outdir`, the generated `styled-system` directory. Modules in it
-   * are never parsed or transformed. The plugin never runs codegen: run `panda codegen` (or
-   * `@pandacss/vite`) to generate the directory when the source imports from it.
+   * Overrides the config's `outdir`, the `styled-system` directory that Panda's codegen
+   * writes to, like `outdir` in `@pandacss/vite`. Modules in it are never parsed or transformed.
    */
   outdir?: string
   /**
@@ -156,15 +155,21 @@ interface IdFilter {
   exclude: (string | RegExp)[]
 }
 
+interface Logger {
+  info: (message: string) => void
+  warn: (message: string) => void
+}
+
 /**
  * A tsdown plugin that extracts the [Panda CSS](https://panda-css.com) stylesheet of a library
  * into a single `lightningcss`-optimized file, following the architecture (and option
  * vocabulary) of `@tsdown/css` and `@sanity/vanilla-extract-tsdown-plugin`.
  *
- * It loads the Panda config with `@pandacss/compiler`, parses the files matched by its
- * `include`/`exclude` globs, and emits every cascade layer (`reset`, `base`, `tokens`, `recipes`
- * and `utilities`) without the layer order declaration. It complements `@pandacss/vite`, which
- * handles Vite-based tooling in the same project, and never runs codegen.
+ * It loads the Panda config with `@pandacss/compiler` and runs Panda's codegen, so the generated
+ * `styled-system` code and types match the config the stylesheet is built from. It then parses
+ * the files matched by the config's `include`/`exclude` globs, and emits every cascade layer
+ * (`reset`, `base`, `tokens`, `recipes` and `utilities`) without the layer order declaration. It
+ * complements `@pandacss/vite`, which handles Vite-based tooling in the same project.
  * @public
  */
 export function pandaPlugin(options: Options = {}): TsdownPlugin {
@@ -205,14 +210,32 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   /** The config file and its dependencies, watched so a change reloads the config. */
   const configWatchFiles = new Set<string>()
 
-  async function reloadDriver(loaded: NodeDriver, warn: (message: string) => void): Promise<void> {
+  /**
+   * Runs Panda's codegen into `outdir`. The native writer only rewrites files whose content
+   * changed, so repeated runs leave watchers alone; the files it did write are reported.
+   */
+  function generate(loaded: NodeDriver, logger: Logger): void {
+    const outdir = path.resolve(cwd, loaded.getOutdir(options.outdir))
+    const previous = fileMtimes(outdir)
+    const files = loaded.codegen(
+      options.outdir === undefined ? undefined : {outdir: options.outdir},
+    )
+    const written = files.filter((file) => previous.get(path.resolve(file)) !== fileMtime(file))
+    if (written.length === 0) return
+    logger.info(
+      `[pandacss] Generated ${written.length} ${written.length === 1 ? 'file' : 'files'} in ${path.relative(cwd, outdir) || '.'}`,
+    )
+  }
+
+  async function reloadDriver(loaded: NodeDriver, logger: Logger): Promise<void> {
     reloadConfig = false
     const {hasChanged} = await loaded.reload()
     if (!hasChanged) return
+    generate(loaded, logger)
     const previousFilter = idFilterKey(idFilter)
     configureIdFilter(idFilter, loaded, cwd, options.outdir)
     if (idFilterKey(idFilter) !== previousFilter) {
-      warn(
+      logger.warn(
         `[pandacss] The \`include\`/\`exclude\` globs of the Panda config changed. The stylesheet follows them right away, but watch mode keeps the transform filter it started with: restart it so newly matched files are transformed and injected.`,
       )
     }
@@ -299,11 +322,16 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
       await loadDriver()
     },
 
-    // Loads the config for rolldown builds outside tsdown. `inject` prepends the CSS import in
-    // `renderChunk` through rolldown's native MagicString (`meta.magicString`), which keeps
-    // sourcemaps intact without a JS magic-string dependency.
+    // Codegen runs here, before any `buildStart` hook: the declaration build (tsdown's `dts`)
+    // reads the generated types in its own `buildStart`, which runs in parallel with the others.
+    // `inject` prepends the CSS import in `renderChunk` through rolldown's native MagicString
+    // (`meta.magicString`), which keeps sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
-      await loadDriver()
+      const loaded = await loadDriver()
+      generate(loaded, {
+        info: (message) => this.info(message),
+        warn: (message) => this.warn(message),
+      })
       if (!inject) return undefined
       return {
         ...inputOptions,
@@ -311,30 +339,39 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
       }
     },
 
-    async buildStart() {
-      const loaded = await loadDriver()
-      const warn = (message: string): void => this.warn(message)
-      if (reloadConfig) await reloadDriver(loaded, warn)
+    // Watch mode only runs the `options` hook once, so a reloaded config regenerates here, ahead
+    // of (and blocking) the other plugins' `buildStart` hooks
+    buildStart: {
+      order: 'pre',
+      sequential: true,
+      async handler() {
+        const loaded = await loadDriver()
+        const logger: Logger = {
+          info: (message) => this.info(message),
+          warn: (message) => this.warn(message),
+        }
+        if (reloadConfig) await reloadDriver(loaded, logger)
 
-      // Every parsed file is watched, not just the bundled modules: the stylesheet covers all of
-      // them, so editing one that no entry imports must rebuild it too
-      for (const report of loaded.parseFiles()) {
-        this.addWatchFile(report.path)
-        warnDiagnostics(warn, report.diagnostics, 'while parsing', {
-          file: report.path,
-          onlyNew: true,
-        })
-      }
+        // Every parsed file is watched, not just the bundled modules: the stylesheet covers all
+        // of them, so editing one that no entry imports must rebuild it too
+        for (const report of loaded.parseFiles()) {
+          this.addWatchFile(report.path)
+          warnDiagnostics(logger.warn, report.diagnostics, 'while parsing', {
+            file: report.path,
+            onlyNew: true,
+          })
+        }
 
-      configWatchFiles.clear()
-      for (const file of [
-        loaded.configPath,
-        ...loaded.configDependencies.map((dependency) => loaded.resolvePath(dependency)),
-      ]) {
-        const resolved = path.resolve(file)
-        configWatchFiles.add(resolved)
-        this.addWatchFile(resolved)
-      }
+        configWatchFiles.clear()
+        for (const file of [
+          loaded.configPath,
+          ...loaded.configDependencies.map((dependency) => loaded.resolvePath(dependency)),
+        ]) {
+          const resolved = path.resolve(file)
+          configWatchFiles.add(resolved)
+          this.addWatchFile(resolved)
+        }
+      },
     },
 
     watchChange(id) {
@@ -540,6 +577,32 @@ function configureIdFilter(
 
 function idFilterKey(idFilter: IdFilter): string {
   return JSON.stringify([idFilter.include ?? null, idFilter.exclude.map(String)])
+}
+
+/** The modification time of every file under `dir`, keyed by resolved path. */
+function fileMtimes(dir: string): Map<string, number> {
+  const mtimes = new Map<string, number>()
+  let entries: string[]
+  try {
+    entries = readdirSync(dir, {recursive: true, encoding: 'utf8'})
+  } catch {
+    return mtimes
+  }
+  for (const entry of entries) {
+    const file = path.resolve(dir, entry)
+    const mtime = fileMtime(file)
+    if (mtime !== undefined) mtimes.set(file, mtime)
+  }
+  return mtimes
+}
+
+function fileMtime(file: string): number | undefined {
+  try {
+    const stats = statSync(file)
+    return stats.isFile() ? stats.mtimeMs : undefined
+  } catch {
+    return undefined
+  }
 }
 
 function realpathOrSelf(file: string): string {

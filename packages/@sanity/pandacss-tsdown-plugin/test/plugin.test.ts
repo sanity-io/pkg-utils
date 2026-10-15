@@ -1,4 +1,4 @@
-import {mkdir, mkdtemp, realpath, rm, writeFile} from 'node:fs/promises'
+import {mkdir, mkdtemp, readFile, realpath, rm, stat, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
@@ -7,6 +7,7 @@ import {
   type ModuleFormat,
   type OutputAsset,
   type OutputChunk,
+  type Plugin,
   type PluginContext,
 } from 'rolldown'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
@@ -247,10 +248,10 @@ async function notifyChange(plugin: TsdownPlugin, file: string): Promise<void> {
 describe('config reloads', () => {
   let dir = ''
 
-  const writeTheme = (color: string) =>
+  const writeTheme = (color: string, variants = '{}') =>
     writeFile(
       path.join(dir, 'theme.ts'),
-      `export const recipes = {badge: {className: 'badge', base: {color: '${color}'}}}\n`,
+      `export const recipes = {badge: {className: 'badge', base: {color: '${color}'}, variants: ${variants}}}\n`,
     )
   const writeConfig = (extra = '') =>
     writeFile(
@@ -274,14 +275,22 @@ describe('config reloads', () => {
     if (dir) await rm(dir, {recursive: true, force: true})
   })
 
-  /** Builds with a shared plugin instance, like the rebuilds of watch mode. */
-  async function rebuild(plugin: TsdownPlugin) {
+  /**
+   * Builds with a shared plugin instance, like the rebuilds of watch mode. The generated
+   * `styled-system` runtime is bundled unless `external` is set.
+   */
+  async function rebuild(
+    plugin: TsdownPlugin,
+    {external = false, before = []}: {external?: boolean; before?: Plugin[]} = {},
+  ) {
+    const infos: string[] = []
     const warnings: string[] = []
     const bundle = await rolldown({
       input: path.join(dir, 'src/index.ts'),
-      external: [/styled-system/],
-      plugins: [plugin],
+      ...(external ? {external: [/styled-system/]} : {}),
+      plugins: [...before, plugin],
       onLog(level, log) {
+        if (level === 'info') infos.push(log.message)
         if (level === 'warn') warnings.push(log.message)
       },
     })
@@ -290,6 +299,7 @@ describe('config reloads', () => {
       return {
         css: findAsset(output, DEFAULT_CSS_FILE_NAME),
         entry: findChunk(output, 'index').code,
+        infos,
         warnings,
         watchFiles: await bundle.watchFiles,
       }
@@ -297,6 +307,41 @@ describe('config reloads', () => {
       await bundle.close()
     }
   }
+
+  test('runs codegen before extracting, rewriting only what changed', async () => {
+    const generated = path.join(dir, 'styled-system/recipes/badge.js')
+    const plugin = pandaPlugin({cwd: dir})
+    // Reads the generated code from another plugin's `buildStart`, like the declaration build
+    // does: it must never see stale output, even when ordered first
+    const seen: (string | undefined)[] = []
+    const probe: Plugin = {
+      name: 'probe',
+      async buildStart() {
+        seen.push(await readFile(generated, 'utf8').catch(() => undefined))
+      },
+    }
+
+    const first = await rebuild(plugin, {before: [probe]})
+    expect(seen.at(-1)).toContain('badge')
+    expect(first.infos).toEqual([expect.stringMatching(/Generated \d+ files in styled-system$/)])
+    // The entry bundles the generated runtime instead of importing a missing module
+    expect(first.entry).not.toMatch(/from ["'][^"']*styled-system/)
+    expect(first.css).toContain('.badge')
+    const {mtimeMs} = await stat(generated)
+
+    // Nothing changed: nothing is rewritten or reported
+    const second = await rebuild(plugin, {before: [probe]})
+    expect(second.infos).toEqual([])
+    expect((await stat(generated)).mtimeMs).toBe(mtimeMs)
+
+    // A reloaded config regenerates the affected files
+    await writeTheme('red', `{size: {sm: {padding: '1px'}}}`)
+    await notifyChange(plugin, path.join(dir, 'theme.ts'))
+    const third = await rebuild(plugin, {before: [probe]})
+    expect(third.infos).toEqual([expect.stringMatching(/Generated \d+ files? in styled-system$/)])
+    expect(await readFile(generated, 'utf8')).toContain('"sm"')
+    expect(seen.at(-1)).toContain('"sm"')
+  })
 
   test('reloads the config when a file it imports changes', async () => {
     const plugin = pandaPlugin({cwd: dir})
@@ -311,13 +356,13 @@ describe('config reloads', () => {
 
   test('applies narrowed `include`/`exclude` globs after a reload', async () => {
     const plugin = pandaPlugin({cwd: dir, inject: true})
-    const first = await rebuild(plugin)
+    const first = await rebuild(plugin, {external: true})
     expect(first.entry).toMatch(/^import "\.\/styles\.css";\n/)
     expect(first.css).toContain('.badge')
 
     await writeConfig(` exclude: ['./src/index.ts'],`)
     await notifyChange(plugin, path.join(dir, 'panda.config.ts'))
-    const second = await rebuild(plugin)
+    const second = await rebuild(plugin, {external: true})
     expect(second.entry).not.toContain('styles.css')
     expect(second.css).not.toContain('.badge')
     expect(second.warnings).toEqual([

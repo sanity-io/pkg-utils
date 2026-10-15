@@ -274,8 +274,10 @@ export default defineConfig({
 })
 ```
 
-The options are the plugin's (`cwd`, `configPath`, `outdir` and `transform` from
-`@pandacss/vite`, plus `fileName`, `minify`, `target`, `lightningcss`, `inject` and `exports`).
+The plugin runs Panda's codegen before extracting, so the generated `styled-system` code and
+types stay in sync with the config. Its options are the plugin's (`cwd`, `configPath`, `outdir`
+and `transform` from `@pandacss/vite`, plus `fileName`, `minify`, `target`, `lightningcss`,
+`inject` and `exports`).
 The only default this config adds is the CSS syntax lowering fallback: browserless targets fall
 back to `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
 `minify`, `inject` and `exports` stay disabled unless you set them.

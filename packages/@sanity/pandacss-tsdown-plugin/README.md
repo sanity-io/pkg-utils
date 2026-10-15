@@ -41,9 +41,24 @@ export default defineConfig({
 The plugin loads `panda.config.*` with `@pandacss/compiler`, parses the files matched by its
 `include`/`exclude` globs, and emits every cascade layer (`reset`, `base`, `tokens`, `recipes` and
 `utilities`) without the layer order declaration. Panda's `--made-with-panda` marker is always
-removed. The plugin never runs codegen: run `panda codegen` (or `@pandacss/vite`) when the source
-imports the generated `styled-system` directory, or enable `transform` to compile the style calls
-away.
+removed.
+
+## Codegen
+
+Before anything is extracted, the plugin runs Panda's codegen into the `styled-system` directory
+(the config's `outdir`), so the generated runtime, types and class names always match the config
+the stylesheet is built from. A `prepare: "panda codegen"` script isn't needed for builds, and
+stale generated code can't leak into the published JS or `.d.ts` files:
+
+- Codegen finishes before any plugin's `buildStart` hook, so tsdown's declaration build reads the
+  fresh types.
+- Only files whose content changed are rewritten, and nothing is logged when nothing changed.
+  Otherwise the build logs how many files were generated.
+- In watch mode, changing the config or a file it imports reloads the config and runs codegen
+  again before the rebuild.
+
+Keep the generated directory out of git, like with `panda codegen`. Enable `transform` to compile
+the style calls away, so the published JS doesn't import the generated runtime.
 
 ## Options
 
@@ -51,7 +66,7 @@ away.
 | -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `cwd`          | tsdown's `cwd`    | Where the Panda config is discovered from, and what its globs are relative to.                                                                                                |
 | `configPath`   |                   | An explicit Panda config file, relative to `cwd`.                                                                                                                             |
-| `outdir`       | the config's      | The generated `styled-system` directory, which is never parsed or transformed.                                                                                                |
+| `outdir`       | the config's      | The `styled-system` directory codegen writes to, which is never parsed or transformed.                                                                                        |
 | `transform`    | `false`           | Statically transform style calls into class name strings, like `@pandacss/vite`.                                                                                              |
 | `fileName`     | `"styles.css"`    | Name of the emitted stylesheet.                                                                                                                                               |
 | `minify`       | `false`           | Minify the stylesheet.                                                                                                                                                        |
