@@ -793,9 +793,13 @@ function stringArray(value: unknown): string[] {
     : []
 }
 
-/** Escapes the glob metacharacters of a literal path, so it only matches itself. */
+/**
+ * Escapes the glob metacharacters of a literal path, so it only matches itself. They're wrapped
+ * in character classes (`[[]`) instead of escaped with a backslash, which rolldown turns into a
+ * path separator on Windows. Closing brackets and braces are literal once the opening ones are.
+ */
 function escapeGlob(literal: string): string {
-  return literal.replace(/[\\*?[\]{}()!@+]/g, '\\$&')
+  return literal.replace(/[*?[{]/g, '[$&]')
 }
 
 function escapeRegex(value: string): string {

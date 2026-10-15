@@ -712,7 +712,7 @@ describe('config reloads', () => {
   }
 
   test('escapes glob metacharacters in the project path', async () => {
-    const project = path.join(dir, 'lib[1]')
+    const project = path.join(dir, 'lib[1]{2}')
     await cp(reloadFixtureDir, project, {recursive: true})
     const plugin = pandaPlugin({cwd: project, inject: true})
     const bundle = await rolldown({
@@ -734,12 +734,14 @@ describe('config reloads', () => {
     if (typeof transform !== 'object') expect.unreachable('expected an object `transform` hook')
     expect(transform.filter).toMatchObject({
       id: {
-        include: [expect.stringMatching(/\/lib\\\[1\\\]\/src\/\*\*\/\*\.ts$/)],
+        include: [expect.stringMatching(/\/lib\[\[\]1\]\[\{\]2\}\/src\/\*\*\/\*\.ts$/)],
         exclude: expect.arrayContaining([
-          expect.stringMatching(/\/lib\\\[1\\\]\/styled-system\/\*\*$/),
+          expect.stringMatching(/\/lib\[\[\]1\]\[\{\]2\}\/styled-system\/\*\*$/),
         ]),
       },
     })
+    // rolldown turns backslashes into path separators on Windows, so no escape may use one
+    expect(JSON.stringify(transform.filter)).not.toContain('\\\\')
   })
 
   test('keeps Windows absolute globs absolute, with forward slashes', async () => {
