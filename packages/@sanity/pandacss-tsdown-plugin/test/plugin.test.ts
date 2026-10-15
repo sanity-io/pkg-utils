@@ -919,7 +919,7 @@ export function makeBrandBox(overrides?: SystemStyleObject): string {
         format: 'cjs',
         tsconfig: path.join(tmpDir, 'tsconfig.json'),
         dts: true,
-        clean: true,
+        clean: ['dist', 'styled-system'],
         exports: true,
         logLevel: 'silent',
         deps: {

@@ -578,8 +578,6 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         nextDriver.config['outdir'] = outdir
       }
       refreshTransformFilter(nextDriver)
-      runCodegen(nextDriver)
-      scanSources(nextDriver)
       updateConfigWatchFiles(nextDriver)
       driver = nextDriver
       return nextDriver
@@ -685,18 +683,27 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       }
     },
 
-    async tsdownConfigResolved(config: ResolvedConfig) {
+    tsdownConfigResolved(config: ResolvedConfig) {
       if (config.target !== undefined) {
         contextTarget = config.target
       }
       if (typeof config.pkg?.name === 'string' && config.pkg.name.length > 0) {
         contextPackageName = config.pkg.name
       }
-      await initDriver(config.cwd || process.cwd())
+      if (!driverPromise) {
+        resolvedCwd = cwd ? path.resolve(cwd) : path.resolve(config.cwd || process.cwd())
+        packageMetadataPromise = undefined
+      }
     },
 
+    // Runs after tsdown's `clean` step and before any Rolldown `buildStart` hook (including
+    // tsdown's separate CJS `.d.ts` build, which runs in parallel with the JS build and does not
+    // include user plugins), so `styled-system` artifacts exist even when `clean` includes
+    // `styled-system`.
     async options(inputOptions) {
-      await initDriver(inputOptions.cwd || resolvedCwd)
+      const activeDriver = await initDriver(inputOptions.cwd || resolvedCwd)
+      runCodegen(activeDriver)
+      scanSources(activeDriver)
       if (!injectEnabled) return undefined
       return {
         ...inputOptions,
@@ -714,7 +721,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         const activeDriver = driver ?? (await initDriver(resolvedCwd))
         if (needsConfigReload || (hasBuiltOnce && this.meta?.watchMode)) {
           await reloadDriver(activeDriver)
-        } else if (hasBuiltOnce) {
+        } else if (!hasBuiltOnce && scannedWatchFiles.length === 0) {
           runCodegen(activeDriver)
           scanSources(activeDriver)
         }
