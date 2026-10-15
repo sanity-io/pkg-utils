@@ -125,6 +125,10 @@ describe('pandaPlugin', () => {
           padding-inline: 4px;
         }
 
+        .gap_2px {
+          gap: 2px;
+        }
+
         .color_tomato {
           color: tomato;
         }
@@ -259,6 +263,22 @@ describe('pandaPlugin', () => {
       // The parse report doesn't count recipe, pattern or token calls
       const output = await build({inject: true}, {input: 'src/recipe.ts'})
       expect(findChunk(output, 'recipe').code).toMatch(/^import "\.\/styles\.css";\n/)
+    })
+
+    test('imports the stylesheet from entries that only use patterns, with `transform: false`', async () => {
+      const output = await build({inject: true, transform: false}, {input: 'src/pattern.ts'})
+      const {code} = findChunk(output, 'pattern')
+      expect(code).toMatch(/^import "\.\/styles\.css";\n/)
+      expect(code).toMatch(/from "\.\.\/styled-system\/patterns"/)
+      expect(findAsset(output, DEFAULT_CSS_FILE_NAME)).toContain('gap: 2px')
+    })
+
+    test('imports the stylesheet from entries that only use config recipes, with `transform: false`', async () => {
+      const output = await build({inject: true, transform: false}, {input: 'src/recipe.ts'})
+      const {code} = findChunk(output, 'recipe')
+      expect(code).toMatch(/^import "\.\/styles\.css";\n/)
+      expect(code).toMatch(/from "\.\.\/styled-system\/recipes"/)
+      expect(findAsset(output, DEFAULT_CSS_FILE_NAME)).toContain('font-weight: bold')
     })
 
     test('keeps a dot-prefixed `fileName` relative', async () => {
