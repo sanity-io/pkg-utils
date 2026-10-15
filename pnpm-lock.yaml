@@ -1562,8 +1562,8 @@ importers:
   playground/sanity-plugin-with-styled-components:
     dependencies:
       '@sanity/ui':
-        specifier: ^4.4.5
-        version: 4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        specifier: ^4.4.8
+        version: 4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       react-compiler-runtime:
         specifier: ^1.0.0
         version: 1.0.0(react@19.3.1)
@@ -1596,8 +1596,8 @@ importers:
   playground/sanity-plugin-with-vanilla-extract:
     dependencies:
       '@sanity/ui':
-        specifier: ^4.4.5
-        version: 4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        specifier: ^4.4.8
+        version: 4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
     devDependencies:
       '@types/react':
         specifier: ^19.3.0
@@ -7146,8 +7146,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@sanity/ui@4.4.5':
-    resolution: {integrity: sha512-irTM74hvxsGZ5mZUcbqQL7xkaSenhYgmpTLqY7McivbPOMLYBCMFSW7wtCHgSLavBqGIUfuUeyRrCt94wu4qvw==}
+  '@sanity/ui@4.4.8':
+    resolution: {integrity: sha512-nXTN95Ls0LYnoSwvXQLE9DxzoOG9/0jDj99UDmuTl3JC6nouU3D4slIzCRLJW67y2KSzOm0IaDQFoLIXAWNhFw==}
     engines: {node: '>=22.12'}
     peerDependencies:
       react: ^19.2
@@ -12862,8 +12862,8 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  react-is@19.3.0:
-    resolution: {integrity: sha512-UpMYezM4v5/18F28aC66AEsjXIgE02kyEMH6yLdgLXu/UTfa1Ntwck/nNLrbqJsEXW7gPb0coNO9FQse9WTovA==}
+  react-is@19.3.1:
+    resolution: {integrity: sha512-RRieF6IyxQBkcK6pP8xOHprLTPW6QjRkbGdImtqNme+/hYVwCZkLQLdlZGOhUqXwkS9IEynaGvPJtv6XB/cz0Q==}
 
   react-reconciler@0.29.2:
     resolution: {integrity: sha512-zZQqIiYgDCTP/f1N/mAR10nJGrPD2ZR+jDSEsKWJHYC7Cm2wodlwbR3upZRdC3cjIjSlTLNVyO7Iu0Yy7t2AYg==}
@@ -21181,7 +21181,7 @@ snapshots:
     dependencies:
       '@sanity/client': 8.9.0(vitest@5.0.4)
       '@sanity/icons': 5.2.3(react@19.3.1)
-      '@sanity/ui': 4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@sanity/ui': 4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       react: 19.3.1
       react-rx: 7.0.1(react@19.3.1)(rxjs@7.8.2)
       rxjs: 7.8.2
@@ -21235,7 +21235,7 @@ snapshots:
       oneline: 2.0.0
       picomatch: 4.0.7
       react: 19.3.1
-      react-is: 19.3.0
+      react-is: 19.3.1
       semver: 7.8.5
       vite: 8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
       zod: 4.6.7
@@ -21290,7 +21290,7 @@ snapshots:
       oneline: 2.0.0
       picomatch: 4.0.7
       react: 19.3.1
-      react-is: 19.3.0
+      react-is: 19.3.1
       semver: 7.8.5
       vite: 8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
       zod: 4.6.7
@@ -21345,7 +21345,7 @@ snapshots:
       oneline: 2.0.0
       picomatch: 4.0.7
       react: 19.3.1
-      react-is: 19.3.0
+      react-is: 19.3.1
       semver: 7.8.5
       vite: 8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
       zod: 4.6.7
@@ -22256,18 +22256,17 @@ snapshots:
     transitivePeerDependencies:
       - vitest
 
-  '@sanity/ui@4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+  '@sanity/ui@4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
     dependencies:
       '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@sanity/color': 3.0.9
       '@sanity/icons': 5.2.3(react@19.3.1)
-      '@vanilla-extract/dynamic': 2.1.5
       clsx: 2.1.1
       csstype: 3.2.3
       motion: 14.2.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-      react-is: 19.3.0
+      react-is: 19.3.1
       react-refractor: 4.0.0(react@19.3.1)
       styled-components: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       use-effect-event: 2.0.4(react@19.3.1)
@@ -28924,7 +28923,7 @@ snapshots:
   pretty-format@30.5.1:
     dependencies:
       '@jest/react-is-18': react-is@18.3.1
-      '@jest/react-is-19': react-is@19.3.0
+      '@jest/react-is-19': react-is@19.3.1
       '@jest/schemas': 30.5.0
       ansi-styles: 5.2.0
 
@@ -29128,7 +29127,7 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-is@19.3.0: {}
+  react-is@19.3.1: {}
 
   react-reconciler@0.29.2(react@18.3.1):
     dependencies:
@@ -29598,7 +29597,7 @@ snapshots:
       '@sanity/sdk-react': 3.8.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))(vitest@5.0.4)(xstate@5.33.2)
       '@sanity/telemetry': 1.1.0(react@19.3.1)
       '@sanity/types': 6.19.0(@types/react@19.3.0)(vitest@5.0.4)
-      '@sanity/ui': 4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@sanity/ui': 4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@sanity/util': 6.19.0(@types/react@19.3.0)(vitest@5.0.4)
       '@sanity/uuid': 3.0.3
       '@sanity/validation': 6.19.0(@types/react@19.3.0)(typescript@7.0.2)(vitest@5.0.4)
@@ -29636,7 +29635,7 @@ snapshots:
       react-fast-compare: 3.2.2
       react-focus-lock: 2.13.7(@types/react@19.3.0)(react@19.3.1)
       react-i18next: 17.0.16(i18next@26.4.4(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
-      react-is: 19.3.0
+      react-is: 19.3.1
       react-refractor: 4.0.0(react@19.3.1)
       react-rx: 7.0.1(react@19.3.1)(rxjs@7.8.2)
       refractor: 5.0.0
@@ -29751,7 +29750,7 @@ snapshots:
       '@sanity/sdk-react': 3.8.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))(vitest@5.0.4)(xstate@5.33.2)
       '@sanity/telemetry': 1.1.0(react@19.3.1)
       '@sanity/types': 6.19.0(@types/react@19.3.0)(vitest@5.0.4)
-      '@sanity/ui': 4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@sanity/ui': 4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@sanity/util': 6.19.0(@types/react@19.3.0)(vitest@5.0.4)
       '@sanity/uuid': 3.0.3
       '@sanity/validation': 6.19.0(@types/react@19.3.0)(typescript@7.0.2)(vitest@5.0.4)
@@ -29789,7 +29788,7 @@ snapshots:
       react-fast-compare: 3.2.2
       react-focus-lock: 2.13.7(@types/react@19.3.0)(react@19.3.1)
       react-i18next: 17.0.16(i18next@26.4.4(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
-      react-is: 19.3.0
+      react-is: 19.3.1
       react-refractor: 4.0.0(react@19.3.1)
       react-rx: 7.0.1(react@19.3.1)(rxjs@7.8.2)
       refractor: 5.0.0
@@ -29904,7 +29903,7 @@ snapshots:
       '@sanity/sdk-react': 3.8.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))(vitest@5.0.4)(xstate@5.33.2)
       '@sanity/telemetry': 1.1.0(react@19.3.1)
       '@sanity/types': 6.19.0(@types/react@19.3.0)(vitest@5.0.4)
-      '@sanity/ui': 4.4.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+      '@sanity/ui': 4.4.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@sanity/util': 6.19.0(@types/react@19.3.0)(vitest@5.0.4)
       '@sanity/uuid': 3.0.3
       '@sanity/validation': 6.19.0(@types/react@19.3.0)(typescript@7.0.2)(vitest@5.0.4)
@@ -29942,7 +29941,7 @@ snapshots:
       react-fast-compare: 3.2.2
       react-focus-lock: 2.13.7(@types/react@19.3.0)(react@19.3.1)
       react-i18next: 17.0.16(i18next@26.4.4(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2)
-      react-is: 19.3.0
+      react-is: 19.3.1
       react-refractor: 4.0.0(react@19.3.1)
       react-rx: 7.0.1(react@19.3.1)(rxjs@7.8.2)
       refractor: 5.0.0
