@@ -63,7 +63,7 @@ function resolveRelativeOutDir(
   normalizedFileName: string,
   configuredOutDir?: string,
 ): string {
-  const pkg = context?.pkg as Partial<PackageJsonWithPath> | undefined
+  const pkg: Partial<PackageJsonWithPath> | undefined = context?.pkg
   const packageJsonPath =
     typeof pkg?.packageJsonPath === 'string' && pkg.packageJsonPath.length > 0
       ? pkg.packageJsonPath

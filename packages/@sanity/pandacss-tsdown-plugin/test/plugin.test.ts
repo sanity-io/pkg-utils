@@ -6,6 +6,7 @@ import {
   readFileSync,
   rmSync,
   statSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs'
 import os from 'node:os'
@@ -26,6 +27,17 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const basicFixtureDir = path.join(__dirname, 'fixtures/basic')
 const basicEntry = path.join(basicFixtureDir, 'src/index.ts')
+
+function createTempProjectDir(prefix: string): string {
+  const tmpDir = mkdtempSync(path.join(os.tmpdir(), prefix))
+  mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
+  symlinkSync(
+    path.resolve(__dirname, '../node_modules'),
+    path.join(tmpDir, 'node_modules'),
+    'junction',
+  )
+  return tmpDir
+}
 
 function snapshotMtimes(dir: string): Map<string, number> {
   const mtimes = new Map<string, number>()
@@ -102,7 +114,7 @@ describe('@sanity/pandacss-tsdown-plugin', () => {
   })
 
   it('emits comment-only CJS-safe styles-css.js shim and export {} in styles-css.d.ts when exports: {nodeCompat: true}', async () => {
-    expect(cssShimSource).not.toContain('export')
+    expect(cssShimSource).not.toContain('export {}')
     expect(cssShimSource.replaceAll(/^\/\/[^\n]*$/gm, '').trim()).toBe('')
     expect(cssShimDtsSource).toContain('export {}')
 
@@ -254,17 +266,18 @@ describe('@sanity/pandacss-tsdown-plugin', () => {
   })
 
   it('injects CJS require() after the directive prologue and hashbang, preserving strict mode', async () => {
-    const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'panda-cjs-strict-'))
+    const tmpDir = createTempProjectDir('panda-cjs-strict-')
     try {
-      mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
       writeFileSync(
         path.join(tmpDir, 'panda.config.ts'),
-        `export default {
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
   preflight: false,
   include: ['./src/**/*.ts'],
   outdir: 'styled-system',
   theme: {extend: {tokens: {colors: {brand: {value: 'rgb(1, 2, 3)'}}}}},
-}
+} satisfies Config)
 `,
       )
       writeFileSync(
@@ -431,16 +444,17 @@ export function getReceiver() {
       expect(withGlobsPlugin.transform.handler).toEqual(expect.any(Function))
     }
 
-    const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'panda-no-globs-'))
+    const tmpDir = createTempProjectDir('panda-no-globs-')
     try {
-      mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
       writeFileSync(
         path.join(tmpDir, 'panda.config.ts'),
-        `export default {
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
   preflight: false,
   outdir: 'styled-system',
   theme: {extend: {tokens: {colors: {brand: {value: 'rgb(1, 2, 3)'}}}}},
-}
+} satisfies Config)
 `,
       )
       writeFileSync(
@@ -476,9 +490,8 @@ export const x = css({color: 'brand'})
   })
 
   it('re-transforms newly eligible modules when include/exclude is widened in a persistent rolldown watcher', async () => {
-    const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'panda-persistent-watch-'))
+    const tmpDir = createTempProjectDir('panda-persistent-watch-')
     try {
-      mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
       const configPath = path.join(tmpDir, 'panda.config.ts')
       const entryPath = path.join(tmpDir, 'src/index.ts')
       const outDir = path.join(tmpDir, 'dist')
@@ -486,7 +499,9 @@ export const x = css({color: 'brand'})
       const writeConfig = (excludeLine: string) =>
         writeFileSync(
           configPath,
-          `export default {
+          `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
   preflight: false,
   include: ['./src/**/*.ts'],
   ${excludeLine}
@@ -500,7 +515,7 @@ export const x = css({color: 'brand'})
       },
     },
   },
-}
+} satisfies Config)
 `,
         )
 
@@ -567,9 +582,8 @@ export const badge = css({color: 'brand'})
   })
 
   it('watches config dependencies and reloads driver, filters, and codegen on watchChange', async () => {
-    const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'panda-watch-reload-'))
+    const tmpDir = createTempProjectDir('panda-watch-reload-')
     try {
-      mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
       const tokensPath = path.join(tmpDir, 'tokens.ts')
       const configPath = path.join(tmpDir, 'panda.config.ts')
       const entryPath = path.join(tmpDir, 'src/index.ts')
@@ -582,8 +596,10 @@ export const badge = css({color: 'brand'})
       const writeConfig = (extraExclude = '') =>
         writeFileSync(
           configPath,
-          `import {brandColor, extraTokens} from './tokens.ts'
-export default {
+          `import {defineConfig, type Config} from '@pandacss/dev'
+import {brandColor, extraTokens} from './tokens.ts'
+
+export default defineConfig({
   preflight: false,
   include: ['./src/**/*.ts'],
   ${extraExclude}
@@ -598,7 +614,7 @@ export default {
       },
     },
   },
-}
+} satisfies Config)
 `,
         )
 
@@ -741,9 +757,8 @@ export const badge = css({color: 'brand'})
   })
 
   it('upgrades tsdown 0.23.1 auto-generated CSS export to conditional Node shim in a real tsdown build with custom outDir', async () => {
-    const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'panda-tsdown-build-'))
+    const tmpDir = createTempProjectDir('panda-tsdown-build-')
     try {
-      mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
       const pkgJsonPath = path.join(tmpDir, 'package.json')
       writeFileSync(
         pkgJsonPath,
@@ -762,13 +777,15 @@ export const badge = css({color: 'brand'})
       )
       writeFileSync(
         path.join(tmpDir, 'panda.config.ts'),
-        `export default {
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
   preflight: false,
   include: ['./src/**/*.ts'],
   outdir: 'styled-system',
   importMap: '#styled-system',
   theme: {extend: {tokens: {colors: {brand: {value: 'rgb(1, 2, 3)'}}}}},
-}
+} satisfies Config)
 `,
       )
       writeFileSync(
@@ -816,9 +833,8 @@ export const brandClass = css({color: 'brand'})
   })
 
   it('runs codegen before tsdown CJS + dts build and does not inject CSS import into .d.cts', async () => {
-    const tmpDir = mkdtempSync(path.join(os.tmpdir(), 'panda-tsdown-cjs-dts-'))
+    const tmpDir = createTempProjectDir('panda-tsdown-cjs-dts-')
     try {
-      mkdirSync(path.join(tmpDir, 'src'), {recursive: true})
       writeFileSync(
         path.join(tmpDir, 'package.json'),
         JSON.stringify(
@@ -855,13 +871,15 @@ export const brandClass = css({color: 'brand'})
       )
       writeFileSync(
         path.join(tmpDir, 'panda.config.ts'),
-        `export default {
+        `import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
   preflight: false,
   include: ['./src/**/*.ts'],
   outdir: 'styled-system',
   importMap: '#styled-system',
   theme: {extend: {tokens: {colors: {brand: {value: 'rgb(1, 2, 3)'}}}}},
-}
+} satisfies Config)
 `,
       )
       writeFileSync(
@@ -883,7 +901,7 @@ export function makeBrandBox(overrides?: SystemStyleObject): string {
         entry: ['src/index.ts'],
         format: 'cjs',
         tsconfig: path.join(tmpDir, 'tsconfig.json'),
-        dts: {generator: 'tsc'},
+        dts: true,
         clean: true,
         exports: true,
         logLevel: 'silent',

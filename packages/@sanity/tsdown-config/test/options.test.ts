@@ -167,6 +167,72 @@ describe('css option', () => {
   })
 })
 
+describe('panda option', () => {
+  test('adds the panda plugin when enabled and wires conditional exports', async () => {
+    const config = await defineConfig({panda: true})
+    expect(pluginNames(config)).toContain('sanity:pandacss-tsdown')
+
+    const {plugins} = config
+    if (!Array.isArray(plugins)) expect.unreachable('expected plugins array')
+    const plugin = plugins.find(
+      (candidate): candidate is TsdownPlugin =>
+        !!candidate &&
+        typeof candidate === 'object' &&
+        'name' in candidate &&
+        candidate.name === 'sanity:pandacss-tsdown',
+    )
+    if (!plugin || typeof plugin.tsdownConfig !== 'function') {
+      expect.unreachable('expected panda plugin with tsdownConfig hook')
+    }
+    await plugin.tsdownConfig(config, {})
+    expect(config.exports).toHaveProperty('customExports')
+  })
+
+  test('preserves browserslist queries in panda.target without overwriting with @sanity/browserslist-config', async () => {
+    const {resolveCssLoweringTargets} = await import('../src/cssLoweringTargets.ts')
+    const {esbuildTargetToLightningCSS: pandaTargetToLightningCSS} =
+      await import('@sanity/pandacss-tsdown-plugin')
+
+    // Browserslist query ('defaults', '> 0.5%') is recognized by Panda's converter, so
+    // resolveCssLoweringTargets leaves lightningcss.targets unset so the plugin lowers for
+    // 'defaults' rather than @sanity/browserslist-config
+    const defaultsResult = await resolveCssLoweringTargets({
+      cssTarget: 'defaults',
+      target: undefined,
+      lightningcss: undefined,
+      resolveTargets: pandaTargetToLightningCSS,
+    })
+    expect(defaultsResult).toBeUndefined()
+
+    const queryResult = await resolveCssLoweringTargets({
+      cssTarget: '> 0.5%',
+      target: undefined,
+      lightningcss: undefined,
+      resolveTargets: pandaTargetToLightningCSS,
+    })
+    expect(queryResult).toBeUndefined()
+
+    // Explicit lightningcss.targets still wins
+    const customTargets = {chrome: 61 << 16}
+    const explicitResult = await resolveCssLoweringTargets({
+      cssTarget: 'defaults',
+      target: undefined,
+      lightningcss: {targets: customTargets},
+      resolveTargets: pandaTargetToLightningCSS,
+    })
+    expect(explicitResult).toEqual({targets: customTargets})
+
+    // Non-browser target ('node22') falls back to @sanity/browserslist-config
+    const fallbackResult = await resolveCssLoweringTargets({
+      cssTarget: 'node22',
+      target: undefined,
+      lightningcss: undefined,
+      resolveTargets: pandaTargetToLightningCSS,
+    })
+    expect(fallbackResult).toEqual({targets: expect.any(Object)})
+  })
+})
+
 function pluginNames(config: UserConfig): string[] {
   const {plugins} = config
   if (!Array.isArray(plugins)) throw new Error('expected plugins array')
