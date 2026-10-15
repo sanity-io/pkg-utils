@@ -30,7 +30,7 @@ import {
   type LightningCSSOptions,
   type Options,
 } from '../src/index.ts'
-import {cascadeWinner, type CascadeElement} from './cascade.ts'
+import {cascadeWinner, ruleLines, type CascadeElement} from './cascade.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
@@ -983,18 +983,6 @@ function styledDeclarations(css: string): Set<string> {
     },
   })
   return declarations
-}
-
-/**
- * The selector and declaration lines of a pretty-printed stylesheet, trimmed and sorted: what it
- * says, regardless of layers, order and indentation.
- */
-function ruleLines(css: string): string[] {
-  return css
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line !== '' && line !== '}' && !line.startsWith('@layer'))
-    .toSorted()
 }
 
 /** A consumer stylesheet, loaded after the library's: an element rule and a one-class override. */
