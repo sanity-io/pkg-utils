@@ -119,7 +119,9 @@ The CSS is extracted into `bundle.css` (the `fileName` option) once per output f
 
 ### Cascade layers
 
-Panda puts its rules in cascade layers, and the stylesheet keeps them by default. For a published library that has a cost: CSS outside any layer beats every layered rule, whatever its specificity. A consumer who overrides a base style with an unlayered rule — even `button { font-weight: inherit }` in a reset such as Tailwind's preflight — also overrides the library's `:hover`, `:focus-visible` and selected states, so focus rings, hover colors and bold weights disappear.
+Panda puts its rules in cascade layers, and the stylesheet keeps them by default: `cascadeLayers` defaults to `true`, here and in `@sanity/tsdown-config`'s `panda` option. `@sanity/tsdown-config` plans to switch its default to `false` in a later release of its own, once `@sanity/ui` and `sanity` have adopted the option.
+
+For a published library, the layers have a cost: CSS outside any layer beats every layered rule, whatever its specificity. A consumer who overrides a base style with an unlayered rule — even `button { font-weight: inherit }` in a reset such as Tailwind's preflight — also overrides the library's `:hover`, `:focus-visible` and selected states, so focus rings, hover colors and bold weights disappear.
 
 `cascadeLayers: false` removes every `@layer` block and statement. The library's rules then cascade like any unlayered CSS, by specificity and then source order, the way a vanilla-extract or plain CSS stylesheet does:
 
