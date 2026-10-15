@@ -3,7 +3,7 @@ import {cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync} from
 import {createRequire} from 'node:module'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-import {promisify} from 'node:util'
+import {promisify, stripVTControlCharacters} from 'node:util'
 import {chromium} from 'playwright'
 import {rolldown} from 'rolldown'
 import {build, createServer, type Plugin, type ServerOptions, type ViteDevServer} from 'vite'
@@ -378,7 +378,8 @@ describe("Vitest's browser mode", () => {
         [vitestBin, 'run', '--root', fixtureDir],
         {env, timeout: 110_000},
       )
-      expect(stdout).toMatch(/Tests\s+2 passed \(2\)/)
+      // Colored when CI forces colors
+      expect(stripVTControlCharacters(stdout)).toMatch(/Tests\s+2 passed \(2\)/)
     },
   )
 })
