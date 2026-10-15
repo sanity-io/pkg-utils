@@ -500,7 +500,7 @@ describe('pandacssPlugin', () => {
         .replace("include: ['./src/**/*.ts']", "include: ['./src/**/*.{ts,tsx}']")
         .replace(
           'presets: [],',
-          "presets: [],\n  jsxFramework: 'react',\n  patterns: {box: {properties: {}, transform: (props: Record<string, unknown>) => props}},",
+          "presets: [],\n  jsxFramework: 'react',\n  patterns: {box: {properties: {}, transform: (props: {color?: string}) => props}},",
         ),
     )
     writeFileSync(

@@ -19,7 +19,7 @@ export default defineConfig({
     box: {
       properties: {},
       // Annotated, since the inferred `props` type is internal to `@pandacss/types`
-      transform: (props: Record<string, unknown>) => props,
+      transform: (props: {color?: string}) => props,
     },
   },
   utilities: {
