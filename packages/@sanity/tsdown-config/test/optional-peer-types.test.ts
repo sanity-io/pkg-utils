@@ -1,4 +1,4 @@
-import {cp, mkdir, mkdtemp, rm, symlink, writeFile} from 'node:fs/promises'
+import {cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
@@ -16,18 +16,26 @@ const repoRoot = path.resolve(packageDir, '../../..')
  * with resolution failing for `blockedModules` — like a consumer that didn't install those
  * peers. Expected errors carry `@ts-expect-error`, so "no diagnostics" asserts both ways
  * (a vanished expected error fails via the unused directive).
+ *
+ * With `skipLibCheck: false`, the diagnostics of this package's own declaration files are
+ * reported too — where a type import of an uninstalled peer surfaces as TS2307.
  */
-function typecheckConsumer(consumerCode: string, blockedModules: string[]): string {
+function typecheckConsumer(
+  consumerCode: string,
+  blockedModules: string[],
+  {skipLibCheck = true}: {skipLibCheck?: boolean} = {},
+): string {
   // Forward slashes: TypeScript normalizes paths before host callbacks see them, so a
   // backslash path would never match the `===` checks below on Windows
   const consumerPath = path.join(packageDir, '__optional-peer-consumer__.ts').replaceAll('\\', '/')
+  const distDir = `${path.join(packageDir, 'dist').replaceAll('\\', '/')}/`
   const compilerOptions: ts.CompilerOptions = {
     module: ts.ModuleKind.Preserve,
     moduleResolution: ts.ModuleResolutionKind.Bundler,
     target: ts.ScriptTarget.ESNext,
     strict: true,
-    // What makes a missing peer degrade silently instead of erroring with TS2307
-    skipLibCheck: true,
+    // `true` is what makes a missing peer degrade silently instead of erroring with TS2307
+    skipLibCheck,
     noEmit: true,
     types: [],
   }
@@ -52,10 +60,19 @@ function typecheckConsumer(consumerCode: string, blockedModules: string[]): stri
   const program = ts.createProgram({rootNames: [consumerPath], options: compilerOptions, host})
   const consumerFile = program.getSourceFile(consumerPath)
   if (!consumerFile) return expect.unreachable('expected the consumer source file')
-  const diagnostics = [
-    ...program.getSyntacticDiagnostics(consumerFile),
-    ...program.getSemanticDiagnostics(consumerFile),
-  ]
+  const checkedFiles = skipLibCheck
+    ? [consumerFile]
+    : [
+        consumerFile,
+        ...program.getSourceFiles().filter((file) => file.fileName.startsWith(distDir)),
+      ]
+  const diagnostics: ts.Diagnostic[] = []
+  for (const file of checkedFiles) {
+    diagnostics.push(
+      ...program.getSyntacticDiagnostics(file),
+      ...program.getSemanticDiagnostics(file),
+    )
+  }
   return ts.formatDiagnostics(diagnostics, {
     getCanonicalFileName: (fileName) => fileName,
     getCurrentDirectory: () => packageDir,
@@ -190,6 +207,52 @@ const invalidSources = defineConfig({reactCompiler: {transform: 'oxc', sources: 
 export {babel, dual, invalidSources, invalidTarget, oxc}
 `,
       [],
+    )
+    expect(diagnostics).toBe('')
+  })
+})
+
+describe('optional @sanity/pandacss-tsdown-plugin peer', () => {
+  test('the declarations never import the plugin', async () => {
+    // `PackagePandaOptions` is declared in this package: a type import of the optional peer
+    // would fail every consumer's `skipLibCheck: false` build that didn't install Panda
+    const declarations = await readFile(path.join(packageDir, 'dist/index.d.mts'), 'utf-8')
+    expect(declarations).not.toContain("from '@sanity/pandacss-tsdown-plugin'")
+    expect(declarations).not.toContain('from "@sanity/pandacss-tsdown-plugin"')
+    expect(declarations).not.toContain("import('@sanity/pandacss-tsdown-plugin')")
+  })
+
+  test('a consumer without the plugin typechecks with `skipLibCheck: false`', () => {
+    // Full-fidelity `panda` options, with the plugin blocked and the declarations themselves
+    // checked (where an import of the missing peer would be reported)
+    const diagnostics = typecheckConsumer(
+      `${consumerPreamble}
+const enabled: Promise<UserConfig> = defineConfig({panda: true})
+const custom: Promise<UserConfig> = defineConfig({
+  panda: {
+    configPath: 'panda.config.ts',
+    codegen: false,
+    transform: false,
+    polyfill: true,
+    fileName: 'styles.css',
+    minify: true,
+    target: ['chrome120', 'safari17'],
+    lightningcss: {unusedSymbols: ['--unused']},
+    inject: false,
+    exports: {nodeCompat: true},
+  },
+})
+
+// @ts-expect-error -- 'yes' is not a boolean
+const invalidMinify = defineConfig({panda: {minify: 'yes'}})
+
+// @ts-expect-error -- unknown options are rejected, not swallowed by a degraded \`any\`
+const unknownOption = defineConfig({panda: {outDir: 'dist'}})
+
+export {custom, enabled, invalidMinify, unknownOption}
+`,
+      ['@sanity/pandacss-tsdown-plugin'],
+      {skipLibCheck: false},
     )
     expect(diagnostics).toBe('')
   })

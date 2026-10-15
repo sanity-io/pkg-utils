@@ -254,6 +254,68 @@ entirely, and a user-provided `lightningcss.targets` wins over the fallback.
 CSS modules (or other `@tsdown/css` features) — the two pipelines write to different files by
 default (`bundle.css` vs `style.css`) and do not interfere with each other.
 
+## panda
+
+`panda: true` enables
+[`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme)
+for a package styled with [Panda CSS](https://panda-css.com): the build generates Panda's files,
+rewrites the style calls it can resolve statically into class names, and extracts the CSS into a
+separate stylesheet. It is the library-build counterpart of `@pandacss/vite`, which applications
+keep using in their Vite config.
+
+Install the plugin — an optional peer dependency of this config:
+
+```sh
+pnpm add --save-dev @sanity/pandacss-tsdown-plugin
+```
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: true,
+})
+```
+
+The Sanity defaults on top of the plugin's own:
+
+- `inject: true` — the entry chunks that use Panda styles get an `import "<pkg>/bundle.css"`
+  (a `require()` in CJS output), so consumers' bundlers load the stylesheet.
+- `exports: {nodeCompat: true}` — `./bundle.css` is published as a conditional export: the
+  `browser` and `style` conditions select the stylesheet, `node` and `default` a no-op JS shim,
+  so the import also loads in Node.js. The export is written to `package.json` through this
+  config's [`exports`](#exports) generation.
+- The CSS syntax is transformed for the configured browsers — `panda.target`, then the top-level
+  `target`, and when neither names browsers (e.g. `node20`) the
+  [`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
+  browsers. Browserslist queries like `'defaults'` work too; `lightningcss.targets` wins over
+  everything and `target: false` disables the transform.
+- `minify` stays off; `transform` stays on (unlike in `@pandacss/vite`).
+
+Pass an object to customize, with the same options as the plugin:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: {minify: true, fileName: 'styles.css'},
+})
+```
+
+Setup reminders, in the package being built:
+
+- `"prepare": "panda codegen"` (from `@pandacss/dev`, recommended but not required) so the
+  generated files exist for the editor and the type checker before a build — the plugin
+  regenerates them when it builds.
+- An `imports` map for the generated directory, e.g. `"#styled-system/*": "./styled-system/*/index.js"`,
+  matching `importMap` in `panda.config.ts`.
+- `"sideEffects": ["*.css"]`, so consumers' tree-shaking keeps the injected stylesheet import.
+
+See the plugin README for the full behavior (sources, codegen, the limits of the transform,
+watch mode) and the options reference.
+
 ## css
 
 tsdown's experimental [`css` option](https://tsdown.dev/options/css) enables the `@tsdown/css`
@@ -526,8 +588,9 @@ the browser - `'node'` makes CommonJS-interop emit a module-scope
 
 tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
 downlevels JS syntax for the given runtimes (esbuild-style target strings), and doubles as the
-default CSS syntax lowering target when `vanillaExtract` is enabled (browserless targets like
-`node20` don't affect the CSS - it falls back to `@sanity/browserslist-config`):
+default CSS syntax lowering target when `vanillaExtract`, `panda` or `css` is enabled
+(browserless targets like `node20` don't affect the CSS - it falls back to
+`@sanity/browserslist-config`):
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'

@@ -1,6 +1,6 @@
 {
   "extends": "@sanity/tsconfig/strictest",
-  "exclude": ["**/dist/**"],
+  "exclude": ["**/dist/**", "**/styled-system/**"],
   "compilerOptions": {
     "rootDir": "."
   }

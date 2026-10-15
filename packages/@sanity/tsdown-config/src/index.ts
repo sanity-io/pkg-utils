@@ -4,6 +4,7 @@ import type {
   Options as VanillaExtractPluginOptions,
 } from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as BabelReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
+import type {CustomAtRules, TransformOptions as LightningCssTransformOptions} from 'lightningcss'
 import type {ReactCompilerOptions as OxcReactCompilerOptions} from 'oxc-transform-react'
 import {detect} from 'package-manager-detector/detect'
 import {
@@ -52,6 +53,109 @@ export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
  * @public
  */
 export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
+
+/**
+ * Options for the `panda` option — the same options as `@sanity/pandacss-tsdown-plugin`
+ * (`cwd`, `configPath`, `outdir` and `transform` from `@pandacss/vite`, `codegen` and
+ * `polyfill`, plus `fileName`, `minify`, `target`, `lightningcss`, `inject`, and `exports`,
+ * modeled after the `css` options of `@tsdown/css`), with the same Sanity-flavored defaults as
+ * {@link PackageVanillaExtractOptions | `vanillaExtract`} on top:
+ *
+ * - `inject` and `exports` default to `true` and `{nodeCompat: true}` (instead of the plugin's
+ *   `false` for both), wiring up the conditional CSS export pattern that Sanity libraries ship
+ *   with. Set `exports: true` for a plain (browser-only) CSS export, `exports: false` for a
+ *   relative CSS import, or `inject: false` to only extract the CSS.
+ * - When the effective CSS syntax lowering target (`target`, falling back to the top-level
+ *   `target`) is undefined or names no browsers (e.g. `'node20'`, resolved from
+ *   `engines.node`), the lowering targets are resolved from `@sanity/browserslist-config` and
+ *   passed through `lightningcss.targets` — where the plugin (like `@tsdown/css`) would skip
+ *   lowering. `target: false` stays the explicit off switch, and a user-provided
+ *   `lightningcss.targets` wins over the fallback.
+ *
+ * `minify` is not set, so it stays the plugin's default (`false`, matching `css.minify` in
+ * `@tsdown/css`). Set `minify: true` to minify the extracted CSS.
+ *
+ * The options are declared here rather than imported from the plugin: the plugin is an
+ * optional peer, and a declaration file importing types from a package that isn't installed
+ * fails every consumer's `skipLibCheck: false` type check (TS2307) — including the consumers
+ * that never enable `panda`. `test/panda-options.test.ts` type-checks that the two
+ * declarations stay identical.
+ * @public
+ */
+export interface PackagePandaOptions {
+  /**
+   * The project root the Panda config is discovered from (`panda.config.ts` upward), and the
+   * directory its `include`/`exclude` globs are relative to — like `cwd` in `@pandacss/vite`.
+   * @defaultValue tsdown's resolved `cwd`
+   */
+  cwd?: string
+  /**
+   * An explicit Panda config file, relative to `cwd`, instead of discovering it upward — like
+   * `configPath` in `@pandacss/vite`.
+   */
+  configPath?: string
+  /**
+   * Run Panda's codegen when a build starts (and after the config reloads in watch mode),
+   * writing only the `styled-system` artifacts whose content changed. Set to `false` when
+   * codegen is managed elsewhere.
+   * @defaultValue true
+   */
+  codegen?: boolean
+  /**
+   * Where the codegen artifacts are written, relative to `cwd` — like `outdir` in
+   * `@pandacss/vite`.
+   * @defaultValue the `outdir` of the Panda config
+   */
+  outdir?: string
+  /**
+   * Rewrite the `css()`, `cva()`, pattern and recipe calls of the Panda sources into static
+   * class names, so the published JavaScript carries no Panda runtime. On by default — unlike
+   * `transform` in `@pandacss/vite`, which defaults to `false` there because applications keep
+   * the runtime around. `false` only extracts the CSS.
+   * @defaultValue true
+   */
+  transform?: boolean
+  /**
+   * Emit the extracted CSS without cascade layers (Panda's `@layer` polyfill).
+   * @defaultValue the `polyfill` option of the Panda config
+   */
+  polyfill?: boolean
+  /**
+   * Name of the emitted CSS file, like `css.fileName` in `@tsdown/css`.
+   * @defaultValue "bundle.css"
+   */
+  fileName?: string
+  /**
+   * Minify the extracted CSS with `lightningcss`, like `css.minify` in `@tsdown/css`.
+   * @defaultValue false
+   */
+  minify?: boolean
+  /**
+   * The target environment for CSS syntax lowering: esbuild-style target strings like
+   * `'chrome90'`, or `false` to disable lowering. Falls back to the top-level `target`, then
+   * to `@sanity/browserslist-config` (see above).
+   */
+  target?: string | string[] | false
+  /**
+   * Options passed through to `lightningcss`'s `transform()`, like `css.lightningcss` in
+   * `@tsdown/css`. `targets` wins over `target`; `unusedSymbols` extends the
+   * `--made-with-panda` entry the plugin always removes.
+   */
+  lightningcss?: Omit<LightningCssTransformOptions<CustomAtRules>, 'filename' | 'code'>
+  /**
+   * Inject the CSS import into every entry chunk that reaches Panda styles, like `css.inject`
+   * in `@tsdown/css`.
+   * @defaultValue true
+   */
+  inject?: boolean
+  /**
+   * Publish the CSS file as the `"./<fileName>"` export subpath: `true` for a plain export,
+   * `{nodeCompat: true}` for the conditional export with the Node-compatible shim, `false` for
+   * a relative CSS import instead.
+   * @defaultValue `{nodeCompat: true}`
+   */
+  exports?: boolean | CssExportsOptions
+}
 
 /**
  * Options for the `css` option — tsdown's experimental
@@ -407,6 +511,30 @@ export interface PackageOptions extends Pick<
    */
   vanillaExtract?: boolean | PackageVanillaExtractOptions
   /**
+   * Enables `@sanity/pandacss-tsdown-plugin`, the library-build companion of `@pandacss/vite`
+   * for [Panda CSS](https://panda-css.com) packages: it loads `panda.config.ts`, rewrites the
+   * `css()`/`cva()`/pattern/recipe calls of the sources the config covers into static class
+   * names (so the published JavaScript carries no Panda runtime), and extracts the generated
+   * stylesheet into a separate file, lowered with `lightningcss`. CSS is left unminified unless
+   * `minify: true` is set, and the lowering targets resolve exactly like
+   * {@link PackageOptions.vanillaExtract | `vanillaExtract`}'s — see
+   * {@link PackagePandaOptions}. Pass `true` to use the defaults, or an object to customize.
+   *
+   * Install `@sanity/pandacss-tsdown-plugin`; like `@pandacss/vite`, it brings the Panda
+   * compiler and transformer it runs as regular dependencies, while the package keeps its own
+   * `@pandacss/dev` for `panda.config.ts` and the `panda` CLI. The plugin runs Panda's codegen
+   * when the build starts (writing only the artifacts whose content changed), so the
+   * `styled-system` directory matches the config the CSS is extracted with; keep the usual
+   * `"prepare": "panda codegen"` script so it also exists for the type checker before a build.
+   *
+   * By default (`inject: true` with `exports: {nodeCompat: true}`) the plugin also injects the
+   * self-referential `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the
+   * conditional `"./bundle.css"` export to `package.json`, like
+   * {@link PackageOptions.vanillaExtract | `vanillaExtract`} does.
+   * @alpha
+   */
+  panda?: boolean | PackagePandaOptions
+  /**
    * Runs `@microsoft/api-extractor` after the build (via tsdown's `build:done` hook) to check
    * that TSDoc tags are valid and release tags are correct. Useful for packages consumed by
    * TSDoc-based tooling. Off by default — set `tsdoc: true` to enable, or pass an options
@@ -675,6 +803,52 @@ async function resolvePackageConfig(
         inject: true,
         exports: {nodeCompat: true},
         ...vanillaExtract,
+        lightningcss,
+      }),
+    )
+  }
+  if (options.panda) {
+    const panda = options.panda === true ? {} : options.panda
+    // Each CSS pipeline emits its own stylesheet and claims its export subpath; two pipelines
+    // writing the same file would overwrite each other's CSS (neither merges the other's), so
+    // a shared effective file name is a configuration error rather than a silent loss
+    const pandaFileName = panda.fileName ?? 'bundle.css'
+    if (options.vanillaExtract) {
+      const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
+      if ((vanillaExtract.fileName ?? 'bundle.css') === pandaFileName) {
+        throw new Error(
+          `\`panda\` and \`vanillaExtract\` both extract their CSS into "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
+        )
+      }
+    }
+    if (options.css && (options.css.fileName ?? 'style.css') === pandaFileName) {
+      throw new Error(
+        `\`panda\` and \`css\` both write their CSS to "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
+      )
+    }
+
+    // Lazy loaded, like `vanillaExtract`, so Panda's toolchain (the `@pandacss/compiler` node
+    // driver, `@pandacss/transformer` and the native `lightningcss` binary) is only paid for when the
+    // option is enabled. The plugin's `inject`/`exports` options follow `css.inject` in
+    // `@tsdown/css` (disabled by default), so this config supplies the same defaults as for
+    // `vanillaExtract`: the conditional CSS export pattern, written through this config's
+    // `exports` option (which the plugin's `tsdownConfig` hook composes into).
+    const [{pandacssPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
+      import('@sanity/pandacss-tsdown-plugin'),
+      import('./cssLoweringTargets.ts'),
+    ])
+
+    const lightningcss = await resolveCssLoweringTargets({
+      cssTarget: panda.target,
+      target,
+      lightningcss: panda.lightningcss,
+    })
+
+    plugins.push(
+      pandacssPlugin({
+        inject: true,
+        exports: {nodeCompat: true},
+        ...panda,
         lightningcss,
       }),
     )
@@ -1048,7 +1222,7 @@ const RUNTIME_CONDITIONS = new Set(['import', 'require', 'default'])
  * chunks — reconstructed in the exact `./<outDir relative to the package root>/<fileName>`
  * form tsdown writes into the exports map, so entries that share a leaf name (`index.js` vs
  * `features/index.js`) can never shadow each other, and non-entry exports (`./package.json`,
- * the conditional `./bundle.css` export of `vanillaExtract`, `devExports` source paths like
+ * the conditional `./bundle.css` export of `vanillaExtract`/`panda`, `devExports` source paths like
  * `./src/index.ts`) pass through untouched. The `react-server` files themselves never enter
  * the map — the `react-server` variant builds with `exports: false` — so they don't become
  * export subpaths of their own.

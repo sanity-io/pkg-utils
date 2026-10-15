@@ -1,0 +1,55 @@
+{
+  "name": "@fixtures/panda-library",
+  "version": "0.0.0-fixture",
+  "private": true,
+  "license": "MIT",
+  "sideEffects": [
+    "*.css",
+    "./dist/index.js",
+    "./dist/index.cjs"
+  ],
+  "type": "module",
+  "imports": {
+    "#styled-system/*": "./styled-system/*/index.js"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepare": "panda codegen"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "catalog:"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs"
+      },
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
+      "./package.json": "./package.json"
+    }
+  }
+}

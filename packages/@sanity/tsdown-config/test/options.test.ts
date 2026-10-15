@@ -167,6 +167,35 @@ describe('css option', () => {
   })
 })
 
+describe('panda option', () => {
+  test('registers the plugin with the Sanity defaults', async () => {
+    const config = await defineConfig({panda: true})
+    expect(pluginNames(config)).toContain('pandacss')
+  })
+
+  test('rejects a CSS file name shared with `vanillaExtract` or `css`', async () => {
+    // Both pipelines extract into `bundle.css` by default; neither merges the other's CSS, so
+    // the second one to write would wipe the first one's stylesheet and `./bundle.css` export
+    await expect(defineConfig({panda: true, vanillaExtract: true})).rejects.toThrow(
+      /`panda` and `vanillaExtract` both extract their CSS into "bundle.css".*fileName/,
+    )
+    await expect(
+      defineConfig({panda: {fileName: 'styles.css'}, vanillaExtract: {fileName: 'styles.css'}}),
+    ).rejects.toThrow(/"styles.css"/)
+    await expect(defineConfig({panda: {fileName: 'style.css'}, css: {}})).rejects.toThrow(
+      /`panda` and `css` both write their CSS to "style.css"/,
+    )
+
+    // Distinct names coexist
+    const config = await defineConfig({panda: {fileName: 'panda.css'}, vanillaExtract: true})
+    expect(pluginNames(config)).toEqual(expect.arrayContaining(['pandacss', 'vanilla-extract']))
+    const withCss = await defineConfig({panda: true, css: {}})
+    expect(pluginNames(withCss)).toEqual(
+      expect.arrayContaining(['pandacss', 'sanity-css-node-compat']),
+    )
+  })
+})
+
 function pluginNames(config: UserConfig): string[] {
   const {plugins} = config
   if (!Array.isArray(plugins)) throw new Error('expected plugins array')
