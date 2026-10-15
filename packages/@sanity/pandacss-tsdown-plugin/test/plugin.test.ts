@@ -853,6 +853,31 @@ describe('tsdown builds', () => {
       '.color_tomato',
     )
   })
+
+  test('runs codegen after tsdown cleans the generated directory', {timeout: 60_000}, async () => {
+    // tsdown cleans after resolving the config, right before it starts the builds
+    await mkdir(path.join(dir, 'styled-system'))
+    await writeFile(path.join(dir, 'styled-system/stale.mjs'), 'export {}\n')
+    await tsdownBuild({
+      cwd: dir,
+      config: false,
+      entry: ['src/index.ts'],
+      format: 'cjs',
+      dts: true,
+      clean: ['dist', 'styled-system'],
+      logLevel: 'silent',
+      plugins: [pandaPlugin({transform: false})],
+    })
+
+    await expect(stat(path.join(dir, 'styled-system/stale.mjs'))).rejects.toThrow('ENOENT')
+    // Without the transform, the JS build bundles the regenerated runtime
+    const code = await readFile(path.join(dir, 'dist/index.cjs'), 'utf8')
+    expect(code).toContain('//#region styled-system/')
+    expect(code).toContain('color: "tomato"')
+    expect(await readFile(path.join(dir, 'dist/index.d.cts'), 'utf8')).toMatch(
+      /declare const button: string;/,
+    )
+  })
 })
 
 async function runTsdownConfigHook(
