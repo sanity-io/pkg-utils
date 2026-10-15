@@ -115,7 +115,7 @@ The CSS is extracted into `bundle.css` (the `fileName` option) once per output f
 
 Which syntax Lightning CSS transforms depends on the targets:
 
-- `target` takes esbuild-style targets like `'chrome90'` or `['chrome90', 'safari16.2']`. It defaults to tsdown's own `target`, and a browser named more than once resolves to its lowest version.
+- `target` takes esbuild-style targets like `'chrome90'` or `['chrome90', 'safari16.2']`, and tsdown's `'baseline-widely-available'`. It defaults to tsdown's own `target`, and a browser named more than once resolves to its lowest version.
 - A target that doesn't specify browsers, such as `node20`, means no syntax transform — the plugin matches `@tsdown/css` here. `@sanity/tsdown-config` falls back to `@sanity/browserslist-config` in that case, and also accepts browserslist queries like `'defaults'`.
 - `lightningcss.targets` wins over `target`; `target: false` disables the syntax transform.
 
@@ -154,7 +154,7 @@ In `tsdown --watch`, the plugin watches every scanned source (imported or not), 
 ## Advanced
 
 - **How modules are selected.** The plugin tells rolldown which modules to hand to its transform hook from the config's `include`/`exclude` globs (the fast-glob subset Panda configs use: `**`, `*`, `?`, `{a,b}`, `[…]`; anything else, and watch mode, let the hook see every module), and always asks Panda's own matcher before touching one. The decision is Panda's either way.
-- **Other hosts.** The plugin is a rolldown plugin with two tsdown hooks on top. A host that isn't tsdown can pass what tsdown would through `plugin.api.setBuildContext({target, packageName, cwd, outDir})`; without it, `target` has no default, the package name for `exports` comes from the nearest `package.json`, and the output directory is not excluded from watching.
+- **Other hosts.** The plugin is a rolldown plugin with two tsdown hooks on top. A host that isn't tsdown can pass what tsdown would through `plugin.api.setBuildContext({target, packageName, cwd, outDir})`; without it, `target` has no default, the package name for `exports` comes from the nearest `package.json`, and the output directory is not excluded from watching. Any host can also pass `fallbackTargets`, the Lightning CSS targets used when the effective `target` names no browsers; `@sanity/tsdown-config` passes its browserslist fallback this way.
 - **Helpers.** `createCssExport`, `createConditionalCssExport` and `insertCssExport` build and insert the `./<fileName>` export; `cssShimFileName`, `cssShimDtsFileName`, `cssShimSource` and `cssShimDtsSource` describe the Node.js shim; `esbuildTargetToLightningCSS` converts esbuild-style targets; `resolveCssExportOptions` resolves `inject`/`exports`. They are exported for hosts that integrate the same CSS export pattern.
 
 ## Related

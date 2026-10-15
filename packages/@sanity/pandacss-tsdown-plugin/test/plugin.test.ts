@@ -721,6 +721,32 @@ describe('pandacssPlugin', () => {
     expect(findEntryChunk(output).code).toContain('"color_brand"')
   })
 
+  test("falls back to the host's targets when the target names no browsers", async () => {
+    // `@sanity/tsdown-config` resolves them from the final config and passes them on
+    const chrome61 = {chrome: 61 << 16}
+    const lowered = (options: Options, target: string[]) => {
+      const plugin = pandacssPlugin({cwd: fixtureDir, ...options})
+      plugin.api.setBuildContext({target, fallbackTargets: chrome61})
+      return rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]}).then(
+        async (bundle) => {
+          try {
+            const {output} = await bundle.generate({format: 'esm'})
+            return !findAsset(output, 'bundle.css').includes('inset:')
+          } finally {
+            await bundle.close()
+          }
+        },
+      )
+    }
+    // chrome61 predates `inset`, the other targets don't
+    expect(await lowered({}, ['node20'])).toBe(true)
+    expect(await lowered({}, ['chrome120'])).toBe(false)
+    expect(await lowered({target: 'chrome120'}, ['node20'])).toBe(false)
+    expect(await lowered({target: false}, ['node20'])).toBe(false)
+    // tsdown's alias names browsers once expanded, so the fallback stays out of it
+    expect(await lowered({target: 'baseline-widely-available'}, ['node20'])).toBe(false)
+  })
+
   test('`lightningcss.targets` wins over `target`, and `target: false` skips lowering', async () => {
     const lowered = await generate({
       cwd: fixtureDir,

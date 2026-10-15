@@ -14,6 +14,7 @@ import {
 } from '@pandacss/transformer'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {PackageJsonWithPath, ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
+import {expandBaselineTarget, resolveComma, toArray} from 'tsdown/internal'
 import {
   cssShimDtsFileName,
   cssShimDtsSource,
@@ -186,16 +187,16 @@ export interface Options {
   minify?: boolean
   /**
    * The target environment for CSS syntax lowering. Accepts esbuild-style target strings
-   * (e.g. `'chrome90'`, `'safari16.2'`), like `css.target` in `@tsdown/css`. Set to `false`
-   * to disable syntax lowering entirely.
+   * (e.g. `'chrome90'`, `'safari16.2'`) and tsdown's `'baseline-widely-available'` alias,
+   * like `css.target` in `@tsdown/css`. Set to `false` to disable syntax lowering entirely.
    *
    * Defaults to tsdown's resolved top-level `target`, forwarded through
    * {@link PandacssPluginApi.setBuildContext} from the plugin's `tsdownConfigResolved` hook.
    * Matching `@tsdown/css`, syntax lowering is skipped when no target is configured anywhere,
    * or when the configured targets don't include any browsers (e.g. `'node20'`, which speaks to
-   * the JS runtime, not the browsers the extracted CSS runs in). `@sanity/tsdown-config` layers
-   * its own default on top, resolving browserless targets from `@sanity/browserslist-config`
-   * and passing them through {@link Options.lightningcss | `lightningcss.targets`}.
+   * the JS runtime, not the browsers the extracted CSS runs in) — unless the host passed
+   * {@link BuildContext.fallbackTargets | fallback targets}: `@sanity/tsdown-config` passes the
+   * `@sanity/browserslist-config` browsers for such targets.
    */
   target?: string | string[] | false
   /**
@@ -251,6 +252,13 @@ export interface Options {
 export interface BuildContext {
   /** Default CSS syntax lowering target(s), used when the `target` option is not set. */
   target?: string | string[] | undefined
+  /**
+   * Lightning CSS targets for when the effective `target` (the option, or the host's default)
+   * names no browsers, such as `node20`, or isn't esbuild-style. `@sanity/tsdown-config`
+   * passes the `@sanity/browserslist-config` browsers here, or the ones a browserslist query
+   * names, resolved from the final config. An explicit `lightningcss.targets` still wins.
+   */
+  fallbackTargets?: Targets | undefined
   /** The consumer's package name, for the self-referential import of `exports`. */
   packageName?: string | undefined
   /** The default working directory the Panda config is discovered from. */
@@ -334,6 +342,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
   /** The host-resolved default for the `target` option (e.g. tsdown's top-level `target`). */
   let contextTarget: string | string[] | undefined
+  /** The host-resolved targets for when the effective target names no browsers. */
+  let contextFallbackTargets: Targets | undefined
   /** The consumer's package name, for the self-referential CSS import injected by `inject`. */
   let packageName: string | undefined
   /** The host-resolved default working directory (e.g. tsdown's `cwd`). */
@@ -418,15 +428,19 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
   function resolveTargets(): Targets | undefined {
     // Matching `@tsdown/css`: explicit `lightningcss.targets` win, then the esbuild-style
-    // `target` (the option, falling back to the host-resolved context target) is converted.
-    // Browserless targets (e.g. tsdown's common `target: 'node20'`, which speaks to the JS
-    // runtime) convert to nothing, skipping syntax lowering — `@sanity/tsdown-config` layers
-    // the `@sanity/browserslist-config` default on top through `lightningcss.targets`.
+    // `target` (the option, falling back to the host-resolved context target) is converted,
+    // with tsdown's `baseline-widely-available` alias expanded like tsdown expands it.
+    // Targets that name no browsers (e.g. tsdown's common `target: 'node20'`, which speaks to
+    // the JS runtime) convert to nothing, which skips syntax lowering unless the host passed
+    // fallback targets — `@sanity/tsdown-config` passes the `@sanity/browserslist-config` ones.
     if (lightningcss?.targets) return lightningcss.targets
     if (options.target === false) return undefined
     const target = options.target ?? contextTarget
-    if (target === undefined) return undefined
-    return esbuildTargetToLightningCSS(target)
+    const converted =
+      target === undefined
+        ? undefined
+        : esbuildTargetToLightningCSS(expandBaselineTarget(resolveComma(toArray(target))))
+    return converted ?? contextFallbackTargets
   }
 
   function resolvePackageName(entryModuleId: string | null): string {
@@ -560,6 +574,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     api: {
       setBuildContext(context: BuildContext): void {
         if (context.target !== undefined) contextTarget = context.target
+        if (context.fallbackTargets !== undefined) contextFallbackTargets = context.fallbackTargets
         if (context.packageName !== undefined) packageName = context.packageName
         if (context.cwd !== undefined) contextCwd = context.cwd
         if (context.outDir !== undefined) contextOutDir = context.outDir

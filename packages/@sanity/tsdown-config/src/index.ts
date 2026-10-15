@@ -13,6 +13,7 @@ import {
   type PackageJsonWithPath,
   type Rolldown,
   type RolldownChunk,
+  type TsdownPlugin,
   type UserConfig,
 } from 'tsdown'
 import type {PackageTsdocOptions} from './tsdoc/types.ts'
@@ -66,11 +67,12 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  *   with. Set `exports: true` for a plain (browser-only) CSS export, `exports: false` for a
  *   relative CSS import, or `inject: false` to only extract the CSS.
  * - When the effective CSS syntax lowering target (`target`, falling back to the top-level
- *   `target`) is undefined or names no browsers (e.g. `'node20'`, resolved from
- *   `engines.node`), the lowering targets are resolved from `@sanity/browserslist-config` and
- *   passed through `lightningcss.targets` — where the plugin (like `@tsdown/css`) would skip
- *   lowering. `target: false` stays the explicit off switch, and a user-provided
- *   `lightningcss.targets` wins over the fallback.
+ *   `target` of the final, resolved config) is undefined or names no browsers (e.g.
+ *   `'node20'`, resolved from `engines.node`), the lowering targets are resolved from
+ *   `@sanity/browserslist-config` — where the plugin (like `@tsdown/css`) would skip lowering.
+ *   A browserslist query in `target` resolves to the browsers it names, and tsdown's
+ *   `'baseline-widely-available'` alias to the ones tsdown expands it to. `target: false` stays
+ *   the explicit off switch, and a user-provided `lightningcss.targets` wins over the fallback.
  *
  * `minify` is not set, so it stays the plugin's default (`false`, matching `css.minify` in
  * `@tsdown/css`). Set `minify: true` to minify the extracted CSS.
@@ -132,8 +134,9 @@ export interface PackagePandaOptions {
   minify?: boolean
   /**
    * The target environment for CSS syntax lowering: esbuild-style target strings like
-   * `'chrome90'`, or `false` to disable lowering. Falls back to the top-level `target`, then
-   * to `@sanity/browserslist-config` (see above).
+   * `'chrome90'`, `'baseline-widely-available'`, browserslist queries, or `false` to disable
+   * lowering. Falls back to the top-level `target`, then to `@sanity/browserslist-config` (see
+   * above).
    */
   target?: string | string[] | false
   /**
@@ -838,20 +841,31 @@ async function resolvePackageConfig(
       import('./cssLoweringTargets.ts'),
     ])
 
-    const lightningcss = await resolveCssLoweringTargets({
-      cssTarget: panda.target,
-      target,
-      lightningcss: panda.lightningcss,
-    })
-
-    plugins.push(
-      pandacssPlugin({
-        inject: true,
-        exports: {nodeCompat: true},
-        ...panda,
-        lightningcss,
-      }),
-    )
+    const pandaPlugin = pandacssPlugin({inject: true, exports: {nodeCompat: true}, ...panda})
+    // The automatic targets depend on the final config's `target`, which a config composed
+    // after this one (`mergeConfig()`) may still override, and which tsdown resolves (from
+    // `engines.node` when it is unset, with its aliases expanded). So they are resolved once
+    // tsdown resolved the config, and handed to the plugin as the fallback for a target that
+    // names no browsers: an explicit `panda.target` or `panda.lightningcss.targets` still wins.
+    let targetDisabled = false
+    const pandaTargetsPlugin: TsdownPlugin = {
+      name: 'sanity:panda-css-targets',
+      tsdownConfig(config) {
+        // tsdown resolves `target: false` to no target at all, which would read as unset
+        targetDisabled = config.target === false
+      },
+      async tsdownConfigResolved(config) {
+        const resolved = await resolveCssLoweringTargets({
+          cssTarget: panda.target,
+          target: targetDisabled ? false : config.target,
+          lightningcss: panda.lightningcss,
+        })
+        if (resolved?.targets && resolved.targets !== panda.lightningcss?.targets) {
+          pandaPlugin.api.setBuildContext({fallbackTargets: resolved.targets})
+        }
+      },
+    }
+    plugins.push(pandaPlugin, pandaTargetsPlugin)
   }
 
   // `@tsdown/css` compiles CSS but has no node-shim concept, so the `exports` option (and the
