@@ -526,6 +526,10 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
         const [file = id] = id.split('?')
         if (!RE_SOURCE.test(file)) return null
         const loaded = await readyDriver()
+        // The result depends on the config (class names, the matched globs), so the config files
+        // are registered with the module itself: a host that caches transforms between rebuilds
+        // then re-runs this one when they change, instead of keeping stale class names
+        for (const configFile of configWatchFiles) this.addWatchFile(configFile)
         // Watch mode keeps the filter it started with, so after a config reload this is what
         // applies the narrowed globs
         if (!loaded.isSourceFile(file)) {

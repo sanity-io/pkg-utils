@@ -498,6 +498,31 @@ describe('config reloads', () => {
     },
   )
 
+  test(
+    're-transforms the modules in watch mode when the class names change',
+    {timeout: 30_000},
+    async () => {
+      const watcher = startWatcher(
+        pandaPlugin({cwd: dir, transform: true}),
+        path.join(dir, 'src/index.ts'),
+        path.join(dir, 'dist'),
+      )
+      try {
+        await watcher.waitForBuild(1)
+        expect(await readFile(path.join(dir, 'dist/index.js'), 'utf8')).toContain('"badge"')
+
+        await delay(300)
+        await writeConfig(` prefix: 'x',`)
+        await watcher.waitForBuild(2)
+        // The unchanged module carries the new class names, matching the stylesheet
+        expect(await readFile(path.join(dir, 'dist/index.js'), 'utf8')).toContain('"x-badge"')
+        expect(await readFile(path.join(dir, 'dist/styles.css'), 'utf8')).toContain('.x-badge')
+      } finally {
+        await watcher.close()
+      }
+    },
+  )
+
   test('reloads the config when a file it imports changes', async () => {
     const plugin = pandaPlugin({cwd: dir})
     const first = await rebuild(plugin)
