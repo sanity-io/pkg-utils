@@ -1095,4 +1095,33 @@ export const sharedCard = css({color: 'brand'})
       rmSync(rootDir, {recursive: true, force: true})
     }
   })
+
+  it('forces cssModules: false in lightningcss so Panda class names are not renamed', async () => {
+    const build = await rolldown({
+      cwd: basicFixtureDir,
+      input: basicEntry,
+      plugins: [
+        pandaCssPlugin({
+          cwd: basicFixtureDir,
+          lightningcss: {cssModules: true},
+        }),
+      ],
+    })
+
+    const {output} = await build.generate({format: 'esm'})
+    await build.close()
+
+    const cssAsset = output.find(
+      (item): item is OutputAsset => item.type === 'asset' && item.fileName === 'styles.css',
+    )
+    const entryChunk = output.find(
+      (item): item is OutputChunk => item.type === 'chunk' && item.isEntry,
+    )
+    expect(cssAsset).toBeDefined()
+    expect(entryChunk).toBeDefined()
+    expect(String(cssAsset!.source)).toContain('.color_brand')
+    expect(String(cssAsset!.source)).toContain('.padding_sm')
+    expect(entryChunk!.code).toContain('color_brand')
+    expect(entryChunk!.code).toContain('padding_sm')
+  })
 })

@@ -45,6 +45,9 @@ export {
 /**
  * Advanced LightningCSS options forwarded to `lightningcss.transform()`.
  *
+ * Plugin-managed fields (`minify`, `cssModules: false`, and `--made-with-panda`
+ * prepended to `unusedSymbols`) take precedence over `lightningcss` properties.
+ *
  * @public
  */
 export type LightningCSSOptions = Omit<TransformOptions<CustomAtRules>, 'filename' | 'code'>
@@ -843,6 +846,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
           filename: normalizedFileName,
           code: Buffer.from(rawCss),
           minify,
+          cssModules: false,
           ...(targets ? {targets} : {}),
           unusedSymbols: ['--made-with-panda', ...(lightningcssOptions?.unusedSymbols ?? [])],
         })

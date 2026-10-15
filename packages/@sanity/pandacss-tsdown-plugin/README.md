@@ -166,7 +166,7 @@ When `exports: {nodeCompat: true}` is enabled alongside tsdown's `exports` gener
 | `exports`      | `boolean \| CssExportsOptions`      | `false`             | Register `./<fileName>` in `package.json#exports` and emit Node-compat shims ([details](#conditional-exports-exports)).                            |
 | `minify`       | `boolean`                           | `false`             | Minify the emitted CSS with Lightning CSS.                                                                                                         |
 | `target`       | `string \| string[] \| false`       | tsdown's `target`   | Browser targets for Lightning CSS syntax transforms (see [Target resolution](#target-resolution)).                                                 |
-| `lightningcss` | `LightningCSSOptions`               | `undefined`         | Additional options forwarded to `lightningcss.transform()`.                                                                                        |
+| `lightningcss` | `LightningCSSOptions`               | `undefined`         | Additional options forwarded to `lightningcss.transform()` (`cssModules` is forced to `false` so Panda's class names stay intact).                 |
 | `packageName`  | `string`                            | `package.json#name` | Explicit package name for self-referential `inject` imports when running outside tsdown.                                                           |
 
 ### Target resolution
