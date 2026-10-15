@@ -467,6 +467,64 @@ describe('tsdownConfig hook', () => {
     })
   })
 
+  test('builds normalized targets relative to the package directory', async () => {
+    const context = {
+      ...customExportsContext,
+      pkg: {packageJsonPath: path.join(fixtureDir, 'package.json')},
+    }
+    const exportFor = async (config: UserConfig, options?: Options) => {
+      const resolved = await runTsdownConfigHook(
+        {cwd: fixtureDir, exports: true, ...config},
+        options,
+      )
+      return (await getCustomExports(resolved)({}, context))['./styles.css']
+    }
+
+    // `./dist` must not leave a `.` segment in the targets (ERR_INVALID_PACKAGE_TARGET)
+    expect(await exportFor({outDir: './dist'})).toEqual(conditionalCssExport)
+    expect(await exportFor({outDir: path.join(fixtureDir, 'build', 'out')}, {exports: true})).toBe(
+      './build/out/styles.css',
+    )
+    expect(await exportFor({outDir: '.'})).toEqual({
+      types: './styles-css.d.ts',
+      browser: './styles.css',
+      style: './styles.css',
+      node: './styles-css.js',
+      default: './styles-css.js',
+    })
+  })
+
+  test("uses tsdown's resolved `outDir`", async () => {
+    const plugin = pandaPlugin({cwd: fixtureDir, exports: true})
+    const config: UserConfig = {cwd: fixtureDir, exports: true, outDir: 'unresolved'}
+    await plugin.tsdownConfig?.(config, {})
+    await plugin.tsdownConfigResolved?.({
+      cwd: fixtureDir,
+      outDir: path.join(fixtureDir, 'lib'),
+    } as ResolvedConfig)
+    const context = {
+      ...customExportsContext,
+      pkg: {packageJsonPath: path.join(fixtureDir, 'package.json')},
+    }
+    expect(await getCustomExports(config)({}, context)).toEqual({
+      './styles.css': './lib/styles.css',
+    })
+  })
+
+  test('rejects an output directory outside the package', async () => {
+    const config = await runTsdownConfigHook(
+      {cwd: fixtureDir, exports: true, outDir: '../elsewhere'},
+      {exports: true},
+    )
+    const context = {
+      ...customExportsContext,
+      pkg: {packageJsonPath: path.join(fixtureDir, 'package.json')},
+    }
+    await expect(getCustomExports(config)({}, context)).rejects.toThrow(
+      'can only publish the stylesheet from inside the package',
+    )
+  })
+
   test('leaves `exports` untouched without the option or without tsdown exports', async () => {
     const disabled = await runTsdownConfigHook({exports: true}, {})
     expect(disabled.exports).toBe(true)

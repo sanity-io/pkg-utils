@@ -14,7 +14,12 @@ import {transform, type CustomAtRules, type Targets, type TransformOptions} from
 import type {OutputChunk, RenderedChunk} from 'rolldown'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
 import {cssShimDtsFileName, cssShimDtsSource, cssShimFileName, cssShimSource} from './cssShim.ts'
-import {createConditionalCssExport, createCssExport, insertCssExport} from './exports.ts'
+import {
+  createConditionalCssExport,
+  createCssExport,
+  insertCssExport,
+  packageRelativeOutDir,
+} from './exports.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
 
 /**
@@ -187,6 +192,8 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   let contextTarget: string | string[] | undefined
   /** The consumer's package name, for the self-referential CSS import injected by `inject`. */
   let packageName: string | undefined
+  /** tsdown's resolved (absolute) `outDir`, for the `exports` targets. */
+  let resolvedOutDir: string | undefined
 
   let driver: NodeDriver | undefined
   let driverPromise: Promise<NodeDriver> | undefined
@@ -319,10 +326,8 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
         : typeof exportsOption === 'string'
           ? {enabled: exportsOption}
           : exportsOption
-      const outDir = config.outDir ?? 'dist'
-      const cssExport = nodeCompat
-        ? createConditionalCssExport(fileName, outDir)
-        : createCssExport(fileName, outDir)
+      const configCwd = path.resolve(config.cwd ?? '.')
+      const configOutDir = config.outDir ?? 'dist'
       const previousCustomExports = exportsOptions.customExports
       exportsOptions.customExports = async (exportsMap, context) => {
         const base =
@@ -331,6 +336,20 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
             : previousCustomExports
               ? {...exportsMap, ...previousCustomExports}
               : exportsMap
+        // Built from the resolved output directory, relative to the package: `outDir` may be
+        // `./dist`, absolute, or the package root, none of which make a valid target as is
+        // tsdown passes its `PackageJsonWithPath`, typed as the plain `PackageJson`
+        const packageJsonPath = context.pkg['packageJsonPath']
+        const outDir = packageRelativeOutDir(
+          path.resolve(
+            configCwd,
+            typeof packageJsonPath === 'string' ? packageJsonPath : 'package.json',
+          ),
+          resolvedOutDir ?? path.resolve(configCwd, configOutDir),
+        )
+        const cssExport = nodeCompat
+          ? createConditionalCssExport(fileName, outDir)
+          : createCssExport(fileName, outDir)
         return insertCssExport(base, `./${fileName}`, cssExport)
       }
       config.exports = exportsOptions
@@ -340,6 +359,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
     async tsdownConfigResolved(config: ResolvedConfig) {
       if (config.target !== undefined) contextTarget = config.target
       if (config.pkg?.name !== undefined) packageName = config.pkg.name
+      if (config.outDir !== undefined) resolvedOutDir = config.outDir
       if (!driverPromise) cwd = path.resolve(config.cwd, options.cwd ?? '.')
       await loadDriver()
     },
