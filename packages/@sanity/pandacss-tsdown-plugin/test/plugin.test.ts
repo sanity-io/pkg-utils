@@ -199,6 +199,14 @@ describe('pandaPlugin', () => {
     }
   })
 
+  test('ignores `lightningcss.cssModules`, keeping the class names the JS uses', async () => {
+    const output = await build({lightningcss: {cssModules: true}})
+    expect(findChunk(output, 'index').code).toContain('"color_tomato padding-inline_4"')
+    const css = findAsset(output, DEFAULT_CSS_FILE_NAME)
+    expect(css).toContain('.color_tomato {')
+    expect(css).toContain('.padding-inline_4 {')
+  })
+
   test('statically transforms style calls by default, unlike `@pandacss/vite`', async () => {
     for (const options of [{}, {transform: true}]) {
       const output = await build(options)
