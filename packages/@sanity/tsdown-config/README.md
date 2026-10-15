@@ -282,9 +282,10 @@ export default defineConfig({
 })
 ```
 
-The plugin does not run codegen: generate the `styled-system` directory from the package's
-`prepare` script, as in a Vite application, so it exists before tsdown (and the type checker)
-runs:
+Like `@pandacss/vite`, the plugin runs Panda's codegen when the build starts (writing only the
+artifacts whose content changed), so the `styled-system` directory is always in sync with the
+config the CSS is extracted with. Keep the usual `prepare` script anyway, so the directory also
+exists for the type checker and the test runner before any build runs:
 
 ```json
 {
@@ -310,8 +311,9 @@ application's call.
 
 Pass an options object instead of `true` to customize - the same `fileName`, `minify`, `target`,
 `lightningcss`, `inject` and `exports` options as `vanillaExtract`, plus `@pandacss/vite`'s
-`cwd`, `configPath` and `transform` (`transform: false` keeps the runtime calls and only extracts
-the CSS) and Panda's `polyfill`:
+`cwd`, `configPath`, `outdir` and `transform` (`transform: false` keeps the runtime calls and
+only extracts the CSS), `codegen` (`false` when codegen is managed elsewhere) and Panda's
+`polyfill`:
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'

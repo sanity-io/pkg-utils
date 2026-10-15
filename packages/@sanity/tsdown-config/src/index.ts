@@ -56,9 +56,9 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
 
 /**
  * Options for the `panda` option — the same options as `@sanity/pandacss-tsdown-plugin`
- * (`cwd`, `configPath`, `transform` and `polyfill` from `@pandacss/vite`, plus `fileName`,
- * `minify`, `target`, `lightningcss`, `inject`, and `exports`, modeled after the `css` options
- * of `@tsdown/css`), with the same Sanity-flavored defaults as
+ * (`cwd`, `configPath`, `outdir` and `transform` from `@pandacss/vite`, `codegen` and
+ * `polyfill`, plus `fileName`, `minify`, `target`, `lightningcss`, `inject`, and `exports`,
+ * modeled after the `css` options of `@tsdown/css`), with the same Sanity-flavored defaults as
  * {@link PackageVanillaExtractOptions | `vanillaExtract`} on top:
  *
  * - `inject` and `exports` default to `true` and `{nodeCompat: true}` (instead of the plugin's
@@ -442,9 +442,10 @@ export interface PackageOptions extends Pick<
    * {@link PackagePandaOptions}. Pass `true` to use the defaults, or an object to customize.
    *
    * Install `@sanity/pandacss-tsdown-plugin` together with its peers `@pandacss/dev` and
-   * `@pandacss/transformer`, and run `panda codegen` before the build (the usual
-   * `"prepare": "panda codegen"` script): the plugin does not generate the `styled-system`
-   * directory, just like `@pandacss/vite`'s `transform` relies on it being there.
+   * `@pandacss/transformer`. Like `@pandacss/vite`, the plugin runs Panda's codegen when the
+   * build starts (writing only the artifacts whose content changed), so the `styled-system`
+   * directory matches the config the CSS is extracted with; keep the usual
+   * `"prepare": "panda codegen"` script so it also exists for the type checker before a build.
    *
    * By default (`inject: true` with `exports: {nodeCompat: true}`) the plugin also injects the
    * self-referential `import "<pkg>/bundle.css"`, emits a `bundle-css.js` shim, and writes the

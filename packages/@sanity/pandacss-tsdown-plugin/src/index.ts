@@ -102,6 +102,26 @@ export interface Options {
    */
   configPath?: string
   /**
+   * Run Panda's codegen when a build starts (and again after the config reloads in watch
+   * mode), writing the `styled-system` artifacts of the loaded config before any module is
+   * transformed — like `@pandacss/vite` does when Vite's config is resolved. The generated
+   * types, runtime and class name hashes the sources import then always match the config the
+   * stylesheet is extracted with, even when the package's `prepare` script (`panda codegen`)
+   * ran against an older config. Panda only writes the files whose content changed, so the
+   * builds a host runs (one per output format) and watch rebuilds leave current artifacts
+   * untouched.
+   *
+   * Set to `false` when codegen is managed elsewhere.
+   * @defaultValue true
+   */
+  codegen?: boolean
+  /**
+   * Where the codegen artifacts are written, relative to {@link Options.cwd | `cwd`} — like
+   * `outdir` in `@pandacss/vite`.
+   * @defaultValue the `outdir` of the Panda config
+   */
+  outdir?: string
+  /**
    * Rewrite the `css()`, `cva()`, pattern and recipe calls of the modules Panda's `include`
    * globs cover into static class name strings with `@pandacss/transformer`, so the published
    * JavaScript neither bundles nor imports Panda's runtime (`styled-system/css`, …) — the same
@@ -246,15 +266,17 @@ type TransformHandler = TransformHook['handler']
  * architecture (and option vocabulary) as `@tsdown/css` and
  * `@sanity/vanilla-extract-tsdown-plugin`.
  *
- * Codegen is not part of the build: the generated `styled-system` directory is expected to
- * exist before tsdown runs, from the package's `prepare` script (`panda codegen`), like in a
- * Vite application.
+ * Like `@pandacss/vite`, it also runs Panda's codegen when a build starts, so the generated
+ * `styled-system` directory the sources import is in sync with the config the stylesheet is
+ * extracted with. Packages keep their `prepare` script (`panda codegen`) for the type checker,
+ * the test runner and the editor, which need the artifacts before any build runs.
  * @public
  */
 export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
   const minify = options.minify ?? false
   const transformEnabled = options.transform ?? true
+  const codegenEnabled = options.codegen ?? true
   const lightningcss = options.lightningcss
   const {inject, exports: exportsCss, nodeCompat} = resolveCssExportOptions(options)
 
@@ -443,11 +465,15 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       }
     },
 
-    // Scan every source the config covers before any module is transformed: the transformer
-    // folds tokens and style objects across files, so a module's dependencies must be known
-    // when it is rewritten, regardless of the order rolldown discovers modules in. The
-    // stylesheet then covers the whole `include` set, like `panda cssgen` — and like
-    // `@pandacss/vite`, which scans the project the same way when Vite's config is resolved.
+    // Regenerate the `styled-system` artifacts and scan every source the config covers before
+    // any module is transformed. The codegen keeps the generated types, runtime and class name
+    // hashes in sync with the config the stylesheet is extracted with (Panda only writes the
+    // files whose content changed, so a current directory stays untouched); the scan matters
+    // because the transformer folds tokens and style objects across files, so a module's
+    // dependencies must be known when it is rewritten, regardless of the order rolldown
+    // discovers modules in. The stylesheet then covers the whole `include` set, like
+    // `panda cssgen` — and like `@pandacss/vite`, which runs codegen and scans the project the
+    // same way when Vite's config is resolved.
     async buildStart() {
       const currentDriver = await resolveDriver(resolveCwd())
       if (built && this.meta.watchMode) {
@@ -461,6 +487,9 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         currentDriver.designSystemDiagnostics,
         'while loading the design system',
       )
+      if (codegenEnabled) {
+        currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
+      }
       const cwd = resolveCwd()
       for (const report of currentDriver.parseFiles()) {
         warnDiagnostics(

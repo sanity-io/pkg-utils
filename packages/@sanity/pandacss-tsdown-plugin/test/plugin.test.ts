@@ -1,3 +1,13 @@
+import {
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
@@ -277,6 +287,84 @@ describe('pandacssPlugin', () => {
 
     const raw = await generate({cwd: fixtureDir, target: false})
     expect(findAsset(raw, 'bundle.css')).toContain('inset: 0')
+  })
+})
+
+/** The modification times of every file in a directory tree, keyed by path. */
+function snapshotMtimes(dir: string): Map<string, number> {
+  const mtimes = new Map<string, number>()
+  for (const entry of readdirSync(dir, {withFileTypes: true, recursive: true})) {
+    if (!entry.isFile()) continue
+    const filePath = path.join(entry.parentPath, entry.name)
+    mtimes.set(filePath, statSync(filePath).mtimeMs)
+  }
+  return mtimes
+}
+
+describe('codegen', () => {
+  const codegenFixtureDir = path.resolve(__dirname, 'fixtures/codegen')
+  const styledSystemDir = path.join(codegenFixtureDir, 'styled-system')
+  const runtimeFile = path.join(styledSystemDir, 'css/index.js')
+  const typesFile = path.join(styledSystemDir, 'css/css.d.ts')
+
+  async function build(options: Options): Promise<OutputChunk> {
+    const bundle = await rolldown({
+      cwd: codegenFixtureDir,
+      input: path.join(codegenFixtureDir, 'src/index.ts'),
+      plugins: [pandacssPlugin({cwd: codegenFixtureDir, ...options})],
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      return findEntryChunk(output)
+    } finally {
+      await bundle.close()
+    }
+  }
+
+  test('regenerates stale and missing `styled-system` artifacts before the build', async () => {
+    const generated = readFileSync(runtimeFile, 'utf-8')
+    writeFileSync(runtimeFile, '// stale\n')
+    rmSync(typesFile)
+
+    // `transform: false` bundles the runtime, so the output proves the codegen ran before
+    // rolldown loaded it
+    const entry = await build({transform: false})
+    expect(entry.code).not.toContain('// stale')
+    expect(readFileSync(runtimeFile, 'utf-8')).toBe(generated)
+    expect(existsSync(typesFile)).toBe(true)
+  })
+
+  test('leaves current artifacts untouched', async () => {
+    await build({})
+    const before = snapshotMtimes(styledSystemDir)
+    expect(before.size).toBeGreaterThan(0)
+
+    // A second build (tsdown runs one per output format) rewrites nothing: the modification
+    // times are unchanged, so nothing downstream (watchers, caches) sees a change
+    await build({})
+    expect(snapshotMtimes(styledSystemDir)).toEqual(before)
+  })
+
+  test('`codegen: false` leaves the artifacts alone', async () => {
+    const generated = readFileSync(runtimeFile, 'utf-8')
+    writeFileSync(runtimeFile, '// stale\n')
+    try {
+      await build({codegen: false})
+      expect(readFileSync(runtimeFile, 'utf-8')).toBe('// stale\n')
+    } finally {
+      writeFileSync(runtimeFile, generated)
+    }
+  })
+
+  test('`outdir` redirects the artifacts, like in `@pandacss/vite`', async () => {
+    const outdir = mkdtempSync(path.join(os.tmpdir(), 'pandacss-tsdown-plugin-outdir-'))
+    try {
+      await build({outdir})
+      expect(existsSync(path.join(outdir, 'css/index.js'))).toBe(true)
+      expect(existsSync(path.join(outdir, 'css/css.d.ts'))).toBe(true)
+    } finally {
+      rmSync(outdir, {recursive: true, force: true})
+    }
   })
 })
 
