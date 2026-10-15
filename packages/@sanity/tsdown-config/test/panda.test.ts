@@ -1,36 +1,13 @@
-import {mkdir, mkdtemp, rm, writeFile} from 'node:fs/promises'
-import {tmpdir} from 'node:os'
 import path from 'node:path'
+import {fileURLToPath} from 'node:url'
 import type {Options as PandaPluginOptions} from '@sanity/pandacss-tsdown-plugin'
 import {rolldown} from 'rolldown'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
-import {afterAll, beforeAll, describe, expect, expectTypeOf, test} from 'vitest'
+import {describe, expect, expectTypeOf, test} from 'vitest'
 import {defineConfig, type PackageOptions, type PackagePandaOptions} from '../src/index.ts'
 
-// Written to a temporary directory: the fixture imports the `styled-system` directory that
-// `panda codegen` would generate, which the plugin never generates (the builds mark it external)
-let fixtureDir: string | undefined
-
-beforeAll(async () => {
-  fixtureDir = await mkdtemp(path.join(tmpdir(), 'tsdown-config-panda-'))
-  await mkdir(path.join(fixtureDir, 'src'))
-  await writeFile(
-    path.join(fixtureDir, 'panda.config.ts'),
-    `export default {include: ['./src/**/*.ts'], outdir: 'styled-system'}\n`,
-  )
-  await writeFile(
-    path.join(fixtureDir, 'src/index.ts'),
-    `import {css} from '../styled-system/css'
-
-export const box = css({paddingInline: '8px', backdropFilter: 'blur(4px)'})
-`,
-  )
-})
-
-afterAll(async () => {
-  // `beforeAll` can throw before `mkdtemp` assigns it
-  if (fixtureDir) await rm(fixtureDir, {recursive: true, force: true})
-})
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const fixtureDir = path.resolve(__dirname, 'fixtures/panda')
 
 function getPluginNames(config: UserConfig) {
   const {plugins} = config
@@ -47,7 +24,6 @@ function getPluginNames(config: UserConfig) {
  * first.
  */
 async function buildWithConfig(options: PackageOptions): Promise<{css: string; entry: string}> {
-  if (!fixtureDir) expect.unreachable('expected the fixture directory')
   const panda = options.panda === true || options.panda === undefined ? {} : options.panda
   const config = await defineConfig({...options, panda: {cwd: fixtureDir, ...panda}})
   const {plugins} = config

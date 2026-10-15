@@ -1,9 +1,9 @@
-import {mkdir, mkdtemp, readFile, realpath, rm, stat, writeFile} from 'node:fs/promises'
-import {tmpdir} from 'node:os'
+import {cp, mkdir, mkdtemp, readFile, realpath, rm, stat, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import {setTimeout as delay} from 'node:timers/promises'
 import {fileURLToPath} from 'node:url'
 import {compileFunction} from 'node:vm'
+import type {Config} from '@pandacss/dev'
 import {
   rolldown,
   watch,
@@ -91,6 +91,14 @@ test('depends on the Panda packages it imports, with `@pandacss/dev` as an optio
     'tsdown': expect.any(String),
   })
   expect(manifest).toHaveProperty('peerDependenciesMeta', {'@pandacss/dev': {optional: true}})
+})
+
+test('the fixtures check their configs with `satisfies Config`', () => {
+  // The pattern every `panda.config.ts` fixture follows, so options Panda doesn't have fail
+  // the type check instead of being ignored
+  // @ts-expect-error -- `eject` is not a Panda option
+  const config = {include: ['./src/**/*.ts'], eject: true} satisfies Config
+  expect(config.include).toEqual(['./src/**/*.ts'])
 })
 
 describe('pandaPlugin', () => {
@@ -345,6 +353,18 @@ function startWatcher(plugin: TsdownPlugin, input: string, outDir: string) {
   }
 }
 
+/**
+ * The fixture the reload tests copy into a temporary project. Its `panda.*.ts` variants are
+ * type-checked configs the tests swap in as `panda.config.ts`.
+ */
+const reloadFixtureDir = path.resolve(__dirname, 'fixtures/reload')
+
+/**
+ * The temporary projects live in the package, so the configs resolve `@pandacss/dev` from its
+ * `node_modules` (`test/.tmp` is gitignored)
+ */
+const temporaryDir = path.resolve(__dirname, '.tmp')
+
 describe('config reloads', () => {
   let dir = ''
 
@@ -353,22 +373,14 @@ describe('config reloads', () => {
       path.join(dir, 'theme.ts'),
       `export const recipes = {badge: {className: 'badge', base: {color: '${color}'}, variants: ${variants}}}\n`,
     )
-  const writeConfig = (extra = '') =>
-    writeFile(
-      path.join(dir, 'panda.config.ts'),
-      `import {recipes} from './theme'\n\nexport default {include: ['./src/**/*.ts'],${extra} outdir: 'styled-system', theme: {recipes}}\n`,
-    )
+  const useConfig = (variant: 'narrowed' | 'prefixed' | 'root' | 'scan') =>
+    cp(path.join(dir, `panda.${variant}.ts`), path.join(dir, 'panda.config.ts'))
 
   beforeEach(async () => {
+    await mkdir(temporaryDir, {recursive: true})
     // Real path: module ids are real paths, which the watch files are compared against
-    dir = await realpath(await mkdtemp(path.join(tmpdir(), 'pandacss-tsdown-plugin-')))
-    await mkdir(path.join(dir, 'src'))
-    await writeTheme('red')
-    await writeConfig()
-    await writeFile(
-      path.join(dir, 'src/index.ts'),
-      `import {badge} from '../styled-system/recipes'\n\nexport const label = badge()\n`,
-    )
+    dir = await realpath(await mkdtemp(path.join(temporaryDir, 'project-')))
+    await cp(reloadFixtureDir, dir, {recursive: true})
   })
 
   afterEach(async () => {
@@ -454,7 +466,7 @@ describe('config reloads', () => {
     const before = await Promise.all([rebuild(plugin), rebuild(plugin, {format: 'cjs'})])
     for (const result of before) expect(result.entry).toContain('"badge"')
 
-    await writeConfig(` prefix: 'x',`)
+    await useConfig('prefixed')
     await notifyChange(plugin, path.join(dir, 'panda.config.ts'))
     const after = await Promise.all([rebuild(plugin), rebuild(plugin, {format: 'cjs'})])
     for (const result of after) {
@@ -465,10 +477,7 @@ describe('config reloads', () => {
 
   test('keeps the overridden `outdir` out of the scan', async () => {
     // Codegen writes into `src/generated`, which the config's `include` matches
-    await writeFile(
-      path.join(dir, 'panda.config.ts'),
-      `export default {include: ['./src/**/*'], exclude: ['./src/ignored/**'], outdir: 'styled-system'}\n`,
-    )
+    await useConfig('scan')
     await writeFile(path.join(dir, 'src/index.ts'), cssSource('box', 'red'))
     await writeFile(path.join(dir, 'src/extra.ts'), cssSource('extra', 'blue'))
     await mkdir(path.join(dir, 'src/ignored'))
@@ -520,10 +529,7 @@ describe('config reloads', () => {
     {timeout: 30_000},
     async () => {
       // `./**/*.ts` makes the project root an `include` base, holding `dist` and `styled-system`
-      await writeFile(
-        path.join(dir, 'panda.config.ts'),
-        `import {recipes} from './theme'\n\nexport default {include: ['./**/*.ts'], outdir: 'styled-system', theme: {recipes}}\n`,
-      )
+      await useConfig('root')
       await mkdir(path.join(dir, 'lib'))
       const watcher = startWatcher(
         pandaPlugin({cwd: dir}),
@@ -561,7 +567,7 @@ describe('config reloads', () => {
         expect(await readFile(path.join(dir, 'dist/index.js'), 'utf8')).toContain('"badge"')
 
         await delay(300)
-        await writeConfig(` prefix: 'x',`)
+        await useConfig('prefixed')
         await watcher.waitForBuild(2)
         // The unchanged module carries the new class names, matching the stylesheet
         expect(await readFile(path.join(dir, 'dist/index.js'), 'utf8')).toContain('"x-badge"')
@@ -670,12 +676,7 @@ describe('config reloads', () => {
 
   test('escapes glob metacharacters in the project path', async () => {
     const project = path.join(dir, 'lib[1]')
-    await mkdir(path.join(project, 'src'), {recursive: true})
-    await writeFile(
-      path.join(project, 'panda.config.ts'),
-      `export default {include: ['./src/**/*.ts'], outdir: 'styled-system'}\n`,
-    )
-    await writeFile(path.join(project, 'src/index.ts'), cssSource('box', 'red'))
+    await cp(reloadFixtureDir, project, {recursive: true})
     const plugin = pandaPlugin({cwd: project, inject: true})
     const bundle = await rolldown({
       input: path.join(project, 'src/index.ts'),
@@ -687,18 +688,19 @@ describe('config reloads', () => {
       const entry = findChunk(output, 'index').code
       // The filter matched the module: it was transformed and gets the stylesheet
       expect(entry).toMatch(/^import "\.\/styles\.css";\n/)
-      expect(entry).toContain('"color_red"')
+      expect(entry).toContain('"badge"')
     } finally {
       await bundle.close()
     }
     // The generated directory is excluded under the same escaped path
     const {transform} = plugin
     if (typeof transform !== 'object') expect.unreachable('expected an object `transform` hook')
-    const escaped = `${dir.replaceAll('\\', '/')}/lib\\[1\\]`
     expect(transform.filter).toMatchObject({
       id: {
-        include: [`${escaped}/src/**/*.ts`],
-        exclude: expect.arrayContaining([`${escaped}/styled-system/**`]),
+        include: [expect.stringMatching(/\/lib\\\[1\\\]\/src\/\*\*\/\*\.ts$/)],
+        exclude: expect.arrayContaining([
+          expect.stringMatching(/\/lib\\\[1\\\]\/styled-system\/\*\*$/),
+        ]),
       },
     })
   })
@@ -720,7 +722,7 @@ describe('config reloads', () => {
     expect(first.entry).toMatch(/^import "\.\/styles\.css";\n/)
     expect(first.css).toContain('.badge')
 
-    await writeConfig(` exclude: ['./src/index.ts'],`)
+    await useConfig('narrowed')
     await notifyChange(plugin, path.join(dir, 'panda.config.ts'))
     const second = await rebuild(plugin, {external: true})
     expect(second.entry).not.toContain('styles.css')
