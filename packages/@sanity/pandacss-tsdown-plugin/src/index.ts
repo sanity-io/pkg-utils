@@ -362,6 +362,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let driver: PandaDriver | undefined
   /** The Panda config file, also when the driver loads it through the `outdir` override. */
   let configFile: string | undefined
+  /** The config reload in flight with the `outdir` override, which overlapping builds share. */
+  let outdirReload: Promise<{hasChanged: boolean}> | undefined
   let transformer: SourceTransformer | undefined
   let transformerCompiler: PandaDriver['compiler'] | undefined
   /** Whether a build already ran, so a later `buildStart` (watch mode) reloads the config. */
@@ -419,6 +421,19 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   async function reloadDriver(currentDriver: PandaDriver): Promise<{hasChanged: boolean}> {
     const {outdir} = options
     if (outdir === undefined || configFile === undefined) return currentDriver.reload()
+    // Builds sharing the plugin can reload at the same time, and the directory below is
+    // created for one of them at a time: they share the reload in flight
+    outdirReload ??= reloadWithOutdir(currentDriver, configFile, outdir).finally(() => {
+      outdirReload = undefined
+    })
+    return outdirReload
+  }
+
+  async function reloadWithOutdir(
+    currentDriver: PandaDriver,
+    pandaConfigFile: string,
+    outdir: string,
+  ): Promise<{hasChanged: boolean}> {
     // The directory of the `outdir` override was removed after the config loaded: it is
     // created again, failing rather than using one somebody else created there in the meantime
     const dir = path.dirname(currentDriver.configPath)
@@ -430,7 +445,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         {cause: error},
       )
     }
-    return withOutdirConfig(dir, configFile, outdir, () => currentDriver.reload())
+    return withOutdirConfig(dir, pandaConfigFile, outdir, () => currentDriver.reload())
   }
 
   async function resolveDriver(cwd: string): Promise<PandaDriver> {

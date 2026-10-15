@@ -1255,33 +1255,50 @@ const conditionalCssExport = {
  * transforms of unchanged modules) and the plugin told about the output directory, like tsdown
  * tells it. `nextBuild()` resolves when the next build completes, and `builds` counts them.
  */
-function startWatcher(cwd: string, options: Options = {}) {
+/**
+ * Watches the project with a watcher per format, all sharing a plugin instance. rolldown runs
+ * the builds of one watcher's configs one after the other, so the builds of separate watchers
+ * are the ones that overlap. The ESM build writes to `dist`, which `readOutput` reads, and
+ * `nextBuild` settles once every watcher finished a build.
+ */
+function startWatcher(
+  cwd: string,
+  options: Options = {},
+  formats: readonly ('esm' | 'cjs')[] = ['esm'],
+) {
   const outDir = path.join(cwd, 'dist')
   let settle: (() => void) | undefined
   let fail: ((error: Error) => void) | undefined
+  let pending = 0
   const state = {builds: 0}
   const nextBuild = () =>
     new Promise<void>((resolve, reject) => {
+      pending = formats.length
       settle = resolve
       fail = reject
     })
   const plugin = pandacssPlugin({cwd, inject: true, ...options})
   plugin.api.setBuildContext({outDir})
-  const watcher = watch({
-    cwd,
-    input: path.join(cwd, 'src/index.ts'),
-    plugins: [plugin],
-    output: {dir: outDir, format: 'esm'},
-    experimental: {incrementalBuild: true},
-  })
-  watcher.on('event', (event) => {
-    if (event.code === 'BUNDLE_END') void event.result.close()
-    if (event.code === 'ERROR') fail?.(event.error)
-    if (event.code === 'END') {
-      state.builds++
-      settle?.()
-    }
-  })
+  const watchers = formats.map((format) =>
+    watch({
+      cwd,
+      input: path.join(cwd, 'src/index.ts'),
+      plugins: [plugin],
+      output: {dir: format === 'esm' ? outDir : path.join(cwd, `dist-${format}`), format},
+      experimental: {incrementalBuild: true},
+    }),
+  )
+  for (const watcher of watchers) {
+    watcher.on('event', (event) => {
+      if (event.code === 'BUNDLE_END') void event.result.close()
+      if (event.code === 'ERROR') fail?.(event.error)
+      if (event.code === 'END') {
+        state.builds++
+        pending--
+        if (pending <= 0) settle?.()
+      }
+    })
+  }
   return {
     state,
     nextBuild,
@@ -1289,7 +1306,7 @@ function startWatcher(cwd: string, options: Options = {}) {
       js: readFileSync(path.join(outDir, 'index.js'), 'utf-8'),
       css: readFileSync(path.join(outDir, 'bundle.css'), 'utf-8'),
     }),
-    close: () => watcher.close(),
+    close: () => Promise.all(watchers.map((watcher) => watcher.close())),
   }
 }
 
@@ -1424,6 +1441,52 @@ describe('watch mode', () => {
       rmSync(cwd, {recursive: true, force: true})
     }
   })
+
+  test(
+    'overlapping builds share a config reload with the `outdir` override',
+    {timeout: 60_000},
+    async () => {
+      // Every build reloads the config in watch mode, and builds sharing the plugin can run at
+      // the same time: they share the reload, and with it the private directory of the override
+      const cwd = copyFixture('watch-outdir-formats')
+      const configPath = path.join(cwd, 'panda.config.ts')
+      const originalConfig = readFileSync(configPath, 'utf-8')
+      const watcher = startWatcher(cwd, {outdir: 'generated'}, ['esm', 'cjs'])
+      try {
+        await watcher.nextBuild()
+        expect(watcher.readOutput().js).toContain('"color_brand"')
+
+        // The watchers run their first codegen at the same time, and each one's writes may
+        // rebuild the other once: let them settle before waiting for the next builds
+        await settleWatcher()
+        const secondBuild = watcher.nextBuild()
+        await rebuildAfter(secondBuild, () =>
+          writeFileSync(
+            configPath,
+            originalConfig.replace('presets: [],', "presets: [],\n  prefix: 'v2',"),
+          ),
+        )
+        expect(watcher.readOutput().js).toContain('"v2-color_brand"')
+        expect(readFileSync(path.join(cwd, 'dist-cjs/index.js'), 'utf-8')).toContain(
+          '"v2-color_brand"',
+        )
+
+        // A source change reloads the config too
+        await settleWatcher()
+        const thirdBuild = watcher.nextBuild()
+        await rebuildAfter(thirdBuild, () =>
+          writeFileSync(
+            path.join(cwd, 'src/index.ts'),
+            "import {css} from '#styled-system/css'\n\nexport const brandText: string = css({color: 'brand', display: 'grid'})\n",
+          ),
+        )
+        expect(watcher.readOutput().css).toContain('.v2-display_grid {')
+      } finally {
+        await watcher.close()
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
 
   test(
     'a source added to an `include` directory reaches the stylesheet, without a rebuild loop',
