@@ -1,0 +1,28 @@
+/* Panda's layers nested under a layer of their own, with `layers: {base: 'panda.base', …}` */
+@layer panda.reset, panda.base;
+
+@layer panda.base {
+  .panda-base {
+    color: green;
+  }
+}
+
+@layer panda.reset {
+  .panda-reset {
+    color: blue;
+  }
+}
+
+@layer base {
+  .base {
+    color: red;
+  }
+}
+
+@layer panda {
+  @layer base {
+    .nested-base {
+      color: purple;
+    }
+  }
+}

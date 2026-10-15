@@ -156,6 +156,18 @@ describe('`removeCascadeLayers`', () => {
     expect(css).toMatch(/^\.base \{$/m)
   })
 
+  test('removes a dotted layer where its full name is written, as Panda writes it', async () => {
+    const css = await (await startDevServer([removeCascadeLayers(['panda.base'])]))('/dotted.css')
+    expect(css).toMatch(/^\.panda-base \{$/m)
+    expect(css).not.toContain('@layer panda.base')
+    // Its siblings stay, also in the statement, and so does the other `base`
+    expect(css).toContain('@layer panda.reset;')
+    expect(css).toContain('@layer panda.reset {')
+    expect(css).toContain('@layer base {')
+    // A `@layer base` block nested in a kept `@layer panda` block isn't matched
+    expect(css).toMatch(/@layer panda \{\s*@layer base \{\s*\.nested-base/)
+  })
+
   test('removes the layers in `vite build` too', async () => {
     const css = await buildStylesheet([
       pandacss({transform: true}),

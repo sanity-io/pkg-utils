@@ -23,7 +23,9 @@ const RE_SPECIAL_QUERY = /[?&](?:worker|sharedworker|raw|url)\b/
  *
  * In every CSS module, it removes the `@layer` blocks of those layers and their sublayers, and
  * their names from `@layer` statements, ordering the rules so that source order gives them the
- * precedence the layers gave them. Other layers stay as they are.
+ * precedence the layers gave them. Other layers stay as they are. A dotted name such as
+ * `panda.base` matches where the layer's full name is written, as Panda writes it, but not a
+ * `@layer base` block nested in a `@layer panda` block.
  *
  * It runs after `@pandacss/vite` has added Panda's CSS to the stylesheet that declares the layers,
  * wherever it is registered (`@pandacss/vite`'s transform is `order: 'pre'`), and before Vite's own

@@ -1560,6 +1560,19 @@ describe('unwrapCascadeLayers', () => {
     expect(unwrapCascadeLayers('@Layer a{.a{}}.top{}', new Set(['a']))).toBe('.a{}.top{}')
   })
 
+  test('with dotted layer names, removes the layers their segments start with', () => {
+    const layers = new Set(['panda.base'])
+    expect(
+      unwrapCascadeLayers(
+        '@layer panda.reset, panda.base;@layer panda.base{@layer s{.s{}}.b{}}@layer panda.reset{.r{}}@layer base{.x{}}',
+        layers,
+      ),
+    ).toBe('@layer panda.reset;.s{}.b{}@layer panda.reset{.r{}}@layer base{.x{}}')
+    // Not a `base` block nested in a kept `panda` block
+    const nested = '@layer panda{@layer base{.b{}}.p{}}'
+    expect(unwrapCascadeLayers(nested, layers)).toBe(nested)
+  })
+
   test('keeps the comments ahead of the first rule there', () => {
     expect(unwrapCascadeLayers('/* head */@layer a{.a{}}/* mid */.top{}')).toBe(
       '/* head */.a{}/* mid */.top{}',
