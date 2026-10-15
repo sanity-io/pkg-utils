@@ -281,7 +281,11 @@ describe('config reloads', () => {
    */
   async function rebuild(
     plugin: TsdownPlugin,
-    {external = false, before = []}: {external?: boolean; before?: Plugin[]} = {},
+    {
+      external = false,
+      before = [],
+      format = 'esm',
+    }: {external?: boolean; before?: Plugin[]; format?: ModuleFormat} = {},
   ) {
     const infos: string[] = []
     const warnings: string[] = []
@@ -295,7 +299,7 @@ describe('config reloads', () => {
       },
     })
     try {
-      const {output} = await bundle.generate({format: 'esm'})
+      const {output} = await bundle.generate({format})
       return {
         css: findAsset(output, DEFAULT_CSS_FILE_NAME),
         entry: findChunk(output, 'index').code,
@@ -341,6 +345,22 @@ describe('config reloads', () => {
     expect(third.infos).toEqual([expect.stringMatching(/Generated \d+ files? in styled-system$/)])
     expect(await readFile(generated, 'utf8')).toContain('"sm"')
     expect(seen.at(-1)).toContain('"sm"')
+  })
+
+  test('builds sharing the plugin wait for a reload another build started', async () => {
+    // Like tsdown's per-format builds: both start together after the config changed, and the
+    // second must not parse or transform with the compiler the first is replacing
+    const plugin = pandaPlugin({cwd: dir, transform: true})
+    const before = await Promise.all([rebuild(plugin), rebuild(plugin, {format: 'cjs'})])
+    for (const result of before) expect(result.entry).toContain('"badge"')
+
+    await writeConfig(` prefix: 'x',`)
+    await notifyChange(plugin, path.join(dir, 'panda.config.ts'))
+    const after = await Promise.all([rebuild(plugin), rebuild(plugin, {format: 'cjs'})])
+    for (const result of after) {
+      expect(result.entry).toContain('"x-badge"')
+      expect(result.css).toContain('.x-badge')
+    }
   })
 
   test('reloads the config when a file it imports changes', async () => {

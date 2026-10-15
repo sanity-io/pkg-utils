@@ -191,6 +191,12 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   let driver: NodeDriver | undefined
   let driverPromise: Promise<NodeDriver> | undefined
   let reloadConfig = false
+  /**
+   * The in-flight (or last) config reload. Hosts may run several builds with a shared plugin
+   * instance (tsdown does, per output format), so every build waits for it before parsing,
+   * transforming or emitting, not just the build that started it.
+   */
+  let reloading: Promise<void> = Promise.resolve()
   let transformer: SourceTransformer | undefined
   let transformerCompiler: NodeDriver['compiler'] | undefined
   const warnDiagnostics = createDiagnosticLog()
@@ -227,8 +233,24 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
     )
   }
 
+  /** Starts a reload when the config changed, queued after any reload already in flight. */
+  function scheduleReload(loaded: NodeDriver, logger: Logger): Promise<void> {
+    if (reloadConfig) {
+      reloadConfig = false
+      const reload = (): Promise<void> => reloadDriver(loaded, logger)
+      reloading = reloading.then(reload, reload)
+    }
+    return reloading
+  }
+
+  /** The loaded driver, once any config reload in flight has finished. */
+  async function readyDriver(): Promise<NodeDriver> {
+    const loaded = await loadDriver()
+    await reloading
+    return loaded
+  }
+
   async function reloadDriver(loaded: NodeDriver, logger: Logger): Promise<void> {
-    reloadConfig = false
     const {hasChanged} = await loaded.reload()
     if (!hasChanged) return
     generate(loaded, logger)
@@ -327,7 +349,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
     // `inject` prepends the CSS import in `renderChunk` through rolldown's native MagicString
     // (`meta.magicString`), which keeps sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
-      const loaded = await loadDriver()
+      const loaded = await readyDriver()
       generate(loaded, {
         info: (message) => this.info(message),
         warn: (message) => this.warn(message),
@@ -350,7 +372,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
           info: (message) => this.info(message),
           warn: (message) => this.warn(message),
         }
-        if (reloadConfig) await reloadDriver(loaded, logger)
+        await scheduleReload(loaded, logger)
 
         // Every parsed file is watched, not just the bundled modules: the stylesheet covers all
         // of them, so editing one that no entry imports must rebuild it too
@@ -398,7 +420,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
       async handler(code, id) {
         const [file = id] = id.split('?')
         if (!RE_SOURCE.test(file)) return null
-        const loaded = await loadDriver()
+        const loaded = await readyDriver()
         // Watch mode keeps the filter it started with, so after a config reload this is what
         // applies the narrowed globs
         if (!loaded.isSourceFile(file)) {
@@ -485,7 +507,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
       )
       if (!hasChunks) return
 
-      const loaded = await loadDriver()
+      const loaded = await readyDriver()
       const output = loaded.getLayerCss({
         layers: ['reset', 'base', 'tokens', 'recipes', 'utilities'],
         emitLayerDeclaration: false,
