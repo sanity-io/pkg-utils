@@ -1,5 +1,37 @@
 # @sanity/tsdown-config
 
+## 0.30.0
+
+### Minor Changes
+
+- [#3639](https://github.com/sanity-io/pkg-utils/pull/3639) [`da36413`](https://github.com/sanity-io/pkg-utils/commit/da36413af1730826e4eccc17188cab022e186331) Thanks [@stipsan](https://github.com/stipsan)! - Add the `panda` option for packages styled with [Panda CSS](https://panda-css.com). Set `panda: true` to enable `@sanity/pandacss-tsdown-plugin` with the Sanity defaults, or pass an options object to customize it.
+
+  By default:
+
+  - the style calls that can be resolved statically are rewritten into class names, and the generated CSS is extracted into `dist/bundle.css`
+  - the entry chunks that use Panda styles import the stylesheet
+  - the stylesheet is published as a conditional `./bundle.css` export: the `browser` and `style` conditions select the CSS file, `node` and `default` a no-op JS shim, so the import also loads in Node.js
+
+  The CSS syntax is transformed for the configured browsers — `panda.target`, falling back to the top-level `target`. When neither names browsers (for example `node20`), the browsers of `@sanity/browserslist-config` are used instead.
+
+  Minification is opt-in:
+
+  ```ts
+  export default defineConfig({
+    panda: {minify: true},
+  })
+  ```
+
+  Setup: install `@sanity/pandacss-tsdown-plugin` as a dev dependency; it is an optional peer dependency of this package. `@pandacss/dev` is recommended — for the usual `"prepare": "panda codegen"` script and the `panda` CLI — but not required.
+
+- [#3623](https://github.com/sanity-io/pkg-utils/pull/3623) [`04ff6bd`](https://github.com/sanity-io/pkg-utils/commit/04ff6bd13e6c2134749ecb2fbccfa53ec84ee0a0) Thanks [@stipsan](https://github.com/stipsan)! - `vanillaExtract.minify` and `css.minify` no longer default to `true`. CSS is left unminified unless `minify: true` is set. The CSS syntax-lowering `target` default is unchanged.
+
+### Patch Changes
+
+- [#3631](https://github.com/sanity-io/pkg-utils/pull/3631) [`648e64b`](https://github.com/sanity-io/pkg-utils/commit/648e64baeb8e8dd44933c46b7bcddca312ae6ec2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency rolldown to ~1.2.14
+- Updated dependencies [[`648e64b`](https://github.com/sanity-io/pkg-utils/commit/648e64baeb8e8dd44933c46b7bcddca312ae6ec2)]:
+  - @sanity/vanilla-extract-tsdown-plugin@0.5.1
+
 ## 0.29.0
 
 ### Minor Changes
