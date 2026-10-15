@@ -69,6 +69,24 @@ describe('resolveCssLoweringTargets', () => {
     }
   })
 
+  test('keeps the lowest version of a browser named next to the alias, in either order', async () => {
+    // Chrome 61 must win over the alias's Chrome 111, wherever the alias is in the list
+    for (const cssTarget of [
+      ['chrome61', 'baseline-widely-available'],
+      ['baseline-widely-available', 'chrome61'],
+      'chrome61,baseline-widely-available',
+    ]) {
+      await expect(
+        resolveCssLoweringTargets({cssTarget, target: undefined, lightningcss: undefined}),
+      ).resolves.toEqual({
+        targets: {
+          ...esbuildTargetToLightningCSS(['edge111', 'firefox114', 'safari16.4', 'ios16.4']),
+          chrome: 61 << 16,
+        },
+      })
+    }
+  })
+
   test('falls back to @sanity/browserslist-config for targets that name no browsers', async () => {
     for (const cssTarget of ['node20', 'es2022', 'node 20', ['node20', 'es2022']]) {
       await expect(

@@ -116,4 +116,21 @@ describe('panda CSS targets', () => {
       expect(css).not.toContain('#de3e2d')
     }
   })
+
+  test('keep the lowest version of a browser named next to the alias, in either order', async () => {
+    // Chrome 61 predates `inset`, the alias's Chrome 111 doesn't. Only `panda.target` can name a
+    // browser twice: rolldown rejects that in the top-level `target`
+    const cwd = scratchProject('baseline-lowest')
+    for (const target of [
+      ['chrome61', 'baseline-widely-available'],
+      ['baseline-widely-available', 'chrome61'],
+    ]) {
+      const css = await buildStylesheet(
+        cwd,
+        await defineConfig(packageOptions(cwd, {panda: {target}, target: 'node22'})),
+      )
+      expect(css).not.toContain('inset:')
+      expect(css).toContain('top: 0')
+    }
+  })
 })
