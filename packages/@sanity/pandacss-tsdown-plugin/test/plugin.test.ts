@@ -1,26 +1,37 @@
-import {
+import {createHash} from 'node:crypto'
+import fs, {
   cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
+  realpathSync,
   rmSync,
   statSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import vm from 'node:vm'
-import {rolldown, watch, type OutputAsset, type OutputChunk} from 'rolldown'
+import {rolldown, watch, type OutputAsset, type OutputChunk, type Plugin} from 'rolldown'
+import {transform as transformWithOxc} from 'rolldown/experimental'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
-import {describe, expect, test} from 'vitest'
-import {esbuildTargetToLightningCSS, pandacssPlugin, type Options} from '../src/index.ts'
+import {describe, expect, test, vi} from 'vitest'
+import {directoryPattern} from '../src/directoryPattern.ts'
+import {
+  esbuildTargetToLightningCSS,
+  pandacssPlugin,
+  type LightningCSSOptions,
+  type Options,
+} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
 const fixtureEntry = path.join(fixtureDir, 'src/index.ts')
+const recipesFixtureDir = path.resolve(__dirname, 'fixtures/recipes')
 
 /**
  * A throwaway copy of the `codegen` fixture under `test/fixtures/<name>.local` (gitignored
@@ -118,6 +129,22 @@ async function generate(
   }
 }
 
+test('depends on the Panda packages it imports, with `@pandacss/dev` as an optional peer', () => {
+  // A project that installs `@pandacss/dev` (for `panda codegen` and the CLI) keeps a single
+  // copy of it, and needs nothing else for the build
+  const manifest: unknown = JSON.parse(
+    readFileSync(path.resolve(__dirname, '../package.json'), 'utf-8'),
+  )
+  expect(manifest).toMatchObject({
+    dependencies: {
+      '@pandacss/compiler': expect.any(String),
+      '@pandacss/transformer': expect.any(String),
+    },
+    peerDependencies: {'@pandacss/dev': '*', 'tsdown': expect.any(String)},
+    peerDependenciesMeta: {'@pandacss/dev': {optional: true}},
+  })
+})
+
 describe('pandacssPlugin', () => {
   test('rewrites the style calls into class names and extracts the stylesheet', async () => {
     const output = await generate({cwd: fixtureDir, target: 'chrome61'})
@@ -158,13 +185,14 @@ describe('pandacssPlugin', () => {
 
   test('derives the `transform` hook filter from the config `include`/`exclude` globs', async () => {
     const plugin = pandacssPlugin({cwd: fixtureDir})
-    expect(plugin.transform).toEqual({handler: expect.any(Function)})
+    expect(plugin.transform).toEqual({order: 'pre', handler: expect.any(Function)})
 
     const bundle = await rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]})
     try {
       // The config is loaded in the `options` hook, so the filter is in place before rolldown
       // reads the plugin's hooks
       expect(plugin.transform).toEqual({
+        order: 'pre',
         filter: {
           id: {
             include: [expect.any(RegExp)],
@@ -297,6 +325,8 @@ describe('pandacssPlugin', () => {
       // `src/index.ts` isn't covered by the second pattern — the point is the filter.)
       ['brace-globstar', './src/{**/*.ts,**/*.tsx}', true],
       ['brace-globstar-prefix', './{src/**,lib}/index.ts', false],
+      // Module ids never spell out a `..` segment, while Panda's matcher covers the file
+      ['dot-segment', './src/../src/**/*.ts', true],
     ] as const) {
       const cwd = copyFixture(name, withInclude(include))
       try {
@@ -322,6 +352,132 @@ describe('pandacssPlugin', () => {
     }
   })
 
+  test('resolves a symlinked project root, like the module ids', async () => {
+    // rolldown resolves symlinks by default, so the ids under a symlinked root (macOS's `/var`
+    // and `/tmp`, a linked workspace) are real paths, which a filter built from the link would
+    // never match. With `resolve.symlinks: false` they keep the link, which a filter built from
+    // the real path would never match.
+    const real = copyFixture('symlink-target')
+    const link = path.resolve(__dirname, 'fixtures', 'symlink.local')
+    rmSync(link, {recursive: true, force: true})
+    symlinkSync(real, link, process.platform === 'win32' ? 'junction' : 'dir')
+    try {
+      for (const symlinks of [undefined, false]) {
+        const bundle = await rolldown({
+          cwd: link,
+          input: path.join(link, 'src/index.ts'),
+          plugins: [pandacssPlugin({cwd: link, inject: true})],
+          ...(symlinks === undefined ? {} : {resolve: {symlinks}}),
+        })
+        try {
+          const {output} = await bundle.generate({format: 'esm'})
+          const entry = findEntryChunk(output)
+          expect(entry.facadeModuleId).toBe(
+            path.join(symlinks === false ? link : realpathSync(real), 'src/index.ts'),
+          )
+          expect(entry.code).toContain('"color_brand"')
+          expect(entry.code.startsWith('import "./bundle.css";\n')).toBe(true)
+          expect(findAsset(output, 'bundle.css')).toContain('.color_brand {')
+        } finally {
+          await bundle.close()
+        }
+      }
+
+      // Under tsdown the driver is created in its `build:before` hook, before rolldown's
+      // `options` hook runs
+      await tsdownBuild({
+        config: false,
+        cwd: link,
+        entry: ['src/index.ts'],
+        format: ['esm'],
+        outDir: 'dist',
+        dts: false,
+        inputOptions: {resolve: {symlinks: false}},
+        plugins: [pandacssPlugin({cwd: link, inject: true})],
+        logLevel: 'silent',
+        publint: false,
+      })
+      const code = readFileSync(path.join(real, 'dist/index.mjs'), 'utf-8')
+      expect(code).toContain('"color_brand"')
+      expect(code.startsWith('import "./bundle.css";\n')).toBe(true)
+      expect(readFileSync(path.join(real, 'dist/bundle.css'), 'utf-8')).toContain('.color_brand {')
+    } finally {
+      rmSync(link, {recursive: true, force: true})
+      rmSync(real, {recursive: true, force: true})
+    }
+  })
+
+  test("resolves a relative `cwd` against the host's working directory", async () => {
+    // tsdown's `cwd` (or rolldown's) needn't be the process's, e.g. in workspaces
+    const cwd = copyFixture('relative-cwd')
+    const hostCwd = path.dirname(cwd)
+    const input = path.join(cwd, 'src/index.ts')
+    try {
+      const fromContext = pandacssPlugin({cwd: path.basename(cwd)})
+      fromContext.api.setBuildContext({cwd: hostCwd})
+      const fromRolldown = pandacssPlugin({cwd: path.basename(cwd)})
+      for (const plugin of [fromContext, fromRolldown]) {
+        const bundle = await rolldown({cwd: hostCwd, input, plugins: [plugin]})
+        try {
+          const {output} = await bundle.generate({format: 'esm'})
+          expect(findEntryChunk(output).code).toContain('"color_brand"')
+        } finally {
+          await bundle.close()
+        }
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
+  test('keeps an overridden `outdir` inside the `include` globs out of the scan and the transform', async () => {
+    // The plugin's `outdir` option sends the generated code into `src/generated`, which
+    // `./src/**/*` covers. Without an `importMap`, Panda recognizes the calls imported from
+    // there only when the override is part of the config it loaded.
+    const cwd = copyFixture(
+      'outdir-in-include',
+      withInclude('./src/**/*').replace("  importMap: '#styled-system',\n", ''),
+    )
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from './generated/css/index.js'\n\nexport const brandText: string = css({color: 'brand'})\n",
+    )
+    const plugin = pandacssPlugin({cwd, outdir: 'src/generated'})
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      cwd,
+      input: path.join(cwd, 'src/index.ts'),
+      plugins: [plugin],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(existsSync(path.join(cwd, 'src/generated/css/index.js'))).toBe(true)
+      expect(findEntryChunk(output).code).toContain('"color_brand"')
+      expect(findAsset(output, 'bundle.css')).toContain('.color_brand {')
+
+      // Every scanned source is watched: the sources, but nothing generated
+      const watched = (await bundle.watchFiles).map((file) =>
+        path.relative(cwd, file).replaceAll('\\', '/'),
+      )
+      expect(watched).toContain('src/index.ts')
+      expect(watched.filter((file) => file.startsWith('src/generated/'))).toEqual([])
+      expect(warnings.filter((message) => message.includes('generated'))).toEqual([])
+
+      const posixCwd = cwd.replaceAll('\\', '/')
+      const {exclude} = transformFilterPatterns(plugin)
+      expect(
+        exclude.some((pattern) => pattern.test(`${posixCwd}/src/generated/css/index.js`)),
+      ).toBe(true)
+      expect(exclude.some((pattern) => pattern.test(`${posixCwd}/src/index.ts`))).toBe(false)
+    } finally {
+      await bundle.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
   test('`minify: true` minifies the stylesheet', async () => {
     const output = await generate({cwd: fixtureDir, minify: true})
     const css = findAsset(output, 'bundle.css')
@@ -338,6 +494,103 @@ describe('pandacssPlugin', () => {
     // The modules still count as styled for `inject`
     expect(entry.code).toContain('import "./bundle.css";')
     expect(findAsset(output, 'bundle.css')).toContain('color: var(--colors-brand)')
+  })
+
+  test('counts pattern, config recipe and `token()` calls as Panda styles', async () => {
+    // Panda's parse report only counts `css()`/`cva()`/`sva()` calls and JSX, so an entry that
+    // only calls a pattern, a config recipe or `token()` must still get the CSS import — also
+    // without the transform, whose rewrite would otherwise be the only sign of them
+    for (const [file, className] of [
+      ['pattern', '.gap_2'],
+      ['recipe', '.button--tone_brand'],
+      ['token', '--colors-brand'],
+    ] as const) {
+      for (const transform of [false, true]) {
+        const output = await generate(
+          {cwd: recipesFixtureDir, inject: true, transform},
+          'esm',
+          path.join(recipesFixtureDir, `src/${file}.ts`),
+        )
+        const entry = findEntryChunk(output)
+        expect(
+          entry.code.startsWith('import "./bundle.css";\n'),
+          `${file}, transform: ${transform}`,
+        ).toBe(true)
+        if (!transform) {
+          // The call stayed, so the generated runtime is bundled for it
+          expect(
+            entry.moduleIds.some((id) => id.replaceAll('\\', '/').includes('/styled-system/')),
+          ).toBe(true)
+        }
+        expect(findAsset(output, 'bundle.css')).toContain(className)
+      }
+    }
+  })
+
+  test('extracts Panda JSX before another plugin lowers it', async () => {
+    // A plugin listed first that lowers JSX into `React.createElement(Box, {color: 'brand'})`
+    // hides the JSX Panda extracts styles from, so Panda's transform runs ahead of it
+    const cwd = copyFixture(
+      'jsx-lowered',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8')
+        .replace("include: ['./src/**/*.ts']", "include: ['./src/**/*.{ts,tsx}']")
+        .replace(
+          'presets: [],',
+          "presets: [],\n  jsxFramework: 'react',\n  patterns: {box: {properties: {}, transform: (props: {color?: string}) => props}},",
+        ),
+    )
+    writeFileSync(
+      path.join(cwd, 'src/badge.tsx'),
+      'import {Box} from \'#styled-system/jsx\'\n\nexport const badge = <Box color="brand">New</Box>\n',
+    )
+    const lowerJsx: Plugin = {
+      name: 'lower-jsx',
+      transform: {
+        filter: {id: /\.tsx$/},
+        async handler(code, id) {
+          const result = await transformWithOxc(id, code, {jsx: {runtime: 'classic'}})
+          return {code: result.code, map: result.map}
+        },
+      },
+    }
+    const bundle = await rolldown({
+      cwd,
+      input: path.join(cwd, 'src/badge.tsx'),
+      external: [/^react/],
+      plugins: [lowerJsx, pandacssPlugin({cwd, inject: true, transform: false})],
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findEntryChunk(output).code.startsWith('import "./bundle.css";\n')).toBe(true)
+      expect(findAsset(output, 'bundle.css')).toContain('.color_brand {')
+    } finally {
+      await bundle.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
+  test('drops the CSS import once a module stops using Panda styles', async () => {
+    // A plugin instance outlives a build in watch mode, so which modules use Panda styles must
+    // follow their current code, not what an earlier build saw
+    const cwd = copyFixture('stops-styling')
+    const entry = path.join(cwd, 'src/index.ts')
+    const plugin = pandacssPlugin({cwd, inject: true})
+    const build = async (): Promise<string> => {
+      const bundle = await rolldown({cwd, input: entry, plugins: [plugin]})
+      try {
+        const {output} = await bundle.generate({format: 'esm'})
+        return findEntryChunk(output).code
+      } finally {
+        await bundle.close()
+      }
+    }
+    try {
+      expect((await build()).startsWith('import "./bundle.css";\n')).toBe(true)
+      writeFileSync(entry, "export const plain: string = 'no Panda styles here'\n")
+      expect(await build()).not.toContain('bundle.css')
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
   })
 
   test('`inject` prepends a relative CSS import, or a `require()` in CJS output', async () => {
@@ -371,6 +624,67 @@ describe('pandacssPlugin', () => {
     expect(evaluateCommonJs(`require("./bundle.css");\n${code}`).isStrict()).toBe(false)
   })
 
+  test('keeps the directive prologue on the string fallback, and warns about the sourcemap', async () => {
+    // Without rolldown's native magic-string (another plugin's `options` hook turned it off),
+    // the load is spliced into the code at the same offset
+    const withoutNativeMagicString: Plugin = {
+      name: 'without-native-magic-string',
+      options: (inputOptions) => ({
+        ...inputOptions,
+        experimental: {...inputOptions.experimental, nativeMagicString: false},
+      }),
+    }
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      cwd: fixtureDir,
+      input: path.join(fixtureDir, 'src/strict.ts'),
+      plugins: [pandacssPlugin({cwd: fixtureDir, inject: true}), withoutNativeMagicString],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'cjs', sourcemap: true})
+      const {code} = findEntryChunk(output)
+      expect(code.startsWith('"use strict";\nrequire("./bundle.css");\n')).toBe(true)
+      expect(evaluateCommonJs(code).isStrict()).toBe(true)
+      expect(warnings).toEqual(
+        expect.arrayContaining([expect.stringContaining('native magic-string is unavailable')]),
+      )
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test('emits the stylesheet an injected import loads, even when it ends up empty', async () => {
+    // Without tokens, globals or a preflight, `css({})` extracts nothing, while the module
+    // still counts as styled: the relative import must resolve to an (empty) file
+    const cwd = copyFixture(
+      'empty-stylesheet',
+      `import {defineConfig, type Config} from '@pandacss/dev'\n\nexport default defineConfig({\n  presets: [],\n  preflight: false,\n  include: ['./src/**/*.ts'],\n  outdir: 'styled-system',\n  outExtension: 'js',\n  importMap: '#styled-system',\n} satisfies Config)\n`,
+    )
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from '#styled-system/css'\n\nexport const empty: string = css({})\n",
+    )
+    try {
+      const bundle = await rolldown({
+        cwd,
+        input: path.join(cwd, 'src/index.ts'),
+        plugins: [pandacssPlugin({cwd, inject: true})],
+      })
+      try {
+        const {output} = await bundle.generate({format: 'esm'})
+        expect(findEntryChunk(output).code.startsWith('import "./bundle.css";\n')).toBe(true)
+        expect(findAsset(output, 'bundle.css').trim()).toBe('')
+      } finally {
+        await bundle.close()
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
   test('keeps `"use client"` the first statement of the chunk', async () => {
     // Directives other than `"use strict"` are read by tools (React Server Components
     // bundlers) that only look at the prologue
@@ -387,6 +701,27 @@ describe('pandacssPlugin', () => {
     expect(findEntryChunk(output).code).toContain('import "@fixtures/panda-basic/bundle.css";')
     expect(findAsset(output, 'bundle-css.js')).toContain('No-op shim for `bundle.css`')
     expect(findAsset(output, 'bundle-css.d.ts')).toContain('export {}')
+  })
+
+  test('keeps the injected import of a dot-prefixed `fileName` relative', async () => {
+    // `import ".assets/bundle.css"` would resolve as a package named `.assets`
+    for (const fileName of ['.bundle.css', '.assets/bundle.css']) {
+      const output = await generate({cwd: fixtureDir, inject: true, fileName})
+      expect(findEntryChunk(output).code.startsWith(`import "./${fileName}";\n`)).toBe(true)
+      expect(findAsset(output, fileName)).toContain('color: var(--colors-brand)')
+    }
+  })
+
+  test('normalizes `fileName`, and rejects one outside the output directory', async () => {
+    const output = await generate({cwd: fixtureDir, inject: true, fileName: './styles.css'})
+    expect(findEntryChunk(output).code.startsWith('import "./styles.css";\n')).toBe(true)
+    expect(findAsset(output, 'styles.css')).toContain('color: var(--colors-brand)')
+
+    for (const fileName of ['../styles.css', '/tmp/styles.css', 'assets/', '.']) {
+      expect(() => pandacssPlugin({fileName}), fileName).toThrow(
+        '`fileName` must name a file inside the output directory',
+      )
+    }
   })
 
   test("`tsdownConfigResolved` forwards tsdown's package name, `target` and `cwd`", async () => {
@@ -499,6 +834,53 @@ describe('pandacssPlugin', () => {
     expect(findEntryChunk(output).code).toContain('"color_brand"')
   })
 
+  test('reads `lightningcss` when it emits the stylesheet', async () => {
+    // `@sanity/tsdown-config` sets `targets` from the final config after creating the plugin,
+    // before the build starts; chrome61 predates the `inset` shorthand
+    const lightningcss: LightningCSSOptions = {}
+    const plugin = pandacssPlugin({cwd: fixtureDir, lightningcss})
+    lightningcss.targets = {chrome: 61 << 16}
+    const bundle = await rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]})
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findAsset(output, 'bundle.css')).not.toContain('inset:')
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test("expands tsdown's `baseline-widely-available` alias in `target`", async () => {
+    // Its browsers (Chrome 111, Safari 16.4) predate `light-dark()`, which an unexpanded alias
+    // (naming no browsers, so no syntax transform) would leave alone
+    const cwd = copyFixture('baseline-target')
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from '#styled-system/css'\n\nexport const themed: string = css({color: 'light-dark(#000, #fff)'})\n",
+    )
+    try {
+      for (const [target, transformed] of [
+        ['baseline-widely-available', true],
+        [false, false],
+      ] as const) {
+        const bundle = await rolldown({
+          cwd,
+          input: path.join(cwd, 'src/index.ts'),
+          plugins: [pandacssPlugin({cwd, target})],
+        })
+        try {
+          const {output} = await bundle.generate({format: 'esm'})
+          expect(findAsset(output, 'bundle.css').includes('light-dark('), String(target)).toBe(
+            !transformed,
+          )
+        } finally {
+          await bundle.close()
+        }
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
   test('`lightningcss.targets` wins over `target`, and `target: false` skips lowering', async () => {
     const lowered = await generate({
       cwd: fixtureDir,
@@ -511,6 +893,18 @@ describe('pandacssPlugin', () => {
     expect(findAsset(raw, 'bundle.css')).toContain('inset: 0')
   })
 })
+
+/** Records the directories created with `fs.mkdtempSync` (by the plugin) and their modes. */
+function spyOnTempDirs(): {created: {dir: string; mode: number}[]; restore(): void} {
+  const createTempDir = fs.mkdtempSync
+  const created: {dir: string; mode: number}[] = []
+  const spy = vi.spyOn(fs, 'mkdtempSync').mockImplementation((prefix, options) => {
+    const dir = createTempDir(prefix, options)
+    created.push({dir, mode: statSync(dir).mode & 0o777})
+    return dir
+  })
+  return {created, restore: () => spy.mockRestore()}
+}
 
 /** The modification times of every file in a directory tree, keyed by path. */
 function snapshotMtimes(dir: string): Map<string, number> {
@@ -593,16 +987,69 @@ describe('codegen', () => {
     }
   })
 
+  // Creating a file symlink takes extra privileges on Windows
+  test.skipIf(process.platform === 'win32')(
+    '`outdir` leaves a pre-created temp path alone',
+    async () => {
+      // The config with the `outdir` override used to be written to a path derived from the
+      // config and the override, which another user of a shared host could pre-create, with the
+      // config a symlink to a file of the build user's
+      const outdir = mkdtempSync(path.join(os.tmpdir(), 'pandacss-tsdown-plugin-outdir-'))
+      const key = createHash('sha256')
+        .update(`${path.join(codegenFixtureDir, 'panda.config.ts')}\0${outdir}`)
+        .digest('hex')
+        .slice(0, 16)
+      const sharedDir = path.join(os.tmpdir(), 'sanity-pandacss-tsdown-plugin')
+      const sharedDirExisted = existsSync(sharedDir)
+      const predictableDir = path.join(sharedDir, key)
+      const victim = path.join(outdir, 'victim.txt')
+      try {
+        writeFileSync(victim, 'not a Panda config\n')
+        mkdirSync(predictableDir, {recursive: true})
+        symlinkSync(victim, path.join(predictableDir, 'panda.config.mjs'))
+        await build({outdir})
+        expect(readFileSync(victim, 'utf-8')).toBe('not a Panda config\n')
+        expect(existsSync(path.join(outdir, 'css/index.js'))).toBe(true)
+      } finally {
+        rmSync(sharedDirExisted ? predictableDir : sharedDir, {recursive: true, force: true})
+        rmSync(outdir, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test('`outdir` loads its config from a private temp directory, removed once loaded', async () => {
+    const outdir = mkdtempSync(path.join(os.tmpdir(), 'pandacss-tsdown-plugin-outdir-'))
+    const tempDirs = spyOnTempDirs()
+    try {
+      await build({outdir})
+      expect(tempDirs.created).toHaveLength(1)
+      const [created] = tempDirs.created
+      if (!created) expect.unreachable('expected a temp directory')
+      const {dir, mode} = created
+      expect(path.basename(dir)).toMatch(/^sanity-pandacss-tsdown-plugin-/)
+      if (process.platform !== 'win32') expect(mode).toBe(0o700)
+      expect(existsSync(dir)).toBe(false)
+      expect(existsSync(path.join(outdir, 'css/index.js'))).toBe(true)
+    } finally {
+      tempDirs.restore()
+      rmSync(outdir, {recursive: true, force: true})
+    }
+  })
+
   test(
     'runs before tsdown builds the CJS declarations, which run without the plugin',
     {timeout: 60_000},
     async () => {
       // For `format: 'cjs'` with declarations, tsdown 0.23 runs a separate declaration build
-      // first, without the user plugins — so a codegen gated on this plugin's `buildStart`
-      // would come too late for it. The first codegen runs from the awaited
-      // `tsdownConfigResolved` hook instead, before any build: on a clean checkout (no
-      // `styled-system` yet) the artifacts exist by the time the declarations are generated.
+      // next to the JS build, without the user plugins — so a codegen gated on this plugin's
+      // `buildStart` would come too late for it. The first codegen runs from tsdown's awaited
+      // `build:before` hook instead, after `clean` (which deletes the generated directory here)
+      // and before any build: the artifacts exist by the time the declarations are generated.
       const cwd = copyFixture('clean-cjs-dts')
+      writeFileSync(
+        path.join(cwd, 'src/index.ts'),
+        `${readFileSync(path.join(cwd, 'src/index.ts'), 'utf-8')}\nexport type {SystemStyleObject} from '#styled-system/types'\n`,
+      )
       writeFileSync(
         path.join(cwd, 'tsconfig.json'),
         JSON.stringify({
@@ -626,13 +1073,15 @@ describe('codegen', () => {
           format: ['cjs'],
           dts: true,
           outDir: 'dist',
+          clean: ['dist', 'styled-system'],
           plugins: [pandacssPlugin({cwd})],
           logLevel: 'silent',
           publint: false,
         })
-        expect(readFileSync(path.join(cwd, 'dist/index.d.cts'), 'utf-8')).toContain(
-          'export declare const brandText: string;',
-        )
+        const declarations = readFileSync(path.join(cwd, 'dist/index.d.cts'), 'utf-8')
+        expect(declarations).toContain('export declare const brandText: string;')
+        // The re-exported type was bundled from the generated declarations of this config
+        expect(declarations).toContain('type ColorToken = "brand"')
         expect(readFileSync(path.join(cwd, 'dist/index.cjs'), 'utf-8')).toContain('"color_brand"')
         // The artifacts were written before the declaration build started
         const generatedAt = statSync(path.join(cwd, 'styled-system/css/index.js')).mtimeMs
@@ -643,6 +1092,141 @@ describe('codegen', () => {
       }
     },
   )
+
+  test(
+    "runs after tsdown's `clean` step, ahead of the user's `build:before` hooks",
+    {timeout: 60_000},
+    async () => {
+      // tsdown cleans after resolving the config, so a codegen before then is deleted again by
+      // `clean: ['dist', 'styled-system']`. The user's hooks (object or function form) keep
+      // running, and see the generated files.
+      const cwd = copyFixture('clean-order')
+      const generatedFile = path.join(cwd, 'styled-system/css/index.js')
+      const staleFile = path.join(cwd, 'dist/stale.txt')
+      try {
+        for (const form of ['object', 'function'] as const) {
+          mkdirSync(path.dirname(staleFile), {recursive: true})
+          writeFileSync(staleFile, '')
+          const observed: {generated: boolean; stale: boolean}[] = []
+          const observe = (): void => {
+            observed.push({generated: existsSync(generatedFile), stale: existsSync(staleFile)})
+          }
+          await tsdownBuild({
+            config: false,
+            cwd,
+            entry: ['src/index.ts'],
+            format: ['esm'],
+            outDir: 'dist',
+            clean: ['dist', 'styled-system'],
+            hooks:
+              form === 'object'
+                ? {'build:before': observe}
+                : (hooks) => {
+                    hooks.hook('build:before', observe)
+                  },
+            plugins: [pandacssPlugin({cwd})],
+            logLevel: 'silent',
+            publint: false,
+          })
+          expect(observed, form).toEqual([{generated: true, stale: false}])
+        }
+      } finally {
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test(
+    'runs again for every tsdown build that reuses the plugin instance',
+    {timeout: 60_000},
+    async () => {
+      // Each programmatic `build()` cleans the generated directory again, so the codegen the
+      // first build ran must not stand in for the second's. `transform: false` bundles the
+      // runtime, so a missing directory fails the build.
+      const cwd = copyFixture('clean-twice')
+      const plugin = pandacssPlugin({cwd, transform: false})
+      try {
+        for (const run of [1, 2]) {
+          await tsdownBuild({
+            config: false,
+            cwd,
+            entry: ['src/index.ts'],
+            format: ['esm', 'cjs'],
+            outDir: 'dist',
+            clean: ['dist', 'styled-system'],
+            plugins: [plugin],
+            logLevel: 'silent',
+            publint: false,
+          })
+          expect(existsSync(path.join(cwd, 'styled-system/css/index.js')), `build ${run}`).toBe(
+            true,
+          )
+          expect(readFileSync(path.join(cwd, 'dist/index.mjs'), 'utf-8')).toMatch(/\bcss\(/)
+        }
+      } finally {
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test("runs before every plugin's `buildStart`, outside tsdown too", async () => {
+    // rolldown runs the `buildStart` hooks in parallel, and a declaration plugin reads the
+    // generated types from its own, so the first codegen must be done before any of them
+    const cwd = copyFixture('codegen-order')
+    const seen: boolean[] = []
+    const probe: Plugin = {
+      name: 'probe',
+      buildStart() {
+        seen.push(existsSync(path.join(cwd, 'styled-system/css/index.js')))
+      },
+    }
+    try {
+      const bundle = await rolldown({
+        cwd,
+        input: path.join(cwd, 'src/index.ts'),
+        plugins: [probe, pandacssPlugin({cwd})],
+      })
+      try {
+        await bundle.generate({format: 'esm'})
+      } finally {
+        await bundle.close()
+      }
+      expect(seen).toEqual([true])
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+})
+
+describe('directoryPattern', () => {
+  test('matches a directory and everything in it, with either separator', () => {
+    for (const [dir, inside, outside] of [
+      [
+        '/home/user/lib/dist',
+        ['/home/user/lib/dist', '/home/user/lib/dist/index.js'],
+        ['/home/user/lib/dist2/index.js', '/home/user/lib'],
+      ],
+      [
+        'C:\\work\\lib\\dist',
+        ['C:\\work\\lib\\dist\\index.js', 'C:/work/lib/dist/index.js'],
+        ['C:\\work\\lib\\distx\\index.js'],
+      ],
+      // A UNC directory keeps its double leading separator, in either spelling
+      [
+        '\\\\server\\share\\lib\\dist',
+        [
+          '\\\\server\\share\\lib\\dist',
+          '\\\\server\\share\\lib\\dist\\index.js',
+          '//server/share/lib/dist/index.js',
+        ],
+        ['\\\\server\\share\\lib\\distx\\index.js', '\\\\server\\share\\lib\\index.js'],
+      ],
+    ] as const) {
+      const pattern = directoryPattern(dir)
+      for (const file of inside) expect(pattern.test(file), file).toBe(true)
+      for (const file of outside) expect(pattern.test(file), file).toBe(false)
+    }
+  })
 })
 
 describe('esbuildTargetToLightningCSS', () => {
@@ -671,7 +1255,7 @@ const conditionalCssExport = {
  * transforms of unchanged modules) and the plugin told about the output directory, like tsdown
  * tells it. `nextBuild()` resolves when the next build completes, and `builds` counts them.
  */
-function startWatcher(cwd: string) {
+function startWatcher(cwd: string, options: Options = {}) {
   const outDir = path.join(cwd, 'dist')
   let settle: (() => void) | undefined
   let fail: ((error: Error) => void) | undefined
@@ -681,7 +1265,7 @@ function startWatcher(cwd: string) {
       settle = resolve
       fail = reject
     })
-  const plugin = pandacssPlugin({cwd, inject: true})
+  const plugin = pandacssPlugin({cwd, inject: true, ...options})
   plugin.api.setBuildContext({outDir})
   const watcher = watch({
     cwd,
@@ -767,6 +1351,79 @@ describe('watch mode', () => {
       }
     },
   )
+
+  test('a change to a file the config imports reloads it', {timeout: 60_000}, async () => {
+    // The config's own imports aren't part of the module graph, but its tokens can live there
+    const cwd = copyFixture(
+      'watch-config-import',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8')
+        .replace(
+          "import {defineConfig, type Config} from '@pandacss/dev'",
+          "import {defineConfig, type Config} from '@pandacss/dev'\nimport {brand} from './theme.ts'",
+        )
+        .replace("brand: {value: '#f03e2f'}", 'brand: {value: brand}'),
+    )
+    const themePath = path.join(cwd, 'theme.ts')
+    writeFileSync(themePath, "export const brand: string = '#f03e2f'\n")
+    const watcher = startWatcher(cwd)
+    try {
+      await watcher.nextBuild()
+      expect(watcher.readOutput().css).toContain('--colors-brand: #f03e2f')
+
+      const secondBuild = watcher.nextBuild()
+      await settleWatcher()
+      await rebuildAfter(secondBuild, () =>
+        writeFileSync(themePath, "export const brand: string = '#0000ff'\n"),
+      )
+      expect(watcher.readOutput().css).toContain('--colors-brand: #00f')
+    } finally {
+      await watcher.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
+  test('a config reload keeps the `outdir` override', {timeout: 60_000}, async () => {
+    // Without an `importMap`, the calls imported from the overridden directory are only
+    // recognized while the override is part of the loaded config — also after a reload
+    const cwd = copyFixture(
+      'watch-outdir',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+        "  importMap: '#styled-system',\n",
+        '',
+      ),
+    )
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from '../generated/css/index.js'\n\nexport const brandText: string = css({color: 'brand'})\n",
+    )
+    const configPath = path.join(cwd, 'panda.config.ts')
+    const originalConfig = readFileSync(configPath, 'utf-8')
+    const tempDirs = spyOnTempDirs()
+    const watcher = startWatcher(cwd, {outdir: 'generated'})
+    try {
+      await watcher.nextBuild()
+      expect(watcher.readOutput().js).toContain('"color_brand"')
+
+      const secondBuild = watcher.nextBuild()
+      await settleWatcher()
+      await rebuildAfter(secondBuild, () =>
+        writeFileSync(
+          configPath,
+          originalConfig.replace('presets: [],', "presets: [],\n  prefix: 'v2',"),
+        ),
+      )
+      const after = watcher.readOutput()
+      expect(after.js).toContain('"v2-color_brand"')
+      expect(after.css).toContain('.v2-color_brand {')
+      // The reload read the override from the same private directory, removed again after it
+      expect(tempDirs.created).toHaveLength(1)
+      expect(existsSync(tempDirs.created[0]?.dir ?? '')).toBe(false)
+    } finally {
+      tempDirs.restore()
+      await watcher.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
 
   test(
     'a source added to an `include` directory reaches the stylesheet, without a rebuild loop',
@@ -905,6 +1562,16 @@ describe('tsdownConfig hook', () => {
     })
   })
 
+  test('writes the export subpath of a `./`-prefixed `fileName` without the prefix', async () => {
+    const config = await runTsdownConfigHook(
+      {exports: true},
+      {exports: true, fileName: './styles.css'},
+    )
+    await expect(
+      getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+    ).resolves.toEqual({'.': './dist/index.mjs', './styles.css': './dist/styles.css'})
+  })
+
   test('resolves `outDir` against the package root, in any spelling', async () => {
     // `./dist`, an absolute directory and a nested one all end up relative to the directory
     // of the `package.json` the exports are written to, with POSIX separators — never
@@ -961,6 +1628,101 @@ describe('tsdownConfig hook', () => {
       '.': './dist/index.mjs',
       './extra': './dist/extra.mjs',
       './bundle.css': conditionalCssExport,
+    })
+  })
+
+  test('rejects an output directory outside the package', async () => {
+    // `./../elsewhere/bundle.css` is not a valid export target, which Node rejects
+    const config = await runTsdownConfigHook(
+      {exports: true, outDir: '../elsewhere'},
+      {exports: true},
+    )
+    await expect(
+      getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+    ).rejects.toThrow('can only publish the stylesheet from inside the package')
+  })
+
+  test("keeps the entry a user's own `customExports` writes for the CSS subpath", async () => {
+    const custom = {style: './dist/bundle.css', default: './dist/bundle.css'}
+    for (const customExports of [
+      (exportsMap: Record<string, unknown>) => ({...exportsMap, './bundle.css': custom}),
+      {'./bundle.css': custom},
+    ]) {
+      const config = await runTsdownConfigHook({exports: {customExports}})
+      await expect(
+        getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+      ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': custom})
+    }
+
+    // An entry tsdown itself passed in is not the user's, and gets the CSS export
+    const passedThrough = await runTsdownConfigHook({
+      exports: {customExports: (exportsMap) => ({...exportsMap})},
+    })
+    await expect(
+      getCustomExports(passedThrough)(
+        {'.': './dist/index.mjs', './bundle.css': './dist/bundle.css'},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': conditionalCssExport})
+  })
+
+  test("keeps an entry the user's `customExports` returns, even tsdown's own", async () => {
+    // The callback receives the CSS export, so writing back the entry tsdown passed in is an
+    // explicit choice too
+    const received: unknown[] = []
+    const config = await runTsdownConfigHook({
+      exports: {
+        customExports: (exportsMap) => {
+          received.push(exportsMap['./bundle.css'])
+          return {...exportsMap, './bundle.css': './dist/bundle.css'}
+        },
+      },
+    })
+    await expect(
+      getCustomExports(config)(
+        {'.': './dist/index.mjs', './bundle.css': './dist/bundle.css'},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': './dist/bundle.css'})
+    expect(received).toEqual([conditionalCssExport])
+  })
+
+  test("keeps a CSS entry the user's `customExports` changes in place", async () => {
+    // A callback may mutate the map it receives and return it
+    const replaced = await runTsdownConfigHook({
+      exports: {
+        customExports: (exportsMap) => {
+          exportsMap['./bundle.css'] = {style: './dist/bundle.css', default: './dist/bundle.css'}
+          return exportsMap
+        },
+      },
+    })
+    await expect(
+      getCustomExports(replaced)({'.': './dist/index.mjs'}, customExportsContext),
+    ).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './bundle.css': {style: './dist/bundle.css', default: './dist/bundle.css'},
+    })
+
+    const nested = await runTsdownConfigHook({
+      exports: {
+        customExports: (exportsMap) => {
+          const entry = exportsMap['./bundle.css']
+          if (typeof entry === 'object' && entry !== null) {
+            Reflect.set(entry, 'module', './dist/bundle.css')
+          }
+          return exportsMap
+        },
+      },
+    })
+    await expect(
+      getCustomExports(nested)(
+        {'.': './dist/index.mjs', './bundle.css': {default: './dist/bundle.css'}},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './bundle.css': {...conditionalCssExport, module: './dist/bundle.css'},
     })
   })
 

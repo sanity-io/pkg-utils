@@ -13,6 +13,7 @@ import {
   type PackageJsonWithPath,
   type Rolldown,
   type RolldownChunk,
+  type TsdownPlugin,
   type UserConfig,
 } from 'tsdown'
 import type {PackageTsdocOptions} from './tsdoc/types.ts'
@@ -66,11 +67,12 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  *   with. Set `exports: true` for a plain (browser-only) CSS export, `exports: false` for a
  *   relative CSS import, or `inject: false` to only extract the CSS.
  * - When the effective CSS syntax lowering target (`target`, falling back to the top-level
- *   `target`) is undefined or names no browsers (e.g. `'node20'`, resolved from
- *   `engines.node`), the lowering targets are resolved from `@sanity/browserslist-config` and
- *   passed through `lightningcss.targets` — where the plugin (like `@tsdown/css`) would skip
- *   lowering. `target: false` stays the explicit off switch, and a user-provided
- *   `lightningcss.targets` wins over the fallback.
+ *   `target` of the final, resolved config) is undefined or names no browsers (e.g.
+ *   `'node20'`, resolved from `engines.node`), the lowering targets are resolved from
+ *   `@sanity/browserslist-config` — where the plugin (like `@tsdown/css`) would skip lowering.
+ *   A browserslist query in `target` resolves to the browsers it names, and tsdown's
+ *   `'baseline-widely-available'` alias to the ones tsdown expands it to. `target: false` stays
+ *   the explicit off switch, and a user-provided `lightningcss.targets` wins over the fallback.
  *
  * `minify` is not set, so it stays the plugin's default (`false`, matching `css.minify` in
  * `@tsdown/css`). Set `minify: true` to minify the extracted CSS.
@@ -108,10 +110,10 @@ export interface PackagePandaOptions {
    */
   outdir?: string
   /**
-   * Rewrite the `css()`, `cva()`, pattern and recipe calls of the Panda sources into static
-   * class names, so the published JavaScript carries no Panda runtime. On by default — unlike
-   * `transform` in `@pandacss/vite`, which defaults to `false` there because applications keep
-   * the runtime around. `false` only extracts the CSS.
+   * Rewrite the statically resolvable `css()`, `cva()`, pattern and recipe calls of the Panda
+   * sources into class names; the others keep their runtime calls, with a warning. On by
+   * default — unlike `transform` in `@pandacss/vite`, which defaults to `false` there because
+   * applications keep the runtime around. `false` only extracts the CSS.
    * @defaultValue true
    */
   transform?: boolean
@@ -132,8 +134,9 @@ export interface PackagePandaOptions {
   minify?: boolean
   /**
    * The target environment for CSS syntax lowering: esbuild-style target strings like
-   * `'chrome90'`, or `false` to disable lowering. Falls back to the top-level `target`, then
-   * to `@sanity/browserslist-config` (see above).
+   * `'chrome90'`, `'baseline-widely-available'`, browserslist queries, or `false` to disable
+   * lowering. Falls back to the top-level `target`, then to `@sanity/browserslist-config` (see
+   * above).
    */
   target?: string | string[] | false
   /**
@@ -513,8 +516,8 @@ export interface PackageOptions extends Pick<
   /**
    * Enables `@sanity/pandacss-tsdown-plugin`, the library-build companion of `@pandacss/vite`
    * for [Panda CSS](https://panda-css.com) packages: it loads `panda.config.ts`, rewrites the
-   * `css()`/`cva()`/pattern/recipe calls of the sources the config covers into static class
-   * names (so the published JavaScript carries no Panda runtime), and extracts the generated
+   * statically resolvable `css()`/`cva()`/pattern/recipe calls of the sources the config covers
+   * into class names (the others keep their runtime calls), and extracts the generated
    * stylesheet into a separate file, lowered with `lightningcss`. CSS is left unminified unless
    * `minify: true` is set, and the lowering targets resolve exactly like
    * {@link PackageOptions.vanillaExtract | `vanillaExtract`}'s — see
@@ -811,17 +814,23 @@ async function resolvePackageConfig(
     const panda = options.panda === true ? {} : options.panda
     // Each CSS pipeline emits its own stylesheet and claims its export subpath; two pipelines
     // writing the same file would overwrite each other's CSS (neither merges the other's), so
-    // a shared effective file name is a configuration error rather than a silent loss
-    const pandaFileName = panda.fileName ?? 'bundle.css'
+    // a shared effective file name is a configuration error rather than a silent loss. Names
+    // are compared as paths, so `./bundle.css` and `bundle.css` are the same file.
+    const pandaFileName = normalizeCssFileName(panda.fileName ?? 'bundle.css')
     if (options.vanillaExtract) {
       const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
-      if ((vanillaExtract.fileName ?? 'bundle.css') === pandaFileName) {
+      if (normalizeCssFileName(vanillaExtract.fileName ?? 'bundle.css') === pandaFileName) {
         throw new Error(
           `\`panda\` and \`vanillaExtract\` both extract their CSS into "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
         )
       }
     }
-    if (options.css && (options.css.fileName ?? 'style.css') === pandaFileName) {
+    // With `css.splitting`, `@tsdown/css` names its stylesheets after the chunks instead
+    if (
+      options.css &&
+      !options.css.splitting &&
+      normalizeCssFileName(options.css.fileName ?? 'style.css') === pandaFileName
+    ) {
       throw new Error(
         `\`panda\` and \`css\` both write their CSS to "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
       )
@@ -834,23 +843,42 @@ async function resolvePackageConfig(
     // `vanillaExtract`: the conditional CSS export pattern, written through this config's
     // `exports` option (which the plugin's `tsdownConfig` hook composes into).
     const [{pandacssPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
-      import('@sanity/pandacss-tsdown-plugin'),
+      // An optional peer dependency: only the packages that use Panda install it
+      import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
+        throw new Error('`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.', {cause})
+      }),
       import('./cssLoweringTargets.ts'),
     ])
 
-    const lightningcss = await resolveCssLoweringTargets({
-      cssTarget: panda.target,
-      target,
-      lightningcss: panda.lightningcss,
-    })
-
+    // The automatic targets depend on the final config's `target`, which a config composed
+    // after this one (`mergeConfig()`) may still override, and which tsdown resolves (from
+    // `engines.node` when it is unset, with its aliases expanded). So they are resolved once
+    // tsdown resolved the config, into the `lightningcss` options the plugin reads when it
+    // emits the stylesheet (every published version of the plugin does). They are only set
+    // where the effective target names no browsers (or is a query or alias), so an explicit
+    // `panda.target`, or the final `target` when it names browsers, still decides otherwise.
+    const lightningcss = {...panda.lightningcss}
+    let targetDisabled = false
+    const pandaTargetsPlugin: TsdownPlugin = {
+      name: 'sanity:panda-css-targets',
+      tsdownConfig(config) {
+        // tsdown resolves `target: false` to no target at all, which would read as unset
+        targetDisabled = config.target === false
+      },
+      async tsdownConfigResolved(config) {
+        const resolved = await resolveCssLoweringTargets({
+          cssTarget: panda.target,
+          target: targetDisabled ? false : config.target,
+          lightningcss: panda.lightningcss,
+        })
+        // Reset on every resolution: a plugin instance can outlive one (repeated `build()`s)
+        if (resolved?.targets) lightningcss.targets = resolved.targets
+        else delete lightningcss.targets
+      },
+    }
     plugins.push(
-      pandacssPlugin({
-        inject: true,
-        exports: {nodeCompat: true},
-        ...panda,
-        lightningcss,
-      }),
+      pandacssPlugin({inject: true, exports: {nodeCompat: true}, ...panda, lightningcss}),
+      pandaTargetsPlugin,
     )
   }
 
@@ -1031,6 +1059,11 @@ const CIRCULAR_DEPENDENCY_PREFIX = 'Circular dependency: '
  * 136 cycle warnings were declaration-only. A cycle that includes even one runtime module is
  * left alone.
  */
+/** A CSS pipeline's `fileName` as a path in the output directory, for comparing two of them. */
+function normalizeCssFileName(fileName: string): string {
+  return path.posix.normalize(fileName.replaceAll('\\', '/'))
+}
+
 function isDtsCircularDependencyWarning(message: string): boolean {
   // The message arrives pre-formatted, with a color-coded `[CIRCULAR_DEPENDENCY] ` code prefix
   // and a trailing newline

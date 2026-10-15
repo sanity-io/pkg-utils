@@ -1,4 +1,5 @@
 import browserslistConfig from '@sanity/browserslist-config'
+import {esbuildTargetToLightningCSS} from '@sanity/vanilla-extract-tsdown-plugin'
 import browserslist from 'browserslist'
 import {browserslistToTargets} from 'lightningcss'
 import {describe, expect, test} from 'vitest'
@@ -44,6 +45,46 @@ describe('resolveCssLoweringTargets', () => {
       targets: browserslistToTargets(browserslist(['> 0.5%', 'last 2 versions'])),
     })
     expect(browserslistToTargets(browserslist('defaults'))).not.toEqual(sanityTargets)
+  })
+
+  test("resolves tsdown's `baseline-widely-available` alias like tsdown does", async () => {
+    // The pipelines convert their own `target` without expanding the alias, so the expanded
+    // browsers are passed explicitly — instead of the alias reaching browserslist, which
+    // rejects it, and falling back to `@sanity/browserslist-config`
+    const baseline = esbuildTargetToLightningCSS([
+      'chrome111',
+      'edge111',
+      'firefox114',
+      'safari16.4',
+      'ios16.4',
+    ])
+    for (const [cssTarget, target] of [
+      ['baseline-widely-available', undefined],
+      [undefined, 'baseline-widely-available'],
+      [undefined, 'node22,baseline-widely-available'],
+    ] as const) {
+      await expect(
+        resolveCssLoweringTargets({cssTarget, target, lightningcss: undefined}),
+      ).resolves.toEqual({targets: baseline})
+    }
+  })
+
+  test('keeps the lowest version of a browser named next to the alias, in either order', async () => {
+    // Chrome 61 must win over the alias's Chrome 111, wherever the alias is in the list
+    for (const cssTarget of [
+      ['chrome61', 'baseline-widely-available'],
+      ['baseline-widely-available', 'chrome61'],
+      'chrome61,baseline-widely-available',
+    ]) {
+      await expect(
+        resolveCssLoweringTargets({cssTarget, target: undefined, lightningcss: undefined}),
+      ).resolves.toEqual({
+        targets: {
+          ...esbuildTargetToLightningCSS(['edge111', 'firefox114', 'safari16.4', 'ios16.4']),
+          chrome: 61 << 16,
+        },
+      })
+    }
   })
 
   test('falls back to @sanity/browserslist-config for targets that name no browsers', async () => {

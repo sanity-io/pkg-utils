@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import {createNodeDriver} from '@pandacss/compiler'
 import {
@@ -12,12 +13,14 @@ import {
 } from '@pandacss/transformer'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {PackageJsonWithPath, ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
+import {expandBaselineTarget, resolveComma, toArray} from 'tsdown/internal'
 import {
   cssShimDtsFileName,
   cssShimDtsSource,
   cssShimFileName,
   cssShimSource,
 } from './cssShimFileName.ts'
+import {directoryPattern} from './directoryPattern.ts'
 import {createConditionalCssExport, createCssExport, insertCssExport} from './exports.ts'
 import {resolveCssExportOptions, type CssExportsOptions} from './exportsOptions.ts'
 import {esbuildTargetToLightningCSS} from './targets.ts'
@@ -85,6 +88,9 @@ const RE_DTS = /\.d\.[cm]?ts$/
  */
 const RE_UNSUPPORTED_GLOB = /[?*+@!]\(|\[[!^]|\{[^{}]*\.\.[^{}]*\}/
 
+/** Matches a `.` or `..` path segment of a (POSIX-form) glob. */
+const RE_DOT_SEGMENT = /(?:^|\/)\.\.?(?:\/|$)/
+
 /** Matches a Windows drive at the start of a glob (`C:/…` or `C:\…`), i.e. an absolute pattern. */
 const RE_WINDOWS_DRIVE = /^[A-Za-z]:[\\/]/
 
@@ -115,6 +121,7 @@ export interface Options {
   /**
    * The project root the Panda config is discovered from (`panda.config.ts` upward), and the
    * directory its `include`/`exclude` globs are relative to — like `cwd` in `@pandacss/vite`.
+   * A relative path is resolved against tsdown's `cwd` (or rolldown's, outside tsdown).
    * @defaultValue tsdown's resolved `cwd` (the directory of the `tsdown.config.ts`)
    */
   cwd?: string
@@ -124,14 +131,14 @@ export interface Options {
    */
   configPath?: string
   /**
-   * Run Panda's codegen when a build starts (and again after the config reloads in watch
+   * Run Panda's codegen before the build starts (and again after a config change in watch
    * mode), writing the `styled-system` artifacts of the loaded config before any module is
    * transformed — like `@pandacss/vite` does when Vite's config is resolved. The generated
-   * types, runtime and class name hashes the sources import then always match the config the
+   * types, runtime and class name hashes the sources import then match the config the
    * stylesheet is extracted with, even when the package's `prepare` script (`panda codegen`)
-   * ran against an older config. Panda only writes the files whose content changed, so the
-   * builds a host runs (one per output format) and watch rebuilds leave current artifacts
-   * untouched.
+   * ran against an older config. Under tsdown it runs once for the builds of every format,
+   * after tsdown's `clean` step, so `clean` may list the generated directory. Panda only
+   * writes the files whose content changed, so current artifacts stay untouched.
    *
    * Set to `false` when codegen is managed elsewhere.
    * @defaultValue true
@@ -139,17 +146,19 @@ export interface Options {
   codegen?: boolean
   /**
    * Where the codegen artifacts are written, relative to {@link Options.cwd | `cwd`} — like
-   * `outdir` in `@pandacss/vite`.
+   * `outdir` in `@pandacss/vite`. It replaces the config's `outdir` when the config loads, so
+   * what Panda derives from it follows too, like the default import map that recognizes the
+   * calls imported from the generated modules.
    * @defaultValue the `outdir` of the Panda config
    */
   outdir?: string
   /**
    * Rewrite the `css()`, `cva()`, pattern and recipe calls of the modules Panda's `include`
    * globs cover into static class name strings with `@pandacss/transformer`, so the published
-   * JavaScript neither bundles nor imports Panda's runtime (`styled-system/css`, …) — the same
+   * JavaScript doesn't need Panda's runtime (`styled-system/css`, …) for them — the same
    * rewrite as `transform: true` in `@pandacss/vite`, which defaults to `false` there because
    * applications keep the runtime around. A call the transformer cannot resolve statically is
-   * left as is (with a warning) and keeps importing the runtime.
+   * left as is (with a warning) and keeps importing the runtime, which is then bundled.
    *
    * Set to `false` to only extract the CSS; the modules then keep their runtime calls, and the
    * runtime is bundled into the output through the package's `imports` map.
@@ -177,8 +186,8 @@ export interface Options {
   minify?: boolean
   /**
    * The target environment for CSS syntax lowering. Accepts esbuild-style target strings
-   * (e.g. `'chrome90'`, `'safari16.2'`), like `css.target` in `@tsdown/css`. Set to `false`
-   * to disable syntax lowering entirely.
+   * (e.g. `'chrome90'`, `'safari16.2'`) and tsdown's `'baseline-widely-available'` alias,
+   * like `css.target` in `@tsdown/css`. Set to `false` to disable syntax lowering entirely.
    *
    * Defaults to tsdown's resolved top-level `target`, forwarded through
    * {@link PandacssPluginApi.setBuildContext} from the plugin's `tsdownConfigResolved` hook.
@@ -194,6 +203,10 @@ export interface Options {
    * `@tsdown/css`. `lightningcss.targets` takes precedence over the esbuild-style
    * {@link Options.target | `target`}, and `lightningcss.unusedSymbols` extends the
    * {@link MADE_WITH_PANDA_SYMBOL | `--made-with-panda`} entry the plugin always removes.
+   *
+   * The object is read when the stylesheet is emitted, not copied when the plugin is created,
+   * so a host may still set its `targets` before the build starts — `@sanity/tsdown-config`
+   * does, from the final config's `target`.
    */
   lightningcss?: LightningCSSOptions
   /**
@@ -301,22 +314,23 @@ const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DT
  * the library build only.
  *
  * It loads the Panda config (`panda.config.ts`) with Panda's node driver, scans the sources the
- * config's `include`/`exclude` globs cover, rewrites their `css()`/`cva()`/pattern/recipe calls
- * into static class names with `@pandacss/transformer` (so the published JavaScript carries no
- * Panda runtime), and emits the generated stylesheet as a single `lightningcss`-optimized CSS
+ * config's `include`/`exclude` globs cover, rewrites their statically resolvable
+ * `css()`/`cva()`/pattern/recipe calls into class names with `@pandacss/transformer` (the
+ * others keep their runtime calls, with a warning), and emits the generated stylesheet as a
+ * single `lightningcss`-optimized CSS
  * file — optionally lowered to the build's `target`, minified, injected into the entry chunks,
  * and published as a conditional `"./bundle.css"` export subpath, following the same
  * architecture (and option vocabulary) as `@tsdown/css` and
  * `@sanity/vanilla-extract-tsdown-plugin`.
  *
- * Like `@pandacss/vite`, it also runs Panda's codegen when a build starts, so the generated
+ * Like `@pandacss/vite`, it also runs Panda's codegen before the build starts, so the generated
  * `styled-system` directory the sources import is in sync with the config the stylesheet is
  * extracted with. Packages keep their `prepare` script (`panda codegen`) for the type checker,
  * the test runner and the editor, which need the artifacts before any build runs.
  * @public
  */
 export function pandacssPlugin(options: Options = {}): PandacssPlugin {
-  const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
+  const fileName = normalizeFileName(options.fileName ?? DEFAULT_CSS_FILE_NAME)
   const minify = options.minify ?? false
   const transformEnabled = options.transform ?? true
   const codegenEnabled = options.codegen ?? true
@@ -329,6 +343,14 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let packageName: string | undefined
   /** The host-resolved default working directory (e.g. tsdown's `cwd`). */
   let contextCwd: string | undefined
+  /** The bundler's working directory (rolldown's `cwd` input option), recorded by `options`. */
+  let inputCwd: string | undefined
+  /**
+   * Whether the host resolves symlinks in module ids (rolldown's `resolve.symlinks`, on by
+   * default), recorded before the driver is created: by `options`, and by tsdown's
+   * `build:before` hook, which runs first.
+   */
+  let resolveSymlinks = true
   /** The host-resolved output directory (tsdown's `outDir`), excluded from watching. */
   let contextOutDir: string | undefined
 
@@ -338,10 +360,17 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
    */
   let driverPromise: Promise<PandaDriver> | undefined
   let driver: PandaDriver | undefined
+  /** The Panda config file, also when the driver loads it through the `outdir` override. */
+  let configFile: string | undefined
   let transformer: SourceTransformer | undefined
   let transformerCompiler: PandaDriver['compiler'] | undefined
   /** Whether a build already ran, so a later `buildStart` (watch mode) reloads the config. */
   let built = false
+  /**
+   * The codegen tsdown's `build:before` hook runs once for the builds of every format; when
+   * set, the rolldown `options` hook leaves the first codegen to it.
+   */
+  let codegenBeforeBuilds: Promise<void> | undefined
 
   /**
    * The ids of the modules with Panda styles — rewritten by the transformer, or left to the
@@ -353,14 +382,70 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   /** Diagnostics already reported, so repeated scans don't warn about the same thing again. */
   const reportedDiagnostics = new Set<string>()
 
-  function resolveCwd(inputCwd?: string): string {
-    return path.resolve(options.cwd ?? contextCwd ?? inputCwd ?? process.cwd())
+  function resolveCwd(): string {
+    // A relative `cwd` option is relative to the host's working directory, like tsdown's own
+    // paths — which isn't necessarily the process's (tsdown's `cwd` option, workspaces).
+    const base = path.resolve(contextCwd ?? inputCwd ?? process.cwd())
+    return resolveProjectPath(options.cwd === undefined ? base : path.resolve(base, options.cwd))
+  }
+
+  /**
+   * A project path in the form module ids take: real, unless the host keeps symlinks in them
+   * (rolldown's `resolve.symlinks: false`). The project root takes that form too, so the
+   * transform filter and Panda's matcher compare like with like under a symlinked root (macOS's
+   * `/var` and `/tmp`, a linked workspace).
+   */
+  function resolveProjectPath(file: string): string {
+    return resolveSymlinks ? realpathOrSelf(file) : file
+  }
+
+  async function createDriver(cwd: string): Promise<PandaDriver> {
+    const configured = await createNodeDriver({cwd, configPath: options.configPath})
+    configFile = configured.configPath
+    const {outdir} = options
+    if (outdir === undefined) return configured
+    // Panda derives defaults from `outdir` while it loads the config — notably the import map
+    // that recognizes the generated modules the sources import — so the override has to be
+    // part of the loaded config. It is loaded through a file that re-exports the config with
+    // the override, which `reload()` reads again (picking up the config's own changes, since
+    // it is bundled as a dependency).
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sanity-pandacss-tsdown-plugin-'))
+    return withOutdirConfig(dir, configured.configPath, outdir, (file) =>
+      createNodeDriver({cwd, configPath: file}),
+    )
+  }
+
+  /** Reloads the config, which Panda reads from the path it first loaded it from. */
+  async function reloadDriver(currentDriver: PandaDriver): Promise<{hasChanged: boolean}> {
+    const {outdir} = options
+    if (outdir === undefined || configFile === undefined) return currentDriver.reload()
+    // The directory of the `outdir` override was removed after the config loaded: it is
+    // created again, failing rather than using one somebody else created there in the meantime
+    const dir = path.dirname(currentDriver.configPath)
+    try {
+      fs.mkdirSync(dir, {mode: 0o700})
+    } catch (error) {
+      throw new Error(
+        `[pandacss] Unable to create the private directory "${dir}" to reload the Panda config with the \`outdir\` override.`,
+        {cause: error},
+      )
+    }
+    return withOutdirConfig(dir, configFile, outdir, () => currentDriver.reload())
   }
 
   async function resolveDriver(cwd: string): Promise<PandaDriver> {
-    driverPromise ??= createNodeDriver({cwd, configPath: options.configPath})
+    driverPromise ??= createDriver(cwd)
     driver = await driverPromise
     return driver
+  }
+
+  /** The directory codegen writes to: the `outdir` option, or the config's. */
+  function resolveGeneratedDir(currentDriver: PandaDriver): string {
+    return path.resolve(resolveCwd(), currentDriver.getOutdir(options.outdir))
+  }
+
+  function runCodegen(currentDriver: PandaDriver): void {
+    currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
   }
 
   function resolveTransformer(currentDriver: PandaDriver): SourceTransformer {
@@ -374,15 +459,16 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
   function resolveTargets(): Targets | undefined {
     // Matching `@tsdown/css`: explicit `lightningcss.targets` win, then the esbuild-style
-    // `target` (the option, falling back to the host-resolved context target) is converted.
-    // Browserless targets (e.g. tsdown's common `target: 'node20'`, which speaks to the JS
-    // runtime) convert to nothing, skipping syntax lowering — `@sanity/tsdown-config` layers
-    // the `@sanity/browserslist-config` default on top through `lightningcss.targets`.
+    // `target` (the option, falling back to the host-resolved context target) is converted,
+    // with tsdown's `baseline-widely-available` alias expanded like tsdown expands it.
+    // Targets that name no browsers (e.g. tsdown's common `target: 'node20'`, which speaks to
+    // the JS runtime) convert to nothing, skipping syntax lowering — `@sanity/tsdown-config`
+    // layers the `@sanity/browserslist-config` default on top through `lightningcss.targets`.
     if (lightningcss?.targets) return lightningcss.targets
     if (options.target === false) return undefined
     const target = options.target ?? contextTarget
     if (target === undefined) return undefined
-    return esbuildTargetToLightningCSS(target)
+    return esbuildTargetToLightningCSS(expandBaselineTarget(resolveComma(toArray(target))))
   }
 
   function resolvePackageName(entryModuleId: string | null): string {
@@ -439,14 +525,18 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       // again when they change — also under `experimental.incrementalBuild`, which otherwise
       // reuses the transforms of the modules whose own files did not change — while
       // `buildStart` only makes them trigger a rebuild.
-      this.addWatchFile(driver.configPath)
+      this.addWatchFile(configFile ?? driver.configPath)
       for (const dependency of driver.configDependencies) {
         this.addWatchFile(driver.resolvePath(dependency))
       }
     }
     // The files the config doesn't cover aren't scanned by Panda — rewriting them would
-    // produce class names the stylesheet doesn't have
-    if (!driver.isSourceFile(filePath)) return undefined
+    // produce class names the stylesheet doesn't have. A module a reloaded config no longer
+    // covers stops counting as styled, too.
+    if (!driver.isSourceFile(filePath)) {
+      pandaModules.delete(id)
+      return undefined
+    }
 
     // Parse the module from the code rolldown hands over (which may differ from the file on
     // disk after other plugins' transforms), so the stylesheet matches the published code.
@@ -491,7 +581,18 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       if (result.changed) transformed = {code: result.code, map: result.map}
     }
 
+    if (!usesStyles) {
+      // The parse report doesn't count pattern, config recipe or `token()` calls, so a module
+      // using only those looks style-free — and without the transform nothing else notices
+      // them. The extraction lists every call Panda matched.
+      const extracted = driver.compiler.extractFileSource(filePath, code)
+      usesStyles = extracted.calls.length > 0 || extracted.jsx.length > 0
+    }
+
+    // Deleted as well as added: in watch mode a module can stop using Panda styles, and its
+    // entry chunks then no longer need the CSS import
     if (usesStyles) pandaModules.add(id)
+    else pandaModules.delete(id)
     return transformed
   }
 
@@ -516,12 +617,20 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // `renderChunk` through rolldown's native MagicString (`meta.magicString`), which keeps
     // sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
-      const cwd = resolveCwd(inputOptions.cwd)
+      if (inputOptions.cwd !== undefined) inputCwd = inputOptions.cwd
+      resolveSymlinks = inputOptions.resolve?.symlinks !== false
+      const cwd = resolveCwd()
       const currentDriver = await resolveDriver(cwd)
+      // Outside tsdown (whose `build:before` hook already ran it), the first codegen runs here,
+      // ahead of every plugin's `buildStart`: rolldown runs those in parallel, and a
+      // declaration plugin reads the generated types from its own
+      if (codegenEnabled && codegenBeforeBuilds === undefined) runCodegen(currentDriver)
       const filter = this.meta.watchMode
         ? CONSERVATIVE_TRANSFORM_FILTER
-        : createTransformFilter(currentDriver, cwd)
-      plugin.transform = filter ? {filter, handler: transformHandler} : {handler: transformHandler}
+        : createTransformFilter(currentDriver, cwd, options.outdir)
+      plugin.transform = filter
+        ? {order: 'pre', filter, handler: transformHandler}
+        : {order: 'pre', handler: transformHandler}
 
       let nextOptions = inputOptions
       if (this.meta.watchMode) {
@@ -530,8 +639,11 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // `styled-system`, and the output directory the host resolved — may sit inside them
         // (e.g. `include: ['./**/*.tsx']`), and every write there would trigger the next
         // rebuild: exclude them from watching.
-        const excluded = [currentDriver.getOutdir(options.outdir)]
-        if (contextOutDir !== undefined) excluded.push(path.resolve(cwd, contextOutDir))
+        const excluded = [resolveGeneratedDir(currentDriver)]
+        // In the form of the watched directories, which come from the project root
+        if (contextOutDir !== undefined) {
+          excluded.push(resolveProjectPath(path.resolve(cwd, contextOutDir)))
+        }
         // `watch: false` is rolldown's way to disable watching, and nothing to add to then
         if (inputOptions.watch !== false) {
           const previous = inputOptions.watch?.exclude
@@ -556,21 +668,23 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       return nextOptions === inputOptions ? undefined : nextOptions
     },
 
-    // Regenerate the `styled-system` artifacts and scan every source the config covers before
-    // any module is transformed. The codegen keeps the generated types, runtime and class name
-    // hashes in sync with the config the stylesheet is extracted with (Panda only writes the
-    // files whose content changed, so a current directory stays untouched); the scan matters
-    // because the transformer folds tokens and style objects across files, so a module's
-    // dependencies must be known when it is rewritten, regardless of the order rolldown
-    // discovers modules in. The stylesheet then covers the whole `include` set, like
-    // `panda cssgen` — and like `@pandacss/vite`, which runs codegen and scans the project the
-    // same way when Vite's config is resolved.
+    // Scan every source the config covers before any module is transformed: the transformer
+    // folds tokens and style objects across files, so a module's dependencies must be known
+    // when it is rewritten, regardless of the order rolldown discovers modules in. The
+    // stylesheet then covers the whole `include` set, like `panda cssgen` — and like
+    // `@pandacss/vite`, which scans the project the same way when Vite's config is resolved.
+    // The first codegen already ran (in tsdown's `build:before` hook or the `options` hook);
+    // a watch rebuild regenerates after a config change, so the generated types, runtime and
+    // class name hashes stay in sync with the config the stylesheet is extracted with.
     async buildStart() {
       const currentDriver = await resolveDriver(resolveCwd())
       if (built && this.meta.watchMode) {
         // A rebuild may follow a config change: reload it (which swaps the compiler when it
-        // changed) so the codegen, the scan and the transforms below use the current config
-        await currentDriver.reload()
+        // changed) so the codegen, the scan and the transforms below use the current config.
+        // Panda only writes the files whose content changed, so a current directory stays
+        // untouched either way.
+        const {hasChanged} = await reloadDriver(currentDriver)
+        if (hasChanged && codegenEnabled) runCodegen(currentDriver)
       }
       built = true
 
@@ -579,9 +693,6 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         currentDriver.designSystemDiagnostics,
         'while loading the design system',
       )
-      if (codegenEnabled) {
-        currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
-      }
       const cwd = resolveCwd()
       for (const report of currentDriver.parseFiles()) {
         warnDiagnostics(
@@ -602,7 +713,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         for (const dir of targets.dirs) {
           this.addWatchFile(currentDriver.resolvePath(dir))
         }
-        this.addWatchFile(currentDriver.configPath)
+        this.addWatchFile(configFile ?? currentDriver.configPath)
         for (const dependency of currentDriver.configDependencies) {
           this.addWatchFile(currentDriver.resolvePath(dependency))
         }
@@ -631,8 +742,11 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       },
     },
 
-    // Replaced in the `options` hook with the filtered version once the config is known
-    transform: {handler: transformHandler},
+    // Replaced in the `options` hook with the filtered version once the config is known. Runs
+    // ahead of the other plugins' transforms (like `enforce: 'pre'` on `@pandacss/transformer`'s
+    // own bundler plugin): Panda extracts from the authored source, which a plugin lowering
+    // JSX first (`React.createElement(Box, {color: 'brand'})`) would hide from it.
+    transform: {order: 'pre', handler: transformHandler},
 
     // Inject the CSS import into entry chunks that reach Panda styles: relative by default
     // (like `css.inject` in `@tsdown/css`), or the self-referential bare specifier when the
@@ -749,12 +863,35 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       }
     },
 
-    // With `exports`, write the `./<fileName>` export to `package.json` (and, through tsdown,
-    // to `publishConfig.exports`) by composing into `exports.customExports` before the config
-    // is resolved — the tsdown analogue of a Vite plugin extending the user config from its
-    // `config` hook. tsdown's `exports` feature is opt-in, so nothing is written (and the
-    // export has to be maintained manually) when it's not enabled.
+    // Compose into the user config before it is resolved — the tsdown analogue of a Vite plugin
+    // extending the user config from its `config` hook:
+    // - With `codegen`, the first codegen joins tsdown's hooks as a `build:before` hook. tsdown
+    //   cleans after resolving the config (and `clean` may list the generated directory), then
+    //   calls `build:before` before any build of a format starts — including the separate CJS
+    //   declaration build, which runs without the user plugins and reads the generated types.
+    //   It is registered ahead of the user's own hooks, so theirs see the generated files.
+    // - With `exports`, write the `./<fileName>` export to `package.json` (and, through tsdown,
+    //   to `publishConfig.exports`) through `exports.customExports`. tsdown's `exports` feature
+    //   is opt-in, so nothing is written (and the export has to be maintained manually) when
+    //   it's not enabled.
     tsdownConfig(config: UserConfig) {
+      if (codegenEnabled) {
+        // Every `build()` (and watch restart) resolves the config again and may clean the
+        // generated directory again, so the deduplication only spans one resolved config
+        codegenBeforeBuilds = undefined
+        const userHooks = config.hooks
+        config.hooks = async (hooks) => {
+          // Every format calls it; the first runs the codegen, and all of them wait for it
+          hooks.hook('build:before', async ({buildOptions}) => {
+            resolveSymlinks = buildOptions.resolve?.symlinks !== false
+            codegenBeforeBuilds ??= resolveDriver(resolveCwd()).then(runCodegen)
+            await codegenBeforeBuilds
+          })
+          if (typeof userHooks === 'function') await userHooks(hooks)
+          else if (userHooks) hooks.addHooks(userHooks)
+        }
+      }
+
       if (!exportsCss) return undefined
       const exportsOption = config.exports
       if (!exportsOption) return undefined
@@ -770,19 +907,19 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
       const previousCustomExports = exportsOptions.customExports
       exportsOptions.customExports = async (exportsMap, context) => {
-        // Apply a pre-existing `customExports` first (both its function and record forms,
-        // mirroring how tsdown itself applies them), then insert the CSS export
-        const base =
-          typeof previousCustomExports === 'function'
-            ? await previousCustomExports(exportsMap, context)
-            : previousCustomExports
-              ? {...exportsMap, ...previousCustomExports}
-              : exportsMap
+        // The CSS export goes in first, and a pre-existing `customExports` (its function and
+        // record forms, applied like tsdown applies them) runs on the result: whatever it writes
+        // for the CSS subpath (to add conditions, say) wins, and passing the map through keeps
+        // the CSS export
         const outDir = resolveOutDir(config, context, fileName)
         const cssExport = nodeCompat
           ? createConditionalCssExport(fileName, outDir)
           : createCssExport(fileName, outDir)
-        return insertCssExport(base, `./${fileName}`, cssExport)
+        const withCssExport = insertCssExport(exportsMap, `./${fileName}`, cssExport)
+        if (typeof previousCustomExports === 'function') {
+          return previousCustomExports(withCssExport, context)
+        }
+        return previousCustomExports ? {...withCssExport, ...previousCustomExports} : withCssExport
       }
       config.exports = exportsOptions
       return undefined
@@ -792,21 +929,14 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // syntax lowering target, like `css.target` in `@tsdown/css`), the package name (for the
     // self-referential import injected by `inject` with `exports`), and the working directory
     // the Panda config is discovered from. The hook fires once per output format with the
-    // same values, and tsdown awaits it before any build starts — which is why the first
-    // codegen runs here as well: for `format: 'cjs'` with declarations, tsdown runs a separate
-    // declaration build without the user plugins (so without this plugin's `buildStart`), and
-    // that build must find the generated types already in place.
-    async tsdownConfigResolved(config: ResolvedConfig) {
+    // same values. The first codegen doesn't run here: tsdown calls it before its `clean` step.
+    tsdownConfigResolved(config: ResolvedConfig) {
       plugin.api.setBuildContext({
         target: config.target,
         packageName: config.pkg?.name,
         cwd: config.cwd,
         outDir: config.outDir,
       })
-      if (codegenEnabled) {
-        const currentDriver = await resolveDriver(resolveCwd())
-        currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
-      }
     },
   }
 
@@ -820,13 +950,28 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
  * decides per module); a glob the converter does not support falls back to the
  * {@link CONSERVATIVE_TRANSFORM_FILTER}, which can never reject a module Panda covers.
  */
-function createTransformFilter(driver: PandaDriver, cwd: string): TransformHookFilter | undefined {
+function createTransformFilter(
+  driver: PandaDriver,
+  cwd: string,
+  outdir: string | undefined,
+): TransformHookFilter | undefined {
   const include = readGlobs(driver.config['include'])
   const exclude = readGlobs(driver.config['exclude'])
   if (include.length === 0 && exclude.length === 0) return undefined
 
   const includePatterns: RegExp[] = []
   const excludePatterns: RegExp[] = []
+  // The `outdir` option may point inside the `include` globs: Panda's matcher rejects the
+  // generated modules, and the native filter keeps them from reaching the handler at all
+  if (outdir !== undefined) {
+    const generatedDir = path.resolve(cwd, driver.getOutdir(outdir))
+    excludePatterns.push(
+      new RegExp(
+        `^${escapeRegExp(generatedDir.replaceAll('\\', '/'))}/`,
+        process.platform === 'win32' ? 'i' : '',
+      ),
+    )
+  }
   for (const pattern of include) {
     // A negated include is an exclude
     const negated = pattern.startsWith('!')
@@ -862,8 +1007,9 @@ function readGlobs(value: unknown): string[] {
  * syntax: the directory it is resolved against is matched literally, brackets and all. The
  * syntax covered is the fast-glob subset Panda configs use — `**`, `*`, `?`, `{a,b}`
  * alternation and plain `[…]` classes; a glob using anything else (extglob groups, negated
- * classes, brace ranges, a globstar at a brace boundary) returns `undefined`, so the caller can
- * leave the native filter unscoped instead of guessing.
+ * classes, brace ranges, a globstar at a brace boundary, `.`/`..` segments past the leading
+ * ones) returns `undefined`, so the caller can leave the native filter unscoped instead of
+ * guessing.
  */
 function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   if (RE_UNSUPPORTED_GLOB.test(glob)) return undefined
@@ -889,6 +1035,9 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
       }
     }
   }
+  // A `.` or `..` segment past the leading ones (`src/../lib/**/*.ts`) names a directory the
+  // module ids never spell out, so a RegExp would reject files Panda's matcher covers
+  if (RE_DOT_SEGMENT.test(pattern)) return undefined
 
   // The base ends with exactly one `/`, also when it is a root (`/`, `C:/`) — which already
   // ends with one, so that slash is dropped first
@@ -984,17 +1133,47 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
 }
 
 /**
- * A `watch.exclude` pattern for a directory and everything in it, matching the path with either
- * separator (rolldown hands watch paths over as the OS spells them).
+ * Loads a Panda config through a file that re-exports it with another `outdir`, written into a
+ * directory the caller just created for this, and removes the directory once Panda loaded it.
+ * The file imports the config by its absolute path: bundling resolves the config's own imports
+ * from there. A promise is awaited like the config's own default export would be.
+ *
+ * The directory is in the OS temp directory, and only the current user can access it: `mkdtemp`
+ * and `mkdir` with mode `0o700` create it, and fail rather than use an existing one. Another
+ * user could pre-create a predictable path there, with the config a symlink to a file the build
+ * would then overwrite. The file only exists while Panda loads it, so nothing is left behind
+ * however the process ends.
  */
-function directoryPattern(dir: string): RegExp {
-  const segments = path
-    .resolve(dir)
-    .split(/[\\/]+/)
-    .filter((segment) => segment !== '')
-    .map(escapeRegExp)
-  const prefix = path.isAbsolute(dir) && !/^[A-Za-z]:/.test(segments[0] ?? '') ? '[\\\\/]' : ''
-  return new RegExp(`^${prefix}${segments.join('[\\\\/]')}(?:[\\\\/]|$)`)
+async function withOutdirConfig<T>(
+  dir: string,
+  configPath: string,
+  outdir: string,
+  load: (file: string) => Promise<T>,
+): Promise<T> {
+  try {
+    const file = path.join(dir, 'panda.config.mjs')
+    fs.writeFileSync(
+      file,
+      `import config from ${JSON.stringify(configPath.replaceAll('\\', '/'))}\n\nexport default Promise.resolve(config).then((resolved) => ({...resolved, outdir: ${JSON.stringify(outdir)}}))\n`,
+      {flag: 'wx'},
+    )
+    return await load(file)
+  } finally {
+    fs.rmSync(dir, {recursive: true, force: true})
+  }
+}
+
+/**
+ * The real path of a file or directory, resolving symlinks in the part of the path that exists
+ * (an output directory may not exist yet), or the path itself when nothing does.
+ */
+function realpathOrSelf(file: string): string {
+  try {
+    return fs.realpathSync(file)
+  } catch {
+    const parent = path.dirname(file)
+    return parent === file ? file : path.join(realpathOrSelf(parent), path.basename(file))
+  }
 }
 
 /** The parent of a POSIX-form directory, stopping at the filesystem root (`/`, `C:`). */
@@ -1033,7 +1212,18 @@ function resolveOutDir(
     }
   }
   outDir ??= path.resolve(cwd, config.outDir ?? 'dist')
-  return path.relative(pkgRoot, outDir).replaceAll('\\', '/')
+  const relativeOutDir = path.relative(pkgRoot, outDir)
+  // An export target must stay inside the package: Node rejects `./../elsewhere/bundle.css`
+  if (
+    relativeOutDir === '..' ||
+    relativeOutDir.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativeOutDir)
+  ) {
+    throw new Error(
+      `[pandacss] \`exports\` can only publish the stylesheet from inside the package, but it is written to "${outDir}", outside "${pkgRoot}". Move tsdown's \`outDir\` into the package, or disable \`exports\` and load the stylesheet another way.`,
+    )
+  }
+  return relativeOutDir.replaceAll('\\', '/')
 }
 
 /** The layer names of a Panda config: the defaults, with the config's `layers` renames applied. */
@@ -1189,7 +1379,31 @@ function prologueEnd(code: string): number {
  */
 function relativeImportPath(chunkFileName: string, cssFileName: string): string {
   const relativePath = path.posix.relative(path.posix.dirname(chunkFileName), cssFileName)
-  return relativePath.startsWith('.') ? relativePath : `./${relativePath}`
+  // Only `./` and `../` make a specifier relative: `.assets/bundle.css` would name a package
+  return relativePath.startsWith('../') ? relativePath : `./${relativePath}`
+}
+
+/**
+ * The `fileName` option as the emitted file's path inside the output directory: POSIX
+ * separators and no `./` prefix, so `./bundle.css` publishes the `./bundle.css` export subpath
+ * rather than `././bundle.css`. A path outside the output directory is rejected, since neither
+ * the export nor the injected import could address it.
+ */
+function normalizeFileName(fileName: string): string {
+  const normalized = path.posix.normalize(fileName.replaceAll('\\', '/'))
+  if (
+    normalized === '.' ||
+    normalized.endsWith('/') ||
+    normalized === '..' ||
+    normalized.startsWith('../') ||
+    path.posix.isAbsolute(normalized) ||
+    RE_WINDOWS_DRIVE.test(normalized)
+  ) {
+    throw new Error(
+      `[pandacss] \`fileName\` must name a file inside the output directory, like "bundle.css" or "assets/bundle.css", but got "${fileName}".`,
+    )
+  }
+  return normalized
 }
 
 /**

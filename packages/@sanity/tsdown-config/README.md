@@ -289,7 +289,9 @@ The Sanity defaults on top of the plugin's own:
 - The CSS syntax is transformed for the configured browsers — `panda.target`, then the top-level
   `target`, and when neither names browsers (e.g. `node20`) the
   [`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
-  browsers. Browserslist queries like `'defaults'` work too; `lightningcss.targets` wins over
+  browsers. The top-level `target` is read from the final config, so a `target` composed after
+  `defineConfig()` with `mergeConfig()` counts too. Browserslist queries like `'defaults'` and
+  tsdown's `'baseline-widely-available'` work as well; `lightningcss.targets` wins over
   everything and `target: false` disables the transform.
 - `minify` stays off; `transform` stays on (unlike in `@pandacss/vite`).
 
