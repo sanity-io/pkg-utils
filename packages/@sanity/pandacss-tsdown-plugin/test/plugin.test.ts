@@ -1560,17 +1560,21 @@ describe('unwrapCascadeLayers', () => {
     expect(unwrapCascadeLayers('@Layer a{.a{}}.top{}', new Set(['a']))).toBe('.a{}.top{}')
   })
 
-  test('with dotted layer names, removes the layers their segments start with', () => {
-    const layers = new Set(['panda.base'])
+  test('with layer names, keeps the order every declaration gives the removed layers', () => {
+    // `b` is declared first, so the rules of `a` still win
     expect(
       unwrapCascadeLayers(
-        '@layer panda.reset, panda.base;@layer panda.base{@layer s{.s{}}.b{}}@layer panda.reset{.r{}}@layer base{.x{}}',
-        layers,
+        '@layer b, kept, a;@layer a{.x{color:red}}@layer kept{.k{}}@layer b{.x{color:blue}}',
+        new Set(['a', 'b']),
       ),
-    ).toBe('@layer panda.reset;.s{}.b{}@layer panda.reset{.r{}}@layer base{.x{}}')
-    // Not a `base` block nested in a kept `panda` block
-    const nested = '@layer panda{@layer base{.b{}}.p{}}'
-    expect(unwrapCascadeLayers(nested, layers)).toBe(nested)
+    ).toBe('@layer kept;.x{color:blue}.x{color:red}@layer kept{.k{}}')
+    // A statement that only names kept layers stays as it is
+    expect(
+      unwrapCascadeLayers(
+        '@layer kept, other;@layer b{.b{}}@layer kept{.k{}}@layer a{.a{}}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('@layer kept, other;.b{}.a{}@layer kept{.k{}}')
   })
 
   test('keeps the comments ahead of the first rule there', () => {

@@ -23,9 +23,9 @@ const RE_SPECIAL_QUERY = /[?&](?:worker|sharedworker|raw|url)\b/
  *
  * In every CSS module, it removes the `@layer` blocks of those layers and their sublayers, and
  * their names from `@layer` statements, ordering the rules so that source order gives them the
- * precedence the layers gave them. Other layers stay as they are. A dotted name such as
- * `panda.base` matches where the layer's full name is written, as Panda writes it, but not a
- * `@layer base` block nested in a `@layer panda` block.
+ * precedence the layers gave them. Other layers stay as they are. The names are top-level layer
+ * names, which remove their sublayers too: a dotted name such as `panda.base` throws, and `panda`
+ * removes every `panda.*` layer.
  *
  * It runs after `@pandacss/vite` has added Panda's CSS to the stylesheet that declares the layers,
  * wherever it is registered (`@pandacss/vite`'s transform is `order: 'pre'`), and before Vite's own
@@ -34,6 +34,13 @@ const RE_SPECIAL_QUERY = /[?&](?:worker|sharedworker|raw|url)\b/
  * @public
  */
 export function removeCascadeLayers(layerNames: readonly string[]): Plugin {
+  for (const name of layerNames) {
+    if (name.includes('.')) {
+      throw new Error(
+        `[pandacss] \`removeCascadeLayers()\` takes top-level layer names, not the sublayer \`${name}\`: a sublayer's order depends on the layers it is declared next to, so it isn't removed on its own. Pass \`${name.slice(0, name.indexOf('.'))}\` to remove it with its parent layer and every other sublayer.`,
+      )
+    }
+  }
   const layers = new Set(layerNames)
   return {
     name: 'sanity:remove-cascade-layers',

@@ -45,9 +45,6 @@ const encoder = new TextEncoder()
 
 const RE_LAYER_KEYWORD = /@layer/i
 
-/** The names of the layers to remove, as segments (`panda.base` is `['panda', 'base']`). */
-type LayerFilter = readonly (readonly string[])[]
-
 /**
  * Removes every `@layer` block and statement from a stylesheet, ordering the rules so that source
  * order alone gives them the precedence the layers gave them: a layer's sublayers come in the
@@ -69,14 +66,11 @@ type LayerFilter = readonly (readonly string[])[]
  * rules, where they have to be.
  *
  * With `layers`, only the layers whose name starts with one of them are removed: `reset` and its
- * sublayers such as `reset.forms`, but not `other.reset`. A dotted name such as `panda.base`
- * removes the layers its segments start with, where their full name is written
- * (`@layer panda.base { … }`, or in a statement), but not a `@layer base { … }` block nested in a
- * kept `@layer panda { … }`. The other layers stay as written, their blocks untouched and their
- * names in the `@layer` statements that also list removed ones, after the rules of the removed
- * layers, which beat them now that they are outside any layer. The comments and `@layer`
- * statements ahead of the first rule stay there, so a statement that orders the layers of other
- * stylesheets is still the first to name them.
+ * sublayers such as `reset.forms`, but not `other.reset`. The other layers stay as written, their
+ * blocks untouched and their names in the `@layer` statements that also list removed ones, after
+ * the rules of the removed layers, which beat them now that they are outside any layer. The
+ * comments and `@layer` statements ahead of the first rule stay there, so a statement that orders
+ * the layers of other stylesheets is still the first to name them.
  *
  * The stylesheet is parsed with PostCSS, whose tree keeps the text of every rule as written, so
  * the rules come out as they went in, their text untouched apart from the indentation of the ones
@@ -93,8 +87,7 @@ export function unwrapCascadeLayers(css: string, layers?: ReadonlySet<string>): 
   if (!RE_LAYER_KEYWORD.test(css)) return css
 
   const root = parse(css)
-  const filter = layers && [...layers].map((name) => layerNames(name)?.[0] ?? [name])
-  const collection = collectLayers(root, filter)
+  const collection = collectLayers(root, layers)
   if (!collection.hasLayers) return css
 
   const indentUnit = detectIndentUnit(root)
@@ -122,7 +115,7 @@ interface LayerCollection {
   readonly hasLayers: boolean
 }
 
-function collectLayers(stylesheet: Root, layers: LayerFilter | undefined): LayerCollection {
+function collectLayers(stylesheet: Root, layers: ReadonlySet<string> | undefined): LayerCollection {
   const root: LayerNode = {name: Symbol('root'), sublayers: new Map(), entries: []}
   const leading: ChildNode[] = []
   const descended: Container[] = []
@@ -138,15 +131,17 @@ function collectLayers(stylesheet: Root, layers: LayerFilter | undefined): Layer
     for (const node of container.nodes ?? []) {
       const isStatement = node.type === 'atrule' && node.nodes === undefined
       if (topLevel && node.type !== 'comment' && !isStatement) ahead = false
+      if (node.type === 'atrule' && isLayerRule(node)) {
+        // Every `@layer` rule declares its layers, the kept ones too, so the removed ones keep
+        // the order they were declared in
+        declareLayers(node, layer)
+      }
       if (node.type === 'atrule' && isLayerRule(node) && removesLayer(node, filter)) {
         hasLayers = true
         const names = layerNames(node.params)
         // An invalid `@layer` rule (`@layer a b;`, `@layer a, b { … }`) is ignored, like a
         // browser ignores it. lightningcss rejects them before the plugin gets here.
         if (node.nodes === undefined) {
-          for (const name of names ?? []) {
-            if (removesName(name, filter)) resolveLayer(layer, name)
-          }
           // The statement stays with the names of the kept layers, as written
           const kept =
             filter === undefined
@@ -183,6 +178,14 @@ function collectLayers(stylesheet: Root, layers: LayerFilter | undefined): Layer
 
   collect(stylesheet, root, undefined)
   return {root, leading, descended, hasLayers}
+}
+
+/** Declares the layers a `@layer` statement lists, or the one a named `@layer` block is for. */
+function declareLayers(rule: AtRule, layer: LayerNode): void {
+  const names = layerNames(rule.params) ?? []
+  if (rule.nodes === undefined || names.length === 1) {
+    for (const name of names) resolveLayer(layer, name)
+  }
 }
 
 /** The (sub)layer a layer name (`['recipes', 'slots']`) names, declared on first use. */
@@ -234,7 +237,7 @@ function emptyCopy(rule: BlockRule): BlockRule {
 }
 
 /** Whether a block has a `@layer` rule that removes a layer in it, outside the layers it keeps. */
-function containsLayer(container: Container, filter: LayerFilter | undefined): boolean {
+function containsLayer(container: Container, filter: ReadonlySet<string> | undefined): boolean {
   return container.some((node) =>
     node.type === 'atrule' && isLayerRule(node)
       ? removesLayer(node, filter)
@@ -243,21 +246,15 @@ function containsLayer(container: Container, filter: LayerFilter | undefined): b
 }
 
 /** Whether a `@layer` rule names a layer to remove: any, without a filter. */
-function removesLayer(rule: AtRule, filter: LayerFilter | undefined): boolean {
+function removesLayer(rule: AtRule, filter: ReadonlySet<string> | undefined): boolean {
   if (filter === undefined) return true
   // An anonymous block is no layer of the filter's
   return (layerNames(rule.params) ?? []).some((name) => removesName(name, filter))
 }
 
-/** Whether a layer name (`['recipes', 'slots']`) starts with the segments of a layer to remove. */
-function removesName(name: readonly string[], filter: LayerFilter | undefined): boolean {
-  return (
-    filter === undefined ||
-    filter.some(
-      (removed) =>
-        removed.length <= name.length && removed.every((segment, index) => name[index] === segment),
-    )
-  )
+/** Whether a layer name (`['recipes', 'slots']`) starts with a layer to remove. */
+function removesName(name: readonly string[], filter: ReadonlySet<string> | undefined): boolean {
+  return filter === undefined || (name[0] !== undefined && filter.has(name[0]))
 }
 
 function isLayerRule(rule: AtRule): boolean {
