@@ -646,6 +646,41 @@ describe('config reloads', () => {
     })
   }
 
+  test('escapes glob metacharacters in the project path', async () => {
+    const project = path.join(dir, 'lib[1]')
+    await mkdir(path.join(project, 'src'), {recursive: true})
+    await writeFile(
+      path.join(project, 'panda.config.ts'),
+      `export default {include: ['./src/**/*.ts'], outdir: 'styled-system'}\n`,
+    )
+    await writeFile(path.join(project, 'src/index.ts'), cssSource('box', 'red'))
+    const plugin = pandaPlugin({cwd: project, inject: true})
+    const bundle = await rolldown({
+      input: path.join(project, 'src/index.ts'),
+      external: [/styled-system/],
+      plugins: [plugin],
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      const entry = findChunk(output, 'index').code
+      // The filter matched the module: it was transformed and gets the stylesheet
+      expect(entry).toMatch(/^import "\.\/styles\.css";\n/)
+      expect(entry).toContain('"color_red"')
+    } finally {
+      await bundle.close()
+    }
+    // The generated directory is excluded under the same escaped path
+    const {transform} = plugin
+    if (typeof transform !== 'object') expect.unreachable('expected an object `transform` hook')
+    const escaped = `${dir.replaceAll('\\', '/')}/lib\\[1\\]`
+    expect(transform.filter).toMatchObject({
+      id: {
+        include: [`${escaped}/src/**/*.ts`],
+        exclude: expect.arrayContaining([`${escaped}/styled-system/**`]),
+      },
+    })
+  })
+
   test('reloads the config when a file it imports changes', async () => {
     const plugin = pandaPlugin({cwd: dir})
     const first = await rebuild(plugin)

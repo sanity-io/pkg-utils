@@ -282,7 +282,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
       exclude: [
         ...stringArray(loaded.config['exclude']),
         ...[configOutdir, outdir].map(
-          (dir) => `${path.relative(cwd, dir).replaceAll('\\', '/')}/**`,
+          (dir) => `${escapeGlob(path.relative(cwd, dir).replaceAll('\\', '/'))}/**`,
         ),
       ],
     })
@@ -701,7 +701,9 @@ function configureIdFilter(
 ): void {
   // Module ids are real paths, so a symlinked `cwd` (e.g. macOS `/tmp`) must be resolved first
   const realCwd = realpathOrSelf(cwd)
-  const base = realCwd.replaceAll('\\', '/')
+  // The project path is literal, the configured globs aren't: only the former is escaped, so a
+  // directory like `lib[1]` doesn't turn into a character class
+  const base = escapeGlob(realCwd.replaceAll('\\', '/'))
   const toAbsolute = (glob: string): string =>
     path.posix.isAbsolute(glob) || /^[a-z]:\//i.test(glob) ? glob : path.posix.join(base, glob)
 
@@ -715,7 +717,7 @@ function configureIdFilter(
     exclude.push(toAbsolute(glob.replace(/^!/, '')))
   }
   const outdirPath = path.relative(cwd, path.resolve(cwd, driver.getOutdir(outdir)))
-  exclude.push(`${path.resolve(realCwd, outdirPath).replaceAll('\\', '/')}/**`)
+  exclude.push(`${escapeGlob(path.resolve(realCwd, outdirPath).replaceAll('\\', '/'))}/**`)
 
   idFilter.exclude = exclude
   if (include.length > 0) idFilter.include = include
@@ -765,6 +767,11 @@ function stringArray(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === 'string')
     : []
+}
+
+/** Escapes the glob metacharacters of a literal path, so it only matches itself. */
+function escapeGlob(literal: string): string {
+  return literal.replace(/[\\*?[\]{}()!@+]/g, '\\$&')
 }
 
 function escapeRegex(value: string): string {
