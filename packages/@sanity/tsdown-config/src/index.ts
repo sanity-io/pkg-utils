@@ -773,13 +773,14 @@ async function resolvePackageConfig(
   if (options.panda) {
     // Lazy loaded like `vanillaExtract`, but from an optional peer dependency: Panda's native
     // compiler is only installed by the packages that use it
-    const [{pandaPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
+    const [{DEFAULT_CSS_FILE_NAME, pandaPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
       import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
         throw new Error('`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.', {cause})
       }),
       import('./cssLoweringTargets.ts'),
     ])
     const panda = options.panda === true ? {} : options.panda
+    assertDistinctPandaFileName(panda.fileName ?? DEFAULT_CSS_FILE_NAME, options)
 
     const lightningcss = await resolveCssLoweringTargets({
       cssTarget: panda.target,
@@ -954,6 +955,34 @@ const RE_ANSI_COLOR = /\u001B\[\d*(?:;\d+)*m/g
 
 /** The `CircularDependency` diagnostic of rolldown, ahead of the cycle's ` -> `-joined modules. */
 const CIRCULAR_DEPENDENCY_PREFIX = 'Circular dependency: '
+
+/**
+ * Throws when the Panda stylesheet would have the name of a stylesheet another CSS option emits.
+ * Each plugin emits its own file (and export subpath), and neither merges the other's CSS.
+ */
+function assertDistinctPandaFileName(pandaFileName: string, options: PackageOptions): void {
+  const others: [option: string, fileName: string][] = []
+  if (options.vanillaExtract) {
+    const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
+    others.push(['vanillaExtract', vanillaExtract.fileName ?? 'bundle.css'])
+  }
+  // With `splitting`, `@tsdown/css` names its files after the chunks instead
+  if (options.css && !options.css.splitting) {
+    others.push(['css', options.css.fileName ?? 'style.css'])
+  }
+  for (const [option, fileName] of others) {
+    if (normalizeFileName(fileName) === normalizeFileName(pandaFileName)) {
+      throw new Error(
+        `\`panda\` and \`${option}\` would both emit "${fileName}", and neither merges the other's CSS. Set a distinct \`fileName\` for one of them, e.g. \`panda: {fileName: 'panda.css'}\`.`,
+      )
+    }
+  }
+}
+
+/** Normalizes an emitted file name, so `./styles.css` and `styles.css` compare equal. */
+function normalizeFileName(fileName: string): string {
+  return path.posix.normalize(fileName.replaceAll('\\', '/'))
+}
 
 /**
  * Whether a warning is a `CIRCULAR_DEPENDENCY` warning whose entire cycle consists of

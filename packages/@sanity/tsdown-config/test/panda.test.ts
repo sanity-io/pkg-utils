@@ -86,6 +86,31 @@ describe('panda option', () => {
     expect(getPluginNames(await defineConfig({panda: true}))).toEqual(['pandacss'])
   })
 
+  test('rejects a stylesheet name another CSS option already emits', async () => {
+    // Each plugin emits its own stylesheet and export subpath, without merging the other's CSS
+    await expect(
+      defineConfig({vanillaExtract: true, panda: {fileName: 'bundle.css'}}),
+    ).rejects.toThrow(
+      '`panda` and `vanillaExtract` would both emit "bundle.css", and neither merges the other\'s CSS. Set a distinct `fileName` for one of them',
+    )
+    await expect(
+      defineConfig({vanillaExtract: {fileName: './styles.css'}, panda: true}),
+    ).rejects.toThrow('`panda` and `vanillaExtract` would both emit "./styles.css"')
+    await expect(defineConfig({css: {fileName: 'styles.css'}, panda: true})).rejects.toThrow(
+      '`panda` and `css` would both emit "styles.css"',
+    )
+
+    // The default names differ, and split `@tsdown/css` output is named after its chunks
+    expect(getPluginNames(await defineConfig({vanillaExtract: true, panda: true}))).toContain(
+      'pandacss',
+    )
+    expect(
+      getPluginNames(
+        await defineConfig({css: {fileName: 'styles.css', splitting: true}, panda: true}),
+      ),
+    ).toContain('pandacss')
+  })
+
   test('resolves browserless targets from @sanity/browserslist-config', async () => {
     // The browserslist targets still need the `-webkit-` prefix for `backdrop-filter`, while
     // the plugin on its own (like `@tsdown/css`) skips syntax lowering without a target
