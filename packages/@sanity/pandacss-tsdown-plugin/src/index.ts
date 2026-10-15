@@ -156,10 +156,10 @@ export interface Options {
   /**
    * Rewrite the `css()`, `cva()`, pattern and recipe calls of the modules Panda's `include`
    * globs cover into static class name strings with `@pandacss/transformer`, so the published
-   * JavaScript neither bundles nor imports Panda's runtime (`styled-system/css`, …) — the same
+   * JavaScript doesn't need Panda's runtime (`styled-system/css`, …) for them — the same
    * rewrite as `transform: true` in `@pandacss/vite`, which defaults to `false` there because
    * applications keep the runtime around. A call the transformer cannot resolve statically is
-   * left as is (with a warning) and keeps importing the runtime.
+   * left as is (with a warning) and keeps importing the runtime, which is then bundled.
    *
    * Set to `false` to only extract the CSS; the modules then keep their runtime calls, and the
    * runtime is bundled into the output through the package's `imports` map.
@@ -318,9 +318,10 @@ const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DT
  * the library build only.
  *
  * It loads the Panda config (`panda.config.ts`) with Panda's node driver, scans the sources the
- * config's `include`/`exclude` globs cover, rewrites their `css()`/`cva()`/pattern/recipe calls
- * into static class names with `@pandacss/transformer` (so the published JavaScript carries no
- * Panda runtime), and emits the generated stylesheet as a single `lightningcss`-optimized CSS
+ * config's `include`/`exclude` globs cover, rewrites their statically resolvable
+ * `css()`/`cva()`/pattern/recipe calls into class names with `@pandacss/transformer` (the
+ * others keep their runtime calls, with a warning), and emits the generated stylesheet as a
+ * single `lightningcss`-optimized CSS
  * file — optionally lowered to the build's `target`, minified, injected into the entry chunks,
  * and published as a conditional `"./bundle.css"` export subpath, following the same
  * architecture (and option vocabulary) as `@tsdown/css` and

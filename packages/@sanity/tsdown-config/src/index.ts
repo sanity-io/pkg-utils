@@ -110,10 +110,10 @@ export interface PackagePandaOptions {
    */
   outdir?: string
   /**
-   * Rewrite the `css()`, `cva()`, pattern and recipe calls of the Panda sources into static
-   * class names, so the published JavaScript carries no Panda runtime. On by default — unlike
-   * `transform` in `@pandacss/vite`, which defaults to `false` there because applications keep
-   * the runtime around. `false` only extracts the CSS.
+   * Rewrite the statically resolvable `css()`, `cva()`, pattern and recipe calls of the Panda
+   * sources into class names; the others keep their runtime calls, with a warning. On by
+   * default — unlike `transform` in `@pandacss/vite`, which defaults to `false` there because
+   * applications keep the runtime around. `false` only extracts the CSS.
    * @defaultValue true
    */
   transform?: boolean
@@ -516,8 +516,8 @@ export interface PackageOptions extends Pick<
   /**
    * Enables `@sanity/pandacss-tsdown-plugin`, the library-build companion of `@pandacss/vite`
    * for [Panda CSS](https://panda-css.com) packages: it loads `panda.config.ts`, rewrites the
-   * `css()`/`cva()`/pattern/recipe calls of the sources the config covers into static class
-   * names (so the published JavaScript carries no Panda runtime), and extracts the generated
+   * statically resolvable `css()`/`cva()`/pattern/recipe calls of the sources the config covers
+   * into class names (the others keep their runtime calls), and extracts the generated
    * stylesheet into a separate file, lowered with `lightningcss`. CSS is left unminified unless
    * `minify: true` is set, and the lowering targets resolve exactly like
    * {@link PackageOptions.vanillaExtract | `vanillaExtract`}'s — see
