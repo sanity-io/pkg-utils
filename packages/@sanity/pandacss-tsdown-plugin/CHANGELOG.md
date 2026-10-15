@@ -1,5 +1,15 @@
 # @sanity/pandacss-tsdown-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- [#3648](https://github.com/sanity-io/pkg-utils/pull/3648) [`654ebee`](https://github.com/sanity-io/pkg-utils/commit/654ebee6351c539feff370acb638f56c8e37797b) Thanks [@stipsan](https://github.com/stipsan)! - Add `removeCascadeLayers()`, exported from the new `@sanity/pandacss-tsdown-plugin/vite` entry: the Vite counterpart of `cascadeLayers: false`, for packages that build with the plugin and also run their Panda sources through the official `@pandacss/vite` plugin, in a dev server, a Storybook or Vitest's browser mode. Registered next to `@pandacss/vite` with the names of the Panda config's layers (`removeCascadeLayers(['reset', 'base', 'tokens', 'recipes', 'utilities'])`), it removes those layers from the CSS `@pandacss/vite` generates with the same pass as the build, so that output cascades like the published `bundle.css`, and leaves every other layer alone. `vite` is an optional peer dependency, which only the new entry needs.
+
+### Patch Changes
+
+- [#3649](https://github.com/sanity-io/pkg-utils/pull/3649) [`4e744d0`](https://github.com/sanity-io/pkg-utils/commit/4e744d00768fd657e0caf6f2dd2a3da9dd293ce4) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency postcss to ^8.5.30
+
 ## 0.2.0
 
 ### Minor Changes
