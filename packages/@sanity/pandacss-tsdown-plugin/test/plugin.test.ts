@@ -14,9 +14,9 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 import vm from 'node:vm'
 import {rolldown, watch, type OutputAsset, type OutputChunk} from 'rolldown'
-import type {ResolvedConfig, UserConfig} from 'tsdown'
+import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
-import {pandacssPlugin, type Options} from '../src/index.ts'
+import {esbuildTargetToLightningCSS, pandacssPlugin, type Options} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
@@ -529,7 +529,6 @@ describe('codegen', () => {
   }
 
   test('regenerates stale and missing `styled-system` artifacts before the build', async () => {
-    const generated = readFileSync(runtimeFile, 'utf-8')
     writeFileSync(runtimeFile, '// stale\n')
     rmSync(typesFile)
 
@@ -537,8 +536,13 @@ describe('codegen', () => {
     // rolldown loaded it
     const entry = await build({transform: false})
     expect(entry.code).not.toContain('// stale')
-    expect(readFileSync(runtimeFile, 'utf-8')).toBe(generated)
+    const regenerated = readFileSync(runtimeFile, 'utf-8')
+    expect(regenerated).not.toContain('// stale')
+    expect(regenerated).toMatch(/\bcss\b/)
     expect(existsSync(typesFile)).toBe(true)
+    // What Panda writes for this config, exactly: another build changes nothing
+    await build({transform: false})
+    expect(readFileSync(runtimeFile, 'utf-8')).toBe(regenerated)
   })
 
   test('leaves current artifacts untouched', async () => {
@@ -572,6 +576,70 @@ describe('codegen', () => {
     } finally {
       rmSync(outdir, {recursive: true, force: true})
     }
+  })
+
+  test(
+    'runs before tsdown builds the CJS declarations, which run without the plugin',
+    {timeout: 60_000},
+    async () => {
+      // For `format: 'cjs'` with declarations, tsdown 0.23 runs a separate declaration build
+      // first, without the user plugins — so a codegen gated on this plugin's `buildStart`
+      // would come too late for it. The first codegen runs from the awaited
+      // `tsdownConfigResolved` hook instead, before any build: on a clean checkout (no
+      // `styled-system` yet) the artifacts exist by the time the declarations are generated.
+      const cwd = copyFixture('clean-cjs-dts')
+      writeFileSync(
+        path.join(cwd, 'tsconfig.json'),
+        JSON.stringify({
+          compilerOptions: {
+            module: 'preserve',
+            moduleResolution: 'bundler',
+            target: 'esnext',
+            strict: true,
+            declaration: true,
+            isolatedDeclarations: true,
+            skipLibCheck: true,
+          },
+          include: ['src'],
+        }),
+      )
+      expect(existsSync(path.join(cwd, 'styled-system'))).toBe(false)
+      try {
+        await tsdownBuild({
+          cwd,
+          entry: ['src/index.ts'],
+          format: ['cjs'],
+          dts: true,
+          outDir: 'dist',
+          plugins: [pandacssPlugin({cwd})],
+          logLevel: 'silent',
+          publint: false,
+        })
+        expect(readFileSync(path.join(cwd, 'dist/index.d.cts'), 'utf-8')).toContain(
+          'export declare const brandText: string;',
+        )
+        expect(readFileSync(path.join(cwd, 'dist/index.cjs'), 'utf-8')).toContain('"color_brand"')
+        // The artifacts were written before the declaration build started
+        const generatedAt = statSync(path.join(cwd, 'styled-system/css/index.js')).mtimeMs
+        const declaredAt = statSync(path.join(cwd, 'dist/index.d.cts')).mtimeMs
+        expect(generatedAt).toBeLessThanOrEqual(declaredAt)
+      } finally {
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+})
+
+describe('esbuildTargetToLightningCSS', () => {
+  test('resolves a browser named more than once to its lowest version', () => {
+    // The CSS has to work in the oldest requested version, whatever the order of the targets
+    const chrome61 = 61 << 16
+    expect(esbuildTargetToLightningCSS(['chrome61', 'chrome120'])).toEqual({chrome: chrome61})
+    expect(esbuildTargetToLightningCSS(['chrome120', 'chrome61'])).toEqual({chrome: chrome61})
+    expect(esbuildTargetToLightningCSS(['chrome120', 'safari16', 'chrome61'])).toEqual({
+      chrome: chrome61,
+      safari: 16 << 16,
+    })
   })
 })
 

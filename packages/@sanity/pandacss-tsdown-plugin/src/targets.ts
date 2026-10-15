@@ -36,7 +36,8 @@ function parseVersion(version: string): number | null {
  * `Targets`, with the same conversion as `css.target` in `@tsdown/css`. Targets that don't map
  * to a browser (e.g. `'node20'`, `'es2022'`) are ignored — `undefined` is returned when none of
  * them do, which hosts like `@sanity/tsdown-config` use to detect browserless targets and layer
- * their own default targets on top.
+ * their own default targets on top. A browser named more than once (`['chrome61', 'chrome120']`)
+ * resolves to its lowest version, whatever the order: the CSS has to work in the oldest one.
  * @public
  */
 export function esbuildTargetToLightningCSS(target: string | string[]): Targets | undefined {
@@ -62,7 +63,8 @@ function convert(target: string[]): Targets | undefined {
     }
 
     targets = targets || {}
-    targets[browser] = versionInt
+    const current = targets[browser]
+    targets[browser] = current === undefined ? versionInt : Math.min(current, versionInt)
   }
 
   return targets

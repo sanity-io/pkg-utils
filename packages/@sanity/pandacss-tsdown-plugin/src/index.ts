@@ -792,14 +792,21 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // syntax lowering target, like `css.target` in `@tsdown/css`), the package name (for the
     // self-referential import injected by `inject` with `exports`), and the working directory
     // the Panda config is discovered from. The hook fires once per output format with the
-    // same values.
-    tsdownConfigResolved(config: ResolvedConfig) {
+    // same values, and tsdown awaits it before any build starts — which is why the first
+    // codegen runs here as well: for `format: 'cjs'` with declarations, tsdown runs a separate
+    // declaration build without the user plugins (so without this plugin's `buildStart`), and
+    // that build must find the generated types already in place.
+    async tsdownConfigResolved(config: ResolvedConfig) {
       plugin.api.setBuildContext({
         target: config.target,
         packageName: config.pkg?.name,
         cwd: config.cwd,
         outDir: config.outDir,
       })
+      if (codegenEnabled) {
+        const currentDriver = await resolveDriver(resolveCwd())
+        currentDriver.codegen(options.outdir === undefined ? undefined : {outdir: options.outdir})
+      }
     },
   }
 
