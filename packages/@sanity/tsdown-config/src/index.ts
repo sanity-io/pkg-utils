@@ -814,17 +814,23 @@ async function resolvePackageConfig(
     const panda = options.panda === true ? {} : options.panda
     // Each CSS pipeline emits its own stylesheet and claims its export subpath; two pipelines
     // writing the same file would overwrite each other's CSS (neither merges the other's), so
-    // a shared effective file name is a configuration error rather than a silent loss
-    const pandaFileName = panda.fileName ?? 'bundle.css'
+    // a shared effective file name is a configuration error rather than a silent loss. Names
+    // are compared as paths, so `./bundle.css` and `bundle.css` are the same file.
+    const pandaFileName = normalizeCssFileName(panda.fileName ?? 'bundle.css')
     if (options.vanillaExtract) {
       const vanillaExtract = options.vanillaExtract === true ? {} : options.vanillaExtract
-      if ((vanillaExtract.fileName ?? 'bundle.css') === pandaFileName) {
+      if (normalizeCssFileName(vanillaExtract.fileName ?? 'bundle.css') === pandaFileName) {
         throw new Error(
           `\`panda\` and \`vanillaExtract\` both extract their CSS into "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
         )
       }
     }
-    if (options.css && (options.css.fileName ?? 'style.css') === pandaFileName) {
+    // With `css.splitting`, `@tsdown/css` names its stylesheets after the chunks instead
+    if (
+      options.css &&
+      !options.css.splitting &&
+      normalizeCssFileName(options.css.fileName ?? 'style.css') === pandaFileName
+    ) {
       throw new Error(
         `\`panda\` and \`css\` both write their CSS to "${pandaFileName}", so one would overwrite the other's stylesheet and \`./${pandaFileName}\` export. Give one of them a distinct file name, e.g. \`panda: {fileName: 'panda.css'}\`.`,
       )
@@ -837,7 +843,10 @@ async function resolvePackageConfig(
     // `vanillaExtract`: the conditional CSS export pattern, written through this config's
     // `exports` option (which the plugin's `tsdownConfig` hook composes into).
     const [{pandacssPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
-      import('@sanity/pandacss-tsdown-plugin'),
+      // An optional peer dependency: only the packages that use Panda install it
+      import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
+        throw new Error('`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.', {cause})
+      }),
       import('./cssLoweringTargets.ts'),
     ])
 
@@ -1045,6 +1054,11 @@ const CIRCULAR_DEPENDENCY_PREFIX = 'Circular dependency: '
  * 136 cycle warnings were declaration-only. A cycle that includes even one runtime module is
  * left alone.
  */
+/** A CSS pipeline's `fileName` as a path in the output directory, for comparing two of them. */
+function normalizeCssFileName(fileName: string): string {
+  return path.posix.normalize(fileName.replaceAll('\\', '/'))
+}
+
 function isDtsCircularDependencyWarning(message: string): boolean {
   // The message arrives pre-formatted, with a color-coded `[CIRCULAR_DEPENDENCY] ` code prefix
   // and a trailing newline

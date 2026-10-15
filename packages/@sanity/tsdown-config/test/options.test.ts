@@ -194,6 +194,19 @@ describe('panda option', () => {
       expect.arrayContaining(['pandacss', 'sanity-css-node-compat']),
     )
   })
+
+  test('compares the CSS file names as paths, and skips a splitting `css`', async () => {
+    // `./bundle.css` is the same file as `bundle.css`
+    await expect(
+      defineConfig({panda: {fileName: './bundle.css'}, vanillaExtract: true}),
+    ).rejects.toThrow(/both extract their CSS into "bundle.css"/)
+    await expect(
+      defineConfig({panda: {fileName: 'style.css'}, css: {fileName: './style.css'}}),
+    ).rejects.toThrow(/`panda` and `css` both write their CSS to "style.css"/)
+    // With `splitting`, `@tsdown/css` names its stylesheets after the chunks, not `fileName`
+    const splitting = await defineConfig({panda: {fileName: 'style.css'}, css: {splitting: true}})
+    expect(pluginNames(splitting)).toContain('pandacss')
+  })
 })
 
 function pluginNames(config: UserConfig): string[] {
