@@ -2,7 +2,7 @@
 
 A [tsdown](https://tsdown.dev) plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm with a separate stylesheet.
 
-It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config, or its wrapper from [`@sanity/pandacss-tsdown-plugin/vite`](#vite-plugin), which generates the CSS into a virtual stylesheet and can remove its cascade layers like this plugin does; they all load the same `panda.config.ts`.
+It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config; the two load the same `panda.config.ts`. A package built with this plugin that also runs its sources through Vite (a dev server, Storybook, Vitest) can use the [`@sanity/pandacss-tsdown-plugin/vite`](#vite-plugin) entry there, so that output behaves like the published build.
 
 ## Installation
 
@@ -144,7 +144,7 @@ Keep the layers when the consumers are Panda apps, or other apps that declare a 
 
 Panda's own `polyfill` option is no substitute: it emulates the layer order by appending `:not(#\#)` chains to every selector, one more ID for each layer. That keeps the library's own precedence, but even its global `button` style becomes as specific as an ID selector (and its utilities as ten), so no consumer rule short of `!important` can override it. The two options can't be combined.
 
-A Storybook, a Vitest browser suite or another Vite app that builds the library's sources instead of loading `bundle.css` gets the same unlayered stylesheet from `cascadeLayers: false` of the [Vite plugin](#vite-plugin).
+The library's own Vite setups, such as its Storybook or Vitest browser suite, which build its sources instead of loading `bundle.css`, get the same unlayered stylesheet from the [Vite plugin](#vite-plugin) with the same `cascadeLayers: false`.
 
 ### Browser targets
 
@@ -191,16 +191,16 @@ An option the plugin doesn't have is an error, not something it ignores — a ty
 
 ## Vite plugin
 
-`@sanity/pandacss-tsdown-plugin/vite` is for the Vite side of the same sources: an app, a Storybook or a Vitest browser suite that builds Panda sources with Vite, such as the sources of a library that publishes its stylesheet with this plugin. It exports `pandacss()`, a drop-in replacement for `pandacss()` from the official `@pandacss/vite`, which it wraps, with two additions:
+`@sanity/pandacss-tsdown-plugin/vite` is for packages that build with this plugin (directly or through the `panda` option of `@sanity/tsdown-config`) and also run their Panda sources through Vite, in a dev server, a Storybook or a Vitest browser suite, and want that output to behave like the published build. It is not a standalone Vite plugin: `tsdown` stays a required peer, and its options mirror the tsdown `panda` options, so the Vite setup passes the same `cascadeLayers` as `tsdown.config.ts`. It exports `pandacss()`, a drop-in replacement for `pandacss()` from the official `@pandacss/vite`, which it wraps, with two additions:
 
 - **No hand-written stylesheet.** `@pandacss/vite` generates the CSS into a stylesheet the app writes itself, which it recognizes by a statement that declares Panda's layers, such as `@layer reset, base, tokens, recipes, utilities;`. The wrapper provides that stylesheet as the virtual module `virtual:panda.css`, with the layer names of the Panda config, renamed ones included.
-- **`cascadeLayers: false`.** It removes the cascade layers from the generated stylesheet with the same pass as the tsdown plugin's [`cascadeLayers: false`](#cascade-layers), so the app cascades like the published `bundle.css`.
+- **`cascadeLayers`, as in the tsdown config.** With `cascadeLayers: false`, it removes the cascade layers from the generated stylesheet with the same pass as the tsdown plugin's [`cascadeLayers: false`](#cascade-layers), so the Vite output cascades like the published `bundle.css`.
+
+The package already has the plugin and `tsdown` for its build. The entry also needs `@pandacss/vite` and `vite`, which are optional peer dependencies of the plugin, so builds that don't use the entry don't install them:
 
 ```sh
-pnpm add --save-dev @sanity/pandacss-tsdown-plugin @pandacss/vite vite
+pnpm add --save-dev @pandacss/vite vite
 ```
-
-`@pandacss/vite` and `vite` are optional peer dependencies, which only this entry needs.
 
 ```ts
 // vite.config.ts
@@ -208,6 +208,7 @@ import {pandacss} from '@sanity/pandacss-tsdown-plugin/vite'
 import {defineConfig} from 'vite'
 
 export default defineConfig({
+  // `cascadeLayers` as in the `panda` options of tsdown.config.ts
   plugins: [pandacss({transform: true, cascadeLayers: false})],
 })
 ```
@@ -233,7 +234,7 @@ import {createRoot} from 'react-dom/client'
 | `configPath`    | `string`  | discovered upward from `cwd` | Passed to `@pandacss/vite`: an explicit Panda config file, relative to `cwd`.                                                                                                  |
 | `outdir`        | `string`  | the Panda config's `outdir`  | Passed to `@pandacss/vite`: where the generated files are written.                                                                                                             |
 | `transform`     | `boolean` | `false`                      | Passed to `@pandacss/vite`: rewrite the style calls into class names.                                                                                                          |
-| `cascadeLayers` | `boolean` | `true`                       | Keep Panda's cascade layers. `false` removes them like the tsdown plugin's option. Can't be combined with the Panda config's `polyfill`.                                       |
+| `cascadeLayers` | `boolean` | `true`                       | Mirrors the tsdown `cascadeLayers` option: pass the value the build uses. `false` removes the layers with the same pass. Can't be combined with the Panda config's `polyfill`. |
 | `banner`        | `string`  | —                            | CSS prepended to the stylesheet, on a line of its own, such as a `@layer` statement that orders the layers of other libraries' stylesheets (`@layer sui;`) ahead of their CSS. |
 
 How it works:
