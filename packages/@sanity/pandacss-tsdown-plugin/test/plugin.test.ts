@@ -379,9 +379,17 @@ describe('pandacssPlugin', () => {
   })
 
   test('keeps an overridden `outdir` inside the `include` globs out of the scan and the transform', async () => {
-    // Panda only skips the config's own `outdir`; the plugin's `outdir` option sends the
-    // generated code into `src/generated`, which `./src/**/*` covers
-    const cwd = copyFixture('outdir-in-include', withInclude('./src/**/*'))
+    // The plugin's `outdir` option sends the generated code into `src/generated`, which
+    // `./src/**/*` covers. Without an `importMap`, Panda recognizes the calls imported from
+    // there only when the override is part of the config it loaded.
+    const cwd = copyFixture(
+      'outdir-in-include',
+      withInclude('./src/**/*').replace("  importMap: '#styled-system',\n", ''),
+    )
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from './generated/css/index.js'\n\nexport const brandText: string = css({color: 'brand'})\n",
+    )
     const plugin = pandacssPlugin({cwd, outdir: 'src/generated'})
     const warnings: string[] = []
     const bundle = await rolldown({
@@ -396,6 +404,7 @@ describe('pandacssPlugin', () => {
       const {output} = await bundle.generate({format: 'esm'})
       expect(existsSync(path.join(cwd, 'src/generated/css/index.js'))).toBe(true)
       expect(findEntryChunk(output).code).toContain('"color_brand"')
+      expect(findAsset(output, 'bundle.css')).toContain('.color_brand {')
 
       // Every scanned source is watched: the sources, but nothing generated
       const watched = (await bundle.watchFiles).map((file) =>
@@ -1025,7 +1034,7 @@ const conditionalCssExport = {
  * transforms of unchanged modules) and the plugin told about the output directory, like tsdown
  * tells it. `nextBuild()` resolves when the next build completes, and `builds` counts them.
  */
-function startWatcher(cwd: string) {
+function startWatcher(cwd: string, options: Options = {}) {
   const outDir = path.join(cwd, 'dist')
   let settle: (() => void) | undefined
   let fail: ((error: Error) => void) | undefined
@@ -1035,7 +1044,7 @@ function startWatcher(cwd: string) {
       settle = resolve
       fail = reject
     })
-  const plugin = pandacssPlugin({cwd, inject: true})
+  const plugin = pandacssPlugin({cwd, inject: true, ...options})
   plugin.api.setBuildContext({outDir})
   const watcher = watch({
     cwd,
@@ -1121,6 +1130,44 @@ describe('watch mode', () => {
       }
     },
   )
+
+  test('a config reload keeps the `outdir` override', {timeout: 60_000}, async () => {
+    // Without an `importMap`, the calls imported from the overridden directory are only
+    // recognized while the override is part of the loaded config — also after a reload
+    const cwd = copyFixture(
+      'watch-outdir',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+        "  importMap: '#styled-system',\n",
+        '',
+      ),
+    )
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from '../generated/css/index.js'\n\nexport const brandText: string = css({color: 'brand'})\n",
+    )
+    const configPath = path.join(cwd, 'panda.config.ts')
+    const originalConfig = readFileSync(configPath, 'utf-8')
+    const watcher = startWatcher(cwd, {outdir: 'generated'})
+    try {
+      await watcher.nextBuild()
+      expect(watcher.readOutput().js).toContain('"color_brand"')
+
+      const secondBuild = watcher.nextBuild()
+      await settleWatcher()
+      await rebuildAfter(secondBuild, () =>
+        writeFileSync(
+          configPath,
+          originalConfig.replace('presets: [],', "presets: [],\n  prefix: 'v2',"),
+        ),
+      )
+      const after = watcher.readOutput()
+      expect(after.js).toContain('"v2-color_brand"')
+      expect(after.css).toContain('.v2-color_brand {')
+    } finally {
+      await watcher.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
 
   test(
     'a source added to an `include` directory reaches the stylesheet, without a rebuild loop',

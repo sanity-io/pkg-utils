@@ -1,4 +1,6 @@
+import {createHash} from 'node:crypto'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import {createNodeDriver} from '@pandacss/compiler'
 import {
@@ -144,7 +146,9 @@ export interface Options {
   codegen?: boolean
   /**
    * Where the codegen artifacts are written, relative to {@link Options.cwd | `cwd`} — like
-   * `outdir` in `@pandacss/vite`.
+   * `outdir` in `@pandacss/vite`. It replaces the config's `outdir` when the config loads, so
+   * what Panda derives from it follows too, like the default import map that recognizes the
+   * calls imported from the generated modules.
    * @defaultValue the `outdir` of the Panda config
    */
   outdir?: string
@@ -354,8 +358,6 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
    * set, the rolldown `options` hook leaves the first codegen to it.
    */
   let codegenBeforeBuilds: Promise<void> | undefined
-  /** The directory codegen writes to, resolved by `buildStart` for the transforms. */
-  let generatedDir: string | undefined
 
   /**
    * The ids of the modules with Panda styles — rewritten by the transformer, or left to the
@@ -376,8 +378,22 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     return realpathOrSelf(options.cwd === undefined ? base : path.resolve(base, options.cwd))
   }
 
+  async function createDriver(cwd: string): Promise<PandaDriver> {
+    const configured = await createNodeDriver({cwd, configPath: options.configPath})
+    if (options.outdir === undefined) return configured
+    // Panda derives defaults from `outdir` while it loads the config — notably the import map
+    // that recognizes the generated modules the sources import — so the override has to be
+    // part of the loaded config. It is loaded through a file that re-exports the config with
+    // the override, which `reload()` reads again (picking up the config's own changes, since
+    // it is bundled as a dependency).
+    return createNodeDriver({
+      cwd,
+      configPath: writeOutdirConfig(configured.configPath, options.outdir),
+    })
+  }
+
   async function resolveDriver(cwd: string): Promise<PandaDriver> {
-    driverPromise ??= createNodeDriver({cwd, configPath: options.configPath})
+    driverPromise ??= createDriver(cwd)
     driver = await driverPromise
     return driver
   }
@@ -473,13 +489,9 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       }
     }
     // The files the config doesn't cover aren't scanned by Panda — rewriting them would
-    // produce class names the stylesheet doesn't have — and neither is the generated code,
-    // which Panda's matcher only recognizes in the config's own `outdir`. A module a reloaded
-    // config no longer covers stops counting as styled, too.
-    if (
-      (generatedDir !== undefined && isInsideDirectory(filePath, generatedDir)) ||
-      !driver.isSourceFile(filePath)
-    ) {
+    // produce class names the stylesheet doesn't have. A module a reloaded config no longer
+    // covers stops counting as styled, too.
+    if (!driver.isSourceFile(filePath)) {
       pandaModules.delete(id)
       return undefined
     }
@@ -639,14 +651,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         'while loading the design system',
       )
       const cwd = resolveCwd()
-      generatedDir = resolveGeneratedDir(currentDriver)
       for (const report of currentDriver.parseFiles()) {
-        // Panda's scan only skips the config's own `outdir`: with the `outdir` option, the
-        // generated code may sit inside the `include` globs, and isn't a source of styles
-        if (isInsideDirectory(report.path, generatedDir)) {
-          currentDriver.compiler.removeFile(report.path)
-          continue
-        }
         warnDiagnostics(
           (message) => this.warn(message),
           report.diagnostics,
@@ -912,9 +917,10 @@ function createTransformFilter(
 
   const includePatterns: RegExp[] = []
   const excludePatterns: RegExp[] = []
-  // Panda's matcher skips the config's own `outdir`, but not the `outdir` option's directory
-  const generatedDir = path.resolve(cwd, driver.getOutdir(outdir))
-  if (generatedDir !== path.resolve(cwd, driver.getOutdir())) {
+  // The `outdir` option may point inside the `include` globs: Panda's matcher rejects the
+  // generated modules, and the native filter keeps them from reaching the handler at all
+  if (outdir !== undefined) {
+    const generatedDir = path.resolve(cwd, driver.getOutdir(outdir))
     excludePatterns.push(
       new RegExp(
         `^${escapeRegExp(generatedDir.replaceAll('\\', '/'))}/`,
@@ -1082,13 +1088,22 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   return new RegExp(`^${source}(?:\\?.*)?$`, process.platform === 'win32' ? 'i' : '')
 }
 
-/** Whether a file is inside a directory (or is the directory itself). */
-function isInsideDirectory(file: string, dir: string): boolean {
-  const relative = path.relative(dir, file)
-  return (
-    relative === '' ||
-    (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+/**
+ * Write the config that re-exports a Panda config with another `outdir`, returning its path. It
+ * lives in the OS temp directory, at a path derived from the config and the override, and
+ * imports the config by its absolute path: bundling resolves the config's own imports from
+ * there. A promise is awaited like the config's own default export would be.
+ */
+function writeOutdirConfig(configPath: string, outdir: string): string {
+  const key = createHash('sha256').update(`${configPath}\0${outdir}`).digest('hex').slice(0, 16)
+  const dir = path.join(os.tmpdir(), 'sanity-pandacss-tsdown-plugin', key)
+  fs.mkdirSync(dir, {recursive: true})
+  const file = path.join(dir, 'panda.config.mjs')
+  fs.writeFileSync(
+    file,
+    `import config from ${JSON.stringify(configPath.replaceAll('\\', '/'))}\n\nexport default Promise.resolve(config).then((resolved) => ({...resolved, outdir: ${JSON.stringify(outdir)}}))\n`,
   )
+  return file
 }
 
 /**
