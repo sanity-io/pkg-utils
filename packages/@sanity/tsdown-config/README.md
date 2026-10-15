@@ -310,19 +310,28 @@ for the full option surface.
 
 ## panda
 
-The `panda` option enables [`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme)
-to run Panda CSS codegen (`styled-system/`), scan source files matched by `panda.config.ts`,
-rewrite `css({...})` calls into static class names at build time by default (`transform: true`,
-unlike `@pandacss/vite` which defaults to `false`; set `transform: false` to opt out), extract all
-Panda layers into `dist/styles.css`, and lower the CSS with `lightningcss`.
+The `panda` option enables [`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme) to run Panda CSS codegen, transform statically resolvable style calls into class names, and extract all Panda cascade layers into `dist/styles.css`.
 
-Only `tsdown`, `@sanity/tsdown-config`, and `@sanity/pandacss-tsdown-plugin` are required (`@pandacss/compiler` and `@pandacss/transformer` are direct dependencies of the plugin). Installing `@pandacss/dev` (an optional peer dependency) is recommended so you can wire up a `"prepare": "panda codegen"` script for your IDE and TypeScript and use Panda's CLI commands for debugging (such as validating `panda.config.ts`):
+Install `tsdown`, `@sanity/tsdown-config`, and `@sanity/pandacss-tsdown-plugin` (`@pandacss/compiler` and `@pandacss/transformer` are direct dependencies of the plugin). Installing `@pandacss/dev` (an optional peer dependency) is recommended for a `"prepare": "panda codegen"` script and CLI debugging commands:
 
 ```sh
-pnpm add --save-dev tsdown @sanity/tsdown-config @sanity/pandacss-tsdown-plugin
+pnpm add --save-dev tsdown @sanity/tsdown-config @sanity/pandacss-tsdown-plugin @pandacss/dev
 ```
 
 ```ts
+// panda.config.ts
+import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
+  include: ['./src/**/*.{ts,tsx}'],
+  outdir: 'styled-system',
+  importMap: '#styled-system',
+  preflight: false,
+} satisfies Config)
+```
+
+```ts
+// tsdown.config.ts
 import {defineConfig} from '@sanity/tsdown-config'
 
 export default defineConfig({
@@ -331,10 +340,25 @@ export default defineConfig({
 })
 ```
 
-By default (`inject: true` with `exports: {nodeCompat: true}`), `panda` wires up the same
-conditional CSS export pattern on `"./styles.css"` as `vanillaExtract` does on `"./bundle.css"`,
-and resolves browserless CSS syntax lowering targets from `@sanity/browserslist-config` (while
-leaving `minify` opt-in).
+With `panda: true`, the following defaults apply:
+
+- **Codegen and static transform (`codegen: true`, `transform: true`):** Runs Panda codegen at build start and rewrites statically resolvable style calls into class name strings (unresolvable dynamic calls keep their `styled-system` runtime imports).
+- **Stylesheet injection and Node-compatible exports (`fileName: 'styles.css'`, `inject: true`, `exports: {nodeCompat: true}`):** Emits `dist/styles.css` alongside `dist/styles-css.js` and `dist/styles-css.d.ts`, injects `import "<pkg>/styles.css"` (or `require()` in CommonJS) into entry chunks that use Panda styles, and writes the conditional `"./styles.css"` export to `package.json`.
+- **Browser syntax targeting (`target`):** Transforms CSS syntax for the effective `target` (`panda.target` or top-level `target`). When the effective target does not specify browsers (such as `node20` or when `target` is unset), targets fall back to `@sanity/browserslist-config`.
+- **Opt-in minification (`minify: false`):** CSS is left unminified by default. Pass `minify: true` to minify the emitted stylesheet:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: {
+    minify: true,
+  },
+})
+```
+
+In `package.json`, map `#styled-system/*` in `imports`, include `"*.css"` in `sideEffects` so consumer bundlers keep the stylesheet, and add `"prepare": "panda codegen"` so generated types exist for your editor and TypeScript before a build runs. See the [`@sanity/pandacss-tsdown-plugin` README](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme) for full setup details, limitations, and options.
 
 ## dts
 
