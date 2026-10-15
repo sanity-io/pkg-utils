@@ -14,6 +14,7 @@ import {
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
 import type {PackageJsonWithPath, ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
 import {expandBaselineTarget, resolveComma, toArray} from 'tsdown/internal'
+import {unwrapCascadeLayers} from './cascadeLayers.ts'
 import {
   cssShimDtsFileName,
   cssShimDtsSource,
@@ -167,10 +168,34 @@ export interface Options {
   transform?: boolean
   /**
    * Emit the extracted CSS without cascade layers (Panda's `@layer` polyfill), for browsers
-   * that predate `@layer`.
+   * that predate `@layer`. The polyfill emulates the layer order by appending `:not(#\#)`
+   * chains to every selector, one ID selector's worth of specificity for each layer (up to ten
+   * for utilities), so consumer CSS can no longer override the library's rules. To publish a
+   * stylesheet consumers can override, use {@link Options.cascadeLayers | `cascadeLayers: false`}
+   * instead.
    * @defaultValue the `polyfill` option of the Panda config
    */
   polyfill?: boolean
+  /**
+   * Keep Panda's cascade layers (`@layer reset`, `base`, `tokens`, `recipes`, `utilities`) in
+   * the extracted CSS. Set to `false` to remove every `@layer` block and statement, with the
+   * rules ordered so that source order gives them the precedence the layers gave them.
+   *
+   * Without layers, the library's rules cascade like any other unlayered CSS: by specificity,
+   * then source order. A consumer's rule can then override a base style with a selector at
+   * least as specific, loaded after the library's stylesheet, while the library's `:hover`,
+   * `:focus-visible` and other state rules, which are more specific, keep winning. Unlayered
+   * consumer CSS, by contrast, beats every rule of a layered stylesheet, states included.
+   *
+   * Source order cannot reproduce everything layers do: a more specific rule in an earlier
+   * layer, which lost to a later layer, wins without layers (such as a recipe's base `_hover`
+   * style over its variants or over a utility), and `!important` declarations no longer
+   * reverse the layer order. Unlike {@link Options.polyfill | `polyfill`}, it leaves every
+   * selector, and so its specificity, as Panda wrote it. It takes precedence over the Panda
+   * config's `polyfill`, and cannot be combined with the `polyfill` option.
+   * @defaultValue true
+   */
+  cascadeLayers?: boolean
   /**
    * Name of the emitted CSS file that the extracted CSS is written to, like `css.fileName`
    * in `@tsdown/css` (which defaults to `"style.css"`).
@@ -334,8 +359,14 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   const minify = options.minify ?? false
   const transformEnabled = options.transform ?? true
   const codegenEnabled = options.codegen ?? true
+  const cascadeLayers = options.cascadeLayers ?? true
   const lightningcss = options.lightningcss
   const {inject, exports: exportsCss, nodeCompat} = resolveCssExportOptions(options)
+  if (!cascadeLayers && options.polyfill === true) {
+    throw new Error(
+      '[pandacss] `cascadeLayers: false` and `polyfill: true` both remove the cascade layers, in different ways: `cascadeLayers: false` keeps the specificity of every selector, while `polyfill` raises it to emulate the layer order. Set only one of them.',
+    )
+  }
 
   /** The host-resolved default for the `target` option (e.g. tsdown's top-level `target`). */
   let contextTarget: string | string[] | undefined
@@ -826,12 +857,13 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       // Every layer is requested (the sources decide which ones have content) but the
       // `@layer reset, base, …;` declaration isn't: it would declare layers the stylesheet
       // doesn't use, and ordering the layers is the consuming application's call. Panda's own
-      // minification is left off in favor of lightningcss below.
+      // minification is left off in favor of lightningcss below. Without `cascadeLayers`, the
+      // layered output is unwrapped before lightningcss runs, so Panda's polyfill stays off.
       const output = driver.getLayerCss({
         layers: ALL_LAYERS,
         emitLayerDeclaration: false,
         minify: false,
-        polyfill: options.polyfill ?? driver.config['polyfill'] === true,
+        polyfill: cascadeLayers && (options.polyfill ?? driver.config['polyfill'] === true),
       })
       warnDiagnostics(
         (message) => this.warn(message),
@@ -852,6 +884,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
           minify,
           targets: resolveTargets(),
           lightningcss,
+          cascadeLayers,
           layerNames: resolveLayerNames(driver.config),
           warn: (message) => this.warn(`[pandacss] ${message}`),
         })
@@ -1258,17 +1291,20 @@ interface OptimizeCssOptions {
   minify: boolean
   targets: Targets | undefined
   lightningcss: LightningCSSOptions | undefined
+  cascadeLayers: boolean
   layerNames: ReadonlySet<string>
   warn: (message: string) => void
 }
 
 /**
- * Run the stylesheet through lightningcss: syntax lowering to the targets, the removal of the
- * `--made-with-panda` marker (and whatever else `unusedSymbols` names) and of the rules and
- * layers that leaves empty, and minification when enabled.
+ * Unwrap the layers without `cascadeLayers` — first, so the rules lightningcss merges and removes
+ * are those of the stylesheet without layers — and run the stylesheet through lightningcss:
+ * syntax lowering to the targets, the removal of the `--made-with-panda` marker (and whatever
+ * else `unusedSymbols` names) and of the rules and layers that leaves empty, and minification
+ * when enabled.
  */
 function optimizeCss(css: string, optimizeOptions: OptimizeCssOptions): string {
-  const {fileName, minify, targets, lightningcss, layerNames, warn} = optimizeOptions
+  const {fileName, minify, targets, lightningcss, cascadeLayers, layerNames, warn} = optimizeOptions
 
   // The spread order matches `@tsdown/css`: the plugin-managed fields (`targets` from the
   // resolved `target`, `minify`, `cssModules`, which Panda's own class naming makes redundant,
@@ -1276,7 +1312,7 @@ function optimizeCss(css: string, optimizeOptions: OptimizeCssOptions): string {
   // counterparts
   const result = transform({
     filename: fileName,
-    code: new TextEncoder().encode(css),
+    code: new TextEncoder().encode(cascadeLayers ? css : unwrapCascadeLayers(css)),
     ...lightningcss,
     unusedSymbols: [MADE_WITH_PANDA_SYMBOL, ...(lightningcss?.unusedSymbols ?? [])],
     minify,
