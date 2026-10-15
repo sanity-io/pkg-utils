@@ -140,7 +140,7 @@ Source order can't reproduce everything layers do, though:
 - `!important` declarations no longer reverse the layer order: the later of two `!important` declarations wins, like normal ones.
 - Load order matters for consumers: an override has to load after the library's stylesheet, or be more specific.
 
-Leave the layers on when consumers are Panda apps that order them in their own CSS, or when the library's rules should never yield to unlayered CSS. Turn them off for a library meant to be overridden with plain CSS or styled-components. The option works with `minify`, `target`, `inject`, `exports` and watch mode, and takes precedence over the Panda config's `polyfill`.
+Leave the layers on when consumers are Panda apps that order them in their own CSS, or when the library's rules should never yield to unlayered CSS. Turn them off for a library meant to be overridden with plain CSS or styled-components. The option works with `minify`, `target`, `inject`, `exports` and watch mode, and with `lightningcss.visitor`, whose visitors receive the layered stylesheet, since the layers are removed after Lightning CSS has run. It takes precedence over the Panda config's `polyfill`.
 
 Panda's own `polyfill` option is no substitute: it emulates the layer order by appending `:not(#\#)` chains to every selector, one more ID for each layer. That keeps the library's own precedence, but even its global `button` style becomes as specific as an ID selector (and its utilities as ten), so no consumer rule short of `!important` can override it. The two options can't be combined.
 
