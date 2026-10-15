@@ -1569,6 +1569,46 @@ describe('tsdownConfig hook', () => {
     ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': conditionalCssExport})
   })
 
+  test("keeps a CSS entry the user's `customExports` changes in place", async () => {
+    // A callback may mutate the map it receives and return it, so the entry tsdown passed in is
+    // compared by its contents, nested conditions included
+    const replaced = await runTsdownConfigHook({
+      exports: {
+        customExports: (exportsMap) => {
+          exportsMap['./bundle.css'] = {style: './dist/bundle.css', default: './dist/bundle.css'}
+          return exportsMap
+        },
+      },
+    })
+    await expect(
+      getCustomExports(replaced)({'.': './dist/index.mjs'}, customExportsContext),
+    ).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './bundle.css': {style: './dist/bundle.css', default: './dist/bundle.css'},
+    })
+
+    const nested = await runTsdownConfigHook({
+      exports: {
+        customExports: (exportsMap) => {
+          const entry = exportsMap['./bundle.css']
+          if (typeof entry === 'object' && entry !== null) {
+            Reflect.set(entry, 'module', './dist/bundle.css')
+          }
+          return exportsMap
+        },
+      },
+    })
+    await expect(
+      getCustomExports(nested)(
+        {'.': './dist/index.mjs', './bundle.css': {default: './dist/bundle.css'}},
+        customExportsContext,
+      ),
+    ).resolves.toEqual({
+      '.': './dist/index.mjs',
+      './bundle.css': {default: './dist/bundle.css', module: './dist/bundle.css'},
+    })
+  })
+
   test('leaves the config alone without `exports`, or when tsdown `exports` is off', async () => {
     const withoutCssExports = await runTsdownConfigHook({exports: true}, {inject: true})
     expect(withoutCssExports.exports).toBe(true)

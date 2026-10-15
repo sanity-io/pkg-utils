@@ -2,6 +2,7 @@ import {createHash} from 'node:crypto'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import {isDeepStrictEqual} from 'node:util'
 import {createNodeDriver} from '@pandacss/compiler'
 import {
   createSourceTransformer,
@@ -873,6 +874,9 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // Apply a pre-existing `customExports` first (both its function and record forms,
         // mirroring how tsdown itself applies them), then insert the CSS export
         const exportKey = `./${fileName}`
+        // A copy of the entry tsdown passed in, nested conditions included: the callback may
+        // change it in place and return the same map
+        const passedEntry = structuredClone(exportsMap[exportKey])
         const base =
           typeof previousCustomExports === 'function'
             ? await previousCustomExports(exportsMap, context)
@@ -883,7 +887,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // say) is theirs to shape, so it is kept as is
         const userDefined =
           typeof previousCustomExports === 'function'
-            ? base[exportKey] !== exportsMap[exportKey]
+            ? !isDeepStrictEqual(base[exportKey], passedEntry)
             : previousCustomExports !== undefined && exportKey in previousCustomExports
         if (userDefined) return base
         const outDir = resolveOutDir(config, context, fileName)
