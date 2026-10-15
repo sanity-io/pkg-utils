@@ -1,4 +1,4 @@
-import 'virtual:panda.css'
+import '../panda.css'
 import '../consumer.css'
 import {expect, test} from 'vitest'
 import {brandButton} from './styles.ts'
@@ -11,12 +11,12 @@ function render(className: string, attributes: Record<string, string> = {}): CSS
   return getComputedStyle(button)
 }
 
-test("generates Panda's CSS without cascade layers, behind the banner", () => {
+test("generates Panda's CSS without cascade layers", () => {
   const rules = [...document.styleSheets].flatMap((sheet) => Array.from(sheet.cssRules))
   const layerRules = rules.filter(
     (rule) => rule instanceof CSSLayerBlockRule || rule instanceof CSSLayerStatementRule,
   )
-  expect(layerRules.map((rule) => rule.cssText)).toEqual(['@layer sui;'])
+  expect(layerRules).toEqual([])
   expect(rules.some((rule) => rule.cssText.startsWith('.button--tone_brand'))).toBe(true)
 })
 

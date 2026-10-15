@@ -1554,6 +1554,51 @@ describe('unwrapCascadeLayers', () => {
       '.a {\n\tcolor: red;\n}\n',
     )
   })
+
+  test('keeps the comments ahead of the first rule there', () => {
+    expect(unwrapCascadeLayers('/* head */@layer a{.a{}}/* mid */.top{}')).toBe(
+      '/* head */.a{}/* mid */.top{}',
+    )
+  })
+
+  test('with layer names, removes only those layers, with their sublayers', () => {
+    // `other.a` is a sublayer of a kept layer, which stays after the rules of the removed ones,
+    // since they beat it now
+    expect(
+      unwrapCascadeLayers(
+        '@layer a{@layer s{.s{}}.a{}}@layer other{@layer a{.oa{}}}@layer b{.b{}}.top{}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('.s{}.a{}.b{}@layer other{@layer a{.oa{}}}.top{}')
+  })
+
+  test('with layer names, keeps the names of the other layers in the statements', () => {
+    // A statement ahead of the first rule stays there, so it still names its layers first
+    expect(
+      unwrapCascadeLayers(
+        '@layer sui, a;.x{}@layer b, other;@layer other{.o{}}@layer a{.a{}}@layer b{.b{}}',
+        new Set(['a', 'b']),
+      ),
+    ).toBe('@layer sui;.a{}.b{}.x{}@layer other;@layer other{.o{}}')
+    // Also when the statement ends up last
+    expect(unwrapCascadeLayers('.x{}@layer a, other;@layer a{.a{}}', new Set(['a']))).toBe(
+      '.a{}.x{}@layer other;',
+    )
+  })
+
+  test('with layer names, only splits the conditional rules around those layers', () => {
+    expect(
+      unwrapCascadeLayers('@media print{@layer other{.o{}}@layer a{.a{}}}', new Set(['a'])),
+    ).toBe('@media print{.a{}@layer other{.o{}}}')
+    expect(
+      unwrapCascadeLayers('@media print{@layer other{.o{}}}@layer a{.a{}}', new Set(['a'])),
+    ).toBe('.a{}@media print{@layer other{.o{}}}')
+  })
+
+  test('with layer names, leaves a stylesheet without them as it is', () => {
+    const css = '@layer other {\n  .o {\n    color: red;\n  }\n}\n\n@layer other.a;\n'
+    expect(unwrapCascadeLayers(css, new Set(['a']))).toBe(css)
+  })
 })
 
 /** Records the directories created with `fs.mkdtempSync` (by the plugin) and their modes. */

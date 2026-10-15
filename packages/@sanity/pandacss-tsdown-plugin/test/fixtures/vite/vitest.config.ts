@@ -1,11 +1,15 @@
+import {pandacss} from '@pandacss/vite'
 import {playwright} from '@vitest/browser-playwright'
 import {defineConfig} from 'vitest/config'
-import {pandacss} from '../../../src/vite.ts'
+import {removeCascadeLayers} from '../../../src/vite.ts'
 
 // Run by `test/vite.test.ts`: the browser test of `src/` in headless Chromium, with the stylesheet
-// generated without cascade layers
+// `@pandacss/vite` generates without cascade layers
 export default defineConfig({
-  plugins: [pandacss({transform: true, cascadeLayers: false, banner: '@layer sui;'})],
+  plugins: [
+    pandacss({transform: true}),
+    removeCascadeLayers(['reset', 'base', 'tokens', 'recipes', 'utilities']),
+  ],
   test: {
     include: ['src/**/*.browser-test.ts'],
     browser: {

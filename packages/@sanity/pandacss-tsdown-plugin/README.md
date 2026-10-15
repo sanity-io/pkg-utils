@@ -2,7 +2,7 @@
 
 A [tsdown](https://tsdown.dev) plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm with a separate stylesheet.
 
-It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config; the two load the same `panda.config.ts`. A package built with this plugin that also runs its sources through Vite (a dev server, Storybook, Vitest) can use the [`@sanity/pandacss-tsdown-plugin/vite`](#vite-plugin) entry there, so that output behaves like the published build.
+It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config; the two load the same `panda.config.ts`. A package built with this plugin with `cascadeLayers: false` that also runs its sources through Vite (a dev server, Storybook, Vitest) can add the [`removeCascadeLayers()`](#vite-plugin) plugin next to `@pandacss/vite` there, so that CSS cascades like the published build.
 
 ## Installation
 
@@ -144,7 +144,7 @@ Keep the layers when the consumers are Panda apps, or other apps that declare a 
 
 Panda's own `polyfill` option is no substitute: it emulates the layer order by appending `:not(#\#)` chains to every selector, one more ID for each layer. That keeps the library's own precedence, but even its global `button` style becomes as specific as an ID selector (and its utilities as ten), so no consumer rule short of `!important` can override it. The two options can't be combined.
 
-The library's own Vite setups, such as its Storybook or Vitest browser suite, which build its sources instead of loading `bundle.css`, get the same unlayered stylesheet from the [Vite plugin](#vite-plugin) with the same `cascadeLayers: false`.
+The library's own Vite setups, such as its Storybook or Vitest browser suite, which build its sources with `@pandacss/vite` instead of loading `bundle.css`, get the same unlayered CSS from the [Vite plugin](#vite-plugin).
 
 ### Browser targets
 
@@ -191,59 +191,28 @@ An option the plugin doesn't have is an error, not something it ignores — a ty
 
 ## Vite plugin
 
-`@sanity/pandacss-tsdown-plugin/vite` is for packages that build with this plugin (directly or through the `panda` option of `@sanity/tsdown-config`) and also run their Panda sources through Vite, in a dev server, a Storybook or a Vitest browser suite, and want that output to behave like the published build. It is not a standalone Vite plugin: `tsdown` stays a required peer, and its options mirror the tsdown `panda` options, so the Vite setup passes the same `cascadeLayers` as `tsdown.config.ts`. It exports `pandacss()`, a drop-in replacement for `pandacss()` from the official `@pandacss/vite`, which it wraps, with two additions:
+`@sanity/pandacss-tsdown-plugin/vite` is for packages that build with this plugin and `cascadeLayers: false` (directly or through the `panda` option of `@sanity/tsdown-config`), and also run their Panda sources through the official `@pandacss/vite` plugin, in a dev server, a Storybook or a Vitest browser suite. Its `removeCascadeLayers()` is the Vite counterpart of `cascadeLayers: false`: registered next to `@pandacss/vite`, it removes the layers from the CSS `@pandacss/vite` generates with the same pass as the build, so the Vite output cascades like the published `bundle.css`. It isn't a standalone Vite plugin: it neither replaces nor wraps `@pandacss/vite`, and `tsdown` stays a required peer.
 
-- **No hand-written stylesheet.** `@pandacss/vite` generates the CSS into a stylesheet the app writes itself, which it recognizes by a statement that declares Panda's layers, such as `@layer reset, base, tokens, recipes, utilities;`. The wrapper provides that stylesheet as the virtual module `virtual:panda.css`, with the layer names of the Panda config, renamed ones included.
-- **`cascadeLayers`, as in the tsdown config.** With `cascadeLayers: false`, it removes the cascade layers from the generated stylesheet with the same pass as the tsdown plugin's [`cascadeLayers: false`](#cascade-layers), so the Vite output cascades like the published `bundle.css`.
-
-The package already has the plugin and `tsdown` for its build. The entry also needs `@pandacss/vite` and `vite`, which are optional peer dependencies of the plugin, so builds that don't use the entry don't install them:
-
-```sh
-pnpm add --save-dev @pandacss/vite vite
-```
+The package already has the plugin and `tsdown` for its build, and `@pandacss/vite` for its Vite setups. The entry also needs `vite`, an optional peer dependency of the plugin, so builds that don't use the entry don't install it.
 
 ```ts
 // vite.config.ts
-import {pandacss} from '@sanity/pandacss-tsdown-plugin/vite'
+import pandacss from '@pandacss/vite'
+import {removeCascadeLayers} from '@sanity/pandacss-tsdown-plugin/vite'
 import {defineConfig} from 'vite'
 
 export default defineConfig({
-  // `cascadeLayers` as in the `panda` options of tsdown.config.ts
-  plugins: [pandacss({transform: true, cascadeLayers: false})],
+  plugins: [
+    pandacss({transform: true}),
+    removeCascadeLayers(['reset', 'base', 'tokens', 'recipes', 'utilities']),
+  ],
 })
 ```
 
-Import the stylesheet once, at the top of the app's entry, before anything that loads other CSS:
-
-```ts
-// src/main.tsx
-import 'virtual:panda.css'
-import {createRoot} from 'react-dom/client'
-
-// …
-```
-
-- **Load order.** Without layers, Panda's rules compete with the app's other CSS by specificity and source order, so the stylesheet has to load first, before the `<style>` elements styled-components adds at runtime, for example. Imported first, it does: in `vite dev`, Vite injects stylesheets in the order the modules import them, and in `vite build` the entry's CSS file is linked from the `<head>`, ahead of anything a script adds.
-- **Storybook.** Import it at the top of `.storybook/preview.tsx`, and add the plugin in `viteFinal`.
-- **Vitest browser mode.** Add the plugin to the Vitest config, and import the stylesheet in a [setup file](https://vitest.dev/config/setupfiles) (`test.setupFiles`), which runs before every test file.
-- **TypeScript.** The `vite/client` types (`/// <reference types="vite/client" />`) declare every `*.css` import, `virtual:panda.css` included. `PANDA_STYLESHEET` exports the specifier, for tooling that adds the import itself.
-
-| Option          | Type      | Default                      | Description                                                                                                                                                                                                                          |
-| --------------- | --------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `cwd`           | `string`  | Vite's `root`                | Passed to `@pandacss/vite`: where `panda.config.ts` is looked up.                                                                                                                                                                    |
-| `configPath`    | `string`  | discovered upward from `cwd` | Passed to `@pandacss/vite`: an explicit Panda config file, relative to `cwd`.                                                                                                                                                        |
-| `outdir`        | `string`  | the Panda config's `outdir`  | Passed to `@pandacss/vite`: where the generated files are written.                                                                                                                                                                   |
-| `transform`     | `boolean` | `false`                      | Passed to `@pandacss/vite`: rewrite the style calls into class names.                                                                                                                                                                |
-| `cascadeLayers` | `boolean` | `true`                       | Mirrors the tsdown `cascadeLayers` option: pass the value the build uses. `false` removes the layers with the same pass. Can't be combined with the Panda config's `polyfill`.                                                       |
-| `banner`        | `string`  | —                            | CSS prepended to the stylesheet, on a line of its own, such as a `@layer` statement that orders the layers of other libraries' stylesheets (`@layer sui;`) ahead of their CSS. Can't be combined with the Panda config's `polyfill`. |
-
-How it works:
-
-- The wrapper returns two plugins: a companion plugin, which loads the Panda config `@pandacss/vite` loads (from the same `cwd` and `configPath`) for its layer names, and `@pandacss/vite` itself. The companion serves `virtual:panda.css`, which declares the layers; `@pandacss/vite` appends the generated CSS to it; and the companion then removes the layers (with `cascadeLayers: false`) and prepends the `banner`. `@pandacss/vite`'s transform comes first (`order: 'pre'`), and the companion's runs before Vite's own CSS pipeline (PostCSS, `@import` inlining, Lightning CSS minification) — in `vite dev`, `vite build` and Vitest's browser mode alike.
-- A hand-written stylesheet that declares the layers keeps working: `@pandacss/vite` still fills it, and the companion rewrites it too. Replace its import with `virtual:panda.css` to delete the file. The layers of other stylesheets are left alone, including the ones a rewritten stylesheet `@import`s.
-- In `vite dev`, an edit to the Panda config that renames the layers updates `virtual:panda.css` before `@pandacss/vite` reloads the page.
-- An app that builds several Panda projects registers one `pandacss()` per project. They share `virtual:panda.css`, which declares the layers of every project's config, in the order of the plugins, and is rewritten once, so the instances must have the same `cascadeLayers` and `banner`.
-- `polyfill: true` in the Panda config works with a single `pandacss()`, `cascadeLayers: true` and no `banner`. `@pandacss/vite` applies the polyfill by removing the `@layer` statement that the companion, and the `@pandacss/vite` of other projects, recognize the stylesheet by, so the plugin reports any other combination when the dev server starts, and when a config change turns the polyfill on while it runs.
+- **The layer names** are the ones the Panda config gives its layers: Panda's defaults above, or the names its `layers` option renames them to, such as `u-reset` for `reset`.
+- **The stylesheet `@pandacss/vite` fills** stays the app's own: a CSS file that declares the layers, such as `@layer reset, base, tokens, recipes, utilities;`, imported at the top of the app's entry, `.storybook/preview.tsx` or a Vitest [setup file](https://vitest.dev/config/setupfiles), before anything that loads other CSS. Without layers, Panda's rules compete with the app's other CSS by specificity and source order, so they have to load first, before the `<style>` elements styled-components adds at runtime, for example. `removeCascadeLayers()` removes the declaration of the named layers from it too.
+- **Only the named layers go**, together with their sublayers (Panda's `recipes.slots` and `utilities.compositions`): their `@layer` blocks, and their names in `@layer` statements. Other layers stay as they are, such as the ones another library's stylesheet declares, or a `@layer` statement ahead of the declaration that orders other libraries' layers (`@layer sui;`). That applies to every CSS module, so the names should be the Panda config's own when other CSS on the page uses the same ones, such as Tailwind's `base` and `utilities`.
+- **It runs after `@pandacss/vite`**, whose transform comes first (`order: 'pre'`), wherever it is registered, and before Vite's own CSS pipeline (PostCSS, `@import` inlining, Lightning CSS minification), so the stylesheets the app's stylesheet `@import`s keep their layers. That holds in `vite dev`, `vite build` and Vitest's browser mode alike.
 
 ## Advanced
 
