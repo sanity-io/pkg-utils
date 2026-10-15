@@ -219,12 +219,49 @@ describe('pandacssPlugin', () => {
 
       // Panda's diagnostic is reported once, although both the parse and the transform of the
       // module carry it
-      const unextractable = warnings.filter((message) =>
-        message.includes('received a dynamic argument'),
+      const unextractable = warnings.filter(
+        (message) =>
+          message.includes('received a dynamic argument') && /src[\\/]index\.ts:/.test(message),
       )
       expect(unextractable).toHaveLength(1)
       expect(unextractable[0]).toContain('[pandacss] Panda reported a warning while parsing')
       expect(unextractable[0]).toMatch(/src[\\/]index\.ts:11:/)
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test('injects the CSS import for modules whose style calls are all left to the runtime', async () => {
+    // Panda extracts nothing from a module with only dynamic values (the parse reports no
+    // calls, just the `panda_call_unextractable` diagnostic) and the transformer leaves it
+    // unchanged — but its runtime calls still produce Panda class names, so the stylesheet
+    // must still reach the entry chunks importing it
+    const dynamicFixtureDir = path.resolve(__dirname, 'fixtures/dynamic')
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      cwd: dynamicFixtureDir,
+      input: path.join(dynamicFixtureDir, 'src/only-dynamic.ts'),
+      plugins: [pandacssPlugin({cwd: dynamicFixtureDir, inject: true})],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      const entry = findEntryChunk(output)
+
+      expect(entry.code.startsWith('import "./bundle.css";\n')).toBe(true)
+      expect(entry.code).toMatch(/css\(\{\s*color\s*\}\)/)
+      expect(
+        entry.moduleIds.some((id) => id.replaceAll('\\', '/').includes('/styled-system/css/')),
+      ).toBe(true)
+      expect(
+        warnings.filter(
+          (message) =>
+            message.includes('received a dynamic argument') &&
+            /src[\\/]only-dynamic\.ts:/.test(message),
+        ),
+      ).toHaveLength(1)
     } finally {
       await bundle.close()
     }

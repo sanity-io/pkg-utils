@@ -277,9 +277,10 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let built = false
 
   /**
-   * The ids of the modules with Panda styles (the modules the transformer rewrote). Builds a
-   * host runs in parallel with a shared plugin instance all add to it (module ids are stable),
-   * and `renderChunk` consults it per output to decide which entry chunks import the CSS.
+   * The ids of the modules with Panda styles — rewritten by the transformer, or left to the
+   * runtime (dynamic calls, or `transform: false`). Builds a host runs in parallel with a shared
+   * plugin instance all add to it (module ids are stable), and `renderChunk` consults it per
+   * output to decide which entry chunks import the CSS.
    */
   const pandaModules = new Set<string>()
   /** Diagnostics already reported, so repeated scans don't warn about the same thing again. */
@@ -375,37 +376,42 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       `while parsing ${displayPath(filePath, resolveCwd())}`,
       filePath,
     )
-    if (!transformEnabled) {
-      if (report.cssCalls + report.cvaCalls + report.svaCalls + report.jsxUsages > 0) {
-        pandaModules.add(id)
+    // The module uses Panda styles when the parse extracted anything — or when it only
+    // reported diagnostics: a call with a dynamic value extracts nothing (and is left to the
+    // runtime below) but still produces class names the stylesheet has to be loaded for, so the
+    // entry chunks reaching the module get the CSS import either way.
+    let usesStyles =
+      report.cssCalls + report.cvaCalls + report.svaCalls + report.jsxUsages > 0 ||
+      report.diagnostics.length > 0
+
+    let transformed: {code: string; map: string | null} | undefined
+    if (transformEnabled) {
+      const result = transformSource({
+        transformer: resolveTransformer(driver),
+        path: filePath,
+        source: code,
+        mode: 'build',
+      })
+      for (const dependency of result.dependencies) {
+        this.addWatchFile(dependency)
       }
-      return undefined
-    }
-
-    const result = transformSource({
-      transformer: resolveTransformer(driver),
-      path: filePath,
-      source: code,
-      mode: 'build',
-    })
-    for (const dependency of result.dependencies) {
-      this.addWatchFile(dependency)
-    }
-    warnDiagnostics(
-      (message) => this.warn(message),
-      result.diagnostics,
-      `while transforming ${displayPath(filePath, resolveCwd())}`,
-      filePath,
-    )
-    if (result.bailed) {
-      this.warn(
-        `[pandacss] Panda could not rewrite the style calls in "${displayPath(filePath, resolveCwd())}" — they run at runtime, so Panda's runtime is bundled into the output for them.`,
+      warnDiagnostics(
+        (message) => this.warn(message),
+        result.diagnostics,
+        `while transforming ${displayPath(filePath, resolveCwd())}`,
+        filePath,
       )
+      if (result.bailed) {
+        this.warn(
+          `[pandacss] Panda could not rewrite the style calls in "${displayPath(filePath, resolveCwd())}" — they run at runtime, so Panda's runtime is bundled into the output for them.`,
+        )
+      }
+      usesStyles ||= result.changed || result.bailed
+      if (result.changed) transformed = {code: result.code, map: result.map}
     }
-    if (!result.changed) return undefined
 
-    pandaModules.add(id)
-    return {code: result.code, map: result.map ?? null}
+    if (usesStyles) pandaModules.add(id)
+    return transformed
   }
 
   const plugin: PandacssPlugin = {
