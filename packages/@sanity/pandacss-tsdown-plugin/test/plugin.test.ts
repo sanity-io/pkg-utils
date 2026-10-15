@@ -6,6 +6,7 @@ import fs, {
   mkdtempSync,
   readdirSync,
   readFileSync,
+  realpathSync,
   rmSync,
   statSync,
   symlinkSync,
@@ -352,25 +353,54 @@ describe('pandacssPlugin', () => {
   })
 
   test('resolves a symlinked project root, like the module ids', async () => {
-    // rolldown resolves symlinks, so the ids under a symlinked root (macOS's `/var` and `/tmp`,
-    // a linked workspace) are real paths, which a filter built from the link would never match
+    // rolldown resolves symlinks by default, so the ids under a symlinked root (macOS's `/var`
+    // and `/tmp`, a linked workspace) are real paths, which a filter built from the link would
+    // never match. With `resolve.symlinks: false` they keep the link, which a filter built from
+    // the real path would never match.
     const real = copyFixture('symlink-target')
     const link = path.resolve(__dirname, 'fixtures', 'symlink.local')
     rmSync(link, {recursive: true, force: true})
     symlinkSync(real, link, process.platform === 'win32' ? 'junction' : 'dir')
     try {
-      const plugin = pandacssPlugin({cwd: link})
-      const bundle = await rolldown({
-        cwd: link,
-        input: path.join(link, 'src/index.ts'),
-        plugins: [plugin],
-      })
-      try {
-        const {output} = await bundle.generate({format: 'esm'})
-        expect(findEntryChunk(output).code).toContain('"color_brand"')
-      } finally {
-        await bundle.close()
+      for (const symlinks of [undefined, false]) {
+        const bundle = await rolldown({
+          cwd: link,
+          input: path.join(link, 'src/index.ts'),
+          plugins: [pandacssPlugin({cwd: link, inject: true})],
+          ...(symlinks === undefined ? {} : {resolve: {symlinks}}),
+        })
+        try {
+          const {output} = await bundle.generate({format: 'esm'})
+          const entry = findEntryChunk(output)
+          expect(entry.facadeModuleId).toBe(
+            path.join(symlinks === false ? link : realpathSync(real), 'src/index.ts'),
+          )
+          expect(entry.code).toContain('"color_brand"')
+          expect(entry.code.startsWith('import "./bundle.css";\n')).toBe(true)
+          expect(findAsset(output, 'bundle.css')).toContain('.color_brand {')
+        } finally {
+          await bundle.close()
+        }
       }
+
+      // Under tsdown the driver is created in its `build:before` hook, before rolldown's
+      // `options` hook runs
+      await tsdownBuild({
+        config: false,
+        cwd: link,
+        entry: ['src/index.ts'],
+        format: ['esm'],
+        outDir: 'dist',
+        dts: false,
+        inputOptions: {resolve: {symlinks: false}},
+        plugins: [pandacssPlugin({cwd: link, inject: true})],
+        logLevel: 'silent',
+        publint: false,
+      })
+      const code = readFileSync(path.join(real, 'dist/index.mjs'), 'utf-8')
+      expect(code).toContain('"color_brand"')
+      expect(code.startsWith('import "./bundle.css";\n')).toBe(true)
+      expect(readFileSync(path.join(real, 'dist/bundle.css'), 'utf-8')).toContain('.color_brand {')
     } finally {
       rmSync(link, {recursive: true, force: true})
       rmSync(real, {recursive: true, force: true})

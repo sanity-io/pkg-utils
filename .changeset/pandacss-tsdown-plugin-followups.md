@@ -9,7 +9,7 @@ Fix several cases where styles were missed or the build output was wrong:
 - With tsdown, the generated `styled-system` files are written after tsdown's `clean` step, so `clean` may list them, and again for every `build()` that reuses the plugin.
 - The `outdir` option now also applies to Panda's default import map, so calls imported from that directory are extracted, also after a config reload in watch mode.
 - `target` accepts tsdown's `'baseline-widely-available'` alias, like `css.target` in `@tsdown/css`.
-- A symlinked project directory, a relative `cwd` and `include` globs with `..` segments no longer leave modules untransformed.
+- A symlinked project directory (also with rolldown's `resolve.symlinks: false`), a relative `cwd` and `include` globs with `..` segments no longer leave modules untransformed.
 - `fileName` accepts a `./` prefix and dot-prefixed names, and a name outside the output directory is rejected.
 - With `exports`, an output directory outside the package fails with an explanation instead of writing an invalid export, and your own `customExports` now runs after the stylesheet export is added, so an entry it writes for the stylesheet wins.
 - Watch mode keeps a Windows network-share (UNC) output directory out of the watcher.

@@ -345,6 +345,12 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let contextCwd: string | undefined
   /** The bundler's working directory (rolldown's `cwd` input option), recorded by `options`. */
   let inputCwd: string | undefined
+  /**
+   * Whether the host resolves symlinks in module ids (rolldown's `resolve.symlinks`, on by
+   * default), recorded before the driver is created: by `options`, and by tsdown's
+   * `build:before` hook, which runs first.
+   */
+  let resolveSymlinks = true
   /** The host-resolved output directory (tsdown's `outDir`), excluded from watching. */
   let contextOutDir: string | undefined
 
@@ -379,10 +385,18 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   function resolveCwd(): string {
     // A relative `cwd` option is relative to the host's working directory, like tsdown's own
     // paths — which isn't necessarily the process's (tsdown's `cwd` option, workspaces).
-    // Module ids are real paths, so a symlinked project root is resolved as well: the
-    // transform filter and Panda's matcher then compare them like with like.
     const base = path.resolve(contextCwd ?? inputCwd ?? process.cwd())
-    return realpathOrSelf(options.cwd === undefined ? base : path.resolve(base, options.cwd))
+    return resolveProjectPath(options.cwd === undefined ? base : path.resolve(base, options.cwd))
+  }
+
+  /**
+   * A project path in the form module ids take: real, unless the host keeps symlinks in them
+   * (rolldown's `resolve.symlinks: false`). The project root takes that form too, so the
+   * transform filter and Panda's matcher compare like with like under a symlinked root (macOS's
+   * `/var` and `/tmp`, a linked workspace).
+   */
+  function resolveProjectPath(file: string): string {
+    return resolveSymlinks ? realpathOrSelf(file) : file
   }
 
   async function createDriver(cwd: string): Promise<PandaDriver> {
@@ -604,6 +618,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
       if (inputOptions.cwd !== undefined) inputCwd = inputOptions.cwd
+      resolveSymlinks = inputOptions.resolve?.symlinks !== false
       const cwd = resolveCwd()
       const currentDriver = await resolveDriver(cwd)
       // Outside tsdown (whose `build:before` hook already ran it), the first codegen runs here,
@@ -625,9 +640,9 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // (e.g. `include: ['./**/*.tsx']`), and every write there would trigger the next
         // rebuild: exclude them from watching.
         const excluded = [resolveGeneratedDir(currentDriver)]
-        // Real, like the watched directories, which come from the (real) project root
+        // In the form of the watched directories, which come from the project root
         if (contextOutDir !== undefined) {
-          excluded.push(realpathOrSelf(path.resolve(cwd, contextOutDir)))
+          excluded.push(resolveProjectPath(path.resolve(cwd, contextOutDir)))
         }
         // `watch: false` is rolldown's way to disable watching, and nothing to add to then
         if (inputOptions.watch !== false) {
@@ -867,7 +882,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         const userHooks = config.hooks
         config.hooks = async (hooks) => {
           // Every format calls it; the first runs the codegen, and all of them wait for it
-          hooks.hook('build:before', async () => {
+          hooks.hook('build:before', async ({buildOptions}) => {
+            resolveSymlinks = buildOptions.resolve?.symlinks !== false
             codegenBeforeBuilds ??= resolveDriver(resolveCwd()).then(runCodegen)
             await codegenBeforeBuilds
           })
