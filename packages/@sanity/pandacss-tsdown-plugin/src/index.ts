@@ -248,10 +248,13 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
    * one of them would otherwise trigger the next rebuild, forever.
    */
   function watchExclusions(loaded: NodeDriver, inputOptions: InputOptions): RegExp[] {
+    // Relative output paths are relative to the bundler's `cwd`, while the generated directories
+    // are relative to Panda's
+    const bundlerCwd = path.resolve(inputOptions.cwd ?? process.cwd())
     watchOutputDirs = [
       ...(resolvedOutDir === undefined ? [] : [resolvedOutDir]),
       ...rolldownOutputDirs(Reflect.get(inputOptions, 'output')),
-    ].map((dir) => path.resolve(cwd, dir))
+    ].map((dir) => path.resolve(bundlerCwd, dir))
     const generatedDirs = [loaded.getOutdir(), loaded.getOutdir(options.outdir)].map((dir) =>
       path.resolve(cwd, dir),
     )

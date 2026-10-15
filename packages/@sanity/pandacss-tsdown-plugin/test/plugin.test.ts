@@ -325,10 +325,12 @@ function cssSource(name: string, color: string): string {
 
 /**
  * Runs rolldown's watcher (polling, so file events behave the same on every OS), counting the
- * finished builds.
+ * finished builds. A relative `input` and `outDir` are resolved against `cwd`, rolldown's
+ * working directory.
  */
-function startWatcher(plugin: TsdownPlugin, input: string, outDir: string) {
+function startWatcher(plugin: TsdownPlugin, input: string, outDir: string, cwd?: string) {
   const watcher = watch({
+    ...(cwd === undefined ? {} : {cwd}),
     input,
     plugins: [plugin],
     output: {dir: outDir, format: 'esm'},
@@ -561,6 +563,27 @@ describe('config reloads', () => {
         expect(await readFile(path.join(dir, 'dist/styles.css'), 'utf8')).toContain('purple')
         await delay(1500)
         expect(watcher.builds()).toBe(2)
+      } finally {
+        await watcher.close()
+      }
+    },
+  )
+
+  test(
+    "resolves a relative output directory against rolldown's `cwd`, not Panda's",
+    {timeout: 30_000},
+    async () => {
+      // Panda's project is `lib`, an `include` base holding the build output in `lib/dist`
+      const project = path.join(dir, 'lib')
+      await cp(reloadFixtureDir, project, {recursive: true})
+      await cp(path.join(project, 'panda.root.ts'), path.join(project, 'panda.config.ts'))
+      const watcher = startWatcher(pandaPlugin({cwd: project}), 'lib/src/index.ts', 'lib/dist', dir)
+      try {
+        await watcher.waitForBuild(1)
+        expect(await readFile(path.join(project, 'dist/styles.css'), 'utf8')).toContain('.badge')
+        // Writing `lib/dist` must not trigger the next build
+        await delay(1500)
+        expect(watcher.builds()).toBe(1)
       } finally {
         await watcher.close()
       }
