@@ -866,10 +866,10 @@ describe('pandacssPlugin', () => {
 
 /** Records the directories created with `fs.mkdtempSync` (by the plugin) and their modes. */
 function spyOnTempDirs(): {created: {dir: string; mode: number}[]; restore(): void} {
-  const mkdtempSync = fs.mkdtempSync
+  const createTempDir = fs.mkdtempSync
   const created: {dir: string; mode: number}[] = []
   const spy = vi.spyOn(fs, 'mkdtempSync').mockImplementation((prefix, options) => {
-    const dir = mkdtempSync(prefix, options)
+    const dir = createTempDir(prefix, options)
     created.push({dir, mode: statSync(dir).mode & 0o777})
     return dir
   })
