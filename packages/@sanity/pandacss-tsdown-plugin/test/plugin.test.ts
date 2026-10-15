@@ -122,6 +122,22 @@ async function generate(
   }
 }
 
+test('depends on the Panda packages it imports, with `@pandacss/dev` as an optional peer', () => {
+  // A project that installs `@pandacss/dev` (for `panda codegen` and the CLI) keeps a single
+  // copy of it, and needs nothing else for the build
+  const manifest: unknown = JSON.parse(
+    readFileSync(path.resolve(__dirname, '../package.json'), 'utf-8'),
+  )
+  expect(manifest).toMatchObject({
+    dependencies: {
+      '@pandacss/compiler': expect.any(String),
+      '@pandacss/transformer': expect.any(String),
+    },
+    peerDependencies: {'@pandacss/dev': '*', 'tsdown': expect.any(String)},
+    peerDependenciesMeta: {'@pandacss/dev': {optional: true}},
+  })
+})
+
 describe('pandacssPlugin', () => {
   test('rewrites the style calls into class names and extracts the stylesheet', async () => {
     const output = await generate({cwd: fixtureDir, target: 'chrome61'})
@@ -570,6 +586,67 @@ describe('pandacssPlugin', () => {
     expect(built.strictBox).toBe('display_flex')
     // The control: the same chunk with the load prepended before the directive runs sloppy
     expect(evaluateCommonJs(`require("./bundle.css");\n${code}`).isStrict()).toBe(false)
+  })
+
+  test('keeps the directive prologue on the string fallback, and warns about the sourcemap', async () => {
+    // Without rolldown's native magic-string (another plugin's `options` hook turned it off),
+    // the load is spliced into the code at the same offset
+    const withoutNativeMagicString: Plugin = {
+      name: 'without-native-magic-string',
+      options: (inputOptions) => ({
+        ...inputOptions,
+        experimental: {...inputOptions.experimental, nativeMagicString: false},
+      }),
+    }
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      cwd: fixtureDir,
+      input: path.join(fixtureDir, 'src/strict.ts'),
+      plugins: [pandacssPlugin({cwd: fixtureDir, inject: true}), withoutNativeMagicString],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'cjs', sourcemap: true})
+      const {code} = findEntryChunk(output)
+      expect(code.startsWith('"use strict";\nrequire("./bundle.css");\n')).toBe(true)
+      expect(evaluateCommonJs(code).isStrict()).toBe(true)
+      expect(warnings).toEqual(
+        expect.arrayContaining([expect.stringContaining('native magic-string is unavailable')]),
+      )
+    } finally {
+      await bundle.close()
+    }
+  })
+
+  test('emits the stylesheet an injected import loads, even when it ends up empty', async () => {
+    // Without tokens, globals or a preflight, `css({})` extracts nothing, while the module
+    // still counts as styled: the relative import must resolve to an (empty) file
+    const cwd = copyFixture(
+      'empty-stylesheet',
+      `import {defineConfig, type Config} from '@pandacss/dev'\n\nexport default defineConfig({\n  presets: [],\n  preflight: false,\n  include: ['./src/**/*.ts'],\n  outdir: 'styled-system',\n  outExtension: 'js',\n  importMap: '#styled-system',\n} satisfies Config)\n`,
+    )
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from '#styled-system/css'\n\nexport const empty: string = css({})\n",
+    )
+    try {
+      const bundle = await rolldown({
+        cwd,
+        input: path.join(cwd, 'src/index.ts'),
+        plugins: [pandacssPlugin({cwd, inject: true})],
+      })
+      try {
+        const {output} = await bundle.generate({format: 'esm'})
+        expect(findEntryChunk(output).code.startsWith('import "./bundle.css";\n')).toBe(true)
+        expect(findAsset(output, 'bundle.css').trim()).toBe('')
+      } finally {
+        await bundle.close()
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
   })
 
   test('keeps `"use client"` the first statement of the chunk', async () => {
@@ -1156,6 +1233,36 @@ describe('watch mode', () => {
       }
     },
   )
+
+  test('a change to a file the config imports reloads it', {timeout: 60_000}, async () => {
+    // The config's own imports aren't part of the module graph, but its tokens can live there
+    const cwd = copyFixture(
+      'watch-config-import',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8')
+        .replace(
+          "import {defineConfig, type Config} from '@pandacss/dev'",
+          "import {defineConfig, type Config} from '@pandacss/dev'\nimport {brand} from './theme.ts'",
+        )
+        .replace("brand: {value: '#f03e2f'}", 'brand: {value: brand}'),
+    )
+    const themePath = path.join(cwd, 'theme.ts')
+    writeFileSync(themePath, "export const brand: string = '#f03e2f'\n")
+    const watcher = startWatcher(cwd)
+    try {
+      await watcher.nextBuild()
+      expect(watcher.readOutput().css).toContain('--colors-brand: #f03e2f')
+
+      const secondBuild = watcher.nextBuild()
+      await settleWatcher()
+      await rebuildAfter(secondBuild, () =>
+        writeFileSync(themePath, "export const brand: string = '#0000ff'\n"),
+      )
+      expect(watcher.readOutput().css).toContain('--colors-brand: #00f')
+    } finally {
+      await watcher.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
 
   test('a config reload keeps the `outdir` override', {timeout: 60_000}, async () => {
     // Without an `importMap`, the calls imported from the overridden directory are only
