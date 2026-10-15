@@ -12,6 +12,11 @@ the tsdown builds that publish the package.
 pnpm add -D @sanity/pandacss-tsdown-plugin
 ```
 
+Like `@pandacss/vite`, the plugin depends on Panda's compiler and transformer directly
+(`@pandacss/compiler`, `@pandacss/compiler-shared` and `@pandacss/transformer`), so it has no Panda
+peer dependencies; `tsdown` is its only peer. `@pandacss/dev` isn't needed for builds, though a
+`panda.config.ts` that imports `defineConfig` from it still needs it installed in the project.
+
 ```ts
 // tsdown.config.ts
 import {pandaPlugin} from '@sanity/pandacss-tsdown-plugin'

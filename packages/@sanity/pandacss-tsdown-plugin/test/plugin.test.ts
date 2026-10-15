@@ -72,6 +72,22 @@ function findChunk(output: Output, name: string): OutputChunk {
   return chunk
 }
 
+test('depends on the Panda packages it imports, with tsdown as the only peer', async () => {
+  // Like `@pandacss/vite`: Panda's compiler and transformer are regular dependencies, and
+  // neither they nor `@pandacss/dev` are peers
+  const manifest: unknown = JSON.parse(
+    await readFile(path.resolve(__dirname, '../package.json'), 'utf8'),
+  )
+  expect(manifest).toMatchObject({
+    dependencies: {
+      '@pandacss/compiler': expect.any(String),
+      '@pandacss/compiler-shared': expect.any(String),
+      '@pandacss/transformer': expect.any(String),
+    },
+  })
+  expect(manifest).toHaveProperty('peerDependencies', {tsdown: expect.any(String)})
+})
+
 describe('pandaPlugin', () => {
   test('emits every cascade layer of the included files without the panda marker', async () => {
     const output = await build()
