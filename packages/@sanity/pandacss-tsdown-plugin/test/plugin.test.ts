@@ -25,6 +25,7 @@ import {unwrapCascadeLayers} from '../src/cascadeLayers.ts'
 import {directoryPattern} from '../src/directoryPattern.ts'
 import {
   esbuildTargetToLightningCSS,
+  PANDACSS_PLUGIN_OPTION_NAMES,
   pandacssPlugin,
   type LightningCSSOptions,
   type Options,
@@ -899,6 +900,47 @@ describe('pandacssPlugin', () => {
   })
 })
 
+describe('options', () => {
+  test('`PANDACSS_PLUGIN_OPTION_NAMES` lists every option', () => {
+    // A `Record` over the keys of `Options` has to name each of them, and nothing else
+    const options: Record<keyof Options, true> = {
+      cwd: true,
+      configPath: true,
+      codegen: true,
+      outdir: true,
+      transform: true,
+      polyfill: true,
+      cascadeLayers: true,
+      fileName: true,
+      minify: true,
+      target: true,
+      lightningcss: true,
+      inject: true,
+      exports: true,
+    }
+    expect([...PANDACSS_PLUGIN_OPTION_NAMES].toSorted()).toEqual(Object.keys(options).toSorted())
+  })
+
+  test('rejects an option it does not have, rather than ignoring it', () => {
+    // A host newer than the plugin (`@sanity/tsdown-config`) may pass an option this version
+    // doesn't know, which must not be dropped without a word; `undefined` is an option left out
+    const unknown: Record<string, unknown> = {inject: true, keepLayers: ['reset']}
+    expect(() => pandacssPlugin(unknown as Options)).toThrow(
+      '`keepLayers` is not an option of this version of @sanity/pandacss-tsdown-plugin',
+    )
+    const unset: Record<string, unknown> = {inject: true, keepLayers: undefined}
+    expect(() => pandacssPlugin(unset as Options)).not.toThrow()
+  })
+
+  test('rejects a `cascadeLayers` value it does not read, rather than keeping the layers', () => {
+    // A later version may take the layers to keep; this one only knows `true` and `false`
+    const keepList: Record<string, unknown> = {cascadeLayers: {keep: ['reset']}}
+    expect(() => pandacssPlugin(keepList as Options)).toThrow(
+      '`cascadeLayers` must be `true` or `false` in this version',
+    )
+  })
+})
+
 /** The stylesheet of the `cascade-layers` fixture, which has rules in every Panda layer. */
 async function generateCascadeLayersCss(options: Options = {}): Promise<string> {
   const output = await generate(
@@ -941,6 +983,18 @@ function styledDeclarations(css: string): Set<string> {
     },
   })
   return declarations
+}
+
+/**
+ * The selector and declaration lines of a pretty-printed stylesheet, trimmed and sorted: what it
+ * says, regardless of layers, order and indentation.
+ */
+function ruleLines(css: string): string[] {
+  return css
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line !== '' && line !== '}' && !line.startsWith('@layer'))
+    .toSorted()
 }
 
 /** A consumer stylesheet, loaded after the library's: an element rule and a one-class override. */
@@ -1207,7 +1261,9 @@ describe('`cascadeLayers: false`', () => {
     expect(findAsset(output, 'bundle-css.js')).toContain('No-op shim for `bundle.css`')
   })
 
-  test('hands the `lightningcss` visitors the stylesheet without layers', async () => {
+  test('removes the layers after lightningcss, whose visitors see the layered stylesheet', async () => {
+    // The layers go last, from the final CSS: lightningcss (and the `lightningcss.visitor` of
+    // the options) still processes Panda's output as Panda wrote it, layers included
     const visited: string[] = []
     const css = await generateCascadeLayersCss({
       cascadeLayers: false,
@@ -1225,8 +1281,24 @@ describe('`cascadeLayers: false`', () => {
       },
     })
     expect(visited).toContain('style')
-    expect(visited).not.toContain('layer-block')
+    expect(visited).toContain('layer-block')
     expect(css).not.toContain('@layer')
+  })
+
+  test('keeps every line as lightningcss printed it, at the indentation of its new depth', async () => {
+    const layered = await generateCascadeLayersCss()
+    const unlayered = await generateCascadeLayersCss({cascadeLayers: false})
+    // The same selector and declaration lines, text for text: only the `@layer` lines (and
+    // their closing braces) are gone, and the indentation differs
+    expect(ruleLines(unlayered)).toEqual(ruleLines(layered))
+    // Rules that were nested in a layer block sit at the top level now, with their
+    // declarations indented once, in lightningcss's own style: an empty line between rules
+    expect(unlayered).toContain('\nbutton {\n  font-weight: 600;\n}\n\n')
+    expect(unlayered).toContain(
+      '\n@media (width >= 48rem) {\n  .md\\:font-size_24px {\n    font-size: 24px;\n  }\n}\n',
+    )
+    expect(unlayered.startsWith('html, :host {\n  ')).toBe(true)
+    expect(unlayered.endsWith('}\n')).toBe(true)
   })
 })
 
@@ -1290,12 +1362,16 @@ describe('unwrapCascadeLayers', () => {
   })
 
   test('splits a style rule with a nested layer the same way', () => {
-    // The rule's own declarations, in `a`, beat those of its nested layer, `a.s`: red wins
+    // The rule's own declarations, in `a`, beat those of its nested layer, `a.s`: red wins.
+    // Both parts land next to each other, so they share one copy of the rule.
     expect(unwrapCascadeLayers('@layer a{.n{color:red;@layer s{color:blue}}}')).toBe(
-      '.n{color:blue;color:red;}',
+      '.n{color:blue;color:red}',
     )
     expect(unwrapCascadeLayers('@layer a{.n{@layer s{color:blue}color:red}@layer t{.t{}}}')).toBe(
-      '.n{color:blue;}.t{}.n{color:red;}',
+      '.n{color:blue}.t{}.n{color:red}',
+    )
+    expect(unwrapCascadeLayers('@layer a{.n{@media print{color:blue;@layer s{color:red}}}}')).toBe(
+      '.n{@media print{color:red;color:blue}}',
     )
   })
 
@@ -1305,27 +1381,71 @@ describe('unwrapCascadeLayers', () => {
       "/* } @layer x; { */.c[title='@layer y{']{d:e}",
       '.f{background:url( "a;b}.png" )}',
       ':is(.g, .h){--x:fn(a;b)}',
+      '.i/*@layer x{*/{content:"\\"}"}',
     ].join('')
     expect(unwrapCascadeLayers(`@layer a{${rules}}`)).toBe(rules)
   })
 
-  test('keeps declaration values opaque, `@layer` in them included', () => {
+  test('keeps custom property values opaque, `@layer` in them included', () => {
     const css = ':root{--rules:{@layer theme{color:red}};--color:blue}'
     expect(unwrapCascadeLayers(css)).toBe(css)
     expect(unwrapCascadeLayers(`@layer a{${css}}`)).toBe(css)
-    // A value that ends its block, and the block value of a regular property
+    // A value that ends its block, one with nested blocks, and one with braces in a comment
     expect(unwrapCascadeLayers('@layer a{.v{--x:{@layer t{a:b}}}}')).toBe('.v{--x:{@layer t{a:b}}}')
-    expect(unwrapCascadeLayers('@layer a{.v{color: {@layer t{a:b}};top:0}}')).toBe(
-      '.v{color: {@layer t{a:b}};top:0}',
+    expect(unwrapCascadeLayers('@layer a{.v{--x:{a:{b:{@layer t{}}}}}}')).toBe(
+      '.v{--x:{a:{b:{@layer t{}}}}}',
+    )
+    expect(unwrapCascadeLayers('@layer a{.v{--x: /* } */ {a:b};top:0}}')).toBe(
+      '.v{--x: /* } */ {a:b};top:0}',
     )
     // Next to a nested layer, the value goes along as it is
     expect(
       unwrapCascadeLayers('@layer a{.n{--v:{@layer z{}};color:red;@layer s{color:blue}}}'),
-    ).toBe('.n{color:blue;--v:{@layer z{}};color:red;}')
+    ).toBe('.n{color:blue;--v:{@layer z{}};color:red}')
     // `a:hover {…}` is a nested rule, not a declaration
     expect(unwrapCascadeLayers('@layer a{.n{a:hover{@layer s{color:blue}}}}')).toBe(
-      '.n{a:hover{color:blue;}}',
+      '.n{a:hover{color:blue}}',
     )
+  })
+
+  test('reads a custom property with a comment between its name and colon as one', () => {
+    // The text scanner this replaced looked for `--name:` and read the value as nested rules
+    // when a comment sat in between, so `@layer data` was unwrapped out of the value
+    const css = '.n{--v /**/: {@layer data{color:red}};color:green}'
+    expect(unwrapCascadeLayers(`@layer a{${css}}`)).toBe(css)
+    expect(unwrapCascadeLayers(`@layer a{.n{--v/**/ :{@layer data{color:red}}}}`)).toBe(
+      '.n{--v/**/ :{@layer data{color:red}}}',
+    )
+  })
+
+  test('reads a layer name with a comment around its dot as the same layer', () => {
+    // `a/**/.b` is `a.b`: a comment is not part of either segment. The text scanner this
+    // replaced turned it into a space, which made `a ` a layer of its own, so green beat the
+    // later `c` layer.
+    expect(
+      unwrapCascadeLayers(
+        '@layer a.b{.x{color:red}}@layer c{.x{color:blue}}@layer a/**/.b{.x{color:green}}',
+      ),
+    ).toBe('.x{color:red}.x{color:green}.x{color:blue}')
+    expect(
+      unwrapCascadeLayers('@layer a./**/b, c;@layer c{.x{color:blue}}@layer a.b{.x{color:red}}'),
+    ).toBe('.x{color:red}.x{color:blue}')
+  })
+
+  test('tells an escaped dot in a layer name from a sublayer', () => {
+    // `a\.b` is one layer named `a.b`, not `b` inside `a`
+    expect(
+      unwrapCascadeLayers('@layer a\\.b{.x{color:red}}@layer a.b{.y{}}@layer a\\.b{.z{}}'),
+    ).toBe('.x{color:red}.z{}.y{}')
+  })
+
+  test('ignores an invalid `@layer` rule, like a browser does', () => {
+    // A name list in a block, or two identifiers without a separator, is no layer at all;
+    // lightningcss rejects both before the plugin gets here
+    expect(unwrapCascadeLayers('@layer a, b{.x{}}.y{}')).toBe('.y{}')
+    expect(unwrapCascadeLayers('@layer a b{.x{}}@layer c{.c{}}')).toBe('.c{}')
+    // Case-insensitive at-keyword, case-sensitive names
+    expect(unwrapCascadeLayers('@LAYER A{.x{}}@layer a{.y{}}@LAYER A{.z{}}')).toBe('.x{}.z{}.y{}')
   })
 
   test('tells escaped commas in layer names apart', () => {
@@ -1372,6 +1492,79 @@ describe('unwrapCascadeLayers', () => {
   test('leaves a stylesheet without layers as it is', () => {
     const css = '.a {\n  color: red;\n}\n\n@media print {\n  .b {\n    color: blue;\n  }\n}\n'
     expect(unwrapCascadeLayers(css)).toBe(css)
+    // Also when `@layer` only occurs as text
+    const text = ':root {\n  --rules: {@layer x{}};\n}\n\n.c[title="@layer y{"] {\n  d: e;\n}\n'
+    expect(unwrapCascadeLayers(text)).toBe(text)
+  })
+
+  test("indents a pretty-printed stylesheet in lightningcss's style, at the new depth", () => {
+    expect(
+      unwrapCascadeLayers(
+        [
+          '@layer reset {',
+          '  html {',
+          '    color: red;',
+          '  }',
+          '',
+          '  @media print {',
+          '    .p {',
+          '      color: blue;',
+          '    }',
+          '  }',
+          '}',
+          '',
+          '@layer base;',
+          '',
+          '@layer utilities {',
+          '  .u {',
+          '    color: red;',
+          '    top: 0;',
+          '  }',
+          '',
+          '  @layer compositions {',
+          '    .c {',
+          '      font-size: 1px;',
+          '    }',
+          '  }',
+          '}',
+          '',
+          '.top {',
+          '  color: green;',
+          '}',
+          '',
+        ].join('\n'),
+      ),
+    ).toBe(
+      [
+        'html {',
+        '  color: red;',
+        '}',
+        '',
+        '@media print {',
+        '  .p {',
+        '    color: blue;',
+        '  }',
+        '}',
+        '',
+        '.c {',
+        '  font-size: 1px;',
+        '}',
+        '',
+        '.u {',
+        '  color: red;',
+        '  top: 0;',
+        '}',
+        '',
+        '.top {',
+        '  color: green;',
+        '}',
+        '',
+      ].join('\n'),
+    )
+    // The indentation unit is the stylesheet's own
+    expect(unwrapCascadeLayers('@layer a {\n\t.a {\n\t\tcolor: red;\n\t}\n}\n')).toBe(
+      '.a {\n\tcolor: red;\n}\n',
+    )
   })
 })
 
