@@ -1,4 +1,5 @@
-import {
+import {createHash} from 'node:crypto'
+import fs, {
   cpSync,
   existsSync,
   mkdirSync,
@@ -17,7 +18,7 @@ import vm from 'node:vm'
 import {rolldown, watch, type OutputAsset, type OutputChunk, type Plugin} from 'rolldown'
 import {transform as transformWithOxc} from 'rolldown/experimental'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
-import {describe, expect, test} from 'vitest'
+import {describe, expect, test, vi} from 'vitest'
 import {directoryPattern} from '../src/directoryPattern.ts'
 import {
   esbuildTargetToLightningCSS,
@@ -863,6 +864,18 @@ describe('pandacssPlugin', () => {
   })
 })
 
+/** Records the directories created with `fs.mkdtempSync` (by the plugin) and their modes. */
+function spyOnTempDirs(): {created: {dir: string; mode: number}[]; restore(): void} {
+  const mkdtempSync = fs.mkdtempSync
+  const created: {dir: string; mode: number}[] = []
+  const spy = vi.spyOn(fs, 'mkdtempSync').mockImplementation((prefix, options) => {
+    const dir = mkdtempSync(prefix, options)
+    created.push({dir, mode: statSync(dir).mode & 0o777})
+    return dir
+  })
+  return {created, restore: () => spy.mockRestore()}
+}
+
 /** The modification times of every file in a directory tree, keyed by path. */
 function snapshotMtimes(dir: string): Map<string, number> {
   const mtimes = new Map<string, number>()
@@ -940,6 +953,53 @@ describe('codegen', () => {
       expect(existsSync(path.join(outdir, 'css/index.js'))).toBe(true)
       expect(existsSync(path.join(outdir, 'css/css.d.ts'))).toBe(true)
     } finally {
+      rmSync(outdir, {recursive: true, force: true})
+    }
+  })
+
+  // Creating a file symlink takes extra privileges on Windows
+  test.skipIf(process.platform === 'win32')(
+    '`outdir` leaves a pre-created temp path alone',
+    async () => {
+      // The config with the `outdir` override used to be written to a path derived from the
+      // config and the override, which another user of a shared host could pre-create, with the
+      // config a symlink to a file of the build user's
+      const outdir = mkdtempSync(path.join(os.tmpdir(), 'pandacss-tsdown-plugin-outdir-'))
+      const key = createHash('sha256')
+        .update(`${path.join(codegenFixtureDir, 'panda.config.ts')}\0${outdir}`)
+        .digest('hex')
+        .slice(0, 16)
+      const sharedDir = path.join(os.tmpdir(), 'sanity-pandacss-tsdown-plugin')
+      const sharedDirExisted = existsSync(sharedDir)
+      const predictableDir = path.join(sharedDir, key)
+      const victim = path.join(outdir, 'victim.txt')
+      try {
+        writeFileSync(victim, 'not a Panda config\n')
+        mkdirSync(predictableDir, {recursive: true})
+        symlinkSync(victim, path.join(predictableDir, 'panda.config.mjs'))
+        await build({outdir})
+        expect(readFileSync(victim, 'utf-8')).toBe('not a Panda config\n')
+        expect(existsSync(path.join(outdir, 'css/index.js'))).toBe(true)
+      } finally {
+        rmSync(sharedDirExisted ? predictableDir : sharedDir, {recursive: true, force: true})
+        rmSync(outdir, {recursive: true, force: true})
+      }
+    },
+  )
+
+  test('`outdir` loads its config from a private temp directory, removed once loaded', async () => {
+    const outdir = mkdtempSync(path.join(os.tmpdir(), 'pandacss-tsdown-plugin-outdir-'))
+    const tempDirs = spyOnTempDirs()
+    try {
+      await build({outdir})
+      expect(tempDirs.created).toHaveLength(1)
+      const [{dir, mode}] = tempDirs.created
+      expect(path.basename(dir)).toMatch(/^sanity-pandacss-tsdown-plugin-/)
+      if (process.platform !== 'win32') expect(mode).toBe(0o700)
+      expect(existsSync(dir)).toBe(false)
+      expect(existsSync(path.join(outdir, 'css/index.js'))).toBe(true)
+    } finally {
+      tempDirs.restore()
       rmSync(outdir, {recursive: true, force: true})
     }
   })
@@ -1306,6 +1366,7 @@ describe('watch mode', () => {
     )
     const configPath = path.join(cwd, 'panda.config.ts')
     const originalConfig = readFileSync(configPath, 'utf-8')
+    const tempDirs = spyOnTempDirs()
     const watcher = startWatcher(cwd, {outdir: 'generated'})
     try {
       await watcher.nextBuild()
@@ -1322,7 +1383,11 @@ describe('watch mode', () => {
       const after = watcher.readOutput()
       expect(after.js).toContain('"v2-color_brand"')
       expect(after.css).toContain('.v2-color_brand {')
+      // The reload read the override from the same private directory, removed again after it
+      expect(tempDirs.created).toHaveLength(1)
+      expect(existsSync(tempDirs.created[0]?.dir ?? '')).toBe(false)
     } finally {
+      tempDirs.restore()
       await watcher.close()
       rmSync(cwd, {recursive: true, force: true})
     }

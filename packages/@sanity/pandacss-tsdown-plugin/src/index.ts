@@ -1,4 +1,3 @@
-import {createHash} from 'node:crypto'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -355,6 +354,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
    */
   let driverPromise: Promise<PandaDriver> | undefined
   let driver: PandaDriver | undefined
+  /** The Panda config file, also when the driver loads it through the `outdir` override. */
+  let configFile: string | undefined
   let transformer: SourceTransformer | undefined
   let transformerCompiler: PandaDriver['compiler'] | undefined
   /** Whether a build already ran, so a later `buildStart` (watch mode) reloads the config. */
@@ -386,16 +387,36 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
   async function createDriver(cwd: string): Promise<PandaDriver> {
     const configured = await createNodeDriver({cwd, configPath: options.configPath})
-    if (options.outdir === undefined) return configured
+    configFile = configured.configPath
+    const {outdir} = options
+    if (outdir === undefined) return configured
     // Panda derives defaults from `outdir` while it loads the config — notably the import map
     // that recognizes the generated modules the sources import — so the override has to be
     // part of the loaded config. It is loaded through a file that re-exports the config with
     // the override, which `reload()` reads again (picking up the config's own changes, since
     // it is bundled as a dependency).
-    return createNodeDriver({
-      cwd,
-      configPath: writeOutdirConfig(configured.configPath, options.outdir),
-    })
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sanity-pandacss-tsdown-plugin-'))
+    return withOutdirConfig(dir, configured.configPath, outdir, (file) =>
+      createNodeDriver({cwd, configPath: file}),
+    )
+  }
+
+  /** Reloads the config, which Panda reads from the path it first loaded it from. */
+  async function reloadDriver(currentDriver: PandaDriver): Promise<{hasChanged: boolean}> {
+    const {outdir} = options
+    if (outdir === undefined || configFile === undefined) return currentDriver.reload()
+    // The directory of the `outdir` override was removed after the config loaded: it is
+    // created again, failing rather than using one somebody else created there in the meantime
+    const dir = path.dirname(currentDriver.configPath)
+    try {
+      fs.mkdirSync(dir, {mode: 0o700})
+    } catch (error) {
+      throw new Error(
+        `[pandacss] Unable to create the private directory "${dir}" to reload the Panda config with the \`outdir\` override.`,
+        {cause: error},
+      )
+    }
+    return withOutdirConfig(dir, configFile, outdir, () => currentDriver.reload())
   }
 
   async function resolveDriver(cwd: string): Promise<PandaDriver> {
@@ -490,7 +511,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       // again when they change — also under `experimental.incrementalBuild`, which otherwise
       // reuses the transforms of the modules whose own files did not change — while
       // `buildStart` only makes them trigger a rebuild.
-      this.addWatchFile(driver.configPath)
+      this.addWatchFile(configFile ?? driver.configPath)
       for (const dependency of driver.configDependencies) {
         this.addWatchFile(driver.resolvePath(dependency))
       }
@@ -647,7 +668,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // changed) so the codegen, the scan and the transforms below use the current config.
         // Panda only writes the files whose content changed, so a current directory stays
         // untouched either way.
-        const {hasChanged} = await currentDriver.reload()
+        const {hasChanged} = await reloadDriver(currentDriver)
         if (hasChanged && codegenEnabled) runCodegen(currentDriver)
       }
       built = true
@@ -677,7 +698,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         for (const dir of targets.dirs) {
           this.addWatchFile(currentDriver.resolvePath(dir))
         }
-        this.addWatchFile(currentDriver.configPath)
+        this.addWatchFile(configFile ?? currentDriver.configPath)
         for (const dependency of currentDriver.configDependencies) {
           this.addWatchFile(currentDriver.resolvePath(dependency))
         }
@@ -1096,21 +1117,34 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
 }
 
 /**
- * Write the config that re-exports a Panda config with another `outdir`, returning its path. It
- * lives in the OS temp directory, at a path derived from the config and the override, and
- * imports the config by its absolute path: bundling resolves the config's own imports from
- * there. A promise is awaited like the config's own default export would be.
+ * Loads a Panda config through a file that re-exports it with another `outdir`, written into a
+ * directory the caller just created for this, and removes the directory once Panda loaded it.
+ * The file imports the config by its absolute path: bundling resolves the config's own imports
+ * from there. A promise is awaited like the config's own default export would be.
+ *
+ * The directory is in the OS temp directory, and only the current user can access it: `mkdtemp`
+ * and `mkdir` with mode `0o700` create it, and fail rather than use an existing one. Another
+ * user could pre-create a predictable path there, with the config a symlink to a file the build
+ * would then overwrite. The file only exists while Panda loads it, so nothing is left behind
+ * however the process ends.
  */
-function writeOutdirConfig(configPath: string, outdir: string): string {
-  const key = createHash('sha256').update(`${configPath}\0${outdir}`).digest('hex').slice(0, 16)
-  const dir = path.join(os.tmpdir(), 'sanity-pandacss-tsdown-plugin', key)
-  fs.mkdirSync(dir, {recursive: true})
-  const file = path.join(dir, 'panda.config.mjs')
-  fs.writeFileSync(
-    file,
-    `import config from ${JSON.stringify(configPath.replaceAll('\\', '/'))}\n\nexport default Promise.resolve(config).then((resolved) => ({...resolved, outdir: ${JSON.stringify(outdir)}}))\n`,
-  )
-  return file
+async function withOutdirConfig<T>(
+  dir: string,
+  configPath: string,
+  outdir: string,
+  load: (file: string) => Promise<T>,
+): Promise<T> {
+  try {
+    const file = path.join(dir, 'panda.config.mjs')
+    fs.writeFileSync(
+      file,
+      `import config from ${JSON.stringify(configPath.replaceAll('\\', '/'))}\n\nexport default Promise.resolve(config).then((resolved) => ({...resolved, outdir: ${JSON.stringify(outdir)}}))\n`,
+      {flag: 'wx'},
+    )
+    return await load(file)
+  } finally {
+    fs.rmSync(dir, {recursive: true, force: true})
+  }
 }
 
 /**
