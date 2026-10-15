@@ -417,8 +417,13 @@ describe('config reloads', () => {
       path.join(dir, 'theme.ts'),
       `export const recipes = {badge: {className: 'badge', base: {color: '${color}'}, variants: ${variants}}}\n`,
     )
-  const useConfig = (variant: 'narrowed' | 'prefixed' | 'root' | 'scan' | 'windows') =>
-    cp(path.join(dir, `panda.${variant}.ts`), path.join(dir, 'panda.config.ts'))
+  // Written rather than copied: a copy keeps the source's modification time on Windows, which a
+  // polling watcher can't tell from the config's own
+  const useConfig = async (variant: 'narrowed' | 'prefixed' | 'root' | 'scan' | 'windows') =>
+    writeFile(
+      path.join(dir, 'panda.config.ts'),
+      await readFile(path.join(dir, `panda.${variant}.ts`)),
+    )
 
   beforeEach(async () => {
     await mkdir(temporaryDir, {recursive: true})
