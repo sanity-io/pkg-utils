@@ -11,7 +11,7 @@ import {
   type SourceTransformer,
 } from '@pandacss/transformer'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
-import type {InputOptions, OutputChunk, RenderedChunk} from 'rolldown'
+import type {InputOptions, OutputChunk, PluginContext, RenderedChunk} from 'rolldown'
 import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
 import {cssShimDtsFileName, cssShimDtsSource, cssShimFileName, cssShimSource} from './cssShim.ts'
 import {
@@ -153,6 +153,8 @@ const RE_DTS = /\.d\.[cm]?ts$/
 const RE_SOURCE = /\.[cm]?[jt]sx?$/
 
 type NodeDriver = Awaited<ReturnType<typeof createNodeDriver>>
+
+type Program = ReturnType<PluginContext['parse']>
 
 /** The `transform` hook's id filter, populated from the Panda config once it is loaded. */
 interface IdFilter {
@@ -589,11 +591,16 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
           ? `${resolvePackageName()}/${fileName}`
           : relativeImportPath(chunk.fileName, fileName),
       )
-      const statement = format === 'cjs' ? `require(${specifier});\n` : `import ${specifier};\n`
+      const statement = format === 'cjs' ? `require(${specifier});` : `import ${specifier};`
+      // Goes after the hashbang and the directive prologue (`"use strict"`, `"use client"`):
+      // any statement before a directive turns it into a plain expression, which turns strict
+      // mode off in CJS output
+      const offset = prologueEnd(this.parse(code))
 
       const {magicString} = meta
       if (magicString) {
-        magicString.prepend(statement)
+        if (offset === 0) magicString.prepend(`${statement}\n`)
+        else magicString.appendLeft(offset, `\n${statement}`)
         return magicString
       }
       if (outputOptions.sourcemap) {
@@ -601,7 +608,12 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
           `[pandacss] rolldown's native magic-string is unavailable (another plugin's \`options\` hook may have disabled \`experimental.nativeMagicString\`), so the CSS import injected into "${chunk.fileName}" shifts its sourcemap by one line.`,
         )
       }
-      return {code: statement + code}
+      return {
+        code:
+          offset === 0
+            ? `${statement}\n${code}`
+            : `${code.slice(0, offset)}\n${statement}${code.slice(offset)}`,
+      }
     },
 
     // Emit the stylesheet (optimized with lightningcss) and, with `exports.nodeCompat`, the JS
@@ -801,6 +813,16 @@ function readPackageName(cwd: string): string | undefined {
       if (path.dirname(dir) === dir) return undefined
     }
   }
+}
+
+/** Where a chunk's hashbang and leading directives end: `0` when it has neither. */
+function prologueEnd(program: Program): number {
+  let end = program.hashbang?.end ?? 0
+  for (const statement of program.body) {
+    if (statement.type !== 'ExpressionStatement' || !('directive' in statement)) break
+    end = statement.end
+  }
+  return end
 }
 
 /**
