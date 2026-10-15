@@ -8,14 +8,46 @@ It complements [`@pandacss/vite`](https://panda-css.com/docs/installation/vite),
 Vite-based tooling (Vitest, `sanity dev`, `sanity build`) in the same project: this plugin covers
 the tsdown builds that publish the package.
 
+## Install
+
 ```sh
-pnpm add -D @sanity/pandacss-tsdown-plugin
+pnpm add -D tsdown @sanity/tsdown-config @sanity/pandacss-tsdown-plugin
 ```
 
-Like `@pandacss/vite`, the plugin depends on Panda's compiler and transformer directly
-(`@pandacss/compiler`, `@pandacss/compiler-shared` and `@pandacss/transformer`), so it has no Panda
-peer dependencies; `tsdown` is its only peer. `@pandacss/dev` isn't needed for builds, though a
-`panda.config.ts` that imports `defineConfig` from it still needs it installed in the project.
+That's all a build needs: the plugin depends on Panda's compiler and transformer directly, like
+`@pandacss/vite`, and runs codegen itself.
+
+[`@pandacss/dev`](https://www.npmjs.com/package/@pandacss/dev) is recommended, but not required:
+
+- A `"prepare": "panda codegen"` script generates the `styled-system` directory for the IDE and
+  TypeScript, before the first build.
+- Its CLI helps debugging, e.g. `panda doctor` validates `panda.config.ts` and prints a project
+  summary.
+
+It's an optional peer dependency (`*`) of the plugin, so a project that installs it never ends up
+with two copies of `@pandacss/dev` in `node_modules`:
+
+```sh
+pnpm add -D @pandacss/dev
+```
+
+## Usage
+
+Enable it with the `panda` option of
+[`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme),
+which also resolves browserless lowering targets from `@sanity/browserslist-config`:
+
+```ts
+// tsdown.config.ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  panda: {exports: {nodeCompat: true}},
+})
+```
+
+Or add the plugin to a plain tsdown config:
 
 ```ts
 // tsdown.config.ts
@@ -29,20 +61,6 @@ export default defineConfig({
 })
 ```
 
-With [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme),
-enable it through the `panda` option instead, which also resolves browserless lowering targets
-from `@sanity/browserslist-config`:
-
-```ts
-// tsdown.config.ts
-import {defineConfig} from '@sanity/tsdown-config'
-
-export default defineConfig({
-  tsconfig: 'tsconfig.dist.json',
-  panda: {exports: {nodeCompat: true}},
-})
-```
-
 The plugin loads `panda.config.*` with `@pandacss/compiler`, parses the files matched by its
 `include`/`exclude` globs, and emits every cascade layer (`reset`, `base`, `tokens`, `recipes` and
 `utilities`) without the layer order declaration. Panda's `--made-with-panda` marker is always
@@ -52,8 +70,9 @@ removed.
 
 Before anything is extracted, the plugin runs Panda's codegen into the `styled-system` directory
 (the config's `outdir`), so the generated runtime, types and class names always match the config
-the stylesheet is built from. A `prepare: "panda codegen"` script isn't needed for builds, and
-stale generated code can't leak into the published JS or `.d.ts` files:
+the stylesheet is built from. Builds don't need a `prepare: "panda codegen"` script (it's still
+recommended for the IDE, see [Install](#install)), and stale generated code can't leak into the
+published JS or `.d.ts` files:
 
 - Codegen finishes before any plugin's `buildStart` hook, so tsdown's declaration build reads the
   fresh types.

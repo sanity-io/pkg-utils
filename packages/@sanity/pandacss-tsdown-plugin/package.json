@@ -57,7 +57,13 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@pandacss/dev": "*",
     "tsdown": "^0.23.0"
+  },
+  "peerDependenciesMeta": {
+    "@pandacss/dev": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=22.12"

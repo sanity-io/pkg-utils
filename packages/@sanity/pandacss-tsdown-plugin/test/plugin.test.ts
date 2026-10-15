@@ -73,9 +73,9 @@ function findChunk(output: Output, name: string): OutputChunk {
   return chunk
 }
 
-test('depends on the Panda packages it imports, with tsdown as the only peer', async () => {
-  // Like `@pandacss/vite`: Panda's compiler and transformer are regular dependencies, and
-  // neither they nor `@pandacss/dev` are peers
+test('depends on the Panda packages it imports, with `@pandacss/dev` as an optional peer', async () => {
+  // Like `@pandacss/vite`, Panda's compiler and transformer are regular dependencies, while
+  // `@pandacss/dev` is an optional `*` peer, so a project that installs it keeps a single copy
   const manifest: unknown = JSON.parse(
     await readFile(path.resolve(__dirname, '../package.json'), 'utf8'),
   )
@@ -86,7 +86,11 @@ test('depends on the Panda packages it imports, with tsdown as the only peer', a
       '@pandacss/transformer': expect.any(String),
     },
   })
-  expect(manifest).toHaveProperty('peerDependencies', {tsdown: expect.any(String)})
+  expect(manifest).toHaveProperty('peerDependencies', {
+    '@pandacss/dev': '*',
+    'tsdown': expect.any(String),
+  })
+  expect(manifest).toHaveProperty('peerDependenciesMeta', {'@pandacss/dev': {optional: true}})
 })
 
 describe('pandaPlugin', () => {
