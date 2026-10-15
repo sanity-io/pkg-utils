@@ -194,9 +194,9 @@ export interface Options {
    * {@link PandacssPluginApi.setBuildContext} from the plugin's `tsdownConfigResolved` hook.
    * Matching `@tsdown/css`, syntax lowering is skipped when no target is configured anywhere,
    * or when the configured targets don't include any browsers (e.g. `'node20'`, which speaks to
-   * the JS runtime, not the browsers the extracted CSS runs in) — unless the host passed
-   * {@link BuildContext.fallbackTargets | fallback targets}: `@sanity/tsdown-config` passes the
-   * `@sanity/browserslist-config` browsers for such targets.
+   * the JS runtime, not the browsers the extracted CSS runs in). `@sanity/tsdown-config` layers
+   * its own default on top, resolving browserless targets from `@sanity/browserslist-config`
+   * and passing them through {@link Options.lightningcss | `lightningcss.targets`}.
    */
   target?: string | string[] | false
   /**
@@ -204,6 +204,10 @@ export interface Options {
    * `@tsdown/css`. `lightningcss.targets` takes precedence over the esbuild-style
    * {@link Options.target | `target`}, and `lightningcss.unusedSymbols` extends the
    * {@link MADE_WITH_PANDA_SYMBOL | `--made-with-panda`} entry the plugin always removes.
+   *
+   * The object is read when the stylesheet is emitted, not copied when the plugin is created,
+   * so a host may still set its `targets` before the build starts — `@sanity/tsdown-config`
+   * does, from the final config's `target`.
    */
   lightningcss?: LightningCSSOptions
   /**
@@ -252,13 +256,6 @@ export interface Options {
 export interface BuildContext {
   /** Default CSS syntax lowering target(s), used when the `target` option is not set. */
   target?: string | string[] | undefined
-  /**
-   * Lightning CSS targets for when the effective `target` (the option, or the host's default)
-   * names no browsers, such as `node20`, or isn't esbuild-style. `@sanity/tsdown-config`
-   * passes the `@sanity/browserslist-config` browsers here, or the ones a browserslist query
-   * names, resolved from the final config. An explicit `lightningcss.targets` still wins.
-   */
-  fallbackTargets?: Targets | undefined
   /** The consumer's package name, for the self-referential import of `exports`. */
   packageName?: string | undefined
   /** The default working directory the Panda config is discovered from. */
@@ -343,8 +340,6 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
   /** The host-resolved default for the `target` option (e.g. tsdown's top-level `target`). */
   let contextTarget: string | string[] | undefined
-  /** The host-resolved targets for when the effective target names no browsers. */
-  let contextFallbackTargets: Targets | undefined
   /** The consumer's package name, for the self-referential CSS import injected by `inject`. */
   let packageName: string | undefined
   /** The host-resolved default working directory (e.g. tsdown's `cwd`). */
@@ -432,16 +427,13 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // `target` (the option, falling back to the host-resolved context target) is converted,
     // with tsdown's `baseline-widely-available` alias expanded like tsdown expands it.
     // Targets that name no browsers (e.g. tsdown's common `target: 'node20'`, which speaks to
-    // the JS runtime) convert to nothing, which skips syntax lowering unless the host passed
-    // fallback targets — `@sanity/tsdown-config` passes the `@sanity/browserslist-config` ones.
+    // the JS runtime) convert to nothing, skipping syntax lowering — `@sanity/tsdown-config`
+    // layers the `@sanity/browserslist-config` default on top through `lightningcss.targets`.
     if (lightningcss?.targets) return lightningcss.targets
     if (options.target === false) return undefined
     const target = options.target ?? contextTarget
-    const converted =
-      target === undefined
-        ? undefined
-        : esbuildTargetToLightningCSS(expandBaselineTarget(resolveComma(toArray(target))))
-    return converted ?? contextFallbackTargets
+    if (target === undefined) return undefined
+    return esbuildTargetToLightningCSS(expandBaselineTarget(resolveComma(toArray(target))))
   }
 
   function resolvePackageName(entryModuleId: string | null): string {
@@ -575,7 +567,6 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     api: {
       setBuildContext(context: BuildContext): void {
         if (context.target !== undefined) contextTarget = context.target
-        if (context.fallbackTargets !== undefined) contextFallbackTargets = context.fallbackTargets
         if (context.packageName !== undefined) packageName = context.packageName
         if (context.cwd !== undefined) contextCwd = context.cwd
         if (context.outDir !== undefined) contextOutDir = context.outDir

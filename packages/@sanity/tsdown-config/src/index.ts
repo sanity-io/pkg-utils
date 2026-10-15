@@ -850,12 +850,14 @@ async function resolvePackageConfig(
       import('./cssLoweringTargets.ts'),
     ])
 
-    const pandaPlugin = pandacssPlugin({inject: true, exports: {nodeCompat: true}, ...panda})
     // The automatic targets depend on the final config's `target`, which a config composed
     // after this one (`mergeConfig()`) may still override, and which tsdown resolves (from
     // `engines.node` when it is unset, with its aliases expanded). So they are resolved once
-    // tsdown resolved the config, and handed to the plugin as the fallback for a target that
-    // names no browsers: an explicit `panda.target` or `panda.lightningcss.targets` still wins.
+    // tsdown resolved the config, into the `lightningcss` options the plugin reads when it
+    // emits the stylesheet (every published version of the plugin does). They are only set
+    // where the effective target names no browsers (or is a query or alias), so an explicit
+    // `panda.target`, or the final `target` when it names browsers, still decides otherwise.
+    const lightningcss = {...panda.lightningcss}
     let targetDisabled = false
     const pandaTargetsPlugin: TsdownPlugin = {
       name: 'sanity:panda-css-targets',
@@ -869,12 +871,15 @@ async function resolvePackageConfig(
           target: targetDisabled ? false : config.target,
           lightningcss: panda.lightningcss,
         })
-        if (resolved?.targets && resolved.targets !== panda.lightningcss?.targets) {
-          pandaPlugin.api.setBuildContext({fallbackTargets: resolved.targets})
-        }
+        // Reset on every resolution: a plugin instance can outlive one (repeated `build()`s)
+        if (resolved?.targets) lightningcss.targets = resolved.targets
+        else delete lightningcss.targets
       },
     }
-    plugins.push(pandaPlugin, pandaTargetsPlugin)
+    plugins.push(
+      pandacssPlugin({inject: true, exports: {nodeCompat: true}, ...panda, lightningcss}),
+      pandaTargetsPlugin,
+    )
   }
 
   // `@tsdown/css` compiles CSS but has no node-shim concept, so the `exports` option (and the

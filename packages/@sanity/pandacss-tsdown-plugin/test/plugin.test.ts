@@ -19,7 +19,12 @@ import {transform as transformWithOxc} from 'rolldown/experimental'
 import {build as tsdownBuild, type ResolvedConfig, type UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {directoryPattern} from '../src/directoryPattern.ts'
-import {esbuildTargetToLightningCSS, pandacssPlugin, type Options} from '../src/index.ts'
+import {
+  esbuildTargetToLightningCSS,
+  pandacssPlugin,
+  type LightningCSSOptions,
+  type Options,
+} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
@@ -798,30 +803,51 @@ describe('pandacssPlugin', () => {
     expect(findEntryChunk(output).code).toContain('"color_brand"')
   })
 
-  test("falls back to the host's targets when the target names no browsers", async () => {
-    // `@sanity/tsdown-config` resolves them from the final config and passes them on
-    const chrome61 = {chrome: 61 << 16}
-    const lowered = (options: Options, target: string[]) => {
-      const plugin = pandacssPlugin({cwd: fixtureDir, ...options})
-      plugin.api.setBuildContext({target, fallbackTargets: chrome61})
-      return rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]}).then(
-        async (bundle) => {
-          try {
-            const {output} = await bundle.generate({format: 'esm'})
-            return !findAsset(output, 'bundle.css').includes('inset:')
-          } finally {
-            await bundle.close()
-          }
-        },
-      )
+  test('reads `lightningcss` when it emits the stylesheet', async () => {
+    // `@sanity/tsdown-config` sets `targets` from the final config after creating the plugin,
+    // before the build starts; chrome61 predates the `inset` shorthand
+    const lightningcss: LightningCSSOptions = {}
+    const plugin = pandacssPlugin({cwd: fixtureDir, lightningcss})
+    lightningcss.targets = {chrome: 61 << 16}
+    const bundle = await rolldown({cwd: fixtureDir, input: fixtureEntry, plugins: [plugin]})
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(findAsset(output, 'bundle.css')).not.toContain('inset:')
+    } finally {
+      await bundle.close()
     }
-    // chrome61 predates `inset`, the other targets don't
-    expect(await lowered({}, ['node20'])).toBe(true)
-    expect(await lowered({}, ['chrome120'])).toBe(false)
-    expect(await lowered({target: 'chrome120'}, ['node20'])).toBe(false)
-    expect(await lowered({target: false}, ['node20'])).toBe(false)
-    // tsdown's alias names browsers once expanded, so the fallback stays out of it
-    expect(await lowered({target: 'baseline-widely-available'}, ['node20'])).toBe(false)
+  })
+
+  test("expands tsdown's `baseline-widely-available` alias in `target`", async () => {
+    // Its browsers (Chrome 111, Safari 16.4) predate `light-dark()`, which an unexpanded alias
+    // (naming no browsers, so no syntax transform) would leave alone
+    const cwd = copyFixture('baseline-target')
+    writeFileSync(
+      path.join(cwd, 'src/index.ts'),
+      "import {css} from '#styled-system/css'\n\nexport const themed: string = css({color: 'light-dark(#000, #fff)'})\n",
+    )
+    try {
+      for (const [target, transformed] of [
+        ['baseline-widely-available', true],
+        [false, false],
+      ] as const) {
+        const bundle = await rolldown({
+          cwd,
+          input: path.join(cwd, 'src/index.ts'),
+          plugins: [pandacssPlugin({cwd, target})],
+        })
+        try {
+          const {output} = await bundle.generate({format: 'esm'})
+          expect(findAsset(output, 'bundle.css').includes('light-dark('), String(target)).toBe(
+            !transformed,
+          )
+        } finally {
+          await bundle.close()
+        }
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
   })
 
   test('`lightningcss.targets` wins over `target`, and `target: false` skips lowering', async () => {
