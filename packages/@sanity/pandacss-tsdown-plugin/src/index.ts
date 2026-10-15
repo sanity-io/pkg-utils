@@ -11,7 +11,7 @@ import {
   type SourceTransformer,
 } from '@pandacss/transformer'
 import {transform, type CustomAtRules, type Targets, type TransformOptions} from 'lightningcss'
-import type {ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
+import type {PackageJsonWithPath, ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
 import {
   cssShimDtsFileName,
   cssShimDtsSource,
@@ -78,6 +78,12 @@ const ALL_LAYERS: StylesheetLayerName[] = ['reset', 'base', 'tokens', 'recipes',
 
 /** Matches rendered `.d.ts`/`.d.mts`/`.d.cts` chunk file names and module ids. */
 const RE_DTS = /\.d\.[cm]?ts$/
+
+/** Matches extglob groups (`@(ts|tsx)`, `+(…)`, `!(…)`, …), which {@link globToRegExp} leaves alone. */
+const RE_EXTGLOB = /[?*+@!]\(/
+
+/** Matches a Windows drive at the start of a glob (`C:/…`), i.e. an absolute pattern. */
+const RE_WINDOWS_DRIVE = /^[A-Za-z]:\//
 
 /** Matches a `@layer <names>;` statement (as opposed to a `@layer <name> { … }` block). */
 const RE_LAYER_STATEMENT = /@layer\s+[^{};]+;/
@@ -251,6 +257,21 @@ type TransformHook = Extract<NonNullable<Rolldown.Plugin['transform']>, {handler
 type TransformHookFilter = NonNullable<TransformHook['filter']>
 type TransformHandler = TransformHook['handler']
 
+type ExportsOptions = Extract<NonNullable<UserConfig['exports']>, object>
+type CustomExportsFunction = Extract<
+  NonNullable<ExportsOptions['customExports']>,
+  (...args: never[]) => unknown
+>
+type CustomExportsContext = Parameters<CustomExportsFunction>[1]
+
+/**
+ * The `transform` hook filter that only skips declaration files, leaving every other decision
+ * to the handler's `driver.isSourceFile()` check: used when the config's globs cannot be
+ * converted to RegExps, and in watch mode, where a config reload may change the globs while
+ * rolldown's native filters are fixed for the session.
+ */
+const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DTS]}}
+
 /**
  * A tsdown plugin for [Panda CSS](https://panda-css.com) libraries: the companion of the
  * official `@pandacss/vite` plugin for the `tsdown.config.ts` of packages published to npm.
@@ -385,9 +406,23 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     if (!driver) return undefined
     const [filePath = id] = id.split('?')
     // `.d.ts` files can match the config's `include` globs (e.g. `src/**/*.ts`) but hold no
-    // styles, and the files the config doesn't cover aren't scanned by Panda — rewriting them
-    // would produce class names the stylesheet doesn't have.
-    if (RE_DTS.test(filePath) || !driver.isSourceFile(filePath)) return undefined
+    // styles
+    if (RE_DTS.test(filePath)) return undefined
+    if (this.meta.watchMode) {
+      // Every module depends on the config (and its imports): a change there can rename the
+      // class names of the modules this hook rewrites, and cover modules it skipped so far.
+      // Registering the files from here, per module, makes rolldown transform the modules
+      // again when they change — also under `experimental.incrementalBuild`, which otherwise
+      // reuses the transforms of the modules whose own files did not change — while
+      // `buildStart` only makes them trigger a rebuild.
+      this.addWatchFile(driver.configPath)
+      for (const dependency of driver.configDependencies) {
+        this.addWatchFile(dependency)
+      }
+    }
+    // The files the config doesn't cover aren't scanned by Panda — rewriting them would
+    // produce class names the stylesheet doesn't have
+    if (!driver.isSourceFile(filePath)) return undefined
 
     // Parse the module from the code rolldown hands over (which may differ from the file on
     // disk after other plugins' transforms), so the stylesheet matches the published code.
@@ -449,13 +484,18 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
     // The Panda config is loaded here, before rolldown reads the plugin's hooks, so the
     // `transform` hook filter can be derived from the config's `include`/`exclude` globs and
-    // rolldown skips the Rust ↔ JS roundtrip for every module outside them. `inject` also
-    // prepends the CSS import in `renderChunk` through rolldown's native MagicString
-    // (`meta.magicString`), which keeps sourcemaps intact without a JS magic-string dependency.
+    // rolldown skips the Rust ↔ JS roundtrip for every module outside them. Not in watch mode,
+    // though: the filter is fixed for the session while the config (and its globs) reloads on
+    // every rebuild, so only declaration files are skipped natively there and the handler
+    // decides per module with the current config. `inject` also prepends the CSS import in
+    // `renderChunk` through rolldown's native MagicString (`meta.magicString`), which keeps
+    // sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
       const cwd = resolveCwd(inputOptions.cwd)
       const currentDriver = await resolveDriver(cwd)
-      const filter = createTransformFilter(currentDriver, cwd)
+      const filter = this.meta.watchMode
+        ? CONSERVATIVE_TRANSFORM_FILTER
+        : createTransformFilter(currentDriver, cwd)
       plugin.transform = filter ? {filter, handler: transformHandler} : {handler: transformHandler}
 
       if (!inject) return undefined
@@ -477,7 +517,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     async buildStart() {
       const currentDriver = await resolveDriver(resolveCwd())
       if (built && this.meta.watchMode) {
-        // A rebuild may follow a config change
+        // A rebuild may follow a config change: reload it (which swaps the compiler when it
+        // changed) so the codegen, the scan and the transforms below use the current config
         await currentDriver.reload()
       }
       built = true
@@ -497,9 +538,12 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
           report.diagnostics,
           `while parsing ${displayPath(report.path, cwd)}`,
         )
+        // The stylesheet covers every scanned source, including the ones no entry imports, so
+        // each of them has to trigger a rebuild in watch mode (the imported ones are watched
+        // through the module graph anyway)
+        this.addWatchFile(report.path)
       }
-      // The scanned sources are watched through the module graph; the config and its imports
-      // aren't part of it
+      // The config and its imports aren't part of the module graph either
       this.addWatchFile(currentDriver.configPath)
       for (const dependency of currentDriver.configDependencies) {
         this.addWatchFile(dependency)
@@ -648,17 +692,13 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
 
       // Normalize the `boolean | CIOption | object` forms of the `exports` option into the
       // object form, preserving the enabled-ness (`true` and bare CI conditions mean enabled)
-      const exportsOptions: Extract<NonNullable<UserConfig['exports']>, object> = exportsOption ===
-      true
-        ? {}
-        : typeof exportsOption === 'string'
-          ? {enabled: exportsOption}
-          : exportsOption
+      const exportsOptions: ExportsOptions =
+        exportsOption === true
+          ? {}
+          : typeof exportsOption === 'string'
+            ? {enabled: exportsOption}
+            : exportsOption
 
-      const outDir = config.outDir ?? 'dist'
-      const cssExport = nodeCompat
-        ? createConditionalCssExport(fileName, outDir)
-        : createCssExport(fileName, outDir)
       const previousCustomExports = exportsOptions.customExports
       exportsOptions.customExports = async (exportsMap, context) => {
         // Apply a pre-existing `customExports` first (both its function and record forms,
@@ -669,6 +709,10 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
             : previousCustomExports
               ? {...exportsMap, ...previousCustomExports}
               : exportsMap
+        const outDir = resolveOutDir(config, context, fileName)
+        const cssExport = nodeCompat
+          ? createConditionalCssExport(fileName, outDir)
+          : createCssExport(fileName, outDir)
         return insertCssExport(base, `./${fileName}`, cssExport)
       }
       config.exports = exportsOptions
@@ -696,7 +740,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
  * Derive the `transform` hook filter from the config's `include`/`exclude` globs, resolved
  * against the config's working directory so they match rolldown's absolute module ids. Without
  * either in the config there is nothing to scope by, so the hook runs for every module (and
- * decides per module).
+ * decides per module); a glob the converter does not support falls back to the
+ * {@link CONSERVATIVE_TRANSFORM_FILTER}, which can never reject a module Panda covers.
  */
 function createTransformFilter(driver: PandaDriver, cwd: string): TransformHookFilter | undefined {
   const include = readGlobs(driver.config['include'])
@@ -707,11 +752,15 @@ function createTransformFilter(driver: PandaDriver, cwd: string): TransformHookF
   const excludePatterns: RegExp[] = []
   for (const pattern of include) {
     // A negated include is an exclude
-    if (pattern.startsWith('!')) excludePatterns.push(globToRegExp(pattern.slice(1), cwd))
-    else includePatterns.push(globToRegExp(pattern, cwd))
+    const negated = pattern.startsWith('!')
+    const regExp = globToRegExp(negated ? pattern.slice(1) : pattern, cwd)
+    if (!regExp) return CONSERVATIVE_TRANSFORM_FILTER
+    ;(negated ? excludePatterns : includePatterns).push(regExp)
   }
   for (const pattern of exclude) {
-    excludePatterns.push(globToRegExp(pattern.replace(/^!/, ''), cwd))
+    const regExp = globToRegExp(pattern.replace(/^!/, ''), cwd)
+    if (!regExp) return CONSERVATIVE_TRANSFORM_FILTER
+    excludePatterns.push(regExp)
   }
 
   return {
@@ -732,16 +781,38 @@ function readGlobs(value: unknown): string[] {
  * Convert one of the config's source globs (relative to the config's `cwd`, e.g.
  * `./src/**\/*.css.ts`) into a RegExp over absolute module ids. A RegExp rather than rolldown's
  * glob strings because rolldown tests RegExp filters against ids with their path separators
- * normalized to `/`, which keeps the filter portable to Windows; the glob syntax covered is the
- * fast-glob subset Panda configs use: `**`, `*`, `?`, `{a,b}` alternation and `[…]` classes.
+ * normalized to `/`, which keeps the filter portable to Windows. Only the glob itself is glob
+ * syntax: the directory it is resolved against is matched literally, brackets and all. The
+ * syntax covered is the fast-glob subset Panda configs use — `**`, `*`, `?`, `{a,b}`
+ * alternation and `[…]` classes; a glob using anything else (extglob groups) returns
+ * `undefined`, so the caller can leave the native filter unscoped instead of guessing.
  */
-function globToRegExp(glob: string, cwd: string): RegExp {
-  const absolute = path.resolve(cwd, glob).replaceAll('\\', '/')
-  let source = ''
+function globToRegExp(glob: string, cwd: string): RegExp | undefined {
+  if (RE_EXTGLOB.test(glob)) return undefined
+
+  // `./` and `../` prefixes address the literal base directory, which an absolute glob replaces
+  let base: string | undefined = path.resolve(cwd).replaceAll('\\', '/')
+  let pattern = glob
+  if (pattern.startsWith('/') || RE_WINDOWS_DRIVE.test(pattern)) {
+    base = undefined
+  } else {
+    for (;;) {
+      if (pattern.startsWith('./')) {
+        pattern = pattern.slice(2)
+      } else if (pattern.startsWith('../')) {
+        base = path.posix.dirname(base)
+        pattern = pattern.slice(3)
+      } else {
+        break
+      }
+    }
+  }
+
+  let source = base === undefined ? '' : base === '/' ? '/' : `${escapeRegExp(base)}/`
   let inClass = false
   let braceDepth = 0
-  for (let index = 0; index < absolute.length; index++) {
-    const char = absolute[index] ?? ''
+  for (let index = 0; index < pattern.length; index++) {
+    const char = pattern[index] ?? ''
     if (inClass) {
       if (char === ']') inClass = false
       source += char
@@ -749,7 +820,7 @@ function globToRegExp(glob: string, cwd: string): RegExp {
     }
     switch (char) {
       case '\\': {
-        const next = absolute[index + 1]
+        const next = pattern[index + 1]
         if (next === undefined) {
           source += '\\\\'
         } else {
@@ -759,10 +830,15 @@ function globToRegExp(glob: string, cwd: string): RegExp {
         break
       }
       case '*': {
-        if (absolute[index + 1] === '*') {
-          // `**` spans directories; `**/` also matches zero of them, so `src/**/*.ts` matches
-          // `src/a.ts` like fast-glob does
-          if (absolute[index + 2] === '/') {
+        const previous = pattern[index - 1]
+        if (
+          pattern[index + 1] === '*' &&
+          (previous === undefined || previous === '/') &&
+          (pattern[index + 2] === undefined || pattern[index + 2] === '/')
+        ) {
+          // A `**` segment spans directories; `**/` also matches zero of them, so `src/**/*.ts`
+          // matches `src/a.ts` like fast-glob does
+          if (pattern[index + 2] === '/') {
             source += '(?:.*/)?'
             index += 2
           } else {
@@ -804,6 +880,38 @@ function globToRegExp(glob: string, cwd: string): RegExp {
   // driver. Windows paths are case-insensitive, and rolldown's ids may differ from the resolved
   // config path in the drive letter's case.
   return new RegExp(`^${source}(?:\\?.*)?$`, process.platform === 'win32' ? 'i' : '')
+}
+
+/**
+ * The build's output directory relative to the root of the package whose `package.json` the
+ * exports are written to (POSIX separators, `''` for the root itself). tsdown resolves `outDir`
+ * against its `cwd`, and the directory can be absolute or `./`-prefixed, so it is never used
+ * as written: `customExports` runs after the build, when the emitted CSS asset carries the
+ * resolved output directory; the config's `outDir` resolved against `cwd` is the fallback.
+ */
+function resolveOutDir(
+  config: UserConfig,
+  context: CustomExportsContext,
+  cssFileName: string,
+): string {
+  // tsdown always resolves the package with its path here — its own exports generation reads
+  // `packageJsonPath` unconditionally from the same object — only the declared context type is
+  // the plain `PackageJson` shape
+  const pkg: Partial<PackageJsonWithPath> = context.pkg
+  const cwd = config.cwd ?? process.cwd()
+  const pkgRoot = pkg.packageJsonPath ? path.dirname(pkg.packageJsonPath) : cwd
+  let outDir: string | undefined
+  for (const chunks of Object.values(context.chunks)) {
+    const asset = chunks?.find(
+      (chunk) => chunk.type === 'asset' && chunk.fileName.replaceAll('\\', '/') === cssFileName,
+    )
+    if (asset) {
+      outDir = asset.outDir
+      break
+    }
+  }
+  outDir ??= path.resolve(cwd, config.outDir ?? 'dist')
+  return path.relative(pkgRoot, outDir).replaceAll('\\', '/')
 }
 
 /** The layer names of a Panda config: the defaults, with the config's `layers` renames applied. */

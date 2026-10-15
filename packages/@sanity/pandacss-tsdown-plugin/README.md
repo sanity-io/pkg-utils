@@ -15,7 +15,7 @@ Applications keep using `@pandacss/vite` in their `vite.config.ts` (and `vitest.
 pnpm add --save-dev @sanity/pandacss-tsdown-plugin @pandacss/dev @pandacss/transformer tsdown
 ```
 
-`@pandacss/dev` and `@pandacss/transformer` are peer dependencies: the plugin uses the Panda version your package already develops against.
+`@pandacss/dev` and `@pandacss/transformer` are peer dependencies: the plugin uses the Panda version your package already develops against. Like tsdown and Panda, it needs Node.js 22.18 or later.
 
 ## Usage
 
@@ -79,7 +79,9 @@ Either way, make sure the extracted CSS survives tree-shaking in consumers by li
 
 ## What the build does
 
-**Sources.** The config's `include`/`exclude` globs decide which modules are Panda sources, in two places: the plugin's `transform` hook declares them as its [hook filter](https://rolldown.rs/apis/plugin-api/hook-filters) (resolved against `cwd`), so rolldown never calls the hook for other modules, and the hook itself asks the driver before touching a module. Without `include` or `exclude` in the config nothing is scoped. The whole `include` set is scanned when a build starts — the transformer folds tokens and style objects across files, so a module's dependencies must be known before it is rewritten — and the stylesheet covers all of it, like `panda cssgen`.
+**Sources.** The config's `include`/`exclude` globs decide which modules are Panda sources, in two places: the plugin's `transform` hook declares them as its [hook filter](https://rolldown.rs/apis/plugin-api/hook-filters) (resolved against `cwd`, which is matched literally, and converted to RegExps so the filter also matches on Windows), so rolldown never calls the hook for other modules, and the hook itself asks the driver before touching a module. The converter covers the fast-glob syntax Panda configs use (`**`, `*`, `?`, `{a,b}`, `[…]`); a glob beyond it (extglobs) and a config without `include` or `exclude` leave the native filter unscoped, so the hook decides for every module. The whole `include` set is scanned when a build starts — the transformer folds tokens and style objects across files, so a module's dependencies must be known before it is rewritten — and the stylesheet covers all of it, like `panda cssgen`.
+
+**Watch mode.** Every scanned source is watched, whether or not an entry imports it, and so are the config and its imports. A rebuild reloads the config, so a change to it regenerates the artifacts, re-extracts the stylesheet — and transforms every module again, since each module registers the config as a dependency: renaming the classes (`prefix`, `hash`, `separator`) or widening `include` reaches the output on the next rebuild, also under rolldown's `experimental.incrementalBuild`, which otherwise reuses the transforms of unchanged files. The native filter stays unscoped for the session, because rolldown fixes it when the watcher starts while the config can change afterwards.
 
 **Codegen.** Before anything is scanned or transformed, the artifacts of the loaded config are written to its `outdir` (`panda codegen`), so the generated types, runtime and class name hashes the sources import match the config the stylesheet is extracted with — a `prepare` script that ran against an older config cannot leak stale output into the published build. Panda only writes the files whose content changed: a current directory is left untouched (its modification times included), so the one build per output format, watch rebuilds, and the tools watching the directory stay quiet. In watch mode the config is reloaded before each rebuild, so a config change regenerates the artifacts too. `codegen: false` skips this when codegen is managed elsewhere, and `outdir` redirects it.
 

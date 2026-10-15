@@ -1,5 +1,7 @@
 import {
+  cpSync,
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -10,7 +12,7 @@ import {
 import os from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-import {rolldown, type OutputAsset, type OutputChunk} from 'rolldown'
+import {rolldown, watch, type OutputAsset, type OutputChunk} from 'rolldown'
 import type {ResolvedConfig, UserConfig} from 'tsdown'
 import {describe, expect, test} from 'vitest'
 import {pandacssPlugin, type Options} from '../src/index.ts'
@@ -18,6 +20,49 @@ import {pandacssPlugin, type Options} from '../src/index.ts'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixtureDir = path.resolve(__dirname, 'fixtures/basic')
 const fixtureEntry = path.join(fixtureDir, 'src/index.ts')
+
+/**
+ * A throwaway copy of the `codegen` fixture under `test/fixtures/<name>.local` (gitignored
+ * through `*.local`, and inside the package so `panda.config.ts` still resolves
+ * `@pandacss/dev`), optionally with another `panda.config.ts`. The plugin regenerates
+ * `styled-system` at build start, so only the sources are copied.
+ */
+function copyFixture(name: string, pandaConfig?: string): string {
+  const source = path.resolve(__dirname, 'fixtures/codegen')
+  const target = path.resolve(__dirname, 'fixtures', `${name}.local`)
+  rmSync(target, {recursive: true, force: true})
+  mkdirSync(target, {recursive: true})
+  cpSync(path.join(source, 'package.json'), path.join(target, 'package.json'))
+  cpSync(path.join(source, 'src'), path.join(target, 'src'), {recursive: true})
+  writeFileSync(
+    path.join(target, 'panda.config.ts'),
+    pandaConfig ?? readFileSync(path.join(source, 'panda.config.ts'), 'utf-8'),
+  )
+  return target
+}
+
+/** The `include`/`exclude` RegExps of a plugin's derived `transform` filter. */
+function transformFilterPatterns(plugin: ReturnType<typeof pandacssPlugin>): {
+  include: RegExp[]
+  exclude: RegExp[]
+} {
+  const {transform} = plugin
+  if (typeof transform !== 'object' || !transform.filter || Array.isArray(transform.filter)) {
+    expect.unreachable('expected an object hook with a `HookFilter`')
+  }
+  const {id} = transform.filter
+  if (typeof id !== 'object' || id === null || id instanceof RegExp || Array.isArray(id)) {
+    expect.unreachable('expected an `include`/`exclude` id filter')
+  }
+  const toRegExps = (patterns: typeof id.include): RegExp[] =>
+    (Array.isArray(patterns) ? patterns : patterns === undefined ? [] : [patterns]).map(
+      (pattern) => {
+        if (!(pattern instanceof RegExp)) expect.unreachable('expected a RegExp filter')
+        return pattern
+      },
+    )
+  return {include: toRegExps(id.include), exclude: toRegExps(id.exclude)}
+}
 
 function findAsset(output: readonly (OutputAsset | OutputChunk)[], fileName: string): string {
   const asset = output.find((assetOrChunk) => assetOrChunk.fileName === fileName)
@@ -108,19 +153,11 @@ describe('pandacssPlugin', () => {
         },
         handler: expect.any(Function),
       })
-      const {transform} = plugin
-      if (typeof transform !== 'object' || !transform.filter || Array.isArray(transform.filter)) {
-        expect.unreachable('expected an object hook with a `HookFilter`')
-      }
-      const {id} = transform.filter
-      if (typeof id !== 'object' || id === null || id instanceof RegExp || Array.isArray(id)) {
-        expect.unreachable('expected an `include`/`exclude` id filter')
-      }
-      const [include] = Array.isArray(id.include) ? id.include : [id.include]
-      const [, exclude] = Array.isArray(id.exclude) ? id.exclude : [id.exclude]
-      if (!(include instanceof RegExp) || !(exclude instanceof RegExp)) {
-        expect.unreachable('expected the globs to be converted to RegExps')
-      }
+      const {
+        include: [include],
+        exclude: [, exclude],
+      } = transformFilterPatterns(plugin)
+      if (!include || !exclude) expect.unreachable('expected the globs to be converted')
       // The globs are resolved against `cwd` and tested against POSIX ids, like rolldown does
       // for RegExp filters on every OS
       const posixFixtureDir = fixtureDir.replaceAll('\\', '/')
@@ -136,6 +173,87 @@ describe('pandacssPlugin', () => {
       expect(findEntryChunk(output).code).toContain('"color_brand"')
     } finally {
       await bundle.close()
+    }
+  })
+
+  test('matches the working directory literally, brackets included', async () => {
+    // `[1]` in a directory name is not a character class: the globs are glob syntax, the
+    // directory they are resolved against is not
+    const cwd = copyFixture('lib[1]')
+    try {
+      const plugin = pandacssPlugin({cwd})
+      const bundle = await rolldown({cwd, input: path.join(cwd, 'src/index.ts'), plugins: [plugin]})
+      try {
+        const {
+          include: [include],
+        } = transformFilterPatterns(plugin)
+        expect(include?.test(`${cwd.replaceAll('\\', '/')}/src/index.ts`)).toBe(true)
+
+        const {output} = await bundle.generate({format: 'esm'})
+        expect(findEntryChunk(output).code).toContain('"color_brand"')
+      } finally {
+        await bundle.close()
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
+  test('supports brace alternation, and leaves extglobs to the handler', async () => {
+    const braces = copyFixture(
+      'braces',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+        "include: ['./src/**/*.ts']",
+        "include: ['./src/**/*.{ts,tsx}']",
+      ),
+    )
+    const extglob = copyFixture(
+      'extglob',
+      readFileSync(path.resolve(__dirname, 'fixtures/codegen/panda.config.ts'), 'utf-8').replace(
+        "include: ['./src/**/*.ts']",
+        "include: ['./src/**/*.@(ts|tsx)']",
+      ),
+    )
+    try {
+      const bracesPlugin = pandacssPlugin({cwd: braces})
+      const bracesBundle = await rolldown({
+        cwd: braces,
+        input: path.join(braces, 'src/index.ts'),
+        plugins: [bracesPlugin],
+      })
+      try {
+        const {
+          include: [include],
+        } = transformFilterPatterns(bracesPlugin)
+        const posixCwd = braces.replaceAll('\\', '/')
+        expect(include?.test(`${posixCwd}/src/index.ts`)).toBe(true)
+        expect(include?.test(`${posixCwd}/src/index.tsx`)).toBe(true)
+        expect(include?.test(`${posixCwd}/src/index.js`)).toBe(false)
+        const {output} = await bracesBundle.generate({format: 'esm'})
+        expect(findEntryChunk(output).code).toContain('"color_brand"')
+      } finally {
+        await bracesBundle.close()
+      }
+
+      // An extglob is beyond the converter, so the native filter only skips declaration
+      // files and the handler decides with Panda's own matcher
+      const extglobPlugin = pandacssPlugin({cwd: extglob})
+      const extglobBundle = await rolldown({
+        cwd: extglob,
+        input: path.join(extglob, 'src/index.ts'),
+        plugins: [extglobPlugin],
+      })
+      try {
+        expect(transformFilterPatterns(extglobPlugin)).toEqual({
+          include: [],
+          exclude: [expect.any(RegExp)],
+        })
+      } finally {
+        await extglobBundle.close()
+      }
+    } finally {
+      rmSync(braces, {recursive: true, force: true})
+      rmSync(extglob, {recursive: true, force: true})
     }
   })
 
@@ -376,11 +494,87 @@ const conditionalCssExport = {
   default: './dist/bundle-css.js',
 }
 
-/** Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. */
+describe('watch mode', () => {
+  test(
+    'a config change renames the classes in the JavaScript and the stylesheet together',
+    {timeout: 60_000},
+    async () => {
+      // Changing the class name `prefix` (like `hash` or `separator`) rewrites every class
+      // name without touching a single source file. The modules must be transformed again all
+      // the same — even under rolldown's incremental build, which reuses the transforms of
+      // the modules whose files did not change — or the output keeps the old names while the
+      // stylesheet has the new ones, and nothing is styled.
+      const cwd = copyFixture('watch')
+      const configPath = path.join(cwd, 'panda.config.ts')
+      const outDir = path.join(cwd, 'dist')
+      const originalConfig = readFileSync(configPath, 'utf-8')
+
+      let settle: (() => void) | undefined
+      let fail: ((error: Error) => void) | undefined
+      const nextBuild = () =>
+        new Promise<void>((resolve, reject) => {
+          settle = resolve
+          fail = reject
+        })
+      const firstBuild = nextBuild()
+      const watcher = watch({
+        cwd,
+        input: path.join(cwd, 'src/index.ts'),
+        plugins: [pandacssPlugin({cwd, inject: true})],
+        output: {dir: outDir, format: 'esm'},
+        experimental: {incrementalBuild: true},
+      })
+      watcher.on('event', (event) => {
+        if (event.code === 'BUNDLE_END') void event.result.close()
+        if (event.code === 'ERROR') fail?.(event.error)
+        if (event.code === 'END') settle?.()
+      })
+      const readOutput = () => ({
+        js: readFileSync(path.join(outDir, 'index.js'), 'utf-8'),
+        css: readFileSync(path.join(outDir, 'bundle.css'), 'utf-8'),
+      })
+
+      try {
+        await firstBuild
+        const before = readOutput()
+        expect(before.js).toContain('"color_brand"')
+        expect(before.css).toContain('.color_brand {')
+
+        // The config and its imports are watched, so the edit triggers a rebuild; the watcher
+        // takes a moment to pick up the files the first build registered
+        const secondBuild = nextBuild()
+        await new Promise((resolve) => setTimeout(resolve, 500))
+        writeFileSync(
+          configPath,
+          originalConfig.replace('eject: true,', "eject: true,\n  prefix: 'v2',"),
+        )
+        await secondBuild
+
+        const after = readOutput()
+        expect(after.js).toContain('"v2-color_brand"')
+        expect(after.js).not.toContain('"color_brand"')
+        expect(after.css).toContain('.v2-color_brand {')
+        expect(after.css).not.toContain('.color_brand {')
+      } finally {
+        await watcher.close()
+        rmSync(cwd, {recursive: true, force: true})
+      }
+    },
+  )
+})
+
+/** The (never created) root of the package the hook tests write exports for. */
+const packageRoot = path.resolve(os.tmpdir(), 'pandacss-tsdown-plugin-host-library')
+
+/**
+ * Runs the plugin's `tsdownConfig` hook against a tsdown user config, like tsdown does. The
+ * config's `cwd` defaults to the package root, as tsdown's would when run from it.
+ */
 async function runTsdownConfigHook(
   config: UserConfig,
   options: Options = {inject: true, exports: {nodeCompat: true}},
 ): Promise<UserConfig> {
+  config.cwd ??= packageRoot
   const plugin = pandacssPlugin(options)
   expect(typeof plugin.tsdownConfig).toBe('function')
   const result = await plugin.tsdownConfig?.(config, {})
@@ -397,14 +591,27 @@ function getCustomExports(config: UserConfig) {
   return exportsOption.customExports
 }
 
-const customExportsContext = {
-  pkg: {packageJsonPath: 'package.json'},
-  chunks: [],
-  outDir: 'dist',
-  isPublish: false,
-} as unknown as Parameters<
+type CustomExportsContext = Parameters<
   Extract<NonNullable<Extract<UserConfig['exports'], object>['customExports']>, Function>
 >[1]
+
+/**
+ * The context tsdown passes to `customExports` after a build: the package (with the path of
+ * its `package.json`, which tsdown always resolves) and the emitted chunks per format, here
+ * the CSS asset carrying the resolved output directory.
+ */
+function createCustomExportsContext(
+  packageJsonPath = path.join(packageRoot, 'package.json'),
+  outDir?: string,
+): CustomExportsContext {
+  return {
+    pkg: {packageJsonPath},
+    chunks: outDir === undefined ? {} : {es: [{type: 'asset', fileName: 'bundle.css', outDir}]},
+    isPublish: false,
+  } as unknown as CustomExportsContext
+}
+
+const customExportsContext = createCustomExportsContext()
 
 describe('tsdownConfig hook', () => {
   test('writes the conditional CSS export through `exports.customExports`', async () => {
@@ -446,6 +653,53 @@ describe('tsdownConfig hook', () => {
         node: './lib/styles-css.js',
         default: './lib/styles-css.js',
       },
+    })
+  })
+
+  test('resolves `outDir` against the package root, in any spelling', async () => {
+    // `./dist`, an absolute directory and a nested one all end up relative to the directory
+    // of the `package.json` the exports are written to, with POSIX separators — never
+    // `././dist` or `.//abs/path/dist`
+    for (const [outDir, expected] of [
+      ['./dist', './dist/bundle.css'],
+      [path.join(packageRoot, 'dist'), './dist/bundle.css'],
+      [`lib${path.sep}esm`, './lib/esm/bundle.css'],
+      ['.', './bundle.css'],
+    ] as const) {
+      const config = await runTsdownConfigHook({exports: true, outDir}, {exports: true})
+      await expect(
+        getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+      ).resolves.toEqual({'.': './dist/index.mjs', './bundle.css': expected})
+    }
+  })
+
+  test('prefers the output directory the build resolved over the configured one', async () => {
+    // `customExports` runs after the build, when the emitted CSS asset knows where tsdown
+    // actually wrote it (tsdown resolves `outDir` against `cwd`, which need not be the package
+    // root the exports are relative to)
+    const config = await runTsdownConfigHook({exports: true, outDir: 'dist'}, {exports: true})
+    const customExports = getCustomExports(config)
+    await expect(
+      customExports(
+        {'.': './build/index.mjs'},
+        createCustomExportsContext(
+          path.join(packageRoot, 'package.json'),
+          path.join(packageRoot, 'build'),
+        ),
+      ),
+    ).resolves.toEqual({'.': './build/index.mjs', './bundle.css': './build/bundle.css'})
+
+    // A `cwd` below the package root: the configured `outDir` is relative to `cwd`, the
+    // export target to the package root
+    const nested = await runTsdownConfigHook(
+      {exports: true, outDir: 'dist', cwd: path.join(packageRoot, 'packages/ui')},
+      {exports: true},
+    )
+    await expect(
+      getCustomExports(nested)({'.': './packages/ui/dist/index.mjs'}, customExportsContext),
+    ).resolves.toEqual({
+      '.': './packages/ui/dist/index.mjs',
+      './bundle.css': './packages/ui/dist/bundle.css',
     })
   })
 

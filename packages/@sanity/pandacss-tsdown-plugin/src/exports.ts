@@ -1,13 +1,34 @@
+import path from 'node:path'
 import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
+
+/**
+ * Normalize an output directory given relative to the package root into the form the export
+ * targets embed: POSIX separators, no `./` prefix or trailing slash, and `''` for the root
+ * itself (`'dist'`, `'./dist'`, `'dist/'`, `'lib\\esm'`, `'.'` → `'dist'`, `'dist'`, `'dist'`,
+ * `'lib/esm'`, `''`). An absolute directory cannot be made relative here — resolve it against
+ * the package root first, like the plugin's `tsdownConfig` hook does.
+ */
+function normalizeOutDir(outDir: string): string {
+  const normalized = path.posix.normalize(outDir.replaceAll('\\', '/')).replace(/\/+$/, '')
+  return normalized === '.' || normalized === '' ? '' : normalized.replace(/^\.\//, '')
+}
+
+/** `./<outDir>/<file>`, or `./<file>` when the output directory is the package root. */
+function exportTarget(outDir: string, fileName: string): string {
+  const dir = normalizeOutDir(outDir)
+  return dir ? `./${dir}/${fileName}` : `./${fileName}`
+}
 
 /**
  * Build the plain CSS export target of `exports: true`, e.g. `"./dist/bundle.css"`. Enough for
  * packages that only run in browsers or bundlers; `exports: {nodeCompat: true}` uses
- * {@link createConditionalCssExport} instead so the subpath also resolves in Node.
+ * {@link createConditionalCssExport} instead so the subpath also resolves in Node. `outDir` is
+ * the output directory relative to the package root, in any spelling (`dist`, `./dist`,
+ * `lib/esm`, or `''`/`.` for the root).
  * @internal
  */
 export function createCssExport(cssFileName: string, outDir: string): string {
-  return `./${outDir}/${cssFileName}`
+  return exportTarget(outDir, cssFileName)
 }
 
 /**
@@ -32,9 +53,9 @@ export function createConditionalCssExport(
   cssFileName: string,
   outDir: string,
 ): Record<string, string> {
-  const cssFile = `./${outDir}/${cssFileName}`
-  const shimFile = `./${outDir}/${cssShimFileName(cssFileName)}`
-  const shimDtsFile = `./${outDir}/${cssShimDtsFileName(cssFileName)}`
+  const cssFile = exportTarget(outDir, cssFileName)
+  const shimFile = exportTarget(outDir, cssShimFileName(cssFileName))
+  const shimDtsFile = exportTarget(outDir, cssShimDtsFileName(cssFileName))
   return {types: shimDtsFile, browser: cssFile, style: cssFile, node: shimFile, default: shimFile}
 }
 
