@@ -1,49 +1,56 @@
 # @sanity/pandacss-tsdown-plugin
 
-A [tsdown](https://tsdown.dev) plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm — the companion of the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin.
+A [tsdown](https://tsdown.dev) plugin for publishing [Panda CSS](https://panda-css.com) libraries to npm with a separate stylesheet.
 
-Applications keep using `@pandacss/vite` in their `vite.config.ts` (and `vitest.config.ts`, `sanity.cli.ts`, …); this plugin takes its place in the `tsdown.config.ts` of a package that ships Panda styles. It:
-
-- loads `panda.config.ts` with Panda's node driver, runs its codegen (so the `styled-system` directory is in sync with the config) and scans the sources the config's `include`/`exclude` globs cover,
-- rewrites their `css()`, `cva()`, pattern and recipe calls into static class name strings with [`@pandacss/transformer`](https://www.npmjs.com/package/@pandacss/transformer), so the published JavaScript carries no Panda runtime,
-- emits the generated stylesheet as a single [`lightningcss`](https://lightningcss.dev)-optimized CSS file (`dist/bundle.css` by default), optionally lowered to the build's `target` and minified,
-- and, when enabled, injects the CSS import into the entry chunks and publishes the file as a conditional `"./bundle.css"` export subpath — the same `inject`/`exports` pattern as [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme), with options modeled after the [`css` options of `@tsdown/css`](https://tsdown.dev/options/css).
+It is for library builds: add it to the `tsdown.config.ts` of a package that styles with Panda, and it generates Panda's files, rewrites the style calls it can resolve statically into class names, and extracts the CSS into one Lightning CSS-optimized file next to the JavaScript. Applications keep using the official [`@pandacss/vite`](https://panda-css.com/docs/installation/vite) plugin in their Vite config; the two load the same `panda.config.ts`.
 
 ## Installation
 
 ```sh
-pnpm add --save-dev @sanity/pandacss-tsdown-plugin @pandacss/dev @pandacss/transformer tsdown
+pnpm add --save-dev @sanity/pandacss-tsdown-plugin tsdown
 ```
 
-`@pandacss/dev` and `@pandacss/transformer` are peer dependencies: the plugin uses the Panda version your package already develops against. Like tsdown and Panda, it needs Node.js 22.18 or later.
+- `tsdown` is a peer dependency. The Panda compiler and transformer the plugin runs are its own dependencies, so there is nothing else to install for the build.
+- `@pandacss/dev` is recommended but not required (an optional peer): it provides `defineConfig` for `panda.config.ts`, the `"prepare": "panda codegen"` script below, and the `panda` CLI for debugging, such as validating the config.
+- Node.js 22.18 or later, like tsdown and Panda.
 
-## Usage
+## Quick start
 
-Like `@pandacss/vite`, the plugin runs Panda's codegen when a build starts, so the `styled-system` directory can never be stale relative to the config the build extracts the CSS with. Keep the usual `prepare` script anyway: the type checker, the test runner and the editor need the generated types before any build runs, like in a Vite application.
+A package with Panda sources under `src/`:
 
 ```json
 {
+  "name": "my-library",
+  "type": "module",
+  "files": ["dist"],
+  "sideEffects": ["*.css"],
+  "imports": {
+    "#styled-system/*": "./styled-system/*/index.js"
+  },
   "scripts": {
     "prepare": "panda codegen",
     "build": "tsdown"
-  },
-  "imports": {
-    "#styled-system/*": "./styled-system/*/index.js"
   }
 }
 ```
 
+- `imports` maps the generated `styled-system` directory, so sources import `#styled-system/css`.
+- `prepare` generates that directory on install. The plugin regenerates it when it builds, but the editor, the type checker and the test runner need it before any build runs.
+- `sideEffects` keeps the stylesheet import that `inject` adds from being tree-shaken by consumers' bundlers.
+
 ```ts
 // panda.config.ts
-import {defineConfig} from '@pandacss/dev'
+import {defineConfig, type Config} from '@pandacss/dev'
 
 export default defineConfig({
-  include: ['./src/**/*.css.ts'],
+  include: ['./src/**/*.ts', './src/**/*.tsx'],
   outdir: 'styled-system',
   importMap: '#styled-system',
   // …
-})
+} satisfies Config)
 ```
+
+`satisfies Config` makes the type checker reject options that don't exist, which `defineConfig` alone lets through.
 
 ```ts
 // tsdown.config.ts
@@ -57,7 +64,13 @@ export default defineConfig({
 })
 ```
 
-With [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#panda), the `panda` option does the same, with `inject: true` and `exports: {nodeCompat: true}` as the defaults and the CSS lowered for the [`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme) browsers when the build's `target` names none:
+This build writes `dist/index.js` with the style calls rewritten, `dist/bundle.css` with the extracted CSS, and — because of the two options — an `import "my-library/bundle.css"` at the top of the entry chunk plus the conditional `./bundle.css` export in `package.json` (see [Loading the stylesheet](#loading-the-stylesheet)). tsdown's `exports: true` is what lets the plugin write that export; without it, the export has to be maintained by hand.
+
+Used standalone, the plugin only extracts the CSS: `inject` and `exports` are off by default, and so is `minify`.
+
+## Using it through `@sanity/tsdown-config`
+
+[`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#panda) wraps the plugin in its `panda` option, with Sanity's defaults on top: `inject: true`, `exports: {nodeCompat: true}`, and CSS syntax transformed for the [`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme) browsers when the build's `target` names none. Minification stays opt-in.
 
 ```ts
 // tsdown.config.ts
@@ -69,68 +82,84 @@ export default defineConfig({
 })
 ```
 
-Either way, make sure the extracted CSS survives tree-shaking in consumers by listing it in `sideEffects`:
-
-```json
-{
-  "sideEffects": ["*.css"]
-}
-```
+Pass an object instead of `true` to customize, with the same [options](#options) as the plugin.
 
 ## What the build does
 
-**Sources.** The config's `include`/`exclude` globs decide which modules are Panda sources, in two places: the plugin's `transform` hook declares them as its [hook filter](https://rolldown.rs/apis/plugin-api/hook-filters) (resolved against `cwd`, which is matched literally, and converted to RegExps so the filter also matches on Windows), so rolldown never calls the hook for other modules, and the hook itself asks the driver before touching a module. The converter covers the fast-glob syntax Panda configs use (`**`, `*`, `?`, `{a,b}`, `[…]`); a glob beyond it (extglobs) and a config without `include` or `exclude` leave the native filter unscoped, so the hook decides for every module. The whole `include` set is scanned when a build starts — the transformer folds tokens and style objects across files, so a module's dependencies must be known before it is rewritten — and the stylesheet covers all of it, like `panda cssgen`.
+### Sources
 
-**Watch mode.** Every scanned source is watched, whether or not an entry imports it, and so are the config and its imports. A rebuild reloads the config, so a change to it regenerates the artifacts, re-extracts the stylesheet — and transforms every module again, since each module registers the config as a dependency: renaming the classes (`prefix`, `hash`, `separator`) or widening `include` reaches the output on the next rebuild, also under rolldown's `experimental.incrementalBuild`, which otherwise reuses the transforms of unchanged files. The native filter stays unscoped for the session, because rolldown fixes it when the watcher starts while the config can change afterwards.
+The Panda config's `include` and `exclude` globs decide which modules are Panda sources. Every file they cover is scanned when a build starts and contributes to the stylesheet — also files no entry imports, like `panda cssgen`. Modules outside the globs are left alone, even when they call `css()`.
 
-**Codegen.** Before anything is scanned or transformed, the artifacts of the loaded config are written to its `outdir` (`panda codegen`), so the generated types, runtime and class name hashes the sources import match the config the stylesheet is extracted with — a `prepare` script that ran against an older config cannot leak stale output into the published build. Panda only writes the files whose content changed: a current directory is left untouched (its modification times included), so the one build per output format, watch rebuilds, and the tools watching the directory stay quiet. In watch mode the config is reloaded before each rebuild, so a config change regenerates the artifacts too. `codegen: false` skips this when codegen is managed elsewhere, and `outdir` redirects it.
+### Codegen
 
-**Transform.** Each Panda source is rewritten in place: `css({color: 'brand'})` becomes `"color_brand"`, so the published module no longer imports `#styled-system/css`. A composition the transformer cannot resolve statically is left as is, with a warning; it keeps calling Panda's runtime, which rolldown then bundles from the `styled-system` directory through the `imports` map. Set `transform: false` to skip the rewrite entirely and only extract the CSS.
+Before anything is scanned or transformed, the plugin writes Panda's generated files (the same output as `panda codegen`) to the config's `outdir`, so the generated types, runtime and class name hashes match the config the stylesheet is extracted with. Only files whose content changed are written; a current directory is left untouched. Set `codegen: false` to leave codegen to your own scripts, and `outdir` to write the files elsewhere.
 
-**Stylesheet.** The CSS is requested for every Panda layer (`reset`, `base`, `tokens`, `recipes`, `utilities` — a library cannot know ahead of time which ones its sources end up using) but without the `@layer reset, base, …;` declaration, which would declare layers the file doesn't use; ordering the layers is the consuming application's call. The result always goes through `lightningcss`, which lowers it to the `target`, normalizes it, drops Panda's `--made-with-panda` marker (listed in `unusedSymbols` together with anything you pass there) and removes the rules and layers that leaves empty, and minifies it only when `minify: true`. The `polyfill` option (defaulting to the Panda config's) emits the CSS without layers instead.
+### Transform
 
-**Output.** The stylesheet is emitted once per output format as `<outDir>/<fileName>`. With `inject`, every entry chunk whose module graph reaches a Panda source gets an `import "…/bundle.css"` (a `require()` in CJS output) prepended — relative to the chunk, or the self-referential `"<pkg-name>/bundle.css"` when the file is also published as an export subpath with `exports`. `exports: {nodeCompat: true}` additionally emits a no-op `bundle-css.js` shim and its `bundle-css.d.ts`, and writes the conditional export to `package.json` through tsdown's [`exports` feature](https://tsdown.dev/options/package-exports) when that is enabled:
+By default (`transform: true`, unlike `@pandacss/vite`, where it is off), each Panda source is rewritten in place: `css({color: 'brand'})` becomes `"color_brand"`, so the module no longer imports `#styled-system/css`. Set `transform: false` to keep every call and only extract the CSS.
 
-```json
-{
-  "exports": {
-    "./bundle.css": {
-      "types": "./dist/bundle-css.d.ts",
-      "browser": "./dist/bundle.css",
-      "style": "./dist/bundle.css",
-      "node": "./dist/bundle-css.js",
-      "default": "./dist/bundle-css.js"
-    }
-  }
-}
-```
+Only calls that can be resolved statically are rewritten:
 
-so `import "<pkg-name>/bundle.css"` resolves to the stylesheet in bundlers and browsers and to the harmless shim in Node and other runtimes that cannot load `.css` files.
+- A conditional composition like `css(base, active && extra)` is resolved into a static expression, or into a call of a small class-merging helper from `@pandacss/transformer` that is bundled into the output — not Panda's full runtime.
+- A call with a dynamic value, like `css({color})`, cannot be resolved. It stays as it is, Panda's `css()` runtime is bundled into the output for it (from `styled-system`, through the `imports` map), and the build warns about it. The runtime call produces a class name, but the stylesheet only has rules for the values Panda could see statically — arbitrary dynamic values have none.
+
+### Stylesheet
+
+The CSS is extracted into `bundle.css` (the `fileName` option) once per output format:
+
+- Every Panda cascade layer is requested, and the output keeps the `@layer` blocks of the layers that have rules — but not the `@layer reset, base, tokens, recipes, utilities;` order declaration. Declaring the order is the consuming application's job (Panda apps do this in their own CSS). Set `polyfill: true` to emit the CSS without layers instead, for browsers that predate `@layer`.
+- Lightning CSS always processes the result: it transforms the syntax for the configured browsers (see [Browser targets](#browser-targets)), normalizes it, and removes Panda's `--made-with-panda` marker together with the rules and layers that leaves empty.
+- Minification is separate and off by default; set `minify: true`.
+
+### Browser targets
+
+Which syntax Lightning CSS transforms depends on the targets:
+
+- `target` takes esbuild-style targets like `'chrome90'` or `['chrome90', 'safari16.2']`. It defaults to tsdown's own `target`, and a browser named more than once resolves to its lowest version.
+- A target that doesn't specify browsers, such as `node20`, means no syntax transform — the plugin matches `@tsdown/css` here. `@sanity/tsdown-config` falls back to `@sanity/browserslist-config` in that case, and also accepts browserslist queries like `'defaults'`.
+- `lightningcss.targets` wins over `target`; `target: false` disables the syntax transform.
+
+### Loading the stylesheet
+
+Consumers have to load `bundle.css`. The plugin can help in two ways, both off by default:
+
+- `inject: true` adds an import of the stylesheet to every JavaScript entry chunk whose module graph reaches a module with Panda styles — `import "./bundle.css"` in ESM output, `require("./bundle.css")` in CJS output, inserted after `"use strict"` and other directives. The CSS is not inlined into the JavaScript and no `<style>` element is created; the consumer's bundler handles the import.
+- `exports: true` publishes the stylesheet as the `./bundle.css` export of the package, and `inject` then uses the self-referential `import "my-library/bundle.css"`. With `exports: {nodeCompat: true}` the export is conditional: the `browser` and `style` conditions select the stylesheet, while `node` and `default` select a no-op `bundle-css.js` shim (with a `bundle-css.d.ts` for `types`), so the import resolves in runtimes that cannot load `.css` files. The export is written to `package.json` through tsdown's [`exports` feature](https://tsdown.dev/options/package-exports) when that is enabled.
+
+Loading through `exports` relies on the consumer's resolver honoring those conditions; bundlers generally do, plain `<script type="module">` in a browser does not.
+
+### Watch mode
+
+In `tsdown --watch`, the plugin watches every scanned source (imported or not), the directories the `include` globs are rooted in (so added files are picked up), and the Panda config with its imports. A rebuild reloads the config: a change to it regenerates the files, re-extracts the stylesheet and transforms every module again — class renames (`prefix`, `hash`, `separator`) and `include` changes reach the output on the next rebuild. The generated directory and the build's output directory are excluded from watching, so the build's own writes don't trigger the next one.
 
 ## Options
 
-| Option         | Type                                           | Default                       | Description                                                                                                                                                                                                               |
-| -------------- | ---------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cwd`          | `string`                                       | tsdown's `cwd`                | The project root the Panda config is discovered from, and the directory its `include`/`exclude` globs are relative to (like `cwd` in `@pandacss/vite`).                                                                   |
-| `configPath`   | `string`                                       | discovered upward from `cwd`  | An explicit Panda config file, relative to `cwd` (like `configPath` in `@pandacss/vite`).                                                                                                                                 |
-| `codegen`      | `boolean`                                      | `true`                        | Run Panda's codegen when a build starts (and after the config reloads in watch mode), writing only the artifacts whose content changed. `false` when codegen is managed elsewhere.                                        |
-| `outdir`       | `string`                                       | the Panda config's `outdir`   | Where the codegen artifacts are written, relative to `cwd` (like `outdir` in `@pandacss/vite`).                                                                                                                           |
-| `transform`    | `boolean`                                      | `true`                        | Rewrite the style calls of the Panda sources into static class names (like `transform` in `@pandacss/vite`, which defaults to `false` there because applications keep the runtime around). `false` only extracts the CSS. |
-| `polyfill`     | `boolean`                                      | the Panda config's `polyfill` | Emit the CSS without cascade layers (Panda's `@layer` polyfill).                                                                                                                                                          |
-| `fileName`     | `string`                                       | `"bundle.css"`                | Name of the emitted CSS file (like `css.fileName` in `@tsdown/css`).                                                                                                                                                      |
-| `minify`       | `boolean`                                      | `false`                       | Minify the CSS with `lightningcss` (like `css.minify` in `@tsdown/css`). The CSS is optimized by `lightningcss` either way.                                                                                               |
-| `target`       | `string \| string[] \| false`                  | tsdown's resolved `target`    | esbuild-style CSS syntax lowering target(s), e.g. `'chrome90'` (like `css.target` in `@tsdown/css`). Browserless targets such as `'node20'` skip lowering; `false` disables it.                                           |
-| `lightningcss` | `Omit<TransformOptions, 'filename' \| 'code'>` | —                             | Options passed through to `lightningcss`'s `transform()` (like `css.lightningcss` in `@tsdown/css`). `targets` wins over `target`; `unusedSymbols` extends the `--made-with-panda` entry the plugin always removes.       |
-| `inject`       | `boolean`                                      | `false`                       | Prepend the CSS import to every entry chunk that reaches Panda styles (like `css.inject` in `@tsdown/css`).                                                                                                               |
-| `exports`      | `boolean \| {nodeCompat?: boolean}`            | `false`                       | Publish the CSS file as the `"./<fileName>"` export subpath — plain with `true`, conditional with a Node-compatible shim with `{nodeCompat: true}` — and make `inject` use the self-referential specifier.                |
+| Option         | Type                                           | Default                       | Description                                                                                                                                                           |
+| -------------- | ---------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cwd`          | `string`                                       | tsdown's `cwd`                | Where `panda.config.ts` is looked up, and what its `include`/`exclude` globs are relative to.                                                                         |
+| `configPath`   | `string`                                       | discovered upward from `cwd`  | An explicit Panda config file, relative to `cwd`.                                                                                                                     |
+| `codegen`      | `boolean`                                      | `true`                        | Write Panda's generated files when a build starts. See [Codegen](#codegen).                                                                                           |
+| `outdir`       | `string`                                       | the Panda config's `outdir`   | Where the generated files are written, relative to `cwd`. Not tsdown's `outDir`, which is where the build output goes.                                                |
+| `transform`    | `boolean`                                      | `true`                        | Rewrite statically resolvable style calls into class names. `false` only extracts the CSS. See [Transform](#transform).                                               |
+| `polyfill`     | `boolean`                                      | the Panda config's `polyfill` | Emit the CSS without cascade layers.                                                                                                                                  |
+| `fileName`     | `string`                                       | `"bundle.css"`                | Name of the stylesheet, written to tsdown's output directory.                                                                                                         |
+| `minify`       | `boolean`                                      | `false`                       | Minify the stylesheet. Lightning CSS processes it either way.                                                                                                         |
+| `target`       | `string \| string[] \| false`                  | tsdown's `target`             | Browsers to transform the CSS syntax for, esbuild-style; `false` disables the transform. See [Browser targets](#browser-targets).                                     |
+| `lightningcss` | `Omit<TransformOptions, 'filename' \| 'code'>` | —                             | Options passed through to Lightning CSS. `targets` wins over `target`; `unusedSymbols` is added to the `--made-with-panda` marker the plugin removes.                 |
+| `inject`       | `boolean`                                      | `false`                       | Add an import of the stylesheet to the entry chunks that use Panda styles. See [Loading the stylesheet](#loading-the-stylesheet).                                     |
+| `exports`      | `boolean \| {nodeCompat?: boolean}`            | `false`                       | Publish the stylesheet as the `./<fileName>` export, conditional with a Node.js shim when `nodeCompat` is set. See [Loading the stylesheet](#loading-the-stylesheet). |
 
-## Compared to `@pandacss/vite`
+`@pandacss/vite`'s `cwd`, `configPath` and `outdir` have the same meaning here. Its `transform` exists too but is on by default, since a published package should not depend on Panda's runtime where it can avoid it.
 
-Both load the same config with the same driver, run the same codegen and transform sources with the same transformer, but they serve different phases. `@pandacss/vite` is an application plugin: it injects the stylesheet into the CSS file that declares Panda's layers, keeps the runtime around (its `transform` is opt-in) and handles HMR. This plugin is a library-build plugin: it emits the stylesheet as a file of its own next to the JavaScript, rewrites the sources so the package does not depend on the runtime, and wires the CSS up for consumers through the package's exports. A `.css` file that declares Panda's layers is not touched here — the consuming application's `@pandacss/vite` handles it.
+## Advanced
+
+- **How modules are selected.** The plugin tells rolldown which modules to hand to its transform hook from the config's `include`/`exclude` globs (the fast-glob subset Panda configs use: `**`, `*`, `?`, `{a,b}`, `[…]`; anything else, and watch mode, let the hook see every module), and always asks Panda's own matcher before touching one. The decision is Panda's either way.
+- **Other hosts.** The plugin is a rolldown plugin with two tsdown hooks on top. A host that isn't tsdown can pass what tsdown would through `plugin.api.setBuildContext({target, packageName, cwd, outDir})`; without it, `target` has no default, the package name for `exports` comes from the nearest `package.json`, and the output directory is not excluded from watching.
+- **Helpers.** `createCssExport`, `createConditionalCssExport` and `insertCssExport` build and insert the `./<fileName>` export; `cssShimFileName`, `cssShimDtsFileName`, `cssShimSource` and `cssShimDtsSource` describe the Node.js shim; `esbuildTargetToLightningCSS` converts esbuild-style targets; `resolveCssExportOptions` resolves `inject`/`exports`. They are exported for hosts that integrate the same CSS export pattern.
 
 ## Related
 
-- [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme) — the `panda` option wraps this plugin with Sanity's defaults.
+- [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#panda) — the `panda` option wraps this plugin with Sanity's defaults.
 - [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme) — the same extract-and-publish model for vanilla-extract.
 
 ## License

@@ -256,21 +256,17 @@ default (`bundle.css` vs `style.css`) and do not interfere with each other.
 
 ## panda
 
-The `panda` option is the [Panda CSS](https://panda-css.com) counterpart of `vanillaExtract`.
-Under the hood it uses
-[`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme),
-the library-build companion of the official `@pandacss/vite` plugin: applications keep
-`@pandacss/vite` in their `vite.config.ts` (and `vitest.config.ts`, `sanity.cli.ts`, …), while
-the tsdown build loads the same `panda.config.ts`, rewrites the `css()`/`cva()`/pattern/recipe
-calls of the sources its `include`/`exclude` globs cover into static class names (so the
-published JavaScript carries no Panda runtime), and extracts the generated stylesheet into a
-separate file (`dist/bundle.css` by default), lowered with `lightningcss` for the
-[`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
-browsers by default. Install the plugin together with its peers — it is an optional peer
-dependency of this config:
+`panda: true` enables
+[`@sanity/pandacss-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/pandacss-tsdown-plugin#readme)
+for a package styled with [Panda CSS](https://panda-css.com): the build generates Panda's files,
+rewrites the style calls it can resolve statically into class names, and extracts the CSS into a
+separate stylesheet. It is the library-build counterpart of `@pandacss/vite`, which applications
+keep using in their Vite config.
+
+Install the plugin — an optional peer dependency of this config:
 
 ```sh
-pnpm add --save-dev @sanity/pandacss-tsdown-plugin @pandacss/dev @pandacss/transformer
+pnpm add --save-dev @sanity/pandacss-tsdown-plugin
 ```
 
 ```ts
@@ -282,47 +278,43 @@ export default defineConfig({
 })
 ```
 
-Like `@pandacss/vite`, the plugin runs Panda's codegen when the build starts (writing only the
-artifacts whose content changed), so the `styled-system` directory is always in sync with the
-config the CSS is extracted with. Keep the usual `prepare` script anyway, so the directory also
-exists for the type checker and the test runner before any build runs:
+The Sanity defaults on top of the plugin's own:
 
-```json
-{
-  "scripts": {
-    "prepare": "panda codegen"
-  },
-  "imports": {
-    "#styled-system/*": "./styled-system/*/index.js"
-  }
-}
-```
+- `inject: true` — the entry chunks that use Panda styles get an `import "<pkg>/bundle.css"`
+  (a `require()` in CJS output), so consumers' bundlers load the stylesheet.
+- `exports: {nodeCompat: true}` — `./bundle.css` is published as a conditional export: the
+  `browser` and `style` conditions select the stylesheet, `node` and `default` a no-op JS shim,
+  so the import also loads in Node.js. The export is written to `package.json` through this
+  config's [`exports`](#exports) generation.
+- The CSS syntax is transformed for the configured browsers — `panda.target`, then the top-level
+  `target`, and when neither names browsers (e.g. `node20`) the
+  [`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
+  browsers. Browserslist queries like `'defaults'` work too; `lightningcss.targets` wins over
+  everything and `target: false` disables the transform.
+- `minify` stays off; `transform` stays on (unlike in `@pandacss/vite`).
 
-The defaults match `vanillaExtract`: `inject: true` with `exports: {nodeCompat: true}` injects the
-self-referential `import "<pkg>/bundle.css"` into the entry chunks that use Panda styles, emits the
-no-op `bundle-css.js` shim (plus `bundle-css.d.ts`), and writes the conditional `"./bundle.css"`
-export to `package.json` — so list the CSS in `sideEffects` as described above. `minify` is not
-enabled (set `minify: true` to minify), and the CSS syntax lowering `target` resolves exactly like
-`vanillaExtract`'s. The stylesheet always goes through `lightningcss`, though, which also drops
-Panda's `--made-with-panda` marker (through `unusedSymbols`) and the empty rules and layers that
-leaves: every Panda layer is requested without the `@layer reset, base, …;` declaration, so only
-the layers the package uses end up in the file, as blocks, and ordering them stays the consuming
-application's call.
-
-Pass an options object instead of `true` to customize - the same `fileName`, `minify`, `target`,
-`lightningcss`, `inject` and `exports` options as `vanillaExtract`, plus `@pandacss/vite`'s
-`cwd`, `configPath`, `outdir` and `transform` (`transform: false` keeps the runtime calls and
-only extracts the CSS), `codegen` (`false` when codegen is managed elsewhere) and Panda's
-`polyfill`:
+Pass an object to customize, with the same options as the plugin:
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'
 
 export default defineConfig({
   tsconfig: 'tsconfig.dist.json',
-  panda: {fileName: 'styles.css', configPath: 'panda.config.ts'},
+  panda: {minify: true, fileName: 'styles.css'},
 })
 ```
+
+Setup reminders, in the package being built:
+
+- `"prepare": "panda codegen"` (from `@pandacss/dev`, recommended but not required) so the
+  generated files exist for the editor and the type checker before a build — the plugin
+  regenerates them when it builds.
+- An `imports` map for the generated directory, e.g. `"#styled-system/*": "./styled-system/*/index.js"`,
+  matching `importMap` in `panda.config.ts`.
+- `"sideEffects": ["*.css"]`, so consumers' tree-shaking keeps the injected stylesheet import.
+
+See the plugin README for the full behavior (sources, codegen, the limits of the transform,
+watch mode) and the options reference.
 
 ## css
 
