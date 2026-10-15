@@ -375,6 +375,45 @@ describe('pandacssPlugin', () => {
     }
   })
 
+  test('keeps an overridden `outdir` inside the `include` globs out of the scan and the transform', async () => {
+    // Panda only skips the config's own `outdir`; the plugin's `outdir` option sends the
+    // generated code into `src/generated`, which `./src/**/*` covers
+    const cwd = copyFixture('outdir-in-include', withInclude('./src/**/*'))
+    const plugin = pandacssPlugin({cwd, outdir: 'src/generated'})
+    const warnings: string[] = []
+    const bundle = await rolldown({
+      cwd,
+      input: path.join(cwd, 'src/index.ts'),
+      plugins: [plugin],
+      onLog(level, log) {
+        if (level === 'warn') warnings.push(log.message)
+      },
+    })
+    try {
+      const {output} = await bundle.generate({format: 'esm'})
+      expect(existsSync(path.join(cwd, 'src/generated/css/index.js'))).toBe(true)
+      expect(findEntryChunk(output).code).toContain('"color_brand"')
+
+      // Every scanned source is watched: the sources, but nothing generated
+      const watched = (await bundle.watchFiles).map((file) =>
+        path.relative(cwd, file).replaceAll('\\', '/'),
+      )
+      expect(watched).toContain('src/index.ts')
+      expect(watched.filter((file) => file.startsWith('src/generated/'))).toEqual([])
+      expect(warnings.filter((message) => message.includes('generated'))).toEqual([])
+
+      const posixCwd = cwd.replaceAll('\\', '/')
+      const {exclude} = transformFilterPatterns(plugin)
+      expect(
+        exclude.some((pattern) => pattern.test(`${posixCwd}/src/generated/css/index.js`)),
+      ).toBe(true)
+      expect(exclude.some((pattern) => pattern.test(`${posixCwd}/src/index.ts`))).toBe(false)
+    } finally {
+      await bundle.close()
+      rmSync(cwd, {recursive: true, force: true})
+    }
+  })
+
   test('`minify: true` minifies the stylesheet', async () => {
     const output = await generate({cwd: fixtureDir, minify: true})
     const css = findAsset(output, 'bundle.css')

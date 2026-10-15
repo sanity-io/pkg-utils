@@ -353,6 +353,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
    * set, the rolldown `options` hook leaves the first codegen to it.
    */
   let codegenBeforeBuilds: Promise<void> | undefined
+  /** The directory codegen writes to, resolved by `buildStart` for the transforms. */
+  let generatedDir: string | undefined
 
   /**
    * The ids of the modules with Panda styles — rewritten by the transformer, or left to the
@@ -377,6 +379,11 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     driverPromise ??= createNodeDriver({cwd, configPath: options.configPath})
     driver = await driverPromise
     return driver
+  }
+
+  /** The directory codegen writes to: the `outdir` option, or the config's. */
+  function resolveGeneratedDir(currentDriver: PandaDriver): string {
+    return path.resolve(resolveCwd(), currentDriver.getOutdir(options.outdir))
   }
 
   function runCodegen(currentDriver: PandaDriver): void {
@@ -465,9 +472,13 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       }
     }
     // The files the config doesn't cover aren't scanned by Panda — rewriting them would
-    // produce class names the stylesheet doesn't have. A module a reloaded config no longer
-    // covers stops counting as styled, too.
-    if (!driver.isSourceFile(filePath)) {
+    // produce class names the stylesheet doesn't have — and neither is the generated code,
+    // which Panda's matcher only recognizes in the config's own `outdir`. A module a reloaded
+    // config no longer covers stops counting as styled, too.
+    if (
+      (generatedDir !== undefined && isInsideDirectory(filePath, generatedDir)) ||
+      !driver.isSourceFile(filePath)
+    ) {
       pandaModules.delete(id)
       return undefined
     }
@@ -560,7 +571,7 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
       if (codegenEnabled && codegenBeforeBuilds === undefined) runCodegen(currentDriver)
       const filter = this.meta.watchMode
         ? CONSERVATIVE_TRANSFORM_FILTER
-        : createTransformFilter(currentDriver, cwd)
+        : createTransformFilter(currentDriver, cwd, options.outdir)
       plugin.transform = filter ? {filter, handler: transformHandler} : {handler: transformHandler}
 
       let nextOptions = inputOptions
@@ -625,7 +636,14 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         'while loading the design system',
       )
       const cwd = resolveCwd()
+      generatedDir = resolveGeneratedDir(currentDriver)
       for (const report of currentDriver.parseFiles()) {
+        // Panda's scan only skips the config's own `outdir`: with the `outdir` option, the
+        // generated code may sit inside the `include` globs, and isn't a source of styles
+        if (isInsideDirectory(report.path, generatedDir)) {
+          currentDriver.compiler.removeFile(report.path)
+          continue
+        }
         warnDiagnostics(
           (message) => this.warn(message),
           report.diagnostics,
@@ -877,13 +895,27 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
  * decides per module); a glob the converter does not support falls back to the
  * {@link CONSERVATIVE_TRANSFORM_FILTER}, which can never reject a module Panda covers.
  */
-function createTransformFilter(driver: PandaDriver, cwd: string): TransformHookFilter | undefined {
+function createTransformFilter(
+  driver: PandaDriver,
+  cwd: string,
+  outdir: string | undefined,
+): TransformHookFilter | undefined {
   const include = readGlobs(driver.config['include'])
   const exclude = readGlobs(driver.config['exclude'])
   if (include.length === 0 && exclude.length === 0) return undefined
 
   const includePatterns: RegExp[] = []
   const excludePatterns: RegExp[] = []
+  // Panda's matcher skips the config's own `outdir`, but not the `outdir` option's directory
+  const generatedDir = path.resolve(cwd, driver.getOutdir(outdir))
+  if (generatedDir !== path.resolve(cwd, driver.getOutdir())) {
+    excludePatterns.push(
+      new RegExp(
+        `^${escapeRegExp(generatedDir.replaceAll('\\', '/'))}/`,
+        process.platform === 'win32' ? 'i' : '',
+      ),
+    )
+  }
   for (const pattern of include) {
     // A negated include is an exclude
     const negated = pattern.startsWith('!')
@@ -1056,6 +1088,15 @@ function directoryPattern(dir: string): RegExp {
     .map(escapeRegExp)
   const prefix = path.isAbsolute(dir) && !/^[A-Za-z]:/.test(segments[0] ?? '') ? '[\\\\/]' : ''
   return new RegExp(`^${prefix}${segments.join('[\\\\/]')}(?:[\\\\/]|$)`)
+}
+
+/** Whether a file is inside a directory (or is the directory itself). */
+function isInsideDirectory(file: string, dir: string): boolean {
+  const relative = path.relative(dir, file)
+  return (
+    relative === '' ||
+    (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))
+  )
 }
 
 /**
