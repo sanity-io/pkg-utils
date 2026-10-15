@@ -550,69 +550,101 @@ describe('config reloads', () => {
     },
   )
 
-  test('injects the CJS stylesheet load after the directive prologue, keeping strict mode', async () => {
-    await writeFile(
-      path.join(dir, 'src/index.ts'),
-      `import {badge} from '../styled-system/recipes'\n\nexport const label = badge()\n\nexport function self() {\n  return this\n}\n`,
-    )
-    const warnings: string[] = []
-    const bundle = await rolldown({
-      input: path.join(dir, 'src/index.ts'),
-      plugins: [pandaPlugin({cwd: dir, inject: true})],
-      onLog(level, log) {
-        if (level === 'warn') warnings.push(log.message)
-      },
-    })
-    try {
-      const {output} = await bundle.generate({format: 'cjs', strict: true, sourcemap: true})
-      const {code, map} = findChunk(output, 'index')
+  // `inject` writes through rolldown's native magic-string, or a string fallback when another
+  // plugin turned it off: the directive prologue must survive either way
+  for (const nativeMagicString of [true, false]) {
+    const via = nativeMagicString ? 'native magic-string' : 'string fallback'
+    const plugins = (): Plugin[] => [
+      pandaPlugin({cwd: dir, inject: true}),
+      ...(nativeMagicString
+        ? []
+        : [
+            {
+              name: 'without-native-magic-string',
+              options: (inputOptions) => ({
+                ...inputOptions,
+                experimental: {...inputOptions.experimental, nativeMagicString: false},
+              }),
+            } satisfies Plugin,
+          ]),
+    ]
 
-      // A bare call of a function returning `this` only gives `undefined` in strict mode
-      const module: {exports: Record<string, unknown>} = {exports: {}}
-      const required: string[] = []
-      const require = (id: string): object => {
-        required.push(id)
-        return {}
-      }
-      Reflect.apply(compileFunction(code, ['require', 'module', 'exports']), undefined, [
-        require,
-        module,
-        module.exports,
-      ])
-      expect(required).toEqual(['./styles.css'])
-      const self = module.exports['self']
-      if (typeof self !== 'function') expect.unreachable('expected the `self` export')
-      expect(Reflect.apply(self, undefined, [])).toBeUndefined()
-
-      expect(code).toMatch(/^"use strict";\nrequire\("\.\/styles\.css"\);\n/)
-      // The native magic-string kept the sourcemap aligned
-      expect(map).toBeTruthy()
-      expect(warnings).toEqual([])
-    } finally {
-      await bundle.close()
-    }
-  })
-
-  test('injects the import after the hashbang and directives', async () => {
-    await writeFile(
-      path.join(dir, 'src/index.ts'),
-      `#!/usr/bin/env node\n'use client'\nimport {badge} from '../styled-system/recipes'\n\nexport const label = badge()\n`,
-    )
-    const bundle = await rolldown({
-      input: path.join(dir, 'src/index.ts'),
-      plugins: [pandaPlugin({cwd: dir, inject: true})],
-      // `'use client'` is reported as a module-level directive that bundling may not preserve
-      onLog() {},
-    })
-    try {
-      const {output} = await bundle.generate({format: 'esm'})
-      expect(findChunk(output, 'index').code).toMatch(
-        /^#!\/usr\/bin\/env node\n["']use client["'];\nimport "\.\/styles\.css";\n/,
+    test(`injects the CJS stylesheet load after the directive prologue, keeping strict mode (${via})`, async () => {
+      await writeFile(
+        path.join(dir, 'src/index.ts'),
+        `'use client'\nimport {badge} from '../styled-system/recipes'\n\nexport const label = badge()\n\nexport function self() {\n  return this\n}\n`,
       )
-    } finally {
-      await bundle.close()
-    }
-  })
+      const warnings: string[] = []
+      const bundle = await rolldown({
+        input: path.join(dir, 'src/index.ts'),
+        plugins: plugins(),
+        onLog(level, log) {
+          if (level === 'warn' && log.code !== 'MODULE_LEVEL_DIRECTIVE') warnings.push(log.message)
+        },
+      })
+      try {
+        const {output} = await bundle.generate({format: 'cjs', strict: true, sourcemap: true})
+        const {code, map} = findChunk(output, 'index')
+
+        // A bare call of a function returning `this` only gives `undefined` in strict mode
+        const module: {exports: Record<string, unknown>} = {exports: {}}
+        const required: string[] = []
+        const require = (id: string): object => {
+          required.push(id)
+          return {}
+        }
+        Reflect.apply(compileFunction(code, ['require', 'module', 'exports']), undefined, [
+          require,
+          module,
+          module.exports,
+        ])
+        expect(required).toEqual(['./styles.css'])
+        const self = module.exports['self']
+        if (typeof self !== 'function') expect.unreachable('expected the `self` export')
+        expect(Reflect.apply(self, undefined, [])).toBeUndefined()
+
+        // Both directives stay in the prologue, ahead of the stylesheet load
+        expect(code).toMatch(
+          /^(?:["']use (?:strict|client)["'];\n){2}require\("\.\/styles\.css"\);\n/,
+        )
+        expect(code).toMatch(/["']use client["']/)
+        expect(map).toBeTruthy()
+        // Only the fallback can't keep the sourcemap aligned, which both the plugin and rolldown
+        // report
+        expect(warnings).toEqual(
+          nativeMagicString
+            ? []
+            : [
+                expect.stringContaining('native magic-string is unavailable'),
+                expect.stringContaining('SOURCEMAP_BROKEN'),
+              ],
+        )
+      } finally {
+        await bundle.close()
+      }
+    })
+
+    test(`injects the import after the hashbang and directives (${via})`, async () => {
+      await writeFile(
+        path.join(dir, 'src/index.ts'),
+        `#!/usr/bin/env node\n'use client'\nimport {badge} from '../styled-system/recipes'\n\nexport const label = badge()\n`,
+      )
+      const bundle = await rolldown({
+        input: path.join(dir, 'src/index.ts'),
+        plugins: plugins(),
+        // `'use client'` is reported as a module-level directive that bundling may not preserve
+        onLog() {},
+      })
+      try {
+        const {output} = await bundle.generate({format: 'esm'})
+        expect(findChunk(output, 'index').code).toMatch(
+          /^#!\/usr\/bin\/env node\n["']use client["'];\nimport "\.\/styles\.css";\n/,
+        )
+      } finally {
+        await bundle.close()
+      }
+    })
+  }
 
   test('reloads the config when a file it imports changes', async () => {
     const plugin = pandaPlugin({cwd: dir})
