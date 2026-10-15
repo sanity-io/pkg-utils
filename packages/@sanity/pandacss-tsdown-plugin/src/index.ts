@@ -316,7 +316,7 @@ const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DT
  * @public
  */
 export function pandacssPlugin(options: Options = {}): PandacssPlugin {
-  const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
+  const fileName = normalizeFileName(options.fileName ?? DEFAULT_CSS_FILE_NAME)
   const minify = options.minify ?? false
   const transformEnabled = options.transform ?? true
   const codegenEnabled = options.codegen ?? true
@@ -1204,7 +1204,31 @@ function prologueEnd(code: string): number {
  */
 function relativeImportPath(chunkFileName: string, cssFileName: string): string {
   const relativePath = path.posix.relative(path.posix.dirname(chunkFileName), cssFileName)
-  return relativePath.startsWith('.') ? relativePath : `./${relativePath}`
+  // Only `./` and `../` make a specifier relative: `.assets/bundle.css` would name a package
+  return relativePath.startsWith('../') ? relativePath : `./${relativePath}`
+}
+
+/**
+ * The `fileName` option as the emitted file's path inside the output directory: POSIX
+ * separators and no `./` prefix, so `./bundle.css` publishes the `./bundle.css` export subpath
+ * rather than `././bundle.css`. A path outside the output directory is rejected, since neither
+ * the export nor the injected import could address it.
+ */
+function normalizeFileName(fileName: string): string {
+  const normalized = path.posix.normalize(fileName.replaceAll('\\', '/'))
+  if (
+    normalized === '.' ||
+    normalized.endsWith('/') ||
+    normalized === '..' ||
+    normalized.startsWith('../') ||
+    path.posix.isAbsolute(normalized) ||
+    RE_WINDOWS_DRIVE.test(normalized)
+  ) {
+    throw new Error(
+      `[pandacss] \`fileName\` must name a file inside the output directory, like "bundle.css" or "assets/bundle.css", but got "${fileName}".`,
+    )
+  }
+  return normalized
 }
 
 /**

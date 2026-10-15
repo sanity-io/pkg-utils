@@ -445,6 +445,27 @@ describe('pandacssPlugin', () => {
     expect(findAsset(output, 'bundle-css.d.ts')).toContain('export {}')
   })
 
+  test('keeps the injected import of a dot-prefixed `fileName` relative', async () => {
+    // `import ".assets/bundle.css"` would resolve as a package named `.assets`
+    for (const fileName of ['.bundle.css', '.assets/bundle.css']) {
+      const output = await generate({cwd: fixtureDir, inject: true, fileName})
+      expect(findEntryChunk(output).code.startsWith(`import "./${fileName}";\n`)).toBe(true)
+      expect(findAsset(output, fileName)).toContain('color: var(--colors-brand)')
+    }
+  })
+
+  test('normalizes `fileName`, and rejects one outside the output directory', async () => {
+    const output = await generate({cwd: fixtureDir, inject: true, fileName: './styles.css'})
+    expect(findEntryChunk(output).code.startsWith('import "./styles.css";\n')).toBe(true)
+    expect(findAsset(output, 'styles.css')).toContain('color: var(--colors-brand)')
+
+    for (const fileName of ['../styles.css', '/tmp/styles.css', 'assets/', '.']) {
+      expect(() => pandacssPlugin({fileName}), fileName).toThrow(
+        '`fileName` must name a file inside the output directory',
+      )
+    }
+  })
+
   test("`tsdownConfigResolved` forwards tsdown's package name, `target` and `cwd`", async () => {
     // The self-referential import of `exports` uses the package name tsdown resolved, the CSS
     // syntax lowering target defaults to tsdown's resolved top-level `target`, and the Panda
@@ -959,6 +980,16 @@ describe('tsdownConfig hook', () => {
         default: './lib/styles-css.js',
       },
     })
+  })
+
+  test('writes the export subpath of a `./`-prefixed `fileName` without the prefix', async () => {
+    const config = await runTsdownConfigHook(
+      {exports: true},
+      {exports: true, fileName: './styles.css'},
+    )
+    await expect(
+      getCustomExports(config)({'.': './dist/index.mjs'}, customExportsContext),
+    ).resolves.toEqual({'.': './dist/index.mjs', './styles.css': './dist/styles.css'})
   })
 
   test('resolves `outDir` against the package root, in any spelling', async () => {
