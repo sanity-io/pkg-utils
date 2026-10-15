@@ -37,7 +37,7 @@
     "packages/@sanity/pandacss-tsdown-plugin": {
       // The fixtures are rolldown build inputs referenced by path, not imported from the tests,
       // and their Panda configs are loaded by Panda's node driver
-      "entry": ["test/fixtures/*/src/index.ts", "test/fixtures/*/panda.config.ts"],
+      "entry": ["test/fixtures/*/src/*.ts", "test/fixtures/*/panda.config.ts"],
       "project": ["src/**/*.ts", "test/**/*.ts"],
     },
     "packages/@sanity/parse-package-json": {
