@@ -842,7 +842,8 @@ function prologueEnd(program: Program): number {
  */
 function relativeImportPath(chunkFileName: string, cssFileName: string): string {
   const relativePath = path.posix.relative(path.posix.dirname(chunkFileName), cssFileName)
-  return relativePath.startsWith('.') ? relativePath : `./${relativePath}`
+  // Only `./` and `../` make a specifier relative: `.assets/styles.css` would name a package
+  return relativePath.startsWith('../') ? relativePath : `./${relativePath}`
 }
 
 /** Whether a chunk (or any chunk it imports, transitively) contains a module with Panda styles. */

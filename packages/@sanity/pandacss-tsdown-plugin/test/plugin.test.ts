@@ -231,6 +231,28 @@ describe('pandaPlugin', () => {
       expect(findChunk(output, 'recipe').code).toMatch(/^import "\.\/styles\.css";\n/)
     })
 
+    test('keeps a dot-prefixed `fileName` relative', async () => {
+      // `.assets/styles.css` on its own would be a package specifier
+      const output = await build({inject: true, fileName: '.assets/styles.css'})
+      expect(findChunk(output, 'index').code).toMatch(/^import "\.\/\.assets\/styles\.css";\n/)
+      expect(findAsset(output, '.assets/styles.css')).toContain('display: flex')
+
+      const bundle = await rolldown({
+        input: path.join(fixtureDir, 'src/index.ts'),
+        external: [/styled-system/],
+        plugins: [pandaPlugin({cwd: fixtureDir, inject: true, fileName: '.assets/styles.css'})],
+      })
+      try {
+        const {output: nested} = await bundle.generate({
+          format: 'esm',
+          entryFileNames: 'nested/[name].js',
+        })
+        expect(findChunk(nested, 'index').code).toMatch(/^import "\.\.\/\.assets\/styles\.css";\n/)
+      } finally {
+        await bundle.close()
+      }
+    })
+
     test('skips modules outside `include`', async () => {
       const output = await build({inject: true}, {input: 'outside.ts'})
       expect(findChunk(output, 'outside').code).not.toContain('styles.css')
