@@ -10,10 +10,26 @@ interface CssItem {
   block: CssItem[] | undefined
 }
 
+/**
+ * A rule around rules of a layer, such as `@media print`, with the rules around it. It is created
+ * once for the block it was written as, so the parts of the block that land next to each other in
+ * the output can be put back in one block.
+ */
+interface Wrapper {
+  prelude: string
+  parent: Wrapper | undefined
+}
+
+/** An item that belongs to a layer, with the innermost rule it was written in, if any. */
+interface LayerEntry {
+  item: CssItem
+  wrapper: Wrapper | undefined
+}
+
 /** A cascade layer: its sublayers in declaration order, and the items directly inside it. */
 interface LayerNode {
   sublayers: Map<string | symbol, LayerNode>
-  items: CssItem[]
+  entries: LayerEntry[]
 }
 
 /** Matches the whitespace and comments an item starts with. */
@@ -39,9 +55,13 @@ const RE_HEX_ESCAPE = /^[0-9a-f]{1,6}\s?/i
  * layer, which used to lose to a later layer, now wins, and `!important` declarations, whose layer
  * order is reversed, follow the same order as normal ones.
  *
- * Layers nested in a conditional rule (`@media { @layer x { … } }`) are ordered within that rule.
- * `@charset`, `@import` and `@namespace` statements stay ahead of the other rules, where they have
- * to be.
+ * A conditional rule (`@media print { @layer x { … } }`, likewise `@supports`, `@container` or a
+ * style rule with nested rules) doesn't scope the layers in it, so its rules join the layers they
+ * belong to, each part of it in a copy of the rule: layer order holds across its boundary.
+ * Browsers only declare a layer in a conditional rule whose condition holds, though, so the order
+ * of a layer first declared in one depends on the condition; here it is the order with every
+ * condition holding. `@charset`, `@import` and `@namespace` statements stay ahead of the other
+ * rules, where they have to be.
  *
  * It works on the text rather than on a lightningcss visitor, because a visitor hands the whole
  * stylesheet to JavaScript and back: that is many times slower than the native pass, changes how
@@ -54,10 +74,10 @@ export function unwrapCascadeLayers(css: string): string {
 }
 
 function unwrapItems(items: CssItem[]): CssItem[] {
-  const root: LayerNode = {sublayers: new Map(), items: []}
+  const root: LayerNode = {sublayers: new Map(), entries: []}
   const leading: CssItem[] = []
 
-  function collect(list: CssItem[], layer: LayerNode): void {
+  function collect(list: CssItem[], layer: LayerNode, wrapper: Wrapper | undefined): void {
     for (const item of list) {
       const keyword = atKeyword(item.prelude)
       if (keyword === 'layer') {
@@ -66,24 +86,35 @@ function unwrapItems(items: CssItem[]): CssItem[] {
           for (const name of names) resolveLayer(layer, name)
         } else {
           // Every anonymous `@layer { … }` block is a layer of its own
-          collect(item.block, resolveLayer(layer, names[0] ?? [Symbol('anonymous')]))
+          const sublayer = resolveLayer(layer, names[0] ?? [Symbol('anonymous')])
+          collect(item.block, sublayer, wrapper)
         }
       } else if (
         layer === root &&
+        wrapper === undefined &&
         item.block === undefined &&
         (keyword === 'charset' || keyword === 'import' || keyword === 'namespace')
       ) {
         leading.push(item)
+      } else if (item.block !== undefined && containsLayer(item.block)) {
+        // The block's own formatting doesn't survive the split, only its rules do
+        const rules = item.block.filter((child) => child.block !== undefined || !isTrivia(child))
+        collect(rules, layer, {prelude: item.prelude, parent: wrapper})
+      } else if (
+        item.block === undefined &&
+        !isTrivia(item) &&
+        !item.prelude.trimEnd().endsWith(';')
+      ) {
+        // The last declaration of a block may leave out its `;`, which it needs next to others
+        layer.entries.push({item: {prelude: `${item.prelude};`, block: undefined}, wrapper})
       } else {
-        layer.items.push(
-          item.block ? {prelude: item.prelude, block: unwrapItems(item.block)} : item,
-        )
+        layer.entries.push({item, wrapper})
       }
     }
   }
 
-  collect(items, root)
-  return [...leading, ...flattenLayer(root)]
+  collect(items, root, undefined)
+  return [...leading, ...rewrap(flattenLayer(root))]
 }
 
 /** The (sub)layer a layer name (`['recipes', 'slots']`) names, declared on first use. */
@@ -92,7 +123,7 @@ function resolveLayer(parent: LayerNode, name: readonly (string | symbol)[]): La
   for (const segment of name) {
     let sublayer = node.sublayers.get(segment)
     if (!sublayer) {
-      sublayer = {sublayers: new Map(), items: []}
+      sublayer = {sublayers: new Map(), entries: []}
       node.sublayers.set(segment, sublayer)
     }
     node = sublayer
@@ -100,8 +131,46 @@ function resolveLayer(parent: LayerNode, name: readonly (string | symbol)[]): La
   return node
 }
 
-function flattenLayer(layer: LayerNode): CssItem[] {
-  return [...[...layer.sublayers.values()].flatMap(flattenLayer), ...layer.items]
+/** The entries of a layer and its sublayers, in the order of the layer's precedence. */
+function flattenLayer(layer: LayerNode): LayerEntry[] {
+  return [...[...layer.sublayers.values()].flatMap(flattenLayer), ...layer.entries]
+}
+
+/**
+ * The items of a list of entries, in copies of the rules they were written in: consecutive
+ * entries of one block share one copy of it.
+ */
+function rewrap(entries: readonly LayerEntry[]): CssItem[] {
+  const items: CssItem[] = []
+  /** The copies the previous entry went into, outermost first. */
+  let open: {wrapper: Wrapper; block: CssItem[]}[] = []
+  for (const {item, wrapper} of entries) {
+    const wrappers: Wrapper[] = []
+    for (let current = wrapper; current; current = current.parent) wrappers.unshift(current)
+    let shared = 0
+    while (shared < open.length && open[shared]?.wrapper === wrappers[shared]) shared++
+    open = open.slice(0, shared)
+    for (const next of wrappers.slice(shared)) {
+      const block: CssItem[] = []
+      ;(open.at(-1)?.block ?? items).push({prelude: next.prelude, block})
+      open.push({wrapper: next, block})
+    }
+    ;(open.at(-1)?.block ?? items).push(item)
+  }
+  return items
+}
+
+/** Whether a block has a `@layer` rule in it, at any depth. */
+function containsLayer(items: readonly CssItem[]): boolean {
+  return items.some(
+    (item) =>
+      atKeyword(item.prelude) === 'layer' ||
+      (item.block !== undefined && containsLayer(item.block)),
+  )
+}
+
+function isTrivia(item: CssItem): boolean {
+  return RE_LEADING_TRIVIA.exec(item.prelude)?.[0].length === item.prelude.length
 }
 
 function serialize(items: CssItem[]): string {

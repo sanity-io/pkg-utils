@@ -1250,9 +1250,52 @@ describe('unwrapCascadeLayers', () => {
     expect(unwrapCascadeLayers('@layer x{.x{}@layer{.a{}}}')).toBe('.a{}.x{}')
   })
 
-  test('unwraps the layers nested in conditional rules, ordered within them', () => {
-    expect(unwrapCascadeLayers('@layer u{@media print{.p{}@layer s{.s{}}}.u{}}')).toBe(
-      '@media print{.s{}.p{}}.u{}',
+  test("keeps a layer's rules ahead of its own across a conditional rule", () => {
+    // `utilities.compositions` loses to `utilities` when printing too: blue wins
+    expect(
+      unwrapCascadeLayers(
+        '@layer utilities{.x{color:blue}@media print{@layer compositions{.x{color:red}}}}',
+      ),
+    ).toBe('@media print{.x{color:red}}.x{color:blue}')
+  })
+
+  test('orders a layer split across conditional and unconditional blocks as one', () => {
+    // `a` comes before `b`, also for the rules of `a` in `@media print`: blue wins
+    expect(
+      unwrapCascadeLayers(
+        '@layer a, b;@media print{@layer a{.x{color:red}}}@layer b{.x{color:blue}}',
+      ),
+    ).toBe('@media print{.x{color:red}}.x{color:blue}')
+    expect(
+      unwrapCascadeLayers(
+        '@layer b{.x{color:blue}}@layer a{.y{}}@media print{@layer b{.x{color:red}}@layer a{.z{}}}',
+      ),
+    ).toBe('.x{color:blue}@media print{.x{color:red}}.y{}@media print{.z{}}')
+  })
+
+  test('splits a conditional rule across the layers of its rules, in copies of it', () => {
+    expect(
+      unwrapCascadeLayers(
+        '@layer u{@supports (display:grid){@media print{.p{} @layer s{.s{}} .q{}}}@layer t{.t{}}.u{}}',
+      ),
+    ).toBe(
+      '@supports (display:grid){@media print{.s{}}}.t{}@supports (display:grid){@media print{.p{} .q{}}}.u{}',
+    )
+    // Parts that end up next to each other share a copy
+    expect(unwrapCascadeLayers('@layer u{@media print{.p{}@layer s{.s{}}}}')).toBe(
+      '@media print{.s{}.p{}}',
+    )
+    // A block without layers stays as it is
+    expect(unwrapCascadeLayers('@layer u{@media print{ .p{} }}')).toBe('@media print{ .p{} }')
+  })
+
+  test('splits a style rule with a nested layer the same way', () => {
+    // The rule's own declarations, in `a`, beat those of its nested layer, `a.s`: red wins
+    expect(unwrapCascadeLayers('@layer a{.n{color:red;@layer s{color:blue}}}')).toBe(
+      '.n{color:blue;color:red;}',
+    )
+    expect(unwrapCascadeLayers('@layer a{.n{@layer s{color:blue}color:red}@layer t{.t{}}}')).toBe(
+      '.n{color:blue;}.t{}.n{color:red;}',
     )
   })
 
