@@ -1023,7 +1023,9 @@ describe('codegen', () => {
     try {
       await build({outdir})
       expect(tempDirs.created).toHaveLength(1)
-      const [{dir, mode}] = tempDirs.created
+      const [created] = tempDirs.created
+      if (!created) expect.unreachable('expected a temp directory')
+      const {dir, mode} = created
       expect(path.basename(dir)).toMatch(/^sanity-pandacss-tsdown-plugin-/)
       if (process.platform !== 'win32') expect(mode).toBe(0o700)
       expect(existsSync(dir)).toBe(false)
