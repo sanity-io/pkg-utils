@@ -3,5 +3,9 @@
   "compilerOptions": {
     "rootDir": "."
   },
-  "exclude": ["**/dist/**", "**/test/fixtures/**"]
+  "exclude": [
+    "**/dist/**",
+    "**/test/fixtures/*/src/**",
+    "**/test/fixtures/*/styled-system/**"
+  ]
 }

@@ -1,4 +1,4 @@
-import {defineConfig} from '@pandacss/dev'
+import {defineConfig, type Config} from '@pandacss/dev'
 
 export default defineConfig({
   include: ['./src/**/*.{ts,tsx}'],
@@ -18,4 +18,4 @@ export default defineConfig({
       },
     },
   },
-})
+} satisfies Config)

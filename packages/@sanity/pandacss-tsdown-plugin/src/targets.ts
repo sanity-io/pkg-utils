@@ -1,6 +1,7 @@
 import browserslist from 'browserslist'
 import {browserslistToTargets, type Targets} from 'lightningcss'
 
+const ES_VERSION_TARGET_RE = /^es(?:\d+|next)$/i
 const ESBUILD_TARGET_RE = /^(chrome|edge|firefox|ie|ios|node|opera|safari)(\d+(?:\.\d+)*)$/i
 
 const ENGINE_TO_BROWSERSLIST: Record<string, string | null> = {
@@ -17,8 +18,8 @@ const ENGINE_TO_BROWSERSLIST: Record<string, string | null> = {
 
 /**
  * Convert an esbuild/tsdown `target` value (e.g. `'chrome120'` or
- * `['chrome102', 'firefox91', 'safari16.4', 'node22']`) to LightningCSS browser
- * `targets`.
+ * `['chrome102', 'firefox91', 'safari16.4', 'node22']`) or a browserslist query
+ * (e.g. `'defaults'`, `'> 0.5%'`) to LightningCSS browser `targets`.
  *
  * Returns `undefined` when `target` is `false`, `'esnext'`, or contains only
  * non-browser engines (such as `'node22'`) or generic ES version strings
@@ -36,7 +37,7 @@ export function esbuildTargetToLightningCSS(
 
   for (const raw of items) {
     const item = raw.trim().toLowerCase()
-    if (!item || item === 'esnext' || item.startsWith('es')) {
+    if (!item || ES_VERSION_TARGET_RE.test(item)) {
       continue
     }
     const match = ESBUILD_TARGET_RE.exec(item)

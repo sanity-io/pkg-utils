@@ -20,9 +20,9 @@ export function cssShimFileName(cssFileName: string): string {
 
 /**
  * Derive the `.d.ts` companion filename for {@link cssShimFileName} so
- * TypeScript's `moduleResolution: "node16"` / `"nodenext"` resolves the
- * `./styles.css` subpath without `TS2882` ("Cannot find module or type
- * declarations for side-effect import").
+ * TypeScript's `moduleResolution: "bundler"` / `"node16"` / `"nodenext"`
+ * resolves the `./styles.css` subpath without `TS2882` ("Cannot find module or
+ * type declarations for side-effect import").
  *
  * @internal
  */
@@ -31,11 +31,14 @@ export function cssShimDtsFileName(cssFileName: string): string {
 }
 
 /**
- * Source for the no-op ESM shim emitted alongside `styles.css`.
+ * Source for the no-op JS shim emitted alongside `styles.css`.
+ *
+ * Intentionally comment-only so it parses as both CommonJS and ES module
+ * regardless of the consuming package's `"type"`.
  *
  * @internal
  */
-export const cssShimSource = '// Runtime no-op for Node.js, see package.json#exports\nexport {}\n'
+export const cssShimSource = '// Runtime no-op for Node.js, see package.json#exports\n'
 
 /**
  * Source for the `.d.ts` companion emitted alongside the Node.js CSS shim.

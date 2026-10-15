@@ -1,7 +1,7 @@
 import path from 'node:path'
-import type {Options as PandaPluginOptions} from '@sanity/pandacss-tsdown-plugin'
 import type {
   CssExportsOptions,
+  LightningCSSOptions,
   Options as VanillaExtractPluginOptions,
 } from '@sanity/vanilla-extract-tsdown-plugin'
 import type {PluginOptions as BabelReactCompilerPluginOptions} from 'babel-plugin-react-compiler'
@@ -30,6 +30,22 @@ export type {
 // graph — including packages with no CSS at all. Everything that needs those helpers loads
 // them through the `await import(...)` calls below.
 export type {CssExportsOptions} from '@sanity/vanilla-extract-tsdown-plugin'
+
+/**
+ * Options for the `package.json#exports` entry generated for the Panda CSS
+ * bundle (`"./styles.css"` by default).
+ *
+ * @public
+ */
+export interface PandaCssExportsOptions extends CssExportsOptions {
+  /**
+   * Condition order for the conditional export object when `nodeCompat` is
+   * enabled.
+   *
+   * @defaultValue `['style', 'browser', 'module', 'node', 'default']`
+   */
+  conditions?: readonly string[]
+}
 
 /**
  * Options for the `vanillaExtract` option — the same options as
@@ -66,9 +82,86 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  *   `target`) is undefined or names no browsers, the lowering targets are resolved from
  *   `@sanity/browserslist-config` and passed through `lightningcss.targets`.
  *
+ * Declared directly here (rather than imported from `@sanity/pandacss-tsdown-plugin`, which is an
+ * optional peer dependency) so consumers without the Panda plugin installed do not get `TS2307`
+ * when type-checking with `skipLibCheck: false`.
+ *
  * @public
  */
-export type PackagePandaOptions = PandaPluginOptions
+export interface PackagePandaOptions {
+  /**
+   * Working directory used to resolve `panda.config.*`.
+   *
+   * When omitted, falls back to tsdown's resolved `cwd` (or `process.cwd()`).
+   */
+  cwd?: string
+  /**
+   * Explicit path to the Panda CSS config file (`panda.config.ts`).
+   */
+  configPath?: string
+  /**
+   * Run Panda's codegen (`driver.codegen()`) at build start and again when the
+   * Panda config reloads in watch mode, keeping `styled-system/` types and
+   * runtime artifacts in sync with the config.
+   *
+   * @defaultValue `true`
+   */
+  codegen?: boolean
+  /**
+   * Override the `outdir` configured in `panda.config.*` (e.g. `'styled-system'`).
+   */
+  outdir?: string
+  /**
+   * Rewrite `css({...})` calls at build time into atomic class name strings via
+   * `@pandacss/transformer`.
+   *
+   * @defaultValue `true`
+   */
+  transform?: boolean
+  /**
+   * File name for the emitted CSS asset in the output bundle.
+   *
+   * @defaultValue `'styles.css'`
+   */
+  fileName?: string
+  /**
+   * Prepend a side-effect CSS import to emitted entry chunks that contribute
+   * Panda CSS rules.
+   *
+   * @defaultValue `true`
+   */
+  inject?: boolean | {nodeCompat?: boolean}
+  /**
+   * Automatically register `"./<fileName>"` in `UserConfig.exports` via tsdown's
+   * `customExports` hook, and emit the corresponding Node.js no-op JS shim
+   * (`styles-css.js`) alongside `styles.css`.
+   *
+   * @defaultValue `{nodeCompat: true}`
+   */
+  exports?: boolean | PandaCssExportsOptions
+  /**
+   * Minify the emitted CSS bundle with LightningCSS.
+   *
+   * @defaultValue `false`
+   */
+  minify?: boolean
+  /**
+   * Target browsers for LightningCSS syntax lowering.
+   *
+   * Accepts an esbuild-style target (`'chrome120'`, `['chrome102', 'safari16.4']`),
+   * a browserslist query (`'defaults'`), or `false` to disable lowering.
+   */
+  target?: string | string[] | false
+  /**
+   * Additional options forwarded to `lightningcss.transform()`.
+   */
+  lightningcss?: LightningCSSOptions
+  /**
+   * Explicit package name for self-referencing `inject` imports when running
+   * outside tsdown.
+   */
+  packageName?: string
+}
 
 /**
  * Options for the `css` option — tsdown's experimental
@@ -708,8 +801,16 @@ async function resolvePackageConfig(
     )
   }
   if (options.panda) {
-    const [{pandaCssPlugin}, {resolveCssLoweringTargets}] = await Promise.all([
-      import('@sanity/pandacss-tsdown-plugin'),
+    const [
+      {pandaCssPlugin, esbuildTargetToLightningCSS: pandaTargetToLightningCSS},
+      {resolveCssLoweringTargets},
+    ] = await Promise.all([
+      import('@sanity/pandacss-tsdown-plugin').catch((cause: unknown) => {
+        throw new Error(
+          '`panda` needs `pnpm add -D @sanity/pandacss-tsdown-plugin`.',
+          {cause},
+        )
+      }),
       import('./cssLoweringTargets.ts'),
     ])
     const panda = options.panda === true ? {} : options.panda
@@ -718,6 +819,7 @@ async function resolvePackageConfig(
       cssTarget: panda.target,
       target,
       lightningcss: panda.lightningcss,
+      resolveTargets: pandaTargetToLightningCSS,
     })
 
     plugins.push(

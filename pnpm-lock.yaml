@@ -164,6 +164,9 @@ settings:
 
 catalogs:
   default:
+    '@pandacss/compiler':
+      specifier: ^2.2.0
+      version: 2.2.0
     '@pandacss/dev':
       specifier: ^2.2.0
       version: 2.2.0
@@ -833,9 +836,9 @@ importers:
 
   packages/@sanity/pandacss-tsdown-plugin:
     dependencies:
-      '@pandacss/dev':
+      '@pandacss/compiler':
         specifier: 'catalog:'
-        version: 2.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(postcss@8.5.29)
+        version: 2.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
       '@pandacss/transformer':
         specifier: 'catalog:'
         version: 2.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(rollup@4.64.5)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(webpack@5.111.1)
@@ -846,6 +849,9 @@ importers:
         specifier: 'catalog:'
         version: 1.33.0
     devDependencies:
+      '@pandacss/dev':
+        specifier: 'catalog:'
+        version: 2.2.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(postcss@8.5.29)
       '@sanity/tsconfig':
         specifier: workspace:^
         version: link:../tsconfig

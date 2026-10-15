@@ -2,7 +2,7 @@ import {existsSync, realpathSync} from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import {createNodeDriver, type Driver} from '@pandacss/dev/node'
+import {createNodeDriver, type Driver} from '@pandacss/compiler'
 import {
   createSourceTransformer,
   getInternalCssRuntimeSource,
@@ -13,7 +13,7 @@ import {
   transformSource,
 } from '@pandacss/transformer'
 import {type CustomAtRules, transform as lightningcss, type TransformOptions} from 'lightningcss'
-import type {OutputChunk, RenderedChunk} from 'rolldown'
+import type {OutputChunk, PluginContext, RenderedChunk} from 'rolldown'
 import type {ResolvedConfig, Rolldown, TsdownPlugin, UserConfig} from 'tsdown'
 
 import {
@@ -165,8 +165,8 @@ export interface Options {
 
 type StylesheetLayerName = NonNullable<Parameters<Driver['getLayerCss']>[0]['layers']>[number]
 type TransformHook = Extract<NonNullable<Rolldown.Plugin['transform']>, {handler: unknown}>
-type TransformHookFilter = NonNullable<TransformHook['filter']>
 type TransformHandler = TransformHook['handler']
+type Program = ReturnType<PluginContext['parse']>
 
 const PANDA_LAYERS: StylesheetLayerName[] = ['reset', 'base', 'tokens', 'recipes', 'utilities']
 const DTS_ID_RE = /\.d\.[cm]?ts$/
@@ -174,7 +174,7 @@ const SOURCE_ID_RE = /\.[cm]?[jt]sx?$/
 const NODE_MODULES_RE = /[\\/]node_modules[\\/]/
 
 interface DerivedSourceFilter {
-  hookFilter: TransformHookFilter | undefined
+  scoped: boolean
   includePatterns: RegExp[]
   excludePatterns: RegExp[]
   resolvedOutdir: string
@@ -198,38 +198,37 @@ function readGlobs(value: unknown): string[] {
   return value.filter((entry): entry is string => typeof entry === 'string')
 }
 
+const UNSUPPORTED_FILTER_GLOB_RE = /[?+*@!]\(|\[[!^]|\{[^}]*\.\.[^}]*\}/
+
 /**
  * Convert a Panda config glob (relative to `cwd`) into a `RegExp` matching
- * Rolldown's normalized POSIX module IDs.
+ * Rolldown's normalized POSIX module IDs, escaping the literal `cwd` prefix
+ * separately so characters like `[1]` in `cwd` are never treated as glob syntax.
  */
-function globToRegExp(glob: string, cwd: string): RegExp {
-  const realBase = realpathOrSelf(cwd)
-  const absolute = path.resolve(realBase, glob).replace(/\\/g, '/')
-  let source = ''
+function globToRegExp(glob: string, cwd: string): RegExp | undefined {
+  if (UNSUPPORTED_FILTER_GLOB_RE.test(glob)) {
+    return undefined
+  }
+  const normalizedGlob = glob.replace(/\\/g, '/').replace(/^(\.\/)+/, '')
+  const realBase = realpathOrSelf(cwd).replace(/\\/g, '/').replace(/\/+$/, '')
+  const isAbsoluteGlob =
+    path.posix.isAbsolute(normalizedGlob) || /^[a-z]:\//i.test(normalizedGlob)
+
+  let source = isAbsoluteGlob ? '' : `${escapeRegExp(realBase)}/`
   let inClass = false
   let braceDepth = 0
 
-  for (let index = 0; index < absolute.length; index++) {
-    const char = absolute[index] ?? ''
+  for (let index = 0; index < normalizedGlob.length; index++) {
+    const char = normalizedGlob[index] ?? ''
     if (inClass) {
       if (char === ']') inClass = false
       source += char
       continue
     }
     switch (char) {
-      case '\\': {
-        const next = absolute[index + 1]
-        if (next === undefined) {
-          source += '\\\\'
-        } else {
-          source += escapeRegExp(next)
-          index++
-        }
-        break
-      }
       case '*': {
-        if (absolute[index + 1] === '*') {
-          if (absolute[index + 2] === '/') {
+        if (normalizedGlob[index + 1] === '*') {
+          if (normalizedGlob[index + 2] === '/') {
             source += '(?:.*/)?'
             index += 2
           } else {
@@ -287,46 +286,51 @@ function deriveSourceFilter(
 
   const includePatterns: RegExp[] = []
   const excludePatterns: RegExp[] = []
+  let hasUnsupportedGlob = false
 
   for (const pattern of rawInclude) {
+    const compiled = globToRegExp(pattern.startsWith('!') ? pattern.slice(1) : pattern, cwd)
+    if (!compiled) {
+      hasUnsupportedGlob = true
+      continue
+    }
     if (pattern.startsWith('!')) {
-      excludePatterns.push(globToRegExp(pattern.slice(1), cwd))
+      excludePatterns.push(compiled)
     } else {
-      includePatterns.push(globToRegExp(pattern, cwd))
+      includePatterns.push(compiled)
     }
   }
   for (const pattern of rawExclude) {
-    excludePatterns.push(globToRegExp(pattern.replace(/^!/, ''), cwd))
+    const compiled = globToRegExp(pattern.replace(/^!/, ''), cwd)
+    if (!compiled) {
+      hasUnsupportedGlob = true
+      continue
+    }
+    excludePatterns.push(compiled)
   }
 
-  if (rawInclude.length === 0 && rawExclude.length === 0) {
+  if ((rawInclude.length === 0 && rawExclude.length === 0) || hasUnsupportedGlob) {
     return {
-      hookFilter: undefined,
+      scoped: false,
       includePatterns,
       excludePatterns,
       resolvedOutdir,
     }
   }
 
-  const outdirExcludePattern = globToRegExp(
-    `${path.relative(cwd, resolvedOutdir).replace(/\\/g, '/') || '.'}/**`,
-    cwd,
-  )
-
   return {
-    hookFilter: {
-      id: {
-        ...(includePatterns.length > 0 ? {include: includePatterns} : {}),
-        exclude: [DTS_ID_RE, outdirExcludePattern, ...excludePatterns],
-      },
-    },
+    scoped: true,
     includePatterns,
     excludePatterns,
     resolvedOutdir,
   }
 }
 
-function matchesSourceFilter(filePath: string, filter: DerivedSourceFilter | undefined): boolean {
+function matchesSourceFilter(
+  filePath: string,
+  driver: Driver,
+  filter: DerivedSourceFilter | undefined,
+): boolean {
   if (DTS_ID_RE.test(filePath) || !SOURCE_ID_RE.test(filePath)) {
     return false
   }
@@ -336,12 +340,24 @@ function matchesSourceFilter(filePath: string, filter: DerivedSourceFilter | und
   if (isInsideDir(filePath, filter.resolvedOutdir)) {
     return false
   }
-  const normalized = realpathOrSelf(filePath).replace(/\\/g, '/')
-  if (filter.excludePatterns.some((re) => re.test(normalized) || re.test(filePath))) {
-    return false
+  if (filter.scoped) {
+    const normalized = realpathOrSelf(filePath).replace(/\\/g, '/')
+    if (filter.excludePatterns.some((re) => re.test(normalized) || re.test(filePath))) {
+      return false
+    }
+    if (
+      filter.includePatterns.length > 0 &&
+      !filter.includePatterns.some((re) => re.test(normalized) || re.test(filePath))
+    ) {
+      return false
+    }
+    return driver.isSourceFile(filePath)
   }
-  if (filter.includePatterns.length > 0) {
-    return filter.includePatterns.some((re) => re.test(normalized) || re.test(filePath))
+  const hasIncludeOrExclude =
+    readGlobs(driver.config['include']).length > 0 ||
+    readGlobs(driver.config['exclude']).length > 0
+  if (hasIncludeOrExclude) {
+    return driver.isSourceFile(filePath)
   }
   return !NODE_MODULES_RE.test(filePath)
 }
@@ -377,6 +393,16 @@ function toPosixRelativeImport(fromChunkFileName: string, toAssetFileName: strin
   return rel.startsWith('.') ? rel : `./${rel}`
 }
 
+/** Where a chunk's hashbang and leading directives end: `0` when it has neither. */
+function prologueEnd(program: Program): number {
+  let end = program.hashbang?.end ?? 0
+  for (const statement of program.body) {
+    if (statement.type !== 'ExpressionStatement' || !('directive' in statement)) break
+    end = statement.end
+  }
+  return end
+}
+
 function chunkHasStyles(
   chunk: RenderedChunk,
   chunks: Record<string, RenderedChunk> | undefined,
@@ -405,11 +431,11 @@ function chunkHasStyles(
 /**
  * Official Panda CSS plugin for tsdown (and Rolldown).
  *
- * Loads `panda.config.*` with `@pandacss/dev/node` (`createNodeDriver`), runs
+ * Loads `panda.config.*` with `@pandacss/compiler` (`createNodeDriver`), runs
  * Panda's codegen (`driver.codegen()`) at build start and on watch-mode config
  * reloads so `styled-system/` stays in sync, scans project source files,
- * optionally rewrites `css({...})` calls at build time via
- * `@pandacss/transformer`, extracts all Panda CSS layers (`reset`, `base`,
+ * rewrites `css({...})` calls at build time via `@pandacss/transformer` by
+ * default (`transform: true`), extracts all Panda CSS layers (`reset`, `base`,
  * `tokens`, `recipes`, `utilities`) with `emitLayerDeclaration: false`,
  * processes the stylesheet with LightningCSS (`--made-with-panda` stripped via
  * `unusedSymbols`), emits `styles.css` (plus optional Node.js `styles-css.js` /
@@ -435,13 +461,11 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
   } = options
 
   const normalizedFileName = normalizeAssetFileName(fileName)
-  const normalizedExports = normalizeCssExportsOptions(enableExports, true)
+  const normalizedExports = normalizeCssExportsOptions(enableExports, false)
   const injectEnabled = Boolean(inject)
   const injectNodeCompat =
     typeof inject === 'object' ? (inject.nodeCompat ?? true) : normalizedExports.nodeCompat
-  const emitNodeCompatShim =
-    (normalizedExports.enabled && normalizedExports.nodeCompat) ||
-    (injectEnabled && injectNodeCompat)
+  let exportsEnabled = normalizedExports.enabled
 
   let resolvedCwd = cwd ? path.resolve(cwd) : process.cwd()
   let contextTarget: string | string[] | false | undefined
@@ -511,9 +535,6 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
 
   const refreshTransformFilter = (activeDriver: Driver): void => {
     sourceFilter = deriveSourceFilter(activeDriver, resolvedCwd, outdir)
-    plugin.transform = sourceFilter.hookFilter
-      ? {filter: sourceFilter.hookFilter, handler: transformHandler}
-      : {handler: transformHandler}
   }
 
   const initDriver = (baseCwd: string): Promise<Driver> => {
@@ -572,7 +593,7 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
     if (!driver) return null
 
     const cleanId = id.split('?')[0] ?? id
-    if (!matchesSourceFilter(cleanId, sourceFilter)) {
+    if (!matchesSourceFilter(cleanId, driver, sourceFilter)) {
       parsedIds.delete(cleanId)
       return null
     }
@@ -633,9 +654,12 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
       config.exports = withCssCustomExports(
         config.exports,
         normalizedFileName,
-        enableExports ?? false,
+        enableExports,
         config.outDir,
       )
+      if (config.exports) {
+        exportsEnabled = true
+      }
     },
 
     async tsdownConfigResolved(config: ResolvedConfig) {
@@ -741,16 +765,24 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         : toPosixRelativeImport(chunk.fileName, normalizedFileName)
       const statement =
         format === 'cjs'
-          ? `require(${JSON.stringify(cssImportPath)});\n`
-          : `import ${JSON.stringify(cssImportPath)};\n`
+          ? `require(${JSON.stringify(cssImportPath)});`
+          : `import ${JSON.stringify(cssImportPath)};`
+      const offset = prologueEnd(this.parse(code))
 
       if (meta?.magicString) {
-        meta.magicString.prepend(statement)
+        if (offset === 0) {
+          meta.magicString.prepend(`${statement}\n`)
+        } else {
+          meta.magicString.appendLeft(offset, `\n${statement}`)
+        }
         return meta.magicString
       }
 
       return {
-        code: `${statement}${code}`,
+        code:
+          offset === 0
+            ? `${statement}\n${code}`
+            : `${code.slice(0, offset)}\n${statement}${code.slice(offset)}`,
         map: null,
       }
     },
@@ -786,7 +818,10 @@ export function pandaCssPlugin(options: Options = {}): TsdownPlugin {
         finalCss = Buffer.from(result.code).toString('utf8')
       }
 
-      if (finalCss.length > 0 || normalizedExports.enabled) {
+      const emitNodeCompatShim =
+        (exportsEnabled && normalizedExports.nodeCompat) || (injectEnabled && injectNodeCompat)
+
+      if (finalCss.length > 0 || exportsEnabled) {
         this.emitFile({
           type: 'asset',
           fileName: normalizedFileName,

@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import type {UserConfig} from 'tsdown'
+import type {PackageJsonWithPath, UserConfig} from 'tsdown'
 
 import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
 import {type CssExportsOptions, normalizeCssExportsOptions} from './exportsOptions.ts'
@@ -37,14 +37,73 @@ export function normalizeAssetFileName(fileName: string): string {
   return normalized
 }
 
-function toPosixRelativeOutDir(pkgRoot?: string, outDir?: string): string {
-  if (!pkgRoot || !outDir) {
+function findEmittedOutDir(
+  chunks: CustomExportsContext['chunks'] | undefined,
+  normalizedFileName: string,
+): string | undefined {
+  if (!chunks || typeof chunks !== 'object') return undefined
+  let fallbackOutDir: string | undefined
+  for (const formatChunks of Object.values(chunks)) {
+    if (!Array.isArray(formatChunks)) continue
+    for (const chunk of formatChunks) {
+      if (!chunk || typeof chunk !== 'object' || typeof chunk.outDir !== 'string' || !chunk.outDir) {
+        continue
+      }
+      fallbackOutDir ??= chunk.outDir
+      if (chunk.type === 'asset' && chunk.fileName.replace(/\\/g, '/') === normalizedFileName) {
+        return chunk.outDir
+      }
+    }
+  }
+  return fallbackOutDir
+}
+
+function resolveRelativeOutDir(
+  context: CustomExportsContext | undefined,
+  normalizedFileName: string,
+  configuredOutDir?: string,
+): string {
+  const pkg = context?.pkg as Partial<PackageJsonWithPath> | undefined
+  const packageJsonPath =
+    typeof pkg?.packageJsonPath === 'string' && pkg.packageJsonPath.length > 0
+      ? pkg.packageJsonPath
+      : undefined
+  const pkgRoot = packageJsonPath ? path.dirname(path.resolve(packageJsonPath)) : undefined
+  const rawOutDir = findEmittedOutDir(context?.chunks, normalizedFileName) ?? configuredOutDir
+
+  if (!rawOutDir) {
     return 'dist'
   }
-  const rel = path.relative(pkgRoot, path.resolve(pkgRoot, outDir))
-  const posixRel = rel.split(path.sep).join('/').replace(/^\/+/, '')
 
-  return posixRel || 'dist'
+  if (pkgRoot) {
+    const resolvedOutDir = path.resolve(pkgRoot, rawOutDir)
+    const rel = path.relative(pkgRoot, resolvedOutDir).replace(/\\/g, '/')
+    if (!rel || rel === '.') {
+      return ''
+    }
+    return path.posix.normalize(rel).replace(/^(\.\/)+/, '').replace(/^\/+|\/+$/g, '')
+  }
+
+  if (path.isAbsolute(rawOutDir)) {
+    const rel = path.relative(process.cwd(), rawOutDir).replace(/\\/g, '/')
+    if (!rel || rel === '.') {
+      return ''
+    }
+    return path.posix.normalize(rel).replace(/^(\.\/)+/, '').replace(/^\/+|\/+$/g, '')
+  }
+
+  const posixOutDir = path.posix
+    .normalize(rawOutDir.replace(/\\/g, '/'))
+    .replace(/^(\.\/)+/, '')
+    .replace(/^\/+|\/+$/g, '')
+
+  return posixOutDir === '.' ? '' : posixOutDir
+}
+
+function formatExportTarget(relOutDir: string, fileName: string): string {
+  const joined = relOutDir ? path.posix.join(relOutDir, fileName) : fileName
+  const normalized = path.posix.normalize(joined).replace(/^(\.\/)+/, '').replace(/^\/+/, '')
+  return `./${normalized}`
 }
 
 /**
@@ -52,10 +111,10 @@ function toPosixRelativeOutDir(pkgRoot?: string, outDir?: string): string {
  * `fileName`.
  *
  * When `nodeCompat` is enabled (the default), returns a conditional export map
- * that routes the `"node"` condition to the emitted no-op JS shim (with a
- * nested `"types"` condition pointing at the `.d.ts` companion so TypeScript's
- * `node16`/`nodenext` resolver accepts the side-effect import without `TS2882`)
- * and every other condition to the real CSS file.
+ * with a top-level `"types"` condition (for `moduleResolution: "bundler"` under
+ * `noUncheckedSideEffectImports`) and a `"node"` condition routing to the
+ * emitted no-op JS shim (with a nested `"types"` condition for
+ * `node16`/`nodenext`), while every other condition routes to the real CSS file.
  *
  * @internal
  */
@@ -64,17 +123,23 @@ function buildCssExportEntry(
   normalizedFileName: string,
   options: {nodeCompat: boolean; conditions: readonly string[]},
 ): string | Record<string, string | Record<string, string>> {
-  const cssTarget = `./${ path.posix.join(relOutDir, normalizedFileName)}`
+  const cssTarget = formatExportTarget(relOutDir, normalizedFileName)
 
   if (!options.nodeCompat) {
     return cssTarget
   }
 
-  const shimTarget = `./${path.posix.join(relOutDir, cssShimFileName(normalizedFileName))}`
-  const shimDtsTarget = `./${path.posix.join(relOutDir, cssShimDtsFileName(normalizedFileName))}`
-  const entry: Record<string, string | Record<string, string>> = {}
+  const shimTarget = formatExportTarget(relOutDir, cssShimFileName(normalizedFileName))
+  const shimDtsTarget = formatExportTarget(relOutDir, cssShimDtsFileName(normalizedFileName))
+  const entry: Record<string, string | Record<string, string>> = {
+    types: shimDtsTarget,
+  }
 
   for (const condition of options.conditions) {
+    if (condition === 'types') {
+      entry['types'] = shimDtsTarget
+      continue
+    }
     entry[condition] =
       condition === 'node' ? {types: shimDtsTarget, default: shimTarget} : cssTarget
   }
@@ -92,19 +157,19 @@ function buildCssExportEntry(
  * export map when `nodeCompat` is enabled) in `customExports`, chained after
  * any user-supplied `customExports` callback.
  *
- * If `config.exports` is `false` or undefined (tsdown export generation is not
- * enabled), `config.exports` is returned unchanged unless `enableExports` is
- * set (`true` or a {@link CssExportsOptions} object).
+ * Note that tsdown 0.23.1+ pre-populates `subpaths["./<fileName>"]` with a
+ * plain CSS path before invoking `customExports`, so this helper upgrades that
+ * entry unless the user's own `customExports` explicitly overrode it.
  *
  * @internal
  */
 export function withCssCustomExports(
   existingExports: UserConfig['exports'],
   fileName: string = DEFAULT_CSS_FILE_NAME,
-  enableExports: boolean | CssExportsOptions = false,
+  enableExports?: boolean | CssExportsOptions,
   outDir?: string,
 ): UserConfig['exports'] {
-  if (existingExports === false) {
+  if (existingExports === false || enableExports === false) {
     return existingExports
   }
 
@@ -128,30 +193,23 @@ export function withCssCustomExports(
   return {
     ...resolvedExports,
     async customExports(subpaths: ExportsSubpaths, context: CustomExportsContext) {
+      const initialCssExport = subpaths[exportKey]
       const base =
         typeof prevCustomExports === 'function'
-          ? await prevCustomExports(subpaths, context)
+          ? await prevCustomExports({...subpaths}, context)
           : prevCustomExports
             ? {...subpaths, ...prevCustomExports}
             : subpaths
       const next: ExportsSubpaths = {...base}
 
-      if (!(exportKey in next)) {
-    const pkgRoot =
-      typeof context === 'object' &&
-      context !== null &&
-      'pkgRoot' in context &&
-      typeof context.pkgRoot === 'string'
-        ? context.pkgRoot
-        : undefined
-    const ctxOutDir =
-      typeof context === 'object' &&
-      context !== null &&
-      'outDir' in context &&
-      typeof context.outDir === 'string'
-        ? context.outDir
-        : undefined
-    const relOutDir = toPosixRelativeOutDir(pkgRoot, outDir ?? ctxOutDir)
+      const userOverrodeCssExport =
+        prevCustomExports !== undefined &&
+        (typeof prevCustomExports === 'function'
+          ? base[exportKey] !== initialCssExport
+          : exportKey in prevCustomExports)
+
+      if (!userOverrodeCssExport) {
+        const relOutDir = resolveRelativeOutDir(context, normalizedFileName, outDir)
         next[exportKey] = buildCssExportEntry(relOutDir, normalizedFileName, normalizedExports)
       }
 

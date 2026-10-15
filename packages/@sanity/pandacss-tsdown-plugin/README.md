@@ -4,7 +4,7 @@ Panda CSS plugin for [`tsdown`](https://tsdown.dev) — the library-build counte
 
 ## Features
 
-- Loads `panda.config.*` with `@pandacss/dev/node` (`createNodeDriver`) and derives `transform.filter.id` from its `include`/`exclude` globs (skipping `transform.filter.id` scoping when neither is defined).
+- Loads `panda.config.*` with `@pandacss/compiler` (`createNodeDriver`) and derives `transform.filter.id` from its `include`/`exclude` globs (skipping `transform.filter.id` scoping when neither is defined).
 - Runs Panda codegen (`driver.codegen()`) automatically at build start and again when `panda.config.*` (or its imported files) reloads in watch mode, keeping `styled-system/` types and class names current while leaving unchanged files untouched.
 - Rewrites `css({...})` calls at build time into atomic class names via `@pandacss/transformer` by default (`transform: true`, unlike `@pandacss/vite` which defaults to `false`; set `transform: false` to opt out).
 - Extracts all Panda CSS layers (`reset`, `base`, `tokens`, `recipes`, `utilities`) with `emitLayerDeclaration: false`, lowers syntax and removes `--made-with-panda` with `lightningcss`, and emits `styles.css`.
@@ -13,7 +13,26 @@ Panda CSS plugin for [`tsdown`](https://tsdown.dev) — the library-build counte
 ## Installation
 
 ```sh
-pnpm add -D @sanity/pandacss-tsdown-plugin tsdown
+pnpm add -D tsdown @sanity/tsdown-config @sanity/pandacss-tsdown-plugin
+```
+
+`@pandacss/compiler` and `@pandacss/transformer` are direct dependencies of `@sanity/pandacss-tsdown-plugin`, so only `tsdown`, `@sanity/tsdown-config`, and `@sanity/pandacss-tsdown-plugin` are required for building.
+
+Installing `@pandacss/dev` (an optional peer dependency) is recommended: it provides a `"prepare": "panda codegen"` script so `styled-system/` types exist for your IDE and TypeScript before a build runs, `defineConfig` and `Config` for authoring `panda.config.ts`, and helpful CLI commands for debugging (such as validating `panda.config.ts`).
+
+```sh
+pnpm add -D @pandacss/dev
+```
+
+```ts
+// panda.config.ts
+import {defineConfig, type Config} from '@pandacss/dev'
+
+export default defineConfig({
+  include: ['./src/**/*.{ts,tsx}'],
+  importMap: '#styled-system',
+  preflight: false,
+} satisfies Config)
 ```
 
 ## Usage

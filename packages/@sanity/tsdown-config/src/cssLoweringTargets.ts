@@ -8,8 +8,8 @@ interface LightningCSSOptionsWithTargets {
 
 /**
  * Resolves the CSS syntax lowering targets for a CSS pipeline
- * (`vanillaExtract`/`css`), applying the Sanity-flavored fallback on top of the
- * `@tsdown/css` behavior both pipelines otherwise follow.
+ * (`vanillaExtract`/`panda`/`css`), applying the Sanity-flavored fallback on top of the
+ * `@tsdown/css` behavior the pipelines otherwise follow.
  *
  * `@tsdown/css` skips syntax lowering when it has no browser targets. Extracted CSS always runs
  * in browsers though, so when the effective target (the pipeline's own `target`, falling back to
@@ -30,14 +30,21 @@ export async function resolveCssLoweringTargets(options: {
   target: string | string[] | false | undefined
   /** The pipeline's own `lightningcss` options. */
   lightningcss: LightningCSSOptionsWithTargets | undefined
+  /**
+   * Target converter for checking whether `cssTarget` resolves to browser targets.
+   * Defaults to `esbuildTargetToLightningCSS` from `@sanity/vanilla-extract-tsdown-plugin`;
+   * `panda` passes its browserslist-aware converter so queries like `'defaults'` or `'> 0.5%'`
+   * are preserved instead of falling back to `@sanity/browserslist-config`.
+   */
+  resolveTargets?: ((target: string | readonly string[]) => Targets | undefined) | undefined
 }): Promise<LightningCSSOptionsWithTargets | undefined> {
-  const {target, lightningcss} = options
+  const {target, lightningcss, resolveTargets = esbuildTargetToLightningCSS} = options
   const cssTarget = options.cssTarget ?? target
 
   if (
     cssTarget === false ||
     lightningcss?.targets ||
-    (cssTarget !== undefined && esbuildTargetToLightningCSS(cssTarget))
+    (cssTarget !== undefined && resolveTargets(cssTarget))
   ) {
     return lightningcss
   }

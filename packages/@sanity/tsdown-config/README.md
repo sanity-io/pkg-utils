@@ -314,11 +314,12 @@ The `panda` option enables [`@sanity/pandacss-tsdown-plugin`](https://github.com
 to run Panda CSS codegen (`styled-system/`), scan source files matched by `panda.config.ts`,
 rewrite `css({...})` calls into static class names at build time by default (`transform: true`,
 unlike `@pandacss/vite` which defaults to `false`; set `transform: false` to opt out), extract all
-Panda layers into `dist/styles.css`, and lower the CSS with `lightningcss`. Install
-`@sanity/pandacss-tsdown-plugin` in the project first — it is an optional peer dependency:
+Panda layers into `dist/styles.css`, and lower the CSS with `lightningcss`.
+
+Only `tsdown`, `@sanity/tsdown-config`, and `@sanity/pandacss-tsdown-plugin` are required (`@pandacss/compiler` and `@pandacss/transformer` are direct dependencies of the plugin). Installing `@pandacss/dev` (an optional peer dependency) is recommended so you can wire up a `"prepare": "panda codegen"` script for your IDE and TypeScript and use Panda's CLI commands for debugging (such as validating `panda.config.ts`):
 
 ```sh
-pnpm add --save-dev @sanity/pandacss-tsdown-plugin
+pnpm add --save-dev tsdown @sanity/tsdown-config @sanity/pandacss-tsdown-plugin
 ```
 
 ```ts

@@ -12,6 +12,7 @@ export interface CssExportsOptions {
    *
    * ```json
    * "./styles.css": {
+   *   "types": "./dist/styles-css.d.ts",
    *   "style": "./dist/styles.css",
    *   "browser": "./dist/styles.css",
    *   "module": "./dist/styles.css",
@@ -32,23 +33,12 @@ export interface CssExportsOptions {
    * Condition order for the conditional export object when `nodeCompat` is
    * enabled.
    *
-   * Each condition name maps to `./<outDir>/<fileName>`, except `"node"` which
-   * maps to `{types: "./<outDir>/styles-css.d.ts", default: "./<outDir>/styles-css.js"}`.
-   *
-   * Why this default order:
-   * - `"style"` first: standard CSS condition recognized by CSS-aware tools
-   *   (Vite, Webpack `css-loader`, Parcel, LightningCSS, etc.).
-   * - `"browser"` and `"module"` before `"node"`: client bundlers (esbuild,
-   *   Rollup, Webpack, Vite) activate `"browser"` and/or `"module"` on client
-   *   builds, and some also include `"node"` as a fallback condition — placing
-   *   `"browser"`/`"module"` ahead of `"node"` ensures they always receive the
-   *   real CSS file.
-   * - `"node"` before `"default"`: Node.js (`import`), `vitest` (`environment:
-   *   'node'` / `'jsdom'`), Next.js SSR, and `tsc --moduleResolution bundler`
-   *   (whose default conditions are `["module", "types"]` — or `["node", ...]`
-   *   for `node16`/`nodenext`) hit `"node"` (or `"module"` for bundler-mode
-   *   typecheck) instead of failing on a raw `.css` file.
-   * - `"default"` last: catch-all for any other tool (`unpkg`, Deno, etc.).
+   * A top-level `"types"` condition pointing at `./<outDir>/styles-css.d.ts` is
+   * always placed first so TypeScript (`moduleResolution: "bundler"` with
+   * `noUncheckedSideEffectImports`) resolves the declaration before matching
+   * runtime conditions. Each condition name in `conditions` then maps to
+   * `./<outDir>/<fileName>`, except `"node"` which maps to
+   * `{types: "./<outDir>/styles-css.d.ts", default: "./<outDir>/styles-css.js"}`.
    *
    * @defaultValue `['style', 'browser', 'module', 'node', 'default']`
    */
@@ -95,7 +85,7 @@ export function normalizeCssExportsOptions(
   if (typeof exportsOption === 'boolean') {
     return {
       enabled: exportsOption,
-      nodeCompat: true,
+      nodeCompat: exportsOption,
       conditions: DEFAULT_CSS_EXPORT_CONDITIONS,
     }
   }

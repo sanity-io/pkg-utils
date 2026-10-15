@@ -2,10 +2,12 @@ import {cp, mkdir, mkdtemp, rm, symlink, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import type {Options as PandaPluginOptions} from '@sanity/pandacss-tsdown-plugin'
 // TypeScript 7 (Go-native) no longer ships the JS compiler API; use the compat package
 import ts from '@typescript/typescript6'
 import {x} from 'tinyexec'
-import {afterAll, beforeAll, describe, expect, test} from 'vitest'
+import {afterAll, beforeAll, describe, expect, expectTypeOf, test} from 'vitest'
+import type {PackagePandaOptions} from '../src/index.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const packageDir = path.resolve(__dirname, '..')
@@ -193,6 +195,68 @@ export {babel, dual, invalidSources, invalidTarget, oxc}
     )
     expect(diagnostics).toBe('')
   })
+  test('a consumer without @sanity/pandacss-tsdown-plugin typechecks with skipLibCheck: false', () => {
+    expectTypeOf<PackagePandaOptions>().toEqualTypeOf<PandaPluginOptions>()
+
+    const consumerPath = path
+      .join(packageDir, '__optional-panda-peer-consumer__.ts')
+      .replaceAll('\\', '/')
+    const distDtsPath = path.join(packageDir, 'dist/index.d.mts').replaceAll('\\', '/')
+    const consumerCode = `${consumerPreamble}
+const basic: Promise<UserConfig> = defineConfig({
+  entry: {index: './src/index.ts'},
+})
+const withPanda: Promise<UserConfig> = defineConfig({
+  panda: {transform: true, minify: false, target: 'defaults'},
+})
+export {basic, withPanda}
+`
+    const compilerOptions: ts.CompilerOptions = {
+      module: ts.ModuleKind.Preserve,
+      moduleResolution: ts.ModuleResolutionKind.Bundler,
+      target: ts.ScriptTarget.ESNext,
+      strict: true,
+      skipLibCheck: false,
+      noEmit: true,
+      types: [],
+    }
+    const host = ts.createCompilerHost(compilerOptions, true)
+    const defaultFileExists = host.fileExists.bind(host)
+    const defaultReadFile = host.readFile.bind(host)
+    const defaultGetSourceFile = host.getSourceFile.bind(host)
+    host.fileExists = (fileName) => fileName === consumerPath || defaultFileExists(fileName)
+    host.readFile = (fileName) =>
+      fileName === consumerPath ? consumerCode : defaultReadFile(fileName)
+    host.getSourceFile = (fileName, languageVersionOrOptions, ...rest) =>
+      fileName === consumerPath
+        ? ts.createSourceFile(fileName, consumerCode, languageVersionOrOptions)
+        : defaultGetSourceFile(fileName, languageVersionOrOptions, ...rest)
+    host.resolveModuleNameLiterals = (moduleLiterals, containingFile, _redirected, options) =>
+      moduleLiterals.map((literal) => {
+        if (literal.text === '@sanity/pandacss-tsdown-plugin') return {resolvedModule: undefined}
+        return ts.resolveModuleName(literal.text, containingFile, options, host)
+      })
+
+    const program = ts.createProgram({rootNames: [consumerPath], options: compilerOptions, host})
+    const consumerFile = program.getSourceFile(consumerPath)
+    const distDtsFile = program.getSourceFile(distDtsPath)
+    if (!consumerFile || !distDtsFile) {
+      expect.unreachable('expected consumer and dist/index.d.mts source files')
+    }
+    const diagnostics = [
+      ...program.getSyntacticDiagnostics(consumerFile),
+      ...program.getSemanticDiagnostics(consumerFile),
+      ...program.getSyntacticDiagnostics(distDtsFile),
+      ...program.getSemanticDiagnostics(distDtsFile),
+    ]
+    expect(
+      ts.formatDiagnostics(diagnostics, {
+        getCanonicalFileName: (fileName) => fileName,
+        getCurrentDirectory: () => packageDir,
+        getNewLine: () => '\n',
+      }),
+    ).toBe('')
+  })
 })
 
 describe('typescript 7 consumer', () => {
@@ -205,10 +269,8 @@ describe('typescript 7 consumer', () => {
     fixtureDir = await mkdtemp(path.join(tmpdir(), 'tsdown-config-optional-peers-'))
     const nodeModules = path.join(fixtureDir, 'node_modules')
     const packagedDir = path.join(nodeModules, '@sanity/tsdown-config')
-    const pandaStubDir = path.join(nodeModules, '@sanity/pandacss-tsdown-plugin')
     const vanillaExtractStubDir = path.join(nodeModules, '@sanity/vanilla-extract-tsdown-plugin')
     await mkdir(packagedDir, {recursive: true})
-    await mkdir(pandaStubDir, {recursive: true})
     await mkdir(vanillaExtractStubDir, {recursive: true})
 
     // The package as published: the real dist, copied (not symlinked — tsc realpaths
@@ -231,21 +293,8 @@ describe('typescript 7 consumer', () => {
         'junction',
       )
     }
-    // Stubs keep the CSS plugins' source trees out of the program; only their
-    // type names are referenced and this fixture never uses them
-    await writeFile(
-      path.join(pandaStubDir, 'package.json'),
-      JSON.stringify({
-        name: '@sanity/pandacss-tsdown-plugin',
-        version: '0.0.0-test',
-        type: 'module',
-        types: './index.d.ts',
-      }),
-    )
-    await writeFile(
-      path.join(pandaStubDir, 'index.d.ts'),
-      'export type Options = Record<string, unknown>\n',
-    )
+    // Note: `@sanity/pandacss-tsdown-plugin` is intentionally NOT installed or stubbed here
+    // because it is an optional peer dependency and must not be referenced by `dist/index.d.mts`.
     await writeFile(
       path.join(vanillaExtractStubDir, 'package.json'),
       JSON.stringify({
@@ -257,7 +306,7 @@ describe('typescript 7 consumer', () => {
     )
     await writeFile(
       path.join(vanillaExtractStubDir, 'index.d.ts'),
-      'export type Options = Record<string, unknown>\nexport type CssExportsOptions = Record<string, unknown>\n',
+      'export type Options = Record<string, unknown>\nexport type CssExportsOptions = {nodeCompat?: boolean}\nexport type LightningCSSOptions = Record<string, unknown>\n',
     )
 
     await writeFile(
@@ -285,6 +334,7 @@ const config: UserConfig = await defineConfig({
   entry: {index: './src/index.ts'},
   styledComponents: true,
   reactCompiler: {target: '18', transform: 'oxc'},
+  panda: {transform: true, minify: false, target: 'defaults'},
 })
 
 const dual: Promise<UserConfig[]> = defineConfig({
@@ -308,12 +358,146 @@ export {babelDegraded, dual, invalidTarget}
     if (fixtureDir) await rm(fixtureDir, {recursive: true, force: true})
   })
 
-  test('the ui consumer typechecks without babel-plugin-react-compiler installed', async () => {
+  test('the ui consumer typechecks without babel-plugin-react-compiler or @sanity/pandacss-tsdown-plugin installed', async () => {
     if (!fixtureDir) expect.unreachable('expected the fixture directory')
     // The catalog `typescript` bin is a node script; spawn through `node` for portability
     const tsc = path.join(repoRoot, 'node_modules', 'typescript', 'bin', 'tsc')
     const result = await x('node', [tsc, '-p', 'tsconfig.json'], {nodeOptions: {cwd: fixtureDir}})
     expect(result.stdout + result.stderr).toBe('')
     expect(result.exitCode).toBe(0)
+  })
+
+  test('isolated consumer typechecks with skipLibCheck: false when @sanity/pandacss-tsdown-plugin is absent', async () => {
+    const strictFixtureDir = await mkdtemp(path.join(tmpdir(), 'tsdown-config-skiplibcheck-false-'))
+    try {
+      const nodeModules = path.join(strictFixtureDir, 'node_modules')
+      const packagedDir = path.join(nodeModules, '@sanity/tsdown-config')
+      const vanillaExtractStubDir = path.join(nodeModules, '@sanity/vanilla-extract-tsdown-plugin')
+      const babelStubDir = path.join(nodeModules, 'babel-plugin-react-compiler')
+      const oxcStubDir = path.join(nodeModules, 'oxc-transform-react')
+      const tsdownStubDir = path.join(nodeModules, 'tsdown')
+      await mkdir(packagedDir, {recursive: true})
+      await mkdir(vanillaExtractStubDir, {recursive: true})
+      await mkdir(babelStubDir, {recursive: true})
+      await mkdir(oxcStubDir, {recursive: true})
+      await mkdir(tsdownStubDir, {recursive: true})
+
+      await cp(path.join(packageDir, 'dist'), path.join(packagedDir, 'dist'), {recursive: true})
+      await writeFile(
+        path.join(packagedDir, 'package.json'),
+        JSON.stringify({
+          name: '@sanity/tsdown-config',
+          version: '0.0.0-test',
+          type: 'module',
+          types: './dist/index.d.mts',
+          exports: {'.': './dist/index.mjs', './package.json': './package.json'},
+        }),
+      )
+      await writeFile(
+        path.join(vanillaExtractStubDir, 'package.json'),
+        JSON.stringify({
+          name: '@sanity/vanilla-extract-tsdown-plugin',
+          version: '0.0.0-test',
+          type: 'module',
+          types: './index.d.ts',
+        }),
+      )
+      await writeFile(
+        path.join(vanillaExtractStubDir, 'index.d.ts'),
+        'export type Options = Record<string, unknown>\nexport type CssExportsOptions = {nodeCompat?: boolean}\nexport type LightningCSSOptions = Record<string, unknown>\n',
+      )
+      await writeFile(
+        path.join(babelStubDir, 'package.json'),
+        JSON.stringify({
+          name: 'babel-plugin-react-compiler',
+          version: '0.0.0-test',
+          type: 'module',
+          types: './index.d.ts',
+        }),
+      )
+      await writeFile(
+        path.join(babelStubDir, 'index.d.ts'),
+        'export interface PluginOptions {target?: "18" | "19"}\n',
+      )
+      await writeFile(
+        path.join(oxcStubDir, 'package.json'),
+        JSON.stringify({
+          name: 'oxc-transform-react',
+          version: '0.0.0-test',
+          type: 'module',
+          types: './index.d.ts',
+        }),
+      )
+      await writeFile(
+        path.join(oxcStubDir, 'index.d.ts'),
+        'export interface ReactCompilerOptions {target?: "18" | "19"}\n',
+      )
+      await writeFile(
+        path.join(tsdownStubDir, 'package.json'),
+        JSON.stringify({
+          name: 'tsdown',
+          version: '0.0.0-test',
+          type: 'module',
+          types: './index.d.ts',
+        }),
+      )
+      await writeFile(
+        path.join(tsdownStubDir, 'index.d.ts'),
+        `export interface UserConfig {
+  tsconfig?: string | boolean
+  entry?: unknown
+  format?: unknown
+  dts?: unknown
+  define?: Record<string, string>
+  target?: string | string[] | false
+  outDir?: string
+  platform?: 'node' | 'neutral' | 'browser'
+  cwd?: string
+  clean?: boolean | string[]
+  exports?: boolean | 'ci-only' | 'local-only' | Record<string, unknown>
+  sourcemap?: boolean | 'inline' | 'hidden'
+  deps?: Record<string, unknown>
+  css?: Record<string, unknown>
+  suppressWarnings?: unknown
+}
+`,
+      )
+      await writeFile(
+        path.join(strictFixtureDir, 'tsconfig.json'),
+        JSON.stringify({
+          include: ['./tsdown.config.mts'],
+          compilerOptions: {
+            module: 'Preserve',
+            moduleDetection: 'force',
+            target: 'ESNext',
+            strict: true,
+            skipLibCheck: false,
+            noEmit: true,
+            types: [],
+          },
+        }),
+      )
+      await writeFile(
+        path.join(strictFixtureDir, 'tsdown.config.mts'),
+        `import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
+
+const config: Promise<UserConfig> = defineConfig({
+  entry: {index: './src/index.ts'},
+})
+
+export default config
+`,
+      )
+
+      const tsc = path.join(repoRoot, 'node_modules', 'typescript', 'bin', 'tsc')
+      const result = await x('node', [tsc, '-p', 'tsconfig.json'], {
+        nodeOptions: {cwd: strictFixtureDir},
+      })
+      expect(result.stdout + result.stderr).toBe('')
+      expect(result.exitCode).toBe(0)
+    } finally {
+      await rm(strictFixtureDir, {recursive: true, force: true})
+    }
   })
 })
