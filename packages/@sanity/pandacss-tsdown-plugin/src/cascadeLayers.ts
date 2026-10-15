@@ -40,6 +40,13 @@ const RE_AT_KEYWORD = /^@([\w-]+)/
 const RE_COMMENT = /\/\*[\s\S]*?(?:\*\/|$)/g
 /** Matches `url(` at `lastIndex`. */
 const RE_URL_START = /url\(/iy
+/**
+ * Matches the start of a declaration whose value may hold a `{}` block, at `lastIndex`: a custom
+ * property (`--rules: …`), or a property whose value is a block (`name: {…}`), the only other
+ * declaration CSS parses with one. `a:hover {…}` is a nested rule.
+ */
+const RE_BLOCK_DECLARATION = /--[^\s:;{}]*\s*:|[\w-]+\s*:\s*\{/y
+const RE_WHITESPACE = /\s/
 /** Matches the hex digits of an escape, with the whitespace that may end it. */
 const RE_HEX_ESCAPE = /^[0-9a-f]{1,6}\s?/i
 
@@ -192,15 +199,25 @@ function atKeyword(prelude: string): string | undefined {
  * of a statement, or the single (possibly missing) name of a block.
  */
 function layerNames(prelude: string, isStatement: boolean): string[][] {
-  let text = prelude
-    .replace(RE_COMMENT, ' ')
-    .trim()
-    .replace(/^@layer/i, '')
+  let text = trimUnescaped(prelude.replace(RE_COMMENT, ' ')).replace(/^@layer/i, '')
   if (isStatement) text = text.replace(/;$/, '')
-  return text
-    .split(',')
-    .map((name) => splitUnescaped(name.trim(), '.').map(unescapeIdentifier))
+  return splitUnescaped(text, ',')
+    .map((name) => splitUnescaped(trimUnescaped(name), '.').map(unescapeIdentifier))
     .filter((name) => name.length > 0 && name.every((segment) => segment.length > 0))
+}
+
+/** Trims whitespace, except an escaped one, which belongs to the identifier (`a\ `). */
+function trimUnescaped(text: string): string {
+  let end = text.length
+  while (end > 0 && RE_WHITESPACE.test(text[end - 1] ?? '') && !isEscaped(text, end - 1)) end--
+  return text.slice(0, end).trimStart()
+}
+
+/** Whether the character at `index` is escaped: preceded by an odd number of backslashes. */
+function isEscaped(text: string, index: number): boolean {
+  let backslashes = 0
+  while (text[index - backslashes - 1] === '\\') backslashes++
+  return backslashes % 2 === 1
 }
 
 function splitUnescaped(text: string, separator: string): string[] {
@@ -244,7 +261,9 @@ function unescapeIdentifier(identifier: string): string {
 
 /**
  * Splits a rule list into items. Braces and semicolons only delimit items outside comments,
- * strings, escapes, unquoted `url()`s and parentheses or brackets, like in the CSS tokenizer.
+ * strings, escapes, unquoted `url()`s and parentheses or brackets, like in the CSS tokenizer. A
+ * declaration whose value may hold a `{}` block is one statement, its value opaque: `@layer` in
+ * a custom property's value is data, not a rule.
  */
 function parseItems(css: string): CssItem[] {
   let index = 0
@@ -252,18 +271,25 @@ function parseItems(css: string): CssItem[] {
   function parseList(nested: boolean): CssItem[] {
     const items: CssItem[] = []
     let itemStart = index
+    /** Whether the item has more than whitespace and comments so far. */
+    let started = false
     let depth = 0
     while (index < css.length) {
-      const char = css[index]
-      if (char === '/' && css[index + 1] === '*') {
-        const end = css.indexOf('*/', index + 2)
-        index = end === -1 ? css.length : end + 2
-      } else if (char === '"' || char === "'") {
-        index = skipString(css, index)
-      } else if (char === '\\') {
-        index += 2
-      } else if ((char === 'u' || char === 'U') && isUrlStart(css, index)) {
-        index = skipUrl(css, index)
+      const char = css[index] ?? ''
+      if (!started && depth === 0 && !RE_WHITESPACE.test(char) && !isCommentStart(css, index)) {
+        started = true
+        RE_BLOCK_DECLARATION.lastIndex = index
+        if (RE_BLOCK_DECLARATION.test(css)) {
+          index = skipDeclaration(css, index)
+          items.push({prelude: css.slice(itemStart, index), block: undefined})
+          itemStart = index
+          started = false
+          continue
+        }
+      }
+      const skipped = skipToken(css, index)
+      if (skipped !== undefined) {
+        index = skipped
       } else if (char === '(' || char === '[') {
         depth++
         index++
@@ -278,10 +304,12 @@ function parseItems(css: string): CssItem[] {
         if (css[index] === '}') index++
         items.push({prelude, block})
         itemStart = index
+        started = false
       } else if (depth === 0 && char === ';') {
         index++
         items.push({prelude: css.slice(itemStart, index), block: undefined})
         itemStart = index
+        started = false
       } else if (depth === 0 && char === '}' && nested) {
         break
       } else {
@@ -293,6 +321,52 @@ function parseItems(css: string): CssItem[] {
   }
 
   return parseList(false)
+}
+
+/**
+ * The end of a declaration: after its `;`, or before the `}` that closes the block it is in.
+ * Brackets and braces in its value are balanced, so a `{}` block in it belongs to the value.
+ */
+function skipDeclaration(css: string, start: number): number {
+  let index = start
+  let depth = 0
+  while (index < css.length) {
+    const char = css[index]
+    const skipped = skipToken(css, index)
+    if (skipped !== undefined) {
+      index = skipped
+    } else if (char === '(' || char === '[' || char === '{') {
+      depth++
+      index++
+    } else if ((char === ')' || char === ']' || char === '}') && depth > 0) {
+      depth--
+      index++
+    } else if (char === '}') {
+      return index
+    } else if (char === ';' && depth === 0) {
+      return index + 1
+    } else {
+      index++
+    }
+  }
+  return index
+}
+
+/** The end of the comment, string, escape or unquoted `url()` at `index`, if one starts there. */
+function skipToken(css: string, index: number): number | undefined {
+  const char = css[index]
+  if (isCommentStart(css, index)) {
+    const end = css.indexOf('*/', index + 2)
+    return end === -1 ? css.length : end + 2
+  }
+  if (char === '"' || char === "'") return skipString(css, index)
+  if (char === '\\') return index + 2
+  if ((char === 'u' || char === 'U') && isUrlStart(css, index)) return skipUrl(css, index)
+  return undefined
+}
+
+function isCommentStart(css: string, index: number): boolean {
+  return css[index] === '/' && css[index + 1] === '*'
 }
 
 function skipString(css: string, start: number): number {

@@ -1309,6 +1309,49 @@ describe('unwrapCascadeLayers', () => {
     expect(unwrapCascadeLayers(`@layer a{${rules}}`)).toBe(rules)
   })
 
+  test('keeps declaration values opaque, `@layer` in them included', () => {
+    const css = ':root{--rules:{@layer theme{color:red}};--color:blue}'
+    expect(unwrapCascadeLayers(css)).toBe(css)
+    expect(unwrapCascadeLayers(`@layer a{${css}}`)).toBe(css)
+    // A value that ends its block, and the block value of a regular property
+    expect(unwrapCascadeLayers('@layer a{.v{--x:{@layer t{a:b}}}}')).toBe('.v{--x:{@layer t{a:b}}}')
+    expect(unwrapCascadeLayers('@layer a{.v{color: {@layer t{a:b}};top:0}}')).toBe(
+      '.v{color: {@layer t{a:b}};top:0}',
+    )
+    // Next to a nested layer, the value goes along as it is
+    expect(
+      unwrapCascadeLayers('@layer a{.n{--v:{@layer z{}};color:red;@layer s{color:blue}}}'),
+    ).toBe('.n{color:blue;--v:{@layer z{}};color:red;}')
+    // `a:hover {…}` is a nested rule, not a declaration
+    expect(unwrapCascadeLayers('@layer a{.n{a:hover{@layer s{color:blue}}}}')).toBe(
+      '.n{a:hover{color:blue;}}',
+    )
+  })
+
+  test('tells escaped commas in layer names apart', () => {
+    // `a\,b` and `a\,c` are two layers: blue, in the later one, wins
+    expect(
+      unwrapCascadeLayers(
+        '@layer a\\,b{.x{color:red}}@layer a\\,c{.x{color:blue}}@layer a\\,b{.x{color:green}}',
+      ),
+    ).toBe('.x{color:red}.x{color:green}.x{color:blue}')
+    // `a\2c b` is `a\,b` with a hexadecimal escape, in a block and in a statement
+    expect(
+      unwrapCascadeLayers(
+        '@layer a\\,b{.x{color:red}}@layer a\\,c{.x{color:blue}}@layer a\\2c b{.x{color:green}}',
+      ),
+    ).toBe('.x{color:red}.x{color:green}.x{color:blue}')
+    expect(
+      unwrapCascadeLayers(
+        '@layer a\\,c, a\\2C b;@layer a\\,b{.x{color:red}}@layer a\\,c{.x{color:blue}}',
+      ),
+    ).toBe('.x{color:blue}.x{color:red}')
+    // An escaped space is part of the name: `a\ ` isn't `a`
+    expect(
+      unwrapCascadeLayers('@layer a\\ {.x{color:red}}@layer b{.y{}}@layer a{.x{color:blue}}'),
+    ).toBe('.x{color:red}.y{}.x{color:blue}')
+  })
+
   test('resolves escapes in layer names', () => {
     expect(unwrapCascadeLayers('@layer u\\-a{.a{}}@layer b{.b{}}@layer u-a{.c{}}')).toBe(
       '.a{}.c{}.b{}',
