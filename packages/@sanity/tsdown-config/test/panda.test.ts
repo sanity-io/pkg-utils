@@ -42,10 +42,11 @@ function getPluginNames(config: UserConfig) {
 
 /**
  * Builds the fixture with the Panda plugin exactly as `defineConfig` wired it up (fallback
- * targets included), returning the extracted CSS. Like tsdown, it forwards the resolved
- * top-level `target` through the plugin's `tsdownConfigResolved` hook first.
+ * targets included), returning the extracted CSS and the entry chunk's code. Like tsdown, it
+ * forwards the resolved top-level `target` through the plugin's `tsdownConfigResolved` hook
+ * first.
  */
-async function buildCssWithConfig(options: PackageOptions): Promise<string> {
+async function buildWithConfig(options: PackageOptions): Promise<{css: string; entry: string}> {
   if (!fixtureDir) expect.unreachable('expected the fixture directory')
   const panda = options.panda === true || options.panda === undefined ? {} : options.panda
   const config = await defineConfig({...options, panda: {cwd: fixtureDir, ...panda}})
@@ -71,17 +72,36 @@ async function buildCssWithConfig(options: PackageOptions): Promise<string> {
     const {output} = await bundle.generate({format: 'esm'})
     const asset = output.find((assetOrChunk) => assetOrChunk.fileName === 'styles.css')
     if (!asset || asset.type !== 'asset') expect.unreachable('expected a `styles.css` asset')
+    const entry = output.find(
+      (assetOrChunk) => assetOrChunk.type === 'chunk' && assetOrChunk.isEntry,
+    )
+    if (!entry || entry.type !== 'chunk') expect.unreachable('expected an entry chunk')
     const {source} = asset
-    return typeof source === 'string' ? source : new TextDecoder().decode(source)
+    return {
+      css: typeof source === 'string' ? source : new TextDecoder().decode(source),
+      entry: entry.code,
+    }
   } finally {
     await bundle.close()
   }
+}
+
+async function buildCssWithConfig(options: PackageOptions): Promise<string> {
+  return (await buildWithConfig(options)).css
 }
 
 describe('panda option', () => {
   test('`PackagePandaOptions` stays the same type as the plugin options', () => {
     // Defined separately so the declarations don't reference the optional peer
     expectTypeOf<PackagePandaOptions>().toEqualTypeOf<PandaPluginOptions>()
+  })
+
+  test('transforms the style calls by default, unless `transform: false`', async () => {
+    // Unlike `@pandacss/vite`, where `transform` defaults to `false`
+    const importsRuntime = /from ["']\.\.\/styled-system\/css["']/
+    expect((await buildWithConfig({panda: true})).entry).not.toMatch(importsRuntime)
+    expect((await buildWithConfig({panda: {transform: true}})).entry).not.toMatch(importsRuntime)
+    expect((await buildWithConfig({panda: {transform: false}})).entry).toMatch(importsRuntime)
   })
 
   test('lazily loads the panda plugin when enabled', async () => {

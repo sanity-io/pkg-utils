@@ -62,8 +62,15 @@ stale generated code can't leak into the published JS or `.d.ts` files:
 - In watch mode, changing the config or a file it imports reloads the config and runs codegen
   again before the rebuild.
 
-Keep the generated directory out of git, like with `panda codegen`. Enable `transform` to compile
-the style calls away, so the published JS doesn't import the generated runtime.
+Keep the generated directory out of git, like with `panda codegen`.
+
+## Transform
+
+`transform` statically compiles the `css()`, `cva()`, `sva()`, pattern and JSX style calls into
+class name strings, so the published JS doesn't import the generated runtime. Unlike in
+`@pandacss/vite`, where it defaults to `false`, it is **enabled by default**. Set
+`transform: false` to keep the style calls (and their `styled-system` imports) as written; the
+stylesheet is extracted either way.
 
 ## Watch mode
 
@@ -82,7 +89,7 @@ the style calls away, so the published JS doesn't import the generated runtime.
 | `cwd`          | tsdown's `cwd`    | Where the Panda config is discovered from, and what its globs are relative to.                                                                                                |
 | `configPath`   |                   | An explicit Panda config file, relative to `cwd`.                                                                                                                             |
 | `outdir`       | the config's      | The `styled-system` directory codegen writes to, which is never parsed or transformed.                                                                                        |
-| `transform`    | `false`           | Statically transform style calls into class name strings, like `@pandacss/vite`.                                                                                              |
+| `transform`    | `true`            | Statically transform style calls into class name strings, like `@pandacss/vite`, where it defaults to `false`. `transform: false` opts out.                                   |
 | `fileName`     | `"styles.css"`    | Name of the emitted stylesheet.                                                                                                                                               |
 | `minify`       | `false`           | Minify the stylesheet.                                                                                                                                                        |
 | `target`       | tsdown's `target` | esbuild-style targets for syntax lowering, or `false` to disable it. Browserless targets skip lowering.                                                                       |

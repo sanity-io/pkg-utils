@@ -280,7 +280,9 @@ and `transform` from `@pandacss/vite`, plus `fileName`, `minify`, `target`, `lig
 `inject` and `exports`).
 The only default this config adds is the CSS syntax lowering fallback: browserless targets fall
 back to `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
-`minify`, `inject` and `exports` stay disabled unless you set them.
+`minify`, `inject` and `exports` stay disabled unless you set them, while `transform`, which
+statically compiles the style calls into class name strings, is enabled by default (unlike in
+`@pandacss/vite`). Set `panda: {transform: false}` to keep the style calls as written.
 
 ## css
 

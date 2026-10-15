@@ -52,9 +52,9 @@ export interface CssExportsOptions {
 /**
  * Options for {@link pandaPlugin}. `cwd`, `configPath`, `outdir` and `transform` match
  * [`@pandacss/vite`](https://panda-css.com/docs/installation/vite), which covers Vite-based
- * tooling (Vitest, `sanity dev`/`sanity build`) in the same projects. The CSS options follow the
- * `css` options of [`@tsdown/css`](https://tsdown.dev/options/css) and
- * `@sanity/vanilla-extract-tsdown-plugin`.
+ * tooling (Vitest, `sanity dev`/`sanity build`) in the same projects, except that `transform`
+ * is enabled by default here. The CSS options follow the `css` options of
+ * [`@tsdown/css`](https://tsdown.dev/options/css) and `@sanity/vanilla-extract-tsdown-plugin`.
  * @public
  */
 export interface Options {
@@ -79,7 +79,11 @@ export interface Options {
    * modules into class name strings, like `transform` in `@pandacss/vite`. The output then no
    * longer imports the generated `styled-system` runtime for the calls Panda could transform;
    * calls it can't transform statically are reported as warnings.
-   * @defaultValue false
+   *
+   * Unlike `@pandacss/vite`, where it defaults to `false`, it is enabled by default, so the
+   * published code doesn't depend on the generated runtime. Set `transform: false` to keep the
+   * style calls (and their `styled-system` imports) as written.
+   * @defaultValue true
    */
   transform?: boolean
   /**
@@ -183,7 +187,7 @@ export function pandaPlugin(options: Options = {}): TsdownPlugin {
   const fileName = options.fileName ?? DEFAULT_CSS_FILE_NAME
   const minify = options.minify ?? false
   const inject = options.inject ?? false
-  const transformEnabled = options.transform ?? false
+  const transformEnabled = options.transform ?? true
   const lightningcss = options.lightningcss
   const exportsCss = Boolean(options.exports)
   const nodeCompat = typeof options.exports === 'object' && (options.exports.nodeCompat ?? false)

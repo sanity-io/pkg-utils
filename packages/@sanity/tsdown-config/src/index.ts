@@ -66,7 +66,8 @@ export type PackageVanillaExtractOptions = VanillaExtractPluginOptions
  * the lowering targets are resolved from `@sanity/browserslist-config` and passed through
  * `lightningcss.targets`. `target: false` stays the explicit off switch, and a user-provided
  * `lightningcss.targets` wins over the fallback. Everything else keeps the plugin's defaults:
- * `minify`, `inject`, and `exports` stay `false`.
+ * `transform` is enabled (unlike in `@pandacss/vite`), while `minify`, `inject`, and `exports`
+ * stay `false`.
  *
  * Defined here rather than imported from the plugin, an optional peer dependency: the published
  * declarations must not reference it, so consumers without it installed still type-check them
@@ -92,8 +93,10 @@ export interface PackagePandaOptions {
   outdir?: string
   /**
    * Statically transform the style calls of the bundled modules into class name strings, like
-   * `transform` in `@pandacss/vite`.
-   * @defaultValue false
+   * `transform` in `@pandacss/vite`. Unlike there, where it defaults to `false`, it is enabled by
+   * default, so the published code doesn't depend on the generated `styled-system` runtime. Set
+   * `transform: false` to keep the style calls as written.
+   * @defaultValue true
    */
   transform?: boolean
   /**

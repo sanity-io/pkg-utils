@@ -173,18 +173,24 @@ describe('pandaPlugin', () => {
     expect(explicit).toContain('padding-inline: 4px')
   })
 
-  test('statically transforms style calls with `transform: true`', async () => {
-    const output = await build({transform: true})
-    const entry = findChunk(output, 'index')
-    expect(entry.code).not.toContain('styled-system')
-    expect(entry.code).toContain('"color_tomato padding-inline_4"')
-    expect(findAsset(output, DEFAULT_CSS_FILE_NAME)).toContain('padding-inline: 4px')
+  test('statically transforms style calls by default, unlike `@pandacss/vite`', async () => {
+    for (const options of [{}, {transform: true}]) {
+      const output = await build(options)
+      const entry = findChunk(output, 'index')
+      expect(entry.code).not.toContain('styled-system')
+      expect(entry.code).toContain('"color_tomato padding-inline_4"')
+      expect(findAsset(output, DEFAULT_CSS_FILE_NAME)).toContain('padding-inline: 4px')
+    }
   })
 
-  test('leaves the source untouched by default', async () => {
-    const entry = findChunk(await build(), 'index')
+  test('leaves the source untouched with `transform: false`', async () => {
+    const output = await build({transform: false})
+    const entry = findChunk(output, 'index')
     expect(entry.code).toContain('../styled-system/css')
+    expect(entry.code).not.toContain('"color_tomato padding-inline_4"')
     expect(entry.code).not.toContain('styles.css')
+    // The stylesheet is extracted either way
+    expect(findAsset(output, DEFAULT_CSS_FILE_NAME)).toContain('padding-inline: 4px')
   })
 
   describe('inject', () => {
