@@ -7,6 +7,7 @@ import {
   readFileSync,
   rmSync,
   statSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs'
 import os from 'node:os'
@@ -298,6 +299,8 @@ describe('pandacssPlugin', () => {
       // `src/index.ts` isn't covered by the second pattern — the point is the filter.)
       ['brace-globstar', './src/{**/*.ts,**/*.tsx}', true],
       ['brace-globstar-prefix', './{src/**,lib}/index.ts', false],
+      // Module ids never spell out a `..` segment, while Panda's matcher covers the file
+      ['dot-segment', './src/../src/**/*.ts', true],
     ] as const) {
       const cwd = copyFixture(name, withInclude(include))
       try {
@@ -320,6 +323,55 @@ describe('pandacssPlugin', () => {
       } finally {
         rmSync(cwd, {recursive: true, force: true})
       }
+    }
+  })
+
+  test('resolves a symlinked project root, like the module ids', async () => {
+    // rolldown resolves symlinks, so the ids under a symlinked root (macOS's `/var` and `/tmp`,
+    // a linked workspace) are real paths, which a filter built from the link would never match
+    const real = copyFixture('symlink-target')
+    const link = path.resolve(__dirname, 'fixtures', 'symlink.local')
+    rmSync(link, {recursive: true, force: true})
+    symlinkSync(real, link, process.platform === 'win32' ? 'junction' : 'dir')
+    try {
+      const plugin = pandacssPlugin({cwd: link})
+      const bundle = await rolldown({
+        cwd: link,
+        input: path.join(link, 'src/index.ts'),
+        plugins: [plugin],
+      })
+      try {
+        const {output} = await bundle.generate({format: 'esm'})
+        expect(findEntryChunk(output).code).toContain('"color_brand"')
+      } finally {
+        await bundle.close()
+      }
+    } finally {
+      rmSync(link, {recursive: true, force: true})
+      rmSync(real, {recursive: true, force: true})
+    }
+  })
+
+  test("resolves a relative `cwd` against the host's working directory", async () => {
+    // tsdown's `cwd` (or rolldown's) needn't be the process's, e.g. in workspaces
+    const cwd = copyFixture('relative-cwd')
+    const hostCwd = path.dirname(cwd)
+    const input = path.join(cwd, 'src/index.ts')
+    try {
+      const fromContext = pandacssPlugin({cwd: path.basename(cwd)})
+      fromContext.api.setBuildContext({cwd: hostCwd})
+      const fromRolldown = pandacssPlugin({cwd: path.basename(cwd)})
+      for (const plugin of [fromContext, fromRolldown]) {
+        const bundle = await rolldown({cwd: hostCwd, input, plugins: [plugin]})
+        try {
+          const {output} = await bundle.generate({format: 'esm'})
+          expect(findEntryChunk(output).code).toContain('"color_brand"')
+        } finally {
+          await bundle.close()
+        }
+      }
+    } finally {
+      rmSync(cwd, {recursive: true, force: true})
     }
   })
 

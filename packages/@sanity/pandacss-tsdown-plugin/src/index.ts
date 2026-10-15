@@ -85,6 +85,9 @@ const RE_DTS = /\.d\.[cm]?ts$/
  */
 const RE_UNSUPPORTED_GLOB = /[?*+@!]\(|\[[!^]|\{[^{}]*\.\.[^{}]*\}/
 
+/** Matches a `.` or `..` path segment of a (POSIX-form) glob. */
+const RE_DOT_SEGMENT = /(?:^|\/)\.\.?(?:\/|$)/
+
 /** Matches a Windows drive at the start of a glob (`C:/…` or `C:\…`), i.e. an absolute pattern. */
 const RE_WINDOWS_DRIVE = /^[A-Za-z]:[\\/]/
 
@@ -115,6 +118,7 @@ export interface Options {
   /**
    * The project root the Panda config is discovered from (`panda.config.ts` upward), and the
    * directory its `include`/`exclude` globs are relative to — like `cwd` in `@pandacss/vite`.
+   * A relative path is resolved against tsdown's `cwd` (or rolldown's, outside tsdown).
    * @defaultValue tsdown's resolved `cwd` (the directory of the `tsdown.config.ts`)
    */
   cwd?: string
@@ -329,6 +333,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   let packageName: string | undefined
   /** The host-resolved default working directory (e.g. tsdown's `cwd`). */
   let contextCwd: string | undefined
+  /** The bundler's working directory (rolldown's `cwd` input option), recorded by `options`. */
+  let inputCwd: string | undefined
   /** The host-resolved output directory (tsdown's `outDir`), excluded from watching. */
   let contextOutDir: string | undefined
 
@@ -358,8 +364,13 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
   /** Diagnostics already reported, so repeated scans don't warn about the same thing again. */
   const reportedDiagnostics = new Set<string>()
 
-  function resolveCwd(inputCwd?: string): string {
-    return path.resolve(options.cwd ?? contextCwd ?? inputCwd ?? process.cwd())
+  function resolveCwd(): string {
+    // A relative `cwd` option is relative to the host's working directory, like tsdown's own
+    // paths — which isn't necessarily the process's (tsdown's `cwd` option, workspaces).
+    // Module ids are real paths, so a symlinked project root is resolved as well: the
+    // transform filter and Panda's matcher then compare them like with like.
+    const base = path.resolve(contextCwd ?? inputCwd ?? process.cwd())
+    return realpathOrSelf(options.cwd === undefined ? base : path.resolve(base, options.cwd))
   }
 
   async function resolveDriver(cwd: string): Promise<PandaDriver> {
@@ -540,7 +551,8 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
     // `renderChunk` through rolldown's native MagicString (`meta.magicString`), which keeps
     // sourcemaps intact without a JS magic-string dependency.
     async options(inputOptions) {
-      const cwd = resolveCwd(inputOptions.cwd)
+      if (inputOptions.cwd !== undefined) inputCwd = inputOptions.cwd
+      const cwd = resolveCwd()
       const currentDriver = await resolveDriver(cwd)
       // Outside tsdown (whose `build:before` hook already ran it), the first codegen runs here,
       // ahead of every plugin's `buildStart`: rolldown runs those in parallel, and a
@@ -559,7 +571,10 @@ export function pandacssPlugin(options: Options = {}): PandacssPlugin {
         // (e.g. `include: ['./**/*.tsx']`), and every write there would trigger the next
         // rebuild: exclude them from watching.
         const excluded = [currentDriver.getOutdir(options.outdir)]
-        if (contextOutDir !== undefined) excluded.push(path.resolve(cwd, contextOutDir))
+        // Real, like the watched directories, which come from the (real) project root
+        if (contextOutDir !== undefined) {
+          excluded.push(realpathOrSelf(path.resolve(cwd, contextOutDir)))
+        }
         // `watch: false` is rolldown's way to disable watching, and nothing to add to then
         if (inputOptions.watch !== false) {
           const previous = inputOptions.watch?.exclude
@@ -902,8 +917,9 @@ function readGlobs(value: unknown): string[] {
  * syntax: the directory it is resolved against is matched literally, brackets and all. The
  * syntax covered is the fast-glob subset Panda configs use — `**`, `*`, `?`, `{a,b}`
  * alternation and plain `[…]` classes; a glob using anything else (extglob groups, negated
- * classes, brace ranges, a globstar at a brace boundary) returns `undefined`, so the caller can
- * leave the native filter unscoped instead of guessing.
+ * classes, brace ranges, a globstar at a brace boundary, `.`/`..` segments past the leading
+ * ones) returns `undefined`, so the caller can leave the native filter unscoped instead of
+ * guessing.
  */
 function globToRegExp(glob: string, cwd: string): RegExp | undefined {
   if (RE_UNSUPPORTED_GLOB.test(glob)) return undefined
@@ -929,6 +945,9 @@ function globToRegExp(glob: string, cwd: string): RegExp | undefined {
       }
     }
   }
+  // A `.` or `..` segment past the leading ones (`src/../lib/**/*.ts`) names a directory the
+  // module ids never spell out, so a RegExp would reject files Panda's matcher covers
+  if (RE_DOT_SEGMENT.test(pattern)) return undefined
 
   // The base ends with exactly one `/`, also when it is a root (`/`, `C:/`) — which already
   // ends with one, so that slash is dropped first
@@ -1035,6 +1054,19 @@ function directoryPattern(dir: string): RegExp {
     .map(escapeRegExp)
   const prefix = path.isAbsolute(dir) && !/^[A-Za-z]:/.test(segments[0] ?? '') ? '[\\\\/]' : ''
   return new RegExp(`^${prefix}${segments.join('[\\\\/]')}(?:[\\\\/]|$)`)
+}
+
+/**
+ * The real path of a file or directory, resolving symlinks in the part of the path that exists
+ * (an output directory may not exist yet), or the path itself when nothing does.
+ */
+function realpathOrSelf(file: string): string {
+  try {
+    return fs.realpathSync(file)
+  } catch {
+    const parent = path.dirname(file)
+    return parent === file ? file : path.join(realpathOrSelf(parent), path.basename(file))
+  }
 }
 
 /** The parent of a POSIX-form directory, stopping at the filesystem root (`/`, `C:`). */
