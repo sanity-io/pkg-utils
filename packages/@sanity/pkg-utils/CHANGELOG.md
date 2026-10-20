@@ -1,5 +1,13 @@
 # @sanity/pkg-utils
 
+## 13.0.16
+
+### Patch Changes
+
+- [#3658](https://github.com/sanity-io/pkg-utils/pull/3658) [`b4849ab`](https://github.com/sanity-io/pkg-utils/commit/b4849abd756bf4b55959630e182fd6f63c6a6d3b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.4
+- Updated dependencies [[`b4849ab`](https://github.com/sanity-io/pkg-utils/commit/b4849abd756bf4b55959630e182fd6f63c6a6d3b)]:
+  - @sanity/tsdown-config@0.31.2
+
 ## 13.0.15
 
 ### Patch Changes
