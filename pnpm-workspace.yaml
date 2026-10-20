@@ -12,10 +12,10 @@ ignoreWorkspaceCycles: true
 autoDedupe: true
 
 catalog:
-  '@pandacss/compiler': ^2.2.0
-  '@pandacss/dev': ^2.2.0
-  '@pandacss/transformer': ^2.2.0
-  '@pandacss/vite': ^2.2.0
+  '@pandacss/compiler': ^2.3.0
+  '@pandacss/dev': ^2.3.0
+  '@pandacss/transformer': ^2.3.0
+  '@pandacss/vite': ^2.3.0
   '@sanity/client': ^8.10.0
   '@sanity/icons': ^5.2.3
   '@sanity/logos': ^2.2.6
@@ -68,6 +68,7 @@ minimumReleaseAgeExclude:
   - oxc-transform-react
   - '@oxlint-tsgolint/*'
   - '@oxlint/*'
+  - '@pandacss/*'
   - oxlint@1.88.0
   - rolldown
   - 'cac@7.1.0'
