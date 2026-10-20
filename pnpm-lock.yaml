@@ -201,8 +201,8 @@ catalogs:
       specifier: ^0.154.0
       version: 0.154.0
     playwright:
-      specifier: ^1.64.0
-      version: 1.64.0
+      specifier: ^1.64.1
+      version: 1.64.1
     postcss:
       specifier: ^8.5.30
       version: 8.5.30
@@ -320,8 +320,8 @@ importers:
         specifier: ^1.33.0
         version: 1.33.0
       playwright:
-        specifier: ^1.64.0
-        version: 1.64.0
+        specifier: ^1.64.1
+        version: 1.64.1
       rolldown:
         specifier: ~1.2.14
         version: 1.2.14
@@ -589,7 +589,7 @@ importers:
     optionalDependencies:
       remix:
         specifier: 3.0.0
-        version: 3.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0)
+        version: 3.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1)
 
   css-playground/rspack:
     devDependencies:
@@ -714,8 +714,8 @@ importers:
   css-playground/verify:
     devDependencies:
       playwright:
-        specifier: ^1.64.0
-        version: 1.64.0
+        specifier: ^1.64.1
+        version: 1.64.1
 
   css-playground/vite:
     devDependencies:
@@ -878,10 +878,10 @@ importers:
         version: 24.19.2
       '@vitest/browser-playwright':
         specifier: 'catalog:'
-        version: 5.0.4(playwright@1.64.0)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)
+        version: 5.0.4(playwright@1.64.1)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)
       playwright:
         specifier: 'catalog:'
-        version: 1.64.0
+        version: 1.64.1
       publint:
         specifier: 'catalog:'
         version: 0.3.25
@@ -12386,13 +12386,13 @@ packages:
   player.style@0.3.5:
     resolution: {integrity: sha512-hknPiLjNtJP5zM0vCVXsl3Pef+uQnecYg8X/1vjd/Y3TdAgs/zxhck02SFTxRSckaObKemP5tUT8wTH7ByUmnw==}
 
-  playwright-core@1.64.0:
-    resolution: {integrity: sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==}
+  playwright-core@1.64.1:
+    resolution: {integrity: sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ==}
     engines: {node: '>=20'}
     hasBin: true
 
-  playwright@1.64.0:
-    resolution: {integrity: sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==}
+  playwright@1.64.1:
+    resolution: {integrity: sha512-HCrVhHr5QQuwYoswEUGTb7gGp522yflbv/ST8nF4sFWGuLjQCt17Q/EubpGGSNKYn1tsTCPZxqHhHCfVURu7UA==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -20514,7 +20514,7 @@ snapshots:
       '@remix-run/session': 1.0.0
     optional: true
 
-  '@remix-run/cli@1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0)':
+  '@remix-run/cli@1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1)':
     dependencies:
       '@remix-run/assets': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
       '@remix-run/data-table': 1.0.0
@@ -20522,7 +20522,7 @@ snapshots:
       '@remix-run/data-table-postgres': 1.0.0
       '@remix-run/data-table-sqlite': 1.0.0
       '@remix-run/terminal': 1.0.0
-      '@remix-run/test': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0)
+      '@remix-run/test': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1)
       jsonc-parser: 3.3.1
       semver: 7.8.5
     transitivePeerDependencies:
@@ -20769,7 +20769,7 @@ snapshots:
   '@remix-run/terminal@1.0.0':
     optional: true
 
-  '@remix-run/test@1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0)':
+  '@remix-run/test@1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1)':
     dependencies:
       '@remix-run/node-tsx': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
       '@remix-run/terminal': 1.0.0
@@ -20784,7 +20784,7 @@ snapshots:
       source-map-js: 1.2.2
       v8-to-istanbul: 9.3.0
     optionalDependencies:
-      playwright: 1.64.0
+      playwright: 1.64.1
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -23847,11 +23847,11 @@ snapshots:
       vite: 8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
       vue: 3.5.43(typescript@7.0.2)
 
-  '@vitest/browser-playwright@5.0.4(playwright@1.64.0)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)':
+  '@vitest/browser-playwright@5.0.4(playwright@1.64.1)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)':
     dependencies:
       '@vitest/browser': 5.0.4(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)
       '@vitest/mocker': 5.0.4(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-      playwright: 1.64.0
+      playwright: 1.64.1
       tinyrainbow: 3.2.0
       vitest: 5.0.4(@types/node@24.19.2)(@vitest/browser-playwright@5.0.4)(@vitest/ui@5.0.4)(jsdom@29.1.1(@noble/hashes@2.4.0))(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
     transitivePeerDependencies:
@@ -28681,11 +28681,11 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  playwright-core@1.64.0: {}
+  playwright-core@1.64.1: {}
 
-  playwright@1.64.0:
+  playwright@1.64.1:
     dependencies:
-      playwright-core: 1.64.0
+      playwright-core: 1.64.1
 
   pluralize-esm@9.0.5: {}
 
@@ -29275,14 +29275,14 @@ snapshots:
 
   relateurl@0.2.7: {}
 
-  remix@3.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0):
+  remix@3.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1):
     dependencies:
       '@remix-run/assert': 1.0.0
       '@remix-run/assets': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
       '@remix-run/async-context-middleware': 1.0.0
       '@remix-run/auth': 1.0.0
       '@remix-run/auth-middleware': 1.0.0
-      '@remix-run/cli': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0)
+      '@remix-run/cli': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1)
       '@remix-run/component': 1.0.0
       '@remix-run/component-hmr': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)
       '@remix-run/compression-middleware': 1.0.0
@@ -29324,9 +29324,9 @@ snapshots:
       '@remix-run/static-middleware': 1.0.0
       '@remix-run/tar-parser': 1.0.0
       '@remix-run/terminal': 1.0.0
-      '@remix-run/test': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.0)
+      '@remix-run/test': 1.0.0(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)(playwright@1.64.1)
     optionalDependencies:
-      playwright: 1.64.0
+      playwright: 1.64.1
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -31420,7 +31420,7 @@ snapshots:
       why-is-node-running: 3.2.1
     optionalDependencies:
       '@types/node': 24.19.2
-      '@vitest/browser-playwright': 5.0.4(playwright@1.64.0)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)
+      '@vitest/browser-playwright': 5.0.4(playwright@1.64.1)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.4)
       '@vitest/ui': 5.0.4(vitest@5.0.4)
       jsdom: 29.1.1(@noble/hashes@2.4.0)
     transitivePeerDependencies:
