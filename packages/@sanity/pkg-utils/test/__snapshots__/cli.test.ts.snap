@@ -1064,7 +1064,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-E-eRD4XU.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-ju7Nlewu.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -2114,7 +2114,7 @@ function createParser(config) {
 		if ((skippingLine || skipNextLineFeed) && (chunk = resumeAfterSkip(chunk), !chunk)) return;
 		if (!pendingFragments.length) {
 			let trailing = processLines(chunk);
-			trailing !== "" && storeTrailing(trailing), checkBufferSize();
+			trailing !== "" && storeTrailing(trailing), checkForBufferOverflow();
 			return;
 		}
 		if (chunk.indexOf("\\n") === -1 && chunk.indexOf("\\r") === -1) {
@@ -2122,12 +2122,12 @@ function createParser(config) {
 				pendingFragments.length = 0, pendingFragmentsLength = 0, skippingLine = !0;
 				return;
 			}
-			pendingFragments.push(chunk), pendingFragmentsLength += chunk.length, checkBufferSize();
+			pendingFragments.push(chunk), pendingFragmentsLength += chunk.length, checkForBufferOverflow();
 			return;
 		}
 		pendingFragments.push(chunk);
 		let input = pendingFragments.join("");
-		pendingFragments.length = 0, pendingFragmentsLength = 0, storeTrailing(processLines(input)), checkBufferSize();
+		pendingFragments.length = 0, pendingFragmentsLength = 0, storeTrailing(processLines(input)), checkForBufferOverflow();
 	}
 	function resumeAfterSkip(chunk) {
 		if (chunk.length === 0) return chunk;
@@ -2136,14 +2136,19 @@ function createParser(config) {
 		return lineEnd === -1 ? "" : lineEnd === chunk.length - 1 && chunk.charCodeAt(lineEnd) === 13 ? (skippingLine = !1, skipNextLineFeed = !0, "") : (skippingLine = !1, chunk.slice(lineEnd + (chunk.charCodeAt(lineEnd) === 13 && chunk.charCodeAt(lineEnd + 1) === 10 ? 2 : 1)));
 	}
 	function storeTrailing(trailing) {
-		trailing && (trailing.charCodeAt(trailing.length - 1) === 13 ? (parseLine(trailing, 0, trailing.length - 1), skipNextLineFeed = !0) : shouldBufferTrailing(trailing) ? (pendingFragments.push(trailing), pendingFragmentsLength = trailing.length) : skippingLine = !0);
+		if (trailing) {
+			if (trailing.charCodeAt(trailing.length - 1) === 13) {
+				if (parseLine(trailing, 0, trailing.length - 1), checkForBufferOverflow()) return;
+				skipNextLineFeed = !0;
+			} else shouldBufferTrailing(trailing) ? (pendingFragments.push(trailing), pendingFragmentsLength = trailing.length) : skippingLine = !0;
+		}
 	}
 	function shouldBufferTrailing(trailing) {
 		let firstCharCode = trailing.charCodeAt(0);
 		return firstCharCode === 58 && !!onComment || firstCharCode === 100 && isPotentialField(trailing, "data") || firstCharCode === 101 && isPotentialField(trailing, "event") || firstCharCode === 105 && isPotentialField(trailing, "id") || firstCharCode === 114 && isPotentialField(trailing, "retry");
 	}
-	function checkBufferSize() {
-		maxBufferSize !== void 0 && (pendingFragmentsLength + data.length <= maxBufferSize || (terminated = !0, pendingFragments.length = 0, pendingFragmentsLength = 0, id = void 0, data = "", dataLines = 0, eventType = void 0, skippingLine = !1, skipNextLineFeed = !1, onError?.(new ParseError(\`Buffered data exceeded max buffer size of \${maxBufferSize} characters\`, { type: "max-buffer-size-exceeded" }))));
+	function checkForBufferOverflow() {
+		return terminated ? !0 : maxBufferSize === void 0 || pendingFragmentsLength + data.length <= maxBufferSize ? !1 : (terminated = !0, pendingFragments.length = 0, pendingFragmentsLength = 0, id = void 0, data = "", dataLines = 0, eventType = void 0, skippingLine = !1, skipNextLineFeed = !1, onError?.(new ParseError(\`Buffered data exceeded max buffer size of \${maxBufferSize} characters\`, { type: "max-buffer-size-exceeded" })), !0);
 	}
 	/**
 	* Splits \`chunk\` into SSE lines and dispatches each to the appropriate handler.
@@ -2180,6 +2185,7 @@ function createParser(config) {
 					}
 					data = dataLines === 0 ? value : \`\${data}\\n\${value}\`, dataLines++;
 				} else isEventPrefix(chunk, searchIndex, firstCharCode) ? eventType = chunk.slice(chunk.charCodeAt(searchIndex + 6) === 32 ? searchIndex + 7 : searchIndex + 6, lfIndex) || void 0 : parseLine(chunk, searchIndex, lfIndex);
+				if (checkForBufferOverflow()) return "";
 				searchIndex = lfIndex + 1, lfIndex = chunk.indexOf("\\n", searchIndex);
 			}
 			return chunk.slice(searchIndex);
@@ -2187,7 +2193,8 @@ function createParser(config) {
 		for (; searchIndex < chunk.length;) {
 			let crIndex = chunk.indexOf("\\r", searchIndex), lfIndex = chunk.indexOf("\\n", searchIndex), lineEnd = -1;
 			if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = crIndex < lfIndex ? crIndex : lfIndex : crIndex === -1 ? lfIndex !== -1 && (lineEnd = lfIndex) : lineEnd = crIndex === chunk.length - 1 ? -1 : crIndex, lineEnd === -1) break;
-			parseLine(chunk, searchIndex, lineEnd), searchIndex = lineEnd + 1, chunk.charCodeAt(searchIndex - 1) === 13 && chunk.charCodeAt(searchIndex) === 10 && searchIndex++;
+			if (parseLine(chunk, searchIndex, lineEnd), checkForBufferOverflow()) return "";
+			searchIndex = lineEnd + 1, chunk.charCodeAt(searchIndex - 1) === 13 && chunk.charCodeAt(searchIndex) === 10 && searchIndex++;
 		}
 		return chunk.slice(searchIndex);
 	}
@@ -2488,7 +2495,8 @@ var EventSourceImpl = class extends EventTarget {
 			this.#failConnection(\`Non-200 status code (\${status})\`, status);
 			return;
 		}
-		if (!(headers.get("content-type") || "").startsWith("text/event-stream")) {
+		let contentType = headers.get("content-type") || "";
+		if (!/^[\\t\\n\\r ]*text\\/event-stream[\\t\\n\\r ]*(?:;|$)/i.test(contentType)) {
 			this.#failConnection("Invalid content type, expected \\"text/event-stream\\"", status);
 			return;
 		}
@@ -2530,7 +2538,7 @@ var EventSourceImpl = class extends EventTarget {
 			redirect: "follow",
 			headers: {
 				Accept: "text/event-stream",
-				...this.#lastEventId ? { "Last-Event-ID": this.#lastEventId } : void 0
+				...this.#lastEventId ? { "Last-Event-ID": this.#fetch === globalThis.fetch && globalThis.navigator?.userAgent === "Cloudflare-Workers" ? this.#lastEventId : utf8ToByteString(this.#lastEventId) } : void 0
 			},
 			cache: "no-store",
 			signal: this.#controller?.signal
@@ -2680,6 +2688,24 @@ function defineEventProperty(event, property, value) {
 		enumerable: !0,
 		configurable: !0
 	});
+}
+/**
+* Encodes a string as UTF-8 and returns those bytes as a "byte string": one character per byte,
+* each in the range U+0000 to U+00FF.
+*
+* Header values are byte strings. \`fetch()\` throws a \`TypeError\` for any character above U+00FF,
+* and sends a character in U+0080 to U+00FF as a single Latin-1 byte, rather than as its UTF-8
+* encoding. Passing the UTF-8 bytes through as characters makes \`fetch()\` put exactly those
+* bytes on the wire.
+*
+* @param value - The string to encode
+* @returns The UTF-8 bytes of \`value\`, one per character
+* @internal
+*/
+function utf8ToByteString(value) {
+	let byteString = "";
+	for (let byte of new TextEncoder().encode(value)) byteString += String.fromCharCode(byte);
+	return byteString;
 }
 var import_cjs = require_request_DXOkY5MQ.l(), import_operators = require_operators();
 /**
@@ -4385,7 +4411,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-DJBBfgjm.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-nz4_BEAD.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
