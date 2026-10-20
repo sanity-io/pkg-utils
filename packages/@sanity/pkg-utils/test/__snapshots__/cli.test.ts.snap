@@ -1064,7 +1064,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-_eAq7Kv_.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-E-eRD4XU.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -1142,7 +1142,7 @@ function getPublishedId(id) {
 	if (isPublishedId(id)) return id;
 	throw Error(\`Unable to resolve a published id from "\${id}"\`);
 }
-var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) => {
+var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.partition = void 0;
 	var not_1 = require_request_DXOkY5MQ.an(), filter_1 = require_request_DXOkY5MQ.in();
 	function partition(predicate, thisArg) {
@@ -1151,7 +1151,7 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) =
 		};
 	}
 	exports.partition = partition;
-})), require_race = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports, module, this$1) => {
+})), require_race = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports, module, this$1) => {
 	var __read = this$1 && this$1.__read || function(o, n) {
 		var m = typeof Symbol == "function" && o[Symbol.iterator];
 		if (!m) return o;
@@ -1179,7 +1179,7 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) =
 		return raceWith_1.raceWith.apply(void 0, __spreadArray([], __read(argsOrArgArray_1.argsOrArgArray(args))));
 	}
 	exports.race = race;
-})), require_operators = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) => {
+})), require_operators = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.mergeAll = exports.merge = exports.max = exports.materialize = exports.mapTo = exports.map = exports.last = exports.isEmpty = exports.ignoreElements = exports.groupBy = exports.first = exports.findIndex = exports.find = exports.finalize = exports.filter = exports.expand = exports.exhaustMap = exports.exhaustAll = exports.exhaust = exports.every = exports.endWith = exports.elementAt = exports.distinctUntilKeyChanged = exports.distinctUntilChanged = exports.distinct = exports.dematerialize = exports.delayWhen = exports.delay = exports.defaultIfEmpty = exports.debounceTime = exports.debounce = exports.count = exports.connect = exports.concatWith = exports.concatMapTo = exports.concatMap = exports.concatAll = exports.concat = exports.combineLatestWith = exports.combineLatest = exports.combineLatestAll = exports.combineAll = exports.catchError = exports.bufferWhen = exports.bufferToggle = exports.bufferTime = exports.bufferCount = exports.buffer = exports.auditTime = exports.audit = void 0, exports.timeInterval = exports.throwIfEmpty = exports.throttleTime = exports.throttle = exports.tap = exports.takeWhile = exports.takeUntil = exports.takeLast = exports.take = exports.switchScan = exports.switchMapTo = exports.switchMap = exports.switchAll = exports.subscribeOn = exports.startWith = exports.skipWhile = exports.skipUntil = exports.skipLast = exports.skip = exports.single = exports.shareReplay = exports.share = exports.sequenceEqual = exports.scan = exports.sampleTime = exports.sample = exports.refCount = exports.retryWhen = exports.retry = exports.repeatWhen = exports.repeat = exports.reduce = exports.raceWith = exports.race = exports.publishReplay = exports.publishLast = exports.publishBehavior = exports.publish = exports.pluck = exports.partition = exports.pairwise = exports.onErrorResumeNext = exports.observeOn = exports.multicast = exports.min = exports.mergeWith = exports.mergeScan = exports.mergeMapTo = exports.mergeMap = exports.flatMap = void 0, exports.zipWith = exports.zipAll = exports.zip = exports.withLatestFrom = exports.windowWhen = exports.windowToggle = exports.windowTime = exports.windowCount = exports.window = exports.toArray = exports.timestamp = exports.timeoutWith = exports.timeout = void 0;
 	var audit_1 = require_request_DXOkY5MQ.rn();
 	Object.defineProperty(exports, "audit", {
@@ -1972,18 +1972,21 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.An(((exports) =
 			return zipWith_1.zipWith;
 		}
 	});
-}));
-require_request_DXOkY5MQ.kn();
-let _Symbol$for, _Symbol$for2;
-_Symbol$for = Symbol.for("nodejs.util.inspect.custom"), _Symbol$for2 = Symbol.for("Deno.customInspect");
-/**
-* An extended version of the \`Event\` emitted by the \`EventSource\` object when an error occurs.
-* While the spec does not include any additional properties, we intentionally go beyond the spec
-* and provide some (minimal) additional information to aid in debugging.
-*
-* @public
-*/
-var ErrorEvent = class extends Event {
+})), ErrorEvent = class extends Event {
+	/**
+	* HTTP status code, if this was triggered by an HTTP error
+	* Note: this is not part of the spec, but is included for better error handling.
+	*
+	* @public
+	*/
+	code;
+	/**
+	* Optional message attached to the error.
+	* Note: this is not part of the spec, but is included for better error handling.
+	*
+	* @public
+	*/
+	message;
 	/**
 	* Constructs a new \`ErrorEvent\` instance. This is typically not called directly,
 	* but rather emitted by the \`EventSource\` object when an error occurs.
@@ -1992,27 +1995,7 @@ var ErrorEvent = class extends Event {
 	* @param errorEventInitDict - Optional properties to include in the error event
 	*/
 	constructor(type, errorEventInitDict) {
-		super(type), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* HTTP status code, if this was triggered by an HTTP error
-			* Note: this is not part of the spec, but is included for better error handling.
-			*
-			* @public
-			*/
-			"code",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Optional message attached to the error.
-			* Note: this is not part of the spec, but is included for better error handling.
-			*
-			* @public
-			*/
-			"message",
-			void 0
-		), this.code = errorEventInitDict?.code ?? void 0, this.message = errorEventInitDict?.message ?? void 0;
+		super(type), this.code = errorEventInitDict?.code ?? void 0, this.message = errorEventInitDict?.message ?? void 0;
 	}
 	/**
 	* Node.js "hides" the \`message\` and \`code\` properties of the \`ErrorEvent\` instance,
@@ -2026,7 +2009,7 @@ var ErrorEvent = class extends Event {
 	* @param inspect - The inspect function to use (prevents having to import it from \`util\`)
 	* @returns A string representation of the error
 	*/
-	[_Symbol$for](_depth, options, inspect) {
+	[Symbol.for("nodejs.util.inspect.custom")](_depth, options, inspect) {
 		return inspect(inspectableError(this), options);
 	}
 	/**
@@ -2040,7 +2023,7 @@ var ErrorEvent = class extends Event {
 	* @param options - The options passed to \`Deno.inspect\`
 	* @returns A string representation of the error
 	*/
-	[_Symbol$for2](inspect, options) {
+	[Symbol.for("Deno.customInspect")](inspect, options) {
 		return inspect(inspectableError(this), options);
 	}
 };
@@ -2320,34 +2303,51 @@ function isPotentialField(line, field) {
 	}
 	return line.length <= field.length || line.charCodeAt(field.length) === 58;
 }
-require_request_DXOkY5MQ.yn(), require_request_DXOkY5MQ.kn(), require_request_DXOkY5MQ.Dn(), require_request_DXOkY5MQ.xn(), require_request_DXOkY5MQ.Cn(), require_request_DXOkY5MQ.Tn();
-var _readyState = /* @__PURE__ */ new WeakMap(), _url = /* @__PURE__ */ new WeakMap(), _redirectUrl = /* @__PURE__ */ new WeakMap(), _withCredentials = /* @__PURE__ */ new WeakMap(), _fetch$3 = /* @__PURE__ */ new WeakMap(), _reconnectInterval = /* @__PURE__ */ new WeakMap(), _reconnectTimer = /* @__PURE__ */ new WeakMap(), _lastEventId = /* @__PURE__ */ new WeakMap(), _controller = /* @__PURE__ */ new WeakMap(), _parser = /* @__PURE__ */ new WeakMap(), _onError = /* @__PURE__ */ new WeakMap(), _onMessage = /* @__PURE__ */ new WeakMap(), _onOpen = /* @__PURE__ */ new WeakMap(), _EventSourceImpl_brand = /* @__PURE__ */ new WeakSet(), _onFetchResponse = /* @__PURE__ */ new WeakMap(), _onFetchError = /* @__PURE__ */ new WeakMap(), _onIdChange = /* @__PURE__ */ new WeakMap(), _onEvent = /* @__PURE__ */ new WeakMap(), _onRetryChange = /* @__PURE__ */ new WeakMap(), _onParseError = /* @__PURE__ */ new WeakMap(), _reconnect = /* @__PURE__ */ new WeakMap(), EventSourceImpl = class extends EventTarget {
+/**
+* Implementation of the \`EventSource\` interface.
+*
+* Intentionally not exported: TypeScript emits a \`#private\` brand into declaration files for any
+* class holding hard-private (\`#\`) fields, which makes the emitted type nominal. Exporting the
+* interface and const instead keeps the public type structural, while the implementation keeps
+* its actual, runtime-enforced private state.
+*
+* Public members are documented on the \`EventSource\` interface, which is what consumers see.
+*
+* @internal
+*/
+var EventSourceImpl = class extends EventTarget {
+	static CONNECTING = 0;
+	static OPEN = 1;
+	static CLOSED = 2;
+	CONNECTING = 0;
+	OPEN = 1;
+	CLOSED = 2;
 	get readyState() {
-		return require_request_DXOkY5MQ.bn(_readyState, this);
+		return this.#readyState;
 	}
 	get url() {
-		return require_request_DXOkY5MQ.bn(_url, this).href;
+		return this.#url.href;
 	}
 	get withCredentials() {
-		return require_request_DXOkY5MQ.bn(_withCredentials, this);
+		return this.#withCredentials;
 	}
 	get onerror() {
-		return require_request_DXOkY5MQ.bn(_onError, this);
+		return this.#onError;
 	}
 	set onerror(value) {
-		require_request_DXOkY5MQ.bn(_onError, this) && this.removeEventListener("error", require_request_DXOkY5MQ.bn(_onError, this)), require_request_DXOkY5MQ.Sn(_onError, this, value), value && this.addEventListener("error", value);
+		this.#onError && this.removeEventListener("error", this.#onError), this.#onError = value, value && this.addEventListener("error", value);
 	}
 	get onmessage() {
-		return require_request_DXOkY5MQ.bn(_onMessage, this);
+		return this.#onMessage;
 	}
 	set onmessage(value) {
-		require_request_DXOkY5MQ.bn(_onMessage, this) && this.removeEventListener("message", require_request_DXOkY5MQ.bn(_onMessage, this)), require_request_DXOkY5MQ.Sn(_onMessage, this, value), value && this.addEventListener("message", value);
+		this.#onMessage && this.removeEventListener("message", this.#onMessage), this.#onMessage = value, value && this.addEventListener("message", value);
 	}
 	get onopen() {
-		return require_request_DXOkY5MQ.bn(_onOpen, this);
+		return this.#onOpen;
 	}
 	set onopen(value) {
-		require_request_DXOkY5MQ.bn(_onOpen, this) && this.removeEventListener("open", require_request_DXOkY5MQ.bn(_onOpen, this)), require_request_DXOkY5MQ.Sn(_onOpen, this, value), value && this.addEventListener("open", value);
+		this.#onOpen && this.removeEventListener("open", this.#onOpen), this.#onOpen = value, value && this.addEventListener("open", value);
 	}
 	addEventListener(type, listener, options) {
 		let listen = listener;
@@ -2358,136 +2358,273 @@ var _readyState = /* @__PURE__ */ new WeakMap(), _url = /* @__PURE__ */ new Weak
 		super.removeEventListener(type, listen, options);
 	}
 	constructor(url, eventSourceInitDict) {
-		super(), require_request_DXOkY5MQ.vn(this, _EventSourceImpl_brand), require_request_DXOkY5MQ.On(this, "CONNECTING", 0), require_request_DXOkY5MQ.On(this, "OPEN", 1), require_request_DXOkY5MQ.On(this, "CLOSED", 2), require_request_DXOkY5MQ.En(this, _readyState, void 0), require_request_DXOkY5MQ.En(this, _url, void 0), require_request_DXOkY5MQ.En(this, _redirectUrl, void 0), require_request_DXOkY5MQ.En(this, _withCredentials, void 0), require_request_DXOkY5MQ.En(this, _fetch$3, void 0), require_request_DXOkY5MQ.En(this, _reconnectInterval, void 0), require_request_DXOkY5MQ.En(this, _reconnectTimer, void 0), require_request_DXOkY5MQ.En(this, _lastEventId, null), require_request_DXOkY5MQ.En(this, _controller, void 0), require_request_DXOkY5MQ.En(this, _parser, void 0), require_request_DXOkY5MQ.En(this, _onError, null), require_request_DXOkY5MQ.En(this, _onMessage, null), require_request_DXOkY5MQ.En(this, _onOpen, null), require_request_DXOkY5MQ.En(this, _onFetchResponse, async (response) => {
-			require_request_DXOkY5MQ.bn(_parser, this).reset();
-			let { body, redirected, status, headers } = response;
-			if (status === 204) {
-				require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _failConnection).call(this, "Server sent HTTP 204, not reconnecting", 204), this.close();
-				return;
-			}
-			if (redirected ? require_request_DXOkY5MQ.Sn(_redirectUrl, this, new URL(response.url)) : require_request_DXOkY5MQ.Sn(_redirectUrl, this, void 0), status !== 200) {
-				require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _failConnection).call(this, \`Non-200 status code (\${status})\`, status);
-				return;
-			}
-			if (!(headers.get("content-type") || "").startsWith("text/event-stream")) {
-				require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _failConnection).call(this, "Invalid content type, expected \\"text/event-stream\\"", status);
-				return;
-			}
-			if (require_request_DXOkY5MQ.bn(_readyState, this) === this.CLOSED) return;
-			require_request_DXOkY5MQ.Sn(_readyState, this, this.OPEN);
-			let openEvent = new Event("open");
-			if (this.dispatchEvent(openEvent), typeof body != "object" || !body || !("getReader" in body)) {
-				require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _failConnection).call(this, "Invalid response body, expected a web ReadableStream", status), this.close();
-				return;
-			}
-			let decoder = new TextDecoder(), reader = body.getReader(), open = !0;
-			do {
-				let { done, value } = await reader.read();
-				if (require_request_DXOkY5MQ.bn(_readyState, this) === this.CLOSED) {
-					open = !1;
-					break;
-				}
-				value && require_request_DXOkY5MQ.bn(_parser, this).feed(decoder.decode(value, { stream: !done })), done && (open = !1, require_request_DXOkY5MQ.bn(_parser, this).reset(), require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _scheduleReconnect).call(this));
-			} while (open);
-		}), require_request_DXOkY5MQ.En(this, _onFetchError, (err) => {
-			require_request_DXOkY5MQ.Sn(_controller, this, void 0), err.name !== "AbortError" && err.type !== "aborted" && require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _scheduleReconnect).call(this, flattenError(err));
-		}), require_request_DXOkY5MQ.En(this, _onIdChange, (value) => {
-			require_request_DXOkY5MQ.Sn(_lastEventId, this, value);
-		}), require_request_DXOkY5MQ.En(this, _onEvent, (event) => {
-			if (require_request_DXOkY5MQ.bn(_readyState, this) === this.CLOSED) return;
-			let origin = require_request_DXOkY5MQ.bn(_redirectUrl, this) ? require_request_DXOkY5MQ.bn(_redirectUrl, this).origin : require_request_DXOkY5MQ.bn(_url, this).origin, lastEventId = require_request_DXOkY5MQ.bn(_lastEventId, this) ?? "", messageEvent = new MessageEvent(event.event || "message", {
-				data: event.data,
-				origin,
-				lastEventId
-			});
-			messageEvent.origin !== origin && defineEventProperty(messageEvent, "origin", origin), messageEvent.lastEventId !== lastEventId && defineEventProperty(messageEvent, "lastEventId", lastEventId), this.dispatchEvent(messageEvent);
-		}), require_request_DXOkY5MQ.En(this, _onRetryChange, (value) => {
-			require_request_DXOkY5MQ.Sn(_reconnectInterval, this, value);
-		}), require_request_DXOkY5MQ.En(this, _onParseError, (error) => {
-			error.type === "max-buffer-size-exceeded" && (this.close(), require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _failConnection).call(this, error.message));
-		}), require_request_DXOkY5MQ.En(this, _reconnect, () => {
-			require_request_DXOkY5MQ.Sn(_reconnectTimer, this, void 0), require_request_DXOkY5MQ.bn(_readyState, this) === this.CONNECTING && require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _connect).call(this);
-		});
+		super();
 		try {
-			if (url instanceof URL) require_request_DXOkY5MQ.Sn(_url, this, url);
-			else if (typeof url == "string") require_request_DXOkY5MQ.Sn(_url, this, new URL(url, getBaseURL()));
+			if (url instanceof URL) this.#url = url;
+			else if (typeof url == "string") this.#url = new URL(url, getBaseURL());
 			else throw Error("Invalid URL");
 		} catch {
 			throw syntaxError("An invalid or illegal string was specified");
 		}
-		require_request_DXOkY5MQ.Sn(_parser, this, createParser({
+		this.#parser = createParser({
 			maxBufferSize: eventSourceInitDict?.maxBufferSize ?? 104857600,
-			onEvent: require_request_DXOkY5MQ.bn(_onEvent, this),
-			onError: require_request_DXOkY5MQ.bn(_onParseError, this),
-			onId: require_request_DXOkY5MQ.bn(_onIdChange, this),
-			onRetry: require_request_DXOkY5MQ.bn(_onRetryChange, this)
-		})), require_request_DXOkY5MQ.Sn(_readyState, this, this.CONNECTING), require_request_DXOkY5MQ.Sn(_reconnectInterval, this, 3e3), require_request_DXOkY5MQ.Sn(_fetch$3, this, eventSourceInitDict?.fetch ?? globalThis.fetch), require_request_DXOkY5MQ.Sn(_withCredentials, this, eventSourceInitDict?.withCredentials ?? !1), require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _connect).call(this);
+			onEvent: this.#onEvent,
+			onError: this.#onParseError,
+			onId: this.#onIdChange,
+			onRetry: this.#onRetryChange
+		}), this.#readyState = this.CONNECTING, this.#reconnectInterval = 3e3, this.#fetch = eventSourceInitDict?.fetch ?? globalThis.fetch, this.#withCredentials = eventSourceInitDict?.withCredentials ?? !1, this.#connect();
 	}
 	close() {
-		require_request_DXOkY5MQ.bn(_reconnectTimer, this) && clearTimeout(require_request_DXOkY5MQ.bn(_reconnectTimer, this)), require_request_DXOkY5MQ.bn(_readyState, this) !== this.CLOSED && (require_request_DXOkY5MQ.bn(_controller, this) && require_request_DXOkY5MQ.bn(_controller, this).abort(), require_request_DXOkY5MQ.Sn(_readyState, this, this.CLOSED), require_request_DXOkY5MQ.Sn(_controller, this, void 0));
+		this.#reconnectTimer && clearTimeout(this.#reconnectTimer), this.#readyState !== this.CLOSED && (this.#controller && this.#controller.abort(), this.#readyState = this.CLOSED, this.#controller = void 0);
 	}
-};
-/**
-* Connect to the given URL and start receiving events
-*
-* @internal
-*/
-function _connect() {
-	require_request_DXOkY5MQ.Sn(_readyState, this, this.CONNECTING), require_request_DXOkY5MQ.Sn(_controller, this, new AbortController()), require_request_DXOkY5MQ.bn(_fetch$3, this)(require_request_DXOkY5MQ.bn(_url, this), require_request_DXOkY5MQ.wn(_EventSourceImpl_brand, this, _getRequestOptions).call(this)).then(require_request_DXOkY5MQ.bn(_onFetchResponse, this)).catch(require_request_DXOkY5MQ.bn(_onFetchError, this));
-}
-/**
-* Get request options for the \`fetch()\` request
-*
-* @returns The request options
-* @internal
-*/
-function _getRequestOptions() {
-	let init = {
-		mode: "cors",
-		redirect: "follow",
-		headers: {
-			Accept: "text/event-stream",
-			...require_request_DXOkY5MQ.bn(_lastEventId, this) ? { "Last-Event-ID": require_request_DXOkY5MQ.bn(_lastEventId, this) } : void 0
-		},
-		cache: "no-store",
-		signal: require_request_DXOkY5MQ.bn(_controller, this)?.signal
+	/**
+	* Current connection state
+	*
+	* @internal
+	*/
+	#readyState;
+	/**
+	* Original URL used to connect.
+	*
+	* Note that this will stay the same even after a redirect.
+	*
+	* @internal
+	*/
+	#url;
+	/**
+	* The destination URL after a redirect. Is reset on reconnection.
+	*
+	* @internal
+	*/
+	#redirectUrl;
+	/**
+	* Whether to include credentials in the request
+	*
+	* @internal
+	*/
+	#withCredentials;
+	/**
+	* The fetch implementation to use
+	*
+	* @internal
+	*/
+	#fetch;
+	/**
+	* The reconnection time in milliseconds
+	*
+	* @internal
+	*/
+	#reconnectInterval;
+	/**
+	* Reference to an ongoing reconnect attempt, if any
+	*
+	* @internal
+	*/
+	#reconnectTimer;
+	/**
+	* The last event ID seen by the EventSource, which will be sent as \`Last-Event-ID\` in the
+	* request headers on a reconnection attempt.
+	*
+	* @internal
+	*/
+	#lastEventId = null;
+	/**
+	* The AbortController instance used to abort the fetch request
+	*
+	* @internal
+	*/
+	#controller;
+	/**
+	* Instance of an EventSource parser (\`eventsource-parser\` npm module)
+	*
+	* @internal
+	*/
+	#parser;
+	/**
+	* Holds the current error handler, attached through \`onerror\` property directly.
+	* Note that \`addEventListener('error', …)\` will not be stored here.
+	*
+	* @internal
+	*/
+	#onError = null;
+	/**
+	* Holds the current message handler, attached through \`onmessage\` property directly.
+	* Note that \`addEventListener('message', …)\` will not be stored here.
+	*
+	* @internal
+	*/
+	#onMessage = null;
+	/**
+	* Holds the current open handler, attached through \`onopen\` property directly.
+	* Note that \`addEventListener('open', …)\` will not be stored here.
+	*
+	* @internal
+	*/
+	#onOpen = null;
+	/**
+	* Connect to the given URL and start receiving events
+	*
+	* @internal
+	*/
+	#connect() {
+		this.#readyState = this.CONNECTING, this.#controller = new AbortController();
+		let fetch = this.#fetch;
+		fetch(this.#url, this.#getRequestOptions()).then(this.#onFetchResponse).catch(this.#onFetchError);
+	}
+	/**
+	* Handles the fetch response
+	*
+	* @param response - The Fetch(ish) response
+	* @internal
+	*/
+	#onFetchResponse = async (response) => {
+		this.#parser.reset();
+		let { body, redirected, status, headers } = response;
+		if (status === 204) {
+			this.#failConnection("Server sent HTTP 204, not reconnecting", 204), this.close();
+			return;
+		}
+		if (this.#redirectUrl = redirected ? new URL(response.url) : void 0, status !== 200) {
+			this.#failConnection(\`Non-200 status code (\${status})\`, status);
+			return;
+		}
+		if (!(headers.get("content-type") || "").startsWith("text/event-stream")) {
+			this.#failConnection("Invalid content type, expected \\"text/event-stream\\"", status);
+			return;
+		}
+		if (this.#readyState === this.CLOSED) return;
+		this.#readyState = this.OPEN;
+		let openEvent = new Event("open");
+		if (this.dispatchEvent(openEvent), typeof body != "object" || !body || !("getReader" in body)) {
+			this.#failConnection("Invalid response body, expected a web ReadableStream", status), this.close();
+			return;
+		}
+		let decoder = new TextDecoder(), reader = body.getReader(), open = !0;
+		do {
+			let { done, value } = await reader.read();
+			if (this.#readyState === this.CLOSED) {
+				open = !1;
+				break;
+			}
+			value && this.#parser.feed(decoder.decode(value, { stream: !done })), done && (open = !1, this.#parser.reset(), this.#scheduleReconnect());
+		} while (open);
 	};
-	return "window" in globalThis && (init.credentials = this.withCredentials ? "include" : "same-origin"), init;
-}
-/**
-* Handles the process referred to in the EventSource specification as "failing a connection".
-*
-* @param error - The error causing the connection to fail
-* @param code - The HTTP status code, if available
-* @internal
-*/
-function _failConnection(message, code) {
-	this.close();
-	let errorEvent = new ErrorEvent("error", {
-		code,
-		message
-	});
-	this.dispatchEvent(errorEvent);
-}
-/**
-* Schedules a reconnection attempt against the EventSource endpoint.
-*
-* @param message - The error causing the connection to fail
-* @param code - The HTTP status code, if available
-* @internal
-*/
-function _scheduleReconnect(message, code) {
-	if (require_request_DXOkY5MQ.bn(_readyState, this) === this.CLOSED) return;
-	require_request_DXOkY5MQ.Sn(_readyState, this, this.CONNECTING);
-	let errorEvent = new ErrorEvent("error", {
-		code,
-		message
-	});
-	this.dispatchEvent(errorEvent);
-	let timer = setTimeout(require_request_DXOkY5MQ.bn(_reconnect, this), require_request_DXOkY5MQ.bn(_reconnectInterval, this));
-	typeof timer == "object" && timer && "unref" in timer && timer.unref(), require_request_DXOkY5MQ.Sn(_reconnectTimer, this, timer);
-}
-require_request_DXOkY5MQ.On(EventSourceImpl, "CONNECTING", 0), require_request_DXOkY5MQ.On(EventSourceImpl, "OPEN", 1), require_request_DXOkY5MQ.On(EventSourceImpl, "CLOSED", 2), Object.defineProperty(EventSourceImpl, "name", { value: "EventSource" }), Object.defineProperty(EventSourceImpl, Symbol.for("eventsource.supports-fetch-override"), {
+	/**
+	* Handles rejected requests for the EventSource endpoint
+	*
+	* @param err - The error from \`fetch()\`
+	* @internal
+	*/
+	#onFetchError = (err) => {
+		this.#controller = void 0, err.name !== "AbortError" && err.type !== "aborted" && this.#scheduleReconnect(flattenError(err));
+	};
+	/**
+	* Get request options for the \`fetch()\` request
+	*
+	* @returns The request options
+	* @internal
+	*/
+	#getRequestOptions() {
+		let init = {
+			mode: "cors",
+			redirect: "follow",
+			headers: {
+				Accept: "text/event-stream",
+				...this.#lastEventId ? { "Last-Event-ID": this.#lastEventId } : void 0
+			},
+			cache: "no-store",
+			signal: this.#controller?.signal
+		};
+		return "window" in globalThis && (init.credentials = this.withCredentials ? "include" : "same-origin"), init;
+	}
+	/**
+	* Called by EventSourceParser when a blank line ends a block containing a valid \`id\` field.
+	* This runs before \`#onEvent\` when the same block also contains data.
+	*
+	* @param value - The value of the \`id\` field
+	* @internal
+	*/
+	#onIdChange = (value) => {
+		this.#lastEventId = value;
+	};
+	/**
+	* Called by EventSourceParser instance when an event has successfully been parsed
+	* and is ready to be processed.
+	*
+	* @param event - The parsed event
+	* @internal
+	*/
+	#onEvent = (event) => {
+		if (this.#readyState === this.CLOSED) return;
+		let origin = this.#redirectUrl ? this.#redirectUrl.origin : this.#url.origin, lastEventId = this.#lastEventId ?? "", messageEvent = new MessageEvent(event.event || "message", {
+			data: event.data,
+			origin,
+			lastEventId
+		});
+		messageEvent.origin !== origin && defineEventProperty(messageEvent, "origin", origin), messageEvent.lastEventId !== lastEventId && defineEventProperty(messageEvent, "lastEventId", lastEventId), this.dispatchEvent(messageEvent);
+	};
+	/**
+	* Called by EventSourceParser instance when a new reconnection interval is received
+	* from the EventSource endpoint.
+	*
+	* @param value - The new reconnection interval in milliseconds
+	* @internal
+	*/
+	#onRetryChange = (value) => {
+		this.#reconnectInterval = value;
+	};
+	/**
+	* Called by EventSourceParser instance when a parse error occurs.
+	*
+	* @param error - The parser error
+	* @internal
+	*/
+	#onParseError = (error) => {
+		error.type === "max-buffer-size-exceeded" && (this.close(), this.#failConnection(error.message));
+	};
+	/**
+	* Handles the process referred to in the EventSource specification as "failing a connection".
+	*
+	* @param error - The error causing the connection to fail
+	* @param code - The HTTP status code, if available
+	* @internal
+	*/
+	#failConnection(message, code) {
+		this.close();
+		let errorEvent = new ErrorEvent("error", {
+			code,
+			message
+		});
+		this.dispatchEvent(errorEvent);
+	}
+	/**
+	* Schedules a reconnection attempt against the EventSource endpoint.
+	*
+	* @param message - The error causing the connection to fail
+	* @param code - The HTTP status code, if available
+	* @internal
+	*/
+	#scheduleReconnect(message, code) {
+		if (this.#readyState === this.CLOSED) return;
+		this.#readyState = this.CONNECTING;
+		let errorEvent = new ErrorEvent("error", {
+			code,
+			message
+		});
+		this.dispatchEvent(errorEvent);
+		let timer = setTimeout(this.#reconnect, this.#reconnectInterval);
+		typeof timer == "object" && timer && "unref" in timer && timer.unref(), this.#reconnectTimer = timer;
+	}
+	/**
+	* Reconnects to the EventSource endpoint after a disconnect/failure
+	*
+	* @internal
+	*/
+	#reconnect = () => {
+		this.#reconnectTimer = void 0, this.#readyState === this.CONNECTING && this.#connect();
+	};
+};
+Object.defineProperty(EventSourceImpl, "name", { value: "EventSource" }), Object.defineProperty(EventSourceImpl, Symbol.for("eventsource.supports-fetch-override"), {
 	value: !0,
 	writable: !1,
 	configurable: !1,
@@ -2765,8 +2902,7 @@ function createDebug(namespace, options) {
 	let color = (options && options.color) ?? selectColor(colors, namespace);
 	return createDebug$1(namespace, Object.assign(defaultOptions$1, { color }, options));
 }
-enable(env.DEBUG || ""), require_request_DXOkY5MQ.kn(), require_request_DXOkY5MQ.Dn(), require_request_DXOkY5MQ.Cn(), require_request_DXOkY5MQ.xn(), require_request_DXOkY5MQ.yn(), require_request_DXOkY5MQ.Tn();
-var _client, _client2, _client3, _client4, _client5, _httpRequest2, _client6, _httpRequest3, _client7, _httpRequest4, _client8, _httpRequest5, _client9, _httpRequest6, _client10, _httpRequest7, _client11, _httpRequest8, _Class_brand, _client12, _httpRequest9, _client13, _client14, _httpRequest10, _client15, _httpRequest11, _client16, _httpRequest12, _client17, _httpRequest13, _client18, _httpRequest14, _client19, _httpRequest15, _client20, _httpRequest16, _client21, _httpRequest17, _client22, _httpRequest18, _client23, _httpRequest19, _client24, _httpRequest20, _client25, _httpRequest21, _clientConfig, _httpRequest22, _clientConfig2, _httpRequest23;
+enable(env.DEBUG || "");
 function generateHelpUrl(slug) {
 	return "https://www.sanity.io/help/" + slug;
 }
@@ -2903,40 +3039,38 @@ const initConfig = (config, prevConfig) => {
 * @public
 */
 var ConnectionFailedError = class extends Error {
+	name = "ConnectionFailedError";
+	/**
+	* HTTP status code of the rejected connection attempt, if known.
+	* Only set when the EventSource implementation exposes it — the \`eventsource\`
+	* package used by the client does (as \`code\` on its error events), while
+	* native EventSource implementations (browser and Node.js) do not.
+	*/
+	status;
 	constructor(message, options = {}) {
-		var _super = (..._args) => (super(..._args), require_request_DXOkY5MQ.On(this, "name", "ConnectionFailedError"), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* HTTP status code of the rejected connection attempt, if known.
-			* Only set when the EventSource implementation exposes it — the \`eventsource\`
-			* package used by the client does (as \`code\` on its error events), while
-			* native EventSource implementations (browser and Node.js) do not.
-			*/
-			"status",
-			void 0
-		), this);
 		let { status, ...errorOptions } = options;
-		_super(message, errorOptions), this.status = status;
+		super(message, errorOptions), this.status = status;
 	}
 }, DisconnectError = class extends Error {
+	name = "DisconnectError";
+	reason;
 	constructor(message, reason, options = {}) {
-		var _super2 = (..._args2) => (super(..._args2), require_request_DXOkY5MQ.On(this, "name", "DisconnectError"), require_request_DXOkY5MQ.On(this, "reason", void 0), this);
-		_super2(message, options), this.reason = reason;
+		super(message, options), this.reason = reason;
 	}
 }, ChannelError = class extends Error {
+	name = "ChannelError";
+	data;
 	constructor(message, data) {
-		var _super3 = (..._args3) => (super(..._args3), require_request_DXOkY5MQ.On(this, "name", "ChannelError"), require_request_DXOkY5MQ.On(this, "data", void 0), this);
-		_super3(message), this.data = data;
+		super(message), this.data = data;
 	}
 }, MessageError = class extends Error {
+	name = "MessageError";
+	data;
 	constructor(message, data, options = {}) {
-		var _super4 = (..._args4) => (super(..._args4), require_request_DXOkY5MQ.On(this, "name", "MessageError"), require_request_DXOkY5MQ.On(this, "data", void 0), this);
-		_super4(message, options), this.data = data;
+		super(message, options), this.data = data;
 	}
 }, MessageParseError = class extends Error {
-	constructor(..._args5) {
-		super(..._args5), require_request_DXOkY5MQ.On(this, "name", "MessageParseError");
-	}
+	name = "MessageParseError";
 };
 const REQUIRED_EVENTS = ["channelError", "disconnect"];
 /**
@@ -3055,8 +3189,10 @@ function getSelection(sel) {
 }
 /** @internal */
 var BasePatch = class {
+	selection;
+	operations;
 	constructor(selection, operations = {}) {
-		require_request_DXOkY5MQ.On(this, "selection", void 0), require_request_DXOkY5MQ.On(this, "operations", void 0), this.selection = selection, this.operations = operations;
+		this.selection = selection, this.operations = operations;
 	}
 	/**
 	* Sets the given attributes to the document. Does NOT merge objects.
@@ -3189,50 +3325,52 @@ var BasePatch = class {
 	_set(op, props) {
 		return this._assign(op, props, !1);
 	}
-}, ObservablePatch = (_client = /* @__PURE__ */ new WeakMap(), class ObservablePatch extends BasePatch {
+}, ObservablePatch = class ObservablePatch extends BasePatch {
+	#client;
 	constructor(selection, operations, client) {
-		var _super5 = (..._args6) => (super(..._args6), require_request_DXOkY5MQ.En(this, _client, void 0), this);
-		_super5(selection, operations), require_request_DXOkY5MQ.Sn(_client, this, client);
+		super(selection, operations), this.#client = client;
 	}
 	/**
 	* Clones the patch
 	*/
 	clone() {
-		return new ObservablePatch(this.selection, { ...this.operations }, require_request_DXOkY5MQ.bn(_client, this));
+		return new ObservablePatch(this.selection, { ...this.operations }, this.#client);
 	}
 	commit(options) {
-		if (!require_request_DXOkY5MQ.bn(_client, this)) throw Error("No \`client\` passed to patch, either provide one or pass the patch to a clients \`mutate()\` method");
+		if (!this.#client) throw Error("No \`client\` passed to patch, either provide one or pass the patch to a clients \`mutate()\` method");
 		let returnFirst = typeof this.selection == "string", opts = Object.assign({
 			returnFirst,
 			returnDocuments: !0
 		}, options);
-		return require_request_DXOkY5MQ.bn(_client, this).mutate({ patch: this.serialize() }, opts);
+		return this.#client.mutate({ patch: this.serialize() }, opts);
 	}
-}), Patch = (_client2 = /* @__PURE__ */ new WeakMap(), class Patch extends BasePatch {
+}, Patch = class Patch extends BasePatch {
+	#client;
 	constructor(selection, operations, client) {
-		var _super6 = (..._args7) => (super(..._args7), require_request_DXOkY5MQ.En(this, _client2, void 0), this);
-		_super6(selection, operations), require_request_DXOkY5MQ.Sn(_client2, this, client);
+		super(selection, operations), this.#client = client;
 	}
 	/**
 	* Clones the patch
 	*/
 	clone() {
-		return new Patch(this.selection, { ...this.operations }, require_request_DXOkY5MQ.bn(_client2, this));
+		return new Patch(this.selection, { ...this.operations }, this.#client);
 	}
 	commit(options) {
-		if (!require_request_DXOkY5MQ.bn(_client2, this)) throw Error("No \`client\` passed to patch, either provide one or pass the patch to a clients \`mutate()\` method");
+		if (!this.#client) throw Error("No \`client\` passed to patch, either provide one or pass the patch to a clients \`mutate()\` method");
 		let returnFirst = typeof this.selection == "string", opts = Object.assign({
 			returnFirst,
 			returnDocuments: !0
 		}, options);
-		return require_request_DXOkY5MQ.bn(_client2, this).mutate({ patch: this.serialize() }, opts);
+		return this.#client.mutate({ patch: this.serialize() }, opts);
 	}
-});
+};
 const defaultMutateOptions = { returnDocuments: !1 };
 /** @internal */
 var BaseTransaction = class {
+	operations;
+	trxId;
 	constructor(operations = [], transactionId) {
-		require_request_DXOkY5MQ.On(this, "operations", void 0), require_request_DXOkY5MQ.On(this, "trxId", void 0), this.operations = operations, this.trxId = transactionId;
+		this.operations = operations, this.trxId = transactionId;
 	}
 	/**
 	* Creates a new Sanity document. If \`_id\` is provided and already exists, the mutation will fail. If no \`_id\` is given, one will automatically be generated by the database.
@@ -3296,31 +3434,31 @@ var BaseTransaction = class {
 	_add(mut) {
 		return this.operations.push(mut), this;
 	}
-}, Transaction = (_client3 = /* @__PURE__ */ new WeakMap(), class Transaction extends BaseTransaction {
+}, Transaction = class Transaction extends BaseTransaction {
+	#client;
 	constructor(operations, client, transactionId) {
-		var _super7 = (..._args8) => (super(..._args8), require_request_DXOkY5MQ.En(this, _client3, void 0), this);
-		_super7(operations, transactionId), require_request_DXOkY5MQ.Sn(_client3, this, client);
+		super(operations, transactionId), this.#client = client;
 	}
 	/**
 	* Clones the transaction
 	*/
 	clone() {
-		return new Transaction([...this.operations], require_request_DXOkY5MQ.bn(_client3, this), this.trxId);
+		return new Transaction([...this.operations], this.#client, this.trxId);
 	}
 	commit(options) {
-		if (!require_request_DXOkY5MQ.bn(_client3, this)) throw Error("No \`client\` passed to transaction, either provide one or pass the transaction to a clients \`mutate()\` method");
-		return require_request_DXOkY5MQ.bn(_client3, this).mutate(this.serialize(), Object.assign({ transactionId: this.trxId }, defaultMutateOptions, options || {}));
+		if (!this.#client) throw Error("No \`client\` passed to transaction, either provide one or pass the transaction to a clients \`mutate()\` method");
+		return this.#client.mutate(this.serialize(), Object.assign({ transactionId: this.trxId }, defaultMutateOptions, options || {}));
 	}
 	patch(patchOrDocumentId, patchOps) {
 		let isBuilder = typeof patchOps == "function", isPatch = typeof patchOrDocumentId != "string" && patchOrDocumentId instanceof Patch, isMutationSelection = typeof patchOrDocumentId == "object" && ("query" in patchOrDocumentId || "id" in patchOrDocumentId);
 		if (isPatch) return this._add({ patch: patchOrDocumentId.serialize() });
 		if (isBuilder) {
-			let patch = patchOps(new Patch(patchOrDocumentId, {}, require_request_DXOkY5MQ.bn(_client3, this)));
+			let patch = patchOps(new Patch(patchOrDocumentId, {}, this.#client));
 			if (!(patch instanceof Patch)) throw Error("function passed to \`patch()\` must return the patch");
 			return this._add({ patch: patch.serialize() });
 		}
 		if (isMutationSelection) {
-			let patch = new Patch(patchOrDocumentId, patchOps || {}, require_request_DXOkY5MQ.bn(_client3, this));
+			let patch = new Patch(patchOrDocumentId, patchOps || {}, this.#client);
 			return this._add({ patch: patch.serialize() });
 		}
 		return this._add({ patch: {
@@ -3328,26 +3466,26 @@ var BaseTransaction = class {
 			...patchOps
 		} });
 	}
-}), ObservableTransaction = (_client4 = /* @__PURE__ */ new WeakMap(), class ObservableTransaction extends BaseTransaction {
+}, ObservableTransaction = class ObservableTransaction extends BaseTransaction {
+	#client;
 	constructor(operations, client, transactionId) {
-		var _super8 = (..._args9) => (super(..._args9), require_request_DXOkY5MQ.En(this, _client4, void 0), this);
-		_super8(operations, transactionId), require_request_DXOkY5MQ.Sn(_client4, this, client);
+		super(operations, transactionId), this.#client = client;
 	}
 	/**
 	* Clones the transaction
 	*/
 	clone() {
-		return new ObservableTransaction([...this.operations], require_request_DXOkY5MQ.bn(_client4, this), this.trxId);
+		return new ObservableTransaction([...this.operations], this.#client, this.trxId);
 	}
 	commit(options) {
-		if (!require_request_DXOkY5MQ.bn(_client4, this)) throw Error("No \`client\` passed to transaction, either provide one or pass the transaction to a clients \`mutate()\` method");
-		return require_request_DXOkY5MQ.bn(_client4, this).mutate(this.serialize(), Object.assign({ transactionId: this.trxId }, defaultMutateOptions, options || {}));
+		if (!this.#client) throw Error("No \`client\` passed to transaction, either provide one or pass the transaction to a clients \`mutate()\` method");
+		return this.#client.mutate(this.serialize(), Object.assign({ transactionId: this.trxId }, defaultMutateOptions, options || {}));
 	}
 	patch(patchOrDocumentId, patchOps) {
 		let isBuilder = typeof patchOps == "function";
 		if (typeof patchOrDocumentId != "string" && patchOrDocumentId instanceof ObservablePatch) return this._add({ patch: patchOrDocumentId.serialize() });
 		if (isBuilder) {
-			let patch = patchOps(new ObservablePatch(patchOrDocumentId, {}, require_request_DXOkY5MQ.bn(_client4, this)));
+			let patch = patchOps(new ObservablePatch(patchOrDocumentId, {}, this.#client));
 			if (!(patch instanceof ObservablePatch)) throw Error("function passed to \`patch()\` must return the patch");
 			return this._add({ patch: patch.serialize() });
 		}
@@ -3356,7 +3494,7 @@ var BaseTransaction = class {
 			...patchOps
 		} });
 	}
-});
+};
 /** @internal */
 const possibleStoreRequestOptions = [
 	"headers",
@@ -3493,7 +3631,7 @@ function _fetch$2(client, httpRequest, _stega, query, _params = {}, options = {}
 		query,
 		params
 	}, reqOpts);
-	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-CO1HKnm2-DjI5VMNE.cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
+	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-qxoqHkQe-BQs61s8O.cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
 		let result = stegaEncodeSourceMap(res.result, res.resultSourceMap, stega);
 		return mapResponse({
 			...res,
@@ -4119,62 +4257,66 @@ function _translate(client, httpRequest, request) {
 * @public
 * @inline
 */
-var ObservableAgentsActionClient = (_client5 = /* @__PURE__ */ new WeakMap(), _httpRequest2 = /* @__PURE__ */ new WeakMap(), class {
+var ObservableAgentsActionClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client5, void 0), require_request_DXOkY5MQ.En(this, _httpRequest2, void 0), require_request_DXOkY5MQ.Sn(_client5, this, client), require_request_DXOkY5MQ.Sn(_httpRequest2, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Run an instruction to generate content in a target document.
 	* @param request - instruction request
 	*/
 	generate(request) {
-		return _generateObservable(require_request_DXOkY5MQ.bn(_client5, this), require_request_DXOkY5MQ.bn(_httpRequest2, this), request);
+		return _generateObservable(this.#client, this.#httpRequest, request);
 	}
 	/**
 	* Transform a target document based on a source.
 	* @param request - translation request
 	*/
 	transform(request) {
-		return _transformObservable(require_request_DXOkY5MQ.bn(_client5, this), require_request_DXOkY5MQ.bn(_httpRequest2, this), request);
+		return _transformObservable(this.#client, this.#httpRequest, request);
 	}
 	/**
 	* Translate a target document based on a source.
 	* @param request - translation request
 	*/
 	translate(request) {
-		return _translateObservable(require_request_DXOkY5MQ.bn(_client5, this), require_request_DXOkY5MQ.bn(_httpRequest2, this), request);
+		return _translateObservable(this.#client, this.#httpRequest, request);
 	}
-}), AgentActionsClient = (_client6 = /* @__PURE__ */ new WeakMap(), _httpRequest3 = /* @__PURE__ */ new WeakMap(), class {
+}, AgentActionsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client6, void 0), require_request_DXOkY5MQ.En(this, _httpRequest3, void 0), require_request_DXOkY5MQ.Sn(_client6, this, client), require_request_DXOkY5MQ.Sn(_httpRequest3, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Run an instruction to generate content in a target document.
 	* @param request - instruction request
 	*/
 	generate(request) {
-		return _generate(require_request_DXOkY5MQ.bn(_client6, this), require_request_DXOkY5MQ.bn(_httpRequest3, this), request);
+		return _generate(this.#client, this.#httpRequest, request);
 	}
 	/**
 	* Transform a target document based on a source.
 	* @param request - translation request
 	*/
 	transform(request) {
-		return _transform(require_request_DXOkY5MQ.bn(_client6, this), require_request_DXOkY5MQ.bn(_httpRequest3, this), request);
+		return _transform(this.#client, this.#httpRequest, request);
 	}
 	/**
 	* Translate a target document based on a source.
 	* @param request - translation request
 	*/
 	translate(request) {
-		return _translate(require_request_DXOkY5MQ.bn(_client6, this), require_request_DXOkY5MQ.bn(_httpRequest3, this), request);
+		return _translate(this.#client, this.#httpRequest, request);
 	}
 	/**
 	* Run a raw instruction and return the result either as text or json
 	* @param request - prompt request
 	*/
 	prompt(request) {
-		return _prompt(require_request_DXOkY5MQ.bn(_client6, this), require_request_DXOkY5MQ.bn(_httpRequest3, this), request);
+		return _prompt(this.#client, this.#httpRequest, request);
 	}
 	/**
 	* Patch a document using a schema aware API.
@@ -4182,24 +4324,28 @@ var ObservableAgentsActionClient = (_client5 = /* @__PURE__ */ new WeakMap(), _h
 	* @param request - instruction request
 	*/
 	patch(request) {
-		return _patch(require_request_DXOkY5MQ.bn(_client6, this), require_request_DXOkY5MQ.bn(_httpRequest3, this), request);
+		return _patch(this.#client, this.#httpRequest, request);
 	}
-}), ObservableAssetsClient = (_client7 = /* @__PURE__ */ new WeakMap(), _httpRequest4 = /* @__PURE__ */ new WeakMap(), class {
+}, ObservableAssetsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client7, void 0), require_request_DXOkY5MQ.En(this, _httpRequest4, void 0), require_request_DXOkY5MQ.Sn(_client7, this, client), require_request_DXOkY5MQ.Sn(_httpRequest4, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	upload(assetType, body, options) {
-		return _upload(require_request_DXOkY5MQ.bn(_client7, this), require_request_DXOkY5MQ.bn(_httpRequest4, this), assetType, body, options);
+		return _upload(this.#client, this.#httpRequest, assetType, body, options);
 	}
-}), AssetsClient = (_client8 = /* @__PURE__ */ new WeakMap(), _httpRequest5 = /* @__PURE__ */ new WeakMap(), class {
+}, AssetsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client8, void 0), require_request_DXOkY5MQ.En(this, _httpRequest5, void 0), require_request_DXOkY5MQ.Sn(_client8, this, client), require_request_DXOkY5MQ.Sn(_httpRequest5, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	upload(assetType, body, options) {
-		let observable = _upload(require_request_DXOkY5MQ.bn(_client8, this), require_request_DXOkY5MQ.bn(_httpRequest5, this), assetType, body, options);
+		let observable = _upload(this.#client, this.#httpRequest, assetType, body, options);
 		return (0, import_cjs.lastValueFrom)(observable.pipe((0, import_operators.filter)((event) => event.type === "response"), (0, import_operators.map)((event) => pluckUploadedAsset(event.body))));
 	}
-});
+};
 /**
 * Content Lake's upload endpoint responds with \`{document: ...}\`; the Media
 * Library upload endpoint responds with \`{asset: ...}\` instead (a
@@ -4239,7 +4385,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-D2hqzYHG.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-DJBBfgjm.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
@@ -4277,7 +4423,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var name = "@sanity/client", version = "8.9.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.10.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), RETRYABLE_STATUSES = /* @__PURE__ */ new Set([408, 429]);
 /**
 * Note: connection failure is not the same as network disconnect which may happen more frequent.
@@ -4565,9 +4711,11 @@ function _listen$1(client, query, params, options) {
 *
 * @alpha
 */
-var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new WeakMap(), _httpRequest6 = /* @__PURE__ */ new WeakMap(), class {
+var ObservableCollaborationCommentsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client9, void 0), require_request_DXOkY5MQ.En(this, _httpRequest6, void 0), require_request_DXOkY5MQ.Sn(_client9, this, client), require_request_DXOkY5MQ.Sn(_httpRequest6, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Create a comment or reply on the configured resource.
@@ -4580,7 +4728,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The created comment
 	*/
 	create(body, options) {
-		return _create(require_request_DXOkY5MQ.bn(_client9, this), require_request_DXOkY5MQ.bn(_httpRequest6, this), body, options);
+		return _create(this.#client, this.#httpRequest, body, options);
 	}
 	/**
 	* Update an existing comment.
@@ -4593,7 +4741,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The updated comment
 	*/
 	update(id, body, options) {
-		return _update(require_request_DXOkY5MQ.bn(_client9, this), require_request_DXOkY5MQ.bn(_httpRequest6, this), id, body, options);
+		return _update(this.#client, this.#httpRequest, id, body, options);
 	}
 	/**
 	* Delete a comment and its replies.
@@ -4603,7 +4751,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns Mutation result, where \`documentIds\` covers the comment and every deleted reply
 	*/
 	delete(id, options) {
-		return _delete(require_request_DXOkY5MQ.bn(_client9, this), require_request_DXOkY5MQ.bn(_httpRequest6, this), id, options);
+		return _delete(this.#client, this.#httpRequest, id, options);
 	}
 	/**
 	* Add the current user's reaction to a comment.
@@ -4614,7 +4762,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The comment, with the reaction applied
 	*/
 	addReaction(id, shortName, options) {
-		return _addReaction(require_request_DXOkY5MQ.bn(_client9, this), require_request_DXOkY5MQ.bn(_httpRequest6, this), id, shortName, options);
+		return _addReaction(this.#client, this.#httpRequest, id, shortName, options);
 	}
 	/**
 	* Remove the current user's reaction from a comment.
@@ -4625,7 +4773,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The comment, with the reaction removed
 	*/
 	removeReaction(id, shortName, options) {
-		return _removeReaction(require_request_DXOkY5MQ.bn(_client9, this), require_request_DXOkY5MQ.bn(_httpRequest6, this), id, shortName, options);
+		return _removeReaction(this.#client, this.#httpRequest, id, shortName, options);
 	}
 	/**
 	* Build the global document reference used by \`target.document._ref\`, for use in
@@ -4646,7 +4794,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns Global document reference, of the form \`resourceType:resourceId:documentId\`
 	*/
 	getTargetDocumentRef(documentId) {
-		return _getTargetDocumentRef(require_request_DXOkY5MQ.bn(_client9, this), documentId);
+		return _getTargetDocumentRef(this.#client, documentId);
 	}
 	/**
 	* Fetch comments on the configured resource.
@@ -4665,14 +4813,16 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @param options - Optional request options
 	*/
 	fetch(query, params, options) {
-		return _fetch$1(require_request_DXOkY5MQ.bn(_client9, this), require_request_DXOkY5MQ.bn(_httpRequest6, this), query, params, options);
+		return _fetch$1(this.#client, this.#httpRequest, query, params, options);
 	}
 	listen(query, params, options) {
-		return _listen$1(require_request_DXOkY5MQ.bn(_client9, this), query, params, options);
+		return _listen$1(this.#client, query, params, options);
 	}
-}), CollaborationCommentsClient = (_client10 = /* @__PURE__ */ new WeakMap(), _httpRequest7 = /* @__PURE__ */ new WeakMap(), class {
+}, CollaborationCommentsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client10, void 0), require_request_DXOkY5MQ.En(this, _httpRequest7, void 0), require_request_DXOkY5MQ.Sn(_client10, this, client), require_request_DXOkY5MQ.Sn(_httpRequest7, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Create a comment or reply on the configured resource.
@@ -4685,7 +4835,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The created comment
 	*/
 	create(body, options) {
-		return (0, import_cjs.lastValueFrom)(_create(require_request_DXOkY5MQ.bn(_client10, this), require_request_DXOkY5MQ.bn(_httpRequest7, this), body, options));
+		return (0, import_cjs.lastValueFrom)(_create(this.#client, this.#httpRequest, body, options));
 	}
 	/**
 	* Update an existing comment.
@@ -4698,7 +4848,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The updated comment
 	*/
 	update(id, body, options) {
-		return (0, import_cjs.lastValueFrom)(_update(require_request_DXOkY5MQ.bn(_client10, this), require_request_DXOkY5MQ.bn(_httpRequest7, this), id, body, options));
+		return (0, import_cjs.lastValueFrom)(_update(this.#client, this.#httpRequest, id, body, options));
 	}
 	/**
 	* Delete a comment and its replies.
@@ -4708,7 +4858,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns Mutation result, where \`documentIds\` covers the comment and every deleted reply
 	*/
 	delete(id, options) {
-		return (0, import_cjs.lastValueFrom)(_delete(require_request_DXOkY5MQ.bn(_client10, this), require_request_DXOkY5MQ.bn(_httpRequest7, this), id, options));
+		return (0, import_cjs.lastValueFrom)(_delete(this.#client, this.#httpRequest, id, options));
 	}
 	/**
 	* Add the current user's reaction to a comment.
@@ -4719,7 +4869,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The comment, with the reaction applied
 	*/
 	addReaction(id, shortName, options) {
-		return (0, import_cjs.lastValueFrom)(_addReaction(require_request_DXOkY5MQ.bn(_client10, this), require_request_DXOkY5MQ.bn(_httpRequest7, this), id, shortName, options));
+		return (0, import_cjs.lastValueFrom)(_addReaction(this.#client, this.#httpRequest, id, shortName, options));
 	}
 	/**
 	* Remove the current user's reaction from a comment.
@@ -4730,7 +4880,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns The comment, with the reaction removed
 	*/
 	removeReaction(id, shortName, options) {
-		return (0, import_cjs.lastValueFrom)(_removeReaction(require_request_DXOkY5MQ.bn(_client10, this), require_request_DXOkY5MQ.bn(_httpRequest7, this), id, shortName, options));
+		return (0, import_cjs.lastValueFrom)(_removeReaction(this.#client, this.#httpRequest, id, shortName, options));
 	}
 	/**
 	* Build the global document reference used by \`target.document._ref\`, for use in
@@ -4751,7 +4901,7 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @returns Global document reference, of the form \`resourceType:resourceId:documentId\`
 	*/
 	getTargetDocumentRef(documentId) {
-		return _getTargetDocumentRef(require_request_DXOkY5MQ.bn(_client10, this), documentId);
+		return _getTargetDocumentRef(this.#client, documentId);
 	}
 	/**
 	* Fetch comments on the configured resource.
@@ -4770,12 +4920,12 @@ var ObservableCollaborationCommentsClient = (_client9 = /* @__PURE__ */ new Weak
 	* @param options - Optional request options
 	*/
 	fetch(query, params, options) {
-		return (0, import_cjs.lastValueFrom)(_fetch$1(require_request_DXOkY5MQ.bn(_client10, this), require_request_DXOkY5MQ.bn(_httpRequest7, this), query, params, options));
+		return (0, import_cjs.lastValueFrom)(_fetch$1(this.#client, this.#httpRequest, query, params, options));
 	}
 	listen(query, params, options) {
-		return _listen$1(require_request_DXOkY5MQ.bn(_client10, this), query, params, options);
+		return _listen$1(this.#client, query, params, options);
 	}
-});
+};
 /** @internal */
 function _organizationId(client) {
 	let organizationId = client.config().context?.organizationId;
@@ -4915,13 +5065,13 @@ function _resolveKnowledgeBaseId(client) {
 function _knowledgeBaseUrl(knowledgeBaseId, suffix = "") {
 	return \`\${COLLECTION_URL}/\${encodeURIComponent(knowledgeBaseId)}\${suffix}\`;
 }
-/** Serialize defined values into query params, dropping the undefined ones. */
 function _conversationUrl(client, threadId) {
 	let organizationId = client.config().context?.organizationId;
 	if (!organizationId) throw Error("\`context.organizationId\` must be configured to record conversations");
 	if (!threadId) throw Error("\`threadId\` must be provided");
 	return \`/context/organizations/\${encodeURIComponent(organizationId)}/conversations/\${encodeURIComponent(threadId)}\`;
 }
+/** Serialize defined values into query params, dropping the undefined ones. */
 function _query(entries) {
 	return Object.fromEntries(Object.entries(entries).flatMap(([key, value]) => value === void 0 ? [] : [[key, \`\${value}\`]]));
 }
@@ -4956,324 +5106,93 @@ function _fetchBody(file) {
 *
 * @beta
 */
-var ContextClient = (_client11 = /* @__PURE__ */ new WeakMap(), _httpRequest8 = /* @__PURE__ */ new WeakMap(), _Class_brand = /* @__PURE__ */ new WeakSet(), class {
+var ContextClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.vn(this, _Class_brand), require_request_DXOkY5MQ.En(this, _client11, void 0), require_request_DXOkY5MQ.En(this, _httpRequest8, void 0), require_request_DXOkY5MQ.On(
-			this,
-			/** The knowledge base collection: management addressed per call. */
-			"knowledgeBases",
-			{
-				/** Create a knowledge base. Requires the org-level knowledge-base create grant. */
-				create: (params, options) => _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-					url: COLLECTION_URL,
-					method: "POST",
-					body: params,
-					...options
-				}),
-				/** List the organization's knowledge bases. */
-				list: (params) => _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-					url: COLLECTION_URL,
-					query: _query({
-						organizationId: params.organizationId,
-						cursor: params.cursor,
-						limit: params.limit
-					}),
-					signal: params.signal,
-					tag: params.tag
-				}),
-				/** Fetch a knowledge base by its id. */
-				get: (knowledgeBaseId, options) => _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-					url: _knowledgeBaseUrl(knowledgeBaseId),
-					...options
-				}),
-				/** Edit a knowledge base's configuration. */
-				edit: (knowledgeBaseId, params, options) => _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-					url: _knowledgeBaseUrl(knowledgeBaseId),
-					method: "PATCH",
-					body: params,
-					...options
-				}),
-				/** Delete a knowledge base and its generated content. */
-				delete: async (knowledgeBaseId, options) => {
-					await _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-						url: _knowledgeBaseUrl(knowledgeBaseId),
-						method: "DELETE",
-						...options
-					});
-				}
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Conversation telemetry. \`threadId\` identifies the conversation within
-			* the organization — reuse means the same conversation. Beyond the canned
-			* \`get\`, reads go through {@link fetch} and {@link listen} with GROQ
-			* (\`_type == "sanity.context.conversation"\`).
-			*
-			* Requires \`context.organizationId\` in the client configuration.
-			*/
-			"conversations",
-			{
-				/**
-				* Record a conversation. Messages replace the stored transcript
-				* wholesale; \`metadata\` and model fields only overwrite when present.
-				* Last write per thread wins — retries are safe.
-				*/
-				save: (params, options) => {
-					let { threadId, ...body } = params;
-					return _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-						url: _conversationUrl(require_request_DXOkY5MQ.bn(_client11, this), threadId),
-						method: "PUT",
-						body,
-						...options
-					});
-				},
-				/**
-				* Record the classification your own model produced for one thread:
-				* exactly one of \`coreMetrics\` (a verdict) or \`classificationError\`
-				* (why classification failed).
-				*/
-				classify: (params, options) => {
-					let { threadId, ...body } = params;
-					return _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-						url: _conversationUrl(require_request_DXOkY5MQ.bn(_client11, this), threadId),
-						method: "PATCH",
-						body,
-						...options
-					});
-				},
-				/**
-				* One recorded conversation by its thread id, or \`null\` when the thread
-				* was never recorded. Runs:
-				*
-				* \`*[_type == "sanity.context.conversation" && organizationId == $org && threadId == $threadId][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _readConversation(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), params.threadId, options)
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/** Imports: feed content into the configured knowledge base. */
-			"imports",
-			{
-				/**
-				* Import content. One entry point, discriminated on \`type\`: inline
-				* \`text\`, a website \`crawl\`, a Sanity \`dataset\` bind, or a \`file\`
-				* upload. Processing queues automatically. The file variant stages the
-				* upload, PUTs the bytes to a signed storage URL, and confirms; the
-				* bytes never pass through the Context API.
-				*/
-				create: (params, options) => params.type === "file" ? require_request_DXOkY5MQ.wn(_Class_brand, this, _uploadFile).call(this, params, options) : require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/imports", {
-					method: "POST",
-					body: params,
-					...options
-				}),
-				list: (params) => require_request_DXOkY5MQ.wn(_Class_brand, this, _list).call(this, "/imports", params),
-				get: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/imports/\${encodeURIComponent(params.importId)}\`, options),
-				/** A short-lived signed URL for the original uploaded bytes. */
-				download: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/imports/\${encodeURIComponent(params.importId)}/download\`, options),
-				delete: async (params, options) => {
-					await require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/imports/\${encodeURIComponent(params.importId)}\`, {
-						method: "DELETE",
-						...options
-					});
-				}
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/** Jobs: poll async work (builds, imports) to a terminal state. */
-			"jobs",
-			{ get: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/jobs/\${encodeURIComponent(params.jobId)}\`, options) }
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Issues: findings from builds awaiting triage. Reads are canned GROQ
-			* queries against the organization's document store; for anything more,
-			* use {@link fetch}. Reads require \`context.organizationId\` alongside the
-			* knowledge-base \`resource\` in the client configuration.
-			*/
-			"issues",
-			{
-				/**
-				* Every issue on the knowledge base, oldest first, optionally narrowed
-				* to one status. Drains keyset pages internally and resolves with the
-				* complete set. Runs:
-				*
-				* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && status == $status] | order(_createdAt asc, _id asc)\`
-				*
-				* (the status clause only when given). For anything more, use {@link fetch}.
-				*/
-				list: (params, options) => _listIssues(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client11, this)), params?.status, options),
-				/**
-				* One issue by its document id, or \`null\` when it does not exist. Runs:
-				*
-				* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && _id == $id][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _readIssue(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client11, this)), params.issueId, options),
-				/** Resolve a conflict issue. Mints the standing instruction, same as the dashboard. */
-				resolve: (params, options) => {
-					let { issueId, ...body } = params;
-					return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/issues/\${encodeURIComponent(issueId)}/resolve\`, {
-						method: "POST",
-						body,
-						...options
-					});
-				},
-				dismiss: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/issues/\${encodeURIComponent(params.issueId)}/dismiss\`, {
-					method: "POST",
-					...options
-				}),
-				reopen: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/issues/\${encodeURIComponent(params.issueId)}/reopen\`, {
-					method: "POST",
-					...options
-				}),
-				/** Apply already-accepted issues to the knowledge base in one batch. */
-				apply: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/issues/apply", {
-					method: "POST",
-					body: params,
-					...options
-				})
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/** Instructions: standing decisions that steer every build. */
-			"instructions",
-			{
-				create: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/instructions", {
-					method: "POST",
-					body: params,
-					...options
-				}),
-				/**
-				* Every current-schema instruction on the knowledge base, oldest first.
-				* Drains keyset pages internally and resolves with the complete set.
-				* Runs:
-				*
-				* \`*[_type == "sanity.context.instruction" && knowledgeBaseId == $kb && schemaVersion == 1] | order(_createdAt asc, _id asc)\`
-				*
-				* For anything more, use {@link fetch}. Requires \`context.organizationId\`
-				* alongside the knowledge-base \`resource\` in the client configuration.
-				*/
-				list: (options) => _listInstructions(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client11, this)), options),
-				edit: (params, options) => {
-					let { instructionId, ...body } = params;
-					return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/instructions/\${encodeURIComponent(instructionId)}\`, {
-						method: "PATCH",
-						body,
-						...options
-					});
-				},
-				delete: async (params, options) => {
-					await require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/instructions/\${encodeURIComponent(params.instructionId)}\`, {
-						method: "DELETE",
-						...options
-					});
-				}
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Entries: the built outline, one entry per node. Reads are canned GROQ
-			* queries against the organization's document store; for anything more,
-			* use {@link fetch}. Requires \`context.organizationId\` alongside the
-			* knowledge-base \`resource\` in the client configuration.
-			*/
-			"entries",
-			{
-				/**
-				* Every entry, path-ordered, as a metadata view (\`_id\`, \`path\`,
-				* \`title\`, \`tldr\`, \`status\`) with bodies excluded. Drains keyset pages
-				* internally and resolves with the complete set. Runs:
-				*
-				* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`
-				*
-				* For bodies, use \`entries.get\` or {@link fetch}.
-				*/
-				list: (options) => _listEntries(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client11, this)), options),
-				/**
-				* One entry with its full body and citations, by outline path (e.g.
-				* \`billing/refunds\`), or \`null\` when no entry sits at that path. Runs:
-				*
-				* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path == $path][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _readEntry(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client11, this)), params.path, options),
-				/**
-				* Rebuild one entry from its already-placed sources, by outline path.
-				* Poll the returned job with {@link jobs}; \`affectedEntries\` lists every
-				* entry the rebuild touches.
-				*/
-				rebuild: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/entries/\${encodeURIComponent(params.path)}/rebuild\`, {
-					method: "POST",
-					...options
-				})
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* MCP endpoint configurations, org-owned documents read with canned GROQ
-			* queries. Requires \`context.organizationId\` in the client configuration.
-			*/
-			"mcpEndpoints",
-			{
-				/**
-				* The organization's MCP endpoint configurations, oldest first. Runs:
-				*
-				* \`*[_type == "sanity.context.mcp" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				list: (options) => _listMcpEndpoints(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), options),
-				/**
-				* One MCP endpoint configuration by its URL name, or \`null\` when none
-				* carries that name. Runs:
-				*
-				* \`*[_type == "sanity.context.mcp" && organizationId == $org && name == $name][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _readMcpEndpoint(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), params.name, options)
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/** Sources: the distilled units builds cite. */
-			"sources",
-			{
-				/**
-				* List sources, optionally filtered by \`status\` or the \`importId\` they
-				* came from. \`ids\` is a lookup mode: it resolves those exact sources
-				* (e.g. from an entry's citations) and overrides \`status\` and \`cursor\`.
-				*/
-				list: (params) => require_request_DXOkY5MQ.wn(_Class_brand, this, _list).call(this, "/sources", params, {
-					status: params?.status,
-					importId: params?.importId,
-					ids: params?.ids?.join(",")
-				}),
-				get: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/sources/\${encodeURIComponent(params.sourceId)}\`, options),
-				/**
-				* Distilled source content, optionally a line range: the evidence behind
-				* a citation or an issue.
-				*/
-				content: (params, options) => require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/sources/\${encodeURIComponent(params.sourceId)}/content\`, {
-					query: _query({
-						startLine: params.startLine,
-						endLine: params.endLine
-					}),
-					...options
-				}),
-				delete: async (params, options) => {
-					await require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/sources/\${encodeURIComponent(params.sourceId)}\`, {
-						method: "DELETE",
-						...options
-					});
-				}
-			}
-		), require_request_DXOkY5MQ.Sn(_client11, this, client), require_request_DXOkY5MQ.Sn(_httpRequest8, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
+	/** Request against the configured knowledge base. */
+	#request(suffix, reqOptions = {}) {
+		return _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(_resolveKnowledgeBaseId(this.#client), suffix),
+			...reqOptions
+		});
+	}
+	/** Shared shape of every paginated list endpoint scoped to the knowledge base. */
+	#list(suffix, params, extraQuery) {
+		return this.#request(suffix, {
+			query: _query({
+				cursor: params?.cursor,
+				limit: params?.limit,
+				...extraQuery
+			}),
+			signal: params?.signal,
+			tag: params?.tag
+		});
+	}
+	async #uploadFile(params, options) {
+		let staged = await this.#request("/imports/uploads", {
+			method: "POST",
+			body: {
+				filename: params.filename,
+				...params.contentType && { contentType: params.contentType }
+			},
+			...options
+		}), config = this.#client.config(), putResponse = await (config.resolveFetch?.(config.proxy) ?? globalThis.fetch)(staged.uploadUrl, {
+			method: "PUT",
+			body: _fetchBody(params.file),
+			...params.contentType && { headers: { "content-type": params.contentType } },
+			signal: options?.signal
+		});
+		if (!putResponse.ok) throw Error(\`File upload failed: \${putResponse.status} \${putResponse.statusText}\`);
+		return this.#request(\`/imports/uploads/\${encodeURIComponent(staged.importId)}/complete\`, {
+			method: "POST",
+			body: {},
+			...options
+		});
+	}
+	/** The knowledge base collection: management addressed per call. */
+	knowledgeBases = {
+		/** Create a knowledge base. Requires the org-level knowledge-base create grant. */
+		create: (params, options) => _request(this.#client, this.#httpRequest, {
+			url: COLLECTION_URL,
+			method: "POST",
+			body: params,
+			...options
+		}),
+		/** List the organization's knowledge bases. */
+		list: (params) => _request(this.#client, this.#httpRequest, {
+			url: COLLECTION_URL,
+			query: _query({
+				organizationId: params.organizationId,
+				cursor: params.cursor,
+				limit: params.limit
+			}),
+			signal: params.signal,
+			tag: params.tag
+		}),
+		/** Fetch a knowledge base by its id. */
+		get: (knowledgeBaseId, options) => _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(knowledgeBaseId),
+			...options
+		}),
+		/** Edit a knowledge base's configuration. */
+		edit: (knowledgeBaseId, params, options) => _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(knowledgeBaseId),
+			method: "PATCH",
+			body: params,
+			...options
+		}),
+		/** Delete a knowledge base and its generated content. */
+		delete: async (knowledgeBaseId, options) => {
+			await _request(this.#client, this.#httpRequest, {
+				url: _knowledgeBaseUrl(knowledgeBaseId),
+				method: "DELETE",
+				...options
+			});
+		}
+	};
 	/**
 	* GROQ over the organization's Context documents (conversation telemetry
 	* today; the store holds every Context family and the caller's access
@@ -5282,7 +5201,7 @@ var ContextClient = (_client11 = /* @__PURE__ */ new WeakMap(), _httpRequest8 = 
 	* Requires \`context.organizationId\` in the client configuration.
 	*/
 	fetch(query, params, options) {
-		return (0, import_cjs.lastValueFrom)(_fetch(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), query, params, options));
+		return (0, import_cjs.lastValueFrom)(_fetch(this.#client, this.#httpRequest, query, params, options));
 	}
 	/**
 	* Listen for changes to the organization's Context documents. Mirrors
@@ -5290,273 +5209,340 @@ var ContextClient = (_client11 = /* @__PURE__ */ new WeakMap(), _httpRequest8 = 
 	* default.
 	*/
 	listen(query, params, options) {
-		return _listen(require_request_DXOkY5MQ.bn(_client11, this), query, params, options);
+		return _listen(this.#client, query, params, options);
 	}
+	/**
+	* Conversation telemetry. \`threadId\` identifies the conversation within
+	* the organization — reuse means the same conversation. Beyond the canned
+	* \`get\`, reads go through {@link fetch} and {@link listen} with GROQ
+	* (\`_type == "sanity.context.conversation"\`).
+	*
+	* Requires \`context.organizationId\` in the client configuration.
+	*/
+	conversations = {
+		/**
+		* Record a conversation. Messages replace the stored transcript
+		* wholesale; \`metadata\` and model fields only overwrite when present.
+		* Last write per thread wins — retries are safe.
+		*/
+		save: (params, options) => {
+			let { threadId, ...body } = params;
+			return _request(this.#client, this.#httpRequest, {
+				url: _conversationUrl(this.#client, threadId),
+				method: "PUT",
+				body,
+				...options
+			});
+		},
+		/**
+		* Record the classification your own model produced for one thread:
+		* exactly one of \`coreMetrics\` (a verdict) or \`classificationError\`
+		* (why classification failed).
+		*/
+		classify: (params, options) => {
+			let { threadId, ...body } = params;
+			return _request(this.#client, this.#httpRequest, {
+				url: _conversationUrl(this.#client, threadId),
+				method: "PATCH",
+				body,
+				...options
+			});
+		},
+		/**
+		* Delete one recorded conversation, transcript and classification
+		* included. Rejects with a 404 when the thread was never recorded.
+		*/
+		delete: (params, options) => _request(this.#client, this.#httpRequest, {
+			url: _conversationUrl(this.#client, params.threadId),
+			method: "DELETE",
+			...options
+		}),
+		/**
+		* One recorded conversation by its thread id, or \`null\` when the thread
+		* was never recorded. Runs:
+		*
+		* \`*[_type == "sanity.context.conversation" && organizationId == $org && threadId == $threadId][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _readConversation(this.#client, this.#httpRequest, params.threadId, options)
+	};
 	/**
 	* Build the configured knowledge base. The server waits for pending import
 	* processing before assembling, so importing and building back to back is
 	* safe. Track the returned job with {@link jobs}.
 	*/
 	build(options) {
-		return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/build", {
+		return this.#request("/build", {
 			method: "POST",
 			...options
 		});
 	}
 	/** Cancel the running build, if any. */
 	cancelBuild(options) {
-		return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/build/cancel", {
+		return this.#request("/build/cancel", {
 			method: "POST",
 			...options
 		});
 	}
 	/** Run an incremental refresh: re-check sources and apply what changed. */
 	refresh(options) {
-		return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/refresh", {
+		return this.#request("/refresh", {
 			method: "POST",
 			...options
 		});
 	}
-}), ObservableContextClient = (_client12 = /* @__PURE__ */ new WeakMap(), _httpRequest9 = /* @__PURE__ */ new WeakMap(), class {
+	/** Imports: feed content into the configured knowledge base. */
+	imports = {
+		/**
+		* Import content. One entry point, discriminated on \`type\`: inline
+		* \`text\`, a website \`crawl\`, a Sanity \`dataset\` bind, or a \`file\`
+		* upload. Processing queues automatically. The file variant stages the
+		* upload, PUTs the bytes to a signed storage URL, and confirms; the
+		* bytes never pass through the Context API.
+		*/
+		create: (params, options) => params.type === "file" ? this.#uploadFile(params, options) : this.#request("/imports", {
+			method: "POST",
+			body: params,
+			...options
+		}),
+		list: (params) => this.#list("/imports", params),
+		get: (params, options) => this.#request(\`/imports/\${encodeURIComponent(params.importId)}\`, options),
+		/** A short-lived signed URL for the original uploaded bytes. */
+		download: (params, options) => this.#request(\`/imports/\${encodeURIComponent(params.importId)}/download\`, options),
+		delete: async (params, options) => {
+			await this.#request(\`/imports/\${encodeURIComponent(params.importId)}\`, {
+				method: "DELETE",
+				...options
+			});
+		}
+	};
+	/** Jobs: poll async work (builds, imports) to a terminal state. */
+	jobs = { get: (params, options) => this.#request(\`/jobs/\${encodeURIComponent(params.jobId)}\`, options) };
+	/**
+	* Issues: findings from builds awaiting triage. Reads are canned GROQ
+	* queries against the organization's document store; for anything more,
+	* use {@link fetch}. Reads require \`context.organizationId\` alongside the
+	* knowledge-base \`resource\` in the client configuration.
+	*/
+	issues = {
+		/**
+		* Every issue on the knowledge base, oldest first, optionally narrowed
+		* to one status. Drains keyset pages internally and resolves with the
+		* complete set. Runs:
+		*
+		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && status == $status] | order(_createdAt asc, _id asc)\`
+		*
+		* (the status clause only when given). For anything more, use {@link fetch}.
+		*/
+		list: (params, options) => _listIssues(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params?.status, options),
+		/**
+		* One issue by its document id, or \`null\` when it does not exist. Runs:
+		*
+		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && _id == $id][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _readIssue(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.issueId, options),
+		/** Resolve a conflict issue. Mints the standing instruction, same as the dashboard. */
+		resolve: (params, options) => {
+			let { issueId, ...body } = params;
+			return this.#request(\`/issues/\${encodeURIComponent(issueId)}/resolve\`, {
+				method: "POST",
+				body,
+				...options
+			});
+		},
+		dismiss: (params, options) => this.#request(\`/issues/\${encodeURIComponent(params.issueId)}/dismiss\`, {
+			method: "POST",
+			...options
+		}),
+		reopen: (params, options) => this.#request(\`/issues/\${encodeURIComponent(params.issueId)}/reopen\`, {
+			method: "POST",
+			...options
+		}),
+		/** Apply already-accepted issues to the knowledge base in one batch. */
+		apply: (params, options) => this.#request("/issues/apply", {
+			method: "POST",
+			body: params,
+			...options
+		})
+	};
+	/** Instructions: standing decisions that steer every build. */
+	instructions = {
+		create: (params, options) => this.#request("/instructions", {
+			method: "POST",
+			body: params,
+			...options
+		}),
+		/**
+		* Every current-schema instruction on the knowledge base, oldest first.
+		* Drains keyset pages internally and resolves with the complete set.
+		* Runs:
+		*
+		* \`*[_type == "sanity.context.instruction" && knowledgeBaseId == $kb && schemaVersion == 1] | order(_createdAt asc, _id asc)\`
+		*
+		* For anything more, use {@link fetch}. Requires \`context.organizationId\`
+		* alongside the knowledge-base \`resource\` in the client configuration.
+		*/
+		list: (options) => _listInstructions(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), options),
+		edit: (params, options) => {
+			let { instructionId, ...body } = params;
+			return this.#request(\`/instructions/\${encodeURIComponent(instructionId)}\`, {
+				method: "PATCH",
+				body,
+				...options
+			});
+		},
+		/**
+		* Delete an instruction. With \`rebuild: true\`, also rebuilds every entry
+		* citing the instruction's sources and resolves with that job's id.
+		*/
+		delete: (params, options) => this.#request(\`/instructions/\${encodeURIComponent(params.instructionId)}\`, {
+			method: "DELETE",
+			query: _query({ rebuild: params.rebuild ? "true" : void 0 }),
+			...options
+		})
+	};
+	/**
+	* Entries: the built outline, one entry per node. Reads are canned GROQ
+	* queries against the organization's document store; for anything more,
+	* use {@link fetch}. Requires \`context.organizationId\` alongside the
+	* knowledge-base \`resource\` in the client configuration.
+	*/
+	entries = {
+		/**
+		* Every entry, path-ordered, as a metadata view (\`_id\`, \`path\`,
+		* \`title\`, \`tldr\`, \`status\`) with bodies excluded. Drains keyset pages
+		* internally and resolves with the complete set. Runs:
+		*
+		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`
+		*
+		* For bodies, use \`entries.get\` or {@link fetch}.
+		*/
+		list: (options) => _listEntries(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), options),
+		/**
+		* One entry with its full body and citations, by outline path (e.g.
+		* \`billing/refunds\`), or \`null\` when no entry sits at that path. Runs:
+		*
+		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path == $path][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _readEntry(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.path, options),
+		/**
+		* Rebuild one entry from its already-placed sources, by outline path.
+		* Poll the returned job with {@link jobs}; \`affectedEntries\` lists every
+		* entry the rebuild touches.
+		*/
+		rebuild: (params, options) => this.#request(\`/entries/\${encodeURIComponent(params.path)}/rebuild\`, {
+			method: "POST",
+			...options
+		})
+	};
+	/**
+	* MCP endpoint configurations, org-owned documents read with canned GROQ
+	* queries. Requires \`context.organizationId\` in the client configuration.
+	*/
+	mcpEndpoints = {
+		/**
+		* The organization's MCP endpoint configurations, oldest first. Runs:
+		*
+		* \`*[_type == "sanity.context.mcp" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		list: (options) => _listMcpEndpoints(this.#client, this.#httpRequest, options),
+		/**
+		* One MCP endpoint configuration by its URL name, or \`null\` when none
+		* carries that name. Runs:
+		*
+		* \`*[_type == "sanity.context.mcp" && organizationId == $org && name == $name][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _readMcpEndpoint(this.#client, this.#httpRequest, params.name, options)
+	};
+	/** Sources: the distilled units builds cite. */
+	sources = {
+		/**
+		* List sources, optionally filtered by \`status\` or the \`importId\` they
+		* came from. \`ids\` is a lookup mode: it resolves those exact sources
+		* (e.g. from an entry's citations) and overrides \`status\` and \`cursor\`.
+		*/
+		list: (params) => this.#list("/sources", params, {
+			status: params?.status,
+			importId: params?.importId,
+			ids: params?.ids?.join(",")
+		}),
+		get: (params, options) => this.#request(\`/sources/\${encodeURIComponent(params.sourceId)}\`, options),
+		/**
+		* Distilled source content, optionally a line range: the evidence behind
+		* a citation or an issue.
+		*/
+		content: (params, options) => this.#request(\`/sources/\${encodeURIComponent(params.sourceId)}/content\`, {
+			query: _query({
+				startLine: params.startLine,
+				endLine: params.endLine
+			}),
+			...options
+		}),
+		delete: async (params, options) => {
+			await this.#request(\`/sources/\${encodeURIComponent(params.sourceId)}\`, {
+				method: "DELETE",
+				...options
+			});
+		}
+	};
+}, ObservableContextClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client12, void 0), require_request_DXOkY5MQ.En(this, _httpRequest9, void 0), require_request_DXOkY5MQ.On(
-			this,
-			/** The knowledge base collection: management addressed per call. */
-			"knowledgeBases",
-			{
-				/** Create a knowledge base. Requires the org-level knowledge-base create grant. */
-				create: (params, options) => _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					url: COLLECTION_URL,
-					method: "POST",
-					body: params,
-					tag: options?.tag,
-					signal
-				})),
-				/** List the organization's knowledge bases. */
-				list: (params) => _observe(params.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					url: COLLECTION_URL,
-					query: _query({
-						organizationId: params.organizationId,
-						cursor: params.cursor,
-						limit: params.limit
-					}),
-					tag: params.tag,
-					signal
-				})),
-				/** Fetch a knowledge base by its id. */
-				get: (knowledgeBaseId, options) => _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					url: _knowledgeBaseUrl(knowledgeBaseId),
-					tag: options?.tag,
-					signal
-				})),
-				/** Edit a knowledge base's configuration. */
-				edit: (knowledgeBaseId, params, options) => _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					url: _knowledgeBaseUrl(knowledgeBaseId),
-					method: "PATCH",
-					body: params,
-					tag: options?.tag,
-					signal
-				})),
-				/** Delete a knowledge base and its generated content. */
-				delete: (knowledgeBaseId, options) => _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					url: _knowledgeBaseUrl(knowledgeBaseId),
-					method: "DELETE",
-					tag: options?.tag,
-					signal
-				}))
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Conversation telemetry. \`threadId\` identifies the conversation within
-			* the organization — reuse means the same conversation. Beyond the canned
-			* \`get\`, reads go through {@link fetch} and {@link listen} with GROQ
-			* (\`_type == "sanity.context.conversation"\`).
-			*
-			* Requires \`context.organizationId\` in the client configuration.
-			*/
-			"conversations",
-			{
-				/**
-				* Record a conversation. Messages replace the stored transcript
-				* wholesale; \`metadata\` and model fields only overwrite when present.
-				* Last write per thread wins — retries are safe.
-				*/
-				save: (params, options) => {
-					let { threadId, ...body } = params;
-					return _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-						url: _conversationUrl(require_request_DXOkY5MQ.bn(_client12, this), threadId),
-						method: "PUT",
-						body,
-						tag: options?.tag,
-						signal
-					}));
-				},
-				/**
-				* Record the classification your own model produced for one thread:
-				* exactly one of \`coreMetrics\` (a verdict) or \`classificationError\`
-				* (why classification failed).
-				*/
-				classify: (params, options) => {
-					let { threadId, ...body } = params;
-					return _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-						url: _conversationUrl(require_request_DXOkY5MQ.bn(_client12, this), threadId),
-						method: "PATCH",
-						body,
-						tag: options?.tag,
-						signal
-					}));
-				},
-				/**
-				* One recorded conversation by its thread id, or \`null\` when the thread
-				* was never recorded. Runs:
-				*
-				* \`*[_type == "sanity.context.conversation" && organizationId == $org && threadId == $threadId][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _observe(options?.signal, (signal) => _readConversation(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), params.threadId, {
-					...options,
-					signal
-				}))
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Entries: the built outline, one entry per node. Reads are canned GROQ
-			* queries against the organization's document store; for anything more,
-			* use {@link fetch}. Requires \`context.organizationId\` alongside the
-			* knowledge-base \`resource\` in the client configuration.
-			*/
-			"entries",
-			{
-				/**
-				* Every entry, path-ordered, as a metadata view (\`_id\`, \`path\`,
-				* \`title\`, \`tldr\`, \`status\`) with bodies excluded. Drains keyset pages
-				* internally and emits the complete set. Runs:
-				*
-				* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`
-				*
-				* For bodies, use \`entries.get\` or {@link fetch}.
-				*/
-				list: (options) => _observe(options?.signal, (signal) => _listEntries(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client12, this)), {
-					...options,
-					signal
-				})),
-				/**
-				* One entry with its full body and citations, by outline path (e.g.
-				* \`billing/refunds\`), or \`null\` when no entry sits at that path. Runs:
-				*
-				* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path == $path][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _observe(options?.signal, (signal) => _readEntry(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client12, this)), params.path, {
-					...options,
-					signal
-				})),
-				/**
-				* Rebuild one entry from its already-placed sources, by outline path.
-				* Poll the returned job with the promise client's \`jobs\`;
-				* \`affectedEntries\` lists every entry the rebuild touches.
-				*/
-				rebuild: (params, options) => _observe(options?.signal, (signal) => _request(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					url: _knowledgeBaseUrl(_resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client12, this)), \`/entries/\${encodeURIComponent(params.path)}/rebuild\`),
-					method: "POST",
-					tag: options?.tag,
-					signal
-				}))
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Issues: findings from builds awaiting triage. Reads are canned GROQ
-			* queries against the organization's document store; for anything more,
-			* use {@link fetch}. Requires \`context.organizationId\` alongside the
-			* knowledge-base \`resource\` in the client configuration.
-			*/
-			"issues",
-			{
-				/**
-				* Every issue on the knowledge base, oldest first, optionally narrowed
-				* to one status. Drains keyset pages internally and emits the complete
-				* set. Runs:
-				*
-				* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && status == $status] | order(_createdAt asc, _id asc)\`
-				*
-				* (the status clause only when given). For anything more, use {@link fetch}.
-				*/
-				list: (params, options) => _observe(options?.signal, (signal) => _listIssues(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client12, this)), params?.status, {
-					...options,
-					signal
-				})),
-				/**
-				* One issue by its document id, or \`null\` when it does not exist. Runs:
-				*
-				* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && _id == $id][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _observe(options?.signal, (signal) => _readIssue(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client12, this)), params.issueId, {
-					...options,
-					signal
-				}))
-			}
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Instructions: standing decisions that steer every build. The canned
-			* GROQ read; writes are promise-based on \`client.context\`.
-			*/
-			"instructions",
-			{ 
-			/**
-			* Every current-schema instruction on the knowledge base, oldest first.
-			* Drains keyset pages internally and emits the complete set. Runs:
-			*
-			* \`*[_type == "sanity.context.instruction" && knowledgeBaseId == $kb && schemaVersion == 1] | order(_createdAt asc, _id asc)\`
-			*
-			* For anything more, use {@link fetch}. Requires \`context.organizationId\`
-			* alongside the knowledge-base \`resource\` in the client configuration.
-			*/
-list: (options) => _observe(options?.signal, (signal) => _listInstructions(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), _resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client12, this)), {
-				...options,
-				signal
-			})) }
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* MCP endpoint configurations, org-owned documents read with canned GROQ
-			* queries. Requires \`context.organizationId\` in the client configuration.
-			*/
-			"mcpEndpoints",
-			{
-				/**
-				* The organization's MCP endpoint configurations, oldest first. Runs:
-				*
-				* \`*[_type == "sanity.context.mcp" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				list: (options) => _observe(options?.signal, (signal) => _listMcpEndpoints(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), {
-					...options,
-					signal
-				})),
-				/**
-				* One MCP endpoint configuration by its URL name, or \`null\` when none
-				* carries that name. Runs:
-				*
-				* \`*[_type == "sanity.context.mcp" && organizationId == $org && name == $name][0]\`
-				*
-				* For anything more, use {@link fetch}.
-				*/
-				get: (params, options) => _observe(options?.signal, (signal) => _readMcpEndpoint(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), params.name, {
-					...options,
-					signal
-				}))
-			}
-		), require_request_DXOkY5MQ.Sn(_client12, this, client), require_request_DXOkY5MQ.Sn(_httpRequest9, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
+	/** The knowledge base collection: management addressed per call. */
+	knowledgeBases = {
+		/** Create a knowledge base. Requires the org-level knowledge-base create grant. */
+		create: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: COLLECTION_URL,
+			method: "POST",
+			body: params,
+			tag: options?.tag,
+			signal
+		})),
+		/** List the organization's knowledge bases. */
+		list: (params) => _observe(params.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: COLLECTION_URL,
+			query: _query({
+				organizationId: params.organizationId,
+				cursor: params.cursor,
+				limit: params.limit
+			}),
+			tag: params.tag,
+			signal
+		})),
+		/** Fetch a knowledge base by its id. */
+		get: (knowledgeBaseId, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(knowledgeBaseId),
+			tag: options?.tag,
+			signal
+		})),
+		/** Edit a knowledge base's configuration. */
+		edit: (knowledgeBaseId, params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(knowledgeBaseId),
+			method: "PATCH",
+			body: params,
+			tag: options?.tag,
+			signal
+		})),
+		/** Delete a knowledge base and its generated content. */
+		delete: (knowledgeBaseId, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(knowledgeBaseId),
+			method: "DELETE",
+			tag: options?.tag,
+			signal
+		}))
+	};
 	/**
 	* GROQ over the organization's Context documents (conversation telemetry
 	* today; the store holds every Context family and the caller's access
@@ -5565,7 +5551,7 @@ list: (options) => _observe(options?.signal, (signal) => _listInstructions(requi
 	* Requires \`context.organizationId\` in the client configuration.
 	*/
 	fetch(query, params, options) {
-		return _fetch(require_request_DXOkY5MQ.bn(_client12, this), require_request_DXOkY5MQ.bn(_httpRequest9, this), query, params, options);
+		return _fetch(this.#client, this.#httpRequest, query, params, options);
 	}
 	/**
 	* Listen for changes to the organization's Context documents. Mirrors
@@ -5573,49 +5559,194 @@ list: (options) => _observe(options?.signal, (signal) => _listInstructions(requi
 	* default.
 	*/
 	listen(query, params, options) {
-		return _listen(require_request_DXOkY5MQ.bn(_client12, this), query, params, options);
+		return _listen(this.#client, query, params, options);
 	}
-});
-/** Request against the configured knowledge base. */
-function _request2(suffix, reqOptions = {}) {
-	return _request(require_request_DXOkY5MQ.bn(_client11, this), require_request_DXOkY5MQ.bn(_httpRequest8, this), {
-		url: _knowledgeBaseUrl(_resolveKnowledgeBaseId(require_request_DXOkY5MQ.bn(_client11, this)), suffix),
-		...reqOptions
-	});
-}
-/** Shared shape of every paginated list endpoint scoped to the knowledge base. */
-function _list(suffix, params, extraQuery) {
-	return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, suffix, {
-		query: _query({
-			cursor: params?.cursor,
-			limit: params?.limit,
-			...extraQuery
-		}),
-		signal: params?.signal,
-		tag: params?.tag
-	});
-}
-async function _uploadFile(params, options) {
-	let staged = await require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, "/imports/uploads", {
-		method: "POST",
-		body: {
-			filename: params.filename,
-			...params.contentType && { contentType: params.contentType }
+	/**
+	* Conversation telemetry. \`threadId\` identifies the conversation within
+	* the organization — reuse means the same conversation. Beyond the canned
+	* \`get\`, reads go through {@link fetch} and {@link listen} with GROQ
+	* (\`_type == "sanity.context.conversation"\`).
+	*
+	* Requires \`context.organizationId\` in the client configuration.
+	*/
+	conversations = {
+		/**
+		* Record a conversation. Messages replace the stored transcript
+		* wholesale; \`metadata\` and model fields only overwrite when present.
+		* Last write per thread wins — retries are safe.
+		*/
+		save: (params, options) => {
+			let { threadId, ...body } = params;
+			return _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+				url: _conversationUrl(this.#client, threadId),
+				method: "PUT",
+				body,
+				tag: options?.tag,
+				signal
+			}));
 		},
-		...options
-	}), config = require_request_DXOkY5MQ.bn(_client11, this).config(), putResponse = await (config.resolveFetch?.(config.proxy) ?? globalThis.fetch)(staged.uploadUrl, {
-		method: "PUT",
-		body: _fetchBody(params.file),
-		...params.contentType && { headers: { "content-type": params.contentType } },
-		signal: options?.signal
-	});
-	if (!putResponse.ok) throw Error(\`File upload failed: \${putResponse.status} \${putResponse.statusText}\`);
-	return require_request_DXOkY5MQ.wn(_Class_brand, this, _request2).call(this, \`/imports/uploads/\${encodeURIComponent(staged.importId)}/complete\`, {
-		method: "POST",
-		body: {},
-		...options
-	});
-}
+		/**
+		* Record the classification your own model produced for one thread:
+		* exactly one of \`coreMetrics\` (a verdict) or \`classificationError\`
+		* (why classification failed).
+		*/
+		classify: (params, options) => {
+			let { threadId, ...body } = params;
+			return _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+				url: _conversationUrl(this.#client, threadId),
+				method: "PATCH",
+				body,
+				tag: options?.tag,
+				signal
+			}));
+		},
+		/**
+		* Delete one recorded conversation, transcript and classification
+		* included. Errors with a 404 when the thread was never recorded.
+		*/
+		delete: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: _conversationUrl(this.#client, params.threadId),
+			method: "DELETE",
+			tag: options?.tag,
+			signal
+		})),
+		/**
+		* One recorded conversation by its thread id, or \`null\` when the thread
+		* was never recorded. Runs:
+		*
+		* \`*[_type == "sanity.context.conversation" && organizationId == $org && threadId == $threadId][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _observe(options?.signal, (signal) => _readConversation(this.#client, this.#httpRequest, params.threadId, {
+			...options,
+			signal
+		}))
+	};
+	/**
+	* Entries: the built outline, one entry per node. Reads are canned GROQ
+	* queries against the organization's document store; for anything more,
+	* use {@link fetch}. Requires \`context.organizationId\` alongside the
+	* knowledge-base \`resource\` in the client configuration.
+	*/
+	entries = {
+		/**
+		* Every entry, path-ordered, as a metadata view (\`_id\`, \`path\`,
+		* \`title\`, \`tldr\`, \`status\`) with bodies excluded. Drains keyset pages
+		* internally and emits the complete set. Runs:
+		*
+		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`
+		*
+		* For bodies, use \`entries.get\` or {@link fetch}.
+		*/
+		list: (options) => _observe(options?.signal, (signal) => _listEntries(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), {
+			...options,
+			signal
+		})),
+		/**
+		* One entry with its full body and citations, by outline path (e.g.
+		* \`billing/refunds\`), or \`null\` when no entry sits at that path. Runs:
+		*
+		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path == $path][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _observe(options?.signal, (signal) => _readEntry(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.path, {
+			...options,
+			signal
+		})),
+		/**
+		* Rebuild one entry from its already-placed sources, by outline path.
+		* Poll the returned job with the promise client's \`jobs\`;
+		* \`affectedEntries\` lists every entry the rebuild touches.
+		*/
+		rebuild: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: _knowledgeBaseUrl(_resolveKnowledgeBaseId(this.#client), \`/entries/\${encodeURIComponent(params.path)}/rebuild\`),
+			method: "POST",
+			tag: options?.tag,
+			signal
+		}))
+	};
+	/**
+	* Issues: findings from builds awaiting triage. Reads are canned GROQ
+	* queries against the organization's document store; for anything more,
+	* use {@link fetch}. Requires \`context.organizationId\` alongside the
+	* knowledge-base \`resource\` in the client configuration.
+	*/
+	issues = {
+		/**
+		* Every issue on the knowledge base, oldest first, optionally narrowed
+		* to one status. Drains keyset pages internally and emits the complete
+		* set. Runs:
+		*
+		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && status == $status] | order(_createdAt asc, _id asc)\`
+		*
+		* (the status clause only when given). For anything more, use {@link fetch}.
+		*/
+		list: (params, options) => _observe(options?.signal, (signal) => _listIssues(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params?.status, {
+			...options,
+			signal
+		})),
+		/**
+		* One issue by its document id, or \`null\` when it does not exist. Runs:
+		*
+		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && _id == $id][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _observe(options?.signal, (signal) => _readIssue(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.issueId, {
+			...options,
+			signal
+		}))
+	};
+	/**
+	* Instructions: standing decisions that steer every build. The canned
+	* GROQ read; writes are promise-based on \`client.context\`.
+	*/
+	instructions = { 
+	/**
+	* Every current-schema instruction on the knowledge base, oldest first.
+	* Drains keyset pages internally and emits the complete set. Runs:
+	*
+	* \`*[_type == "sanity.context.instruction" && knowledgeBaseId == $kb && schemaVersion == 1] | order(_createdAt asc, _id asc)\`
+	*
+	* For anything more, use {@link fetch}. Requires \`context.organizationId\`
+	* alongside the knowledge-base \`resource\` in the client configuration.
+	*/
+list: (options) => _observe(options?.signal, (signal) => _listInstructions(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), {
+		...options,
+		signal
+	})) };
+	/**
+	* MCP endpoint configurations, org-owned documents read with canned GROQ
+	* queries. Requires \`context.organizationId\` in the client configuration.
+	*/
+	mcpEndpoints = {
+		/**
+		* The organization's MCP endpoint configurations, oldest first. Runs:
+		*
+		* \`*[_type == "sanity.context.mcp" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		list: (options) => _observe(options?.signal, (signal) => _listMcpEndpoints(this.#client, this.#httpRequest, {
+			...options,
+			signal
+		})),
+		/**
+		* One MCP endpoint configuration by its URL name, or \`null\` when none
+		* carries that name. Runs:
+		*
+		* \`*[_type == "sanity.context.mcp" && organizationId == $org && name == $name][0]\`
+		*
+		* For anything more, use {@link fetch}.
+		*/
+		get: (params, options) => _observe(options?.signal, (signal) => _readMcpEndpoint(this.#client, this.#httpRequest, params.name, {
+			...options,
+			signal
+		}))
+	};
+};
 /**
 * A variant of share that takes a predicate function to determine which value to replay to new subscribers
 * @param configOrPredicate - Predicate function to determine which value to replay
@@ -5644,18 +5775,19 @@ const requiredApiVersion = "2021-03-25";
 * @public
 * @inline
 */
-var LiveClient = (_client13 = /* @__PURE__ */ new WeakMap(), class {
+var LiveClient = class {
+	#client;
 	constructor(client) {
-		require_request_DXOkY5MQ.En(this, _client13, void 0), require_request_DXOkY5MQ.Sn(_client13, this, client);
+		this.#client = client;
 	}
 	/**
 	* Requires \`apiVersion\` to be \`2021-03-25\` or later.
 	*/
 	events({ includeDrafts = !1, tag: _tag, waitFor } = {}) {
-		let config = require_request_DXOkY5MQ.bn(_client13, this).config(), { projectId, apiVersion: _apiVersion, token, withCredentials, requestTagPrefix, headers: configHeaders } = config, apiVersion = _apiVersion.replace(/^v/, "");
+		let config = this.#client.config(), { projectId, apiVersion: _apiVersion, token, withCredentials, requestTagPrefix, headers: configHeaders } = config, apiVersion = _apiVersion.replace(/^v/, "");
 		if (apiVersion !== "X" && apiVersion < requiredApiVersion) throw Error(\`The live events API requires API version \${requiredApiVersion} or later. The current API version is \${apiVersion}. Please update your API version to use this feature.\`);
 		if (includeDrafts && !token && !withCredentials) throw Error("The live events API requires a token or withCredentials when 'includeDrafts: true'. Please update your client configuration. The token should have the lowest possible access role.");
-		let path = _getDataUrl(require_request_DXOkY5MQ.bn(_client13, this), "live/events"), url = new URL(require_request_DXOkY5MQ.bn(_client13, this).getUrl(path, !1)), tag = _tag && requestTagPrefix ? [requestTagPrefix, _tag].join(".") : _tag;
+		let path = _getDataUrl(this.#client, "live/events"), url = new URL(this.#client.getUrl(path, !1)), tag = _tag && requestTagPrefix ? [requestTagPrefix, _tag].join(".") : _tag;
 		tag && url.searchParams.set("tag", tag), includeDrafts && url.searchParams.set("includeDrafts", "true"), waitFor && url.searchParams.set("waitFor", waitFor);
 		let eventSourceHeaders = {};
 		includeDrafts && token && (eventSourceHeaders.Authorization = \`Bearer \${token}\`), configHeaders && Object.assign(eventSourceHeaders, configHeaders);
@@ -5677,7 +5809,7 @@ var LiveClient = (_client13 = /* @__PURE__ */ new WeakMap(), class {
 			"welcome",
 			"reconnect",
 			"goaway"
-		]), checkCors = checkCorsObservable(new URL(require_request_DXOkY5MQ.bn(_client13, this).getUrl("/check/cors", !1)), projectId, eventSourceWithCredentials, pickBaseFetch(config)), observable = events.pipe(reconnectOnConnectionFailure(), (0, import_cjs.mergeMap)((event) => event.type === "reconnect" ? checkCors.pipe((0, import_cjs.mergeMap)(() => (0, import_cjs.of)(event))) : (0, import_cjs.of)(event)), (0, import_cjs.catchError)((err) => err instanceof require_request_DXOkY5MQ.n ? (0, import_cjs.throwError)(() => err) : checkCors.pipe((0, import_cjs.mergeMap)(() => {
+		]), checkCors = checkCorsObservable(new URL(this.#client.getUrl("/check/cors", !1)), projectId, eventSourceWithCredentials, pickBaseFetch(config)), observable = events.pipe(reconnectOnConnectionFailure(), (0, import_cjs.mergeMap)((event) => event.type === "reconnect" ? checkCors.pipe((0, import_cjs.mergeMap)(() => (0, import_cjs.of)(event))) : (0, import_cjs.of)(event)), (0, import_cjs.catchError)((err) => err instanceof require_request_DXOkY5MQ.n ? (0, import_cjs.throwError)(() => err) : checkCors.pipe((0, import_cjs.mergeMap)(() => {
 			throw err;
 		}))), (0, import_operators.map)((event) => {
 			if (event.type === "message") {
@@ -5693,7 +5825,7 @@ var LiveClient = (_client13 = /* @__PURE__ */ new WeakMap(), class {
 		}), shareReplayLatest({ predicate: (event) => event.type === "welcome" }));
 		return transportCache.set(cacheKey, observable), observable;
 	}
-});
+};
 /**
 * Probes the \`/check/cors\` endpoint to confirm whether the current origin is
 * allowed by the project's CORS configuration. EventSource failures are opaque,
@@ -5764,9 +5896,11 @@ const eventsCache = /* @__PURE__ */ new Map();
 * @internal
 * @inline
 */
-var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _httpRequest10 = /* @__PURE__ */ new WeakMap(), class {
+var ObservableDatasetsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client14, void 0), require_request_DXOkY5MQ.En(this, _httpRequest10, void 0), require_request_DXOkY5MQ.Sn(_client14, this, client), require_request_DXOkY5MQ.Sn(_httpRequest10, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Create a new dataset with the given name
@@ -5775,7 +5909,7 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Options for the dataset, including optional embeddings configuration
 	*/
 	create(name, options) {
-		return _modifyObservable(require_request_DXOkY5MQ.bn(_client14, this), require_request_DXOkY5MQ.bn(_httpRequest10, this), "PUT", name, options);
+		return _modifyObservable(this.#client, this.#httpRequest, "PUT", name, options);
 	}
 	/**
 	* Edit a dataset with the given name
@@ -5784,7 +5918,7 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - New options for the dataset
 	*/
 	edit(name, options) {
-		return _modifyObservable(require_request_DXOkY5MQ.bn(_client14, this), require_request_DXOkY5MQ.bn(_httpRequest10, this), "PATCH", name, options);
+		return _modifyObservable(this.#client, this.#httpRequest, "PATCH", name, options);
 	}
 	/**
 	* Delete a dataset with the given name
@@ -5792,15 +5926,15 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param name - Name of the dataset to delete
 	*/
 	delete(name) {
-		return _modifyObservable(require_request_DXOkY5MQ.bn(_client14, this), require_request_DXOkY5MQ.bn(_httpRequest10, this), "DELETE", name);
+		return _modifyObservable(this.#client, this.#httpRequest, "DELETE", name);
 	}
 	/**
 	* Fetch a list of datasets for the configured project
 	*/
 	list() {
-		resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client14, this).config());
-		let config = require_request_DXOkY5MQ.bn(_client14, this).config(), projectId = config.projectId, url = "/datasets";
-		return config.useProjectHostname === !1 && (url = \`/projects/\${projectId}/datasets\`), _requestObservable(require_request_DXOkY5MQ.bn(_client14, this), require_request_DXOkY5MQ.bn(_httpRequest10, this), {
+		resourceGuard("dataset", this.#client.config());
+		let config = this.#client.config(), projectId = config.projectId, url = "/datasets";
+		return config.useProjectHostname === !1 && (url = \`/projects/\${projectId}/datasets\`), _requestObservable(this.#client, this.#httpRequest, {
 			url,
 			tag: null
 		});
@@ -5811,8 +5945,8 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param name - Name of the dataset
 	*/
 	getEmbeddingsSettings(name) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client14, this).config()), dataset(name), _requestObservable(require_request_DXOkY5MQ.bn(_client14, this), require_request_DXOkY5MQ.bn(_httpRequest10, this), {
-			url: _embeddingsSettingsUri(require_request_DXOkY5MQ.bn(_client14, this), name),
+		return resourceGuard("dataset", this.#client.config()), dataset(name), _requestObservable(this.#client, this.#httpRequest, {
+			url: _embeddingsSettingsUri(this.#client, name),
 			tag: null
 		});
 	}
@@ -5823,16 +5957,18 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param settings - Embeddings settings to apply
 	*/
 	editEmbeddingsSettings(name, settings) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client14, this).config()), dataset(name), _requestObservable(require_request_DXOkY5MQ.bn(_client14, this), require_request_DXOkY5MQ.bn(_httpRequest10, this), {
+		return resourceGuard("dataset", this.#client.config()), dataset(name), _requestObservable(this.#client, this.#httpRequest, {
 			method: "PUT",
-			url: _embeddingsSettingsUri(require_request_DXOkY5MQ.bn(_client14, this), name),
+			url: _embeddingsSettingsUri(this.#client, name),
 			body: settings,
 			tag: null
 		});
 	}
-}), DatasetsClient = (_client15 = /* @__PURE__ */ new WeakMap(), _httpRequest11 = /* @__PURE__ */ new WeakMap(), class {
+}, DatasetsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client15, void 0), require_request_DXOkY5MQ.En(this, _httpRequest11, void 0), require_request_DXOkY5MQ.Sn(_client15, this, client), require_request_DXOkY5MQ.Sn(_httpRequest11, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Create a new dataset with the given name
@@ -5841,7 +5977,7 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Options for the dataset, including optional embeddings configuration
 	*/
 	create(name, options) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client15, this).config()), _modify(require_request_DXOkY5MQ.bn(_client15, this), require_request_DXOkY5MQ.bn(_httpRequest11, this), "PUT", name, options);
+		return resourceGuard("dataset", this.#client.config()), _modify(this.#client, this.#httpRequest, "PUT", name, options);
 	}
 	/**
 	* Edit a dataset with the given name
@@ -5850,7 +5986,7 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - New options for the dataset
 	*/
 	edit(name, options) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client15, this).config()), _modify(require_request_DXOkY5MQ.bn(_client15, this), require_request_DXOkY5MQ.bn(_httpRequest11, this), "PATCH", name, options);
+		return resourceGuard("dataset", this.#client.config()), _modify(this.#client, this.#httpRequest, "PATCH", name, options);
 	}
 	/**
 	* Delete a dataset with the given name
@@ -5858,15 +5994,15 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param name - Name of the dataset to delete
 	*/
 	delete(name) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client15, this).config()), _modify(require_request_DXOkY5MQ.bn(_client15, this), require_request_DXOkY5MQ.bn(_httpRequest11, this), "DELETE", name);
+		return resourceGuard("dataset", this.#client.config()), _modify(this.#client, this.#httpRequest, "DELETE", name);
 	}
 	/**
 	* Fetch a list of datasets for the configured project
 	*/
 	list() {
-		resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client15, this).config());
-		let config = require_request_DXOkY5MQ.bn(_client15, this).config(), projectId = config.projectId, url = "/datasets";
-		return config.useProjectHostname === !1 && (url = \`/projects/\${projectId}/datasets\`), _request(require_request_DXOkY5MQ.bn(_client15, this), require_request_DXOkY5MQ.bn(_httpRequest11, this), {
+		resourceGuard("dataset", this.#client.config());
+		let config = this.#client.config(), projectId = config.projectId, url = "/datasets";
+		return config.useProjectHostname === !1 && (url = \`/projects/\${projectId}/datasets\`), _request(this.#client, this.#httpRequest, {
 			url,
 			tag: null
 		});
@@ -5877,8 +6013,8 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param name - Name of the dataset
 	*/
 	getEmbeddingsSettings(name) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client15, this).config()), dataset(name), _request(require_request_DXOkY5MQ.bn(_client15, this), require_request_DXOkY5MQ.bn(_httpRequest11, this), {
-			url: _embeddingsSettingsUri(require_request_DXOkY5MQ.bn(_client15, this), name),
+		return resourceGuard("dataset", this.#client.config()), dataset(name), _request(this.#client, this.#httpRequest, {
+			url: _embeddingsSettingsUri(this.#client, name),
 			tag: null
 		});
 	}
@@ -5889,14 +6025,14 @@ var ObservableDatasetsClient = (_client14 = /* @__PURE__ */ new WeakMap(), _http
 	* @param settings - Embeddings settings to apply
 	*/
 	editEmbeddingsSettings(name, settings) {
-		return resourceGuard("dataset", require_request_DXOkY5MQ.bn(_client15, this).config()), dataset(name), _request(require_request_DXOkY5MQ.bn(_client15, this), require_request_DXOkY5MQ.bn(_httpRequest11, this), {
+		return resourceGuard("dataset", this.#client.config()), dataset(name), _request(this.#client, this.#httpRequest, {
 			method: "PUT",
-			url: _embeddingsSettingsUri(require_request_DXOkY5MQ.bn(_client15, this), name),
+			url: _embeddingsSettingsUri(this.#client, name),
 			body: settings,
 			tag: null
 		});
 	}
-});
+};
 function _embeddingsSettingsUri(client, name) {
 	let config = client.config();
 	return config.useProjectHostname === !1 ? \`/projects/\${config.projectId}/datasets/\${name}/settings/embeddings\` : \`/datasets/\${name}/settings/embeddings\`;
@@ -5977,23 +6113,29 @@ function _invoke(client, httpRequest, functionName, request, options) {
 	});
 }
 /** @public */
-var ObservableFunctionsClient = (_client16 = /* @__PURE__ */ new WeakMap(), _httpRequest12 = /* @__PURE__ */ new WeakMap(), class {
+var ObservableFunctionsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client16, void 0), require_request_DXOkY5MQ.En(this, _httpRequest12, void 0), require_request_DXOkY5MQ.Sn(_client16, this, client), require_request_DXOkY5MQ.Sn(_httpRequest12, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	invoke(functionName, request, options) {
-		return _invoke(require_request_DXOkY5MQ.bn(_client16, this), require_request_DXOkY5MQ.bn(_httpRequest12, this), functionName, request, options);
+		return _invoke(this.#client, this.#httpRequest, functionName, request, options);
 	}
-}), FunctionsClient = (_client17 = /* @__PURE__ */ new WeakMap(), _httpRequest13 = /* @__PURE__ */ new WeakMap(), class {
+}, FunctionsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client17, void 0), require_request_DXOkY5MQ.En(this, _httpRequest13, void 0), require_request_DXOkY5MQ.Sn(_client17, this, client), require_request_DXOkY5MQ.Sn(_httpRequest13, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	invoke(functionName, request, options) {
-		return (0, import_cjs.lastValueFrom)(_invoke(require_request_DXOkY5MQ.bn(_client17, this), require_request_DXOkY5MQ.bn(_httpRequest13, this), functionName, request, options));
+		return (0, import_cjs.lastValueFrom)(_invoke(this.#client, this.#httpRequest, functionName, request, options));
 	}
-}), ObservableMediaLibraryVideoClient = (_client18 = /* @__PURE__ */ new WeakMap(), _httpRequest14 = /* @__PURE__ */ new WeakMap(), class {
+}, ObservableMediaLibraryVideoClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client18, void 0), require_request_DXOkY5MQ.En(this, _httpRequest14, void 0), require_request_DXOkY5MQ.Sn(_client18, this, client), require_request_DXOkY5MQ.Sn(_httpRequest14, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Get video playback information for a media library asset
@@ -6002,18 +6144,20 @@ var ObservableFunctionsClient = (_client16 = /* @__PURE__ */ new WeakMap(), _htt
 	* @param options - Options for transformations and expiration
 	*/
 	getPlaybackInfo(assetIdentifier, options = {}) {
-		let config = require_request_DXOkY5MQ.bn(_client18, this).config(), configMediaLibraryId = (config.resource || config["~experimental_resource"])?.id, { instanceId, libraryId } = parseAssetInstanceId(assetIdentifier), effectiveLibraryId = libraryId || configMediaLibraryId;
+		let config = this.#client.config(), configMediaLibraryId = (config.resource || config["~experimental_resource"])?.id, { instanceId, libraryId } = parseAssetInstanceId(assetIdentifier), effectiveLibraryId = libraryId || configMediaLibraryId;
 		if (!effectiveLibraryId) throw Error("Could not determine Media Library ID - you need to provide a valid Media Library ID in the client config or a Media Library GDR");
 		let url = buildVideoPlaybackInfoUrl(instanceId, effectiveLibraryId), queryParams = buildQueryParams(options);
-		return _requestObservable(require_request_DXOkY5MQ.bn(_client18, this), require_request_DXOkY5MQ.bn(_httpRequest14, this), {
+		return _requestObservable(this.#client, this.#httpRequest, {
 			method: "GET",
 			url,
 			query: queryParams
 		});
 	}
-}), MediaLibraryVideoClient = (_client19 = /* @__PURE__ */ new WeakMap(), _httpRequest15 = /* @__PURE__ */ new WeakMap(), class {
+}, MediaLibraryVideoClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client19, void 0), require_request_DXOkY5MQ.En(this, _httpRequest15, void 0), require_request_DXOkY5MQ.Sn(_client19, this, client), require_request_DXOkY5MQ.Sn(_httpRequest15, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Get video playback information for a media library asset
@@ -6022,16 +6166,16 @@ var ObservableFunctionsClient = (_client16 = /* @__PURE__ */ new WeakMap(), _htt
 	* @param options - Options for transformations and expiration
 	*/
 	getPlaybackInfo(assetIdentifier, options = {}) {
-		let config = require_request_DXOkY5MQ.bn(_client19, this).config(), configMediaLibraryId = (config.resource || config["~experimental_resource"])?.id, { instanceId, libraryId } = parseAssetInstanceId(assetIdentifier), effectiveLibraryId = libraryId || configMediaLibraryId;
+		let config = this.#client.config(), configMediaLibraryId = (config.resource || config["~experimental_resource"])?.id, { instanceId, libraryId } = parseAssetInstanceId(assetIdentifier), effectiveLibraryId = libraryId || configMediaLibraryId;
 		if (!effectiveLibraryId) throw Error("Could not determine Media Library ID - you need to provide a valid Media Library ID in the client config or a Media Library GDR");
 		let url = buildVideoPlaybackInfoUrl(instanceId, effectiveLibraryId), queryParams = buildQueryParams(options);
-		return _request(require_request_DXOkY5MQ.bn(_client19, this), require_request_DXOkY5MQ.bn(_httpRequest15, this), {
+		return _request(this.#client, this.#httpRequest, {
 			method: "GET",
 			url,
 			query: queryParams
 		});
 	}
-});
+};
 const ML_GDR_PATTERN = /^media-library:(ml[^:]+):([^:]+)$/;
 /** @internal */
 function isSanityReference(assetIdentifier) {
@@ -6070,9 +6214,11 @@ function buildQueryParams(options) {
 * @internal
 * @inline
 */
-var ObservableProjectsClient = (_client20 = /* @__PURE__ */ new WeakMap(), _httpRequest16 = /* @__PURE__ */ new WeakMap(), class {
+var ObservableProjectsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client20, void 0), require_request_DXOkY5MQ.En(this, _httpRequest16, void 0), require_request_DXOkY5MQ.Sn(_client20, this, client), require_request_DXOkY5MQ.Sn(_httpRequest16, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Fetch a list of projects the authenticated user has access to.
@@ -6085,7 +6231,7 @@ var ObservableProjectsClient = (_client20 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	list(options) {
 		let query = {};
-		return options?.includeMembers === !1 && (query.includeMembers = "false"), options?.includeFeatures === !1 && (query.includeFeatures = "false"), options?.organizationId && (query.organizationId = options.organizationId), options?.onlyExplicitMembership && (query.onlyExplicitMembership = "true"), _requestObservable(require_request_DXOkY5MQ.bn(_client20, this), require_request_DXOkY5MQ.bn(_httpRequest16, this), {
+		return options?.includeMembers === !1 && (query.includeMembers = "false"), options?.includeFeatures === !1 && (query.includeFeatures = "false"), options?.organizationId && (query.organizationId = options.organizationId), options?.onlyExplicitMembership && (query.onlyExplicitMembership = "true"), _requestObservable(this.#client, this.#httpRequest, {
 			url: "/projects",
 			query
 		});
@@ -6096,11 +6242,13 @@ var ObservableProjectsClient = (_client20 = /* @__PURE__ */ new WeakMap(), _http
 	* @param projectId - ID of the project to fetch
 	*/
 	getById(projectId) {
-		return _requestObservable(require_request_DXOkY5MQ.bn(_client20, this), require_request_DXOkY5MQ.bn(_httpRequest16, this), { url: \`/projects/\${projectId}\` });
+		return _requestObservable(this.#client, this.#httpRequest, { url: \`/projects/\${projectId}\` });
 	}
-}), ProjectsClient = (_client21 = /* @__PURE__ */ new WeakMap(), _httpRequest17 = /* @__PURE__ */ new WeakMap(), class {
+}, ProjectsClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client21, void 0), require_request_DXOkY5MQ.En(this, _httpRequest17, void 0), require_request_DXOkY5MQ.Sn(_client21, this, client), require_request_DXOkY5MQ.Sn(_httpRequest17, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Fetch a list of projects the authenticated user has access to.
@@ -6113,7 +6261,7 @@ var ObservableProjectsClient = (_client20 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	list(options) {
 		let query = {};
-		return options?.includeMembers === !1 && (query.includeMembers = "false"), options?.includeFeatures === !1 && (query.includeFeatures = "false"), options?.organizationId && (query.organizationId = options.organizationId), options?.onlyExplicitMembership && (query.onlyExplicitMembership = "true"), _request(require_request_DXOkY5MQ.bn(_client21, this), require_request_DXOkY5MQ.bn(_httpRequest17, this), {
+		return options?.includeMembers === !1 && (query.includeMembers = "false"), options?.includeFeatures === !1 && (query.includeFeatures = "false"), options?.organizationId && (query.organizationId = options.organizationId), options?.onlyExplicitMembership && (query.onlyExplicitMembership = "true"), _request(this.#client, this.#httpRequest, {
 			url: "/projects",
 			query
 		});
@@ -6124,9 +6272,9 @@ var ObservableProjectsClient = (_client20 = /* @__PURE__ */ new WeakMap(), _http
 	* @param projectId - ID of the project to fetch
 	*/
 	getById(projectId) {
-		return _request(require_request_DXOkY5MQ.bn(_client21, this), require_request_DXOkY5MQ.bn(_httpRequest17, this), { url: \`/projects/\${projectId}\` });
+		return _request(this.#client, this.#httpRequest, { url: \`/projects/\${projectId}\` });
 	}
-});
+};
 /**
 * @internal
 *
@@ -6196,9 +6344,11 @@ const getArgs = (releaseOrOptions, maybeOptions) => {
 * @public
 * @inline
 */
-var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _httpRequest18 = /* @__PURE__ */ new WeakMap(), class {
+var ObservableReleasesClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client22, void 0), require_request_DXOkY5MQ.En(this, _httpRequest18, void 0), require_request_DXOkY5MQ.Sn(_client22, this, client), require_request_DXOkY5MQ.Sn(_httpRequest18, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* @public
@@ -6228,11 +6378,11 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* \`\`\`
 	*/
 	get({ releaseId }, options) {
-		return _getDocumentObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), \`_.releases.\${releaseId}\`, options);
+		return _getDocumentObservable(this.#client, this.#httpRequest, \`_.releases.\${releaseId}\`, options);
 	}
 	create(releaseOrOptions, maybeOptions) {
 		let { action, options } = createRelease(releaseOrOptions, maybeOptions), { releaseId, metadata } = action;
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), action, options).pipe((0, import_cjs.map)((actionResult) => ({
+		return _actionObservable(this.#client, this.#httpRequest, action, options).pipe((0, import_cjs.map)((actionResult) => ({
 			...actionResult,
 			releaseId,
 			metadata
@@ -6257,7 +6407,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			releaseId,
 			patch
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), editAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, editAction, options);
 	}
 	/**
 	* @public
@@ -6282,7 +6432,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.publish",
 			releaseId
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), publishAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, publishAction, options);
 	}
 	/**
 	* @public
@@ -6304,7 +6454,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.archive",
 			releaseId
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), archiveAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, archiveAction, options);
 	}
 	/**
 	* @public
@@ -6324,7 +6474,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.unarchive",
 			releaseId
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), unarchiveAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, unarchiveAction, options);
 	}
 	/**
 	* @public
@@ -6348,7 +6498,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			releaseId,
 			publishAt
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), scheduleAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, scheduleAction, options);
 	}
 	/**
 	* @public
@@ -6370,7 +6520,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.unschedule",
 			releaseId
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), unscheduleAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, unscheduleAction, options);
 	}
 	/**
 	* @public
@@ -6390,7 +6540,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.delete",
 			releaseId
 		};
-		return _actionObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), deleteAction, options);
+		return _actionObservable(this.#client, this.#httpRequest, deleteAction, options);
 	}
 	/**
 	* @public
@@ -6405,11 +6555,13 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @returns An observable that resolves to the documents in the release.
 	*/
 	fetchDocuments({ releaseId }, options) {
-		return _getReleaseDocumentsObservable(require_request_DXOkY5MQ.bn(_client22, this), require_request_DXOkY5MQ.bn(_httpRequest18, this), releaseId, options);
+		return _getReleaseDocumentsObservable(this.#client, this.#httpRequest, releaseId, options);
 	}
-}), ReleasesClient = (_client23 = /* @__PURE__ */ new WeakMap(), _httpRequest19 = /* @__PURE__ */ new WeakMap(), class {
+}, ReleasesClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client23, void 0), require_request_DXOkY5MQ.En(this, _httpRequest19, void 0), require_request_DXOkY5MQ.Sn(_client23, this, client), require_request_DXOkY5MQ.Sn(_httpRequest19, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* @public
@@ -6438,12 +6590,12 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* \`\`\`
 	*/
 	get({ releaseId }, options) {
-		return _getDocument(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), \`_.releases.\${releaseId}\`, options);
+		return _getDocument(this.#client, this.#httpRequest, \`_.releases.\${releaseId}\`, options);
 	}
 	async create(releaseOrOptions, maybeOptions) {
 		let { action, options } = createRelease(releaseOrOptions, maybeOptions), { releaseId, metadata } = action;
 		return {
-			...await _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), action, options),
+			...await _action(this.#client, this.#httpRequest, action, options),
 			releaseId,
 			metadata
 		};
@@ -6467,7 +6619,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			releaseId,
 			patch
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), editAction, options);
+		return _action(this.#client, this.#httpRequest, editAction, options);
 	}
 	/**
 	* @public
@@ -6492,7 +6644,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.publish",
 			releaseId
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), publishAction, options);
+		return _action(this.#client, this.#httpRequest, publishAction, options);
 	}
 	/**
 	* @public
@@ -6514,7 +6666,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.archive",
 			releaseId
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), archiveAction, options);
+		return _action(this.#client, this.#httpRequest, archiveAction, options);
 	}
 	/**
 	* @public
@@ -6534,7 +6686,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.unarchive",
 			releaseId
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), unarchiveAction, options);
+		return _action(this.#client, this.#httpRequest, unarchiveAction, options);
 	}
 	/**
 	* @public
@@ -6558,7 +6710,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			releaseId,
 			publishAt
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), scheduleAction, options);
+		return _action(this.#client, this.#httpRequest, scheduleAction, options);
 	}
 	/**
 	* @public
@@ -6580,7 +6732,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.unschedule",
 			releaseId
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), unscheduleAction, options);
+		return _action(this.#client, this.#httpRequest, unscheduleAction, options);
 	}
 	/**
 	* @public
@@ -6600,7 +6752,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			actionType: "sanity.action.release.delete",
 			releaseId
 		};
-		return _action(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), deleteAction, options);
+		return _action(this.#client, this.#httpRequest, deleteAction, options);
 	}
 	/**
 	* @public
@@ -6615,11 +6767,13 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @returns A promise that resolves to the documents in the release.
 	*/
 	fetchDocuments({ releaseId }, options) {
-		return _getReleaseDocuments(require_request_DXOkY5MQ.bn(_client23, this), require_request_DXOkY5MQ.bn(_httpRequest19, this), releaseId, options);
+		return _getReleaseDocuments(this.#client, this.#httpRequest, releaseId, options);
 	}
-}), ObservableUsersClient = (_client24 = /* @__PURE__ */ new WeakMap(), _httpRequest20 = /* @__PURE__ */ new WeakMap(), class {
+}, ObservableUsersClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client24, void 0), require_request_DXOkY5MQ.En(this, _httpRequest20, void 0), require_request_DXOkY5MQ.Sn(_client24, this, client), require_request_DXOkY5MQ.Sn(_httpRequest20, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Fetch a user by user ID
@@ -6627,11 +6781,13 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param id - User ID of the user to fetch. If \`me\` is provided, a minimal response including the users role is returned.
 	*/
 	getById(id) {
-		return _requestObservable(require_request_DXOkY5MQ.bn(_client24, this), require_request_DXOkY5MQ.bn(_httpRequest20, this), { url: \`/users/\${id}\` });
+		return _requestObservable(this.#client, this.#httpRequest, { url: \`/users/\${id}\` });
 	}
-}), UsersClient = (_client25 = /* @__PURE__ */ new WeakMap(), _httpRequest21 = /* @__PURE__ */ new WeakMap(), class {
+}, UsersClient = class {
+	#client;
+	#httpRequest;
 	constructor(client, httpRequest) {
-		require_request_DXOkY5MQ.En(this, _client25, void 0), require_request_DXOkY5MQ.En(this, _httpRequest21, void 0), require_request_DXOkY5MQ.Sn(_client25, this, client), require_request_DXOkY5MQ.Sn(_httpRequest21, this, httpRequest);
+		this.#client = client, this.#httpRequest = httpRequest;
 	}
 	/**
 	* Fetch a user by user ID
@@ -6639,97 +6795,71 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param id - User ID of the user to fetch. If \`me\` is provided, a minimal response including the users role is returned.
 	*/
 	getById(id) {
-		return _request(require_request_DXOkY5MQ.bn(_client25, this), require_request_DXOkY5MQ.bn(_httpRequest21, this), { url: \`/users/\${id}\` });
+		return _request(this.#client, this.#httpRequest, { url: \`/users/\${id}\` });
 	}
-}), ObservableSanityClient = (_clientConfig = /* @__PURE__ */ new WeakMap(), _httpRequest22 = /* @__PURE__ */ new WeakMap(), class ObservableSanityClient {
+}, ObservableSanityClient = class ObservableSanityClient {
+	/**
+	* Upload, fetch and delete assets (images and files) in the configured dataset
+	*
+	* @category Assets
+	*/
+	assets;
+	/**
+	* Create, list, edit and delete datasets in the configured project
+	*
+	* @category Projects & Datasets
+	*/
+	datasets;
+	/**
+	* Subscribe to live content updates through the Live Content API
+	*
+	* @category Real-time
+	*/
+	live;
+	/**
+	* Interact with Media Library assets
+	*
+	* @category Assets
+	*/
+	mediaLibrary;
+	/**
+	* Fetch information about the projects the authenticated user has access to
+	*
+	* @category Projects & Datasets
+	*/
+	projects;
+	/**
+	* Fetch information about users in the configured project
+	*
+	* @category Projects & Datasets
+	*/
+	users;
+	/**
+	* Run Agent Actions - AI-powered operations to generate, transform, translate, prompt and patch documents
+	*
+	* @category Agent Actions
+	*/
+	agent;
+	collaboration;
+	functions;
+	/**
+	* Create and manage content releases and their scheduled publishing
+	*
+	* @category Releases
+	*/
+	releases;
+	/** @beta */
+	context;
+	#clientConfig;
+	#httpRequest;
+	/**
+	* Listen to document changes matching a GROQ query, delivered as server-sent events
+	*
+	* @category Real-time
+	*/
+	listen = _listen$2;
 	constructor(httpRequest, config = defaultConfig) {
-		require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Upload, fetch and delete assets (images and files) in the configured dataset
-			*
-			* @category Assets
-			*/
-			"assets",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Create, list, edit and delete datasets in the configured project
-			*
-			* @category Projects & Datasets
-			*/
-			"datasets",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Subscribe to live content updates through the Live Content API
-			*
-			* @category Real-time
-			*/
-			"live",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Interact with Media Library assets
-			*
-			* @category Assets
-			*/
-			"mediaLibrary",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Fetch information about the projects the authenticated user has access to
-			*
-			* @category Projects & Datasets
-			*/
-			"projects",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Fetch information about users in the configured project
-			*
-			* @category Projects & Datasets
-			*/
-			"users",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Run Agent Actions - AI-powered operations to generate, transform, translate, prompt and patch documents
-			*
-			* @category Agent Actions
-			*/
-			"agent",
-			void 0
-		), require_request_DXOkY5MQ.On(this, "collaboration", void 0), require_request_DXOkY5MQ.On(this, "functions", void 0), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Create and manage content releases and their scheduled publishing
-			*
-			* @category Releases
-			*/
-			"releases",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/** @beta */
-			"context",
-			void 0
-		), require_request_DXOkY5MQ.En(this, _clientConfig, void 0), require_request_DXOkY5MQ.En(this, _httpRequest22, void 0), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Listen to document changes matching a GROQ query, delivered as server-sent events
-			*
-			* @category Real-time
-			*/
-			"listen",
-			_listen$2
-		), this.config(config), require_request_DXOkY5MQ.Sn(_httpRequest22, this, httpRequest), this.assets = new ObservableAssetsClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)), this.datasets = new ObservableDatasetsClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)), this.live = new LiveClient(this), this.mediaLibrary = { video: new ObservableMediaLibraryVideoClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)) }, this.projects = new ObservableProjectsClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)), this.users = new ObservableUsersClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)), this.agent = { action: new ObservableAgentsActionClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)) }, this.collaboration = { comments: new ObservableCollaborationCommentsClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)) }, this.functions = new ObservableFunctionsClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)), this.releases = new ObservableReleasesClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this)), this.context = new ObservableContextClient(this, require_request_DXOkY5MQ.bn(_httpRequest22, this));
+		this.config(config), this.#httpRequest = httpRequest, this.assets = new ObservableAssetsClient(this, this.#httpRequest), this.datasets = new ObservableDatasetsClient(this, this.#httpRequest), this.live = new LiveClient(this), this.mediaLibrary = { video: new ObservableMediaLibraryVideoClient(this, this.#httpRequest) }, this.projects = new ObservableProjectsClient(this, this.#httpRequest), this.users = new ObservableUsersClient(this, this.#httpRequest), this.agent = { action: new ObservableAgentsActionClient(this, this.#httpRequest) }, this.collaboration = { comments: new ObservableCollaborationCommentsClient(this, this.#httpRequest) }, this.functions = new ObservableFunctionsClient(this, this.#httpRequest), this.releases = new ObservableReleasesClient(this, this.#httpRequest), this.context = new ObservableContextClient(this, this.#httpRequest);
 	}
 	/**
 	* Clone the client - returns a new instance
@@ -6737,12 +6867,12 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @category Configuration
 	*/
 	clone() {
-		return new ObservableSanityClient(require_request_DXOkY5MQ.bn(_httpRequest22, this), this.config());
+		return new ObservableSanityClient(this.#httpRequest, this.config());
 	}
 	config(newConfig) {
-		if (newConfig === void 0) return { ...require_request_DXOkY5MQ.bn(_clientConfig, this) };
-		if (require_request_DXOkY5MQ.bn(_clientConfig, this) && require_request_DXOkY5MQ.bn(_clientConfig, this).allowReconfigure === !1) throw Error("Existing client instance cannot be reconfigured - use \`withConfig(newConfig)\` to return a new client");
-		return require_request_DXOkY5MQ.Sn(_clientConfig, this, initConfig(newConfig, require_request_DXOkY5MQ.bn(_clientConfig, this) || {})), this;
+		if (newConfig === void 0) return { ...this.#clientConfig };
+		if (this.#clientConfig && this.#clientConfig.allowReconfigure === !1) throw Error("Existing client instance cannot be reconfigured - use \`withConfig(newConfig)\` to return a new client");
+		return this.#clientConfig = initConfig(newConfig, this.#clientConfig || {}), this;
 	}
 	/**
 	* Clone the client with a new (partial) configuration.
@@ -6753,7 +6883,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	withConfig(newConfig) {
 		let thisConfig = this.config();
-		return new ObservableSanityClient(require_request_DXOkY5MQ.bn(_httpRequest22, this), {
+		return new ObservableSanityClient(this.#httpRequest, {
 			...thisConfig,
 			...newConfig,
 			stega: {
@@ -6763,10 +6893,10 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 		});
 	}
 	fetch(query, params, options) {
-		return _fetchObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), require_request_DXOkY5MQ.bn(_clientConfig, this).stega, query, params, options);
+		return _fetchObservable(this, this.#httpRequest, this.#clientConfig.stega, query, params, options);
 	}
 	getDocument(id, options) {
-		if (options?.includeAllVersions === !0) return _getDocumentObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), id, {
+		if (options?.includeAllVersions === !0) return _getDocumentObservable(this, this.#httpRequest, id, {
 			...options,
 			includeAllVersions: !0
 		});
@@ -6776,7 +6906,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			releaseId: options?.releaseId,
 			...options && "includeAllVersions" in options ? { includeAllVersions: !1 } : {}
 		};
-		return _getDocumentObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), id, opts);
+		return _getDocumentObservable(this, this.#httpRequest, id, opts);
 	}
 	/**
 	* Fetch multiple documents in one request.
@@ -6790,7 +6920,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Request options
 	*/
 	getDocuments(ids, options) {
-		return _getDocumentsObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), ids, options);
+		return _getDocumentsObservable(this, this.#httpRequest, ids, options);
 	}
 	/**
 	* Convenient and bandwidth efficient method of checking wether a set of document IDs exists.
@@ -6802,19 +6932,19 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Request options
 	*/
 	documentsExists(ids, options) {
-		return _documentsExistsObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), ids, options);
+		return _documentsExistsObservable(this, this.#httpRequest, ids, options);
 	}
 	create(document, options) {
-		return _createObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), document, "create", options);
+		return _createObservable(this, this.#httpRequest, document, "create", options);
 	}
 	createIfNotExists(document, options) {
-		return _createIfNotExistsObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), document, options);
+		return _createIfNotExistsObservable(this, this.#httpRequest, document, options);
 	}
 	createOrReplace(document, options) {
-		return _createOrReplaceObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), document, options);
+		return _createOrReplaceObservable(this, this.#httpRequest, document, options);
 	}
 	createVersion({ document, publishedId, releaseId, baseId, ifBaseRevisionId }, options) {
-		if (!document) return _createVersionFromBaseObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), publishedId, baseId, releaseId, ifBaseRevisionId, options);
+		if (!document) return _createVersionFromBaseObservable(this, this.#httpRequest, publishedId, baseId, releaseId, ifBaseRevisionId, options);
 		let documentVersionId = deriveDocumentVersionId("createVersion", {
 			document,
 			publishedId,
@@ -6823,10 +6953,10 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			...document,
 			_id: documentVersionId
 		}, versionPublishedId = publishedId || getPublishedId(document._id);
-		return _createVersionObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), documentVersion, versionPublishedId, options);
+		return _createVersionObservable(this, this.#httpRequest, documentVersion, versionPublishedId, options);
 	}
 	delete(selection, options) {
-		return _deleteObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), selection, options);
+		return _deleteObservable(this, this.#httpRequest, selection, options);
 	}
 	/**
 	* @public
@@ -6860,7 +6990,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	discardVersion({ releaseId, publishedId }, purge, options) {
 		let documentVersionId = getDocumentVersionId(publishedId, releaseId);
-		return _discardVersionObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), documentVersionId, purge, options);
+		return _discardVersionObservable(this, this.#httpRequest, documentVersionId, purge, options);
 	}
 	replaceVersion({ document, publishedId, releaseId }, options) {
 		let documentVersionId = deriveDocumentVersionId("replaceVersion", {
@@ -6871,7 +7001,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			...document,
 			_id: documentVersionId
 		};
-		return _replaceVersionObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), documentVersion, options);
+		return _replaceVersionObservable(this, this.#httpRequest, documentVersion, options);
 	}
 	/**
 	* @public
@@ -6898,10 +7028,10 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	unpublishVersion({ releaseId, publishedId }, options) {
 		let versionId = getVersionId(publishedId, releaseId);
-		return _unpublishVersionObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), versionId, publishedId, options);
+		return _unpublishVersionObservable(this, this.#httpRequest, versionId, publishedId, options);
 	}
 	mutate(operations, options) {
-		return _mutateObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), operations, options);
+		return _mutateObservable(this, this.#httpRequest, operations, options);
 	}
 	/**
 	* Create a new buildable patch of operations to perform
@@ -6932,7 +7062,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Action options
 	*/
 	action(operations, options) {
-		return _actionObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), operations, options);
+		return _actionObservable(this, this.#httpRequest, operations, options);
 	}
 	/**
 	* Perform an HTTP request against the Sanity API
@@ -6942,7 +7072,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Request options
 	*/
 	request(options) {
-		return _requestObservable(this, require_request_DXOkY5MQ.bn(_httpRequest22, this), options);
+		return _requestObservable(this, this.#httpRequest, options);
 	}
 	/**
 	* Get a Sanity API URL for the URI provided
@@ -6966,104 +7096,75 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	getDataUrl(operation, path) {
 		return _getDataUrl(this, operation, path);
 	}
-}), SanityClient = (_clientConfig2 = /* @__PURE__ */ new WeakMap(), _httpRequest23 = /* @__PURE__ */ new WeakMap(), class SanityClient {
+}, SanityClient = class SanityClient {
+	/**
+	* Upload, fetch and delete assets (images and files) in the configured dataset
+	*
+	* @category Assets
+	*/
+	assets;
+	/**
+	* Create, list, edit and delete datasets in the configured project
+	*
+	* @category Projects & Datasets
+	*/
+	datasets;
+	/**
+	* Subscribe to live content updates through the Live Content API
+	*
+	* @category Real-time
+	*/
+	live;
+	/**
+	* Interact with Media Library assets
+	*
+	* @category Assets
+	*/
+	mediaLibrary;
+	/**
+	* Fetch information about the projects the authenticated user has access to
+	*
+	* @category Projects & Datasets
+	*/
+	projects;
+	/**
+	* Fetch information about users in the configured project
+	*
+	* @category Projects & Datasets
+	*/
+	users;
+	/**
+	* Run Agent Actions - AI-powered operations to generate, transform, translate, prompt and patch documents
+	*
+	* @category Agent Actions
+	*/
+	agent;
+	collaboration;
+	functions;
+	/**
+	* Create and manage content releases and their scheduled publishing
+	*
+	* @category Releases
+	*/
+	releases;
+	/** @beta */
+	context;
+	/**
+	* Observable version of the Sanity client, with the same configuration as the promise-based one
+	*
+	* @category Configuration
+	*/
+	observable;
+	#clientConfig;
+	#httpRequest;
+	/**
+	* Listen to document changes matching a GROQ query, delivered as server-sent events
+	*
+	* @category Real-time
+	*/
+	listen = _listen$2;
 	constructor(httpRequest, config = defaultConfig) {
-		require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Upload, fetch and delete assets (images and files) in the configured dataset
-			*
-			* @category Assets
-			*/
-			"assets",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Create, list, edit and delete datasets in the configured project
-			*
-			* @category Projects & Datasets
-			*/
-			"datasets",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Subscribe to live content updates through the Live Content API
-			*
-			* @category Real-time
-			*/
-			"live",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Interact with Media Library assets
-			*
-			* @category Assets
-			*/
-			"mediaLibrary",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Fetch information about the projects the authenticated user has access to
-			*
-			* @category Projects & Datasets
-			*/
-			"projects",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Fetch information about users in the configured project
-			*
-			* @category Projects & Datasets
-			*/
-			"users",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Run Agent Actions - AI-powered operations to generate, transform, translate, prompt and patch documents
-			*
-			* @category Agent Actions
-			*/
-			"agent",
-			void 0
-		), require_request_DXOkY5MQ.On(this, "collaboration", void 0), require_request_DXOkY5MQ.On(this, "functions", void 0), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Create and manage content releases and their scheduled publishing
-			*
-			* @category Releases
-			*/
-			"releases",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/** @beta */
-			"context",
-			void 0
-		), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Observable version of the Sanity client, with the same configuration as the promise-based one
-			*
-			* @category Configuration
-			*/
-			"observable",
-			void 0
-		), require_request_DXOkY5MQ.En(this, _clientConfig2, void 0), require_request_DXOkY5MQ.En(this, _httpRequest23, void 0), require_request_DXOkY5MQ.On(
-			this,
-			/**
-			* Listen to document changes matching a GROQ query, delivered as server-sent events
-			*
-			* @category Real-time
-			*/
-			"listen",
-			_listen$2
-		), this.config(config), require_request_DXOkY5MQ.Sn(_httpRequest23, this, httpRequest), this.assets = new AssetsClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.datasets = new DatasetsClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.live = new LiveClient(this), this.mediaLibrary = { video: new MediaLibraryVideoClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)) }, this.projects = new ProjectsClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.users = new UsersClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.agent = { action: new AgentActionsClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)) }, this.collaboration = { comments: new CollaborationCommentsClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)) }, this.functions = new FunctionsClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.releases = new ReleasesClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.context = new ContextClient(this, require_request_DXOkY5MQ.bn(_httpRequest23, this)), this.observable = new ObservableSanityClient(httpRequest, config);
+		this.config(config), this.#httpRequest = httpRequest, this.assets = new AssetsClient(this, this.#httpRequest), this.datasets = new DatasetsClient(this, this.#httpRequest), this.live = new LiveClient(this), this.mediaLibrary = { video: new MediaLibraryVideoClient(this, this.#httpRequest) }, this.projects = new ProjectsClient(this, this.#httpRequest), this.users = new UsersClient(this, this.#httpRequest), this.agent = { action: new AgentActionsClient(this, this.#httpRequest) }, this.collaboration = { comments: new CollaborationCommentsClient(this, this.#httpRequest) }, this.functions = new FunctionsClient(this, this.#httpRequest), this.releases = new ReleasesClient(this, this.#httpRequest), this.context = new ContextClient(this, this.#httpRequest), this.observable = new ObservableSanityClient(httpRequest, config);
 	}
 	/**
 	* Clone the client - returns a new instance
@@ -7071,12 +7172,12 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @category Configuration
 	*/
 	clone() {
-		return new SanityClient(require_request_DXOkY5MQ.bn(_httpRequest23, this), this.config());
+		return new SanityClient(this.#httpRequest, this.config());
 	}
 	config(newConfig) {
-		if (newConfig === void 0) return { ...require_request_DXOkY5MQ.bn(_clientConfig2, this) };
-		if (require_request_DXOkY5MQ.bn(_clientConfig2, this) && require_request_DXOkY5MQ.bn(_clientConfig2, this).allowReconfigure === !1) throw Error("Existing client instance cannot be reconfigured - use \`withConfig(newConfig)\` to return a new client");
-		return this.observable && this.observable.config(newConfig), require_request_DXOkY5MQ.Sn(_clientConfig2, this, initConfig(newConfig, require_request_DXOkY5MQ.bn(_clientConfig2, this) || {})), this;
+		if (newConfig === void 0) return { ...this.#clientConfig };
+		if (this.#clientConfig && this.#clientConfig.allowReconfigure === !1) throw Error("Existing client instance cannot be reconfigured - use \`withConfig(newConfig)\` to return a new client");
+		return this.observable && this.observable.config(newConfig), this.#clientConfig = initConfig(newConfig, this.#clientConfig || {}), this;
 	}
 	/**
 	* Clone the client with a new (partial) configuration.
@@ -7087,7 +7188,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	withConfig(newConfig) {
 		let thisConfig = this.config();
-		return new SanityClient(require_request_DXOkY5MQ.bn(_httpRequest23, this), {
+		return new SanityClient(this.#httpRequest, {
 			...thisConfig,
 			...newConfig,
 			stega: {
@@ -7097,10 +7198,10 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 		});
 	}
 	fetch(query, params, options) {
-		return _fetch$2(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), require_request_DXOkY5MQ.bn(_clientConfig2, this).stega, query, params, options);
+		return _fetch$2(this, this.#httpRequest, this.#clientConfig.stega, query, params, options);
 	}
 	getDocument(id, options) {
-		if (options?.includeAllVersions === !0) return _getDocument(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), id, {
+		if (options?.includeAllVersions === !0) return _getDocument(this, this.#httpRequest, id, {
 			...options,
 			includeAllVersions: !0
 		});
@@ -7110,7 +7211,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			releaseId: options?.releaseId,
 			...options && "includeAllVersions" in options ? { includeAllVersions: !1 } : {}
 		};
-		return _getDocument(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), id, opts);
+		return _getDocument(this, this.#httpRequest, id, opts);
 	}
 	/**
 	* Fetch multiple documents in one request.
@@ -7124,7 +7225,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Request options
 	*/
 	getDocuments(ids, options) {
-		return _getDocuments(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), ids, options);
+		return _getDocuments(this, this.#httpRequest, ids, options);
 	}
 	/**
 	* Convenient and bandwidth efficient method of checking wether a set of document IDs exists.
@@ -7136,19 +7237,19 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Request options
 	*/
 	documentsExists(ids, options) {
-		return _documentsExists(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), ids, options);
+		return _documentsExists(this, this.#httpRequest, ids, options);
 	}
 	create(document, options) {
-		return _create$1(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), document, "create", options);
+		return _create$1(this, this.#httpRequest, document, "create", options);
 	}
 	createIfNotExists(document, options) {
-		return _createIfNotExists(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), document, options);
+		return _createIfNotExists(this, this.#httpRequest, document, options);
 	}
 	createOrReplace(document, options) {
-		return _createOrReplace(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), document, options);
+		return _createOrReplace(this, this.#httpRequest, document, options);
 	}
 	createVersion({ document, publishedId, releaseId, baseId, ifBaseRevisionId }, options) {
-		if (!document) return _createVersionFromBase(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), publishedId, baseId, releaseId, ifBaseRevisionId, options);
+		if (!document) return _createVersionFromBase(this, this.#httpRequest, publishedId, baseId, releaseId, ifBaseRevisionId, options);
 		let documentVersionId = deriveDocumentVersionId("createVersion", {
 			document,
 			publishedId,
@@ -7157,10 +7258,10 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			...document,
 			_id: documentVersionId
 		}, versionPublishedId = publishedId || getPublishedId(document._id);
-		return _createVersion(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), documentVersion, versionPublishedId, options);
+		return _createVersion(this, this.#httpRequest, documentVersion, versionPublishedId, options);
 	}
 	delete(selection, options) {
-		return _delete$1(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), selection, options);
+		return _delete$1(this, this.#httpRequest, selection, options);
 	}
 	/**
 	* @public
@@ -7194,7 +7295,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	discardVersion({ releaseId, publishedId }, purge, options) {
 		let documentVersionId = getDocumentVersionId(publishedId, releaseId);
-		return _discardVersion(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), documentVersionId, purge, options);
+		return _discardVersion(this, this.#httpRequest, documentVersionId, purge, options);
 	}
 	replaceVersion({ document, publishedId, releaseId }, options) {
 		let documentVersionId = deriveDocumentVersionId("replaceVersion", {
@@ -7205,7 +7306,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 			...document,
 			_id: documentVersionId
 		};
-		return _replaceVersion(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), documentVersion, options);
+		return _replaceVersion(this, this.#httpRequest, documentVersion, options);
 	}
 	/**
 	* @public
@@ -7232,10 +7333,10 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	*/
 	unpublishVersion({ releaseId, publishedId }, options) {
 		let versionId = getVersionId(publishedId, releaseId);
-		return _unpublishVersion(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), versionId, publishedId, options);
+		return _unpublishVersion(this, this.#httpRequest, versionId, publishedId, options);
 	}
 	mutate(operations, options) {
-		return _mutate(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), operations, options);
+		return _mutate(this, this.#httpRequest, operations, options);
 	}
 	/**
 	* Create a new buildable patch of operations to perform
@@ -7267,7 +7368,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @param options - Action options
 	*/
 	action(operations, options) {
-		return _action(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), operations, options);
+		return _action(this, this.#httpRequest, operations, options);
 	}
 	/**
 	* Perform a request against the Sanity API
@@ -7279,7 +7380,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @returns Promise resolving to the response body
 	*/
 	request(options) {
-		return _request(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), options);
+		return _request(this, this.#httpRequest, options);
 	}
 	/**
 	* Perform an HTTP request a \`/data\` sub-endpoint
@@ -7292,7 +7393,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	* @internal
 	*/
 	dataRequest(endpoint, body, options) {
-		return _dataRequest(this, require_request_DXOkY5MQ.bn(_httpRequest23, this), endpoint, body, options);
+		return _dataRequest(this, this.#httpRequest, endpoint, body, options);
 	}
 	/**
 	* Get a Sanity API URL for the URI provided
@@ -7316,7 +7417,7 @@ var ObservableReleasesClient = (_client22 = /* @__PURE__ */ new WeakMap(), _http
 	getDataUrl(operation, path) {
 		return _getDataUrl(this, operation, path);
 	}
-});
+};
 /**
 * Create the \`requester\` and \`createClient\` exports, that have environment specific middleware for node and browsers
 * @internal
