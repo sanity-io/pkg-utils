@@ -93,21 +93,6 @@ minimumReleaseAgeExclude:
   # @vanilla-extract/css@1.21.3 and @vanilla-extract/integration@8.0.11 (published 2026-10-08)
   - '@vanilla-extract/css@1.21.3'
   - '@vanilla-extract/integration@8.0.11'
-  - '@yuku-core/binding-android-arm64@0.18.1'
-  - '@yuku-core/binding-darwin-arm64@0.18.1'
-  - '@yuku-core/binding-darwin-x64@0.18.1'
-  - '@yuku-core/binding-freebsd-x64@0.18.1'
-  - '@yuku-core/binding-linux-arm-gnu@0.18.1'
-  - '@yuku-core/binding-linux-arm-musl@0.18.1'
-  - '@yuku-core/binding-linux-arm64-gnu@0.18.1'
-  - '@yuku-core/binding-linux-arm64-musl@0.18.1'
-  - '@yuku-core/binding-linux-x64-gnu@0.18.1'
-  - '@yuku-core/binding-linux-x64-musl@0.18.1'
-  - '@yuku-core/binding-win32-arm64@0.18.1'
-  - '@yuku-core/binding-win32-x64@0.18.1'
-  - '@yuku-toolchain/types@0.18.1'
-  - 'yuku-core@0.18.1'
-  - 'yuku-parser@0.18.1'
 minimumReleaseAgeExcludePrune: true
 
 overrides:
@@ -125,34 +110,6 @@ trustPolicyExclude:
   # trusted-publisher publish, so pnpm flags each 9.x version of these packages as a trust
   # downgrade (nuxt >= 4.6 depends on cssnano ^9.4). Name-level: every future bump trips again.
   - cssnano
-  - cssnano-preset-default
-  - cssnano-utils
-  - postcss-colormin
-  - postcss-convert-values
-  - postcss-discard-comments
-  - postcss-discard-duplicates
-  - postcss-discard-empty
-  - postcss-discard-overridden
-  - postcss-merge-longhand
-  - postcss-merge-rules
-  - postcss-minify-font-values
-  - postcss-minify-gradients
-  - postcss-minify-params
-  - postcss-minify-selectors
-  - postcss-normalize-charset
-  - postcss-normalize-display-values
-  - postcss-normalize-positions
-  - postcss-normalize-repeat-style
-  - postcss-normalize-string
-  - postcss-normalize-timing-functions
-  - postcss-normalize-unicode
-  - postcss-normalize-url
-  - postcss-normalize-whitespace
-  - postcss-ordered-values
-  - postcss-reduce-initial
-  - postcss-reduce-transforms
-  - postcss-unique-selectors
-  - stylehacks
   - chokidar@4.0.3
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
