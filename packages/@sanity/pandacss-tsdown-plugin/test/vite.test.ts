@@ -181,7 +181,8 @@ describe('`removeCascadeLayers`', () => {
     const positions = positionsOf(css.replaceAll('}', '}\n'), [
       'button{font-weight:600}',
       '.button{',
-      '.button--tone_brand{',
+      // Vite's minifier merges the recipe variants that share their declarations into one rule
+      '.card__root--tone_brand,.button--tone_brand{',
       '.textStyle_body{',
       '.color_ink{',
     ])
