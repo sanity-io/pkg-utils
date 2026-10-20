@@ -3631,7 +3631,7 @@ function _fetch$2(client, httpRequest, _stega, query, _params = {}, options = {}
 		query,
 		params
 	}, reqOpts);
-	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-CO1HKnm2-DjI5VMNE.cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
+	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-qxoqHkQe-BQs61s8O.cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
 		let result = stegaEncodeSourceMap(res.result, res.resultSourceMap, stega);
 		return mapResponse({
 			...res,
@@ -4423,7 +4423,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var name = "@sanity/client", version = "8.9.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.10.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), RETRYABLE_STATUSES = /* @__PURE__ */ new Set([408, 429]);
 /**
 * Note: connection failure is not the same as network disconnect which may happen more frequent.
@@ -5065,13 +5065,13 @@ function _resolveKnowledgeBaseId(client) {
 function _knowledgeBaseUrl(knowledgeBaseId, suffix = "") {
 	return \`\${COLLECTION_URL}/\${encodeURIComponent(knowledgeBaseId)}\${suffix}\`;
 }
-/** Serialize defined values into query params, dropping the undefined ones. */
 function _conversationUrl(client, threadId) {
 	let organizationId = client.config().context?.organizationId;
 	if (!organizationId) throw Error("\`context.organizationId\` must be configured to record conversations");
 	if (!threadId) throw Error("\`threadId\` must be provided");
 	return \`/context/organizations/\${encodeURIComponent(organizationId)}/conversations/\${encodeURIComponent(threadId)}\`;
 }
+/** Serialize defined values into query params, dropping the undefined ones. */
 function _query(entries) {
 	return Object.fromEntries(Object.entries(entries).flatMap(([key, value]) => value === void 0 ? [] : [[key, \`\${value}\`]]));
 }
@@ -5249,6 +5249,15 @@ var ContextClient = class {
 			});
 		},
 		/**
+		* Delete one recorded conversation, transcript and classification
+		* included. Rejects with a 404 when the thread was never recorded.
+		*/
+		delete: (params, options) => _request(this.#client, this.#httpRequest, {
+			url: _conversationUrl(this.#client, params.threadId),
+			method: "DELETE",
+			...options
+		}),
+		/**
 		* One recorded conversation by its thread id, or \`null\` when the thread
 		* was never recorded. Runs:
 		*
@@ -5385,12 +5394,15 @@ var ContextClient = class {
 				...options
 			});
 		},
-		delete: async (params, options) => {
-			await this.#request(\`/instructions/\${encodeURIComponent(params.instructionId)}\`, {
-				method: "DELETE",
-				...options
-			});
-		}
+		/**
+		* Delete an instruction. With \`rebuild: true\`, also rebuilds every entry
+		* citing the instruction's sources and resolves with that job's id.
+		*/
+		delete: (params, options) => this.#request(\`/instructions/\${encodeURIComponent(params.instructionId)}\`, {
+			method: "DELETE",
+			query: _query({ rebuild: params.rebuild ? "true" : void 0 }),
+			...options
+		})
 	};
 	/**
 	* Entries: the built outline, one entry per node. Reads are canned GROQ
@@ -5588,6 +5600,16 @@ var ContextClient = class {
 				signal
 			}));
 		},
+		/**
+		* Delete one recorded conversation, transcript and classification
+		* included. Errors with a 404 when the thread was never recorded.
+		*/
+		delete: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
+			url: _conversationUrl(this.#client, params.threadId),
+			method: "DELETE",
+			tag: options?.tag,
+			signal
+		})),
 		/**
 		* One recorded conversation by its thread id, or \`null\` when the thread
 		* was never recorded. Runs:
