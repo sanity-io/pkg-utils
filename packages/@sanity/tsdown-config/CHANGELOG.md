@@ -1,5 +1,11 @@
 # @sanity/tsdown-config
 
+## 0.31.2
+
+### Patch Changes
+
+- [#3658](https://github.com/sanity-io/pkg-utils/pull/3658) [`b4849ab`](https://github.com/sanity-io/pkg-utils/commit/b4849abd756bf4b55959630e182fd6f63c6a6d3b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.4
+
 ## 0.31.1
 
 No changes in this release.
