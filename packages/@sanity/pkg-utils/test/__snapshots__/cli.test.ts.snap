@@ -1064,7 +1064,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-ju7Nlewu.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
+const require_request_DXOkY5MQ = require("./request-DXOkY5MQ-FpapDSZu.cjs"), require_dist_C5K_YcEU = require("./dist-C5K_YcEU-DdRRTXFP.cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--e6uYYXAR.cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -3206,12 +3206,7 @@ function getSelection(sel) {
 		query: sel.query,
 		params: sel.params
 	} : { query: sel.query };
-	let selectionOpts = [
-		"* Document ID (<docId>)",
-		"* Array of document IDs",
-		"* Object containing \`query\`"
-	].join("\\n");
-	throw Error(\`Unknown selection - must be one of:\\n\\n\${selectionOpts}\`);
+	throw Error("Unknown selection - must be one of:\\n\\n* Document ID (<docId>)\\n* Array of document IDs\\n* Object containing \`query\`");
 }
 /** @internal */
 var BasePatch = class {
@@ -4411,7 +4406,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		body
 	};
 	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-nz4_BEAD.cjs")), req = _prepareRequest(client, { ...baseRequest });
+		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-_NNxbR-f.cjs")), req = _prepareRequest(client, { ...baseRequest });
 		return uploadWithProgress({
 			url: appendQuery(req.url, req.query),
 			method: req.method ?? "POST",
