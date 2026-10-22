@@ -1809,8 +1809,12 @@ describe('codegen', () => {
         })
         const declarations = readFileSync(path.join(cwd, 'dist/index.d.cts'), 'utf-8')
         expect(declarations).toContain('export declare const brandText: string;')
-        // The re-exported type was bundled from the generated declarations of this config
-        expect(declarations).toContain('type ColorToken = "brand"')
+        // The re-exported type was bundled from the generated declarations of this config.
+        // Panda 2.4 wraps the local token union in `Registered` so an extending app can add
+        // tokens. `brand` is this fixture's color token.
+        expect(declarations).toContain(
+          'type ColorToken = Registered<"ColorToken", "brand" | "colorPalette">;',
+        )
         expect(readFileSync(path.join(cwd, 'dist/index.cjs'), 'utf-8')).toContain('"color_brand"')
         // The artifacts were written before the declaration build started
         const generatedAt = statSync(path.join(cwd, 'styled-system/css/index.js')).mtimeMs
