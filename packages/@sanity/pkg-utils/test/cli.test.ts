@@ -18,6 +18,22 @@ async function findDistFile(
   return `${dir}/${matches[0]}`
 }
 
+/**
+ * Replaces the content hash in the filenames of the shared chunks a chunk loads with `[hash]`,
+ * and sorts its leading `require()` statements for them. Rolldown orders chunk imports by
+ * execution order before 1.2.16 and by source order since (rolldown/rolldown#11298), and the
+ * hash of a chunk follows from the order of its own imports, so both differ between the patch
+ * releases the `~` range of the lockfile resolves to.
+ */
+function stableChunkRefs(code: string): string {
+  return code
+    .replace(/(\.\/[\w.-]+?)-[\w-]{8}(\.(?:d\.)?[cm]?[jt]s)\b/g, '$1-[hash]$2')
+    .replace(
+      /^const (require_\w+ = require\("[^"]+"\)(?:, require_\w+ = require\("[^"]+"\))+);$/m,
+      (_, declarators: string) => `const ${declarators.split(', ').toSorted().join(', ')};`,
+    )
+}
+
 describe.skipIf(process.platform === 'win32')('cli', () => {
   test('should build `js` package', async () => {
     const project = await spawnProject('js')
@@ -258,8 +274,9 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distIndexJs).not.toContain('@sanity/icons')
     expect(distIndexDcts).not.toContain('@sanity/icons')
     expect(distIndexDts).not.toContain('@sanity/icons')
-    // Snapshot the contents for easier debugging
-    expect(distIndexCjs).toMatchSnapshot('./dist/index.cjs')
+    // Snapshot the contents for easier debugging. The inlined `@sanity/client` is code split
+    // into shared chunks in the CJS output, whose hashes and import order are not under test.
+    expect(stableChunkRefs(distIndexCjs)).toMatchSnapshot('./dist/index.cjs')
     expect(distIndexDcts).toMatchSnapshot('./dist/index.d.cts')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
