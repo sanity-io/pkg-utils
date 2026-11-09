@@ -1064,7 +1064,7 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_dist_C5K_YcEU = require("./dist-C5K_YcEU-[hash].cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--[hash].cjs"), require_request_DXOkY5MQ = require("./request-DXOkY5MQ-[hash].cjs");
+const require_dist_BPHpH4Im = require("./dist-BPHpH4Im-[hash].cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--[hash].cjs"), require_request_CycLCCas = require("./request-CycLCCas-[hash].cjs");
 let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
@@ -1142,16 +1142,16 @@ function getPublishedId(id) {
 	if (isPublishedId(id)) return id;
 	throw Error(\`Unable to resolve a published id from "\${id}"\`);
 }
-var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) => {
+var require_partition = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.partition = void 0;
-	var not_1 = require_request_DXOkY5MQ.an(), filter_1 = require_request_DXOkY5MQ.in();
+	var not_1 = require_request_CycLCCas.an(), filter_1 = require_request_CycLCCas.in();
 	function partition(predicate, thisArg) {
 		return function(source) {
 			return [filter_1.filter(predicate, thisArg)(source), filter_1.filter(not_1.not(predicate, thisArg))(source)];
 		};
 	}
 	exports.partition = partition;
-})), require_race = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports, module, this$1) => {
+})), require_race = /* @__PURE__ */ require_request_CycLCCas.vn(((exports, module, this$1) => {
 	var __read = this$1 && this$1.__read || function(o, n) {
 		var m = typeof Symbol == "function" && o[Symbol.iterator];
 		if (!m) return o;
@@ -1173,428 +1173,428 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) =
 		return to;
 	};
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.race = void 0;
-	var argsOrArgArray_1 = require_request_DXOkY5MQ.on(), raceWith_1 = require_request_DXOkY5MQ.q();
+	var argsOrArgArray_1 = require_request_CycLCCas.on(), raceWith_1 = require_request_CycLCCas.q();
 	function race() {
 		for (var args = [], _i = 0; _i < arguments.length; _i++) args[_i] = arguments[_i];
 		return raceWith_1.raceWith.apply(void 0, __spreadArray([], __read(argsOrArgArray_1.argsOrArgArray(args))));
 	}
 	exports.race = race;
-})), require_operators = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) => {
+})), require_operators = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.mergeAll = exports.merge = exports.max = exports.materialize = exports.mapTo = exports.map = exports.last = exports.isEmpty = exports.ignoreElements = exports.groupBy = exports.first = exports.findIndex = exports.find = exports.finalize = exports.filter = exports.expand = exports.exhaustMap = exports.exhaustAll = exports.exhaust = exports.every = exports.endWith = exports.elementAt = exports.distinctUntilKeyChanged = exports.distinctUntilChanged = exports.distinct = exports.dematerialize = exports.delayWhen = exports.delay = exports.defaultIfEmpty = exports.debounceTime = exports.debounce = exports.count = exports.connect = exports.concatWith = exports.concatMapTo = exports.concatMap = exports.concatAll = exports.concat = exports.combineLatestWith = exports.combineLatest = exports.combineLatestAll = exports.combineAll = exports.catchError = exports.bufferWhen = exports.bufferToggle = exports.bufferTime = exports.bufferCount = exports.buffer = exports.auditTime = exports.audit = void 0, exports.timeInterval = exports.throwIfEmpty = exports.throttleTime = exports.throttle = exports.tap = exports.takeWhile = exports.takeUntil = exports.takeLast = exports.take = exports.switchScan = exports.switchMapTo = exports.switchMap = exports.switchAll = exports.subscribeOn = exports.startWith = exports.skipWhile = exports.skipUntil = exports.skipLast = exports.skip = exports.single = exports.shareReplay = exports.share = exports.sequenceEqual = exports.scan = exports.sampleTime = exports.sample = exports.refCount = exports.retryWhen = exports.retry = exports.repeatWhen = exports.repeat = exports.reduce = exports.raceWith = exports.race = exports.publishReplay = exports.publishLast = exports.publishBehavior = exports.publish = exports.pluck = exports.partition = exports.pairwise = exports.onErrorResumeNext = exports.observeOn = exports.multicast = exports.min = exports.mergeWith = exports.mergeScan = exports.mergeMapTo = exports.mergeMap = exports.flatMap = void 0, exports.zipWith = exports.zipAll = exports.zip = exports.withLatestFrom = exports.windowWhen = exports.windowToggle = exports.windowTime = exports.windowCount = exports.window = exports.toArray = exports.timestamp = exports.timeoutWith = exports.timeout = void 0;
-	var audit_1 = require_request_DXOkY5MQ.rn();
+	var audit_1 = require_request_CycLCCas.rn();
 	Object.defineProperty(exports, "audit", {
 		enumerable: !0,
 		get: function() {
 			return audit_1.audit;
 		}
 	});
-	var auditTime_1 = require_request_DXOkY5MQ.nn();
+	var auditTime_1 = require_request_CycLCCas.nn();
 	Object.defineProperty(exports, "auditTime", {
 		enumerable: !0,
 		get: function() {
 			return auditTime_1.auditTime;
 		}
 	});
-	var buffer_1 = require_request_DXOkY5MQ.tn();
+	var buffer_1 = require_request_CycLCCas.tn();
 	Object.defineProperty(exports, "buffer", {
 		enumerable: !0,
 		get: function() {
 			return buffer_1.buffer;
 		}
 	});
-	var bufferCount_1 = require_request_DXOkY5MQ.en();
+	var bufferCount_1 = require_request_CycLCCas.en();
 	Object.defineProperty(exports, "bufferCount", {
 		enumerable: !0,
 		get: function() {
 			return bufferCount_1.bufferCount;
 		}
 	});
-	var bufferTime_1 = require_request_DXOkY5MQ.$t();
+	var bufferTime_1 = require_request_CycLCCas.$t();
 	Object.defineProperty(exports, "bufferTime", {
 		enumerable: !0,
 		get: function() {
 			return bufferTime_1.bufferTime;
 		}
 	});
-	var bufferToggle_1 = require_request_DXOkY5MQ.Qt();
+	var bufferToggle_1 = require_request_CycLCCas.Qt();
 	Object.defineProperty(exports, "bufferToggle", {
 		enumerable: !0,
 		get: function() {
 			return bufferToggle_1.bufferToggle;
 		}
 	});
-	var bufferWhen_1 = require_request_DXOkY5MQ.Zt();
+	var bufferWhen_1 = require_request_CycLCCas.Zt();
 	Object.defineProperty(exports, "bufferWhen", {
 		enumerable: !0,
 		get: function() {
 			return bufferWhen_1.bufferWhen;
 		}
 	});
-	var catchError_1 = require_request_DXOkY5MQ.Xt();
+	var catchError_1 = require_request_CycLCCas.Xt();
 	Object.defineProperty(exports, "catchError", {
 		enumerable: !0,
 		get: function() {
 			return catchError_1.catchError;
 		}
 	});
-	var combineAll_1 = require_request_DXOkY5MQ.Kt();
+	var combineAll_1 = require_request_CycLCCas.Kt();
 	Object.defineProperty(exports, "combineAll", {
 		enumerable: !0,
 		get: function() {
 			return combineAll_1.combineAll;
 		}
 	});
-	var combineLatestAll_1 = require_request_DXOkY5MQ.qt();
+	var combineLatestAll_1 = require_request_CycLCCas.qt();
 	Object.defineProperty(exports, "combineLatestAll", {
 		enumerable: !0,
 		get: function() {
 			return combineLatestAll_1.combineLatestAll;
 		}
 	});
-	var combineLatest_1 = require_request_DXOkY5MQ.Gt();
+	var combineLatest_1 = require_request_CycLCCas.Gt();
 	Object.defineProperty(exports, "combineLatest", {
 		enumerable: !0,
 		get: function() {
 			return combineLatest_1.combineLatest;
 		}
 	});
-	var combineLatestWith_1 = require_request_DXOkY5MQ.Wt();
+	var combineLatestWith_1 = require_request_CycLCCas.Wt();
 	Object.defineProperty(exports, "combineLatestWith", {
 		enumerable: !0,
 		get: function() {
 			return combineLatestWith_1.combineLatestWith;
 		}
 	});
-	var concat_1 = require_request_DXOkY5MQ.Vt();
+	var concat_1 = require_request_CycLCCas.Vt();
 	Object.defineProperty(exports, "concat", {
 		enumerable: !0,
 		get: function() {
 			return concat_1.concat;
 		}
 	});
-	var concatAll_1 = require_request_DXOkY5MQ.sn();
+	var concatAll_1 = require_request_CycLCCas.sn();
 	Object.defineProperty(exports, "concatAll", {
 		enumerable: !0,
 		get: function() {
 			return concatAll_1.concatAll;
 		}
 	});
-	var concatMap_1 = require_request_DXOkY5MQ.Ut();
+	var concatMap_1 = require_request_CycLCCas.Ut();
 	Object.defineProperty(exports, "concatMap", {
 		enumerable: !0,
 		get: function() {
 			return concatMap_1.concatMap;
 		}
 	});
-	var concatMapTo_1 = require_request_DXOkY5MQ.Ht();
+	var concatMapTo_1 = require_request_CycLCCas.Ht();
 	Object.defineProperty(exports, "concatMapTo", {
 		enumerable: !0,
 		get: function() {
 			return concatMapTo_1.concatMapTo;
 		}
 	});
-	var concatWith_1 = require_request_DXOkY5MQ.Bt();
+	var concatWith_1 = require_request_CycLCCas.Bt();
 	Object.defineProperty(exports, "concatWith", {
 		enumerable: !0,
 		get: function() {
 			return concatWith_1.concatWith;
 		}
 	});
-	var connect_1 = require_request_DXOkY5MQ.zt();
+	var connect_1 = require_request_CycLCCas.zt();
 	Object.defineProperty(exports, "connect", {
 		enumerable: !0,
 		get: function() {
 			return connect_1.connect;
 		}
 	});
-	var count_1 = require_request_DXOkY5MQ.Rt();
+	var count_1 = require_request_CycLCCas.Rt();
 	Object.defineProperty(exports, "count", {
 		enumerable: !0,
 		get: function() {
 			return count_1.count;
 		}
 	});
-	var debounce_1 = require_request_DXOkY5MQ.Lt();
+	var debounce_1 = require_request_CycLCCas.Lt();
 	Object.defineProperty(exports, "debounce", {
 		enumerable: !0,
 		get: function() {
 			return debounce_1.debounce;
 		}
 	});
-	var debounceTime_1 = require_request_DXOkY5MQ.It();
+	var debounceTime_1 = require_request_CycLCCas.It();
 	Object.defineProperty(exports, "debounceTime", {
 		enumerable: !0,
 		get: function() {
 			return debounceTime_1.debounceTime;
 		}
 	});
-	var defaultIfEmpty_1 = require_request_DXOkY5MQ.Ft();
+	var defaultIfEmpty_1 = require_request_CycLCCas.Ft();
 	Object.defineProperty(exports, "defaultIfEmpty", {
 		enumerable: !0,
 		get: function() {
 			return defaultIfEmpty_1.defaultIfEmpty;
 		}
 	});
-	var delay_1 = require_request_DXOkY5MQ.At();
+	var delay_1 = require_request_CycLCCas.At();
 	Object.defineProperty(exports, "delay", {
 		enumerable: !0,
 		get: function() {
 			return delay_1.delay;
 		}
 	});
-	var delayWhen_1 = require_request_DXOkY5MQ.jt();
+	var delayWhen_1 = require_request_CycLCCas.jt();
 	Object.defineProperty(exports, "delayWhen", {
 		enumerable: !0,
 		get: function() {
 			return delayWhen_1.delayWhen;
 		}
 	});
-	var dematerialize_1 = require_request_DXOkY5MQ.kt();
+	var dematerialize_1 = require_request_CycLCCas.kt();
 	Object.defineProperty(exports, "dematerialize", {
 		enumerable: !0,
 		get: function() {
 			return dematerialize_1.dematerialize;
 		}
 	});
-	var distinct_1 = require_request_DXOkY5MQ.Ot();
+	var distinct_1 = require_request_CycLCCas.Ot();
 	Object.defineProperty(exports, "distinct", {
 		enumerable: !0,
 		get: function() {
 			return distinct_1.distinct;
 		}
 	});
-	var distinctUntilChanged_1 = require_request_DXOkY5MQ.Dt();
+	var distinctUntilChanged_1 = require_request_CycLCCas.Dt();
 	Object.defineProperty(exports, "distinctUntilChanged", {
 		enumerable: !0,
 		get: function() {
 			return distinctUntilChanged_1.distinctUntilChanged;
 		}
 	});
-	var distinctUntilKeyChanged_1 = require_request_DXOkY5MQ.Et();
+	var distinctUntilKeyChanged_1 = require_request_CycLCCas.Et();
 	Object.defineProperty(exports, "distinctUntilKeyChanged", {
 		enumerable: !0,
 		get: function() {
 			return distinctUntilKeyChanged_1.distinctUntilKeyChanged;
 		}
 	});
-	var elementAt_1 = require_request_DXOkY5MQ.wt();
+	var elementAt_1 = require_request_CycLCCas.wt();
 	Object.defineProperty(exports, "elementAt", {
 		enumerable: !0,
 		get: function() {
 			return elementAt_1.elementAt;
 		}
 	});
-	var endWith_1 = require_request_DXOkY5MQ.Ct();
+	var endWith_1 = require_request_CycLCCas.Ct();
 	Object.defineProperty(exports, "endWith", {
 		enumerable: !0,
 		get: function() {
 			return endWith_1.endWith;
 		}
 	});
-	var every_1 = require_request_DXOkY5MQ.St();
+	var every_1 = require_request_CycLCCas.St();
 	Object.defineProperty(exports, "every", {
 		enumerable: !0,
 		get: function() {
 			return every_1.every;
 		}
 	});
-	var exhaust_1 = require_request_DXOkY5MQ.yt();
+	var exhaust_1 = require_request_CycLCCas.yt();
 	Object.defineProperty(exports, "exhaust", {
 		enumerable: !0,
 		get: function() {
 			return exhaust_1.exhaust;
 		}
 	});
-	var exhaustAll_1 = require_request_DXOkY5MQ.bt();
+	var exhaustAll_1 = require_request_CycLCCas.bt();
 	Object.defineProperty(exports, "exhaustAll", {
 		enumerable: !0,
 		get: function() {
 			return exhaustAll_1.exhaustAll;
 		}
 	});
-	var exhaustMap_1 = require_request_DXOkY5MQ.xt();
+	var exhaustMap_1 = require_request_CycLCCas.xt();
 	Object.defineProperty(exports, "exhaustMap", {
 		enumerable: !0,
 		get: function() {
 			return exhaustMap_1.exhaustMap;
 		}
 	});
-	var expand_1 = require_request_DXOkY5MQ.vt();
+	var expand_1 = require_request_CycLCCas.vt();
 	Object.defineProperty(exports, "expand", {
 		enumerable: !0,
 		get: function() {
 			return expand_1.expand;
 		}
 	});
-	var filter_1 = require_request_DXOkY5MQ.in();
+	var filter_1 = require_request_CycLCCas.in();
 	Object.defineProperty(exports, "filter", {
 		enumerable: !0,
 		get: function() {
 			return filter_1.filter;
 		}
 	});
-	var finalize_1 = require_request_DXOkY5MQ._t();
+	var finalize_1 = require_request_CycLCCas._t();
 	Object.defineProperty(exports, "finalize", {
 		enumerable: !0,
 		get: function() {
 			return finalize_1.finalize;
 		}
 	});
-	var find_1 = require_request_DXOkY5MQ.gt();
+	var find_1 = require_request_CycLCCas.gt();
 	Object.defineProperty(exports, "find", {
 		enumerable: !0,
 		get: function() {
 			return find_1.find;
 		}
 	});
-	var findIndex_1 = require_request_DXOkY5MQ.ht();
+	var findIndex_1 = require_request_CycLCCas.ht();
 	Object.defineProperty(exports, "findIndex", {
 		enumerable: !0,
 		get: function() {
 			return findIndex_1.findIndex;
 		}
 	});
-	var first_1 = require_request_DXOkY5MQ.mt();
+	var first_1 = require_request_CycLCCas.mt();
 	Object.defineProperty(exports, "first", {
 		enumerable: !0,
 		get: function() {
 			return first_1.first;
 		}
 	});
-	var groupBy_1 = require_request_DXOkY5MQ.pt();
+	var groupBy_1 = require_request_CycLCCas.pt();
 	Object.defineProperty(exports, "groupBy", {
 		enumerable: !0,
 		get: function() {
 			return groupBy_1.groupBy;
 		}
 	});
-	var ignoreElements_1 = require_request_DXOkY5MQ.Nt();
+	var ignoreElements_1 = require_request_CycLCCas.Nt();
 	Object.defineProperty(exports, "ignoreElements", {
 		enumerable: !0,
 		get: function() {
 			return ignoreElements_1.ignoreElements;
 		}
 	});
-	var isEmpty_1 = require_request_DXOkY5MQ.ft();
+	var isEmpty_1 = require_request_CycLCCas.ft();
 	Object.defineProperty(exports, "isEmpty", {
 		enumerable: !0,
 		get: function() {
 			return isEmpty_1.isEmpty;
 		}
 	});
-	var last_1 = require_request_DXOkY5MQ.ut();
+	var last_1 = require_request_CycLCCas.ut();
 	Object.defineProperty(exports, "last", {
 		enumerable: !0,
 		get: function() {
 			return last_1.last;
 		}
 	});
-	var map_1 = require_request_DXOkY5MQ.un();
+	var map_1 = require_request_CycLCCas.un();
 	Object.defineProperty(exports, "map", {
 		enumerable: !0,
 		get: function() {
 			return map_1.map;
 		}
 	});
-	var mapTo_1 = require_request_DXOkY5MQ.Mt();
+	var mapTo_1 = require_request_CycLCCas.Mt();
 	Object.defineProperty(exports, "mapTo", {
 		enumerable: !0,
 		get: function() {
 			return mapTo_1.mapTo;
 		}
 	});
-	var materialize_1 = require_request_DXOkY5MQ.lt();
+	var materialize_1 = require_request_CycLCCas.lt();
 	Object.defineProperty(exports, "materialize", {
 		enumerable: !0,
 		get: function() {
 			return materialize_1.materialize;
 		}
 	});
-	var max_1 = require_request_DXOkY5MQ.ct();
+	var max_1 = require_request_CycLCCas.ct();
 	Object.defineProperty(exports, "max", {
 		enumerable: !0,
 		get: function() {
 			return max_1.max;
 		}
 	});
-	var merge_1 = require_request_DXOkY5MQ.it();
+	var merge_1 = require_request_CycLCCas.it();
 	Object.defineProperty(exports, "merge", {
 		enumerable: !0,
 		get: function() {
 			return merge_1.merge;
 		}
 	});
-	var mergeAll_1 = require_request_DXOkY5MQ.cn();
+	var mergeAll_1 = require_request_CycLCCas.cn();
 	Object.defineProperty(exports, "mergeAll", {
 		enumerable: !0,
 		get: function() {
 			return mergeAll_1.mergeAll;
 		}
 	});
-	var flatMap_1 = require_request_DXOkY5MQ.st();
+	var flatMap_1 = require_request_CycLCCas.st();
 	Object.defineProperty(exports, "flatMap", {
 		enumerable: !0,
 		get: function() {
 			return flatMap_1.flatMap;
 		}
 	});
-	var mergeMap_1 = require_request_DXOkY5MQ.ln();
+	var mergeMap_1 = require_request_CycLCCas.ln();
 	Object.defineProperty(exports, "mergeMap", {
 		enumerable: !0,
 		get: function() {
 			return mergeMap_1.mergeMap;
 		}
 	});
-	var mergeMapTo_1 = require_request_DXOkY5MQ.ot();
+	var mergeMapTo_1 = require_request_CycLCCas.ot();
 	Object.defineProperty(exports, "mergeMapTo", {
 		enumerable: !0,
 		get: function() {
 			return mergeMapTo_1.mergeMapTo;
 		}
 	});
-	var mergeScan_1 = require_request_DXOkY5MQ.at();
+	var mergeScan_1 = require_request_CycLCCas.at();
 	Object.defineProperty(exports, "mergeScan", {
 		enumerable: !0,
 		get: function() {
 			return mergeScan_1.mergeScan;
 		}
 	});
-	var mergeWith_1 = require_request_DXOkY5MQ.rt();
+	var mergeWith_1 = require_request_CycLCCas.rt();
 	Object.defineProperty(exports, "mergeWith", {
 		enumerable: !0,
 		get: function() {
 			return mergeWith_1.mergeWith;
 		}
 	});
-	var min_1 = require_request_DXOkY5MQ.nt();
+	var min_1 = require_request_CycLCCas.nt();
 	Object.defineProperty(exports, "min", {
 		enumerable: !0,
 		get: function() {
 			return min_1.min;
 		}
 	});
-	var multicast_1 = require_request_DXOkY5MQ.tt();
+	var multicast_1 = require_request_CycLCCas.tt();
 	Object.defineProperty(exports, "multicast", {
 		enumerable: !0,
 		get: function() {
 			return multicast_1.multicast;
 		}
 	});
-	var observeOn_1 = require_request_DXOkY5MQ.pn();
+	var observeOn_1 = require_request_CycLCCas.pn();
 	Object.defineProperty(exports, "observeOn", {
 		enumerable: !0,
 		get: function() {
 			return observeOn_1.observeOn;
 		}
 	});
-	var onErrorResumeNextWith_1 = require_request_DXOkY5MQ.et();
+	var onErrorResumeNextWith_1 = require_request_CycLCCas.et();
 	Object.defineProperty(exports, "onErrorResumeNext", {
 		enumerable: !0,
 		get: function() {
 			return onErrorResumeNextWith_1.onErrorResumeNext;
 		}
 	});
-	var pairwise_1 = require_request_DXOkY5MQ.$();
+	var pairwise_1 = require_request_CycLCCas.$();
 	Object.defineProperty(exports, "pairwise", {
 		enumerable: !0,
 		get: function() {
@@ -1608,35 +1608,35 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) =
 			return partition_1.partition;
 		}
 	});
-	var pluck_1 = require_request_DXOkY5MQ.Q();
+	var pluck_1 = require_request_CycLCCas.Q();
 	Object.defineProperty(exports, "pluck", {
 		enumerable: !0,
 		get: function() {
 			return pluck_1.pluck;
 		}
 	});
-	var publish_1 = require_request_DXOkY5MQ.Z();
+	var publish_1 = require_request_CycLCCas.Z();
 	Object.defineProperty(exports, "publish", {
 		enumerable: !0,
 		get: function() {
 			return publish_1.publish;
 		}
 	});
-	var publishBehavior_1 = require_request_DXOkY5MQ.X();
+	var publishBehavior_1 = require_request_CycLCCas.X();
 	Object.defineProperty(exports, "publishBehavior", {
 		enumerable: !0,
 		get: function() {
 			return publishBehavior_1.publishBehavior;
 		}
 	});
-	var publishLast_1 = require_request_DXOkY5MQ.Y();
+	var publishLast_1 = require_request_CycLCCas.Y();
 	Object.defineProperty(exports, "publishLast", {
 		enumerable: !0,
 		get: function() {
 			return publishLast_1.publishLast;
 		}
 	});
-	var publishReplay_1 = require_request_DXOkY5MQ.J();
+	var publishReplay_1 = require_request_CycLCCas.J();
 	Object.defineProperty(exports, "publishReplay", {
 		enumerable: !0,
 		get: function() {
@@ -1650,322 +1650,322 @@ var require_partition = /* @__PURE__ */ require_request_DXOkY5MQ.vn(((exports) =
 			return race_1.race;
 		}
 	});
-	var raceWith_1 = require_request_DXOkY5MQ.q();
+	var raceWith_1 = require_request_CycLCCas.q();
 	Object.defineProperty(exports, "raceWith", {
 		enumerable: !0,
 		get: function() {
 			return raceWith_1.raceWith;
 		}
 	});
-	var reduce_1 = require_request_DXOkY5MQ.Yt();
+	var reduce_1 = require_request_CycLCCas.Yt();
 	Object.defineProperty(exports, "reduce", {
 		enumerable: !0,
 		get: function() {
 			return reduce_1.reduce;
 		}
 	});
-	var repeat_1 = require_request_DXOkY5MQ.K();
+	var repeat_1 = require_request_CycLCCas.K();
 	Object.defineProperty(exports, "repeat", {
 		enumerable: !0,
 		get: function() {
 			return repeat_1.repeat;
 		}
 	});
-	var repeatWhen_1 = require_request_DXOkY5MQ.G();
+	var repeatWhen_1 = require_request_CycLCCas.G();
 	Object.defineProperty(exports, "repeatWhen", {
 		enumerable: !0,
 		get: function() {
 			return repeatWhen_1.repeatWhen;
 		}
 	});
-	var retry_1 = require_request_DXOkY5MQ.W();
+	var retry_1 = require_request_CycLCCas.W();
 	Object.defineProperty(exports, "retry", {
 		enumerable: !0,
 		get: function() {
 			return retry_1.retry;
 		}
 	});
-	var retryWhen_1 = require_request_DXOkY5MQ.U();
+	var retryWhen_1 = require_request_CycLCCas.U();
 	Object.defineProperty(exports, "retryWhen", {
 		enumerable: !0,
 		get: function() {
 			return retryWhen_1.retryWhen;
 		}
 	});
-	var refCount_1 = require_request_DXOkY5MQ.mn();
+	var refCount_1 = require_request_CycLCCas.mn();
 	Object.defineProperty(exports, "refCount", {
 		enumerable: !0,
 		get: function() {
 			return refCount_1.refCount;
 		}
 	});
-	var sample_1 = require_request_DXOkY5MQ.H();
+	var sample_1 = require_request_CycLCCas.H();
 	Object.defineProperty(exports, "sample", {
 		enumerable: !0,
 		get: function() {
 			return sample_1.sample;
 		}
 	});
-	var sampleTime_1 = require_request_DXOkY5MQ.V();
+	var sampleTime_1 = require_request_CycLCCas.V();
 	Object.defineProperty(exports, "sampleTime", {
 		enumerable: !0,
 		get: function() {
 			return sampleTime_1.sampleTime;
 		}
 	});
-	var scan_1 = require_request_DXOkY5MQ.B();
+	var scan_1 = require_request_CycLCCas.B();
 	Object.defineProperty(exports, "scan", {
 		enumerable: !0,
 		get: function() {
 			return scan_1.scan;
 		}
 	});
-	var sequenceEqual_1 = require_request_DXOkY5MQ.z();
+	var sequenceEqual_1 = require_request_CycLCCas.z();
 	Object.defineProperty(exports, "sequenceEqual", {
 		enumerable: !0,
 		get: function() {
 			return sequenceEqual_1.sequenceEqual;
 		}
 	});
-	var share_1 = require_request_DXOkY5MQ.R();
+	var share_1 = require_request_CycLCCas.R();
 	Object.defineProperty(exports, "share", {
 		enumerable: !0,
 		get: function() {
 			return share_1.share;
 		}
 	});
-	var shareReplay_1 = require_request_DXOkY5MQ.L();
+	var shareReplay_1 = require_request_CycLCCas.L();
 	Object.defineProperty(exports, "shareReplay", {
 		enumerable: !0,
 		get: function() {
 			return shareReplay_1.shareReplay;
 		}
 	});
-	var single_1 = require_request_DXOkY5MQ.I();
+	var single_1 = require_request_CycLCCas.I();
 	Object.defineProperty(exports, "single", {
 		enumerable: !0,
 		get: function() {
 			return single_1.single;
 		}
 	});
-	var skip_1 = require_request_DXOkY5MQ.F();
+	var skip_1 = require_request_CycLCCas.F();
 	Object.defineProperty(exports, "skip", {
 		enumerable: !0,
 		get: function() {
 			return skip_1.skip;
 		}
 	});
-	var skipLast_1 = require_request_DXOkY5MQ.P();
+	var skipLast_1 = require_request_CycLCCas.P();
 	Object.defineProperty(exports, "skipLast", {
 		enumerable: !0,
 		get: function() {
 			return skipLast_1.skipLast;
 		}
 	});
-	var skipUntil_1 = require_request_DXOkY5MQ.N();
+	var skipUntil_1 = require_request_CycLCCas.N();
 	Object.defineProperty(exports, "skipUntil", {
 		enumerable: !0,
 		get: function() {
 			return skipUntil_1.skipUntil;
 		}
 	});
-	var skipWhile_1 = require_request_DXOkY5MQ.M();
+	var skipWhile_1 = require_request_CycLCCas.M();
 	Object.defineProperty(exports, "skipWhile", {
 		enumerable: !0,
 		get: function() {
 			return skipWhile_1.skipWhile;
 		}
 	});
-	var startWith_1 = require_request_DXOkY5MQ.j();
+	var startWith_1 = require_request_CycLCCas.j();
 	Object.defineProperty(exports, "startWith", {
 		enumerable: !0,
 		get: function() {
 			return startWith_1.startWith;
 		}
 	});
-	var subscribeOn_1 = require_request_DXOkY5MQ.fn();
+	var subscribeOn_1 = require_request_CycLCCas.fn();
 	Object.defineProperty(exports, "subscribeOn", {
 		enumerable: !0,
 		get: function() {
 			return subscribeOn_1.subscribeOn;
 		}
 	});
-	var switchAll_1 = require_request_DXOkY5MQ.k();
+	var switchAll_1 = require_request_CycLCCas.k();
 	Object.defineProperty(exports, "switchAll", {
 		enumerable: !0,
 		get: function() {
 			return switchAll_1.switchAll;
 		}
 	});
-	var switchMap_1 = require_request_DXOkY5MQ.A();
+	var switchMap_1 = require_request_CycLCCas.A();
 	Object.defineProperty(exports, "switchMap", {
 		enumerable: !0,
 		get: function() {
 			return switchMap_1.switchMap;
 		}
 	});
-	var switchMapTo_1 = require_request_DXOkY5MQ.O();
+	var switchMapTo_1 = require_request_CycLCCas.O();
 	Object.defineProperty(exports, "switchMapTo", {
 		enumerable: !0,
 		get: function() {
 			return switchMapTo_1.switchMapTo;
 		}
 	});
-	var switchScan_1 = require_request_DXOkY5MQ.D();
+	var switchScan_1 = require_request_CycLCCas.D();
 	Object.defineProperty(exports, "switchScan", {
 		enumerable: !0,
 		get: function() {
 			return switchScan_1.switchScan;
 		}
 	});
-	var take_1 = require_request_DXOkY5MQ.Pt();
+	var take_1 = require_request_CycLCCas.Pt();
 	Object.defineProperty(exports, "take", {
 		enumerable: !0,
 		get: function() {
 			return take_1.take;
 		}
 	});
-	var takeLast_1 = require_request_DXOkY5MQ.dt();
+	var takeLast_1 = require_request_CycLCCas.dt();
 	Object.defineProperty(exports, "takeLast", {
 		enumerable: !0,
 		get: function() {
 			return takeLast_1.takeLast;
 		}
 	});
-	var takeUntil_1 = require_request_DXOkY5MQ.E();
+	var takeUntil_1 = require_request_CycLCCas.E();
 	Object.defineProperty(exports, "takeUntil", {
 		enumerable: !0,
 		get: function() {
 			return takeUntil_1.takeUntil;
 		}
 	});
-	var takeWhile_1 = require_request_DXOkY5MQ.T();
+	var takeWhile_1 = require_request_CycLCCas.T();
 	Object.defineProperty(exports, "takeWhile", {
 		enumerable: !0,
 		get: function() {
 			return takeWhile_1.takeWhile;
 		}
 	});
-	var tap_1 = require_request_DXOkY5MQ.w();
+	var tap_1 = require_request_CycLCCas.w();
 	Object.defineProperty(exports, "tap", {
 		enumerable: !0,
 		get: function() {
 			return tap_1.tap;
 		}
 	});
-	var throttle_1 = require_request_DXOkY5MQ.C();
+	var throttle_1 = require_request_CycLCCas.C();
 	Object.defineProperty(exports, "throttle", {
 		enumerable: !0,
 		get: function() {
 			return throttle_1.throttle;
 		}
 	});
-	var throttleTime_1 = require_request_DXOkY5MQ.S();
+	var throttleTime_1 = require_request_CycLCCas.S();
 	Object.defineProperty(exports, "throttleTime", {
 		enumerable: !0,
 		get: function() {
 			return throttleTime_1.throttleTime;
 		}
 	});
-	var throwIfEmpty_1 = require_request_DXOkY5MQ.Tt();
+	var throwIfEmpty_1 = require_request_CycLCCas.Tt();
 	Object.defineProperty(exports, "throwIfEmpty", {
 		enumerable: !0,
 		get: function() {
 			return throwIfEmpty_1.throwIfEmpty;
 		}
 	});
-	var timeInterval_1 = require_request_DXOkY5MQ.x();
+	var timeInterval_1 = require_request_CycLCCas.x();
 	Object.defineProperty(exports, "timeInterval", {
 		enumerable: !0,
 		get: function() {
 			return timeInterval_1.timeInterval;
 		}
 	});
-	var timeout_1 = require_request_DXOkY5MQ.dn();
+	var timeout_1 = require_request_CycLCCas.dn();
 	Object.defineProperty(exports, "timeout", {
 		enumerable: !0,
 		get: function() {
 			return timeout_1.timeout;
 		}
 	});
-	var timeoutWith_1 = require_request_DXOkY5MQ.b();
+	var timeoutWith_1 = require_request_CycLCCas.b();
 	Object.defineProperty(exports, "timeoutWith", {
 		enumerable: !0,
 		get: function() {
 			return timeoutWith_1.timeoutWith;
 		}
 	});
-	var timestamp_1 = require_request_DXOkY5MQ.y();
+	var timestamp_1 = require_request_CycLCCas.y();
 	Object.defineProperty(exports, "timestamp", {
 		enumerable: !0,
 		get: function() {
 			return timestamp_1.timestamp;
 		}
 	});
-	var toArray_1 = require_request_DXOkY5MQ.Jt();
+	var toArray_1 = require_request_CycLCCas.Jt();
 	Object.defineProperty(exports, "toArray", {
 		enumerable: !0,
 		get: function() {
 			return toArray_1.toArray;
 		}
 	});
-	var window_1 = require_request_DXOkY5MQ.v();
+	var window_1 = require_request_CycLCCas.v();
 	Object.defineProperty(exports, "window", {
 		enumerable: !0,
 		get: function() {
 			return window_1.window;
 		}
 	});
-	var windowCount_1 = require_request_DXOkY5MQ._();
+	var windowCount_1 = require_request_CycLCCas._();
 	Object.defineProperty(exports, "windowCount", {
 		enumerable: !0,
 		get: function() {
 			return windowCount_1.windowCount;
 		}
 	});
-	var windowTime_1 = require_request_DXOkY5MQ.g();
+	var windowTime_1 = require_request_CycLCCas.g();
 	Object.defineProperty(exports, "windowTime", {
 		enumerable: !0,
 		get: function() {
 			return windowTime_1.windowTime;
 		}
 	});
-	var windowToggle_1 = require_request_DXOkY5MQ.h();
+	var windowToggle_1 = require_request_CycLCCas.h();
 	Object.defineProperty(exports, "windowToggle", {
 		enumerable: !0,
 		get: function() {
 			return windowToggle_1.windowToggle;
 		}
 	});
-	var windowWhen_1 = require_request_DXOkY5MQ.m();
+	var windowWhen_1 = require_request_CycLCCas.m();
 	Object.defineProperty(exports, "windowWhen", {
 		enumerable: !0,
 		get: function() {
 			return windowWhen_1.windowWhen;
 		}
 	});
-	var withLatestFrom_1 = require_request_DXOkY5MQ.p();
+	var withLatestFrom_1 = require_request_CycLCCas.p();
 	Object.defineProperty(exports, "withLatestFrom", {
 		enumerable: !0,
 		get: function() {
 			return withLatestFrom_1.withLatestFrom;
 		}
 	});
-	var zip_1 = require_request_DXOkY5MQ.d();
+	var zip_1 = require_request_CycLCCas.d();
 	Object.defineProperty(exports, "zip", {
 		enumerable: !0,
 		get: function() {
 			return zip_1.zip;
 		}
 	});
-	var zipAll_1 = require_request_DXOkY5MQ.f();
+	var zipAll_1 = require_request_CycLCCas.f();
 	Object.defineProperty(exports, "zipAll", {
 		enumerable: !0,
 		get: function() {
 			return zipAll_1.zipAll;
 		}
 	});
-	var zipWith_1 = require_request_DXOkY5MQ.u();
+	var zipWith_1 = require_request_CycLCCas.u();
 	Object.defineProperty(exports, "zipWith", {
 		enumerable: !0,
 		get: function() {
@@ -2367,7 +2367,7 @@ var EventSourceImpl = class extends EventTarget {
 	constructor(url, eventSourceInitDict) {
 		super();
 		try {
-			if (url instanceof URL) this.#url = url;
+			if (url instanceof URL) this.#url = new URL(url);
 			else if (typeof url == "string") this.#url = new URL(url, getBaseURL());
 			else throw Error("Invalid URL");
 		} catch {
@@ -2707,7 +2707,7 @@ function utf8ToByteString(value) {
 	for (let byte of new TextEncoder().encode(value)) byteString += String.fromCharCode(byte);
 	return byteString;
 }
-var import_cjs = require_request_DXOkY5MQ.l(), import_operators = require_operators();
+var import_cjs = require_request_CycLCCas.l(), import_operators = require_operators();
 /**
 * Coerce \`value\`.
 */
@@ -3003,7 +3003,7 @@ const createWarningPrinter = (message) => once((...args) => console.warn(message
 	"\`useCdn: false\` to use the Live API. Note: You may incur higher costs using the live API."
 ]), printCdnPreviewDraftsWarning = createWarningPrinter(["The Sanity client is configured with the \`perspective\` set to \`drafts\` or \`previewDrafts\`, which doesn't support the API-CDN.", "The Live API will be used instead. Set \`useCdn: false\` in your configuration to hide this warning."]), printPreviewDraftsDeprecationWarning = createWarningPrinter(["The \`previewDrafts\` perspective has been renamed to  \`drafts\` and will be removed in a future API version"]), printBrowserTokenWarning = createWarningPrinter(["You have configured Sanity client to use a token in the browser. This may cause unintentional security issues.", \`See \${generateHelpUrl("js-client-browser-token")} for more information and how to hide this warning.\`]), printCredentialedTokenWarning = createWarningPrinter(["You have configured Sanity client to use a token, but also provided \`withCredentials: true\`.", "This is no longer supported - only token will be used - remove \`withCredentials: true\`."]), printNoApiVersionSpecifiedWarning = createWarningPrinter(["Using the Sanity client without specifying an API version is deprecated.", \`See \${generateHelpUrl("js-client-api-version")}\`]);
 createWarningPrinter(["The default export of @sanity/client has been deprecated. Use the named export \`createClient\` instead."]);
-const printCreateVersionWithBaseIdWarning = createWarningPrinter(["You have called \`createVersion()\` with a defined \`document\`.", "If you are creating a version of a document that already exists, prefer providing \`baseId\` and \`releaseId\` instead."]), printDeprecatedUriOptionWarning = createWarningPrinter(["The \`uri\` request option has been renamed to \`url\`.", "Please update your code to use \`url\` instead. Support for \`uri\` will be removed in a future version."]), printDeprecatedResourceConfigWarning = createWarningPrinter(["The \`~experimental_resource\` configuration property has been renamed to \`resource\`.", "Please update your client configuration to use \`resource\` instead. Support for \`~experimental_resource\` will be removed in a future version."]), defaultConfig = {
+const printCreateVersionWithBaseIdWarning = createWarningPrinter(["You have called \`createVersion()\` with a defined \`document\`.", "If you are creating a version of a document that already exists, prefer providing \`baseId\` and \`releaseId\` instead."]), printDeprecatedUriOptionWarning = createWarningPrinter(["The \`uri\` request option has been renamed to \`url\`.", "Please update your code to use \`url\` instead. Support for \`uri\` will be removed in a future version."]), printConfigTokenUnderReactiveAuthWarning = createWarningPrinter(["This client is configured with a reactive \`auth\`, so \`client.config().token\` and \`client.config().withCredentials\` are \`undefined\`.", "Use \`await client.getAuth()\` to read the credential the client sends, or subscribe to \`client.observeAuth()\` to follow changes."]), printDeprecatedResourceConfigWarning = createWarningPrinter(["The \`~experimental_resource\` configuration property has been renamed to \`resource\`.", "Please update your client configuration to use \`resource\` instead. Support for \`~experimental_resource\` will be removed in a future version."]), defaultConfig = {
 	apiHost: "https://api.sanity.io",
 	apiVersion: "1",
 	useProjectHostname: !0,
@@ -3023,6 +3023,57 @@ function validateApiVersion(apiVersion) {
 */
 function validateApiPerspective(perspective) {
 	if (Array.isArray(perspective) && perspective.length > 1 && perspective.includes("raw")) throw TypeError("Invalid API perspective value: \\"raw\\". The raw-perspective can not be combined with other perspectives");
+}
+/**
+* Whether \`key\` is an own, enumerable property of \`obj\`. Enumerable only, so the
+* non-enumerable \`token\` / \`withCredentials\` getters \`exposeConfig\` adds under a
+* reactive \`auth\` do not count as a static credential when a \`client.config()\`
+* result is passed back in without being spread.
+*/
+const hasOwn = (obj, key) => Object.prototype.propertyIsEnumerable.call(obj, key), hasOwnReactiveAuth = (config) => hasOwn(config, "auth") && config.auth !== void 0, hasOwnStaticAuth = (config) => hasOwn(config, "token") || hasOwn(config, "withCredentials");
+/**
+* Merge a partial configuration onto an existing one for \`withConfig()\`.
+*
+* Plain spread semantics for everything, with one rule for the credential: a
+* credential the new configuration sets itself replaces the inherited one. An
+* \`auth\` of its own drops the inherited \`token\` / \`withCredentials\`, and a
+* \`token\` / \`withCredentials\` of its own (an own property, even with the value
+* \`undefined\`) drops an inherited \`auth\`. Setting both forms at once is left
+* for \`initConfig\` to reject.
+*
+* @internal
+*/
+function mergeConfig(prev, next = {}) {
+	let merged = {
+		...prev,
+		...next,
+		stega: {
+			...prev.stega,
+			...typeof next.stega == "boolean" ? { enabled: next.stega } : next.stega || {}
+		}
+	}, nextHasReactiveAuth = hasOwnReactiveAuth(next), nextHasStaticAuth = hasOwnStaticAuth(next);
+	return nextHasReactiveAuth && !nextHasStaticAuth ? (delete merged.token, delete merged.withCredentials) : nextHasStaticAuth && !nextHasReactiveAuth && delete merged.auth, merged;
+}
+/**
+* The configuration as \`client.config()\` returns it: a copy, so callers cannot
+* mutate the client's own config. It describes what was configured. Under a
+* reactive \`auth\` observable that is \`auth\`, so \`token\` and \`withCredentials\`
+* are \`undefined\`; they are non-enumerable getters that say so once, to help
+* code that still reads them move to \`client.getAuth()\`.
+*
+* @internal
+*/
+function exposeConfig(config) {
+	let copy = { ...config };
+	if (!config.auth) return copy;
+	for (let key of ["token", "withCredentials"]) Object.defineProperty(copy, key, {
+		enumerable: !1,
+		configurable: !0,
+		get: () => {
+			printConfigTokenUnderReactiveAuthWarning();
+		}
+	});
+	return copy;
 }
 const initConfig = (config, prevConfig) => {
 	let specifiedConfig = {
@@ -3051,7 +3102,10 @@ const initConfig = (config, prevConfig) => {
 	if (typeof newConfig.stega.enabled != "boolean") throw Error(\`stega.enabled must be a boolean, received \${newConfig.stega.enabled}\`);
 	if (newConfig.stega.enabled && newConfig.stega.studioUrl === void 0) throw Error("stega.studioUrl must be defined when stega.enabled is true");
 	if (newConfig.stega.enabled && typeof newConfig.stega.studioUrl != "string" && typeof newConfig.stega.studioUrl != "function") throw Error(\`stega.studioUrl must be a string or a function, received \${newConfig.stega.studioUrl}\`);
-	let isBrowser = typeof window < "u" && window.location && window.location.hostname, isLocalhost = isBrowser && isLocal(window.location.hostname), hasToken = !!newConfig.token;
+	let isBrowser = typeof window < "u" && window.location && window.location.hostname, isLocalhost = isBrowser && isLocal(window.location.hostname), ownReactiveAuth = hasOwnReactiveAuth(config), ownStaticAuth = hasOwnStaticAuth(config);
+	if (ownReactiveAuth && ownStaticAuth && (config.token || config.withCredentials)) throw Error("\`auth\` cannot be combined with \`token\` or \`withCredentials\`. Pass the credential through \`auth\` alone, or use the static options without \`auth\`. A client configured with \`auth\` includes it in \`client.config()\`, so to replace its credential, use \`client.withConfig({token})\` rather than spreading its config into \`createClient()\`.");
+	ownReactiveAuth ? (delete newConfig.token, delete newConfig.withCredentials) : (ownStaticAuth || !newConfig.auth) && delete newConfig.auth;
+	let hasToken = !!newConfig.token;
 	newConfig.withCredentials && hasToken && (printCredentialedTokenWarning(), newConfig.withCredentials = !1), isBrowser && isLocalhost && hasToken && newConfig.ignoreBrowserTokenWarning !== !0 ? printBrowserTokenWarning() : newConfig.useCdn === void 0 && printCdnWarning(), projectBased && projectId(newConfig.projectId), newConfig.dataset && dataset(newConfig.dataset), "requestTagPrefix" in newConfig && (newConfig.requestTagPrefix = newConfig.requestTagPrefix ? requestTag(newConfig.requestTagPrefix).replace(/\\.+$/, "") : void 0), newConfig.apiVersion = \`\${newConfig.apiVersion}\`.replace(/^v/, ""), newConfig.isDefaultApi = newConfig.apiHost === defaultConfig.apiHost, newConfig.useCdn === !0 && newConfig.withCredentials && printCdnAndWithCredentialsWarning(), newConfig.useCdn = newConfig.useCdn !== !1 && !newConfig.withCredentials, validateApiVersion(newConfig.apiVersion);
 	let hostParts = newConfig.apiHost.split("://", 2), protocol = hostParts[0], host = hostParts[1], cdnHost = newConfig.isDefaultApi ? "apicdn.sanity.io" : host;
 	return projectBased ? (newConfig.url = \`\${protocol}://\${newConfig.projectId}.\${host}/v\${newConfig.apiVersion}\`, newConfig.cdnUrl = \`\${protocol}://\${newConfig.projectId}.\${cdnHost}/v\${newConfig.apiVersion}\`) : (newConfig.url = \`\${newConfig.apiHost}/v\${newConfig.apiVersion}\`, newConfig.cdnUrl = newConfig.url), newConfig;
@@ -3098,6 +3152,15 @@ var ConnectionFailedError = class extends Error {
 }, MessageParseError = class extends Error {
 	name = "MessageParseError";
 };
+/**
+* Whether \`err\` was raised by the EventSource connection (one of the error
+* classes above), as opposed to the code around it.
+*
+* @internal
+*/
+function isEventSourceError(err) {
+	return err instanceof ConnectionFailedError || err instanceof ChannelError || err instanceof DisconnectError || err instanceof MessageError || err instanceof MessageParseError;
+}
 const REQUIRED_EVENTS = ["channelError", "disconnect"];
 /**
 * Sanity API specific EventSource handler shared between the listen and live APIs
@@ -3187,7 +3250,7 @@ function extractErrorMessage(err, tag) {
 		return typeof message == "string" && message || "Unknown listener error";
 	}
 	if (require_isRecord_Kfmt_nk_.t(error)) {
-		if (require_request_DXOkY5MQ.s(error)) return require_request_DXOkY5MQ.a(error, tag);
+		if (require_request_CycLCCas.s(error)) return require_request_CycLCCas.a(error, tag);
 		if (typeof error.description == "string") return error.description;
 	}
 	return typeof error == "string" ? error : JSON.stringify(error, null, 2);
@@ -3525,6 +3588,66 @@ const possibleStoreRequestOptions = [
 	"token"
 ];
 /**
+* Turn the static config options into the \`Auth\` union. Token mode wins
+* when both are set, matching the credentialed-token warning \`initConfig\`
+* prints for that combination.
+*
+* @internal
+*/
+function authFromStaticOptions(token, withCredentials) {
+	if (typeof token == "string" && token) return { token };
+	if (withCredentials) return { withCredentials: !0 };
+}
+/**
+* The credential of a static config, read from its \`token\` / \`withCredentials\`
+* options; \`undefined\` for a config with a reactive \`auth\` observable.
+*
+* @internal
+*/
+function getStaticAuth(config) {
+	return config.auth ? void 0 : { value: authFromStaticOptions(config.token, config.withCredentials) };
+}
+/**
+* Whether the request options themselves carry a bearer credential (a
+* \`token\`, or an \`Authorization\` header), which replaces the client's \`auth\`
+* for that one request, whether that is static or reactive. A per-request
+* \`withCredentials\` is not a replacement: \`true\` adds cookies alongside
+* whatever the client sends, as it always has, and \`false\` only keeps cookies
+* off (see \`_prepareAuthenticatedRequest\`).
+*
+* @internal
+*/
+function hasRequestAuth(options) {
+	return !!options?.token || typeof options?.headers == "object" && options.headers !== null && hasAuthorizationHeader(options.headers);
+}
+/**
+* Attach a resolved credential to a request: \`Authorization: Bearer …\` in
+* token mode (replacing an \`Authorization\` set through the config-level
+* \`headers\`, as the static \`token\` always has), \`credentials: 'include'\` in
+* cookie mode, nothing when anonymous.
+*
+* @internal
+*/
+function applyAuth(request, auth) {
+	if (auth === void 0) return request;
+	if ("token" in auth) {
+		let headers = {};
+		for (let [name, value] of Object.entries(request.headers)) name.toLowerCase() !== "authorization" && (headers[name] = value);
+		return headers.Authorization = \`Bearer \${auth.token}\`, {
+			...request,
+			headers
+		};
+	}
+	return {
+		...request,
+		credentials: "include"
+	};
+}
+function hasAuthorizationHeader(headers) {
+	return Object.keys(headers).some((name) => name.toLowerCase() === "authorization");
+}
+const DEFAULT_REQUEST_TIMEOUT_MS = 3e5;
+/**
 * Project the public request options (\`timeout: 0\` to disable,
 * \`withCredentials\`, \`maxRedirects\`, the function/object-form \`fetch\`, ...)
 * plus the client config into a get-it v9 fetch-shaped request. This is the
@@ -3532,22 +3655,25 @@ const possibleStoreRequestOptions = [
 * the transport — everything below it speaks get-it v9.
 *
 * Reads the live client config, so reconfiguration via \`client.config()\` /
-* \`withConfig()\` (token, headers, proxy, ...) applies to subsequent requests.
+* \`withConfig()\` (headers, proxy, ...) applies to subsequent requests.
+*
+* The client's own credential is not applied here:
+* \`_prepareAuthenticatedRequest\` attaches it afterwards, static or reactive.
+* Only the per-request \`token\` and \`withCredentials\` overrides are
+* translated.
 *
 * @internal
 */
 function requestOptions(config, overrides = {}) {
 	let headers = {};
-	config.headers && Object.assign(headers, config.headers);
-	let token = overrides.token || config.token;
-	token && (headers.Authorization = \`Bearer \${token}\`), !overrides.useGlobalApi && !config.useProjectHostname && config.projectId && (headers["X-Sanity-Project-ID"] = config.projectId);
+	config.headers && Object.assign(headers, config.headers), overrides.token && (headers.Authorization = \`Bearer \${overrides.token}\`), !overrides.useGlobalApi && !config.useProjectHostname && config.projectId && (headers["X-Sanity-Project-ID"] = config.projectId);
 	let request = {
 		url: overrides.url,
 		headers: Object.assign(headers, overrides.headers || {})
 	};
-	overrides.method && (request.method = overrides.method), overrides.body !== void 0 && (request.body = overrides.body), overrides.query && (request.query = expandQueryArrays(overrides.query)), overrides.signal && (request.signal = overrides.signal), (overrides.withCredentials === void 0 ? config.withCredentials : overrides.withCredentials) && (request.credentials = "include"), typeof overrides.maxRedirects == "number" && (request.redirect = overrides.maxRedirects === 0 ? "manual" : "follow");
+	overrides.method && (request.method = overrides.method), overrides.body !== void 0 && (request.body = overrides.body), overrides.query && (request.query = expandQueryArrays(overrides.query)), overrides.signal && (request.signal = overrides.signal), overrides.withCredentials && (request.credentials = "include"), typeof overrides.maxRedirects == "number" && (request.redirect = overrides.maxRedirects === 0 ? "manual" : "follow");
 	let timeout = overrides.timeout === void 0 ? config.timeout : overrides.timeout;
-	request.timeout = timeout === void 0 ? 3e5 : timeout !== 0 && timeout, overrides.useAbortSignal === !1 && !request.signal && (request.timeout = typeof request.timeout == "number" && request.timeout > 0 && {
+	request.timeout = timeout === void 0 ? DEFAULT_REQUEST_TIMEOUT_MS : timeout !== 0 && timeout, overrides.useAbortSignal === !1 && !request.signal && (request.timeout = typeof request.timeout == "number" && request.timeout > 0 && {
 		total: request.timeout,
 		signal: !1
 	});
@@ -3558,7 +3684,10 @@ function requestOptions(config, overrides = {}) {
 	return typeof fetchOption == "function" ? request.fetch = fetchOption : typeof fetchOption == "object" && fetchOption && (request.meta = {
 		...request.meta,
 		fetchInit: fetchOption
-	}), !request.fetch && config.resolveFetch && (request.fetch = config.resolveFetch(typeof config.proxy == "string" ? config.proxy : void 0)), typeof overrides.maxRetries == "number" && (request.maxRetries = overrides.maxRetries), typeof config.lineage == "string" && config.lineage && (request.meta = {
+	}), !request.fetch && config.resolveFetch && (request.fetch = config.resolveFetch(typeof config.proxy == "string" ? config.proxy : void 0)), typeof overrides.maxRetries == "number" && (request.maxRetries = overrides.maxRetries), overrides.rawBody === !0 && (request.meta = {
+		...request.meta,
+		rawBody: !0
+	}), typeof config.lineage == "string" && config.lineage && (request.meta = {
 		...request.meta,
 		lineage: config.lineage
 	}), request;
@@ -3580,7 +3709,96 @@ function expandQueryArrays(query) {
 	}
 	return params;
 }
-var import_dist = require_dist_C5K_YcEU.t();
+/**
+* The rejection an aborted operation produces: the same \`AbortError\`
+* \`DOMException\` a \`fetch\` aborted through its \`signal\` rejects with, carrying
+* the signal's \`reason\` when one was given.
+*/
+function createAbortError(signal) {
+	return new DOMException(signal?.reason ?? "The operation was aborted.", "AbortError");
+}
+/**
+* Errors the stream with an \`AbortError\` when \`signal\` aborts, and
+* unsubscribes from the source. An already-aborted signal errors immediately
+* without subscribing.
+*
+* @internal
+*/
+function withAbortSignal(signal) {
+	return (input) => new import_cjs.Observable((observer) => {
+		let abort = () => observer.error(createAbortError(signal));
+		if (signal.aborted) {
+			abort();
+			return;
+		}
+		let subscription = input.subscribe(observer);
+		return signal.addEventListener("abort", abort), () => {
+			signal.removeEventListener("abort", abort), subscription.unsubscribe();
+		};
+	});
+}
+/**
+* The config's credential, emitted when it settles: the static value at once,
+* or each promise the reactive \`auth\` emits once it settles (nothing while a
+* renewal is pending). A newer emission supersedes a
+* still-pending older promise, which is what overlapping refreshes want.
+*
+* @internal
+*/
+function settledAuth(config) {
+	let source = config.auth;
+	return source ? source.pipe((0, import_cjs.switchMap)((pending) => (0, import_cjs.from)(pending))) : (0, import_cjs.of)(authFromStaticOptions(config.token, config.withCredentials));
+}
+/**
+* The config's credential as \`client.observeAuth()\` emits it: every settled
+* credential, as an object (\`{}\` for anonymous) so it can be destructured.
+* A static config emits once and completes.
+*
+* @internal
+*/
+function observeResolvedAuth(config) {
+	return settledAuth(config).pipe((0, import_cjs.map)((auth) => auth ?? {}));
+}
+/**
+* The current credential: the first value the config's \`auth\` observable
+* settles to, then complete. Bounded by \`timeoutMs\` when given: a source that
+* never settles then fails the way a hung request does, with a \`TimeoutError\`,
+* instead of silently. Unsubscribing tears the wait down at once, so a caller
+* that goes away while a renewal is pending leaves no subscription behind.
+*
+* @internal
+*/
+function currentAuth(config, timeoutMs) {
+	return settledAuth(config).pipe(typeof timeoutMs == "number" && timeoutMs > 0 ? (0, import_cjs.timeout)({
+		first: timeoutMs,
+		with: () => (0, import_cjs.throwError)(() => new DOMException(\`The \\\`auth\\\` observable did not settle on a credential within \${timeoutMs}ms. It must emit the current credential to every subscriber; a \\\`BehaviorSubject\\\` or \\\`shareReplay(1)\\\` does.\`, "TimeoutError"))
+	}) : import_cjs.identity, (0, import_cjs.take)(1), (0, import_cjs.throwIfEmpty)(() => /* @__PURE__ */ Error("The \`auth\` observable completed without emitting a credential. \`auth\` must emit the current credential to every subscriber and then every change, and never complete; a \`BehaviorSubject\` or \`shareReplay(1)\` satisfies this.")));
+}
+/**
+* {@link currentAuth} as a promise, for the request pipeline. A static config
+* answers without subscribing. The wait is cancelled by \`signal\`, so a request
+* aborted while a renewal is pending rejects instead of hanging on it.
+*
+* @internal
+*/
+function resolveAuth(config, signal, timeoutMs) {
+	let staticAuth = getStaticAuth(config);
+	return staticAuth ? Promise.resolve(staticAuth.value) : (0, import_cjs.firstValueFrom)(currentAuth(config, timeoutMs).pipe(signal ? withAbortSignal(signal) : import_cjs.identity));
+}
+/**
+* The credential the client would attach to a request right now, as an
+* object (\`{}\` for anonymous) so callers can destructure it. Backs
+* \`client.getAuth()\`: static configs answer at once; a reactive \`auth\` is
+* awaited, cancelled by \`options.signal\` and bounded by the client's \`timeout\`
+* like a request is.
+*
+* @internal
+*/
+async function resolveCurrentAuth(config, options = {}) {
+	let timeoutMs = config.timeout === void 0 ? DEFAULT_REQUEST_TIMEOUT_MS : config.timeout;
+	return await resolveAuth(config, options.signal, timeoutMs) ?? {};
+}
+var import_dist = require_dist_BPHpH4Im.t();
 /**
 * Can take a \`result\` JSON from a \`const {result} = client.fetch(query, params, {filterResponse: false})\`
 * and remove all stega-encoded data from it.
@@ -3652,7 +3870,7 @@ function _fetch$2(client, httpRequest, _stega, query, _params = {}, options = {}
 		query,
 		params
 	}, reqOpts);
-	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-qxoqHkQe-[hash].cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
+	return stega.enabled ? Promise.all([request, Promise.resolve().then(() => require("./stegaEncodeSourceMap-BABM8sfV-[hash].cjs"))]).then(([res, { stegaEncodeSourceMap }]) => {
 		let result = stegaEncodeSourceMap(res.result, res.resultSourceMap, stega);
 		return mapResponse({
 			...res,
@@ -4040,9 +4258,8 @@ const hasDataConfig = (client) => {
 }, isQuery = (client, uri) => hasDataConfig(client) && uri.startsWith(_getDataUrl(client, "query")), isMutate = (client, uri) => hasDataConfig(client) && uri.startsWith(_getDataUrl(client, "mutate")), isDoc = (client, uri) => hasDataConfig(client) && uri.startsWith(_getDataUrl(client, "doc", "")), isListener = (client, uri) => hasDataConfig(client) && uri.startsWith(_getDataUrl(client, "listen")), isHistory = (client, uri) => hasDataConfig(client) && uri.startsWith(_getDataUrl(client, "history", "")), isData = (client, uri) => uri.startsWith("/data/") || isQuery(client, uri) || isMutate(client, uri) || isDoc(client, uri) || isListener(client, uri) || isHistory(client, uri);
 /**
 * Build the final request options (URL, headers, query params, etc.) used by
-* both the regular request pipeline and the asset upload path.
-*
-* @internal
+* both the regular request pipeline and the asset upload path. Everything but
+* the client's credential, which {@link _prepareAuthenticatedRequest} adds.
 */
 function _prepareRequest(client, options) {
 	options.uri !== void 0 && printDeprecatedUriOptionWarning();
@@ -4088,6 +4305,77 @@ function _prepareRequest(client, options) {
 	return requestOptions(config, Object.assign({}, options, { url: _getUrl(client, uri, useCdn) }));
 }
 /**
+* {@link _prepareRequest}, then the client's credential: its static \`token\` /
+* \`withCredentials\`, or the current value of a reactive \`auth\`, applied as a
+* bearer token or \`credentials: 'include'\`. A \`token\` or \`Authorization\`
+* header on the request itself replaces the client's token; the client's
+* cookie mode still applies.
+*
+* Synchronous for a static config, so those requests reach the transport
+* exactly as they did before \`auth\` existed. A reactive \`auth\` is awaited even
+* when the request carries its own bearer, since the client's cookie mode
+* still applies to it. The wait is cancelled by the request's \`signal\` and
+* bounded by the request's \`timeout\`, which the request then runs under for
+* the time that remains, so a source that never emits fails like a hung
+* request rather than hanging forever.
+*
+* @internal
+*/
+function _prepareAuthenticatedRequest(client, options) {
+	let request = _prepareRequest(client, options), config = client.config(), requestBearer = hasRequestAuth(options), apply = (auth) => auth !== void 0 && "token" in auth && requestBearer || auth !== void 0 && "withCredentials" in auth && options.withCredentials === !1 ? request : applyAuth(request, auth), staticAuth = getStaticAuth(config);
+	if (staticAuth) return apply(staticAuth.value);
+	let deadline = requestTimeoutMs(request), startedAt = Date.now();
+	return resolveAuth(config, options.signal, deadline).then((auth) => deadline === void 0 ? apply(auth) : withRemainingTimeout(apply(auth), Math.max(1, deadline - (Date.now() - startedAt))));
+}
+/**
+* {@link _prepareAuthenticatedRequest} as an observable that emits the prepared
+* request once and completes. Unsubscribing while a reactive credential is
+* still pending cancels the wait, so nothing (such as an upload body) is held
+* until the renewal settles. A static credential is prepared in the same tick,
+* exactly as before.
+*
+* @internal
+*/
+function _prepareAuthenticatedRequestObservable(client, options) {
+	return new import_cjs.Observable((subscriber) => {
+		let controller = new AbortController(), signal = getStaticAuth(client.config()) === void 0 ? options.signal ? require_request_CycLCCas.gn([options.signal, controller.signal]) : controller.signal : void 0, settled = !1, emit = (request) => {
+			settled = !0, subscriber.next(request), subscriber.complete();
+		}, prepared = _prepareAuthenticatedRequest(client, signal ? {
+			...options,
+			signal
+		} : options);
+		return prepared instanceof Promise ? prepared.then(emit, (err) => {
+			settled = !0, subscriber.error(err);
+		}) : emit(prepared), () => {
+			settled || controller.abort();
+		};
+	});
+}
+/** The request with its \`timeout\` reduced to what is left of the deadline. */
+function withRemainingTimeout(request, remainingMs) {
+	let { timeout } = request;
+	return typeof timeout == "object" && timeout ? {
+		...request,
+		timeout: {
+			...timeout,
+			total: remainingMs
+		}
+	} : {
+		...request,
+		timeout: remainingMs
+	};
+}
+/**
+* The deadline the request will run under, as milliseconds, or \`undefined\`
+* when timeouts are disabled (\`timeout: 0\`). Mirrors what \`requestOptions\`
+* resolved from the per-request and client-level \`timeout\`.
+*/
+function requestTimeoutMs(request) {
+	let { timeout } = request;
+	if (typeof timeout == "number") return timeout;
+	if (typeof timeout == "object" && timeout && typeof timeout.total == "number") return timeout.total;
+}
+/**
 * Wrap a promise-returning request in a cold, single-value Observable.
 *
 * Each subscription invokes \`run\` with a fresh \`AbortSignal\` that is aborted
@@ -4105,7 +4393,7 @@ function _prepareRequest(client, options) {
 function _observe(userSignal, run) {
 	return new import_cjs.Observable((subscriber) => {
 		let controller = new AbortController();
-		return run(userSignal ? require_request_DXOkY5MQ.gn([userSignal, controller.signal]) : controller.signal).then((value) => {
+		return run(userSignal ? require_request_CycLCCas.gn([userSignal, controller.signal]) : controller.signal).then((value) => {
 			subscriber.next(value), subscriber.complete();
 		}, (err) => subscriber.error(err)), () => controller.abort();
 	});
@@ -4119,7 +4407,8 @@ function _observe(userSignal, run) {
 * @internal
 */
 function _request(client, httpRequest, options) {
-	return httpRequest(_prepareRequest(client, options), client.config().requestHandler).then((body) => body);
+	let prepared = _prepareAuthenticatedRequest(client, options), send = (reqOptions) => httpRequest(reqOptions, client.config().requestHandler);
+	return (prepared instanceof Promise ? prepared.then(send) : send(prepared)).then((body) => body);
 }
 /**
 * Execute an HTTP request through the regular pipeline and resolve to the
@@ -4144,7 +4433,7 @@ function _requestObservable(client, httpRequest, options) {
 * @internal
 */
 function _uploadObservable(client, options) {
-	let reqOptions = _prepareRequest(client, options), requester = client.config().requester, request = new import_cjs.Observable((subscriber) => requester(reqOptions).subscribe(subscriber)).pipe((0, import_operators.filter)((event) => event?.type === "progress" || event?.type === "response"), (0, import_operators.map)((event) => event.type === "progress" ? {
+	let requester = client.config().requester, request = _prepareAuthenticatedRequestObservable(client, options).pipe((0, import_operators.mergeMap)((reqOptions) => requester(reqOptions)), (0, import_operators.filter)((event) => event?.type === "progress" || event?.type === "response"), (0, import_operators.map)((event) => event.type === "progress" ? {
 		type: "progress",
 		stage: event.stage,
 		percent: event.percent,
@@ -4155,7 +4444,7 @@ function _uploadObservable(client, options) {
 		type: "response",
 		body: event.body
 	}));
-	return options.signal ? request.pipe(_withAbortSignal(options.signal)) : request;
+	return options.signal ? request.pipe(withAbortSignal(options.signal)) : request;
 }
 /**
 * @internal
@@ -4172,31 +4461,6 @@ function _getDataUrl(client, operation, path) {
 function _getUrl(client, uri, canUseCdn = !1) {
 	let { url, cdnUrl } = client.config();
 	return \`\${canUseCdn ? cdnUrl : url}/\${uri.replace(/^\\//, "")}\`;
-}
-/**
-* @internal
-*/
-function _withAbortSignal(signal) {
-	return (input) => new import_cjs.Observable((observer) => {
-		let abort = () => observer.error(_createAbortError(signal));
-		if (signal && signal.aborted) {
-			abort();
-			return;
-		}
-		let subscription = input.subscribe(observer);
-		return signal.addEventListener("abort", abort), () => {
-			signal.removeEventListener("abort", abort), subscription.unsubscribe();
-		};
-	});
-}
-/**
-* \`DOMException\` is globally available in every supported runtime
-* (Node 22.12+ and all modern browsers), so we can construct one directly.
-*
-* @internal
-*/
-function _createAbortError(signal) {
-	return new DOMException(signal?.reason ?? "The operation was aborted.", "AbortError");
 }
 const resourceDataBase = (config) => {
 	let resource = config.resource;
@@ -4405,18 +4669,15 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		query,
 		body
 	};
-	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(async () => {
-		let { uploadWithProgress } = await Promise.resolve().then(() => require("./browserUpload-QxCD0Hp6-[hash].cjs")), req = _prepareRequest(client, { ...baseRequest });
-		return uploadWithProgress({
-			url: appendQuery(req.url, req.query),
-			method: req.method ?? "POST",
-			headers: req.headers,
-			body,
-			withCredentials: req.credentials === "include",
-			timeout: typeof req.timeout == "object" ? req.timeout.total : req.timeout,
-			signal: req.signal
-		});
-	}).pipe((0, import_operators.mergeAll)()) : _uploadObservable(client, baseRequest);
+	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(() => Promise.resolve().then(() => require("./browserUpload-RbNSlau1-[hash].cjs"))).pipe((0, import_operators.mergeMap)(({ uploadWithProgress }) => _prepareAuthenticatedRequestObservable(client, { ...baseRequest }).pipe((0, import_operators.mergeMap)((req) => uploadWithProgress({
+		url: appendQuery(req.url, req.query),
+		method: req.method ?? "POST",
+		headers: req.headers,
+		body,
+		withCredentials: req.credentials === "include",
+		timeout: typeof req.timeout == "object" ? req.timeout.total : req.timeout,
+		signal: req.signal
+	}))))) : _uploadObservable(client, baseRequest);
 }
 function appendQuery(url, query) {
 	if (!query) return url;
@@ -4430,7 +4691,7 @@ function buildAssetUploadUrl(config, assetType) {
 		switch (type) {
 			case "dataset": throw Error("Assets are not supported for dataset resources, yet. Configure the client with \`{projectId: <projectId>, dataset: <datasetId>}\` instead.");
 			case "canvas": return \`/canvases/\${id}/assets/\${assetTypeEndpoint}\`;
-			case "knowledge-base": throw Error("Assets are not supported for knowledge-base resources. Use \`client.context.imports\` to add content instead.");
+			case "knowledge-base": throw Error("Assets are not supported for knowledge-base resources. Add content as a Context source instead, for example with \`client.context.createFileSource\`.");
 			case "media-library": return \`/media-libraries/\${id}/upload\`;
 			case "dashboard": return \`/dashboards/\${id}/assets/\${assetTypeEndpoint}\`;
 			default: throw Error(\`Unsupported resource type: \${type.toString()}\`);
@@ -4444,7 +4705,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var name = "@sanity/client", version = "8.10.1", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.15.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), RETRYABLE_STATUSES = /* @__PURE__ */ new Set([408, 429]);
 /**
 * Note: connection failure is not the same as network disconnect which may happen more frequent.
@@ -4483,7 +4744,7 @@ function reconnectOnConnectionFailure() {
 * @internal
 */
 function resolveEventSourceFetch(config, options = {}) {
-	let extraHeaders = options.headers, credentials = options.withCredentials ? "include" : void 0;
+	let extraHeaders = options.headers;
 	return function eventSourceFetch(url, init) {
 		let baseFetch = pickBaseFetch(config), mergedInit = { ...init };
 		if (extraHeaders) {
@@ -4491,7 +4752,7 @@ function resolveEventSourceFetch(config, options = {}) {
 			for (let [key, value] of Object.entries(extraHeaders)) headers.set(key, value);
 			mergedInit.headers = headers;
 		}
-		return credentials !== void 0 && (mergedInit.credentials = credentials), baseFetch(typeof url == "string" ? url : url.href, mergedInit);
+		return baseFetch(typeof url == "string" ? url : url.href, mergedInit);
 	};
 }
 /**
@@ -4504,6 +4765,87 @@ function resolveEventSourceFetch(config, options = {}) {
 */
 function pickBaseFetch(config) {
 	return config.resolveFetch ? config.resolveFetch(typeof config.proxy == "string" ? config.proxy : void 0) : globalThis.fetch.bind(globalThis);
+}
+/**
+* An EventSource connection that follows the client's credential. A static
+* one is sent as is; the rest of this describes a reactive \`auth\`.
+*
+* Two mechanisms, both needed:
+*
+* - \`switchMap\` on every credential \`config.auth\` settles to closes the
+*   current connection and opens a new one, which carries \`Last-Event-ID\` so the
+*   server resumes after the last event the consumer saw. A successful resume
+*   answers \`welcomeback\` (listen) and nothing is refetched; a failed one
+*   (position aged out) answers \`reset\` / \`restart\` and the consumer's normal
+*   refetch path runs. No \`distinctUntilChanged\`: the observable decides what
+*   counts as a change, and a cookie-mode re-login is
+*   \`{withCredentials: true}\` → \`{withCredentials: true}\`.
+* - The credential each attempt actually sends is resolved inside the fetch
+*   handed to the \`eventsource\` package, not taken from the value \`switchMap\`
+*   received, so the package's own reconnects after a network blip send the
+*   credential the observable holds at that moment. When the observable is
+*   withholding (a refresh in flight), the reconnect waits behind it like
+*   every request, cancelled by the abort signal the package passes in \`init\`.
+*
+* Transient connection failures are retried per credential by
+* \`reconnectOnConnectionFailure\`. A rejection (4xx, including a 401) errors
+* the stream with a \`ConnectionFailedError\`, and what to do about it is the
+* consumer's call. An error from \`auth\` itself ends the stream with that error.
+*
+* @internal
+*/
+function connectAuthenticatedEventSource(config, url, events, options) {
+	return (0, import_cjs.defer)(() => {
+		let lastEventId, auth$ = options.withAuth ? settledAuth(config) : (0, import_cjs.of)(void 0), transport = resolveEventSourceFetch(config), syncAuth = options.withAuth ? getStaticAuth(config) : { value: void 0 };
+		return auth$.pipe((0, import_cjs.switchMap)(() => {
+			let send = (fetchUrl, init, auth) => (options.onSend?.(auth), transport(fetchUrl, withAuthAndResume(init, options.headers, auth, lastEventId))), fetch = (fetchUrl, init) => syncAuth ? send(fetchUrl, init, syncAuth.value) : resolveAuth(config, isAbortSignal(init?.signal) ? init.signal : void 0).then((auth) => send(fetchUrl, init, auth));
+			return connectEventSource(() => new EventSource(url, { fetch }), events).pipe(reconnectOnConnectionFailure());
+		}), (0, import_cjs.tap)((event) => {
+			"id" in event && event.id && (lastEventId = event.id);
+		}));
+	});
+}
+/**
+* The request init for one attempt: the package's own init plus the config's
+* custom \`headers\`, the credential (a bearer token as \`Authorization\`, cookie
+* mode as \`credentials: 'include'\`) and the resume position as
+* \`Last-Event-ID\`. The credential is applied after the config headers, so the
+* client's token replaces an \`Authorization\` set there, as it does for
+* requests. The package sets \`Last-Event-ID\` itself on its own reconnects;
+* that value is kept, and ours only fills the gap on a fresh instance opened
+* after a credential change or a client-driven reconnect.
+*/
+function withAuthAndResume(init, configHeaders, auth, lastEventId) {
+	if (init === void 0) return init;
+	let headers = { ...init.headers };
+	for (let [name, value] of Object.entries(configHeaders ?? {})) setHeader(headers, name, value);
+	return auth !== void 0 && "token" in auth && setHeader(headers, "Authorization", \`Bearer \${auth.token}\`), lastEventId && !hasHeader(headers, "last-event-id") && (headers["Last-Event-ID"] = lastEventId), deleteHeader(headers, "accept"), {
+		...init,
+		headers: {
+			...headers,
+			Accept: init.headers.Accept
+		},
+		...auth !== void 0 && "withCredentials" in auth ? { credentials: "include" } : {}
+	};
+}
+/** Set a header, replacing any existing spelling of the same name. */
+function setHeader(headers, name, value) {
+	deleteHeader(headers, name), headers[name] = value;
+}
+/** Remove every spelling of a header. */
+function deleteHeader(headers, name) {
+	for (let key of Object.keys(headers)) key.toLowerCase() === name.toLowerCase() && delete headers[key];
+}
+function hasHeader(headers, name) {
+	return Object.keys(headers).some((key) => key.toLowerCase() === name);
+}
+/**
+* The \`eventsource\` package types the signal it passes as \`any\` (polyfills
+* disagree on the shape), and realms differ on \`AbortSignal\` identity, so
+* narrow structurally.
+*/
+function isAbortSignal(value) {
+	return typeof value == "object" && !!value && "aborted" in value && "addEventListener" in value && typeof value.addEventListener == "function";
 }
 /** @internal */
 const possibleOptions = [
@@ -4535,13 +4877,11 @@ function _listen$2(query, params, opts = {}) {
 }
 /** @internal */
 function _connectListenEventSource(client, uri, listenFor) {
-	let config = client.config(), { token, withCredentials, headers: configHeaders } = config, headers = {};
-	token && (headers.Authorization = \`Bearer \${token}\`), configHeaders && Object.assign(headers, configHeaders);
-	let initEventSource = () => new EventSource(uri, { fetch: resolveEventSourceFetch(config, {
-		headers: Object.keys(headers).length ? headers : void 0,
-		withCredentials
-	}) });
-	return connectEventSource(initEventSource, listenFor).pipe(reconnectOnConnectionFailure(), (0, import_operators.filter)((event) => listenFor.includes(event.type)), (0, import_operators.map)((event) => ({
+	let config = client.config();
+	return connectAuthenticatedEventSource(config, uri, listenFor, {
+		headers: config.headers,
+		withAuth: !0
+	}).pipe((0, import_operators.filter)((event) => listenFor.includes(event.type)), (0, import_operators.map)((event) => ({
 		type: event.type,
 		..."data" in event ? event.data : {}
 	})));
@@ -4567,7 +4907,7 @@ function _connectListenEventSource(client, uri, listenFor) {
 * @param resource - The resource the comments are stored against, as \`ClientConfig['resource']\` takes it
 * @param documentId - Document ID, in published, draft or version form
 * @returns Global document reference, of the form \`resourceType:resourceId:documentId\`
-* @alpha
+* @beta
 */
 function getCommentTargetDocumentRef(resource, documentId) {
 	if (!documentId) throw Error("Document ID must be provided");
@@ -4730,7 +5070,7 @@ function _listen$1(client, query, params, options) {
 *
 * Requires \`collaboration.organizationId\`, plus either \`resource\` or \`projectId\` and \`dataset\`.
 *
-* @alpha
+* @beta
 */
 var ObservableCollaborationCommentsClient = class {
 	#client;
@@ -4947,7 +5287,6 @@ var ObservableCollaborationCommentsClient = class {
 		return _listen$1(this.#client, query, params, options);
 	}
 };
-/** @internal */
 function _organizationId(client) {
 	let organizationId = client.config().context?.organizationId;
 	if (!organizationId) throw Error("\`context.organizationId\` must be configured to query Context documents");
@@ -4992,137 +5331,64 @@ function _listen(client, query, params, options) {
 	}), uri = \`\${client.getUrl(storeUrl(client, "listen"))}\${qs}\`;
 	return uri.length > 14800 ? (0, import_cjs.throwError)(() => /* @__PURE__ */ Error("Query too large for listener")) : _connectListenEventSource(client, uri, opts.events ? opts.events : ["mutation"]);
 }
-const ENTRY_TYPE = "sanity.context.entry", ISSUE_TYPE = "sanity.context.issue", MCP_TYPE = "sanity.context.mcp";
-function _one(client, httpRequest, query, params, options) {
-	return (0, import_cjs.lastValueFrom)(_fetch(client, httpRequest, query, params, options));
+function isRecord(value) {
+	return typeof value == "object" && !!value && !Array.isArray(value);
+}
+function isContextRequest(value) {
+	return isRecord(value);
+}
+function _stringValues(entries) {
+	let values = {};
+	for (let [key, value] of Object.entries(entries ?? {})) value != null && (values[key] = String(value));
+	return values;
+}
+function _pathParam(client, name, params) {
+	let value = params[name];
+	if (typeof value == "string" && value !== "") return value;
+	if (value !== void 0) throw Error(\`\\\`params.\${name}\\\` must be a non-empty string\`);
+	let config = client.config();
+	if (name === "knowledgeBaseId" && config.resource?.type === "knowledge-base") return config.resource.id;
+	if (name === "organizationId" && config.context?.organizationId) return config.context.organizationId;
+	throw Error(name === "knowledgeBaseId" ? "\`params.knowledgeBaseId\` is required unless a \`knowledge-base\` resource is configured" : name === "organizationId" ? "\`params.organizationId\` is required unless \`context.organizationId\` is configured" : \`\\\`params.\${name}\\\` is required\`);
 }
 /**
-* Drain every page of a \`(_createdAt, _id)\`-keyset read. Termination keys on
-* the raw page length before anything looks at the rows: a short page means
-* the store had nothing more to give, and filtering must never shorten a
-* full page into a false stop.
+* The request options for a \`METHOD /path\` route: path parameters filled in
+* and encoded, query and headers stringified, \`undefined\` values left out.
 */
-async function _drainByCreatedAt(client, httpRequest, filter, params, options) {
-	let all = [], cursor;
-	for (;;) {
-		let query = \`*[\${cursor ? \`\${filter} && (_createdAt > \\$c || (_createdAt == \\$c && _id > \\$i))\` : filter}] | order(_createdAt asc, _id asc) [0...200]\`, page = await (0, import_cjs.lastValueFrom)(_fetch(client, httpRequest, query, cursor ? {
-			...params,
-			...cursor
-		} : params, options));
-		if (all.push(...page), page.length < 200) return all;
-		let last = page[page.length - 1];
-		cursor = {
-			c: last._createdAt,
-			i: last._id
-		};
-	}
-}
-/** @internal */
-function _readEntry(client, httpRequest, knowledgeBaseId, path, options) {
-	return _one(client, httpRequest, \`*[_type == "\${ENTRY_TYPE}" && knowledgeBaseId == $kb && path == $path][0]\`, {
-		kb: knowledgeBaseId,
-		path
-	}, options);
-}
-/** @internal */
-async function _listEntries(client, httpRequest, knowledgeBaseId, options) {
-	let all = [], after = "";
-	for (;;) {
-		let page = await (0, import_cjs.lastValueFrom)(_fetch(client, httpRequest, \`*[_type == "\${ENTRY_TYPE}" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`, {
-			kb: knowledgeBaseId,
-			after
-		}, options));
-		if (all.push(...page), page.length < 200) return all;
-		after = page[page.length - 1].path;
-	}
-}
-/** @internal */
-function _listIssues(client, httpRequest, knowledgeBaseId, status, options) {
-	return _drainByCreatedAt(client, httpRequest, \`_type == "\${ISSUE_TYPE}" && knowledgeBaseId == $kb\${status === void 0 ? "" : " && status == $status"}\`, status === void 0 ? { kb: knowledgeBaseId } : {
-		kb: knowledgeBaseId,
-		status
-	}, options);
-}
-/** @internal */
-function _readIssue(client, httpRequest, knowledgeBaseId, issueId, options) {
-	return _one(client, httpRequest, \`*[_type == "\${ISSUE_TYPE}" && knowledgeBaseId == $kb && _id == $id][0]\`, {
-		kb: knowledgeBaseId,
-		id: issueId
-	}, options);
-}
-/** @internal */
-function _listInstructions(client, httpRequest, knowledgeBaseId, options) {
-	return _drainByCreatedAt(client, httpRequest, "_type == \\"sanity.context.instruction\\" && knowledgeBaseId == $kb && schemaVersion == 1", { kb: knowledgeBaseId }, options);
-}
-/** @internal */
-function _listMcpEndpoints(client, httpRequest, options) {
-	return (0, import_cjs.lastValueFrom)(_fetch(client, httpRequest, \`*[_type == "\${MCP_TYPE}" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`, { org: _organizationId(client) }, options));
-}
-/** @internal */
-function _readMcpEndpoint(client, httpRequest, name, options) {
-	return _one(client, httpRequest, \`*[_type == "\${MCP_TYPE}" && organizationId == $org && name == $name][0]\`, {
-		org: _organizationId(client),
-		name
-	}, options);
-}
-/** @internal */
-function _readConversation(client, httpRequest, threadId, options) {
-	return _one(client, httpRequest, "*[_type == \\"sanity.context.conversation\\" && organizationId == $org && threadId == $threadId][0]", {
-		org: _organizationId(client),
-		threadId
-	}, options);
-}
-const COLLECTION_URL = "/context/knowledge-bases";
-/**
-* The knowledge base every scoped method operates on comes from the client's
-* \`resource\` configuration, matching how media libraries and canvases are
-* addressed. Resolved per call so \`withConfig\` clones behave.
-*/
-function _resolveKnowledgeBaseId(client) {
-	let resource = client.config().resource;
-	if (resource?.type !== "knowledge-base") throw Error("\`resource\` of type \`knowledge-base\` must be configured to use knowledge-base methods");
-	return resource.id;
-}
-function _knowledgeBaseUrl(knowledgeBaseId, suffix = "") {
-	return \`\${COLLECTION_URL}/\${encodeURIComponent(knowledgeBaseId)}\${suffix}\`;
-}
-function _conversationUrl(client, threadId) {
-	let organizationId = client.config().context?.organizationId;
-	if (!organizationId) throw Error("\`context.organizationId\` must be configured to record conversations");
-	if (!threadId) throw Error("\`threadId\` must be provided");
-	return \`/context/organizations/\${encodeURIComponent(organizationId)}/conversations/\${encodeURIComponent(threadId)}\`;
-}
-/** Serialize defined values into query params, dropping the undefined ones. */
-function _query(entries) {
-	return Object.fromEntries(Object.entries(entries).flatMap(([key, value]) => value === void 0 ? [] : [[key, \`\${value}\`]]));
+function _contextRequestOptions(client, route, init) {
+	let request = isContextRequest(init) ? init : {}, separator = route.indexOf(" "), method = route.slice(0, separator), params = request.params ?? {};
+	return {
+		url: \`/context\${route.slice(separator + 1).replace(/\\{([^}]+)\\}/g, (_match, name) => encodeURIComponent(_pathParam(client, name, params)))}\`,
+		method,
+		query: _stringValues(request.query),
+		headers: _stringValues(request.headers),
+		...request.body !== void 0 && { body: request.body },
+		signal: request.signal,
+		tag: request.tag
+	};
 }
 function _fetchBody(file) {
 	return ArrayBuffer.isView(file) ? file.buffer instanceof ArrayBuffer ? new Uint8Array(file.buffer, file.byteOffset, file.byteLength) : Uint8Array.from(file) : file;
 }
 /**
-* \`client.context\` — knowledge bases and everything scoped to them.
+* \`client.context\`: the Context API, typed from its OpenAPI spec.
 *
-* Collection-level management (create, list, get, edit, delete) addresses
-* knowledge bases per call, like \`client.projects\`. Everything scoped to one
-* knowledge base (imports, builds, issues, entries, ...) operates on the
-* client's configured \`resource\`, like media libraries:
+* {@link ContextClient.request} calls any operation by its \`METHOD /path\`,
+* with path parameters, query, headers and body typed from the spec.
+* \`knowledgeBaseId\` defaults to the client's \`knowledge-base\` resource and
+* \`organizationId\` to \`context.organizationId\`. GROQ reads of the
+* organization's Context documents go through {@link ContextClient.fetch}
+* and {@link ContextClient.listen}.
 *
-* @example Full lifecycle
+* @example
 * \`\`\`ts
-* const created = await client.context.knowledgeBases.create({
-*   organizationId: 'org123',
-*   title: 'Support docs',
-*   description: 'Product docs and troubleshooting guides',
+* const kb = await client.context.request('POST /knowledge-bases', {
+*   body: {organizationId: 'org123', title: 'Support docs', description: 'Product docs'},
 * })
-*
-* const kb = createClient({
-*   apiVersion: '2026-08-25',
-*   token,
-*   resource: {type: 'knowledge-base', id: created.publicId},
+* const source = await client.context.request('POST /knowledge-bases/{knowledgeBaseId}/sources', {
+*   params: {knowledgeBaseId: kb.publicId},
+*   body: {type: 'web', url: 'https://example.com/docs'},
 * })
-*
-* await kb.context.imports.create({type: 'text', title: 'Refund policy', content: refundMd})
-* const {jobId} = await kb.context.build()
 * \`\`\`
 *
 * @beta
@@ -5133,91 +5399,99 @@ var ContextClient = class {
 	constructor(client, httpRequest) {
 		this.#client = client, this.#httpRequest = httpRequest;
 	}
-	/** Request against the configured knowledge base. */
-	#request(suffix, reqOptions = {}) {
+	/**
+	* Call a Context API operation. Resolves with the success response body,
+	* or \`undefined\` for \`204 No Content\`; rejects with the API's error.
+	*/
+	async request(route, ...[init]) {
+		return _request(this.#client, this.#httpRequest, _contextRequestOptions(this.#client, route, init));
+	}
+	/**
+	* {@link ContextClient.request}, resolving with the response bytes instead
+	* of parsed JSON: for a document's content with \`format: 'raw'\`, the bytes
+	* its source gave.
+	*/
+	async requestBytes(route, ...[init]) {
 		return _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(_resolveKnowledgeBaseId(this.#client), suffix),
-			...reqOptions
+			..._contextRequestOptions(this.#client, route, init),
+			rawBody: !0
 		});
 	}
-	/** Shared shape of every paginated list endpoint scoped to the knowledge base. */
-	#list(suffix, params, extraQuery) {
-		return this.#request(suffix, {
-			query: _query({
-				cursor: params?.cursor,
-				limit: params?.limit,
-				...extraQuery
-			}),
-			signal: params?.signal,
-			tag: params?.tag
-		});
-	}
-	async #uploadFile(params, options) {
-		let staged = await this.#request("/imports/uploads", {
-			method: "POST",
-			body: {
-				filename: params.filename,
-				...params.contentType && { contentType: params.contentType }
+	/**
+	* Upload a file to a \`files\` source and sync it, replacing the file it
+	* holds: stages an upload, PUTs the bytes to the signed storage URL, and
+	* starts the sync with it. The bytes never pass through the Context API.
+	* If the API refuses the sync, the error carries the staged \`uploadId\`, so
+	* a retry can start the sync with it instead of uploading the bytes again.
+	*/
+	async uploadFile(params, options) {
+		let { knowledgeBaseId, sourceId, file, filename, contentType } = params, target = {
+			params: {
+				knowledgeBaseId,
+				sourceId
 			},
 			...options
+		}, staged = await this.request("POST /knowledge-bases/{knowledgeBaseId}/sources/{sourceId}/uploads", {
+			...target,
+			body: {
+				filename,
+				...contentType && { contentType }
+			}
 		}), config = this.#client.config(), putResponse = await (config.resolveFetch?.(config.proxy) ?? globalThis.fetch)(staged.uploadUrl, {
 			method: "PUT",
-			body: _fetchBody(params.file),
-			...params.contentType && { headers: { "content-type": params.contentType } },
+			body: _fetchBody(file),
+			...contentType && { headers: { "content-type": contentType } },
 			signal: options?.signal
 		});
 		if (!putResponse.ok) throw Error(\`File upload failed: \${putResponse.status} \${putResponse.statusText}\`);
-		return this.#request(\`/imports/uploads/\${encodeURIComponent(staged.importId)}/complete\`, {
-			method: "POST",
-			body: {},
+		try {
+			return await this.request("POST /knowledge-bases/{knowledgeBaseId}/sources/{sourceId}/syncs", {
+				...target,
+				body: { uploadId: staged.uploadId }
+			});
+		} catch (error) {
+			throw error instanceof Error && Object.assign(error, { uploadId: staged.uploadId }), error;
+		}
+	}
+	/**
+	* Add a \`files\` source holding a file: adds the source, uploads the file
+	* with {@link ContextClient.uploadFile}, and resolves with the source as
+	* created and the sync the upload started (follow its \`jobId\`). If the
+	* upload fails, the source is deleted again before the error is thrown.
+	*/
+	async createFileSource(params, options) {
+		let { knowledgeBaseId, file, filename, contentType, ...body } = params, created = await this.request("POST /knowledge-bases/{knowledgeBaseId}/sources", {
+			params: { knowledgeBaseId },
+			body,
 			...options
 		});
-	}
-	/** The knowledge base collection: management addressed per call. */
-	knowledgeBases = {
-		/** Create a knowledge base. Requires the org-level knowledge-base create grant. */
-		create: (params, options) => _request(this.#client, this.#httpRequest, {
-			url: COLLECTION_URL,
-			method: "POST",
-			body: params,
-			...options
-		}),
-		/** List the organization's knowledge bases. */
-		list: (params) => _request(this.#client, this.#httpRequest, {
-			url: COLLECTION_URL,
-			query: _query({
-				organizationId: params.organizationId,
-				cursor: params.cursor,
-				limit: params.limit
-			}),
-			signal: params.signal,
-			tag: params.tag
-		}),
-		/** Fetch a knowledge base by its id. */
-		get: (knowledgeBaseId, options) => _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(knowledgeBaseId),
-			...options
-		}),
-		/** Edit a knowledge base's configuration. */
-		edit: (knowledgeBaseId, params, options) => _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(knowledgeBaseId),
-			method: "PATCH",
-			body: params,
-			...options
-		}),
-		/** Delete a knowledge base and its generated content. */
-		delete: async (knowledgeBaseId, options) => {
-			await _request(this.#client, this.#httpRequest, {
-				url: _knowledgeBaseUrl(knowledgeBaseId),
-				method: "DELETE",
-				...options
-			});
+		if (!("id" in created)) throw Error("The Context API answered a source create with a crawl preview");
+		let target = {
+			knowledgeBaseId,
+			sourceId: created.id
+		}, sync;
+		try {
+			sync = await this.uploadFile({
+				...target,
+				file,
+				filename,
+				contentType
+			}, options);
+		} catch (error) {
+			throw await this.request("DELETE /knowledge-bases/{knowledgeBaseId}/sources/{sourceId}", {
+				params: target,
+				...options?.tag && { tag: options.tag }
+			}).catch(() => {}), error;
 		}
-	};
+		return {
+			source: created,
+			sync
+		};
+	}
 	/**
-	* GROQ over the organization's Context documents (conversation telemetry
-	* today; the store holds every Context family and the caller's access
-	* decides what a query returns, so filter on \`_type\`).
+	* GROQ over the organization's Context documents. The store holds every
+	* Context document family and the caller's access decides what a query
+	* returns, so filter on \`_type\`.
 	*
 	* Requires \`context.organizationId\` in the client configuration.
 	*/
@@ -5232,541 +5506,24 @@ var ContextClient = class {
 	listen(query, params, options) {
 		return _listen(this.#client, query, params, options);
 	}
-	/**
-	* Conversation telemetry. \`threadId\` identifies the conversation within
-	* the organization — reuse means the same conversation. Beyond the canned
-	* \`get\`, reads go through {@link fetch} and {@link listen} with GROQ
-	* (\`_type == "sanity.context.conversation"\`).
-	*
-	* Requires \`context.organizationId\` in the client configuration.
-	*/
-	conversations = {
-		/**
-		* Record a conversation. Messages replace the stored transcript
-		* wholesale; \`metadata\` and model fields only overwrite when present.
-		* Last write per thread wins — retries are safe.
-		*/
-		save: (params, options) => {
-			let { threadId, ...body } = params;
-			return _request(this.#client, this.#httpRequest, {
-				url: _conversationUrl(this.#client, threadId),
-				method: "PUT",
-				body,
-				...options
-			});
-		},
-		/**
-		* Record the classification your own model produced for one thread:
-		* exactly one of \`coreMetrics\` (a verdict) or \`classificationError\`
-		* (why classification failed).
-		*/
-		classify: (params, options) => {
-			let { threadId, ...body } = params;
-			return _request(this.#client, this.#httpRequest, {
-				url: _conversationUrl(this.#client, threadId),
-				method: "PATCH",
-				body,
-				...options
-			});
-		},
-		/**
-		* Delete one recorded conversation, transcript and classification
-		* included. Rejects with a 404 when the thread was never recorded.
-		*/
-		delete: (params, options) => _request(this.#client, this.#httpRequest, {
-			url: _conversationUrl(this.#client, params.threadId),
-			method: "DELETE",
-			...options
-		}),
-		/**
-		* One recorded conversation by its thread id, or \`null\` when the thread
-		* was never recorded. Runs:
-		*
-		* \`*[_type == "sanity.context.conversation" && organizationId == $org && threadId == $threadId][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _readConversation(this.#client, this.#httpRequest, params.threadId, options)
-	};
-	/**
-	* Build the configured knowledge base. The server waits for pending import
-	* processing before assembling, so importing and building back to back is
-	* safe. Track the returned job with {@link jobs}.
-	*/
-	build(options) {
-		return this.#request("/build", {
-			method: "POST",
-			...options
-		});
-	}
-	/** Cancel the running build, if any. */
-	cancelBuild(options) {
-		return this.#request("/build/cancel", {
-			method: "POST",
-			...options
-		});
-	}
-	/** Run an incremental refresh: re-check sources and apply what changed. */
-	refresh(options) {
-		return this.#request("/refresh", {
-			method: "POST",
-			...options
-		});
-	}
-	/** Imports: feed content into the configured knowledge base. */
-	imports = {
-		/**
-		* Import content. One entry point, discriminated on \`type\`: inline
-		* \`text\`, a website \`crawl\`, a Sanity \`dataset\` bind, or a \`file\`
-		* upload. Processing queues automatically. The file variant stages the
-		* upload, PUTs the bytes to a signed storage URL, and confirms; the
-		* bytes never pass through the Context API.
-		*/
-		create: (params, options) => params.type === "file" ? this.#uploadFile(params, options) : this.#request("/imports", {
-			method: "POST",
-			body: params,
-			...options
-		}),
-		list: (params) => this.#list("/imports", params),
-		get: (params, options) => this.#request(\`/imports/\${encodeURIComponent(params.importId)}\`, options),
-		/** A short-lived signed URL for the original uploaded bytes. */
-		download: (params, options) => this.#request(\`/imports/\${encodeURIComponent(params.importId)}/download\`, options),
-		delete: async (params, options) => {
-			await this.#request(\`/imports/\${encodeURIComponent(params.importId)}\`, {
-				method: "DELETE",
-				...options
-			});
-		}
-	};
-	/** Jobs: poll async work (builds, imports) to a terminal state. */
-	jobs = { get: (params, options) => this.#request(\`/jobs/\${encodeURIComponent(params.jobId)}\`, options) };
-	/**
-	* Issues: findings from builds awaiting triage. Reads are canned GROQ
-	* queries against the organization's document store; for anything more,
-	* use {@link fetch}. Reads require \`context.organizationId\` alongside the
-	* knowledge-base \`resource\` in the client configuration.
-	*/
-	issues = {
-		/**
-		* Every issue on the knowledge base, oldest first, optionally narrowed
-		* to one status. Drains keyset pages internally and resolves with the
-		* complete set. Runs:
-		*
-		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && status == $status] | order(_createdAt asc, _id asc)\`
-		*
-		* (the status clause only when given). For anything more, use {@link fetch}.
-		*/
-		list: (params, options) => _listIssues(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params?.status, options),
-		/**
-		* One issue by its document id, or \`null\` when it does not exist. Runs:
-		*
-		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && _id == $id][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _readIssue(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.issueId, options),
-		/** Resolve a conflict issue. Mints the standing instruction, same as the dashboard. */
-		resolve: (params, options) => {
-			let { issueId, ...body } = params;
-			return this.#request(\`/issues/\${encodeURIComponent(issueId)}/resolve\`, {
-				method: "POST",
-				body,
-				...options
-			});
-		},
-		dismiss: (params, options) => this.#request(\`/issues/\${encodeURIComponent(params.issueId)}/dismiss\`, {
-			method: "POST",
-			...options
-		}),
-		reopen: (params, options) => this.#request(\`/issues/\${encodeURIComponent(params.issueId)}/reopen\`, {
-			method: "POST",
-			...options
-		}),
-		/** Apply already-accepted issues to the knowledge base in one batch. */
-		apply: (params, options) => this.#request("/issues/apply", {
-			method: "POST",
-			body: params,
-			...options
-		})
-	};
-	/** Instructions: standing decisions that steer every build. */
-	instructions = {
-		create: (params, options) => this.#request("/instructions", {
-			method: "POST",
-			body: params,
-			...options
-		}),
-		/**
-		* Every current-schema instruction on the knowledge base, oldest first.
-		* Drains keyset pages internally and resolves with the complete set.
-		* Runs:
-		*
-		* \`*[_type == "sanity.context.instruction" && knowledgeBaseId == $kb && schemaVersion == 1] | order(_createdAt asc, _id asc)\`
-		*
-		* For anything more, use {@link fetch}. Requires \`context.organizationId\`
-		* alongside the knowledge-base \`resource\` in the client configuration.
-		*/
-		list: (options) => _listInstructions(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), options),
-		edit: (params, options) => {
-			let { instructionId, ...body } = params;
-			return this.#request(\`/instructions/\${encodeURIComponent(instructionId)}\`, {
-				method: "PATCH",
-				body,
-				...options
-			});
-		},
-		/**
-		* Delete an instruction. With \`rebuild: true\`, also rebuilds every entry
-		* citing the instruction's sources and resolves with that job's id.
-		*/
-		delete: (params, options) => this.#request(\`/instructions/\${encodeURIComponent(params.instructionId)}\`, {
-			method: "DELETE",
-			query: _query({ rebuild: params.rebuild ? "true" : void 0 }),
-			...options
-		})
-	};
-	/**
-	* Entries: the built outline, one entry per node. Reads are canned GROQ
-	* queries against the organization's document store; for anything more,
-	* use {@link fetch}. Requires \`context.organizationId\` alongside the
-	* knowledge-base \`resource\` in the client configuration.
-	*/
-	entries = {
-		/**
-		* Every entry, path-ordered, as a metadata view (\`_id\`, \`path\`,
-		* \`title\`, \`tldr\`, \`status\`) with bodies excluded. Drains keyset pages
-		* internally and resolves with the complete set. Runs:
-		*
-		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`
-		*
-		* For bodies, use \`entries.get\` or {@link fetch}.
-		*/
-		list: (options) => _listEntries(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), options),
-		/**
-		* One entry with its full body and citations, by outline path (e.g.
-		* \`billing/refunds\`), or \`null\` when no entry sits at that path. Runs:
-		*
-		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path == $path][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _readEntry(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.path, options),
-		/**
-		* Rebuild one entry from its already-placed sources, by outline path.
-		* Poll the returned job with {@link jobs}; \`affectedEntries\` lists every
-		* entry the rebuild touches.
-		*/
-		rebuild: (params, options) => this.#request(\`/entries/\${encodeURIComponent(params.path)}/rebuild\`, {
-			method: "POST",
-			...options
-		})
-	};
-	/**
-	* MCP endpoint configurations, org-owned documents read with canned GROQ
-	* queries. Requires \`context.organizationId\` in the client configuration.
-	*/
-	mcpEndpoints = {
-		/**
-		* The organization's MCP endpoint configurations, oldest first. Runs:
-		*
-		* \`*[_type == "sanity.context.mcp" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		list: (options) => _listMcpEndpoints(this.#client, this.#httpRequest, options),
-		/**
-		* One MCP endpoint configuration by its URL name, or \`null\` when none
-		* carries that name. Runs:
-		*
-		* \`*[_type == "sanity.context.mcp" && organizationId == $org && name == $name][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _readMcpEndpoint(this.#client, this.#httpRequest, params.name, options)
-	};
-	/** Sources: the distilled units builds cite. */
-	sources = {
-		/**
-		* List sources, optionally filtered by \`status\` or the \`importId\` they
-		* came from. \`ids\` is a lookup mode: it resolves those exact sources
-		* (e.g. from an entry's citations) and overrides \`status\` and \`cursor\`.
-		*/
-		list: (params) => this.#list("/sources", params, {
-			status: params?.status,
-			importId: params?.importId,
-			ids: params?.ids?.join(",")
-		}),
-		get: (params, options) => this.#request(\`/sources/\${encodeURIComponent(params.sourceId)}\`, options),
-		/**
-		* Distilled source content, optionally a line range: the evidence behind
-		* a citation or an issue.
-		*/
-		content: (params, options) => this.#request(\`/sources/\${encodeURIComponent(params.sourceId)}/content\`, {
-			query: _query({
-				startLine: params.startLine,
-				endLine: params.endLine
-			}),
-			...options
-		}),
-		delete: async (params, options) => {
-			await this.#request(\`/sources/\${encodeURIComponent(params.sourceId)}\`, {
-				method: "DELETE",
-				...options
-			});
-		}
-	};
 }, ObservableContextClient = class {
 	#client;
 	#httpRequest;
 	constructor(client, httpRequest) {
 		this.#client = client, this.#httpRequest = httpRequest;
 	}
-	/** The knowledge base collection: management addressed per call. */
-	knowledgeBases = {
-		/** Create a knowledge base. Requires the org-level knowledge-base create grant. */
-		create: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: COLLECTION_URL,
-			method: "POST",
-			body: params,
-			tag: options?.tag,
-			signal
-		})),
-		/** List the organization's knowledge bases. */
-		list: (params) => _observe(params.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: COLLECTION_URL,
-			query: _query({
-				organizationId: params.organizationId,
-				cursor: params.cursor,
-				limit: params.limit
-			}),
-			tag: params.tag,
-			signal
-		})),
-		/** Fetch a knowledge base by its id. */
-		get: (knowledgeBaseId, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(knowledgeBaseId),
-			tag: options?.tag,
-			signal
-		})),
-		/** Edit a knowledge base's configuration. */
-		edit: (knowledgeBaseId, params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(knowledgeBaseId),
-			method: "PATCH",
-			body: params,
-			tag: options?.tag,
-			signal
-		})),
-		/** Delete a knowledge base and its generated content. */
-		delete: (knowledgeBaseId, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(knowledgeBaseId),
-			method: "DELETE",
-			tag: options?.tag,
-			signal
-		}))
-	};
-	/**
-	* GROQ over the organization's Context documents (conversation telemetry
-	* today; the store holds every Context family and the caller's access
-	* decides what a query returns, so filter on \`_type\`).
-	*
-	* Requires \`context.organizationId\` in the client configuration.
-	*/
+	/** Call a Context API operation. See {@link ContextClient.request}. */
+	request(route, ...[init]) {
+		return (0, import_cjs.defer)(() => _requestObservable(this.#client, this.#httpRequest, _contextRequestOptions(this.#client, route, init)));
+	}
+	/** GROQ over the organization's Context documents. See {@link ContextClient.fetch}. */
 	fetch(query, params, options) {
 		return _fetch(this.#client, this.#httpRequest, query, params, options);
 	}
-	/**
-	* Listen for changes to the organization's Context documents. Mirrors
-	* \`client.listen(query, params, options)\` and emits mutation events by
-	* default.
-	*/
+	/** Listen for changes to the organization's Context documents. See {@link ContextClient.listen}. */
 	listen(query, params, options) {
 		return _listen(this.#client, query, params, options);
 	}
-	/**
-	* Conversation telemetry. \`threadId\` identifies the conversation within
-	* the organization — reuse means the same conversation. Beyond the canned
-	* \`get\`, reads go through {@link fetch} and {@link listen} with GROQ
-	* (\`_type == "sanity.context.conversation"\`).
-	*
-	* Requires \`context.organizationId\` in the client configuration.
-	*/
-	conversations = {
-		/**
-		* Record a conversation. Messages replace the stored transcript
-		* wholesale; \`metadata\` and model fields only overwrite when present.
-		* Last write per thread wins — retries are safe.
-		*/
-		save: (params, options) => {
-			let { threadId, ...body } = params;
-			return _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-				url: _conversationUrl(this.#client, threadId),
-				method: "PUT",
-				body,
-				tag: options?.tag,
-				signal
-			}));
-		},
-		/**
-		* Record the classification your own model produced for one thread:
-		* exactly one of \`coreMetrics\` (a verdict) or \`classificationError\`
-		* (why classification failed).
-		*/
-		classify: (params, options) => {
-			let { threadId, ...body } = params;
-			return _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-				url: _conversationUrl(this.#client, threadId),
-				method: "PATCH",
-				body,
-				tag: options?.tag,
-				signal
-			}));
-		},
-		/**
-		* Delete one recorded conversation, transcript and classification
-		* included. Errors with a 404 when the thread was never recorded.
-		*/
-		delete: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: _conversationUrl(this.#client, params.threadId),
-			method: "DELETE",
-			tag: options?.tag,
-			signal
-		})),
-		/**
-		* One recorded conversation by its thread id, or \`null\` when the thread
-		* was never recorded. Runs:
-		*
-		* \`*[_type == "sanity.context.conversation" && organizationId == $org && threadId == $threadId][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _observe(options?.signal, (signal) => _readConversation(this.#client, this.#httpRequest, params.threadId, {
-			...options,
-			signal
-		}))
-	};
-	/**
-	* Entries: the built outline, one entry per node. Reads are canned GROQ
-	* queries against the organization's document store; for anything more,
-	* use {@link fetch}. Requires \`context.organizationId\` alongside the
-	* knowledge-base \`resource\` in the client configuration.
-	*/
-	entries = {
-		/**
-		* Every entry, path-ordered, as a metadata view (\`_id\`, \`path\`,
-		* \`title\`, \`tldr\`, \`status\`) with bodies excluded. Drains keyset pages
-		* internally and emits the complete set. Runs:
-		*
-		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`
-		*
-		* For bodies, use \`entries.get\` or {@link fetch}.
-		*/
-		list: (options) => _observe(options?.signal, (signal) => _listEntries(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), {
-			...options,
-			signal
-		})),
-		/**
-		* One entry with its full body and citations, by outline path (e.g.
-		* \`billing/refunds\`), or \`null\` when no entry sits at that path. Runs:
-		*
-		* \`*[_type == "sanity.context.entry" && knowledgeBaseId == $kb && path == $path][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _observe(options?.signal, (signal) => _readEntry(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.path, {
-			...options,
-			signal
-		})),
-		/**
-		* Rebuild one entry from its already-placed sources, by outline path.
-		* Poll the returned job with the promise client's \`jobs\`;
-		* \`affectedEntries\` lists every entry the rebuild touches.
-		*/
-		rebuild: (params, options) => _observe(options?.signal, (signal) => _request(this.#client, this.#httpRequest, {
-			url: _knowledgeBaseUrl(_resolveKnowledgeBaseId(this.#client), \`/entries/\${encodeURIComponent(params.path)}/rebuild\`),
-			method: "POST",
-			tag: options?.tag,
-			signal
-		}))
-	};
-	/**
-	* Issues: findings from builds awaiting triage. Reads are canned GROQ
-	* queries against the organization's document store; for anything more,
-	* use {@link fetch}. Requires \`context.organizationId\` alongside the
-	* knowledge-base \`resource\` in the client configuration.
-	*/
-	issues = {
-		/**
-		* Every issue on the knowledge base, oldest first, optionally narrowed
-		* to one status. Drains keyset pages internally and emits the complete
-		* set. Runs:
-		*
-		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && status == $status] | order(_createdAt asc, _id asc)\`
-		*
-		* (the status clause only when given). For anything more, use {@link fetch}.
-		*/
-		list: (params, options) => _observe(options?.signal, (signal) => _listIssues(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params?.status, {
-			...options,
-			signal
-		})),
-		/**
-		* One issue by its document id, or \`null\` when it does not exist. Runs:
-		*
-		* \`*[_type == "sanity.context.issue" && knowledgeBaseId == $kb && _id == $id][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _observe(options?.signal, (signal) => _readIssue(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), params.issueId, {
-			...options,
-			signal
-		}))
-	};
-	/**
-	* Instructions: standing decisions that steer every build. The canned
-	* GROQ read; writes are promise-based on \`client.context\`.
-	*/
-	instructions = { 
-	/**
-	* Every current-schema instruction on the knowledge base, oldest first.
-	* Drains keyset pages internally and emits the complete set. Runs:
-	*
-	* \`*[_type == "sanity.context.instruction" && knowledgeBaseId == $kb && schemaVersion == 1] | order(_createdAt asc, _id asc)\`
-	*
-	* For anything more, use {@link fetch}. Requires \`context.organizationId\`
-	* alongside the knowledge-base \`resource\` in the client configuration.
-	*/
-list: (options) => _observe(options?.signal, (signal) => _listInstructions(this.#client, this.#httpRequest, _resolveKnowledgeBaseId(this.#client), {
-		...options,
-		signal
-	})) };
-	/**
-	* MCP endpoint configurations, org-owned documents read with canned GROQ
-	* queries. Requires \`context.organizationId\` in the client configuration.
-	*/
-	mcpEndpoints = {
-		/**
-		* The organization's MCP endpoint configurations, oldest first. Runs:
-		*
-		* \`*[_type == "sanity.context.mcp" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		list: (options) => _observe(options?.signal, (signal) => _listMcpEndpoints(this.#client, this.#httpRequest, {
-			...options,
-			signal
-		})),
-		/**
-		* One MCP endpoint configuration by its URL name, or \`null\` when none
-		* carries that name. Runs:
-		*
-		* \`*[_type == "sanity.context.mcp" && organizationId == $org && name == $name][0]\`
-		*
-		* For anything more, use {@link fetch}.
-		*/
-		get: (params, options) => _observe(options?.signal, (signal) => _readMcpEndpoint(this.#client, this.#httpRequest, params.name, {
-			...options,
-			signal
-		}))
-	};
 };
 /**
 * A variant of share that takes a predicate function to determine which value to replay to new subscribers
@@ -5805,34 +5562,34 @@ var LiveClient = class {
 	* Requires \`apiVersion\` to be \`2021-03-25\` or later.
 	*/
 	events({ includeDrafts = !1, tag: _tag, waitFor } = {}) {
-		let config = this.#client.config(), { projectId, apiVersion: _apiVersion, token, withCredentials, requestTagPrefix, headers: configHeaders } = config, apiVersion = _apiVersion.replace(/^v/, "");
+		let config = this.#client.config(), { projectId, apiVersion: _apiVersion, requestTagPrefix, headers: configHeaders } = config, apiVersion = _apiVersion.replace(/^v/, "");
 		if (apiVersion !== "X" && apiVersion < requiredApiVersion) throw Error(\`The live events API requires API version \${requiredApiVersion} or later. The current API version is \${apiVersion}. Please update your API version to use this feature.\`);
-		if (includeDrafts && !token && !withCredentials) throw Error("The live events API requires a token or withCredentials when 'includeDrafts: true'. Please update your client configuration. The token should have the lowest possible access role.");
+		let staticAuth = getStaticAuth(config);
+		if (includeDrafts && staticAuth !== void 0 && staticAuth.value === void 0) throw Error("The live events API requires a token or withCredentials when 'includeDrafts: true'. Please update your client configuration. The token should have the lowest possible access role.");
 		let path = _getDataUrl(this.#client, "live/events"), url = new URL(this.#client.getUrl(path, !1)), tag = _tag && requestTagPrefix ? [requestTagPrefix, _tag].join(".") : _tag;
 		tag && url.searchParams.set("tag", tag), includeDrafts && url.searchParams.set("includeDrafts", "true"), waitFor && url.searchParams.set("waitFor", waitFor);
-		let eventSourceHeaders = {};
-		includeDrafts && token && (eventSourceHeaders.Authorization = \`Bearer \${token}\`), configHeaders && Object.assign(eventSourceHeaders, configHeaders);
-		let eventSourceWithCredentials = !!(includeDrafts && withCredentials), transportCache = eventsCache.get(config.resolveFetch);
-		transportCache || (transportCache = /* @__PURE__ */ new Map(), eventsCache.set(config.resolveFetch, transportCache));
-		let cacheKey = JSON.stringify([
+		let withAuth = !!includeDrafts, lastSent, sentCredentials = () => lastSent !== void 0 && "withCredentials" in lastSent, authKey = withAuth ? config.auth ?? null : null, transportCache = getOrCreate(eventsCache, config.resolveFetch, () => /* @__PURE__ */ new Map()), authCache = getOrCreate(transportCache, authKey, () => /* @__PURE__ */ new Map()), cacheKey = JSON.stringify([
 			url.href,
 			typeof config.proxy == "string" ? config.proxy : null,
-			eventSourceHeaders,
-			eventSourceWithCredentials
-		]), existing = transportCache.get(cacheKey);
+			configHeaders ?? null,
+			withAuth ? staticAuth?.value ?? null : null
+		]), existing = authCache.get(cacheKey);
 		if (existing) return existing;
-		let initEventSource = () => new EventSource(url.href, { fetch: resolveEventSourceFetch(config, {
-			headers: Object.keys(eventSourceHeaders).length ? eventSourceHeaders : void 0,
-			withCredentials: eventSourceWithCredentials
-		}) }), events = connectEventSource(initEventSource, [
+		let events = connectAuthenticatedEventSource(config, url.href, [
 			"message",
 			"restart",
 			"welcome",
 			"reconnect",
 			"goaway"
-		]), checkCors = checkCorsObservable(new URL(this.#client.getUrl("/check/cors", !1)), projectId, eventSourceWithCredentials, pickBaseFetch(config)), observable = events.pipe(reconnectOnConnectionFailure(), (0, import_cjs.mergeMap)((event) => event.type === "reconnect" ? checkCors.pipe((0, import_cjs.mergeMap)(() => (0, import_cjs.of)(event))) : (0, import_cjs.of)(event)), (0, import_cjs.catchError)((err) => err instanceof require_request_DXOkY5MQ.n ? (0, import_cjs.throwError)(() => err) : checkCors.pipe((0, import_cjs.mergeMap)(() => {
+		], {
+			headers: configHeaders,
+			withAuth,
+			onSend: (auth) => {
+				lastSent = auth;
+			}
+		}), checkCors = checkCorsObservable(new URL(this.#client.getUrl("/check/cors", !1)), projectId, sentCredentials, pickBaseFetch(config)), observable = events.pipe((0, import_cjs.mergeMap)((event) => event.type === "reconnect" ? checkCors.pipe((0, import_cjs.mergeMap)(() => (0, import_cjs.of)(event))) : (0, import_cjs.of)(event)), (0, import_cjs.catchError)((err) => isEventSourceError(err) ? checkCors.pipe((0, import_cjs.mergeMap)(() => {
 			throw err;
-		}))), (0, import_operators.map)((event) => {
+		})) : (0, import_cjs.throwError)(() => err)), (0, import_operators.map)((event) => {
 			if (event.type === "message") {
 				let { data, ...rest } = event;
 				return {
@@ -5842,9 +5599,9 @@ var LiveClient = class {
 			}
 			return event;
 		})).pipe((0, import_operators.finalize)(() => {
-			transportCache.delete(cacheKey), transportCache.size === 0 && eventsCache.delete(config.resolveFetch);
+			authCache.delete(cacheKey), authCache.size === 0 && transportCache.delete(authKey), transportCache.size === 0 && eventsCache.delete(config.resolveFetch);
 		}), shareReplayLatest({ predicate: (event) => event.type === "welcome" }));
-		return transportCache.set(cacheKey, observable), observable;
+		return authCache.set(cacheKey, observable), observable;
 	}
 };
 /**
@@ -5883,9 +5640,9 @@ var LiveClient = class {
 * In all of those cases the caller's original underlying error from the
 * EventSource is allowed to propagate unchanged.
 */
-function checkCorsObservable(url, projectId, requireCredentials, fetcher) {
+function checkCorsObservable(url, projectId, sentCredentials, fetcher) {
 	return new import_cjs.Observable((observer) => {
-		let controller = new AbortController(), { signal } = controller;
+		let requireCredentials = sentCredentials(), controller = new AbortController(), { signal } = controller;
 		return fetcher(url.href, {
 			method: "GET",
 			credentials: "omit",
@@ -5895,10 +5652,10 @@ function checkCorsObservable(url, projectId, requireCredentials, fetcher) {
 		}).then((text) => {
 			if (signal.aborted) return;
 			let parsed = text === void 0 ? void 0 : JSON.parse(text), result = require_isRecord_Kfmt_nk_.t(parsed) ? parsed.result : void 0;
-			requireCredentials && require_isRecord_Kfmt_nk_.t(result) && result.withCredentials === !1 ? observer.error(new require_request_DXOkY5MQ.n({
+			requireCredentials && require_isRecord_Kfmt_nk_.t(result) && result.withCredentials === !1 ? observer.error(new require_request_CycLCCas.n({
 				projectId,
 				credentials: !0
-			})) : require_isRecord_Kfmt_nk_.t(result) && result.allowed === !1 ? observer.error(new require_request_DXOkY5MQ.n({
+			})) : require_isRecord_Kfmt_nk_.t(result) && result.allowed === !1 ? observer.error(new require_request_CycLCCas.n({
 				projectId,
 				credentials: requireCredentials
 			})) : (observer.next(), observer.complete());
@@ -5908,11 +5665,19 @@ function checkCorsObservable(url, projectId, requireCredentials, fetcher) {
 	});
 }
 /**
-* Cached observables capture their transport (\`initEventSource\` closes over
-* \`config.resolveFetch\` and \`config.proxy\`), so the cache is scoped per
-* resolver — \`undefined\` covers the \`globalThis.fetch\` fallback.
+* Cached observables capture their transport (\`config.resolveFetch\` and
+* \`config.proxy\`) and, for draft streams, their credential source, so the
+* cache is scoped per resolver (\`undefined\` covers the \`globalThis.fetch\`
+* fallback), then per reactive \`auth\` observable (\`null\` for static and anonymous
+* connections, whose credential is part of the string key instead).
 */
 const eventsCache = /* @__PURE__ */ new Map();
+function getOrCreate(cache, key, create) {
+	let existing = cache.get(key);
+	if (existing) return existing;
+	let created = create();
+	return cache.set(key, created), created;
+}
 /**
 * @internal
 * @inline
@@ -6074,6 +5839,27 @@ function _modify(client, httpRequest, method, name, options) {
 		tag: null
 	});
 }
+/**
+* An \`Error\` is reported by its message and stack
+* @internal
+*/
+function _toCallbackFailure(failure) {
+	return failure instanceof Error ? {
+		errorMessage: failure.message,
+		...failure.stack ? { stackTrace: failure.stack.split("\\n") } : {}
+	} : failure;
+}
+/** @internal */
+function _callback(client, httpRequest, callbackId, outcome, body, options) {
+	return (0, import_cjs.defer)(() => _requestObservable(client, httpRequest, {
+		method: "POST",
+		url: \`/functions/durables/callback/\${encodeURIComponent(callbackId)}/\${outcome}\`,
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(body ?? null),
+		timeout: options?.timeout,
+		signal: options?.signal
+	}).pipe((0, import_cjs.map)(() => void 0)));
+}
 /** Function resource types in a blueprint are namespaced under this prefix. */
 const SYNC_INVOCABLE_FUNCTION_TYPES = ["sanity.function.pubsub"], ASYNC_INVOCABLE_FUNCTION_TYPES = [
 	"sanity.function.durable",
@@ -6134,11 +5920,81 @@ function _invoke(client, httpRequest, functionName, request, options) {
 	});
 }
 /** @public */
-var ObservableFunctionsClient = class {
+var ObservableDurablesClient = class {
 	#client;
 	#httpRequest;
 	constructor(client, httpRequest) {
 		this.#client = client, this.#httpRequest = httpRequest;
+	}
+	/**
+	* Resume a durable function waiting on a callback, handing it a result.
+	*
+	* Emits \`undefined\` once the callback is accepted.
+	*
+	* @param callbackId - the id the function handed out from \`step.waitForCallback\`
+	* @param result - JSON-serializable value the waiting step resolves with
+	* @param options - request options
+	*/
+	callbackSuccess(callbackId, result, options) {
+		return _callback(this.#client, this.#httpRequest, callbackId, "success", result, options);
+	}
+	/**
+	* Resume a durable function waiting on a callback, failing the waiting step.
+	*
+	* Emits \`undefined\` once the callback is accepted.
+	*
+	* @param callbackId - the id the function handed out from \`step.waitForCallback\`
+	* @param failure - an \`Error\`, reported by its message and stack, or the failure fields
+	* @param options - request options
+	*/
+	callbackFailure(callbackId, failure = {}, options) {
+		return _callback(this.#client, this.#httpRequest, callbackId, "failure", _toCallbackFailure(failure), options);
+	}
+}, DurablesClient = class {
+	#client;
+	#httpRequest;
+	constructor(client, httpRequest) {
+		this.#client = client, this.#httpRequest = httpRequest;
+	}
+	/**
+	* Resume a durable function waiting on a callback, handing it a result.
+	*
+	* The waiting \`step.waitForCallback\` resolves with \`result\`, which must be
+	* JSON-serializable. Omitting it resolves the step with \`null\`. The callback
+	* id is the only credential the route needs.
+	*
+	* Resolves with \`undefined\` once the callback is accepted.
+	*
+	* @param callbackId - the id the function handed out from \`step.waitForCallback\`
+	* @param result - JSON-serializable value the waiting step resolves with
+	* @param options - request options
+	*/
+	callbackSuccess(callbackId, result, options) {
+		return (0, import_cjs.lastValueFrom)(_callback(this.#client, this.#httpRequest, callbackId, "success", result, options));
+	}
+	/**
+	* Resume a durable function waiting on a callback, failing the waiting step.
+	*
+	* The waiting \`step.waitForCallback\` rejects. Pass an \`Error\` to report its
+	* message and stack, or the failure fields directly. \`errorData\` must be a
+	* string; serialize structured data before passing it.
+	*
+	* Resolves with \`undefined\` once the callback is accepted.
+	*
+	* @param callbackId - the id the function handed out from \`step.waitForCallback\`
+	* @param failure - an \`Error\`, reported by its message and stack, or the failure fields
+	* @param options - request options
+	*/
+	callbackFailure(callbackId, failure = {}, options) {
+		return (0, import_cjs.lastValueFrom)(_callback(this.#client, this.#httpRequest, callbackId, "failure", _toCallbackFailure(failure), options));
+	}
+}, ObservableFunctionsClient = class {
+	#client;
+	#httpRequest;
+	/** Report back to durable functions. */
+	durables;
+	constructor(client, httpRequest) {
+		this.#client = client, this.#httpRequest = httpRequest, this.durables = new ObservableDurablesClient(client, httpRequest);
 	}
 	invoke(functionName, request, options) {
 		return _invoke(this.#client, this.#httpRequest, functionName, request, options);
@@ -6146,8 +6002,10 @@ var ObservableFunctionsClient = class {
 }, FunctionsClient = class {
 	#client;
 	#httpRequest;
+	/** Report back to durable functions. */
+	durables;
 	constructor(client, httpRequest) {
-		this.#client = client, this.#httpRequest = httpRequest;
+		this.#client = client, this.#httpRequest = httpRequest, this.durables = new DurablesClient(client, httpRequest);
 	}
 	invoke(functionName, request, options) {
 		return (0, import_cjs.lastValueFrom)(_invoke(this.#client, this.#httpRequest, functionName, request, options));
@@ -6891,7 +6749,7 @@ var ObservableReleasesClient = class {
 		return new ObservableSanityClient(this.#httpRequest, this.config());
 	}
 	config(newConfig) {
-		if (newConfig === void 0) return { ...this.#clientConfig };
+		if (newConfig === void 0) return exposeConfig(this.#clientConfig);
 		if (this.#clientConfig && this.#clientConfig.allowReconfigure === !1) throw Error("Existing client instance cannot be reconfigured - use \`withConfig(newConfig)\` to return a new client");
 		return this.#clientConfig = initConfig(newConfig, this.#clientConfig || {}), this;
 	}
@@ -6903,15 +6761,35 @@ var ObservableReleasesClient = class {
 	* @param newConfig - New client configuration properties, shallowly merged with existing configuration
 	*/
 	withConfig(newConfig) {
-		let thisConfig = this.config();
-		return new ObservableSanityClient(this.#httpRequest, {
-			...thisConfig,
-			...newConfig,
-			stega: {
-				...thisConfig.stega,
-				...typeof newConfig?.stega == "boolean" ? { enabled: newConfig.stega } : newConfig?.stega || {}
-			}
-		});
+		return new ObservableSanityClient(this.#httpRequest, mergeConfig(this.#clientConfig, newConfig));
+	}
+	/**
+	* The credential the client would attach to a request right now: \`{token}\`,
+	* \`{withCredentials: true}\` or \`{}\` for anonymous, so it can be destructured.
+	* Emits once and completes. Correct for a static configuration and for a
+	* reactive \`auth\` alike; under the latter it waits while a renewal is
+	* pending, so it never yields a credential the client itself would not
+	* send. The wait is cancelled by \`options.signal\` and bounded by the
+	* client's \`timeout\`. Use \`observeAuth()\` instead to follow changes.
+	*
+	* @category Configuration
+	*/
+	getAuth(options = {}) {
+		return _observe(options.signal, (signal) => resolveCurrentAuth(this.#clientConfig, { signal }));
+	}
+	/**
+	* Every credential the client would attach to its requests: the current one
+	* when subscribed, then each change, as \`{token}\`, \`{withCredentials: true}\`
+	* or \`{}\` for anonymous, like {@link ObservableSanityClient.getAuth}. Under
+	* a reactive \`auth\` it emits each credential once it settles, and nothing
+	* while a renewal is pending; a static configuration emits its credential
+	* and completes, so the same code can follow the credential whichever way
+	* the client is configured.
+	*
+	* @category Configuration
+	*/
+	observeAuth() {
+		return observeResolvedAuth(this.#clientConfig);
 	}
 	fetch(query, params, options) {
 		return _fetchObservable(this, this.#httpRequest, this.#clientConfig.stega, query, params, options);
@@ -7196,7 +7074,7 @@ var ObservableReleasesClient = class {
 		return new SanityClient(this.#httpRequest, this.config());
 	}
 	config(newConfig) {
-		if (newConfig === void 0) return { ...this.#clientConfig };
+		if (newConfig === void 0) return exposeConfig(this.#clientConfig);
 		if (this.#clientConfig && this.#clientConfig.allowReconfigure === !1) throw Error("Existing client instance cannot be reconfigured - use \`withConfig(newConfig)\` to return a new client");
 		return this.observable && this.observable.config(newConfig), this.#clientConfig = initConfig(newConfig, this.#clientConfig || {}), this;
 	}
@@ -7208,15 +7086,35 @@ var ObservableReleasesClient = class {
 	* @param newConfig - New client configuration properties, shallowly merged with existing configuration
 	*/
 	withConfig(newConfig) {
-		let thisConfig = this.config();
-		return new SanityClient(this.#httpRequest, {
-			...thisConfig,
-			...newConfig,
-			stega: {
-				...thisConfig.stega,
-				...typeof newConfig?.stega == "boolean" ? { enabled: newConfig.stega } : newConfig?.stega || {}
-			}
-		});
+		return new SanityClient(this.#httpRequest, mergeConfig(this.#clientConfig, newConfig));
+	}
+	/**
+	* The credential the client would attach to a request right now: \`{token}\`,
+	* \`{withCredentials: true}\` or \`{}\` for anonymous, so it can be destructured.
+	* Correct for a static configuration and for a reactive \`auth\` alike; under
+	* the latter it waits while a renewal is pending, so it never resolves to
+	* a credential the client itself would not send. The wait is
+	* cancelled by \`options.signal\` and bounded by the client's \`timeout\`.
+	* Use \`observeAuth()\` instead to follow changes.
+	*
+	* @category Configuration
+	*/
+	getAuth(options = {}) {
+		return resolveCurrentAuth(this.#clientConfig, options);
+	}
+	/**
+	* Every credential the client would attach to its requests: the current one
+	* when subscribed, then each change, as \`{token}\`, \`{withCredentials: true}\`
+	* or \`{}\` for anonymous, like {@link SanityClient.getAuth}. Under
+	* a reactive \`auth\` it emits each credential once it settles, and nothing
+	* while a renewal is pending; a static configuration emits its credential
+	* and completes, so the same code can follow the credential whichever way
+	* the client is configured.
+	*
+	* @category Configuration
+	*/
+	observeAuth() {
+		return observeResolvedAuth(this.#clientConfig);
 	}
 	fetch(query, params, options) {
 		return _fetch$2(this, this.#httpRequest, this.#clientConfig.stega, query, params, options);
@@ -7444,8 +7342,8 @@ var ObservableReleasesClient = class {
 * @internal
 */
 function defineCreateClientExports(envOptions, ClassConstructor) {
-	let defaultRequester = require_request_DXOkY5MQ.i(envOptions).observable, createClient = (config) => {
-		let { observable: clientRequester, promise: clientRequesterPromise } = require_request_DXOkY5MQ.i(envOptions, {
+	let defaultRequester = require_request_CycLCCas.i(envOptions).observable, createClient = (config) => {
+		let { observable: clientRequester, promise: clientRequesterPromise } = require_request_CycLCCas.i(envOptions, {
 			ignoreWarnings: config.ignoreWarnings,
 			maxRetries: config.maxRetries,
 			retryDelay: config.retryDelay
@@ -7472,7 +7370,7 @@ const proxyFetchCache = /* @__PURE__ */ new Map();
 function getProxyFetch(proxyUrl) {
 	let cached = proxyFetchCache.get(proxyUrl);
 	if (cached) return cached;
-	let fetch = require_request_DXOkY5MQ._n({
+	let fetch = require_request_CycLCCas._n({
 		proxy: proxyUrl,
 		connections: 30
 	});
@@ -7493,10 +7391,10 @@ let envDefaultFetch;
 * @internal
 */
 function resolveFetch(proxyUrl) {
-	return typeof proxyUrl == "string" ? getProxyFetch(proxyUrl) : (envDefaultFetch ??= require_request_DXOkY5MQ._n(), envDefaultFetch);
+	return typeof proxyUrl == "string" ? getProxyFetch(proxyUrl) : (envDefaultFetch ??= require_request_CycLCCas._n(), envDefaultFetch);
 }
 const middleware = [
-	require_request_DXOkY5MQ.hn({
+	require_request_CycLCCas.hn({
 		log: (message, ...args) => log(message, ...args),
 		verbose: !0
 	}),
@@ -7767,7 +7665,7 @@ createWarningPrinter(["Because you set \`withCredentials\` to true, we will over
 	"Since you haven't set a value for \`useCdn\`, we will deliver content using our",
 	"global, edge-cached API-CDN. If you wish to have content delivered faster, set",
 	"\`useCdn: false\` to use the Live API. Note: You may incur higher costs using the live API."
-]), createWarningPrinter(["The Sanity client is configured with the \`perspective\` set to \`drafts\` or \`previewDrafts\`, which doesn't support the API-CDN.", "The Live API will be used instead. Set \`useCdn: false\` in your configuration to hide this warning."]), createWarningPrinter(["The \`previewDrafts\` perspective has been renamed to  \`drafts\` and will be removed in a future API version"]), createWarningPrinter(["You have configured Sanity client to use a token in the browser. This may cause unintentional security issues.", \`See \${generateHelpUrl("js-client-browser-token")} for more information and how to hide this warning.\`]), createWarningPrinter(["You have configured Sanity client to use a token, but also provided \`withCredentials: true\`.", "This is no longer supported - only token will be used - remove \`withCredentials: true\`."]), createWarningPrinter(["Using the Sanity client without specifying an API version is deprecated.", \`See \${generateHelpUrl("js-client-api-version")}\`]), createWarningPrinter(["The default export of @sanity/client has been deprecated. Use the named export \`createClient\` instead."]), createWarningPrinter(["You have called \`createVersion()\` with a defined \`document\`.", "If you are creating a version of a document that already exists, prefer providing \`baseId\` and \`releaseId\` instead."]), createWarningPrinter(["The \`uri\` request option has been renamed to \`url\`.", "Please update your code to use \`url\` instead. Support for \`uri\` will be removed in a future version."]), createWarningPrinter(["The \`~experimental_resource\` configuration property has been renamed to \`resource\`.", "Please update your client configuration to use \`resource\` instead. Support for \`~experimental_resource\` will be removed in a future version."]);
+]), createWarningPrinter(["The Sanity client is configured with the \`perspective\` set to \`drafts\` or \`previewDrafts\`, which doesn't support the API-CDN.", "The Live API will be used instead. Set \`useCdn: false\` in your configuration to hide this warning."]), createWarningPrinter(["The \`previewDrafts\` perspective has been renamed to  \`drafts\` and will be removed in a future API version"]), createWarningPrinter(["You have configured Sanity client to use a token in the browser. This may cause unintentional security issues.", \`See \${generateHelpUrl("js-client-browser-token")} for more information and how to hide this warning.\`]), createWarningPrinter(["You have configured Sanity client to use a token, but also provided \`withCredentials: true\`.", "This is no longer supported - only token will be used - remove \`withCredentials: true\`."]), createWarningPrinter(["Using the Sanity client without specifying an API version is deprecated.", \`See \${generateHelpUrl("js-client-api-version")}\`]), createWarningPrinter(["The default export of @sanity/client has been deprecated. Use the named export \`createClient\` instead."]), createWarningPrinter(["You have called \`createVersion()\` with a defined \`document\`.", "If you are creating a version of a document that already exists, prefer providing \`baseId\` and \`releaseId\` instead."]), createWarningPrinter(["The \`uri\` request option has been renamed to \`url\`.", "Please update your code to use \`url\` instead. Support for \`uri\` will be removed in a future version."]), createWarningPrinter(["This client is configured with a reactive \`auth\`, so \`client.config().token\` and \`client.config().withCredentials\` are \`undefined\`.", "Use \`await client.getAuth()\` to read the credential the client sends, or subscribe to \`client.observeAuth()\` to follow changes."]), createWarningPrinter(["The \`~experimental_resource\` configuration property has been renamed to \`resource\`.", "Please update your client configuration to use \`resource\` instead. Support for \`~experimental_resource\` will be removed in a future version."]);
 /**
 * @internal - it may have breaking changes in any release
 */
