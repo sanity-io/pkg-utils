@@ -20,7 +20,37 @@
       "description": "Dependency updates to other package jsons than the root should always use the chore scope as they aren't published to npm",
       "matchFileNames": ["playground/**/package.json"],
       "semanticCommitType": "chore",
+      "group": {"semanticCommitType": "chore"},
       "groupSlug": "playground"
+    },
+    {
+      "description": "Private workspaces are never published, so their dependency updates are chore too",
+      "matchFileNames": [
+        "benchmarks/**/package.json",
+        "css-playground/**/package.json",
+        "integration/**/package.json"
+      ],
+      "semanticCommitType": "chore",
+      "group": {"semanticCommitType": "chore"}
+    },
+    {
+      "description": "The shared preset uses fix(deps) for every pnpm catalog entry, but the catalog mostly holds tooling (vitest, @types/node, publint, ...) and updates to it must not trigger a changeset. Catalog entries that published packages use at runtime are set back to fix below",
+      "matchDepTypes": ["devDependencies", "pnpm.catalog.default"],
+      "semanticCommitType": "chore",
+      "group": {"semanticCommitType": "chore"}
+    },
+    {
+      "description": "Catalog entries consumed as runtime dependencies or peerDependencies by published packages: keep fix(deps) so they get a changeset. Add new runtime catalog entries here",
+      "matchDepTypes": ["pnpm.catalog.default"],
+      "matchPackageNames": [
+        "@pandacss/compiler",
+        "@pandacss/transformer",
+        "lightningcss",
+        "postcss",
+        "tsdown"
+      ],
+      "semanticCommitType": "fix",
+      "group": {"semanticCommitType": "fix"}
     },
     {
       "matchDepTypes": ["dependencies"],
@@ -29,8 +59,7 @@
     {
       "matchDepTypes": ["devDependencies"],
       "matchPackageNames": ["typescript"],
-      "rangeStrategy": "bump",
-      "semanticCommitType": "fix"
+      "rangeStrategy": "bump"
     },
     {
       "description": "Never narrow the tsdown peer range: the shared preset widens peerDependencies, so in-range releases leave the range untouched instead of pinning consumers to an exact version",
