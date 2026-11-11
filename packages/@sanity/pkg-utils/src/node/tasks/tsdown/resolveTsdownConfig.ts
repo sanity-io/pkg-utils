@@ -127,14 +127,30 @@ export async function resolveTsdownConfig(
   const hasTsSources =
     !build.css && build.entries.some((buildEntry) => RE_TS_SOURCE.test(buildEntry.source))
   const dtsObject = typeof config?.dts === 'object' ? config.dts : undefined
+  // Strip a leftover top-level `newContext` after migrating it under `tsc` — rolldown-plugin-dts
+  // 0.29+ throws when the same option is set at both levels with conflicting values.
+  const {
+    newContext: dtsNewContext,
+    tsc: dtsTsc,
+    entry: dtsEntry,
+    ...restDtsObject
+  } = dtsObject ?? {}
   const nativePreviewGenerator = hasNativePreview(pkg) ? ({generator: 'tsgo'} as const) : undefined
+  // rolldown-plugin-dts 0.30 rejects `entry` together with `dtsOnly`. tsdown already drops
+  // the filter for its CJS declaration pass and applies it to Rolldown's input; a
+  // declaration-only ESM build has to do that itself or the plugin throws before emitting.
+  const rolldownEntry =
+    ctx.emitDeclarationOnly && dtsEntry !== undefined
+      ? filterDeclarationEntries(entry, dtsEntry, restDtsObject.cwd ?? cwd, cwd)
+      : entry
   const dts =
     hasTsSources && config?.dts !== false
       ? {
           ...nativePreviewGenerator,
-          newContext: true,
-          ...dtsObject,
-          ...(ctx.emitDeclarationOnly ? {emitDtsOnly: true} : {}),
+          ...restDtsObject,
+          ...(dtsEntry !== undefined && !ctx.emitDeclarationOnly ? {entry: dtsEntry} : {}),
+          tsc: {newContext: dtsNewContext ?? true, ...dtsTsc},
+          ...(ctx.emitDeclarationOnly ? {dtsOnly: true} : {}),
         }
       : false
 
@@ -168,12 +184,14 @@ export async function resolveTsdownConfig(
           bundledPackages: ctx.bundledPackages,
         }
 
-  const base = await defineConfig({
+  // `reactCompiler`'s type still includes `reactServer?: boolean`, so this overload can
+  // resolve to one config or two. `reactServer: true` already threw above.
+  const baseOrBuilds = await defineConfig({
     cwd,
     tsconfig: ctx.ts.configPath,
     platform,
     format,
-    entry,
+    entry: rolldownEntry,
     // POSIX separators: on Windows `path.relative` yields backslashes, which would leak into
     // generated `package.json` export targets (e.g. the conditional vanilla-extract export)
     outDir: path.relative(cwd, distPath).replaceAll('\\', '/') || '.',
@@ -196,6 +214,17 @@ export async function resolveTsdownConfig(
     // so a failing TSDoc rule doesn't tear down the watcher on every save.
     tsdoc: options.watch ? false : tsdocOption,
   })
+  if (Array.isArray(baseOrBuilds)) {
+    throw new Error(
+      [
+        'package.config.ts: `reactCompiler.reactServer` is not supported by `pkg build` — the',
+        'dual React Server Components build needs one tsdown run driving multiple configs.',
+        'Use `tsdown` + `@sanity/tsdown-config` directly instead: export the config from',
+        '`tsdown.config.ts` and build with `tsdown`.',
+      ].join('\n'),
+    )
+  }
+  const base = baseOrBuilds
 
   // The hand-written exports define the emitted extensions (`.js`/`.mjs`/`.cjs` per
   // `package.json#type`, enforced by `validateExports`), so the extensions are pinned
@@ -230,6 +259,59 @@ export async function resolveTsdownConfig(
         }
       : {}),
   }
+}
+
+/**
+ * tsdown 0.23 treats an empty entry object as "unspecified" and falls back to `src/index.ts`.
+ * A declaration-only filter that excludes every input of a build must skip that build instead.
+ * @internal
+ */
+export function isEmptyRolldownEntry(entry: InlineConfig['entry']): boolean {
+  return (
+    typeof entry === 'object' &&
+    entry !== null &&
+    !Array.isArray(entry) &&
+    Object.keys(entry).length === 0
+  )
+}
+
+/**
+ * `path.relative` yields `src/index.ts`, while `exports.source` and tsdown entry globs often
+ * keep a `./` prefix. `path.matchesGlob` treats that prefix as literal, so strip it from both
+ * sides before comparing.
+ */
+function normalizeDeclarationGlob(value: string): string {
+  const normalized = value.replaceAll('\\', '/')
+  return normalized.startsWith('./') ? normalized.slice(2) : normalized
+}
+
+/**
+ * Applies `dts.entry` to Rolldown's input for a declaration-only build, the same way tsdown
+ * filters the CJS declaration pass. `!` patterns are exclusions. Paths are matched relative
+ * to `dts.cwd`, falling back to the package directory.
+ * @internal
+ */
+function filterDeclarationEntries(
+  entry: Record<string, string>,
+  patterns: string | readonly string[],
+  dtsCwd: string,
+  cwd: string,
+): Record<string, string> {
+  const includes: string[] = []
+  const ignores: string[] = []
+  for (const pattern of typeof patterns === 'string' ? [patterns] : patterns) {
+    if (pattern.startsWith('!')) ignores.push(normalizeDeclarationGlob(pattern.slice(1)))
+    else includes.push(normalizeDeclarationGlob(pattern))
+  }
+  return Object.fromEntries(
+    Object.entries(entry).filter(([, file]) => {
+      const id = normalizeDeclarationGlob(path.relative(dtsCwd, path.resolve(cwd, file)))
+      return (
+        includes.some((pattern) => path.matchesGlob(id, pattern)) &&
+        ignores.every((pattern) => !path.matchesGlob(id, pattern))
+      )
+    }),
+  )
 }
 
 /** @internal */

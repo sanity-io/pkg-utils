@@ -7,7 +7,10 @@ import {parseAndValidateExports} from '../src/node/core/pkg/parseAndValidateExpo
 import {createLogger} from '../src/node/logger'
 import {parseStrictOptions} from '../src/node/strict'
 import {resolveTsdownBuilds} from '../src/node/tasks/tsdown/resolveTsdownBuilds'
-import {resolveTsdownConfig} from '../src/node/tasks/tsdown/resolveTsdownConfig'
+import {
+  isEmptyRolldownEntry,
+  resolveTsdownConfig,
+} from '../src/node/tasks/tsdown/resolveTsdownConfig'
 
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
@@ -15,7 +18,11 @@ const logger = createLogger()
 // working directory than a package-level run
 const cwd = path.resolve(__dirname, '..')
 
-function createContext(config: BuildContext['config']): BuildContext {
+function createContext(
+  config: BuildContext['config'],
+  options: {emitDeclarationOnly?: boolean; sources?: string[]} = {},
+): BuildContext {
+  const sources = options.sources ?? ['./src/index.ts']
   const pkg: PackageJSON = {
     type: 'module',
     name: 'test',
@@ -23,12 +30,22 @@ function createContext(config: BuildContext['config']): BuildContext {
     types: './dist/index.d.ts',
     files: ['dist'],
     exports: {
-      '.': {
-        source: './src/index.ts',
-        import: './dist/index.js',
-        require: './dist/index.cjs',
-        default: './dist/index.js',
-      },
+      ...Object.fromEntries(
+        sources.map((source) => {
+          const base = path.basename(source, path.extname(source))
+          const exportPath = base === 'index' && source.endsWith('/index.ts') ? '.' : `./${base}`
+          const out = exportPath === '.' ? 'index' : base
+          return [
+            exportPath,
+            {
+              source,
+              import: `./dist/${out}.js`,
+              require: `./dist/${out}.cjs`,
+              default: `./dist/${out}.js`,
+            },
+          ]
+        }),
+      ),
       './package.json': './package.json',
     },
   }
@@ -47,7 +64,7 @@ function createContext(config: BuildContext['config']): BuildContext {
     cwd,
     deps: undefined,
     distPath: path.join(cwd, 'dist'),
-    emitDeclarationOnly: false,
+    emitDeclarationOnly: options.emitDeclarationOnly ?? false,
     cssExports: [],
     exports: Object.fromEntries(exports.map(({_path, ...entry}) => [_path, entry])),
     external: [],
@@ -81,7 +98,70 @@ test('a leftover v11 `dts` string degrades to the default instead of spreading',
 
   const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
 
-  expect(inlineConfig.dts).toEqual({newContext: true})
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}})
+})
+
+test('a declaration-only build applies `dts.entry` to the inputs and omits it from `dts`', async () => {
+  const ctx = createContext(
+    {dts: {entry: ['src/*.ts', '!src/skip.ts'], cwd: cwd}},
+    {emitDeclarationOnly: true, sources: ['./src/index.ts', './src/skip.ts']},
+  )
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({index: './src/index.ts'})
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, cwd, dtsOnly: true})
+})
+
+test('a declaration-only `dts.entry` matches patterns that keep a ./ prefix', async () => {
+  const ctx = createContext(
+    {dts: {entry: ['./src/*.ts', '!./src/skip.ts']}},
+    {emitDeclarationOnly: true, sources: ['./src/index.ts', './src/skip.ts']},
+  )
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({index: './src/index.ts'})
+  expect(isEmptyRolldownEntry(inlineConfig.entry)).toBe(false)
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, dtsOnly: true})
+})
+
+test('a declaration-only filter that matches nothing leaves no Rolldown inputs', async () => {
+  const ctx = createContext({dts: {entry: 'src/absent.ts'}}, {emitDeclarationOnly: true})
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({})
+  expect(isEmptyRolldownEntry(inlineConfig.entry)).toBe(true)
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, dtsOnly: true})
+})
+
+test('a declaration-only build without `dts.entry` still emits every input', async () => {
+  const ctx = createContext({dts: {sourcemap: true}}, {emitDeclarationOnly: true})
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({index: './src/index.ts'})
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, sourcemap: true, dtsOnly: true})
+})
+
+test('a full build keeps `dts.entry` and does not set `dtsOnly`', async () => {
+  const ctx = createContext({dts: {entry: 'src/index.ts'}})
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({index: './src/index.ts'})
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, entry: 'src/index.ts'})
 })
 
 test('the `dts` object passthrough spreads over the defaults', async () => {
@@ -91,7 +171,11 @@ test('the `dts` object passthrough spreads over the defaults', async () => {
 
   const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
 
-  expect(inlineConfig.dts).toEqual({newContext: true, generator: 'tsgo', sourcemap: true})
+  expect(inlineConfig.dts).toEqual({
+    tsc: {newContext: true},
+    generator: 'tsgo',
+    sourcemap: true,
+  })
 })
 
 test('forwards `bundleAnalyzer` to @sanity/tsdown-config', async () => {

@@ -12,7 +12,7 @@ import {
   resolveTsdownBuilds,
   type TsdownBuild as TsdownBuildDef,
 } from './tasks/tsdown/resolveTsdownBuilds.ts'
-import {resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
+import {isEmptyRolldownEntry, resolveTsdownConfig} from './tasks/tsdown/resolveTsdownConfig.ts'
 
 const RE_TS_SOURCE = /\.[cm]?tsx?$/
 
@@ -92,16 +92,21 @@ export async function build(options: {
     }
 
     const taskName = buildTaskName(buildDef)
-    const spinner = createSpinner(taskName, quiet)
+    let spinner: ReturnType<typeof createSpinner> | undefined
 
     try {
       const inlineConfig = await resolveTsdownConfig(ctx, buildDef, {clean: first && clean})
+      // An empty object is not "no entry" to tsdown: it rebuilds `src/index.ts`. Skip the
+      // build when a declaration-only `dts.entry` filter excluded every input.
+      if (ctx.emitDeclarationOnly && isEmptyRolldownEntry(inlineConfig.entry)) continue
+
+      spinner = createSpinner(taskName, quiet)
       first = false
 
       const {bundles} = await tsdownBuild(inlineConfig)
 
       if (ctx.emitDeclarationOnly) {
-        // `dts.emitDtsOnly` suppresses the JS chunks of the ES pass, but the CJS pass emits
+        // `dts.dtsOnly` suppresses the JS chunks of the ES pass, but the CJS pass emits
         // its JS regardless (only its extra dts pass runs the dts plugin) — a types-only
         // build removes everything that is not a declaration file
         removeNonDeclarationOutputs(bundles)
@@ -117,7 +122,7 @@ export async function build(options: {
       printBuildOutputs(ctx, bundles, buildDef)
       ctx.logger.log()
     } catch (err) {
-      spinner.error()
+      spinner?.error()
 
       if (err instanceof Error) {
         const RE_CWD = new RegExp(escapeRegExp(cwd), 'g')

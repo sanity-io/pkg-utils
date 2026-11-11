@@ -197,7 +197,7 @@ export interface PackagePandaOptions {
  * `@sanity/browserslist-config` through `lightningcss.targets`.
  * @public
  */
-export type PackageCssOptions = NonNullable<UserConfig['css']> & {
+export type PackageCssOptions = Exclude<UserConfig['css'], false | undefined> & {
   /**
    * Publish each emitted CSS file as an export subpath of the package, so consumers can
    * `import "<pkg-name>/style.css"` — which is also the specifier `inject` then uses, instead
@@ -793,7 +793,11 @@ async function resolvePackageConfig(
           '`@vitejs/plugin-react` returned no `vite:react-compiler` plugin — the installed version does not support the default `oxc` implementation of the `reactCompiler` option.',
         )
       }
-      plugins.push(compilerPlugin)
+      // Vite pins its own rolldown minor and types plugin hooks with a required
+      // `this.environment`; the compiler plugin only reads it optionally, so it runs as-is
+      // under tsdown's rolldown.
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      plugins.push(compilerPlugin as Rolldown.Plugin)
     }
   }
   if (options.vanillaExtract) {

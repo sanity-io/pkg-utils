@@ -19,15 +19,15 @@ catalog:
   '@sanity/client': ^8.15.1
   '@sanity/icons': ^5.2.3
   '@sanity/logos': ^2.2.6
-  '@tsdown/css': ^0.23.1
+  '@tsdown/css': ^0.23.7
   '@types/node': ^24.19.2
   '@vitest/browser-playwright': ^5.1.0
   lightningcss: ^1.33.0
-  oxc-transform-react: ^0.157.0
+  oxc-transform-react: ^0.158.0
   playwright: ^1.65.0
   postcss: ^8.5.32
   publint: ^0.3.25
-  tsdown: ^0.23.1
+  tsdown: ^0.23.7
   typescript: 7.0.2
   vitest: ^5.1.0
 
@@ -79,17 +79,14 @@ minimumReleaseAgeExclude:
   - '@pandacss/*'
   - oxlint
   - rolldown
+  - rolldown-plugin-dts
+  - vite
+  - '@vitejs/plugin-react'
   - 'cac@7.1.0'
   - 'package-manager-detector@1.9.0'
-  - '@vitejs/plugin-react@6.1.2'
-  - '@microsoft/api-extractor@7.59.4'
-  - '@microsoft/api-extractor-model@7.33.15'
   - 'styled-components@6.6.0'
   - 'zod@4.6.7'
-  - '@rushstack/node-core-library@5.25.1'
   - '@rushstack/rig-package@0.7.4'
-  - '@rushstack/terminal@0.24.7'
-  - '@rushstack/ts-command-line@5.3.17'
   # @vanilla-extract/css@1.21.3 and @vanilla-extract/integration@8.0.11 (published 2026-10-08)
   - '@vanilla-extract/css@1.21.3'
   - '@vanilla-extract/integration@8.0.11'
@@ -112,7 +109,6 @@ trustPolicyExclude:
   - cssnano
   - chokidar@4.0.3
   - rxjs@7.8.2
-  - semver@5.7.2 || 6.3.1
   - webpack-dev-middleware@7.4.6
 
 trustPolicyExcludePrune: true
