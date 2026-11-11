@@ -137,10 +137,10 @@ the gap the near-empty fixtures used to understate.
 
 ### Vite dev HMR (10 samples each)
 
-| Scenario                               | Official plugin | Sanity plugin | Relative result     |
-| -------------------------------------- | --------------: | ------------: | ------------------- |
-| Single `.css.ts` leaf edit             |       272.81 ms |     266.50 ms | parity (1.02x)      |
-| Shared theme edit, 100 style importers |       395.59 ms |     404.53 ms | parity (1.02x)      |
+| Scenario                               | Official plugin | Sanity plugin | Relative result |
+| -------------------------------------- | --------------: | ------------: | --------------- |
+| Single `.css.ts` leaf edit             |       272.81 ms |     266.50 ms | parity (1.02x)  |
+| Shared theme edit, 100 style importers |       395.59 ms |     404.53 ms | parity (1.02x)  |
 
 Both HMR scenarios sit inside the run-to-run noise, so treat them as parity.
 
