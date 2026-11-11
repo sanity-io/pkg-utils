@@ -1,6 +1,8 @@
-import * as chokidar from 'chokidar'
-import type {EventName} from 'chokidar/handler.js'
+import {watch, type EmitArgsWithName} from 'chokidar'
 import {Observable} from 'rxjs'
+
+// Chokidar 6 publishes event names on this tuple from the package entry.
+type EventName = EmitArgsWithName[0]
 
 export interface FileEvent {
   type: EventName
@@ -9,7 +11,7 @@ export interface FileEvent {
 
 export function watchFiles(patterns: string[]): Observable<FileEvent> {
   return new Observable((observer) => {
-    const watcher = chokidar.watch(patterns, {
+    const watcher = watch(patterns, {
       ignoreInitial: true,
     })
 
