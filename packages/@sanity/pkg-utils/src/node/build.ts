@@ -101,7 +101,7 @@ export async function build(options: {
       const {bundles} = await tsdownBuild(inlineConfig)
 
       if (ctx.emitDeclarationOnly) {
-        // `dts.emitDtsOnly` suppresses the JS chunks of the ES pass, but the CJS pass emits
+        // `dts.dtsOnly` suppresses the JS chunks of the ES pass, but the CJS pass emits
         // its JS regardless (only its extra dts pass runs the dts plugin) — a types-only
         // build removes everything that is not a declaration file
         removeNonDeclarationOutputs(bundles)

@@ -152,8 +152,7 @@ export interface Config extends Plugin {
 /** @public */
 export declare function defineConfig(options: Config): Config;
 /** @public */
-export declare function definePlugin(plugin: Plugin): Plugin;
-//# sourceMappingURL=index.d.ts.map"
+export declare function definePlugin(plugin: Plugin): Plugin;"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.js 1`] = `
@@ -185,8 +184,7 @@ exports.plugin = plugin;
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.d.ts 1`] = `
 "import { Plugin } from "multi-export";
 /** @public */
-export declare function plugin(): Plugin;
-//# sourceMappingURL=plugin.d.ts.map"
+export declare function plugin(): Plugin;"
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.js 1`] = `
@@ -895,7 +893,8 @@ export declare const VERSION = "1.0.0";
 `;
 
 exports[`cli > should build \`ts-namespace-reexport\` package > ./dist/extra.d.ts 1`] = `
-"import { t as inner_d_exports } from "./inner-Bnma_jkP.js";
+"/** @alpha */
+import { t as inner_d_exports } from "./inner-Bnma_jkP.js";
 export { inner_d_exports as inner };"
 `;
 
@@ -2190,11 +2189,12 @@ function createParser(config) {
 			}
 			return chunk.slice(searchIndex);
 		}
+		let crIndex = chunk.indexOf("\\r", searchIndex), lfIndex = chunk.indexOf("\\n", searchIndex);
 		for (; searchIndex < chunk.length;) {
-			let crIndex = chunk.indexOf("\\r", searchIndex), lfIndex = chunk.indexOf("\\n", searchIndex), lineEnd = -1;
+			let lineEnd = -1;
 			if (crIndex !== -1 && lfIndex !== -1 ? lineEnd = crIndex < lfIndex ? crIndex : lfIndex : crIndex === -1 ? lfIndex !== -1 && (lineEnd = lfIndex) : lineEnd = crIndex === chunk.length - 1 ? -1 : crIndex, lineEnd === -1) break;
 			if (parseLine(chunk, searchIndex, lineEnd), checkForBufferOverflow()) return "";
-			searchIndex = lineEnd + 1, chunk.charCodeAt(searchIndex - 1) === 13 && chunk.charCodeAt(searchIndex) === 10 && searchIndex++;
+			searchIndex = lineEnd + 1, chunk.charCodeAt(searchIndex - 1) === 13 && chunk.charCodeAt(searchIndex) === 10 && searchIndex++, crIndex !== -1 && crIndex < searchIndex && (crIndex = chunk.indexOf("\\r", searchIndex)), lfIndex !== -1 && lfIndex < searchIndex && (lfIndex = chunk.indexOf("\\n", searchIndex));
 		}
 		return chunk.slice(searchIndex);
 	}
