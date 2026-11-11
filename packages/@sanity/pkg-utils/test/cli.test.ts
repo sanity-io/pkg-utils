@@ -757,7 +757,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(stdout).not.toContain('→ ./dist/index.js')
 
     // A types-only build emits declaration files only (the CJS pass emits its JS regardless
-    // of `dts.emitDtsOnly`, so everything else is removed afterwards)
+    // of `dts.dtsOnly`, so everything else is removed afterwards)
     const files = await fs.readdir(path.resolve(project.cwd, 'dist'))
     expect(files.filter((file) => !/\.d\.[mc]?ts(\.map)?$/.test(file))).toEqual([])
   })
