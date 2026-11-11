@@ -7,7 +7,10 @@ import {parseAndValidateExports} from '../src/node/core/pkg/parseAndValidateExpo
 import {createLogger} from '../src/node/logger'
 import {parseStrictOptions} from '../src/node/strict'
 import {resolveTsdownBuilds} from '../src/node/tasks/tsdown/resolveTsdownBuilds'
-import {resolveTsdownConfig} from '../src/node/tasks/tsdown/resolveTsdownConfig'
+import {
+  isEmptyRolldownEntry,
+  resolveTsdownConfig,
+} from '../src/node/tasks/tsdown/resolveTsdownConfig'
 
 const strictOptions = parseStrictOptions({})
 const logger = createLogger()
@@ -110,6 +113,21 @@ test('a declaration-only build applies `dts.entry` to the inputs and omits it fr
 
   expect(inlineConfig.entry).toEqual({index: './src/index.ts'})
   expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, cwd, dtsOnly: true})
+})
+
+test('a declaration-only filter that matches nothing leaves no Rolldown inputs', async () => {
+  const ctx = createContext(
+    {dts: {entry: 'src/absent.ts'}},
+    {emitDeclarationOnly: true},
+  )
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({})
+  expect(isEmptyRolldownEntry(inlineConfig.entry)).toBe(true)
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, dtsOnly: true})
 })
 
 test('a declaration-only build without `dts.entry` still emits every input', async () => {

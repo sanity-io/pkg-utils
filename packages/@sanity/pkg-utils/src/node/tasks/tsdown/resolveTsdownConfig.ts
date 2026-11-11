@@ -257,6 +257,20 @@ export async function resolveTsdownConfig(
 }
 
 /**
+ * tsdown 0.23 treats an empty entry object as "unspecified" and falls back to `src/index.ts`.
+ * A declaration-only filter that excludes every input of a build must skip that build instead.
+ * @internal
+ */
+export function isEmptyRolldownEntry(entry: InlineConfig['entry']): boolean {
+  return (
+    typeof entry === 'object' &&
+    entry !== null &&
+    !Array.isArray(entry) &&
+    Object.keys(entry).length === 0
+  )
+}
+
+/**
  * Applies `dts.entry` to Rolldown's input for a declaration-only build, the same way tsdown
  * filters the CJS declaration pass. `!` patterns are exclusions. Paths are matched relative
  * to `dts.cwd`, falling back to the package directory.
