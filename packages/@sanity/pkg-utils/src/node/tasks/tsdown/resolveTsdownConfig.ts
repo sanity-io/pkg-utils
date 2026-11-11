@@ -129,7 +129,12 @@ export async function resolveTsdownConfig(
   const dtsObject = typeof config?.dts === 'object' ? config.dts : undefined
   // Strip a leftover top-level `newContext` after migrating it under `tsc` — rolldown-plugin-dts
   // 0.29+ throws when the same option is set at both levels with conflicting values.
-  const {newContext: dtsNewContext, tsc: dtsTsc, entry: dtsEntry, ...restDtsObject} = dtsObject ?? {}
+  const {
+    newContext: dtsNewContext,
+    tsc: dtsTsc,
+    entry: dtsEntry,
+    ...restDtsObject
+  } = dtsObject ?? {}
   const nativePreviewGenerator = hasNativePreview(pkg) ? ({generator: 'tsgo'} as const) : undefined
   // rolldown-plugin-dts 0.30 rejects `entry` together with `dtsOnly`. tsdown already drops
   // the filter for its CJS declaration pass and applies it to Rolldown's input; a
