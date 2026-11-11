@@ -131,10 +131,7 @@ test('a declaration-only `dts.entry` matches patterns that keep a ./ prefix', as
 })
 
 test('a declaration-only filter that matches nothing leaves no Rolldown inputs', async () => {
-  const ctx = createContext(
-    {dts: {entry: 'src/absent.ts'}},
-    {emitDeclarationOnly: true},
-  )
+  const ctx = createContext({dts: {entry: 'src/absent.ts'}}, {emitDeclarationOnly: true})
   const [build] = resolveTsdownBuilds(ctx)
   if (!build) throw new Error('expected a build')
 
