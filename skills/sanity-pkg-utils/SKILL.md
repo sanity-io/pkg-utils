@@ -18,7 +18,7 @@ Use the separate `tsdown` skill for generic tsdown options.
 
 ## Install and run
 
-`@sanity/pkg-utils` 13.x requires Node.js `^22.18.0 || ^24.11.0 || >=26.0.0`.
+`@sanity/pkg-utils` 13.x requires Node.js `^22.22.0 || ^24.11.0 || >=26.0.0`.
 
 ```sh
 pnpm add -D @sanity/pkg-utils
