@@ -1064,8 +1064,8 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_dist_BPHpH4Im = require("./dist-BPHpH4Im-[hash].cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--[hash].cjs"), require_request_CycLCCas = require("./request-CycLCCas-[hash].cjs");
-let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_stream = require("node:stream"), node_util = require("node:util"), node_tty = require("node:tty");
+const require_dist_BPHpH4Im = require("./dist-BPHpH4Im-[hash].cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--[hash].cjs"), require_request_Boa4xq42 = require("./request-Boa4xq42-[hash].cjs");
+let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_util = require("node:util"), node_tty = require("node:tty");
 /**
 * @public
 */
@@ -1142,16 +1142,16 @@ function getPublishedId(id) {
 	if (isPublishedId(id)) return id;
 	throw Error(\`Unable to resolve a published id from "\${id}"\`);
 }
-var require_partition = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) => {
+var require_partition = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.partition = void 0;
-	var not_1 = require_request_CycLCCas.an(), filter_1 = require_request_CycLCCas.in();
+	var not_1 = require_request_Boa4xq42.an(), filter_1 = require_request_Boa4xq42.in();
 	function partition(predicate, thisArg) {
 		return function(source) {
 			return [filter_1.filter(predicate, thisArg)(source), filter_1.filter(not_1.not(predicate, thisArg))(source)];
 		};
 	}
 	exports.partition = partition;
-})), require_race = /* @__PURE__ */ require_request_CycLCCas.vn(((exports, module, this$1) => {
+})), require_race = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports, module, this$1) => {
 	var __read = this$1 && this$1.__read || function(o, n) {
 		var m = typeof Symbol == "function" && o[Symbol.iterator];
 		if (!m) return o;
@@ -1173,428 +1173,428 @@ var require_partition = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) =
 		return to;
 	};
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.race = void 0;
-	var argsOrArgArray_1 = require_request_CycLCCas.on(), raceWith_1 = require_request_CycLCCas.q();
+	var argsOrArgArray_1 = require_request_Boa4xq42.on(), raceWith_1 = require_request_Boa4xq42.q();
 	function race() {
 		for (var args = [], _i = 0; _i < arguments.length; _i++) args[_i] = arguments[_i];
 		return raceWith_1.raceWith.apply(void 0, __spreadArray([], __read(argsOrArgArray_1.argsOrArgArray(args))));
 	}
 	exports.race = race;
-})), require_operators = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) => {
+})), require_operators = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.mergeAll = exports.merge = exports.max = exports.materialize = exports.mapTo = exports.map = exports.last = exports.isEmpty = exports.ignoreElements = exports.groupBy = exports.first = exports.findIndex = exports.find = exports.finalize = exports.filter = exports.expand = exports.exhaustMap = exports.exhaustAll = exports.exhaust = exports.every = exports.endWith = exports.elementAt = exports.distinctUntilKeyChanged = exports.distinctUntilChanged = exports.distinct = exports.dematerialize = exports.delayWhen = exports.delay = exports.defaultIfEmpty = exports.debounceTime = exports.debounce = exports.count = exports.connect = exports.concatWith = exports.concatMapTo = exports.concatMap = exports.concatAll = exports.concat = exports.combineLatestWith = exports.combineLatest = exports.combineLatestAll = exports.combineAll = exports.catchError = exports.bufferWhen = exports.bufferToggle = exports.bufferTime = exports.bufferCount = exports.buffer = exports.auditTime = exports.audit = void 0, exports.timeInterval = exports.throwIfEmpty = exports.throttleTime = exports.throttle = exports.tap = exports.takeWhile = exports.takeUntil = exports.takeLast = exports.take = exports.switchScan = exports.switchMapTo = exports.switchMap = exports.switchAll = exports.subscribeOn = exports.startWith = exports.skipWhile = exports.skipUntil = exports.skipLast = exports.skip = exports.single = exports.shareReplay = exports.share = exports.sequenceEqual = exports.scan = exports.sampleTime = exports.sample = exports.refCount = exports.retryWhen = exports.retry = exports.repeatWhen = exports.repeat = exports.reduce = exports.raceWith = exports.race = exports.publishReplay = exports.publishLast = exports.publishBehavior = exports.publish = exports.pluck = exports.partition = exports.pairwise = exports.onErrorResumeNext = exports.observeOn = exports.multicast = exports.min = exports.mergeWith = exports.mergeScan = exports.mergeMapTo = exports.mergeMap = exports.flatMap = void 0, exports.zipWith = exports.zipAll = exports.zip = exports.withLatestFrom = exports.windowWhen = exports.windowToggle = exports.windowTime = exports.windowCount = exports.window = exports.toArray = exports.timestamp = exports.timeoutWith = exports.timeout = void 0;
-	var audit_1 = require_request_CycLCCas.rn();
+	var audit_1 = require_request_Boa4xq42.rn();
 	Object.defineProperty(exports, "audit", {
 		enumerable: !0,
 		get: function() {
 			return audit_1.audit;
 		}
 	});
-	var auditTime_1 = require_request_CycLCCas.nn();
+	var auditTime_1 = require_request_Boa4xq42.nn();
 	Object.defineProperty(exports, "auditTime", {
 		enumerable: !0,
 		get: function() {
 			return auditTime_1.auditTime;
 		}
 	});
-	var buffer_1 = require_request_CycLCCas.tn();
+	var buffer_1 = require_request_Boa4xq42.tn();
 	Object.defineProperty(exports, "buffer", {
 		enumerable: !0,
 		get: function() {
 			return buffer_1.buffer;
 		}
 	});
-	var bufferCount_1 = require_request_CycLCCas.en();
+	var bufferCount_1 = require_request_Boa4xq42.en();
 	Object.defineProperty(exports, "bufferCount", {
 		enumerable: !0,
 		get: function() {
 			return bufferCount_1.bufferCount;
 		}
 	});
-	var bufferTime_1 = require_request_CycLCCas.$t();
+	var bufferTime_1 = require_request_Boa4xq42.$t();
 	Object.defineProperty(exports, "bufferTime", {
 		enumerable: !0,
 		get: function() {
 			return bufferTime_1.bufferTime;
 		}
 	});
-	var bufferToggle_1 = require_request_CycLCCas.Qt();
+	var bufferToggle_1 = require_request_Boa4xq42.Qt();
 	Object.defineProperty(exports, "bufferToggle", {
 		enumerable: !0,
 		get: function() {
 			return bufferToggle_1.bufferToggle;
 		}
 	});
-	var bufferWhen_1 = require_request_CycLCCas.Zt();
+	var bufferWhen_1 = require_request_Boa4xq42.Zt();
 	Object.defineProperty(exports, "bufferWhen", {
 		enumerable: !0,
 		get: function() {
 			return bufferWhen_1.bufferWhen;
 		}
 	});
-	var catchError_1 = require_request_CycLCCas.Xt();
+	var catchError_1 = require_request_Boa4xq42.Xt();
 	Object.defineProperty(exports, "catchError", {
 		enumerable: !0,
 		get: function() {
 			return catchError_1.catchError;
 		}
 	});
-	var combineAll_1 = require_request_CycLCCas.Kt();
+	var combineAll_1 = require_request_Boa4xq42.Kt();
 	Object.defineProperty(exports, "combineAll", {
 		enumerable: !0,
 		get: function() {
 			return combineAll_1.combineAll;
 		}
 	});
-	var combineLatestAll_1 = require_request_CycLCCas.qt();
+	var combineLatestAll_1 = require_request_Boa4xq42.qt();
 	Object.defineProperty(exports, "combineLatestAll", {
 		enumerable: !0,
 		get: function() {
 			return combineLatestAll_1.combineLatestAll;
 		}
 	});
-	var combineLatest_1 = require_request_CycLCCas.Gt();
+	var combineLatest_1 = require_request_Boa4xq42.Gt();
 	Object.defineProperty(exports, "combineLatest", {
 		enumerable: !0,
 		get: function() {
 			return combineLatest_1.combineLatest;
 		}
 	});
-	var combineLatestWith_1 = require_request_CycLCCas.Wt();
+	var combineLatestWith_1 = require_request_Boa4xq42.Wt();
 	Object.defineProperty(exports, "combineLatestWith", {
 		enumerable: !0,
 		get: function() {
 			return combineLatestWith_1.combineLatestWith;
 		}
 	});
-	var concat_1 = require_request_CycLCCas.Vt();
+	var concat_1 = require_request_Boa4xq42.Vt();
 	Object.defineProperty(exports, "concat", {
 		enumerable: !0,
 		get: function() {
 			return concat_1.concat;
 		}
 	});
-	var concatAll_1 = require_request_CycLCCas.sn();
+	var concatAll_1 = require_request_Boa4xq42.sn();
 	Object.defineProperty(exports, "concatAll", {
 		enumerable: !0,
 		get: function() {
 			return concatAll_1.concatAll;
 		}
 	});
-	var concatMap_1 = require_request_CycLCCas.Ut();
+	var concatMap_1 = require_request_Boa4xq42.Ut();
 	Object.defineProperty(exports, "concatMap", {
 		enumerable: !0,
 		get: function() {
 			return concatMap_1.concatMap;
 		}
 	});
-	var concatMapTo_1 = require_request_CycLCCas.Ht();
+	var concatMapTo_1 = require_request_Boa4xq42.Ht();
 	Object.defineProperty(exports, "concatMapTo", {
 		enumerable: !0,
 		get: function() {
 			return concatMapTo_1.concatMapTo;
 		}
 	});
-	var concatWith_1 = require_request_CycLCCas.Bt();
+	var concatWith_1 = require_request_Boa4xq42.Bt();
 	Object.defineProperty(exports, "concatWith", {
 		enumerable: !0,
 		get: function() {
 			return concatWith_1.concatWith;
 		}
 	});
-	var connect_1 = require_request_CycLCCas.zt();
+	var connect_1 = require_request_Boa4xq42.zt();
 	Object.defineProperty(exports, "connect", {
 		enumerable: !0,
 		get: function() {
 			return connect_1.connect;
 		}
 	});
-	var count_1 = require_request_CycLCCas.Rt();
+	var count_1 = require_request_Boa4xq42.Rt();
 	Object.defineProperty(exports, "count", {
 		enumerable: !0,
 		get: function() {
 			return count_1.count;
 		}
 	});
-	var debounce_1 = require_request_CycLCCas.Lt();
+	var debounce_1 = require_request_Boa4xq42.Lt();
 	Object.defineProperty(exports, "debounce", {
 		enumerable: !0,
 		get: function() {
 			return debounce_1.debounce;
 		}
 	});
-	var debounceTime_1 = require_request_CycLCCas.It();
+	var debounceTime_1 = require_request_Boa4xq42.It();
 	Object.defineProperty(exports, "debounceTime", {
 		enumerable: !0,
 		get: function() {
 			return debounceTime_1.debounceTime;
 		}
 	});
-	var defaultIfEmpty_1 = require_request_CycLCCas.Ft();
+	var defaultIfEmpty_1 = require_request_Boa4xq42.Ft();
 	Object.defineProperty(exports, "defaultIfEmpty", {
 		enumerable: !0,
 		get: function() {
 			return defaultIfEmpty_1.defaultIfEmpty;
 		}
 	});
-	var delay_1 = require_request_CycLCCas.At();
+	var delay_1 = require_request_Boa4xq42.At();
 	Object.defineProperty(exports, "delay", {
 		enumerable: !0,
 		get: function() {
 			return delay_1.delay;
 		}
 	});
-	var delayWhen_1 = require_request_CycLCCas.jt();
+	var delayWhen_1 = require_request_Boa4xq42.jt();
 	Object.defineProperty(exports, "delayWhen", {
 		enumerable: !0,
 		get: function() {
 			return delayWhen_1.delayWhen;
 		}
 	});
-	var dematerialize_1 = require_request_CycLCCas.kt();
+	var dematerialize_1 = require_request_Boa4xq42.kt();
 	Object.defineProperty(exports, "dematerialize", {
 		enumerable: !0,
 		get: function() {
 			return dematerialize_1.dematerialize;
 		}
 	});
-	var distinct_1 = require_request_CycLCCas.Ot();
+	var distinct_1 = require_request_Boa4xq42.Ot();
 	Object.defineProperty(exports, "distinct", {
 		enumerable: !0,
 		get: function() {
 			return distinct_1.distinct;
 		}
 	});
-	var distinctUntilChanged_1 = require_request_CycLCCas.Dt();
+	var distinctUntilChanged_1 = require_request_Boa4xq42.Dt();
 	Object.defineProperty(exports, "distinctUntilChanged", {
 		enumerable: !0,
 		get: function() {
 			return distinctUntilChanged_1.distinctUntilChanged;
 		}
 	});
-	var distinctUntilKeyChanged_1 = require_request_CycLCCas.Et();
+	var distinctUntilKeyChanged_1 = require_request_Boa4xq42.Et();
 	Object.defineProperty(exports, "distinctUntilKeyChanged", {
 		enumerable: !0,
 		get: function() {
 			return distinctUntilKeyChanged_1.distinctUntilKeyChanged;
 		}
 	});
-	var elementAt_1 = require_request_CycLCCas.wt();
+	var elementAt_1 = require_request_Boa4xq42.wt();
 	Object.defineProperty(exports, "elementAt", {
 		enumerable: !0,
 		get: function() {
 			return elementAt_1.elementAt;
 		}
 	});
-	var endWith_1 = require_request_CycLCCas.Ct();
+	var endWith_1 = require_request_Boa4xq42.Ct();
 	Object.defineProperty(exports, "endWith", {
 		enumerable: !0,
 		get: function() {
 			return endWith_1.endWith;
 		}
 	});
-	var every_1 = require_request_CycLCCas.St();
+	var every_1 = require_request_Boa4xq42.St();
 	Object.defineProperty(exports, "every", {
 		enumerable: !0,
 		get: function() {
 			return every_1.every;
 		}
 	});
-	var exhaust_1 = require_request_CycLCCas.yt();
+	var exhaust_1 = require_request_Boa4xq42.yt();
 	Object.defineProperty(exports, "exhaust", {
 		enumerable: !0,
 		get: function() {
 			return exhaust_1.exhaust;
 		}
 	});
-	var exhaustAll_1 = require_request_CycLCCas.bt();
+	var exhaustAll_1 = require_request_Boa4xq42.bt();
 	Object.defineProperty(exports, "exhaustAll", {
 		enumerable: !0,
 		get: function() {
 			return exhaustAll_1.exhaustAll;
 		}
 	});
-	var exhaustMap_1 = require_request_CycLCCas.xt();
+	var exhaustMap_1 = require_request_Boa4xq42.xt();
 	Object.defineProperty(exports, "exhaustMap", {
 		enumerable: !0,
 		get: function() {
 			return exhaustMap_1.exhaustMap;
 		}
 	});
-	var expand_1 = require_request_CycLCCas.vt();
+	var expand_1 = require_request_Boa4xq42.vt();
 	Object.defineProperty(exports, "expand", {
 		enumerable: !0,
 		get: function() {
 			return expand_1.expand;
 		}
 	});
-	var filter_1 = require_request_CycLCCas.in();
+	var filter_1 = require_request_Boa4xq42.in();
 	Object.defineProperty(exports, "filter", {
 		enumerable: !0,
 		get: function() {
 			return filter_1.filter;
 		}
 	});
-	var finalize_1 = require_request_CycLCCas._t();
+	var finalize_1 = require_request_Boa4xq42._t();
 	Object.defineProperty(exports, "finalize", {
 		enumerable: !0,
 		get: function() {
 			return finalize_1.finalize;
 		}
 	});
-	var find_1 = require_request_CycLCCas.gt();
+	var find_1 = require_request_Boa4xq42.gt();
 	Object.defineProperty(exports, "find", {
 		enumerable: !0,
 		get: function() {
 			return find_1.find;
 		}
 	});
-	var findIndex_1 = require_request_CycLCCas.ht();
+	var findIndex_1 = require_request_Boa4xq42.ht();
 	Object.defineProperty(exports, "findIndex", {
 		enumerable: !0,
 		get: function() {
 			return findIndex_1.findIndex;
 		}
 	});
-	var first_1 = require_request_CycLCCas.mt();
+	var first_1 = require_request_Boa4xq42.mt();
 	Object.defineProperty(exports, "first", {
 		enumerable: !0,
 		get: function() {
 			return first_1.first;
 		}
 	});
-	var groupBy_1 = require_request_CycLCCas.pt();
+	var groupBy_1 = require_request_Boa4xq42.pt();
 	Object.defineProperty(exports, "groupBy", {
 		enumerable: !0,
 		get: function() {
 			return groupBy_1.groupBy;
 		}
 	});
-	var ignoreElements_1 = require_request_CycLCCas.Nt();
+	var ignoreElements_1 = require_request_Boa4xq42.Nt();
 	Object.defineProperty(exports, "ignoreElements", {
 		enumerable: !0,
 		get: function() {
 			return ignoreElements_1.ignoreElements;
 		}
 	});
-	var isEmpty_1 = require_request_CycLCCas.ft();
+	var isEmpty_1 = require_request_Boa4xq42.ft();
 	Object.defineProperty(exports, "isEmpty", {
 		enumerable: !0,
 		get: function() {
 			return isEmpty_1.isEmpty;
 		}
 	});
-	var last_1 = require_request_CycLCCas.ut();
+	var last_1 = require_request_Boa4xq42.ut();
 	Object.defineProperty(exports, "last", {
 		enumerable: !0,
 		get: function() {
 			return last_1.last;
 		}
 	});
-	var map_1 = require_request_CycLCCas.un();
+	var map_1 = require_request_Boa4xq42.un();
 	Object.defineProperty(exports, "map", {
 		enumerable: !0,
 		get: function() {
 			return map_1.map;
 		}
 	});
-	var mapTo_1 = require_request_CycLCCas.Mt();
+	var mapTo_1 = require_request_Boa4xq42.Mt();
 	Object.defineProperty(exports, "mapTo", {
 		enumerable: !0,
 		get: function() {
 			return mapTo_1.mapTo;
 		}
 	});
-	var materialize_1 = require_request_CycLCCas.lt();
+	var materialize_1 = require_request_Boa4xq42.lt();
 	Object.defineProperty(exports, "materialize", {
 		enumerable: !0,
 		get: function() {
 			return materialize_1.materialize;
 		}
 	});
-	var max_1 = require_request_CycLCCas.ct();
+	var max_1 = require_request_Boa4xq42.ct();
 	Object.defineProperty(exports, "max", {
 		enumerable: !0,
 		get: function() {
 			return max_1.max;
 		}
 	});
-	var merge_1 = require_request_CycLCCas.it();
+	var merge_1 = require_request_Boa4xq42.it();
 	Object.defineProperty(exports, "merge", {
 		enumerable: !0,
 		get: function() {
 			return merge_1.merge;
 		}
 	});
-	var mergeAll_1 = require_request_CycLCCas.cn();
+	var mergeAll_1 = require_request_Boa4xq42.cn();
 	Object.defineProperty(exports, "mergeAll", {
 		enumerable: !0,
 		get: function() {
 			return mergeAll_1.mergeAll;
 		}
 	});
-	var flatMap_1 = require_request_CycLCCas.st();
+	var flatMap_1 = require_request_Boa4xq42.st();
 	Object.defineProperty(exports, "flatMap", {
 		enumerable: !0,
 		get: function() {
 			return flatMap_1.flatMap;
 		}
 	});
-	var mergeMap_1 = require_request_CycLCCas.ln();
+	var mergeMap_1 = require_request_Boa4xq42.ln();
 	Object.defineProperty(exports, "mergeMap", {
 		enumerable: !0,
 		get: function() {
 			return mergeMap_1.mergeMap;
 		}
 	});
-	var mergeMapTo_1 = require_request_CycLCCas.ot();
+	var mergeMapTo_1 = require_request_Boa4xq42.ot();
 	Object.defineProperty(exports, "mergeMapTo", {
 		enumerable: !0,
 		get: function() {
 			return mergeMapTo_1.mergeMapTo;
 		}
 	});
-	var mergeScan_1 = require_request_CycLCCas.at();
+	var mergeScan_1 = require_request_Boa4xq42.at();
 	Object.defineProperty(exports, "mergeScan", {
 		enumerable: !0,
 		get: function() {
 			return mergeScan_1.mergeScan;
 		}
 	});
-	var mergeWith_1 = require_request_CycLCCas.rt();
+	var mergeWith_1 = require_request_Boa4xq42.rt();
 	Object.defineProperty(exports, "mergeWith", {
 		enumerable: !0,
 		get: function() {
 			return mergeWith_1.mergeWith;
 		}
 	});
-	var min_1 = require_request_CycLCCas.nt();
+	var min_1 = require_request_Boa4xq42.nt();
 	Object.defineProperty(exports, "min", {
 		enumerable: !0,
 		get: function() {
 			return min_1.min;
 		}
 	});
-	var multicast_1 = require_request_CycLCCas.tt();
+	var multicast_1 = require_request_Boa4xq42.tt();
 	Object.defineProperty(exports, "multicast", {
 		enumerable: !0,
 		get: function() {
 			return multicast_1.multicast;
 		}
 	});
-	var observeOn_1 = require_request_CycLCCas.pn();
+	var observeOn_1 = require_request_Boa4xq42.pn();
 	Object.defineProperty(exports, "observeOn", {
 		enumerable: !0,
 		get: function() {
 			return observeOn_1.observeOn;
 		}
 	});
-	var onErrorResumeNextWith_1 = require_request_CycLCCas.et();
+	var onErrorResumeNextWith_1 = require_request_Boa4xq42.et();
 	Object.defineProperty(exports, "onErrorResumeNext", {
 		enumerable: !0,
 		get: function() {
 			return onErrorResumeNextWith_1.onErrorResumeNext;
 		}
 	});
-	var pairwise_1 = require_request_CycLCCas.$();
+	var pairwise_1 = require_request_Boa4xq42.$();
 	Object.defineProperty(exports, "pairwise", {
 		enumerable: !0,
 		get: function() {
@@ -1608,35 +1608,35 @@ var require_partition = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) =
 			return partition_1.partition;
 		}
 	});
-	var pluck_1 = require_request_CycLCCas.Q();
+	var pluck_1 = require_request_Boa4xq42.Q();
 	Object.defineProperty(exports, "pluck", {
 		enumerable: !0,
 		get: function() {
 			return pluck_1.pluck;
 		}
 	});
-	var publish_1 = require_request_CycLCCas.Z();
+	var publish_1 = require_request_Boa4xq42.Z();
 	Object.defineProperty(exports, "publish", {
 		enumerable: !0,
 		get: function() {
 			return publish_1.publish;
 		}
 	});
-	var publishBehavior_1 = require_request_CycLCCas.X();
+	var publishBehavior_1 = require_request_Boa4xq42.X();
 	Object.defineProperty(exports, "publishBehavior", {
 		enumerable: !0,
 		get: function() {
 			return publishBehavior_1.publishBehavior;
 		}
 	});
-	var publishLast_1 = require_request_CycLCCas.Y();
+	var publishLast_1 = require_request_Boa4xq42.Y();
 	Object.defineProperty(exports, "publishLast", {
 		enumerable: !0,
 		get: function() {
 			return publishLast_1.publishLast;
 		}
 	});
-	var publishReplay_1 = require_request_CycLCCas.J();
+	var publishReplay_1 = require_request_Boa4xq42.J();
 	Object.defineProperty(exports, "publishReplay", {
 		enumerable: !0,
 		get: function() {
@@ -1650,322 +1650,322 @@ var require_partition = /* @__PURE__ */ require_request_CycLCCas.vn(((exports) =
 			return race_1.race;
 		}
 	});
-	var raceWith_1 = require_request_CycLCCas.q();
+	var raceWith_1 = require_request_Boa4xq42.q();
 	Object.defineProperty(exports, "raceWith", {
 		enumerable: !0,
 		get: function() {
 			return raceWith_1.raceWith;
 		}
 	});
-	var reduce_1 = require_request_CycLCCas.Yt();
+	var reduce_1 = require_request_Boa4xq42.Yt();
 	Object.defineProperty(exports, "reduce", {
 		enumerable: !0,
 		get: function() {
 			return reduce_1.reduce;
 		}
 	});
-	var repeat_1 = require_request_CycLCCas.K();
+	var repeat_1 = require_request_Boa4xq42.K();
 	Object.defineProperty(exports, "repeat", {
 		enumerable: !0,
 		get: function() {
 			return repeat_1.repeat;
 		}
 	});
-	var repeatWhen_1 = require_request_CycLCCas.G();
+	var repeatWhen_1 = require_request_Boa4xq42.G();
 	Object.defineProperty(exports, "repeatWhen", {
 		enumerable: !0,
 		get: function() {
 			return repeatWhen_1.repeatWhen;
 		}
 	});
-	var retry_1 = require_request_CycLCCas.W();
+	var retry_1 = require_request_Boa4xq42.W();
 	Object.defineProperty(exports, "retry", {
 		enumerable: !0,
 		get: function() {
 			return retry_1.retry;
 		}
 	});
-	var retryWhen_1 = require_request_CycLCCas.U();
+	var retryWhen_1 = require_request_Boa4xq42.U();
 	Object.defineProperty(exports, "retryWhen", {
 		enumerable: !0,
 		get: function() {
 			return retryWhen_1.retryWhen;
 		}
 	});
-	var refCount_1 = require_request_CycLCCas.mn();
+	var refCount_1 = require_request_Boa4xq42.mn();
 	Object.defineProperty(exports, "refCount", {
 		enumerable: !0,
 		get: function() {
 			return refCount_1.refCount;
 		}
 	});
-	var sample_1 = require_request_CycLCCas.H();
+	var sample_1 = require_request_Boa4xq42.H();
 	Object.defineProperty(exports, "sample", {
 		enumerable: !0,
 		get: function() {
 			return sample_1.sample;
 		}
 	});
-	var sampleTime_1 = require_request_CycLCCas.V();
+	var sampleTime_1 = require_request_Boa4xq42.V();
 	Object.defineProperty(exports, "sampleTime", {
 		enumerable: !0,
 		get: function() {
 			return sampleTime_1.sampleTime;
 		}
 	});
-	var scan_1 = require_request_CycLCCas.B();
+	var scan_1 = require_request_Boa4xq42.B();
 	Object.defineProperty(exports, "scan", {
 		enumerable: !0,
 		get: function() {
 			return scan_1.scan;
 		}
 	});
-	var sequenceEqual_1 = require_request_CycLCCas.z();
+	var sequenceEqual_1 = require_request_Boa4xq42.z();
 	Object.defineProperty(exports, "sequenceEqual", {
 		enumerable: !0,
 		get: function() {
 			return sequenceEqual_1.sequenceEqual;
 		}
 	});
-	var share_1 = require_request_CycLCCas.R();
+	var share_1 = require_request_Boa4xq42.R();
 	Object.defineProperty(exports, "share", {
 		enumerable: !0,
 		get: function() {
 			return share_1.share;
 		}
 	});
-	var shareReplay_1 = require_request_CycLCCas.L();
+	var shareReplay_1 = require_request_Boa4xq42.L();
 	Object.defineProperty(exports, "shareReplay", {
 		enumerable: !0,
 		get: function() {
 			return shareReplay_1.shareReplay;
 		}
 	});
-	var single_1 = require_request_CycLCCas.I();
+	var single_1 = require_request_Boa4xq42.I();
 	Object.defineProperty(exports, "single", {
 		enumerable: !0,
 		get: function() {
 			return single_1.single;
 		}
 	});
-	var skip_1 = require_request_CycLCCas.F();
+	var skip_1 = require_request_Boa4xq42.F();
 	Object.defineProperty(exports, "skip", {
 		enumerable: !0,
 		get: function() {
 			return skip_1.skip;
 		}
 	});
-	var skipLast_1 = require_request_CycLCCas.P();
+	var skipLast_1 = require_request_Boa4xq42.P();
 	Object.defineProperty(exports, "skipLast", {
 		enumerable: !0,
 		get: function() {
 			return skipLast_1.skipLast;
 		}
 	});
-	var skipUntil_1 = require_request_CycLCCas.N();
+	var skipUntil_1 = require_request_Boa4xq42.N();
 	Object.defineProperty(exports, "skipUntil", {
 		enumerable: !0,
 		get: function() {
 			return skipUntil_1.skipUntil;
 		}
 	});
-	var skipWhile_1 = require_request_CycLCCas.M();
+	var skipWhile_1 = require_request_Boa4xq42.M();
 	Object.defineProperty(exports, "skipWhile", {
 		enumerable: !0,
 		get: function() {
 			return skipWhile_1.skipWhile;
 		}
 	});
-	var startWith_1 = require_request_CycLCCas.j();
+	var startWith_1 = require_request_Boa4xq42.j();
 	Object.defineProperty(exports, "startWith", {
 		enumerable: !0,
 		get: function() {
 			return startWith_1.startWith;
 		}
 	});
-	var subscribeOn_1 = require_request_CycLCCas.fn();
+	var subscribeOn_1 = require_request_Boa4xq42.fn();
 	Object.defineProperty(exports, "subscribeOn", {
 		enumerable: !0,
 		get: function() {
 			return subscribeOn_1.subscribeOn;
 		}
 	});
-	var switchAll_1 = require_request_CycLCCas.k();
+	var switchAll_1 = require_request_Boa4xq42.k();
 	Object.defineProperty(exports, "switchAll", {
 		enumerable: !0,
 		get: function() {
 			return switchAll_1.switchAll;
 		}
 	});
-	var switchMap_1 = require_request_CycLCCas.A();
+	var switchMap_1 = require_request_Boa4xq42.A();
 	Object.defineProperty(exports, "switchMap", {
 		enumerable: !0,
 		get: function() {
 			return switchMap_1.switchMap;
 		}
 	});
-	var switchMapTo_1 = require_request_CycLCCas.O();
+	var switchMapTo_1 = require_request_Boa4xq42.O();
 	Object.defineProperty(exports, "switchMapTo", {
 		enumerable: !0,
 		get: function() {
 			return switchMapTo_1.switchMapTo;
 		}
 	});
-	var switchScan_1 = require_request_CycLCCas.D();
+	var switchScan_1 = require_request_Boa4xq42.D();
 	Object.defineProperty(exports, "switchScan", {
 		enumerable: !0,
 		get: function() {
 			return switchScan_1.switchScan;
 		}
 	});
-	var take_1 = require_request_CycLCCas.Pt();
+	var take_1 = require_request_Boa4xq42.Pt();
 	Object.defineProperty(exports, "take", {
 		enumerable: !0,
 		get: function() {
 			return take_1.take;
 		}
 	});
-	var takeLast_1 = require_request_CycLCCas.dt();
+	var takeLast_1 = require_request_Boa4xq42.dt();
 	Object.defineProperty(exports, "takeLast", {
 		enumerable: !0,
 		get: function() {
 			return takeLast_1.takeLast;
 		}
 	});
-	var takeUntil_1 = require_request_CycLCCas.E();
+	var takeUntil_1 = require_request_Boa4xq42.E();
 	Object.defineProperty(exports, "takeUntil", {
 		enumerable: !0,
 		get: function() {
 			return takeUntil_1.takeUntil;
 		}
 	});
-	var takeWhile_1 = require_request_CycLCCas.T();
+	var takeWhile_1 = require_request_Boa4xq42.T();
 	Object.defineProperty(exports, "takeWhile", {
 		enumerable: !0,
 		get: function() {
 			return takeWhile_1.takeWhile;
 		}
 	});
-	var tap_1 = require_request_CycLCCas.w();
+	var tap_1 = require_request_Boa4xq42.w();
 	Object.defineProperty(exports, "tap", {
 		enumerable: !0,
 		get: function() {
 			return tap_1.tap;
 		}
 	});
-	var throttle_1 = require_request_CycLCCas.C();
+	var throttle_1 = require_request_Boa4xq42.C();
 	Object.defineProperty(exports, "throttle", {
 		enumerable: !0,
 		get: function() {
 			return throttle_1.throttle;
 		}
 	});
-	var throttleTime_1 = require_request_CycLCCas.S();
+	var throttleTime_1 = require_request_Boa4xq42.S();
 	Object.defineProperty(exports, "throttleTime", {
 		enumerable: !0,
 		get: function() {
 			return throttleTime_1.throttleTime;
 		}
 	});
-	var throwIfEmpty_1 = require_request_CycLCCas.Tt();
+	var throwIfEmpty_1 = require_request_Boa4xq42.Tt();
 	Object.defineProperty(exports, "throwIfEmpty", {
 		enumerable: !0,
 		get: function() {
 			return throwIfEmpty_1.throwIfEmpty;
 		}
 	});
-	var timeInterval_1 = require_request_CycLCCas.x();
+	var timeInterval_1 = require_request_Boa4xq42.x();
 	Object.defineProperty(exports, "timeInterval", {
 		enumerable: !0,
 		get: function() {
 			return timeInterval_1.timeInterval;
 		}
 	});
-	var timeout_1 = require_request_CycLCCas.dn();
+	var timeout_1 = require_request_Boa4xq42.dn();
 	Object.defineProperty(exports, "timeout", {
 		enumerable: !0,
 		get: function() {
 			return timeout_1.timeout;
 		}
 	});
-	var timeoutWith_1 = require_request_CycLCCas.b();
+	var timeoutWith_1 = require_request_Boa4xq42.b();
 	Object.defineProperty(exports, "timeoutWith", {
 		enumerable: !0,
 		get: function() {
 			return timeoutWith_1.timeoutWith;
 		}
 	});
-	var timestamp_1 = require_request_CycLCCas.y();
+	var timestamp_1 = require_request_Boa4xq42.y();
 	Object.defineProperty(exports, "timestamp", {
 		enumerable: !0,
 		get: function() {
 			return timestamp_1.timestamp;
 		}
 	});
-	var toArray_1 = require_request_CycLCCas.Jt();
+	var toArray_1 = require_request_Boa4xq42.Jt();
 	Object.defineProperty(exports, "toArray", {
 		enumerable: !0,
 		get: function() {
 			return toArray_1.toArray;
 		}
 	});
-	var window_1 = require_request_CycLCCas.v();
+	var window_1 = require_request_Boa4xq42.v();
 	Object.defineProperty(exports, "window", {
 		enumerable: !0,
 		get: function() {
 			return window_1.window;
 		}
 	});
-	var windowCount_1 = require_request_CycLCCas._();
+	var windowCount_1 = require_request_Boa4xq42._();
 	Object.defineProperty(exports, "windowCount", {
 		enumerable: !0,
 		get: function() {
 			return windowCount_1.windowCount;
 		}
 	});
-	var windowTime_1 = require_request_CycLCCas.g();
+	var windowTime_1 = require_request_Boa4xq42.g();
 	Object.defineProperty(exports, "windowTime", {
 		enumerable: !0,
 		get: function() {
 			return windowTime_1.windowTime;
 		}
 	});
-	var windowToggle_1 = require_request_CycLCCas.h();
+	var windowToggle_1 = require_request_Boa4xq42.h();
 	Object.defineProperty(exports, "windowToggle", {
 		enumerable: !0,
 		get: function() {
 			return windowToggle_1.windowToggle;
 		}
 	});
-	var windowWhen_1 = require_request_CycLCCas.m();
+	var windowWhen_1 = require_request_Boa4xq42.m();
 	Object.defineProperty(exports, "windowWhen", {
 		enumerable: !0,
 		get: function() {
 			return windowWhen_1.windowWhen;
 		}
 	});
-	var withLatestFrom_1 = require_request_CycLCCas.p();
+	var withLatestFrom_1 = require_request_Boa4xq42.p();
 	Object.defineProperty(exports, "withLatestFrom", {
 		enumerable: !0,
 		get: function() {
 			return withLatestFrom_1.withLatestFrom;
 		}
 	});
-	var zip_1 = require_request_CycLCCas.d();
+	var zip_1 = require_request_Boa4xq42.d();
 	Object.defineProperty(exports, "zip", {
 		enumerable: !0,
 		get: function() {
 			return zip_1.zip;
 		}
 	});
-	var zipAll_1 = require_request_CycLCCas.f();
+	var zipAll_1 = require_request_Boa4xq42.f();
 	Object.defineProperty(exports, "zipAll", {
 		enumerable: !0,
 		get: function() {
 			return zipAll_1.zipAll;
 		}
 	});
-	var zipWith_1 = require_request_CycLCCas.u();
+	var zipWith_1 = require_request_Boa4xq42.u();
 	Object.defineProperty(exports, "zipWith", {
 		enumerable: !0,
 		get: function() {
@@ -2707,7 +2707,7 @@ function utf8ToByteString(value) {
 	for (let byte of new TextEncoder().encode(value)) byteString += String.fromCharCode(byte);
 	return byteString;
 }
-var import_cjs = require_request_CycLCCas.l(), import_operators = require_operators();
+var import_cjs = require_request_Boa4xq42.l(), import_operators = require_operators();
 /**
 * Coerce \`value\`.
 */
@@ -3250,7 +3250,7 @@ function extractErrorMessage(err, tag) {
 		return typeof message == "string" && message || "Unknown listener error";
 	}
 	if (require_isRecord_Kfmt_nk_.t(error)) {
-		if (require_request_CycLCCas.s(error)) return require_request_CycLCCas.a(error, tag);
+		if (require_request_Boa4xq42.s(error)) return require_request_Boa4xq42.a(error, tag);
 		if (typeof error.description == "string") return error.description;
 	}
 	return typeof error == "string" ? error : JSON.stringify(error, null, 2);
@@ -4338,7 +4338,7 @@ function _prepareAuthenticatedRequest(client, options) {
 */
 function _prepareAuthenticatedRequestObservable(client, options) {
 	return new import_cjs.Observable((subscriber) => {
-		let controller = new AbortController(), signal = getStaticAuth(client.config()) === void 0 ? options.signal ? require_request_CycLCCas.gn([options.signal, controller.signal]) : controller.signal : void 0, settled = !1, emit = (request) => {
+		let controller = new AbortController(), signal = getStaticAuth(client.config()) === void 0 ? options.signal ? require_request_Boa4xq42.gn([options.signal, controller.signal]) : controller.signal : void 0, settled = !1, emit = (request) => {
 			settled = !0, subscriber.next(request), subscriber.complete();
 		}, prepared = _prepareAuthenticatedRequest(client, signal ? {
 			...options,
@@ -4393,7 +4393,7 @@ function requestTimeoutMs(request) {
 function _observe(userSignal, run) {
 	return new import_cjs.Observable((subscriber) => {
 		let controller = new AbortController();
-		return run(userSignal ? require_request_CycLCCas.gn([userSignal, controller.signal]) : controller.signal).then((value) => {
+		return run(userSignal ? require_request_Boa4xq42.gn([userSignal, controller.signal]) : controller.signal).then((value) => {
 			subscriber.next(value), subscriber.complete();
 		}, (err) => subscriber.error(err)), () => controller.abort();
 	});
@@ -4669,7 +4669,7 @@ function _upload(client, _httpRequest, assetType, body, opts = {}) {
 		query,
 		body
 	};
-	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(() => Promise.resolve().then(() => require("./browserUpload-RbNSlau1-[hash].cjs"))).pipe((0, import_operators.mergeMap)(({ uploadWithProgress }) => _prepareAuthenticatedRequestObservable(client, { ...baseRequest }).pipe((0, import_operators.mergeMap)((req) => uploadWithProgress({
+	return typeof XMLHttpRequest < "u" ? (0, import_cjs.defer)(() => Promise.resolve().then(() => require("./browserUpload-CsYGEmb9-[hash].cjs"))).pipe((0, import_operators.mergeMap)(({ uploadWithProgress }) => _prepareAuthenticatedRequestObservable(client, { ...baseRequest }).pipe((0, import_operators.mergeMap)((req) => uploadWithProgress({
 		url: appendQuery(req.url, req.query),
 		method: req.method ?? "POST",
 		headers: req.headers,
@@ -4705,7 +4705,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var name = "@sanity/client", version = "8.15.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.15.1", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), RETRYABLE_STATUSES = /* @__PURE__ */ new Set([408, 429]);
 /**
 * Note: connection failure is not the same as network disconnect which may happen more frequent.
@@ -5287,6 +5287,214 @@ var ObservableCollaborationCommentsClient = class {
 		return _listen$1(this.#client, query, params, options);
 	}
 };
+const ENTRY_TYPE = "sanity.context.entry", ISSUE_TYPE = "sanity.context.issue", MCP_TYPE = "sanity.context.mcp";
+function knowledgeBaseId(client) {
+	let resource = client.config().resource;
+	if (resource?.type !== "knowledge-base") throw Error("\`resource\` of type \`knowledge-base\` must be configured to use knowledge-base methods");
+	return resource.id;
+}
+function organizationId(client) {
+	let id = client.config().context?.organizationId;
+	if (!id) throw Error("\`context.organizationId\` must be configured to use MCP endpoints");
+	return id;
+}
+function removed(name) {
+	throw Error(\`\\\`client.context.\${name}\\\` was removed with the Context API's imports. Upgrade the Sanity CLI, or use \\\`client.context.request\\\` with the sources, syncs and documents routes.\`);
+}
+async function drainByCreatedAt(fetch, filter, params, options) {
+	let all = [], cursor;
+	for (;;) {
+		let page = await fetch(\`*[\${cursor ? \`\${filter} && (_createdAt > \\$c || (_createdAt == \\$c && _id > \\$i))\` : filter}] | order(_createdAt asc, _id asc) [0...200]\`, cursor ? {
+			...params,
+			...cursor
+		} : params, options);
+		if (all.push(...page), page.length < 200) return all;
+		let last = page[page.length - 1];
+		cursor = {
+			c: last._createdAt,
+			i: last._id
+		};
+	}
+}
+/** @internal */
+function legacyNamespaces(client, request, fetch) {
+	let kb = () => ({ knowledgeBaseId: knowledgeBaseId(client()) });
+	return {
+		knowledgeBases: {
+			create: (params, options) => request("POST /knowledge-bases", {
+				body: params,
+				...options
+			}),
+			list: (params) => {
+				let { signal, tag, ...query } = params;
+				return request("GET /knowledge-bases", {
+					query,
+					signal,
+					tag
+				});
+			},
+			get: (id, options) => request("GET /knowledge-bases/{knowledgeBaseId}", {
+				params: { knowledgeBaseId: id },
+				...options
+			}),
+			edit: (id, params, options) => request("PATCH /knowledge-bases/{knowledgeBaseId}", {
+				params: { knowledgeBaseId: id },
+				body: params,
+				...options
+			}),
+			delete: async (id, options) => {
+				await request("DELETE /knowledge-bases/{knowledgeBaseId}", {
+					params: { knowledgeBaseId: id },
+					...options
+				});
+			}
+		},
+		build: (options) => request("POST /knowledge-bases/{knowledgeBaseId}/build", {
+			params: kb(),
+			...options
+		}),
+		cancelBuild: (options) => request("POST /knowledge-bases/{knowledgeBaseId}/build/cancel", {
+			params: kb(),
+			...options
+		}),
+		refresh: () => removed("refresh()"),
+		imports: {
+			create: () => removed("imports.create"),
+			list: () => removed("imports.list"),
+			get: () => removed("imports.get"),
+			download: () => removed("imports.download"),
+			delete: () => removed("imports.delete")
+		},
+		jobs: { get: (params, options) => request("GET /knowledge-bases/{knowledgeBaseId}/jobs/{jobId}", {
+			params: {
+				...kb(),
+				jobId: params.jobId
+			},
+			...options
+		}) },
+		issues: {
+			list: (params, options) => {
+				let status = params?.status;
+				return drainByCreatedAt(fetch, \`_type == "\${ISSUE_TYPE}" && knowledgeBaseId == $kb\${status ? " && status == $status" : ""}\`, status ? {
+					kb: kb().knowledgeBaseId,
+					status
+				} : { kb: kb().knowledgeBaseId }, options);
+			},
+			get: (params, options) => fetch(\`*[_type == "\${ISSUE_TYPE}" && knowledgeBaseId == $kb && _id == $id][0]\`, {
+				kb: kb().knowledgeBaseId,
+				id: params.issueId
+			}, options),
+			resolve: (params, options) => {
+				let { issueId, ...body } = params;
+				return request("POST /knowledge-bases/{knowledgeBaseId}/issues/{issueId}/resolve", {
+					params: {
+						...kb(),
+						issueId
+					},
+					body,
+					...options
+				});
+			},
+			dismiss: (params, options) => request("POST /knowledge-bases/{knowledgeBaseId}/issues/{issueId}/dismiss", {
+				params: {
+					...kb(),
+					issueId: params.issueId
+				},
+				...options
+			}),
+			reopen: (params, options) => request("POST /knowledge-bases/{knowledgeBaseId}/issues/{issueId}/reopen", {
+				params: {
+					...kb(),
+					issueId: params.issueId
+				},
+				...options
+			}),
+			apply: (params, options) => request("POST /knowledge-bases/{knowledgeBaseId}/issues/apply", {
+				params: kb(),
+				body: params,
+				...options
+			})
+		},
+		entries: {
+			list: async (options) => {
+				let all = [], after = "";
+				for (;;) {
+					let page = await fetch(\`*[_type == "\${ENTRY_TYPE}" && knowledgeBaseId == $kb && path > $after] | order(path asc) [0...200] {_id, path, title, tldr, status}\`, {
+						kb: kb().knowledgeBaseId,
+						after
+					}, options);
+					if (all.push(...page), page.length < 200) return all;
+					after = page[page.length - 1].path;
+				}
+			},
+			get: (params, options) => fetch(\`*[_type == "\${ENTRY_TYPE}" && knowledgeBaseId == $kb && path == $path][0]\`, {
+				kb: kb().knowledgeBaseId,
+				path: params.path
+			}, options),
+			rebuild: (params, options) => request("POST /knowledge-bases/{knowledgeBaseId}/entries/{entryPath}/rebuild", {
+				params: {
+					...kb(),
+					entryPath: params.path
+				},
+				...options
+			})
+		},
+		mcpEndpoints: {
+			list: (options) => fetch(\`*[_type == "\${MCP_TYPE}" && organizationId == $org] | order(_createdAt asc, _id asc) [0...500]\`, { org: organizationId(client()) }, options),
+			get: (params, options) => fetch(\`*[_type == "\${MCP_TYPE}" && organizationId == $org && name == $name][0]\`, {
+				org: organizationId(client()),
+				name: params.name
+			}, options),
+			create: (params, options) => request("POST /organizations/{organizationId}/mcp", {
+				params: { organizationId: organizationId(client()) },
+				body: params,
+				...options
+			}),
+			edit: (params, options) => {
+				let { name, ...body } = params;
+				return request("PATCH /organizations/{organizationId}/mcp/{mcpEndpoint}", {
+					params: {
+						organizationId: organizationId(client()),
+						mcpEndpoint: name
+					},
+					body,
+					...options
+				});
+			},
+			status: (params, options) => {
+				let { name, ...query } = params;
+				return request("GET /organizations/{organizationId}/mcp/{mcpEndpoint}/status", {
+					params: {
+						organizationId: organizationId(client()),
+						mcpEndpoint: name
+					},
+					query,
+					...options
+				});
+			},
+			delete: async (params, options) => {
+				await request("DELETE /organizations/{organizationId}/mcp/{mcpEndpoint}", {
+					params: {
+						organizationId: organizationId(client()),
+						mcpEndpoint: params.name
+					},
+					...options
+				});
+			},
+			initialContext: (params, options) => {
+				let { name, ...query } = params;
+				return request("GET /organizations/{organizationId}/mcp/{mcpEndpoint}/initial-context", {
+					params: {
+						organizationId: organizationId(client()),
+						mcpEndpoint: name
+					},
+					query,
+					...options
+				});
+			}
+		}
+	};
+}
 function _organizationId(client) {
 	let organizationId = client.config().context?.organizationId;
 	if (!organizationId) throw Error("\`context.organizationId\` must be configured to query Context documents");
@@ -5399,6 +5607,25 @@ var ContextClient = class {
 	constructor(client, httpRequest) {
 		this.#client = client, this.#httpRequest = httpRequest;
 	}
+	#legacy = legacyNamespaces(() => this.#client, this.request.bind(this), this.fetch.bind(this));
+	/** @deprecated Use \`request\` with the \`/knowledge-bases\` routes. Kept for Sanity CLI 8.27 and earlier. */
+	knowledgeBases = this.#legacy.knowledgeBases;
+	/** @deprecated Use \`request\` with the MCP endpoint routes. Kept for Sanity CLI 8.27 and earlier. */
+	mcpEndpoints = this.#legacy.mcpEndpoints;
+	/** @deprecated Use \`request\` and \`fetch\`. Kept for Sanity CLI 8.27 and earlier. */
+	entries = this.#legacy.entries;
+	/** @deprecated Use \`request\` and \`fetch\`. Kept for Sanity CLI 8.27 and earlier. */
+	issues = this.#legacy.issues;
+	/** @deprecated Use \`request\`. Kept for Sanity CLI 8.27 and earlier. */
+	jobs = this.#legacy.jobs;
+	/** @deprecated Use \`request('POST /knowledge-bases/{knowledgeBaseId}/build')\`. Kept for Sanity CLI 8.27 and earlier. */
+	build = this.#legacy.build;
+	/** @deprecated Use \`request('POST /knowledge-bases/{knowledgeBaseId}/build/cancel')\`. Kept for Sanity CLI 8.27 and earlier. */
+	cancelBuild = this.#legacy.cancelBuild;
+	/** @deprecated Removed with the imports API; throws. Use the sources, syncs and documents routes. */
+	imports = this.#legacy.imports;
+	/** @deprecated Removed with the imports API; throws. Use \`request('POST /knowledge-bases/{knowledgeBaseId}/sync')\`. */
+	refresh = this.#legacy.refresh;
 	/**
 	* Call a Context API operation. Resolves with the success response body,
 	* or \`undefined\` for \`204 No Content\`; rejects with the API's error.
@@ -5652,10 +5879,10 @@ function checkCorsObservable(url, projectId, sentCredentials, fetcher) {
 		}).then((text) => {
 			if (signal.aborted) return;
 			let parsed = text === void 0 ? void 0 : JSON.parse(text), result = require_isRecord_Kfmt_nk_.t(parsed) ? parsed.result : void 0;
-			requireCredentials && require_isRecord_Kfmt_nk_.t(result) && result.withCredentials === !1 ? observer.error(new require_request_CycLCCas.n({
+			requireCredentials && require_isRecord_Kfmt_nk_.t(result) && result.withCredentials === !1 ? observer.error(new require_request_Boa4xq42.n({
 				projectId,
 				credentials: !0
-			})) : require_isRecord_Kfmt_nk_.t(result) && result.allowed === !1 ? observer.error(new require_request_CycLCCas.n({
+			})) : require_isRecord_Kfmt_nk_.t(result) && result.allowed === !1 ? observer.error(new require_request_Boa4xq42.n({
 				projectId,
 				credentials: requireCredentials
 			})) : (observer.next(), observer.complete());
@@ -7342,8 +7569,8 @@ var ObservableReleasesClient = class {
 * @internal
 */
 function defineCreateClientExports(envOptions, ClassConstructor) {
-	let defaultRequester = require_request_CycLCCas.i(envOptions).observable, createClient = (config) => {
-		let { observable: clientRequester, promise: clientRequesterPromise } = require_request_CycLCCas.i(envOptions, {
+	let defaultRequester = require_request_Boa4xq42.i(envOptions).observable, createClient = (config) => {
+		let { observable: clientRequester, promise: clientRequesterPromise } = require_request_Boa4xq42.i(envOptions, {
 			ignoreWarnings: config.ignoreWarnings,
 			maxRetries: config.maxRetries,
 			retryDelay: config.retryDelay
@@ -7362,15 +7589,11 @@ function defineCreateClientExports(envOptions, ClassConstructor) {
 		createClient
 	};
 }
-const log = createDebug("sanity:client");
-function isNodeReadableStream(value) {
-	return typeof value != "object" || !value || !("pipe" in value) ? !1 : typeof value.pipe == "function";
-}
-const proxyFetchCache = /* @__PURE__ */ new Map();
+const log = createDebug("sanity:client"), proxyFetchCache = /* @__PURE__ */ new Map();
 function getProxyFetch(proxyUrl) {
 	let cached = proxyFetchCache.get(proxyUrl);
 	if (cached) return cached;
-	let fetch = require_request_CycLCCas._n({
+	let fetch = require_request_Boa4xq42._n({
 		proxy: proxyUrl,
 		connections: 30
 	});
@@ -7391,29 +7614,20 @@ let envDefaultFetch;
 * @internal
 */
 function resolveFetch(proxyUrl) {
-	return typeof proxyUrl == "string" ? getProxyFetch(proxyUrl) : (envDefaultFetch ??= require_request_CycLCCas._n(), envDefaultFetch);
+	return typeof proxyUrl == "string" ? getProxyFetch(proxyUrl) : (envDefaultFetch ??= require_request_Boa4xq42._n(), envDefaultFetch);
 }
-const middleware = [
-	require_request_CycLCCas.hn({
-		log: (message, ...args) => log(message, ...args),
-		verbose: !0
-	}),
-	{ beforeRequest(opts) {
-		let configLineage = typeof opts.meta?.lineage == "string" ? opts.meta.lineage : void 0, lineage = typeof process < "u" && process.env.X_SANITY_LINEAGE || configLineage;
-		if (!lineage) return opts;
-		let headers = new Headers(opts.headers);
-		return headers.set("x-sanity-lineage", lineage), {
-			...opts,
-			headers
-		};
-	} },
-	{ beforeRequest(opts) {
-		return isNodeReadableStream(opts.body) ? {
-			...opts,
-			body: node_stream.Readable.toWeb(opts.body)
-		} : opts;
-	} }
-], exp = defineCreateClientExports({
+const middleware = [require_request_Boa4xq42.hn({
+	log: (message, ...args) => log(message, ...args),
+	verbose: !0
+}), { beforeRequest(opts) {
+	let configLineage = typeof opts.meta?.lineage == "string" ? opts.meta.lineage : void 0, lineage = typeof process < "u" && process.env.X_SANITY_LINEAGE || configLineage;
+	if (!lineage) return opts;
+	let headers = new Headers(opts.headers);
+	return headers.set("x-sanity-lineage", lineage), {
+		...opts,
+		headers
+	};
+} }], exp = defineCreateClientExports({
 	headers: { "User-Agent": \`\${name} \${version}\` },
 	middleware,
 	resolveFetch
