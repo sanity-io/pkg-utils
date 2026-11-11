@@ -115,6 +115,21 @@ test('a declaration-only build applies `dts.entry` to the inputs and omits it fr
   expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, cwd, dtsOnly: true})
 })
 
+test('a declaration-only `dts.entry` matches patterns that keep a ./ prefix', async () => {
+  const ctx = createContext(
+    {dts: {entry: ['./src/*.ts', '!./src/skip.ts']}},
+    {emitDeclarationOnly: true, sources: ['./src/index.ts', './src/skip.ts']},
+  )
+  const [build] = resolveTsdownBuilds(ctx)
+  if (!build) throw new Error('expected a build')
+
+  const inlineConfig = await resolveTsdownConfig(ctx, build, {clean: false})
+
+  expect(inlineConfig.entry).toEqual({index: './src/index.ts'})
+  expect(isEmptyRolldownEntry(inlineConfig.entry)).toBe(false)
+  expect(inlineConfig.dts).toEqual({tsc: {newContext: true}, dtsOnly: true})
+})
+
 test('a declaration-only filter that matches nothing leaves no Rolldown inputs', async () => {
   const ctx = createContext(
     {dts: {entry: 'src/absent.ts'}},

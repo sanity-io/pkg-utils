@@ -271,6 +271,16 @@ export function isEmptyRolldownEntry(entry: InlineConfig['entry']): boolean {
 }
 
 /**
+ * `path.relative` yields `src/index.ts`, while `exports.source` and tsdown entry globs often
+ * keep a `./` prefix. `path.matchesGlob` treats that prefix as literal, so strip it from both
+ * sides before comparing.
+ */
+function normalizeDeclarationGlob(value: string): string {
+  const normalized = value.replaceAll('\\', '/')
+  return normalized.startsWith('./') ? normalized.slice(2) : normalized
+}
+
+/**
  * Applies `dts.entry` to Rolldown's input for a declaration-only build, the same way tsdown
  * filters the CJS declaration pass. `!` patterns are exclusions. Paths are matched relative
  * to `dts.cwd`, falling back to the package directory.
@@ -285,12 +295,12 @@ function filterDeclarationEntries(
   const includes: string[] = []
   const ignores: string[] = []
   for (const pattern of typeof patterns === 'string' ? [patterns] : patterns) {
-    if (pattern.startsWith('!')) ignores.push(pattern.slice(1))
-    else includes.push(pattern)
+    if (pattern.startsWith('!')) ignores.push(normalizeDeclarationGlob(pattern.slice(1)))
+    else includes.push(normalizeDeclarationGlob(pattern))
   }
   return Object.fromEntries(
     Object.entries(entry).filter(([, file]) => {
-      const id = path.relative(dtsCwd, path.resolve(cwd, file)).replaceAll('\\', '/')
+      const id = normalizeDeclarationGlob(path.relative(dtsCwd, path.resolve(cwd, file)))
       return (
         includes.some((pattern) => path.matchesGlob(id, pattern)) &&
         ignores.every((pattern) => !path.matchesGlob(id, pattern))
