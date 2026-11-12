@@ -1,5 +1,23 @@
 # @sanity/tsdown-config
 
+## 0.31.3
+
+### Patch Changes
+
+- [#3713](https://github.com/sanity-io/pkg-utils/pull/3713) [`ccf0d44`](https://github.com/sanity-io/pkg-utils/commit/ccf0d44571090d224f0ba559efb4f35c99ef8ead) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.5
+
+- [#3736](https://github.com/sanity-io/pkg-utils/pull/3736) [`34fbc5c`](https://github.com/sanity-io/pkg-utils/commit/34fbc5c4507e2e61d2592eea60be9764c2039e05) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @microsoft/api-extractor to ^7.60.1
+
+- [#3731](https://github.com/sanity-io/pkg-utils/pull/3731) [`0a83842`](https://github.com/sanity-io/pkg-utils/commit/0a838425afae4db31972920338082a3ecb1c50c4) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update the rolldown/tsdown toolchain to latest (tsdown ^0.23.7, rolldown ~1.3.1, vite ^8.3.8, @vitejs/plugin-react ^6.3.0, @rolldown/plugin-babel ^0.3.1)
+
+  - `@sanity/pkg-utils` passes `dts.tsc.newContext` and `dts.dtsOnly` instead of the options rolldown-plugin-dts 0.29/0.30 deprecated, and drops a leftover top-level `newContext` so the two levels cannot conflict. A declaration-only build that sets `dts.entry` applies that filter to the build inputs and omits `entry`, because rolldown-plugin-dts 0.30 rejects `entry` together with `dtsOnly`. A leading `./` on those patterns, as in `exports.source`, is ignored so the filter still matches.
+  - `@sanity/tsdown-config`'s TSDoc check includes every `@types/*` package again when the tsconfig doesn't set `types`. API Extractor 7.60 bundles TypeScript 6, which defaults `types` to `[]`, so declarations that use an ambient global such as `React.JSX.Element` crashed the check with "Unable to follow symbol". The package now depends on API Extractor `^7.60.0`; 7.59 bundles TypeScript 5.9, which treats `types: ['*']` as a package name.
+  - `PackageCssOptions` no longer includes tsdown's new `css: false` value.
+  - Direct `tsdown` builds that keep the legacy `main`/`module` fields now get `"types": "./dist/index.d.cts"` instead of `./dist/index.d.ts`, matching `main`. tsdown always preferred the CJS declarations for this field; rolldown-plugin-dts 0.30 no longer hides them. `pkg build` writes the hand-written `types` value back after the canonical build, so packages built with `@sanity/pkg-utils` keep that field.
+
+- Updated dependencies []:
+  - @sanity/vanilla-extract-tsdown-plugin@0.5.2
+
 ## 0.31.2
 
 ### Patch Changes

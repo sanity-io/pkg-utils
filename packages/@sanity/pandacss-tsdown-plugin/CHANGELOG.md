@@ -1,5 +1,11 @@
 # @sanity/pandacss-tsdown-plugin
 
+## 0.3.2
+
+### Patch Changes
+
+- [#3695](https://github.com/sanity-io/pkg-utils/pull/3695) [`735fdfc`](https://github.com/sanity-io/pkg-utils/commit/735fdfc367236f3d57dde1caca103716aa46d53e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency postcss to ^8.5.32
+
 ## 0.3.1
 
 ### Patch Changes
