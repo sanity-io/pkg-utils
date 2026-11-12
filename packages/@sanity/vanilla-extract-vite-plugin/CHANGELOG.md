@@ -1,5 +1,12 @@
 # @sanity/vanilla-extract-vite-plugin
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [[`b62fa20`](https://github.com/sanity-io/pkg-utils/commit/b62fa20a7042b1f1480bd75d5f0e8bfaa6b49cc6)]:
+  - @sanity/vanilla-extract-integration@0.2.3
+
 ## 0.3.2
 
 ### Patch Changes
