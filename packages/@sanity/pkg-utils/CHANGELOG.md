@@ -1,5 +1,11 @@
 # @sanity/pkg-utils
 
+## 13.0.19
+
+### Patch Changes
+
+- [#3751](https://github.com/sanity-io/pkg-utils/pull/3751) [`cd09771`](https://github.com/sanity-io/pkg-utils/commit/cd09771e76253ec9838f9636649bd6620fb4b4d6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
 ## 13.0.18
 
 ### Patch Changes
