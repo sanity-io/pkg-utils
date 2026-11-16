@@ -8,6 +8,9 @@ packages:
 
 ignoreWorkspaceCycles: true
 
+lockfile:
+  format: v13
+
 # Deduplicate compatible dependency versions during installation (pnpm >= 12.6.0).
 autoDedupe: true
 
