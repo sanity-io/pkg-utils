@@ -1,0 +1,50 @@
+{
+  "name": "@sanity/oxfmt-config",
+  "version": "0.0.0",
+  "description": "Shared oxfmt config for Sanity repositories",
+  "keywords": [
+    "oxfmt",
+    "prettier",
+    "sanity"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/oxfmt-config#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/oxfmt-config"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./json": "./oxfmt.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "oxfmt.json"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "workspace:^",
+    "@types/node": "catalog:",
+    "oxfmt": "^0.79.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

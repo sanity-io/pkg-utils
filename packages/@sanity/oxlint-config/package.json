@@ -1,0 +1,50 @@
+{
+  "name": "@sanity/oxlint-config",
+  "version": "0.0.0",
+  "description": "Shared oxlint config for Sanity repositories",
+  "keywords": [
+    "oxlint",
+    "eslint",
+    "sanity"
+  ],
+  "homepage": "https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/oxlint-config#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/pkg-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/pkg-utils.git",
+    "directory": "packages/@sanity/oxlint-config"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./json": "./oxlintrc.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "oxlintrc.json"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "workspace:^",
+    "@types/node": "catalog:",
+    "oxlint": "^1.94.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

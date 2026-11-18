@@ -1,0 +1,73 @@
+import sharedConfig from '@sanity/oxlint-config'
+import {defineConfig} from 'oxlint'
+
+export default defineConfig({
+  extends: [sharedConfig],
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
+  plugins: ['typescript', 'unicorn', 'react', 'oxc', 'import', 'node', 'promise'],
+  ignorePatterns: ['**/dist/*', '**/.next/*', '**/lib/*', '**/test/env/__tmp__/*'],
+  categories: {
+    correctness: 'error',
+    suspicious: 'error',
+    perf: 'error',
+  },
+  rules: {
+    'import/no-cycle': 'error',
+    'import/no-unassigned-import': [
+      'error',
+      {
+        allow: ['**/*.css'],
+      },
+    ],
+    'oxc/no-barrel-file': 'error',
+    'eslint/no-console': [
+      'warn',
+      {
+        allow: ['warn', 'error'],
+      },
+    ],
+    'react/react-in-jsx-scope': 'off',
+    'eslint/no-await-in-loop': 'off',
+    'eslint/no-underscore-dangle': 'off',
+  },
+  overrides: [
+    {
+      files: ['bin/**', 'packages/**/bin/**'],
+      rules: {
+        'import/no-unassigned-import': 'off',
+      },
+    },
+    {
+      files: [
+        'playground/**',
+        'css-playground/**',
+        'test/**',
+        'packages/**/test/**',
+        '**/*.test.ts',
+        '**/*.test.js',
+        '**/*.test.tsx',
+        '**/*.test.jsx',
+        '**/test.cjs',
+      ],
+      rules: {
+        'eslint/no-console': 'off',
+        'eslint/no-unused-vars': 'off',
+        'triple-slash-reference': 'off',
+        'await-thenable': 'off',
+        'no-floating-promises': 'off',
+        'no-unnecessary-boolean-literal-compare': 'off',
+        'no-unnecessary-template-expression': 'off',
+        'no-unnecessary-type-arguments': 'off',
+        'no-unnecessary-type-assertion': 'off',
+        'no-unsafe-enum-comparison': 'off',
+        'no-unsafe-type-assertion': 'off',
+        'restrict-template-expressions': 'off',
+        'unbound-method': 'off',
+      },
+    },
+  ],
+})
