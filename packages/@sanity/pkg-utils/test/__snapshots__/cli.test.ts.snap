@@ -118,16 +118,11 @@ export { version };
 `;
 
 exports[`cli > should build \`multi-export\` package > ./dist/index.cjs 1`] = `
-"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-/** @public */
-function defineConfig(options) {
+"Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" }), exports.defineConfig = function defineConfig(options) {
 	return options;
-}
-/** @public */
-function definePlugin(plugin) {
+}, exports.definePlugin = function definePlugin(plugin) {
 	return plugin;
-}
-exports.defineConfig = defineConfig, exports.definePlugin = definePlugin;
+};
 
 //# sourceMappingURL=index.cjs.map"
 `;
@@ -172,11 +167,9 @@ export { defineConfig, definePlugin };
 exports[`cli > should build \`multi-export\` package > ./dist/plugin.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 let multi_export = require("multi-export");
-/** @public */
-function plugin() {
+exports.plugin = function plugin() {
 	return (0, multi_export.definePlugin)({ name: "plugin" });
-}
-exports.plugin = plugin;
+};
 
 //# sourceMappingURL=plugin.cjs.map"
 `;
@@ -221,11 +214,9 @@ export { version };
 exports[`cli > should build \`node-condition\` package > ./dist/index.node.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 let node_fs = require("node:fs");
-/** @public */
-function readPackageJson(filePath) {
+exports.readPackageJson = function readPackageJson(filePath) {
 	return (0, node_fs.readFileSync)(filePath, "utf-8");
-}
-exports.readPackageJson = readPackageJson, exports.version = "1.0.0";
+}, exports.version = "1.0.0";
 
 //# sourceMappingURL=index.node.cjs.map"
 `;
@@ -658,7 +649,7 @@ function ColorInput(props) {
 }
 export { ColorInput as default };
 
-//# sourceMappingURL=ColorInput-jwKTnvie.js.map"
+//# sourceMappingURL=ColorInput-C5yybDQd.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-styled-components\` package > ./dist/index.d.ts 1`] = `
@@ -698,7 +689,7 @@ exports[`cli > should build \`sanity-plugin-with-styled-components\` package > .
 import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-jwKTnvie.js")), colorType = defineType({
+const ColorInput = lazy(() => import("./ColorInput-C5yybDQd.js")), colorType = defineType({
 	name: "color",
 	type: "string",
 	title: "Color",
@@ -742,7 +733,7 @@ function ColorInput(props) {
 }
 export { ColorInput as default };
 
-//# sourceMappingURL=ColorInput-C7Xco6IZ.js.map"
+//# sourceMappingURL=ColorInput-DT1I4aw0.js.map"
 `;
 
 exports[`cli > should build \`sanity-plugin-with-vanilla-extract\` package > ./dist/bundle.css 1`] = `
@@ -832,7 +823,7 @@ import "@sanity/ui/styles.css";
 import { definePlugin, defineType } from "sanity";
 import { lazy } from "react";
 /** @public */
-const ColorInput = lazy(() => import("./ColorInput-C7Xco6IZ.js")), colorType = defineType({
+const ColorInput = lazy(() => import("./ColorInput-DT1I4aw0.js")), colorType = defineType({
 	name: "color",
 	type: "string",
 	title: "Color",
@@ -894,12 +885,12 @@ export declare const VERSION = "1.0.0";
 
 exports[`cli > should build \`ts-namespace-reexport\` package > ./dist/extra.d.ts 1`] = `
 "/** @alpha */
-import { t as inner_d_exports } from "./inner-Bnma_jkP.js";
+import { t as inner_d_exports } from "./inner-D1-PJpcA.js";
 export { inner_d_exports as inner };"
 `;
 
 exports[`cli > should build \`ts-namespace-reexport\` package > ./dist/index.d.ts 1`] = `
-"import { t as inner_d_exports } from "./inner-Bnma_jkP.js";
+"import { t as inner_d_exports } from "./inner-D1-PJpcA.js";
 declare namespace other_d_exports {
   export { answer };
 }
@@ -938,14 +929,14 @@ export declare const VERSION = "1.0.0";
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_c = require("./c-BvaL5bSQ.cjs");
+const require_c = require("./c-BvDN-3r-.cjs");
 exports.a = "a", exports.c = require_c.t;
 
 //# sourceMappingURL=a.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.cts 1`] = `
-"import { t as c } from "./c-BCyBvqMe.cjs";
+"import { t as c } from "./c-a-K4g7IH.cjs";
 /** @public */
 export declare const a = "a";
 export { c };
@@ -953,7 +944,7 @@ export { c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.d.ts 1`] = `
-"import { t as c } from "./c-BCyBvqMe.js";
+"import { t as c } from "./c-C8e3DKKk.js";
 /** @public */
 export declare const a = "a";
 export { c };
@@ -961,7 +952,7 @@ export { c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/a.js 1`] = `
-"import { t as c } from "./c-DrgDdB0B.js";
+"import { t as c } from "./c-SgNOjJhM.js";
 /** @public */
 const a = "a";
 export { a, c };
@@ -971,14 +962,14 @@ export { a, c };
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const require_c = require("./c-BvaL5bSQ.cjs");
+const require_c = require("./c-BvDN-3r-.cjs");
 exports.b = "b", exports.c = require_c.t;
 
 //# sourceMappingURL=b.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.cts 1`] = `
-"import { t as c } from "./c-BCyBvqMe.cjs";
+"import { t as c } from "./c-a-K4g7IH.cjs";
 /** @public */
 export declare const b = "b";
 export { c };
@@ -986,7 +977,7 @@ export { c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.d.ts 1`] = `
-"import { t as c } from "./c-BCyBvqMe.js";
+"import { t as c } from "./c-C8e3DKKk.js";
 /** @public */
 export declare const b = "b";
 export { c };
@@ -994,7 +985,7 @@ export { c };
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/b.js 1`] = `
-"import { t as c } from "./c-DrgDdB0B.js";
+"import { t as c } from "./c-SgNOjJhM.js";
 /** @public */
 const b = "b";
 export { b, c };
@@ -1010,21 +1001,21 @@ exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].cjs 1`] = 
 	}
 });
 
-//# sourceMappingURL=c-BvaL5bSQ.cjs.map"
+//# sourceMappingURL=c-BvDN-3r-.cjs.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].d.cts 1`] = `
 "/** @public */
 declare const c = "c";
 export { c as t };
-//# sourceMappingURL=c-BCyBvqMe.d.cts.map"
+//# sourceMappingURL=c-a-K4g7IH.d.cts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].d.ts 1`] = `
 "/** @public */
 declare const c = "c";
 export { c as t };
-//# sourceMappingURL=c-BCyBvqMe.d.ts.map"
+//# sourceMappingURL=c-C8e3DKKk.d.ts.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].js 1`] = `
@@ -1032,7 +1023,7 @@ exports[`cli > should build \`ts-rolldown\` package > ./dist/c-[hash].js 1`] = `
 const c = "c";
 export { c as t };
 
-//# sourceMappingURL=c-DrgDdB0B.js.map"
+//# sourceMappingURL=c-SgNOjJhM.js.map"
 `;
 
 exports[`cli > should build \`ts-rolldown\` package > ./dist/index.cjs 1`] = `
@@ -1063,8 +1054,9 @@ export { VERSION };
 
 exports[`cli > should build \`ts-rolldown-bundle-dev-dependency\` package > ./dist/index.cjs 1`] = `
 "Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos");
 const require_dist_BPHpH4Im = require("./dist-BPHpH4Im-[hash].cjs"), require_isRecord_Kfmt_nk_ = require("./isRecord-Kfmt-nk--[hash].cjs"), require_request_Boa4xq42 = require("./request-Boa4xq42-[hash].cjs");
-let react = require("react"), react_jsx_runtime = require("react/jsx-runtime"), _sanity_logos = require("@sanity/logos"), node_util = require("node:util"), node_tty = require("node:tty");
+let node_tty = require("node:tty"), node_util = require("node:util");
 /**
 * @public
 */
@@ -1144,12 +1136,11 @@ function getPublishedId(id) {
 var require_partition = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.partition = void 0;
 	var not_1 = require_request_Boa4xq42.an(), filter_1 = require_request_Boa4xq42.in();
-	function partition(predicate, thisArg) {
+	exports.partition = function partition(predicate, thisArg) {
 		return function(source) {
 			return [filter_1.filter(predicate, thisArg)(source), filter_1.filter(not_1.not(predicate, thisArg))(source)];
 		};
-	}
-	exports.partition = partition;
+	};
 })), require_race = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports, module, this$1) => {
 	var __read = this$1 && this$1.__read || function(o, n) {
 		var m = typeof Symbol == "function" && o[Symbol.iterator];
@@ -1173,11 +1164,10 @@ var require_partition = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports) =
 	};
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.race = void 0;
 	var argsOrArgArray_1 = require_request_Boa4xq42.on(), raceWith_1 = require_request_Boa4xq42.q();
-	function race() {
+	exports.race = function race() {
 		for (var args = [], _i = 0; _i < arguments.length; _i++) args[_i] = arguments[_i];
 		return raceWith_1.raceWith.apply(void 0, __spreadArray([], __read(argsOrArgArray_1.argsOrArgArray(args))));
-	}
-	exports.race = race;
+	};
 })), require_operators = /* @__PURE__ */ require_request_Boa4xq42.vn(((exports) => {
 	Object.defineProperty(exports, "__esModule", { value: !0 }), exports.mergeAll = exports.merge = exports.max = exports.materialize = exports.mapTo = exports.map = exports.last = exports.isEmpty = exports.ignoreElements = exports.groupBy = exports.first = exports.findIndex = exports.find = exports.finalize = exports.filter = exports.expand = exports.exhaustMap = exports.exhaustAll = exports.exhaust = exports.every = exports.endWith = exports.elementAt = exports.distinctUntilKeyChanged = exports.distinctUntilChanged = exports.distinct = exports.dematerialize = exports.delayWhen = exports.delay = exports.defaultIfEmpty = exports.debounceTime = exports.debounce = exports.count = exports.connect = exports.concatWith = exports.concatMapTo = exports.concatMap = exports.concatAll = exports.concat = exports.combineLatestWith = exports.combineLatest = exports.combineLatestAll = exports.combineAll = exports.catchError = exports.bufferWhen = exports.bufferToggle = exports.bufferTime = exports.bufferCount = exports.buffer = exports.auditTime = exports.audit = void 0, exports.timeInterval = exports.throwIfEmpty = exports.throttleTime = exports.throttle = exports.tap = exports.takeWhile = exports.takeUntil = exports.takeLast = exports.take = exports.switchScan = exports.switchMapTo = exports.switchMap = exports.switchAll = exports.subscribeOn = exports.startWith = exports.skipWhile = exports.skipUntil = exports.skipLast = exports.skip = exports.single = exports.shareReplay = exports.share = exports.sequenceEqual = exports.scan = exports.sampleTime = exports.sample = exports.refCount = exports.retryWhen = exports.retry = exports.repeatWhen = exports.repeat = exports.reduce = exports.raceWith = exports.race = exports.publishReplay = exports.publishLast = exports.publishBehavior = exports.publish = exports.pluck = exports.partition = exports.pairwise = exports.onErrorResumeNext = exports.observeOn = exports.multicast = exports.min = exports.mergeWith = exports.mergeScan = exports.mergeMapTo = exports.mergeMap = exports.flatMap = void 0, exports.zipWith = exports.zipAll = exports.zip = exports.withLatestFrom = exports.windowWhen = exports.windowToggle = exports.windowTime = exports.windowCount = exports.window = exports.toArray = exports.timestamp = exports.timeoutWith = exports.timeout = void 0;
 	var audit_1 = require_request_Boa4xq42.rn();
