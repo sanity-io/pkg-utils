@@ -3,11 +3,21 @@ import {fileURLToPath} from 'node:url'
 import {describe, expect, test} from 'vitest'
 import {compile} from '../src/compile.ts'
 import {getSourceFromVirtualCssFile} from '../src/getSourceFromVirtualCssFile.ts'
-import {processVanillaFile} from '../src/processVanillaFile.ts'
+import {processVanillaFile as processVanillaFileOrNull} from '../src/processVanillaFile.ts'
+import {InvalidExportsError} from '../src/serializeVanillaModule.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(__dirname, '..')
 const entryPath = path.join(__dirname, 'fixtures/basic/entry.css.ts')
+
+/** `processVanillaFile` for modules that are expected to be vanilla-extract modules. */
+async function processVanillaFile(
+  options: Parameters<typeof processVanillaFileOrNull>[0],
+): Promise<string> {
+  const output = await processVanillaFileOrNull(options)
+  if (output === null) throw new Error('Expected a vanilla-extract module')
+  return output
+}
 
 describe('processVanillaFile', () => {
   test('evaluates compiled output into virtual CSS imports and serialized exports', async () => {
@@ -97,5 +107,54 @@ endFileScope();
 
     expect(output).toMatch(/export var block = ['"][^'"]+['"];/)
     expect(output).toContain(`test/unit.css.js.vanilla.css?source=`)
+  })
+
+  describe('modules whose exports can not be serialized', () => {
+    const filePath = path.join(packageRoot, 'test/unit.css.js')
+
+    test('resolves to null for a module that registered no CSS', async () => {
+      // Shaped like the `*.css.js` style helpers `@sentry/feedback` 11.13+ ships: matches the
+      // `.css.js` file filter, but exports a function and never touches vanilla-extract
+      const source = `
+const { setFileScope, endFileScope } = require('@vanilla-extract/css/fileScope');
+setFileScope('test/unit.css.js', 'test-pkg');
+exports.createStyles = (nonce) => '.helper{color:red}/* ' + nonce + ' */';
+endFileScope();
+`
+      await expect(
+        processVanillaFileOrNull({source, filePath, identOption: 'short'}),
+      ).resolves.toBeNull()
+    })
+
+    test('resolves to null without CSS output too (`outputCss: false`)', async () => {
+      const source = `exports.createStyles = () => '.helper{color:red}';`
+      await expect(
+        processVanillaFileOrNull({source, filePath, identOption: 'short', outputCss: false}),
+      ).resolves.toBeNull()
+    })
+
+    test('still serializes a module that registered no CSS when its exports can be', async () => {
+      const source = `exports.marker = '.helper{color:red}';`
+      await expect(processVanillaFile({source, filePath, identOption: 'short'})).resolves.toBe(
+        `export var marker = '.helper{color:red}';`,
+      )
+    })
+
+    test.each([true, false])(
+      'still throws for a module that registered CSS (`outputCss: %s`)',
+      async (outputCss) => {
+        const source = `
+const { style } = require('@vanilla-extract/css');
+const { setFileScope, endFileScope } = require('@vanilla-extract/css/fileScope');
+setFileScope('test/unit.css.js', 'test-pkg');
+exports.block = style({ color: 'rgb(9, 9, 9)' });
+exports.helper = () => 'not serializable';
+endFileScope();
+`
+        await expect(
+          processVanillaFileOrNull({source, filePath, identOption: 'short', outputCss}),
+        ).rejects.toBeInstanceOf(InvalidExportsError)
+      },
+    )
   })
 })

@@ -7,7 +7,7 @@
  * scenario where processing the plain `.css.js` module used to hang the vanilla-extract
  * compiler and crash the dev server.
  */
-import {getPlainCssJsStyles} from 'plain-css-js-dependency'
+import {getFunctionCssJsStyles, getPlainCssJsStyles} from 'plain-css-js-dependency'
 import {createElement, type ReactElement} from 'react'
 import type {StringInputProps} from 'sanity'
 import {veStudioLazyBadge} from './PlainCssJsInput.css'
@@ -15,7 +15,11 @@ import {veStudioLazyBadge} from './PlainCssJsInput.css'
 export default function PlainCssJsInput(props: StringInputProps): ReactElement {
   return createElement(
     'div',
-    {'className': veStudioLazyBadge, 'data-plain-css-js': getPlainCssJsStyles()},
+    {
+      'className': veStudioLazyBadge,
+      'data-plain-css-js': getPlainCssJsStyles(),
+      'data-function-css-js': getFunctionCssJsStyles('studio'),
+    },
     props.renderDefault(props),
   )
 }

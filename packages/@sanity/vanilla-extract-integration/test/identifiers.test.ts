@@ -55,6 +55,7 @@ async function buildRelease(
     identOption,
   })
   const output = await processVanillaFile({source: compiled, filePath, identOption})
+  if (output === null) throw new Error(`Expected ${filePath} to be a vanilla-extract module`)
   return new Map(
     Array.from(output.matchAll(/export var (\w+) = ['"]([^'"]+)['"];/g), ([, name, className]) => [
       name!,

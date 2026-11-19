@@ -371,6 +371,9 @@ export function vanillaExtractPlugin({
             outputCss: true,
           })
 
+          // Not a vanilla-extract module after all (see `ProcessedVanillaFile`): leave it as it is
+          if (source === null) return null
+
           // Store the same absolute id the compiler's module graph uses (`validId` may be
           // root-relative in SSR or `/@id/`-wrapped), so the `findImporterTree` boundary
           // check in `hotUpdate` matches

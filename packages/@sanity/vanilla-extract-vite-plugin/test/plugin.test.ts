@@ -1,7 +1,7 @@
 import {mkdir, rm, writeFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
-import {normalizePath} from '@sanity/vanilla-extract-integration'
+import {InvalidExportsError, normalizePath} from '@sanity/vanilla-extract-integration'
 import {build, createServer, type Plugin, type Rollup} from 'vite'
 import {afterEach, describe, expect, test} from 'vitest'
 import {createCompiler, vanillaExtractPlugin, type Compiler, type Options} from '../src/index.ts'
@@ -9,6 +9,7 @@ import {createCompiler, vanillaExtractPlugin, type Compiler, type Options} from 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const appRoot = path.resolve(__dirname, 'fixtures/app')
 const mutableRoot = path.resolve(__dirname, 'fixtures/mutable')
+const passthroughRoot = path.resolve(__dirname, 'fixtures/passthrough')
 
 const stylesCssTs = path.join(appRoot, 'src/styles.css.ts')
 const themeTs = path.join(appRoot, 'src/theme.ts')
@@ -118,6 +119,69 @@ describe('vite build', () => {
     )
     if (!html || html.type !== 'asset') expect.unreachable('expected the index.html asset')
     expect(String(html.source)).toMatch(/<link rel="stylesheet"[^>]+\.css/)
+  })
+})
+
+describe('`*.css.ts` modules that are not vanilla-extract modules', () => {
+  const helpersCssTs = path.join(passthroughRoot, 'src/helpers.css.ts')
+
+  test('are bundled as authored by `vite build`, next to the real stylesheets', async () => {
+    const result = await build({
+      root: passthroughRoot,
+      configFile: false,
+      logLevel: 'silent',
+      plugins: [vanillaExtractPlugin()],
+      build: {write: false, minify: false},
+    })
+    const {output} = Array.isArray(result) ? result[0]! : (result as Rollup.RollupOutput)
+
+    expect(findCssAsset(output)).toContain('rgb(1, 2, 3)')
+    const entry = output.find(
+      (assetOrChunk) => assetOrChunk.type === 'chunk' && assetOrChunk.isEntry,
+    )
+    if (!entry || entry.type !== 'chunk') expect.unreachable('expected an entry chunk')
+    expect(entry.code).toContain('.passthrough-helper{color:rgb(7, 8, 9)}')
+  })
+
+  test('are served as authored by `vite dev`', async () => {
+    const server = await createServer({
+      root: passthroughRoot,
+      configFile: false,
+      logLevel: 'silent',
+      server: {middlewareMode: true},
+      plugins: [vanillaExtractPlugin()],
+    })
+    try {
+      const helpers = await server.transformRequest('/src/helpers.css.ts')
+      expect(helpers?.code).toContain('createHelperStyles')
+      expect(helpers?.code).not.toContain('.vanilla.css')
+
+      const box = await server.transformRequest('/src/box.css.ts')
+      expect(box?.code).toContain('.vanilla.css')
+    } finally {
+      await server.close()
+    }
+  })
+
+  test('the compiler resolves them to a `null` source', async () => {
+    const compiler = createTestCompiler(passthroughRoot)
+
+    const {source} = await compiler.processVanillaFile(helpersCssTs)
+    expect(source).toBeNull()
+
+    // Cached like any other result, and the real stylesheet next to it is unaffected
+    const again = await compiler.processVanillaFile(helpersCssTs)
+    expect(again.source).toBeNull()
+    const box = await compiler.processVanillaFile(path.join(passthroughRoot, 'src/box.css.ts'))
+    expect(box.source).toContain('export var box')
+  })
+
+  test('a real vanilla-extract module that exports a function still throws', async () => {
+    const compiler = createTestCompiler(passthroughRoot)
+
+    await expect(
+      compiler.processVanillaFile(path.join(passthroughRoot, 'src/invalid.css.ts')),
+    ).rejects.toBeInstanceOf(InvalidExportsError)
   })
 })
 
@@ -661,7 +725,7 @@ async function writeReleaseFixture(version: string): Promise<string> {
 
 async function compileBoxClassName(compiler: Compiler, filePath: string): Promise<string> {
   const {source} = await compiler.processVanillaFile(filePath)
-  const className = /export var box = ['"]([^'"]+)['"]/.exec(source)?.[1]
+  const className = /export var box = ['"]([^'"]+)['"]/.exec(source ?? '')?.[1]
   if (!className) expect.unreachable('expected the `box` class name export')
   return className
 }
