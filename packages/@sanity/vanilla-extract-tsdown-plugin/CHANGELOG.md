@@ -1,5 +1,12 @@
 # @sanity/vanilla-extract-tsdown-plugin
 
+## 0.5.5
+
+### Patch Changes
+
+- Updated dependencies [[`4fec1f3`](https://github.com/sanity-io/pkg-utils/commit/4fec1f334a9d3f42ddfb56683dd924949da11474)]:
+  - @sanity/vanilla-extract-rolldown-plugin@0.5.5
+
 ## 0.5.4
 
 ### Patch Changes

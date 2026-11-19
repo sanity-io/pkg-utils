@@ -1,5 +1,12 @@
 # @sanity/pkg-utils
 
+## 13.0.20
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @sanity/tsdown-config@0.31.6
+
 ## 13.0.19
 
 ### Patch Changes
