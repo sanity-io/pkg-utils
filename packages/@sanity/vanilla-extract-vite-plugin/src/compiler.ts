@@ -15,6 +15,7 @@ import {isAbsolute, join} from 'node:path'
 import {
   cssFileFilter,
   getPackageInfo,
+  InvalidExportsError,
   normalizePath,
   resolveIdentifierOption,
   serializeVanillaModule,
@@ -131,8 +132,15 @@ class NormalizedMap<V> extends Map<string, V> {
 
 /** @public */
 export interface ProcessedVanillaFile {
-  /** The serialized JS module: virtual CSS imports followed by the evaluated exports. */
-  source: string
+  /**
+   * The serialized JS module: virtual CSS imports followed by the evaluated exports. `null` when
+   * the module isn't a vanilla-extract module after all: evaluating it (and its dependencies)
+   * registered no CSS and it exports something that can't be serialized, like the function
+   * exporting `*.css.js` helpers some packages ship. Leave such a module as it is. A module that
+   * registered CSS still throws {@link InvalidExportsError}, since that is a mistake in the
+   * stylesheet.
+   */
+  source: string | null
   /** Files the `.css.ts` module (transitively) depends on. */
   watchFiles: Set<string>
 }
@@ -479,8 +487,8 @@ export function createCompiler({
         },
       }
 
-      const {fileExports, cssImports, watchFiles, lastInvalidationTimestamp} = await lock(
-        async () => {
+      const {fileExports, registeredCss, cssImports, watchFiles, lastInvalidationTimestamp} =
+        await lock(async () => {
           globalAdapterStore[GLOBAL_ADAPTER_KEY] = cssAdapter
           let evaluatedExports: Record<string, unknown>
           try {
@@ -497,6 +505,7 @@ export function createCompiler({
 
           const collectedCssImports: string[] = []
           const orderedComposedClassLists: Composition[] = []
+          let anyCssRegistered = false
 
           const scanModule = createModuleScanner()
           const {cssDeps, watchFiles: scannedWatchFiles} = scanModule(moduleNode)
@@ -510,6 +519,12 @@ export function createCompiler({
             if (cachedClassRegistrations) {
               orderedComposedClassLists.push(...cachedClassRegistrations.composedClassLists)
             }
+
+            // A dependency served from the runner's cache registers nothing in this
+            // compilation, so its earlier registrations count too
+            anyCssRegistered ||= cssObjs
+              ? cssObjs.length > 0
+              : Boolean(cachedCss?.css) || (cachedClassRegistrations?.localClassNames.size ?? 0) > 0
 
             if (!cssObjs && !cachedCss && !cachedClassRegistrations) {
               continue
@@ -548,21 +563,26 @@ export function createCompiler({
 
           return {
             fileExports: evaluatedExports,
+            registeredCss: anyCssRegistered,
             cssImports: outputCss ? collectedCssImports : [],
             watchFiles: scannedWatchFiles,
             lastInvalidationTimestamp: moduleNode.lastInvalidationTimestamp,
           }
-        },
-      )
+        })
 
-      const result: ProcessedVanillaFile = {
-        source: serializeVanillaModule(
+      let source: string | null
+      try {
+        source = serializeVanillaModule(
           cssImports,
           fileExports,
           null, // This compiler currently retains all composition classes
-        ),
-        watchFiles,
+        )
+      } catch (error) {
+        if (!(error instanceof InvalidExportsError) || registeredCss) throw error
+        source = null
       }
+
+      const result: ProcessedVanillaFile = {source, watchFiles}
 
       processVanillaFileCache.set(cacheKey, {lastInvalidationTimestamp, result})
 

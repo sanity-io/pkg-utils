@@ -326,6 +326,8 @@ export function vanillaExtractPlugin(options: Options = {}): VanillaExtractPlugi
           filePath,
           identOption,
         })
+        // Not a vanilla-extract module after all (see `processVanillaFile`): leave it as it is
+        if (output === null) return null
         return {
           code: output,
           map: {mappings: ''},

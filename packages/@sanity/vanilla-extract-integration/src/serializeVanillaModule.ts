@@ -6,6 +6,25 @@
 import {stringify} from 'javascript-stringify'
 import {hash} from './hash.ts'
 
+/**
+ * Thrown when a module exports a value that can't be serialized back into an ES module (a
+ * function that isn't a vanilla-extract function serializer, a class instance, …).
+ * @public
+ */
+export class InvalidExportsError extends Error {
+  override name = 'InvalidExportsError'
+
+  constructor() {
+    super(
+      [
+        'Invalid exports.',
+        '',
+        'You can only export plain objects, arrays, strings, numbers and null/undefined.',
+      ].join('\n'),
+    )
+  }
+}
+
 function isRecord(value: unknown): value is Record<string | symbol, unknown> {
   return typeof value === 'object' && value !== null
 }
@@ -124,13 +143,7 @@ function stringifyExports(
         }
       }
 
-      throw new Error(
-        [
-          'Invalid exports.',
-          '',
-          'You can only export plain objects, arrays, strings, numbers and null/undefined.',
-        ].join('\n'),
-      )
+      throw new InvalidExportsError()
     },
     0,
     {

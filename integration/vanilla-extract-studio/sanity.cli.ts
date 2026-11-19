@@ -8,7 +8,7 @@
 import {vanillaExtractPlugin as forkVanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {vanillaExtractPlugin as upstreamVanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
 import {defineCliConfig} from 'sanity/cli'
-import type {BuildOptions, PluginOption} from 'vite'
+import type {BuildOptions, Plugin, PluginOption} from 'vite'
 
 // Derived from the upstream plugin: the variants run through both implementations, and the
 // fork's option also accepts `'safe'`, which upstream doesn't
@@ -32,12 +32,42 @@ function resolveIdentifiers(): IdentifierOption | undefined {
   throw new Error(`Unsupported VE_IDENTIFIERS value: ${identifiers}`)
 }
 
+/**
+ * Known upstream gap: `@vanilla-extract/vite-plugin` evaluates every module whose name matches
+ * `*.css.(js|ts|…)` — including node_modules dependencies that aren't vanilla-extract modules,
+ * such as the function-exporting `*.css.js` helpers of `@sentry/feedback` 11.13+ — and throws
+ * `Invalid exports` on the ones whose exports can't be serialized. The fork passes such modules
+ * through unchanged, so the upstream reference leaves the node_modules modules it fails on
+ * untouched too; everything else keeps going through upstream unmodified, which is the output
+ * the fork has to match.
+ */
+function passThroughUnserializableNodeModules(plugins: Plugin[]): Plugin[] {
+  return plugins.map((plugin) => {
+    const {transform} = plugin
+    if (typeof transform !== 'function') return plugin
+    return {
+      ...plugin,
+      async transform(code, id, ...rest) {
+        try {
+          return await transform.call(this, code, id, ...rest)
+        } catch (error) {
+          if (id.includes('/node_modules/') && String(error).includes('Invalid exports'))
+            return null
+          throw error
+        }
+      },
+    }
+  })
+}
+
 function resolvePlugin(): PluginOption {
   const implementation = process.env['VE_PLUGIN'] ?? 'fork'
   const identifiers = resolveIdentifiers()
   const options = identifiers === undefined ? {} : {identifiers}
   if (implementation === 'fork') return forkVanillaExtractPlugin(options)
-  if (implementation === 'upstream') return upstreamVanillaExtractPlugin(options)
+  if (implementation === 'upstream') {
+    return passThroughUnserializableNodeModules(upstreamVanillaExtractPlugin(options))
+  }
   throw new Error(`Unsupported VE_PLUGIN value: ${implementation}`)
 }
 

@@ -299,6 +299,13 @@ describe('vanillaExtractPlugin', () => {
     ])
   })
 
+  test('bundles a `*.css.ts` module that is not a vanilla-extract module as authored', async () => {
+    const output = await buildFixture(undefined, 'esm', false, 'passthrough')
+
+    expect(output.map((assetOrChunk) => assetOrChunk.fileName)).toEqual(['index.js'])
+    expect(findEntryChunk(output).code).toContain('.passthrough-helper{color:rgb(7, 8, 9)}')
+  })
+
   test('`exports: true` publishes the CSS without a shim', async () => {
     const output = await buildFixture({inject: true, exports: true})
 

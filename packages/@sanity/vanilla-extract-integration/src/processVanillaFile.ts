@@ -8,7 +8,7 @@ import {transformCss} from '@vanilla-extract/css/transformCss'
 import {evalModule} from './evalModule.ts'
 import {parseFileScope, stringifyFileScope} from './fileScope.ts'
 import {serializeCss} from './serializeCss.ts'
-import {serializeVanillaModule} from './serializeVanillaModule.ts'
+import {InvalidExportsError, serializeVanillaModule} from './serializeVanillaModule.ts'
 import type {IdentifierOption} from './types.ts'
 
 type Css = Parameters<Adapter['appendCss']>[0]
@@ -33,6 +33,12 @@ export interface ProcessVanillaFileOptions {
  * Evaluates the compiled source of a `.css.ts` module (see {@link compile}) with a collecting
  * CSS adapter, and serializes the result back into an ES module of virtual `.vanilla.css`
  * imports followed by the evaluated exports.
+ *
+ * Resolves to `null` for a module that isn't a vanilla-extract module after all: evaluating it
+ * registered no CSS and it exports something that can't be serialized (a name matching
+ * `cssFileFilter` says nothing about its content, e.g. the `*.css.js` helpers some
+ * packages ship). Callers should leave such a module as it is. A module that registered CSS
+ * still throws {@link InvalidExportsError}, since that is a mistake in the stylesheet.
  * @public
  */
 export async function processVanillaFile({
@@ -41,14 +47,16 @@ export async function processVanillaFile({
   outputCss = true,
   identOption = process.env['NODE_ENV'] === 'production' ? 'short' : 'debug',
   serializeVirtualCssPath,
-}: ProcessVanillaFileOptions): Promise<string> {
+}: ProcessVanillaFileOptions): Promise<string | null> {
   const cssByFileScope = new Map<string, Array<Css>>()
   const localClassNames = new Set<string>()
   const composedClassLists: Array<Composition> = []
   const usedCompositions = new Set<string>()
+  let registeredCss = false
 
   const cssAdapter: Adapter = {
     appendCss: (css, fileScope) => {
+      registeredCss = true
       if (outputCss) {
         const serialisedFileScope = stringifyFileScope(fileScope)
         const fileScopeCss = cssByFileScope.get(serialisedFileScope) ?? []
@@ -134,5 +142,10 @@ export async function processVanillaFile({
   const unusedCompositionRegex =
     unusedCompositions.length > 0 ? RegExp(`(${unusedCompositions.join('|')})\\s`, 'g') : null
 
-  return serializeVanillaModule(cssImports, evalResult, unusedCompositionRegex)
+  try {
+    return serializeVanillaModule(cssImports, evalResult, unusedCompositionRegex)
+  } catch (error) {
+    if (error instanceof InvalidExportsError && !registeredCss) return null
+    throw error
+  }
 }

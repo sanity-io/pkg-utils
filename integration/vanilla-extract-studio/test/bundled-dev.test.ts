@@ -97,6 +97,11 @@ async function collectBundledDevOutput(
     expect(lazyPatch).toContain('.plain-css-js-dependency{color:rgb(201, 202, 203)}')
     expect(lazyPatch).not.toContain('Styles.css.js.vanilla.css')
 
+    // The function-exporting `FunctionStyles.css.js` (the shape of `@sentry/feedback` 11.13+'s
+    // `*.css.js` helpers) is left as it was authored: still a function, nothing virtual emitted
+    expect(lazyPatch).toContain('.function-css-js-dependency{color:rgb(211, 212, 213)}')
+    expect(lazyPatch).not.toContain('FunctionStyles.css.js.vanilla.css')
+
     // The dev server survived the compile (the regression crashed the whole process)
     const entryAfter = await server.fetchText('/assets/index.js')
     expect(extractDevClassNames(entryAfter)['veStudioDialog']).toBe(exports['veStudioDialog'])

@@ -34,7 +34,13 @@ Commands, each across the shared option matrix in `test/variants.ts`:
   `Styles.css.js` whose name matches vanilla-extract's `cssFileFilter`. Processing that
   module used to hang the fork's compiler and crash the dev server, forcing the workaround
   in [sanity-io/plugins#1553](https://github.com/sanity-io/plugins/pull/1553); the compiled
-  patch must match upstream's byte for byte, no workaround required.
+  patch must match upstream's byte for byte, no workaround required. The fixture package also
+  ships a `FunctionStyles.css.js` that exports a function, shaped like the `*.css.js` helpers
+  of `@sentry/feedback` 11.13+ (which `sanity` pulls into every build): the fork passes such
+  non-vanilla-extract modules through unchanged. Upstream still throws `Invalid exports` on
+  them, so the upstream reference in `sanity.cli.ts` leaves the node_modules modules it throws on
+  untouched (a known upstream gap, see `passThroughUnserializableNodeModules`); everything else
+  is compared as before.
 - **HMR in bundled dev mode** (`test/bundled-dev-hmr.test.ts`) — registers an HMR client, edits
   `src/button.css.ts` and then `src/theme.ts` (a plain module `styles.css.ts` imports), and
   asserts each edit pushes a patch with the new CSS of the matching virtual `.vanilla.css`
