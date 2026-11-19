@@ -555,7 +555,15 @@ describe('pandacssPlugin', () => {
         filter: {id: /\.tsx$/},
         async handler(code, id) {
           const result = await transformWithOxc(id, code, {jsx: {runtime: 'classic'}})
-          return {code: result.code, map: result.map}
+          // oxc's SourceMap.sources includes `undefined` (rolldown 1.3.3). The hook's
+          // SourceMapInput still only allows `string | null`.
+          return {
+            code: result.code,
+            map: result.map && {
+              ...result.map,
+              sources: result.map.sources.map((source) => source ?? null),
+            },
+          }
         },
       },
     }
