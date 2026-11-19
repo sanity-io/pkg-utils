@@ -222,8 +222,8 @@ snapshots:
 					"version": "0.158.0",
 				},
 				"playwright": {
-					"specifier": "^1.65.0",
-					"version": "1.65.0",
+					"specifier": "^1.65.1",
+					"version": "1.65.1",
 				},
 				"postcss": {
 					"specifier": "^8.5.33",
@@ -343,8 +343,8 @@ snapshots:
 					"version": "1.33.0",
 				},
 				"playwright": {
-					"specifier": "^1.65.0",
-					"version": "1.65.0",
+					"specifier": "^1.65.1",
+					"version": "1.65.1",
 				},
 				"rolldown": {
 					"specifier": "~1.3.2",
@@ -813,8 +813,8 @@ snapshots:
 		"css-playground/verify": {
 			"devDependencies": {
 				"playwright": {
-					"specifier": "^1.65.0",
-					"version": "1.65.0",
+					"specifier": "^1.65.1",
+					"version": "1.65.1",
 				},
 			},
 		},
@@ -957,20 +957,6 @@ snapshots:
 				"sanity": {
 					"specifier": "^6.24.0",
 					"version": "6.24.0",
-					"with": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"supports-color": "8.1.1",
-					},
 				},
 				"styled-components": {
 					"specifier": "^6.6.0",
@@ -1747,6 +1733,20 @@ snapshots:
 				"sanity": {
 					"specifier": "^6.24.0",
 					"version": "6.24.0",
+					"with": {
+						"@sanity/workflow-blueprint": {
+							"version": "0.37.0",
+							"with": {
+								"@sanity/workflow-engine": {
+									"version": "0.37.0",
+									"with": {
+										"supports-color": "10.2.2",
+									},
+								},
+							},
+						},
+						"supports-color": "10.2.2",
+					},
 				},
 				"styled-components": {
 					"specifier": "^6.6.0",
@@ -1791,6 +1791,20 @@ snapshots:
 				"sanity": {
 					"specifier": "^6.24.0",
 					"version": "6.24.0",
+					"with": {
+						"@sanity/workflow-blueprint": {
+							"version": "0.37.0",
+							"with": {
+								"@sanity/workflow-engine": {
+									"version": "0.37.0",
+									"with": {
+										"supports-color": "10.2.2",
+									},
+								},
+							},
+						},
+						"supports-color": "10.2.2",
+					},
 				},
 				"styled-components": {
 					"specifier": "^6.6.0",
@@ -14541,7 +14555,7 @@ snapshots:
 					"below": true,
 				},
 				"playwright": {
-					"version": "1.65.0",
+					"version": "1.65.1",
 					"below": true,
 				},
 			},
@@ -14991,7 +15005,7 @@ snapshots:
 				},
 				"playwright": {
 					"specifier": "^1.60.0",
-					"version": "1.65.0",
+					"version": "1.65.1",
 					"optional": true,
 				},
 			},
@@ -16195,12 +16209,12 @@ snapshots:
 												"@sanity/workflow-engine": {
 													"version": "0.37.0",
 													"with": {
-														"supports-color": "10.2.2",
+														"supports-color": "8.1.1",
 													},
 												},
 											},
 										},
-										"supports-color": "10.2.2",
+										"supports-color": "8.1.1",
 									},
 								},
 							},
@@ -16221,12 +16235,12 @@ snapshots:
 												"@sanity/workflow-engine": {
 													"version": "0.37.0",
 													"with": {
-														"supports-color": "8.1.1",
+														"supports-color": "10.2.2",
 													},
 												},
 											},
 										},
-										"supports-color": "8.1.1",
+										"supports-color": "10.2.2",
 									},
 								},
 							},
@@ -16356,12 +16370,12 @@ snapshots:
 										"@sanity/workflow-engine": {
 											"version": "0.37.0",
 											"with": {
-												"supports-color": "10.2.2",
+												"supports-color": "8.1.1",
 											},
 										},
 									},
 								},
-								"supports-color": "10.2.2",
+								"supports-color": "8.1.1",
 							},
 						},
 					},
@@ -16377,12 +16391,12 @@ snapshots:
 										"@sanity/workflow-engine": {
 											"version": "0.37.0",
 											"with": {
-												"supports-color": "8.1.1",
+												"supports-color": "10.2.2",
 											},
 										},
 									},
 								},
-								"supports-color": "8.1.1",
+								"supports-color": "10.2.2",
 							},
 						},
 					},
@@ -16643,9 +16657,77 @@ snapshots:
 						},
 					},
 					"dependencies": {
-						"@sanity/blueprints": "0.33.0",
-						"@sanity/cli-build": "7.3.0",
-						"@sanity/runtime-cli": "17.21.3",
+						"@sanity/blueprints": {
+							"version": "0.33.0",
+							"with": {
+								"@sanity/cli-build": {
+									"version": "7.3.0",
+									"with": {
+										"sanity": {
+											"version": "6.24.0",
+											"with": {
+												"@sanity/workflow-blueprint": {
+													"version": "0.37.0",
+													"with": {
+														"@sanity/workflow-engine": {
+															"version": "0.37.0",
+															"with": {
+																"supports-color": "10.2.2",
+															},
+														},
+													},
+												},
+												"supports-color": "10.2.2",
+											},
+										},
+									},
+								},
+							},
+						},
+						"@sanity/cli-build": {
+							"version": "7.3.0",
+							"with": {
+								"sanity": {
+									"version": "6.24.0",
+									"with": {
+										"@sanity/workflow-blueprint": {
+											"version": "0.37.0",
+											"with": {
+												"@sanity/workflow-engine": {
+													"version": "0.37.0",
+													"with": {
+														"supports-color": "10.2.2",
+													},
+												},
+											},
+										},
+										"supports-color": "10.2.2",
+									},
+								},
+							},
+						},
+						"@sanity/runtime-cli": {
+							"version": "17.21.3",
+							"with": {
+								"sanity": {
+									"version": "6.24.0",
+									"with": {
+										"@sanity/workflow-blueprint": {
+											"version": "0.37.0",
+											"with": {
+												"@sanity/workflow-engine": {
+													"version": "0.37.0",
+													"with": {
+														"supports-color": "10.2.2",
+													},
+												},
+											},
+										},
+										"supports-color": "10.2.2",
+									},
+								},
+							},
+						},
 						"@sanity/workflow-cli": "0.37.0",
 					},
 				},
@@ -16687,77 +16769,9 @@ snapshots:
 						},
 					},
 					"dependencies": {
-						"@sanity/blueprints": {
-							"version": "0.33.0",
-							"with": {
-								"@sanity/cli-build": {
-									"version": "7.3.0",
-									"with": {
-										"sanity": {
-											"version": "6.24.0",
-											"with": {
-												"@sanity/workflow-blueprint": {
-													"version": "0.37.0",
-													"with": {
-														"@sanity/workflow-engine": {
-															"version": "0.37.0",
-															"with": {
-																"supports-color": "8.1.1",
-															},
-														},
-													},
-												},
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-							},
-						},
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@sanity/runtime-cli": {
-							"version": "17.21.3",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
+						"@sanity/blueprints": "0.33.0",
+						"@sanity/cli-build": "7.3.0",
+						"@sanity/runtime-cli": "17.21.3",
 						"@sanity/workflow-cli": {
 							"version": "0.37.0",
 							"with": {
@@ -17340,12 +17354,12 @@ snapshots:
 										"@sanity/workflow-engine": {
 											"version": "0.37.0",
 											"with": {
-												"supports-color": "10.2.2",
+												"supports-color": "8.1.1",
 											},
 										},
 									},
 								},
-								"supports-color": "10.2.2",
+								"supports-color": "8.1.1",
 							},
 							"below": true,
 						},
@@ -17366,12 +17380,12 @@ snapshots:
 										"@sanity/workflow-engine": {
 											"version": "0.37.0",
 											"with": {
-												"supports-color": "8.1.1",
+												"supports-color": "10.2.2",
 											},
 										},
 									},
 								},
-								"supports-color": "8.1.1",
+								"supports-color": "10.2.2",
 							},
 							"below": true,
 						},
@@ -17392,12 +17406,12 @@ snapshots:
 														"@sanity/workflow-engine": {
 															"version": "0.37.0",
 															"with": {
-																"supports-color": "8.1.1",
+																"supports-color": "10.2.2",
 															},
 														},
 													},
 												},
-												"supports-color": "8.1.1",
+												"supports-color": "10.2.2",
 											},
 										},
 									},
@@ -17416,12 +17430,12 @@ snapshots:
 												"@sanity/workflow-engine": {
 													"version": "0.37.0",
 													"with": {
-														"supports-color": "8.1.1",
+														"supports-color": "10.2.2",
 													},
 												},
 											},
 										},
-										"supports-color": "8.1.1",
+										"supports-color": "10.2.2",
 									},
 								},
 							},
@@ -20768,7 +20782,7 @@ snapshots:
 			"peerDependencies": {
 				"playwright": {
 					"specifier": "*",
-					"version": "1.65.0",
+					"version": "1.65.1",
 				},
 				"vite": {
 					"version": "8.3.8",
@@ -29544,18 +29558,18 @@ snapshots:
 			},
 		},
 
-		"playwright-core@1.65.0": {
-			"integrity": "sha512-vNSKgH6YqtN7cdT/L334zo0a+YwkrpicyrHJlWWPIm/Q+Nn2SWInil01oT0mbu96U4GgoRtCYQD9CzJQgju+lA==",
+		"playwright-core@1.65.1": {
+			"integrity": "sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==",
 			"engines": {"node": ">=20"},
 			"hasBin": true,
 		},
 
-		"playwright@1.65.0": {
-			"integrity": "sha512-F3AMWcR44qMBt4kq+6Kb6mX7bjGXshktKFOPULd7reED6ZJWevjbNRqysP7q+AATE9kdPEZBibex1BYsvpVoeA==",
+		"playwright@1.65.1": {
+			"integrity": "sha512-vJ1FuoOrNwOKHUIVEvSt3jT1L+wjjDpwhwIstKtfvTh8XIG4FG4bIFuvNdMxi81LGfAhUgUZleVFaOLY4RIUUw==",
 			"engines": {"node": ">=20"},
 			"hasBin": true,
 			"dependencies": {
-				"playwright-core": "1.65.0",
+				"playwright-core": "1.65.1",
 			},
 		},
 
@@ -30503,7 +30517,7 @@ snapshots:
 				},
 				"playwright": {
 					"specifier": "^1.60.0",
-					"version": "1.65.0",
+					"version": "1.65.1",
 					"optional": true,
 				},
 				"redis": {
@@ -31193,14 +31207,14 @@ snapshots:
 								"@sanity/workflow-engine": {
 									"version": "0.37.0",
 									"with": {
-										"supports-color": "10.2.2",
+										"supports-color": "8.1.1",
 									},
 								},
 							},
 							"below": true,
 						},
 						"supports-color": {
-							"version": "10.2.2",
+							"version": "8.1.1",
 							"below": true,
 						},
 					},
@@ -31213,14 +31227,14 @@ snapshots:
 								"@sanity/workflow-engine": {
 									"version": "0.37.0",
 									"with": {
-										"supports-color": "8.1.1",
+										"supports-color": "10.2.2",
 									},
 								},
 							},
 							"below": true,
 						},
 						"supports-color": {
-							"version": "8.1.1",
+							"version": "10.2.2",
 							"below": true,
 						},
 					},
