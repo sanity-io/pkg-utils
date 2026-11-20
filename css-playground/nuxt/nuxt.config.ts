@@ -1,4 +1,4 @@
-import {createConfig} from 'sanity-css-vanilla-extract-test'
+import {createConfig} from 'sanity-css-test'
 
 // nuxt.config.ts is evaluated in Node by Nuxt (via jiti), so importing and calling the package here
 // reproduces the CSS-unaware import scenario: the self-referential `import "<pkg>/bundle.css"` must

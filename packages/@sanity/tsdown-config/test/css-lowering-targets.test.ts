@@ -1,9 +1,9 @@
 import browserslistConfig from '@sanity/browserslist-config'
-import {esbuildTargetToLightningCSS} from '@sanity/vanilla-extract-tsdown-plugin'
 import browserslist from 'browserslist'
 import {browserslistToTargets} from 'lightningcss'
 import {describe, expect, test} from 'vitest'
 import {resolveCssLoweringTargets} from '../src/cssLoweringTargets.ts'
+import {esbuildTargetToLightningCSS} from '../src/esbuildTargets.ts'
 
 const sanityTargets = browserslistToTargets(browserslist(browserslistConfig))
 

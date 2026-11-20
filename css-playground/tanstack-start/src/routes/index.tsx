@@ -1,5 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router'
-import {TestComponent} from 'sanity-css-vanilla-extract-test'
+import {TestComponent} from 'sanity-css-test'
 
 export const Route = createFileRoute('/')({
   component: Home,

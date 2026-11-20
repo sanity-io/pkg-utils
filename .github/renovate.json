@@ -25,11 +25,7 @@
     },
     {
       "description": "Private workspaces are never published, so their dependency updates are chore too",
-      "matchFileNames": [
-        "benchmarks/**/package.json",
-        "css-playground/**/package.json",
-        "integration/**/package.json"
-      ],
+      "matchFileNames": ["css-playground/**/package.json"],
       "semanticCommitType": "chore",
       "group": {"semanticCommitType": "chore"}
     },

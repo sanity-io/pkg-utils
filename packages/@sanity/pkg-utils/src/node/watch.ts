@@ -73,15 +73,7 @@ export async function watch(options: {
       const cssNames: string[] = []
       const cssSources: Record<string, string> = {}
 
-      const vanillaExtract = ctx.config?.vanillaExtract
-      if (vanillaExtract) {
-        const veOptions = vanillaExtract === true ? {} : vanillaExtract
-        if (usesCssExportNodeCompat(veOptions)) {
-          cssNames.push(veOptions.fileName || 'bundle.css')
-        }
-      }
-
-      // The `@tsdown/css` pipeline's own exports: the `.css` export subpaths built by the
+      // The `@tsdown/css` pipeline's exports: the `.css` export subpaths built by the
       // stylesheet build. Their file names follow their subpath and a declared entry always
       // emits, so they are known up front. The merged `style.css` of CSS imported from JS is
       // not — it only exists once something actually imports CSS — so `resolveTsdownConfig`

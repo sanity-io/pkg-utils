@@ -15,7 +15,7 @@ import {chromium} from 'playwright'
  *            the expected outcome for pure Server Components that never ship client JS).
  *
  * It loads <url>, finds the producer's element, reads its *computed* `color`, and compares it to the
- * marker declared in `sanity-css-vanilla-extract-test`'s vanilla-extract style (`rgb(1, 2, 3)`). A
+ * marker declared in `sanity-css-test`'s stylesheet (`rgb(1, 2, 3)`). A
  * full-page screenshot is written to `screenshots/<name>.png` so a human can eyeball it too.
  *
  * Requires the Chromium browser to be installed once: `pnpm --filter @css-playground/verify install-browser`.
@@ -30,9 +30,9 @@ if (!url || (expect !== 'css' && expect !== 'no-css')) {
   process.exit(2)
 }
 
-// The marker declared in css-playground/sanity-css-vanilla-extract-test/src/styles.css.ts.
+// The marker declared in css-playground/sanity-css-test/src/styles.css.
 const EXPECTED_COLOR = 'rgb(1, 2, 3)'
-const SELECTOR = '[data-testid="sanity-css-vanilla-extract-test"]'
+const SELECTOR = '[data-testid="sanity-css-test"]'
 
 const browser = await chromium.launch()
 

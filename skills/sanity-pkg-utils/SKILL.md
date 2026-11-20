@@ -96,7 +96,7 @@ options include:
 - `dist` to override the output directory inferred from authored export targets (commonly `dist`)
 - `clean` (`true`), `sourcemap` (`true`), and `minify` (`false` for full minification)
 - `runtime` (`'*'`), `deps`, `dts`, `define`, and extra Rolldown `plugins`
-- `reactCompiler`, `styledComponents`, `vanillaExtract`, `css`, and `bundleAnalyzer`
+- `reactCompiler`, `styledComponents`, `css`, and `bundleAnalyzer`
 - `tsdoc` (`true`)
 - `bundles` for entry points such as workers or CLIs that are built but not exported
 
@@ -155,7 +155,8 @@ replace a separate type-check command.
 - `reactCompiler` and `styledComponents` are opt-in.
 - pkg-utils does not support `reactCompiler.reactServer`. Use tsdown with
   `@sanity/tsdown-config` directly for that dual build.
-- `vanillaExtract: true` emits and conditionally exports `bundle.css`.
+- The `vanillaExtract` option was removed in v14 and throws when set. For vanilla-extract, add its
+  bundler plugin (e.g. `@vanilla-extract/rollup-plugin`) to `plugins`.
 - `css: {...}` uses the optional `@tsdown/css` peer for plain CSS, CSS modules, preprocessors, or
   PostCSS and conditionally exports `style.css`.
 - A `.css` export subpath with a `source` automatically enables the CSS pipeline.

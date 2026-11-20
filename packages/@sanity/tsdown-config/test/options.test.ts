@@ -61,7 +61,7 @@ describe('target option', () => {
 
   test('is passed through to tsdown as-is', async () => {
     // tsdown resolves the target into `ResolvedConfig.target`, where plugins pick it up - e.g.
-    // `@sanity/vanilla-extract-tsdown-plugin` uses it as the default CSS syntax lowering target
+    // `@sanity/pandacss-tsdown-plugin` uses it as the default CSS syntax lowering target
     expect((await defineConfig({target: 'chrome90'})).target).toBe('chrome90')
     expect((await defineConfig({target: ['chrome90', 'safari16']})).target).toEqual([
       'chrome90',
@@ -122,7 +122,7 @@ describe('css option', () => {
       // runtimes that cannot load `.css` files - `cssNodeCompatPlugin` injects the
       // self-referential specifier of the conditional CSS export instead
       inject: false,
-      // Browserless targets fall back to `@sanity/browserslist-config`, like `vanillaExtract`.
+      // Browserless targets fall back to `@sanity/browserslist-config`, like `panda`.
       // `minify` is left unset, so `@tsdown/css` keeps its own default (`false`)
       lightningcss: {targets: expect.any(Object)},
       modules: {localsConvention: 'camelCase'},
@@ -143,19 +143,6 @@ describe('css option', () => {
     expect(config.css).not.toHaveProperty('lightningcss.targets')
   })
 
-  test('can be enabled alongside vanillaExtract', async () => {
-    // Both pipelines are independent: `vanillaExtract` extracts `.css.ts` into `bundle.css`,
-    // `@tsdown/css` handles everything else. The fixture build covers them end-to-end.
-    const config = await defineConfig({
-      vanillaExtract: true,
-      css: {modules: {localsConvention: 'camelCase'}},
-    })
-
-    expect(pluginNames(config)).toEqual(
-      expect.arrayContaining(['vanilla-extract', 'sanity-css-node-compat']),
-    )
-  })
-
   test('writes the conditional CSS export unless `css.exports` is false', async () => {
     const withExports = await defineConfig({css: {}, exports: true})
     await runCssConfigHook(withExports)
@@ -173,22 +160,14 @@ describe('panda option', () => {
     expect(pluginNames(config)).toContain('pandacss')
   })
 
-  test('rejects a CSS file name shared with `vanillaExtract` or `css`', async () => {
-    // Both pipelines extract into `bundle.css` by default; neither merges the other's CSS, so
-    // the second one to write would wipe the first one's stylesheet and `./bundle.css` export
-    await expect(defineConfig({panda: true, vanillaExtract: true})).rejects.toThrow(
-      /`panda` and `vanillaExtract` both extract their CSS into "bundle.css".*fileName/,
-    )
-    await expect(
-      defineConfig({panda: {fileName: 'styles.css'}, vanillaExtract: {fileName: 'styles.css'}}),
-    ).rejects.toThrow(/"styles.css"/)
+  test('rejects a CSS file name shared with `css`', async () => {
+    // Neither pipeline merges the other's CSS, so the second one to write would wipe the first
+    // one's stylesheet and export
     await expect(defineConfig({panda: {fileName: 'style.css'}, css: {}})).rejects.toThrow(
       /`panda` and `css` both write their CSS to "style.css"/,
     )
 
     // Distinct names coexist
-    const config = await defineConfig({panda: {fileName: 'panda.css'}, vanillaExtract: true})
-    expect(pluginNames(config)).toEqual(expect.arrayContaining(['pandacss', 'vanilla-extract']))
     const withCss = await defineConfig({panda: true, css: {}})
     expect(pluginNames(withCss)).toEqual(
       expect.arrayContaining(['pandacss', 'sanity-css-node-compat']),
@@ -196,10 +175,7 @@ describe('panda option', () => {
   })
 
   test('compares the CSS file names as paths, and skips a splitting `css`', async () => {
-    // `./bundle.css` is the same file as `bundle.css`
-    await expect(
-      defineConfig({panda: {fileName: './bundle.css'}, vanillaExtract: true}),
-    ).rejects.toThrow(/both extract their CSS into "bundle.css"/)
+    // `./style.css` is the same file as `style.css`
     await expect(
       defineConfig({panda: {fileName: 'style.css'}, css: {fileName: './style.css'}}),
     ).rejects.toThrow(/`panda` and `css` both write their CSS to "style.css"/)
@@ -500,5 +476,15 @@ describe('exports option', () => {
       devExports: true,
     })
     expect((await defineConfig({exports: false})).exports).toBe(false)
+  })
+})
+
+describe('vanillaExtract option', () => {
+  test('was removed, and fails with a pointer to the migration note', async () => {
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const options = {vanillaExtract: true} as Parameters<typeof defineConfig>[0]
+    await expect(defineConfig(options)).rejects.toThrow(
+      /`vanillaExtract` option was removed.*tsdown-config#vanilla-extract/,
+    )
   })
 })

@@ -1,6 +1,4 @@
 packages:
-  - benchmarks/*
-  - integration/*
   - packages/@sanity/*
   - playground/*
   - css-playground/*
@@ -90,9 +88,6 @@ minimumReleaseAgeExclude:
   - 'styled-components@6.6.0'
   - 'zod@4.6.7'
   - '@rushstack/rig-package@0.7.4'
-  # @vanilla-extract/css@1.21.3 and @vanilla-extract/integration@8.0.11 (published 2026-10-08)
-  - '@vanilla-extract/css@1.21.3'
-  - '@vanilla-extract/integration@8.0.11'
 minimumReleaseAgeExcludePrune: true
 
 overrides:

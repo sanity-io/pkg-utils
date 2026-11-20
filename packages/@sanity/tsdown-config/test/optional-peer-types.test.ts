@@ -268,9 +268,7 @@ describe('typescript 7 consumer', () => {
     fixtureDir = await mkdtemp(path.join(tmpdir(), 'tsdown-config-optional-peers-'))
     const nodeModules = path.join(fixtureDir, 'node_modules')
     const packagedDir = path.join(nodeModules, '@sanity/tsdown-config')
-    const vanillaExtractStubDir = path.join(nodeModules, '@sanity/vanilla-extract-tsdown-plugin')
     await mkdir(packagedDir, {recursive: true})
-    await mkdir(vanillaExtractStubDir, {recursive: true})
 
     // The package as published: the real dist, copied (not symlinked — tsc realpaths
     // symlinks, and lookups from the real location would find babel again)
@@ -292,22 +290,6 @@ describe('typescript 7 consumer', () => {
         'junction',
       )
     }
-    // A stub keeps the vanilla-extract plugin's source tree out of the program; only its
-    // two type names are referenced and this fixture never uses them
-    await writeFile(
-      path.join(vanillaExtractStubDir, 'package.json'),
-      JSON.stringify({
-        name: '@sanity/vanilla-extract-tsdown-plugin',
-        version: '0.0.0-test',
-        type: 'module',
-        types: './index.d.ts',
-      }),
-    )
-    await writeFile(
-      path.join(vanillaExtractStubDir, 'index.d.ts'),
-      'export type Options = Record<string, unknown>\nexport type CssExportsOptions = Record<string, unknown>\n',
-    )
-
     await writeFile(
       path.join(fixtureDir, 'tsconfig.json'),
       JSON.stringify({

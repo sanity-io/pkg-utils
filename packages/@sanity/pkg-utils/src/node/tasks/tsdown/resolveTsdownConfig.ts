@@ -105,8 +105,7 @@ export async function resolveTsdownConfig(
   // that declares a `.css` export subpath with a `source`. The stylesheet build needs
   // `splitting` so each entry emits its own file at the path its subpath promises; the JS
   // builds keep `@tsdown/css`'s merged default, so CSS imported from JS lands in a single
-  // `style.css` with one export and one injected import - the `bundle.css` shape of
-  // `vanillaExtract`.
+  // `style.css` with one export and one injected import.
   const css: PkgConfigOptions['css'] | undefined =
     config?.css || ctx.cssExports.length
       ? {...config?.css, ...(build.css ? {splitting: true} : {})}
@@ -193,7 +192,7 @@ export async function resolveTsdownConfig(
     format,
     entry: rolldownEntry,
     // POSIX separators: on Windows `path.relative` yields backslashes, which would leak into
-    // generated `package.json` export targets (e.g. the conditional vanilla-extract export)
+    // generated `package.json` export targets (e.g. the conditional CSS export)
     outDir: path.relative(cwd, distPath).replaceAll('\\', '/') || '.',
     target: ctx.target[build.runtime],
     define,
@@ -208,7 +207,6 @@ export async function resolveTsdownConfig(
     css,
     reactCompiler: reactCompilerOption,
     styledComponents: config?.styledComponents,
-    vanillaExtract: config?.vanillaExtract,
     bundleAnalyzer: config?.bundleAnalyzer,
     // Types-only builds still emit `.d.ts` files that deserve the check; watch mode skips it
     // so a failing TSDoc rule doesn't tear down the watcher on every save.

@@ -315,58 +315,6 @@ snapshots:
 			},
 		},
 
-		"benchmarks/vanilla-extract": {
-			"devDependencies": {
-				"@sanity/tsconfig": "workspace:*",
-				"@sanity/vanilla-extract-integration": "workspace:*",
-				"@sanity/vanilla-extract-rolldown-plugin": "workspace:*",
-				"@sanity/vanilla-extract-vite-plugin": "workspace:*",
-				"@types/node": "catalog:",
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-				"@vanilla-extract/integration": {
-					"specifier": "^8.0.11",
-					"version": "8.0.11",
-				},
-				"@vanilla-extract/rollup-plugin": {
-					"specifier": "^1.5.4",
-					"version": "1.5.4",
-				},
-				"@vanilla-extract/vite-plugin": {
-					"specifier": "^5.2.6",
-					"version": "5.2.6",
-				},
-				"lightningcss": {
-					"specifier": "^1.33.0",
-					"version": "1.33.0",
-				},
-				"playwright": {
-					"specifier": "^1.65.1",
-					"version": "1.65.1",
-				},
-				"rolldown": {
-					"specifier": "~1.3.3",
-					"version": "1.3.3",
-				},
-				"rollup": {
-					"specifier": "^4.68.3",
-					"version": "4.68.6",
-				},
-				"tsx": {
-					"specifier": "^4.23.15",
-					"version": "4.23.15",
-				},
-				"typescript": "catalog:",
-				"vite": {
-					"specifier": "^8.3.8",
-					"version": "8.3.8",
-				},
-				"vitest": "catalog:",
-			},
-		},
-
 		"css-playground/astro": {
 			"devDependencies": {
 				"@astrojs/react": {
@@ -397,19 +345,19 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
 		"css-playground/bun": {
 			"devDependencies": {
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
 		"css-playground/deno": {
 			"devDependencies": {
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
@@ -419,7 +367,7 @@ snapshots:
 					"specifier": "^30.5.2",
 					"version": "30.5.2",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
@@ -450,7 +398,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
@@ -481,7 +429,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
@@ -512,20 +460,20 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
 		"css-playground/node": {
 			"devDependencies": {
 				"@types/node": "catalog:",
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
 		"css-playground/node-tap": {
 			"devDependencies": {
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"tap": {
 					"specifier": "^21.8.1",
 					"version": "21.8.1",
@@ -559,7 +507,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"vue": {
 					"specifier": "^3.5.45",
 					"version": "3.5.45",
@@ -593,7 +541,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
@@ -631,7 +579,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"vite": {
 					"specifier": "^8.3.8",
 					"version": "8.3.8",
@@ -653,7 +601,7 @@ snapshots:
 					"specifier": "^19.3.1",
 					"version": "19.3.1",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 			"optionalDependencies": {
 				"remix": "3.2.0",
@@ -690,15 +638,16 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 			},
 		},
 
-		"css-playground/sanity-css-vanilla-extract-test": {
-			"name": "sanity-css-vanilla-extract-test",
+		"css-playground/sanity-css-test": {
+			"name": "sanity-css-test",
 			"devDependencies": {
 				"@sanity/pkg-utils": "workspace:*",
 				"@sanity/tsconfig": "workspace:*",
+				"@tsdown/css": "catalog:",
 				"@types/react": {
 					"specifier": "^19.3.0",
 					"version": "19.3.0",
@@ -706,10 +655,6 @@ snapshots:
 				"@types/react-dom": {
 					"specifier": "^19.3.0",
 					"version": "19.3.0",
-				},
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
 				},
 				"react": {
 					"specifier": "^19.3.1",
@@ -723,7 +668,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": {
+				"sanity-css-test": {
 					"specifier": "workspace:*",
 					"version": "link:",
 				},
@@ -752,7 +697,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"solid-js": {
 					"specifier": "^1.9.19",
 					"version": "1.9.19",
@@ -802,7 +747,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"vite": {
 					"specifier": "^8.3.8",
 					"version": "8.3.8",
@@ -845,7 +790,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"vite": {
 					"specifier": "^8.3.8",
 					"version": "8.3.8",
@@ -855,7 +800,7 @@ snapshots:
 
 		"css-playground/vitest": {
 			"devDependencies": {
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"vitest": "catalog:",
 			},
 		},
@@ -894,7 +839,7 @@ snapshots:
 					"specifier": "^6.1.4",
 					"version": "6.1.4",
 				},
-				"sanity-css-vanilla-extract-test": "workspace:*",
+				"sanity-css-test": "workspace:*",
 				"style-loader": {
 					"specifier": "^4.0.0",
 					"version": "4.0.0",
@@ -915,73 +860,6 @@ snapshots:
 					"specifier": "^6.1.0",
 					"version": "6.1.0",
 				},
-			},
-		},
-
-		"integration/vanilla-extract-studio": {
-			"devDependencies": {
-				"@sanity/tsconfig": "workspace:*",
-				"@sanity/vanilla-extract-vite-plugin": "workspace:*",
-				"@types/node": "catalog:",
-				"@types/react": {
-					"specifier": "^19.3.0",
-					"version": "19.3.0",
-				},
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-				"@vanilla-extract/vite-plugin": {
-					"specifier": "^5.2.6",
-					"version": "5.2.6",
-					"with": {
-						"supports-color": "8.1.1",
-					},
-				},
-				"plain-css-js-dependency": {
-					"specifier": "file:./fixtures/plain-css-js-dependency",
-					"version": "file:integration/vanilla-extract-studio/fixtures/plain-css-js-dependency",
-				},
-				"react": {
-					"specifier": "^19.3.1",
-					"version": "19.3.1",
-				},
-				"react-dom": {
-					"specifier": "^19.3.1",
-					"version": "19.3.1",
-				},
-				"rimraf": {
-					"specifier": "^6.1.4",
-					"version": "6.1.4",
-				},
-				"sanity": {
-					"specifier": "^6.24.0",
-					"version": "6.24.0",
-					"with": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"supports-color": "8.1.1",
-					},
-				},
-				"styled-components": {
-					"specifier": "^6.6.0",
-					"version": "6.6.0",
-				},
-				"typescript": "catalog:",
-				"vite": {
-					"specifier": "^8.3.8",
-					"version": "8.3.8",
-				},
-				"vitest": "catalog:",
 			},
 		},
 
@@ -1224,7 +1102,6 @@ snapshots:
 					"specifier": "^1.0.5",
 					"version": "1.0.5",
 				},
-				"@sanity/vanilla-extract-tsdown-plugin": "workspace:^",
 				"@typescript/typescript6": {
 					"specifier": "^6.0.2",
 					"version": "6.0.2",
@@ -1290,6 +1167,12 @@ snapshots:
 		"packages/@sanity/tsdown-config/test/fixtures/bundle-analyzer-library": {},
 
 		"packages/@sanity/tsdown-config/test/fixtures/circular-dependency-library": {},
+
+		"packages/@sanity/tsdown-config/test/fixtures/css-modules-library": {
+			"devDependencies": {
+				"@tsdown/css": "catalog:",
+			},
+		},
 
 		"packages/@sanity/tsdown-config/test/fixtures/external-side-effect": {
 			"dependencies": {
@@ -1389,151 +1272,6 @@ snapshots:
 					"specifier": "^6.6.0",
 					"version": "6.6.0",
 				},
-			},
-		},
-
-		"packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-cjs-library": {
-			"devDependencies": {
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-			},
-		},
-
-		"packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-css-modules-library": {
-			"devDependencies": {
-				"@tsdown/css": "catalog:",
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-			},
-		},
-
-		"packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-library": {
-			"devDependencies": {
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-			},
-		},
-
-		"packages/@sanity/tsdown-config/test/fixtures/vanilla-extract-node-target-library": {
-			"devDependencies": {
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-			},
-		},
-
-		"packages/@sanity/vanilla-extract-integration": {
-			"name": "@sanity/vanilla-extract-integration",
-			"dependencies": {
-				"@emotion/hash": {
-					"specifier": "^0.9.2",
-					"version": "0.9.2",
-				},
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-				"javascript-stringify": {
-					"specifier": "^2.1.0",
-					"version": "2.1.0",
-				},
-				"rolldown": {
-					"specifier": "~1.3.3",
-					"version": "1.3.3",
-				},
-				"yuku-parser": {
-					"specifier": "^0.19.0",
-					"version": "0.19.0",
-				},
-			},
-			"devDependencies": {
-				"@sanity/tsconfig": "workspace:^",
-				"@sanity/tsdown-config": "workspace:^",
-				"@types/node": "catalog:",
-				"publint": "catalog:",
-				"tsdown": "catalog:",
-				"typescript": "catalog:",
-				"vitest": "catalog:",
-			},
-		},
-
-		"packages/@sanity/vanilla-extract-rolldown-plugin": {
-			"name": "@sanity/vanilla-extract-rolldown-plugin",
-			"dependencies": {
-				"@sanity/vanilla-extract-integration": "workspace:^",
-				"lightningcss": "catalog:",
-			},
-			"devDependencies": {
-				"@sanity/tsconfig": "workspace:^",
-				"@sanity/tsdown-config": "workspace:^",
-				"@types/node": "catalog:",
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-				"publint": "catalog:",
-				"rolldown": {
-					"specifier": "~1.3.3",
-					"version": "1.3.3",
-				},
-				"tsdown": "catalog:",
-				"typescript": "catalog:",
-				"vitest": "catalog:",
-			},
-		},
-
-		"packages/@sanity/vanilla-extract-tsdown-plugin": {
-			"name": "@sanity/vanilla-extract-tsdown-plugin",
-			"dependencies": {
-				"@sanity/vanilla-extract-rolldown-plugin": "workspace:^",
-			},
-			"devDependencies": {
-				"@sanity/tsconfig": "workspace:^",
-				"@sanity/tsdown-config": "workspace:^",
-				"@types/node": "catalog:",
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-				"publint": "catalog:",
-				"rolldown": {
-					"specifier": "~1.3.3",
-					"version": "1.3.3",
-				},
-				"tsdown": "catalog:",
-				"typescript": "catalog:",
-				"vitest": "catalog:",
-			},
-		},
-
-		"packages/@sanity/vanilla-extract-vite-plugin": {
-			"name": "@sanity/vanilla-extract-vite-plugin",
-			"dependencies": {
-				"@sanity/vanilla-extract-integration": "workspace:^",
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-			},
-			"devDependencies": {
-				"@sanity/tsconfig": "workspace:^",
-				"@sanity/tsdown-config": "workspace:^",
-				"@types/node": "catalog:",
-				"publint": "catalog:",
-				"tsdown": "catalog:",
-				"typescript": "catalog:",
-				"vite": {
-					"specifier": "^8.3.8",
-					"version": "8.3.8",
-				},
-				"vitest": "catalog:",
 			},
 		},
 
@@ -1751,54 +1489,6 @@ snapshots:
 				"styled-components": {
 					"specifier": "^6.6.0",
 					"version": "6.6.0",
-				},
-			},
-		},
-
-		"playground/sanity-plugin-with-vanilla-extract": {
-			"dependencies": {
-				"@sanity/ui": {
-					"specifier": "^4.4.12",
-					"version": "4.4.12",
-				},
-			},
-			"devDependencies": {
-				"@types/react": {
-					"specifier": "^19.3.0",
-					"version": "19.3.0",
-				},
-				"@types/react-dom": {
-					"specifier": "^19.3.0",
-					"version": "19.3.0",
-				},
-				"@vanilla-extract/css": {
-					"specifier": "^1.21.3",
-					"version": "1.21.3",
-				},
-				"@vanilla-extract/vite-plugin": {
-					"specifier": "^5.2.6",
-					"version": "5.2.6",
-				},
-				"babel-plugin-react-compiler": "1.0.0",
-				"react": {
-					"specifier": "^19.3.1",
-					"version": "19.3.1",
-				},
-				"react-dom": {
-					"specifier": "^19.3.1",
-					"version": "19.3.1",
-				},
-				"sanity": {
-					"specifier": "^6.24.0",
-					"version": "6.24.0",
-				},
-				"styled-components": {
-					"specifier": "^6.6.0",
-					"version": "6.6.0",
-				},
-				"vite": {
-					"specifier": "^8.3.8",
-					"version": "8.3.8",
 				},
 			},
 		},
@@ -2751,41 +2441,29 @@ snapshots:
 			"integrity": "sha512-nKvzhuLMMnFHHsENpUZh4N2e+LqnKDgT0SMibSyv8aW8FqGKWMqLO/zdnRjAYcruH9At6LVicWg7DgTc6IPzNg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-annotate-as-pure": "7.29.7",
 				"regexpu-core": "6.5.4",
 				"semver": "6.3.2",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/helper-define-polyfill-provider@0.6.8": {
 			"integrity": "sha512-47UwBLPpQi1NoWzLuHNjRoHlYXMwIJoBf7MFou6viC/sIHWYygpvr0B6IAyh5sBdA2nr2LPIRww8lfaUVQINBA==",
 			"peerDependencies": {
-				"@babel/core": "^7.4.0 || ^8.0.0-0 <8.0.0",
+				"@babel/core": {
+					"specifier": "^7.4.0 || ^8.0.0-0 <8.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-compilation-targets": "7.29.13",
@@ -2794,36 +2472,6 @@ snapshots:
 				"lodash.debounce": "4.0.8",
 				"resolve": "1.22.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/helper-globals@7.29.7": {
@@ -2970,43 +2618,20 @@ snapshots:
 			"integrity": "sha512-16AMiW26DbXWBbr3B8wNozKM0ydMLB892vaOaJW/fPJdnT8vJk5sdkQcU/isqUxyCE0cEoa8wZOcbgDuC4b6Og==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-annotate-as-pure": "7.29.7",
 				"@babel/helper-wrap-function": "7.29.14",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/helper-replace-supers@7.29.7": {
@@ -3112,29 +2737,17 @@ snapshots:
 		"@babel/helper-wrap-function@7.29.14": {
 			"integrity": "sha512-sBCQEL5D9MYOI5RvWpYtXJBeFLuGGI40hU7wW4WtDvuSZGi0zDV+cn8y9sJWD5rKpjZdsde0+oJniLbU2vdfIg==",
 			"engines": {"node": ">=6.9.0"},
+			"peerDependencies": {
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
+			},
 			"dependencies": {
 				"@babel/template": "7.29.7",
 				"@babel/traverse": "7.29.14",
 				"@babel/types": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/helpers@7.29.14": {
@@ -3177,265 +2790,116 @@ snapshots:
 			"integrity": "sha512-j8SrR0zLZrRsC09DlszEx8FpMiwukKffYXMK0d5LmOglO7vGG6sz/BR/20yHqWH+Lnn31JTt2PE3hIWNgM2J6w==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-bugfix-safari-class-field-initializer-scope@7.29.7": {
 			"integrity": "sha512-r8j8escF+U2FUHo0KOhPUdMzUO+jp9fInva6+ACVAF3Y97Ev+5iNZwiqTghmzNeWwDkOPlYuTcfb1vDaoZKmAQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@7.29.7": {
 			"integrity": "sha512-GE1TFSiuFeGsCxmYXZl8HwoPrVlwe4rHPFE8weieGKZqnDORK+Ar3vgWMgW+AOxQ6/2TgLSKx9p6W7O4rC6qgQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-bugfix-safari-rest-destructuring-rhs-array@7.29.13": {
 			"integrity": "sha512-7RpEgFZq9xNRHsWwPLFQpjPOi0ZECE2QZWMBes+vgK7E02krjOfPiYtnHTIUF2nCDyeCJPvSAj0AP4NTVf4hsw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-skip-transparent-expression-wrappers": "7.29.13",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@7.29.7": {
 			"integrity": "sha512-QQt9qKHZ2sg/kivaLr7lnQr8HVrQDdBNSfCsTjiDxRuX/K5ORyKq+Bu8Xr0cDE3Dfkv0cw28Ve0EKyKMvulkOw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.13.0",
+				"@babel/core": {
+					"specifier": "^7.13.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-skip-transparent-expression-wrappers": "7.29.13",
 				"@babel/plugin-transform-optional-chaining": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly@7.29.7": {
 			"integrity": "sha512-pn6QacGLgvCcwc+syUhKE/qSjV2D1IHDB84RNxWYSt1mW3K/SCtjinZ2p0cETJxAWBjPy3K/1lHwG5BjjPxNlw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-proposal-private-property-in-object@7.21.0-placeholder-for-preset-env.2": {
 			"integrity": "sha512-SOSkfJDddaM7mak6cPEpswyTRnuRltl429hMraQEglW+OkovnCzsiszTmsrlY//qLFjCpQDFRvjdm2wA5pPm9w==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-syntax-async-generators@7.8.4": {
@@ -3495,33 +2959,14 @@ snapshots:
 			"integrity": "sha512-/An1OCBN93thpBAGyfsK2pcf0jvju1SAtKkL2Ny++B5Sy6sqgzXDQH1cZxWbF96Wuk+bn41MDA9bLd4VVAw6rw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-syntax-import-attributes@7.29.7": {
@@ -3759,325 +3204,149 @@ snapshots:
 			"integrity": "sha512-727YkEAPwSIQTv5im8QHz3upqp92JTWhidIC81Tdx4VJYIte/VndKf1qKrfnnhPLiPghStWfvC/iFaMCQu7Nqg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-arrow-functions@7.29.7": {
 			"integrity": "sha512-N7zArUXWzAMzm+/N0uPBeVB3Fam5lMxtUwMmDK5f/IBBS7a7p1qeUoxd/6CckXoxUdgsntq1Dh8xNW06maZbDQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-async-generator-functions@7.29.7": {
 			"integrity": "sha512-d98gXZkgswvkyohMBABkhm3GeXhYj8psWfwQ2C7gtfrKGTykQa/iOIi+JJhwMjPlZ6Vm2XN+DCf3Es1EoG4ZLA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-remap-async-to-generator": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-async-to-generator@7.29.7": {
 			"integrity": "sha512-pcUb2SS+RMo9TWVBwKGI5ShtoG7R+zBsFmCKDa6fe8c+hPr3XJlZgoE5j6i8W7gDjhyvy+85vmYexanvXh3d1w==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-module-imports": "7.29.7",
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-remap-async-to-generator": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-block-scoped-functions@7.29.7": {
 			"integrity": "sha512-cUSmjh72N+rN4PrkFlN1dJwNCwjVp5d38/CQrEsFggkD10UiFlBFgdH3tv5dNsLuHY+3S8db2xCHjhZcv5WgvA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-block-scoping@7.29.13": {
 			"integrity": "sha512-q7f5zYLtDLqO11ydQK1w2RqZ1m5kmcAlmgZlfXssKgqVyL8+HgDvWXMxvuEz8TuJfq1UNsY9sB6ABjjtQkN6wA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-class-properties@7.29.7": {
 			"integrity": "sha512-GtcpjFvanPfzNQi3eTitsCqtRRmmqzpy/A+yhTR1HaZo1Ly3EA8ZXxlPyHdR8/IuRMYc3E4wdGBewB2QKQjAaA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-create-class-features-plugin": "7.29.13",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-class-static-block@7.29.14": {
 			"integrity": "sha512-4rr6WKSu9DzMYpcTlbjHw6hFRk0Gkys3D54mqNE4tOyYQFOTrf3RBhntYH62ec/fbvgGEVATh5cqGZjM2Yc3gw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.12.0",
+				"@babel/core": {
+					"specifier": "^7.12.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-create-class-features-plugin": "7.29.13",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-classes@7.29.11": {
 			"integrity": "sha512-f8kTDM/nTvpLeafb+TJ4jboFr/Y3BbC+QzgPpPGzSKJqWLnj9LW0WLqv4XKA11LX5sr+EgvLE6Ix3YsCEusodw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-annotate-as-pure": "7.29.7",
@@ -4087,112 +3356,40 @@ snapshots:
 				"@babel/helper-replace-supers": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-computed-properties@7.29.7": {
 			"integrity": "sha512-RK7/IyU5phpuCdBAuig5VkzG/EnbDaui5SQGdU9BFrHdV+mV4cUjLMQ9lJDjLNtWHsqtiefpGZUXQP2BiTYMsA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/template": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-destructuring@7.29.13": {
 			"integrity": "sha512-X2meXB39NOPPmmshSRJzyd50hX9uCzbscNQwVCjLCtq363PZIJFFxJIeZPpgAewC570vpdeGIHTcltwd0QUlJg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-destructuring@8.0.5": {
@@ -4213,580 +3410,252 @@ snapshots:
 			"integrity": "sha512-3qc18hsD2RdZiyJNDNc7HQpv6xbncwh8FYtxNFFzclSyh/trPD9KkVR9BDECUjDLvb7yJVF15GfYUuC+LMkkiQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-duplicate-keys@7.29.7": {
 			"integrity": "sha512-6IvRRriEMqnBwD6chtxdLpMYCHWEzN+oL5cyQtjykya19UgzbmKhxmhZgKC/LHxS2nYr9Q/qYPZ5Lr6jOL9+yQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-duplicate-named-capturing-groups-regex@7.29.7": {
 			"integrity": "sha512-2wiIyo2BjtgU7HufSeDnL9L2O7zr8jmhFKuSr65VpRkUiRKRNpb0mdlk56+XPPKoIrfHqzbMuglDvZun0RISsA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-dynamic-import@7.29.7": {
 			"integrity": "sha512-giOlEm/EFjfjr+te9NsdjkUo2v4f8rS/SXPumRVHAtbNcyNlvtREkU1dZzaIDclNpnaVhlCqRdFKhJBjBikzLg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-explicit-resource-management@7.29.7": {
 			"integrity": "sha512-Rstj7coNz8sE+7Ju7ihpHLI564lsK5pUpNNlvptCIC/16E/S5hbl6n3kESPKdNRmqEWlpn5xpS5Q2dvXBsySLw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/plugin-transform-destructuring": "7.29.13",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-exponentiation-operator@7.29.7": {
 			"integrity": "sha512-zFpMOTLZBdW5LfObqcSbL6kefg4R4eLdmvS0wbN9M6D5Mym/sKm9toOoWyVOa+xDjvCnuWcHls2YonXwHvH3CQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-export-namespace-from@7.29.7": {
 			"integrity": "sha512-24B2nOy2TeJSMheqwPD4DDQOV/elLSIlKxjZt4i05H5AgdPdWR3n18HnNrcJ+j76WJd9gbwb9jPjNYUy6RautA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-for-of@7.29.13": {
 			"integrity": "sha512-dFjiIw+xBYpgLhYDc1QFQOZmMX44se0YCmXUjPsm9SQEj9HaCJAjvVnK6/yK9iE4E1LaKU5fIAKVJPZWCbKwXw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-skip-transparent-expression-wrappers": "7.29.13",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-function-name@7.29.7": {
 			"integrity": "sha512-otRWaHXE6fbAGkePvaj/kvs3HsqXfPhlnzwSOlnFgbqCPMd975dW+4wZ00WFBt+/YlBGcJwNrARQTOJOb4ZrIg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-compilation-targets": "7.29.13",
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-json-strings@7.29.7": {
 			"integrity": "sha512-RRnE2+eon1rJAq8MnoF1b5kTpY1vU88twHcvcKMrsqP/jxIRqDVs9iJB5fqPuqyeFAW0wJo4MlUIPpQCq/aRsg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-literals@7.29.7": {
 			"integrity": "sha512-DZ/oLP21ZuWx1vKqnoNv6/tvEK48AQOBRai40CX9dTjGluvT/YZCyY3rryDtyUqCEoyNroy5KKPwX2iQCiRvyw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-logical-assignment-operators@7.29.7": {
 			"integrity": "sha512-A0H91hh6W8MFRkp5TqJmMr39jzGD1A1E1Ysiv2O06Sfbhkapm+XyIzxWCEh5kqwOZ1/8QZ0dY3SeQ7XBqfJd5Q==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-member-expression-literals@7.29.7": {
 			"integrity": "sha512-hl1kwFZCCiDyfH25Xmco9jTrkPgnS9pmOzSG7W5I4SaGbLeqKv417hcU2RKmaxoPEgsoJh7ZPOrnPGq99bHoUg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-modules-amd@7.29.14": {
 			"integrity": "sha512-n0CzmQX3BoyPq3p3+udWNd99Yag9NJPKA1d/2SA5wLZS2Rrep8BSIP6uXfwz3ydJYL2ycXIMsuew2mtSYacG1A==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-module-transforms": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-modules-commonjs@7.29.14": {
 			"integrity": "sha512-mbv2yy5dqP6e3DbusCx+5AypXkFbyJD/JhG4/XhA+BIADOw5o7W+X0ewSp/h3w7gRL3oR5yny2/K8ljiydj4uA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-module-transforms": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-modules-systemjs@7.29.8": {
 			"integrity": "sha512-6iSnEK0zlkLKU4heofK/AdmRD4e2SHVpJMtrwnTCzhnaM98ria4rTrOXBBi45BTTYnJtO8txnPsX4fChYXkmeA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-module-transforms": "7.29.14",
@@ -4794,286 +3663,104 @@ snapshots:
 				"@babel/helper-validator-identifier": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-modules-umd@7.29.14": {
 			"integrity": "sha512-R9DargOyEaXhrsZNsUTof3RUxZupSpSmwQ58emYbmdUa/aMrZE/mLpeEZjze4RnijUyivyjJnLa/hbVEB7sy3w==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-module-transforms": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-named-capturing-groups-regex@7.29.7": {
 			"integrity": "sha512-vuFoLwr4qnv2xbZ16SQd6uPcH5FNrLHhk/Jzo++0XJFcaDsr4gjJVg6j398oMHiC+83k/GiBzviwF5KBJkPUtQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-new-target@7.29.7": {
 			"integrity": "sha512-fEo41GmsOUhOBlw8ioo6zvjX5Xc2Lqkzlyfqbpsk3eB6TReV18uhxZ0esfEokVbY2+PVJAQHNKxER6lGrzNd3A==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-nullish-coalescing-operator@7.29.7": {
 			"integrity": "sha512-idmp1dFaekP9GbcMvG24Kvw2BfhFZjHnNJCkV4WuIY4PskJzwI3f1N5OdgYke38T7rftO6ERulFRn2cFeZwRkg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-numeric-separator@7.29.7": {
 			"integrity": "sha512-zR7fv/z14OjgHl4AgRtkDBvBMhIzCxqV/qN/2BCRC7LjFwvuzjYe7gDWxC4Wl/SNsLM6SE1IWvRPYMgSJaUvNw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-object-rest-spread@7.29.7": {
 			"integrity": "sha512-Ld98jn4c0smUywL57m7SgsHq3OpThOa6LqZJif3G6jYOovPleoFhVrBJ1WegRApSFB2wu4+RelAj9AC9G08Z4A==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-compilation-targets": "7.29.13",
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/plugin-transform-destructuring": "7.29.13",
+				"@babel/plugin-transform-parameters": "7.29.7",
 				"@babel/traverse": "7.29.14",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-transform-parameters": "7.29.7",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-transform-parameters": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-object-rest-spread@8.0.1": {
@@ -5097,150 +3784,66 @@ snapshots:
 			"integrity": "sha512-Ea/diGcw0twB5IlZPO5sgET6fJsLJqPABqTuFWIR+iMPGPZJkATEIWx0wa+aEQ5UY1CBQyP/gkAiLEqn1vBiQA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-replace-supers": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-optional-catch-binding@7.29.7": {
 			"integrity": "sha512-sLsyndxK2VwX6yNUOakMb7Sh553ZTe/vVM1XJ+9Z5aW1ytsc8xOIwmyk05NNjN60vkc5/KqoTH6hB4V41LJhng==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-optional-chaining@7.29.7": {
 			"integrity": "sha512-6GM1dhvK3gNODkXcEcMCOLEDCLSoZ/sBbro2Ax8HURyasQ4NshagQixkRFdh5niI6E4gmA/jYI/4aT7rRos3ZQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-skip-transparent-expression-wrappers": "7.29.13",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-parameters@7.29.7": {
 			"integrity": "sha512-ZDOBqV/qLYJI0YElr8DcENEyARsFQeESqWXH6gZlghYXuPPjvweuDhP4VyEi4BlUBlLRFZVjxoZDMjxhLW766g==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-parameters@8.0.5": {
@@ -5261,575 +3864,250 @@ snapshots:
 			"integrity": "sha512-/6Rz4DK1ETDEM/bWHsPHcaEe7ZaT1EqSXjtSP/L0DijOYuaUhiRiOKcwpZ8P7zR4xXEHc2ITdiCgBm9Tpyv9ug==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-create-class-features-plugin": "7.29.13",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-private-property-in-object@7.29.7": {
 			"integrity": "sha512-+BNo06dnrzdNNqCm1X6YUaVv0DKk8Q+JYcoZfOkLhYWNCXzlwTSRq8zGWayT1csjcpNXV9CQTBRRbmTLZac5cA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-annotate-as-pure": "7.29.7",
 				"@babel/helper-create-class-features-plugin": "7.29.13",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-property-literals@7.29.7": {
 			"integrity": "sha512-bOMRLQuI0A5ZqHq3OWJ89/rXpJ/NJrbVhXiP4zwPGMs6kpcVsuTUNjwoE30K0Qm3mf48a/TnRYYD6vPNqcg6jA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-react-display-name@7.29.7": {
 			"integrity": "sha512-+1wdDMGNb4UPeY3Q4L5yLiYe6TXPXubs4NjrgRFw13hPRLJfEMw2Q5OXkee6/IfdqePIeW4Jjwe3aBh7SdKz4Q==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-react-jsx-development@7.29.7": {
 			"integrity": "sha512-Xfy3UVMF04+ypnFbkhvfqtmvwfe92qwQdbGZVonhE+6v35GzlofmOnA1szaZqzb9xYWr0nl1e5EMmzi0DNON1g==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/plugin-transform-react-jsx": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-react-jsx@7.29.7": {
 			"integrity": "sha512-WsZulLVBUHXVj2cUcPVx6UE21TpalB6bHbSFErKT0Ib++ax24jjXe73FqlWvdylFOjiuPHYi6VCcgRad1ItN+A==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-annotate-as-pure": "7.29.7",
 				"@babel/helper-module-imports": "7.29.7",
 				"@babel/helper-plugin-utils": "7.29.7",
-				"@babel/types": "7.29.14",
-			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-syntax-jsx": "7.29.7",
-					},
-				},
-				{
-					"peerDependencies": {
+				"@babel/plugin-syntax-jsx": {
+					"version": "7.29.7",
+					"with": {
 						"@babel/core": {
 							"version": "7.29.13",
 							"with": {
 								"supports-color": "8.1.1",
 							},
 						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-syntax-jsx": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
 					},
 				},
-			],
+				"@babel/types": "7.29.14",
+			},
 		},
 
 		"@babel/plugin-transform-react-pure-annotations@7.29.7": {
 			"integrity": "sha512-H5E+HBgDpr6Q5t+Aj11tL7XkIui1jhbIoArVQnqjgXo5/3YxkN7ZEBcWF4RQlB0T4rrxJQbXS6kiFV6B7XTqUA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-annotate-as-pure": "7.29.7",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-regenerator@7.29.8": {
 			"integrity": "sha512-0UpIXPtdDtMXfnV2OJAVMLpj3H/92vmkA6lpSRakmycJvj3VUy6Xs1dM8tXRugupykr5WB+LpiVl0J8LMVg2mg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-regexp-modifiers@7.29.7": {
 			"integrity": "sha512-mB5Fs0VWrJ42ZCmc8114v60qetdaUVNkj9PmSZRmanCZM3S9hm0CFRLjRmYIsuXav14l2jvZ+4T8iiCGnhj3nQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-reserved-words@7.29.7": {
 			"integrity": "sha512-5+YhdpVgmfSmwZyLMftfaiffLRMHjzIRHFHHLdibcSyJm2pasMrKHrO3Ptrt2DRshjvpgjEJJ1zVW14WPq/6QA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-shorthand-properties@7.29.7": {
 			"integrity": "sha512-I+WYbGBAiCn7nA6xBrlgPH+MB7HWb4u8pv5S0Pv7OtwNvIFvCCb24YlttKEeUFVurfBCEaOTnuhlqsb7f0Z5Dg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-spread@7.29.11": {
 			"integrity": "sha512-5xWGhfuMgbOfIjsk/I2c4uMnoqRwQdKYi4QjvybQrcEVE0G9/p3qmIkp2Sxe8YF8DGNNVs5whfwNqIM5684XoQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-skip-transparent-expression-wrappers": "7.29.13",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-sticky-regex@7.29.7": {
 			"integrity": "sha512-BCHzNYJGe9l7EpwwDBN/ztlL2NYFFq8hp9ddjtUEM9f2O7S7kKV/lL6Fwo7IF7NSkYhPK2vO+86nIGltA90MsA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-template-literals@7.29.7": {
 			"integrity": "sha512-NCSEJ4sLFU2gqAub45HYh4fus2yQ36rr6ei6vpU7NdoJqCpxvEG8E6eJpscGyXP3VHD2Ny+fSXr04k1hoUrFqA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-typeof-symbol@7.29.7": {
 			"integrity": "sha512-223mNGoTkBiTEWFoK+Q6Go3tueMRclO8vxxxxquNCYuNI4jWOofFKJRRDu6SDrB8Sgo1UEGW9T4GAQ8ZyRso1A==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-typescript@7.29.9": {
@@ -5896,187 +4174,73 @@ snapshots:
 			"integrity": "sha512-jCfXxSjf94lf4E0hKE0AByxF6F3/pVFqRdUUNkDJhsY0m1ZKjnN6ZYyMeHNpzflxb/0q5b7t3p+BE+SLF1WOtA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-unicode-property-regex@7.29.7": {
 			"integrity": "sha512-OgZ+zoAJgZLUCunsTRQ5LAjOywDv5zzZ2/hQ5aMw1pGXyY2rtE8/chXYUmu3AlVHKpm10KEdG9aMwbI/K76ZGw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-unicode-regex@7.29.7": {
 			"integrity": "sha512-7D/x/23/d/3VqZ0QA+LGbZMlGwZjztBygSWWWsfTPoQ1oQ6Q1P6Mr3d0kk42XabyUVw+fha3LqdRsFqeKqvCyA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/plugin-transform-unicode-sets-regex@7.29.7": {
 			"integrity": "sha512-BLOhLht9DOJwIxlmp91wHvkXv1lguuHS3/FwUO8HL1H0u8s4hR1gASVFyilu9iGtcTRYqjTZmlsFFeQletntEg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
+				"@babel/helper-create-regexp-features-plugin": "7.29.14",
 				"@babel/helper-plugin-utils": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": "7.29.14",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-					"dependencies": {
-						"@babel/helper-create-regexp-features-plugin": {
-							"version": "7.29.14",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/preset-env@7.29.14": {
 			"integrity": "sha512-Vigj5vlTvQVUUzw5geGRE7SLQ3wEDHWP00PMxmM80eWNUfLPCrvaKttN+bqqu6ev4g+GJ24ILel4stUN+DPAUw==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/compat-data": "7.29.7",
@@ -6084,709 +4248,163 @@ snapshots:
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-validator-option": "7.29.7",
 				"@babel/plugin-bugfix-firefox-class-in-computed-class-key": "7.29.7",
+				"@babel/plugin-bugfix-safari-class-field-initializer-scope": "7.29.7",
+				"@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": "7.29.7",
 				"@babel/plugin-bugfix-safari-rest-destructuring-rhs-array": "7.29.13",
 				"@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining": "7.29.7",
 				"@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly": "7.29.7",
+				"@babel/plugin-proposal-private-property-in-object": "7.21.0-placeholder-for-preset-env.2",
+				"@babel/plugin-syntax-import-assertions": "7.29.7",
+				"@babel/plugin-syntax-import-attributes": {
+					"version": "7.29.7",
+					"with": {
+						"@babel/core": {
+							"version": "7.29.13",
+							"with": {
+								"supports-color": "8.1.1",
+							},
+						},
+					},
+				},
+				"@babel/plugin-syntax-unicode-sets-regex": "7.18.6",
+				"@babel/plugin-transform-arrow-functions": "7.29.7",
 				"@babel/plugin-transform-async-generator-functions": "7.29.7",
 				"@babel/plugin-transform-async-to-generator": "7.29.7",
+				"@babel/plugin-transform-block-scoped-functions": "7.29.7",
+				"@babel/plugin-transform-block-scoping": "7.29.13",
 				"@babel/plugin-transform-class-properties": "7.29.7",
 				"@babel/plugin-transform-class-static-block": "7.29.14",
 				"@babel/plugin-transform-classes": "7.29.11",
+				"@babel/plugin-transform-computed-properties": "7.29.7",
 				"@babel/plugin-transform-destructuring": "7.29.13",
+				"@babel/plugin-transform-dotall-regex": "7.29.7",
+				"@babel/plugin-transform-duplicate-keys": "7.29.7",
+				"@babel/plugin-transform-duplicate-named-capturing-groups-regex": "7.29.7",
+				"@babel/plugin-transform-dynamic-import": "7.29.7",
 				"@babel/plugin-transform-explicit-resource-management": "7.29.7",
+				"@babel/plugin-transform-exponentiation-operator": "7.29.7",
+				"@babel/plugin-transform-export-namespace-from": "7.29.7",
 				"@babel/plugin-transform-for-of": "7.29.13",
 				"@babel/plugin-transform-function-name": "7.29.7",
+				"@babel/plugin-transform-json-strings": "7.29.7",
+				"@babel/plugin-transform-literals": "7.29.7",
+				"@babel/plugin-transform-logical-assignment-operators": "7.29.7",
+				"@babel/plugin-transform-member-expression-literals": "7.29.7",
 				"@babel/plugin-transform-modules-amd": "7.29.14",
 				"@babel/plugin-transform-modules-commonjs": "7.29.14",
 				"@babel/plugin-transform-modules-systemjs": "7.29.8",
 				"@babel/plugin-transform-modules-umd": "7.29.14",
+				"@babel/plugin-transform-named-capturing-groups-regex": "7.29.7",
+				"@babel/plugin-transform-new-target": "7.29.7",
+				"@babel/plugin-transform-nullish-coalescing-operator": "7.29.7",
+				"@babel/plugin-transform-numeric-separator": "7.29.7",
 				"@babel/plugin-transform-object-rest-spread": "7.29.7",
 				"@babel/plugin-transform-object-super": "7.29.7",
+				"@babel/plugin-transform-optional-catch-binding": "7.29.7",
 				"@babel/plugin-transform-optional-chaining": "7.29.7",
+				"@babel/plugin-transform-parameters": "7.29.7",
 				"@babel/plugin-transform-private-methods": "7.29.7",
 				"@babel/plugin-transform-private-property-in-object": "7.29.7",
+				"@babel/plugin-transform-property-literals": "7.29.7",
+				"@babel/plugin-transform-regenerator": "7.29.8",
+				"@babel/plugin-transform-regexp-modifiers": "7.29.7",
+				"@babel/plugin-transform-reserved-words": "7.29.7",
+				"@babel/plugin-transform-shorthand-properties": "7.29.7",
 				"@babel/plugin-transform-spread": "7.29.11",
+				"@babel/plugin-transform-sticky-regex": "7.29.7",
+				"@babel/plugin-transform-template-literals": "7.29.7",
+				"@babel/plugin-transform-typeof-symbol": "7.29.7",
+				"@babel/plugin-transform-unicode-escapes": "7.29.7",
+				"@babel/plugin-transform-unicode-property-regex": "7.29.7",
+				"@babel/plugin-transform-unicode-regex": "7.29.7",
+				"@babel/plugin-transform-unicode-sets-regex": "7.29.7",
+				"@babel/preset-modules": "0.1.6-no-external-plugins",
 				"babel-plugin-polyfill-corejs2": "0.4.17",
 				"babel-plugin-polyfill-corejs3": "0.14.2",
 				"babel-plugin-polyfill-regenerator": "0.6.8",
 				"core-js-compat": "3.51.0",
 				"semver": "6.3.2",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-bugfix-safari-class-field-initializer-scope": "7.29.7",
-						"@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": "7.29.7",
-						"@babel/plugin-proposal-private-property-in-object": "7.21.0-placeholder-for-preset-env.2",
-						"@babel/plugin-syntax-import-assertions": "7.29.7",
-						"@babel/plugin-syntax-import-attributes": "7.29.7",
-						"@babel/plugin-syntax-unicode-sets-regex": "7.18.6",
-						"@babel/plugin-transform-arrow-functions": "7.29.7",
-						"@babel/plugin-transform-block-scoped-functions": "7.29.7",
-						"@babel/plugin-transform-block-scoping": "7.29.13",
-						"@babel/plugin-transform-computed-properties": "7.29.7",
-						"@babel/plugin-transform-dotall-regex": "7.29.7",
-						"@babel/plugin-transform-duplicate-keys": "7.29.7",
-						"@babel/plugin-transform-duplicate-named-capturing-groups-regex": "7.29.7",
-						"@babel/plugin-transform-dynamic-import": "7.29.7",
-						"@babel/plugin-transform-exponentiation-operator": "7.29.7",
-						"@babel/plugin-transform-export-namespace-from": "7.29.7",
-						"@babel/plugin-transform-json-strings": "7.29.7",
-						"@babel/plugin-transform-literals": "7.29.7",
-						"@babel/plugin-transform-logical-assignment-operators": "7.29.7",
-						"@babel/plugin-transform-member-expression-literals": "7.29.7",
-						"@babel/plugin-transform-named-capturing-groups-regex": "7.29.7",
-						"@babel/plugin-transform-new-target": "7.29.7",
-						"@babel/plugin-transform-nullish-coalescing-operator": "7.29.7",
-						"@babel/plugin-transform-numeric-separator": "7.29.7",
-						"@babel/plugin-transform-optional-catch-binding": "7.29.7",
-						"@babel/plugin-transform-parameters": "7.29.7",
-						"@babel/plugin-transform-property-literals": "7.29.7",
-						"@babel/plugin-transform-regenerator": "7.29.8",
-						"@babel/plugin-transform-regexp-modifiers": "7.29.7",
-						"@babel/plugin-transform-reserved-words": "7.29.7",
-						"@babel/plugin-transform-shorthand-properties": "7.29.7",
-						"@babel/plugin-transform-sticky-regex": "7.29.7",
-						"@babel/plugin-transform-template-literals": "7.29.7",
-						"@babel/plugin-transform-typeof-symbol": "7.29.7",
-						"@babel/plugin-transform-unicode-escapes": "7.29.7",
-						"@babel/plugin-transform-unicode-property-regex": "7.29.7",
-						"@babel/plugin-transform-unicode-regex": "7.29.7",
-						"@babel/plugin-transform-unicode-sets-regex": "7.29.7",
-						"@babel/preset-modules": "0.1.6-no-external-plugins",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-bugfix-safari-class-field-initializer-scope": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-proposal-private-property-in-object": {
-							"version": "7.21.0-placeholder-for-preset-env.2",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-syntax-import-assertions": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-syntax-import-attributes": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-syntax-unicode-sets-regex": {
-							"version": "7.18.6",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-arrow-functions": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-block-scoped-functions": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-block-scoping": {
-							"version": "7.29.13",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-computed-properties": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-dotall-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-duplicate-keys": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-duplicate-named-capturing-groups-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-dynamic-import": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-exponentiation-operator": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-export-namespace-from": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-json-strings": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-literals": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-logical-assignment-operators": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-member-expression-literals": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-named-capturing-groups-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-new-target": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-nullish-coalescing-operator": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-numeric-separator": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-optional-catch-binding": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-parameters": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-property-literals": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-regenerator": {
-							"version": "7.29.8",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-regexp-modifiers": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-reserved-words": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-shorthand-properties": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-sticky-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-template-literals": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-typeof-symbol": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-unicode-escapes": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-unicode-property-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-unicode-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-unicode-sets-regex": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/preset-modules": {
-							"version": "0.1.6-no-external-plugins",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/preset-modules@0.1.6-no-external-plugins": {
 			"integrity": "sha512-HrcgcIESLm9aIR842yhJ5RWan/gebQUJ6E/E5+rf0y9o6oj7w0Br+sWuL6kEQ/o/AdfvR1Je9jG18/gnpwjEyA==",
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0 || ^8.0.0-0 <8.0.0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0 || ^8.0.0-0 <8.0.0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/types": "7.29.14",
 				"esutils": "2.0.3",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/preset-react@7.29.7": {
 			"integrity": "sha512-C+PV1TFUPTmBQGoPBL8j2QmLpZ117YTCwxIZeJOM96GbYMFSc7/pOXU5lVykwnZxyTqQxRsvoRk6f2FktZgGHA==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-validator-option": "7.29.7",
+				"@babel/plugin-transform-react-display-name": "7.29.7",
 				"@babel/plugin-transform-react-jsx": "7.29.7",
 				"@babel/plugin-transform-react-jsx-development": "7.29.7",
+				"@babel/plugin-transform-react-pure-annotations": "7.29.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-transform-react-display-name": "7.29.7",
-						"@babel/plugin-transform-react-pure-annotations": "7.29.7",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-transform-react-display-name": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@babel/plugin-transform-react-pure-annotations": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/preset-typescript@7.29.7": {
 			"integrity": "sha512-/Foi8vKY2EVbed/1eZx0gJEEwHAIxogrySI7rULcRIvhZzbvoE/b5qG5Ghc0WKAFKOHA9SD1x7RsFlOYdutIiQ==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-plugin-utils": "7.29.7",
 				"@babel/helper-validator-option": "7.29.7",
-				"@babel/plugin-transform-modules-commonjs": "7.29.14",
-				"@babel/plugin-transform-typescript": "7.29.9",
-			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-syntax-jsx": "7.29.7",
-					},
-				},
-				{
-					"peerDependencies": {
+				"@babel/plugin-syntax-jsx": {
+					"version": "7.29.7",
+					"with": {
 						"@babel/core": {
 							"version": "7.29.13",
 							"with": {
 								"supports-color": "8.1.1",
 							},
 						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-syntax-jsx": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
 					},
 				},
-			],
+				"@babel/plugin-transform-modules-commonjs": "7.29.14",
+				"@babel/plugin-transform-typescript": "7.29.9",
+			},
 		},
 
 		"@babel/register@7.29.13": {
 			"integrity": "sha512-MgjJHsquuHn0BvPonFcJuBZkeqOG3rz9X1ViQZRl+a0EXvLXMKlhCAaqsu6OpijCrRRAmMWvFc9uuWS7lkFwdg==",
 			"engines": {"node": ">=6.9.0"},
 			"peerDependencies": {
-				"@babel/core": "^7.0.0-0",
+				"@babel/core": {
+					"specifier": "^7.0.0-0",
+					"version": "7.29.13",
+				},
 			},
 			"dependencies": {
 				"clone-deep": "4.0.1",
@@ -6795,28 +4413,6 @@ snapshots:
 				"pirates": "4.0.7",
 				"source-map-support": "0.5.21",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@babel/runtime@7.29.14": {
@@ -7602,10 +5198,6 @@ snapshots:
 			"dependencies": {
 				"tslib": "2.9.1",
 			},
-		},
-
-		"@emotion/hash@0.9.2": {
-			"integrity": "sha512-MyqliTZGuOm3+5ZRSaaBGP3USLw6+EGykkwZns2EPC5g8jJ4z9OrdZY9apkl3+UP9+sdz76YYkwCKP5gh8iY3g==",
 		},
 
 		"@emotion/is-prop-valid@1.4.0": {
@@ -16398,6 +13990,7 @@ snapshots:
 			"peerDependencies": {
 				"@sanity/cli-build": {
 					"specifier": ">= 6",
+					"version": "7.3.0",
 					"optional": true,
 				},
 				"jiti": {
@@ -16414,60 +14007,6 @@ snapshots:
 			"dependencies": {
 				"parse-duration": "2.1.11",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "10.2.2",
-													},
-												},
-											},
-										},
-										"supports-color": "10.2.2",
-									},
-								},
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/blueprints@0.34.1": {
@@ -16476,6 +14015,7 @@ snapshots:
 			"peerDependencies": {
 				"@sanity/cli-build": {
 					"specifier": ">= 6",
+					"version": "7.3.0",
 					"optional": true,
 				},
 				"jiti": {
@@ -16492,60 +14032,6 @@ snapshots:
 			"dependencies": {
 				"parse-duration": "2.1.11",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "10.2.2",
-													},
-												},
-											},
-										},
-										"supports-color": "10.2.2",
-									},
-								},
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/browserslist-config@1.0.5": {
@@ -16599,6 +14085,7 @@ snapshots:
 				},
 				"sanity": {
 					"specifier": "^6.22.0",
+					"version": "6.24.0",
 					"optional": true,
 				},
 				"terser": {
@@ -16656,50 +14143,6 @@ snapshots:
 				"vite": "8.3.8",
 				"zod": "4.6.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"sanity": {
-							"version": "6.24.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "10.2.2",
-											},
-										},
-									},
-								},
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"sanity": {
-							"version": "6.24.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/cli-core@3.15.1": {
@@ -16788,6 +14231,10 @@ snapshots:
 					"version": "0.3.1",
 					"below": true,
 				},
+				"@sanity/workflow-blueprint": {
+					"version": "0.37.0",
+					"below": true,
+				},
 				"@types/node": {
 					"version": "24.19.2",
 					"below": true,
@@ -16829,6 +14276,14 @@ snapshots:
 					"version": "1.3.3",
 					"below": true,
 				},
+				"sanity": {
+					"version": "6.24.0",
+					"below": true,
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 				"terser": {
 					"version": "5.51.2",
 					"below": true,
@@ -16858,6 +14313,8 @@ snapshots:
 				"@oclif/core": "4.14.0",
 				"@oclif/plugin-help": "6.3.0",
 				"@oclif/plugin-not-found": "3.3.0",
+				"@sanity/blueprints": "0.33.0",
+				"@sanity/cli-build": "7.3.0",
 				"@sanity/cli-core": "3.15.1",
 				"@sanity/client": "8.16.0",
 				"@sanity/codegen": "8.3.1",
@@ -16867,6 +14324,7 @@ snapshots:
 				"@sanity/id-utils": "1.1.0",
 				"@sanity/import": "7.1.1",
 				"@sanity/migrate": "8.0.5",
+				"@sanity/runtime-cli": "17.21.5",
 				"@sanity/schema": "6.24.0",
 				"@sanity/schema-descriptor-utils": "1.4.0",
 				"@sanity/telemetry": "1.1.0",
@@ -16876,6 +14334,7 @@ snapshots:
 				"@sanity/validation": "6.24.0",
 				"@sanity/workbench-cli": "2.18.0",
 				"@sanity/worker-channels": "2.0.0",
+				"@sanity/workflow-cli": "0.37.0",
 				"@sanity/workflow-engine": "0.37.0",
 				"@vercel/frameworks": "3.29.0",
 				"chokidar": "5.0.0",
@@ -16916,185 +14375,6 @@ snapshots:
 				"yaml": "2.9.1",
 				"zod": "4.6.7",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "10.2.2",
-									},
-								},
-							},
-							"below": true,
-						},
-						"sanity": {
-							"version": "6.24.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "10.2.2",
-											},
-										},
-									},
-								},
-								"supports-color": "10.2.2",
-							},
-							"below": true,
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@sanity/blueprints": "0.33.0",
-						"@sanity/cli-build": "7.3.0",
-						"@sanity/runtime-cli": "17.21.5",
-						"@sanity/workflow-cli": "0.37.0",
-					},
-				},
-				{
-					"peerDependencies": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-							"below": true,
-						},
-						"sanity": {
-							"version": "6.24.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-								"supports-color": "8.1.1",
-							},
-							"below": true,
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@sanity/blueprints": {
-							"version": "0.33.0",
-							"with": {
-								"@sanity/cli-build": {
-									"version": "7.3.0",
-									"with": {
-										"sanity": {
-											"version": "6.24.0",
-											"with": {
-												"@sanity/workflow-blueprint": {
-													"version": "0.37.0",
-													"with": {
-														"@sanity/workflow-engine": {
-															"version": "0.37.0",
-															"with": {
-																"supports-color": "8.1.1",
-															},
-														},
-													},
-												},
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-							},
-						},
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@sanity/runtime-cli": {
-							"version": "17.21.5",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@sanity/workflow-cli": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/client@7.28.0": {
@@ -17138,6 +14418,10 @@ snapshots:
 					"version": "19.3.1",
 					"below": true,
 				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 				"typescript": {
 					"version": "7.0.2",
 					"below": true,
@@ -17149,6 +14433,7 @@ snapshots:
 				"@babel/preset-env": "7.29.14",
 				"@babel/preset-react": "7.29.7",
 				"@babel/preset-typescript": "7.29.7",
+				"@babel/register": "7.29.13",
 				"@babel/traverse": "7.29.14",
 				"@babel/types": "7.29.14",
 				"@sanity/telemetry": "1.1.0",
@@ -17165,40 +14450,6 @@ snapshots:
 				"tsconfig-paths": "4.2.0",
 				"valibot": "1.5.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/register": "7.29.13",
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/register": {
-							"version": "7.29.13",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/color@3.0.9": {
@@ -17280,27 +14531,15 @@ snapshots:
 		"@sanity/groq-condition-describe@0.5.2": {
 			"integrity": "sha512-HbP+UytB9gbScX5JuCM5mJNIZ093p3eeuDojqbf5KIunBaAqi0AuamsU5bjfNa/roE92xAJ9HDLbS5Vc93aPWA==",
 			"engines": {"node": ">=20"},
+			"peerDependencies": {
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
+			},
 			"dependencies": {
 				"groq-js": "1.30.3",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/icons@5.4.0": {
@@ -17584,6 +14823,10 @@ snapshots:
 					"version": "1.3.3",
 					"below": true,
 				},
+				"sanity": {
+					"version": "6.24.0",
+					"below": true,
+				},
 				"terser": {
 					"version": "5.51.2",
 					"below": true,
@@ -17622,7 +14865,9 @@ snapshots:
 				"@oclif/core": "4.14.0",
 				"@oclif/plugin-help": "6.3.0",
 				"@sanity-labs/oclif-plugin-skills-flag": "0.2.1",
+				"@sanity/blueprints": "0.34.1",
 				"@sanity/blueprints-parser": "0.5.0",
+				"@sanity/cli-build": "7.3.0",
 				"@sanity/cli-core": "3.15.1",
 				"@sanity/client": "8.16.0",
 				"adm-zip": "0.6.1",
@@ -17642,107 +14887,6 @@ snapshots:
 				"ws": "8.23.0",
 				"xdg-basedir": "5.1.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"sanity": {
-							"version": "6.24.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "10.2.2",
-											},
-										},
-									},
-								},
-								"supports-color": "10.2.2",
-							},
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@sanity/blueprints": "0.34.1",
-						"@sanity/cli-build": "7.3.0",
-					},
-				},
-				{
-					"peerDependencies": {
-						"sanity": {
-							"version": "6.24.0",
-							"with": {
-								"@sanity/workflow-blueprint": {
-									"version": "0.37.0",
-									"with": {
-										"@sanity/workflow-engine": {
-											"version": "0.37.0",
-											"with": {
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-								"supports-color": "8.1.1",
-							},
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@sanity/blueprints": {
-							"version": "0.34.1",
-							"with": {
-								"@sanity/cli-build": {
-									"version": "7.3.0",
-									"with": {
-										"sanity": {
-											"version": "6.24.0",
-											"with": {
-												"@sanity/workflow-blueprint": {
-													"version": "0.37.0",
-													"with": {
-														"@sanity/workflow-engine": {
-															"version": "0.37.0",
-															"with": {
-																"supports-color": "8.1.1",
-															},
-														},
-													},
-												},
-												"supports-color": "8.1.1",
-											},
-										},
-									},
-								},
-							},
-						},
-						"@sanity/cli-build": {
-							"version": "7.3.0",
-							"with": {
-								"sanity": {
-									"version": "6.24.0",
-									"with": {
-										"@sanity/workflow-blueprint": {
-											"version": "0.37.0",
-											"with": {
-												"@sanity/workflow-engine": {
-													"version": "0.37.0",
-													"with": {
-														"supports-color": "8.1.1",
-													},
-												},
-											},
-										},
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/schema-descriptor-utils@1.4.0": {
@@ -18162,33 +15306,14 @@ snapshots:
 			"integrity": "sha512-+XFTUOu57nobzV3OGC67CWag2TPssyPclvewe5lqFbyo4DQj4uVxTcByw70FOWnJ1+fHDDla1DKCcx723BI4oA==",
 			"engines": {"node": ">=20"},
 			"peerDependencies": {
-				"@sanity/workflow-engine": "0.37.0",
+				"@sanity/workflow-engine": {
+					"specifier": "0.37.0",
+					"version": "0.37.0",
+				},
 			},
 			"dependencies": {
 				"@sanity/client": "7.28.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@sanity/workflow-engine": {
-							"version": "0.37.0",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@sanity/workflow-engine": {
-							"version": "0.37.0",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/workflow-cli@0.37.0": {
@@ -18200,8 +15325,14 @@ snapshots:
 					"specifier": "^3.6.0",
 					"version": "3.15.1",
 				},
-				"@sanity/workflow-blueprint": "0.37.0",
-				"@sanity/workflow-engine": "0.37.0",
+				"@sanity/workflow-blueprint": {
+					"specifier": "0.37.0",
+					"version": "0.37.0",
+				},
+				"@sanity/workflow-engine": {
+					"specifier": "0.37.0",
+					"version": "0.37.0",
+				},
 				"react": {
 					"version": "19.3.1",
 					"below": true,
@@ -18220,50 +15351,6 @@ snapshots:
 				"ora": "9.4.1",
 				"wrap-ansi": "10.0.2",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "10.2.2",
-									},
-								},
-							},
-						},
-						"@sanity/workflow-engine": {
-							"version": "0.37.0",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-						"@sanity/workflow-engine": {
-							"version": "0.37.0",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-					},
-				},
-			],
 		},
 
 		"@sanity/workflow-engine@0.37.0": {
@@ -18272,6 +15359,10 @@ snapshots:
 			"peerDependencies": {
 				"@types/react": {
 					"version": "19.3.0",
+					"below": true,
+				},
+				"supports-color": {
+					"version": "8.1.1",
 					"below": true,
 				},
 				"typescript": {
@@ -18286,24 +15377,6 @@ snapshots:
 				"groq-js": "1.30.3",
 				"valibot": "1.5.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"@sec-ant/readable-stream@0.4.1": {
@@ -20768,229 +17841,6 @@ snapshots:
 			"optional": true,
 		},
 
-		"@vanilla-extract/babel-plugin-debug-ids@1.2.2": {
-			"integrity": "sha512-MeDWGICAF9zA/OZLOKwhoRlsUW+fiMwnfuOAqFVohL31Agj7Q/RBWAYweqjHLgFBCsdnr6XIfwjJnmb2znEWxw==",
-			"dependencies": {
-				"@babel/core": "7.29.13",
-			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
-		},
-
-		"@vanilla-extract/compiler@0.7.2": {
-			"integrity": "sha512-VslwMJ01taDhJmMo0+A0SWn2dloMnYi0+BbvLuXXlqK4ufVRwXsq/U/Fp8ANkw3jevmQXy+JL7VtIQdjEtylDQ==",
-			"peerDependencies": {
-				"@types/node": {
-					"version": "24.19.2",
-					"below": true,
-				},
-				"esbuild": {
-					"version": "0.28.2",
-					"below": true,
-				},
-				"jiti": {
-					"version": "2.7.0",
-					"below": true,
-				},
-				"terser": {
-					"version": "5.51.2",
-					"below": true,
-				},
-				"tsx": {
-					"version": "4.23.15",
-					"below": true,
-				},
-				"yaml": {
-					"version": "2.9.1",
-					"below": true,
-				},
-			},
-			"dependencies": {
-				"@vanilla-extract/css": "1.21.3",
-				"@vanilla-extract/integration": "8.0.11",
-				"vite": "8.3.8",
-				"vite-node": "6.0.0",
-			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
-		},
-
-		"@vanilla-extract/css@1.21.3": {
-			"integrity": "sha512-h7wXxEowNLjhGfTHqReoSBWjAzxDADM8yUuUL/enDWXQVwy50JnY8xFNaie04XHTmrBPKJjwcwRNuTGlFIJLSA==",
-			"dependencies": {
-				"@emotion/hash": "0.9.2",
-				"@vanilla-extract/private": "1.0.9",
-				"css-what": "6.2.2",
-				"csstype": "3.2.4",
-				"dedent": "1.7.2",
-				"deep-object-diff": "1.1.9",
-				"deepmerge-ts": "8.0.2",
-				"lru-cache": "10.4.3",
-				"media-query-parser": "2.0.2",
-				"modern-ahocorasick": "3.3.0",
-				"picocolors": "1.1.1",
-			},
-		},
-
-		"@vanilla-extract/integration@8.0.11": {
-			"integrity": "sha512-f24QLKpY6qN1AJcWxvbfP6H3BNJPkLC6La52OfRje6KNPTrlFX4nBlw10UDyPI7pwwh6zXR7IKyD/LCmWQBnpg==",
-			"dependencies": {
-				"@babel/core": "7.29.13",
-				"@vanilla-extract/babel-plugin-debug-ids": "1.2.2",
-				"@vanilla-extract/css": "1.21.3",
-				"dedent": "1.7.2",
-				"esbuild": "0.28.2",
-				"eval": "0.1.8",
-				"find-up": "5.0.0",
-				"javascript-stringify": "2.1.0",
-				"mlly": "1.8.2",
-			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-syntax-typescript": "7.29.7",
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-					"dependencies": {
-						"@babel/plugin-syntax-typescript": {
-							"version": "7.29.7",
-							"with": {
-								"@babel/core": {
-									"version": "7.29.13",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-						},
-					},
-				},
-			],
-		},
-
-		"@vanilla-extract/private@1.0.9": {
-			"integrity": "sha512-gT2jbfZuaaCLrAxwXbRgIhGhcXbRZCG3v4TTUnjw0EJ7ArdBRxkq4msNJkbuRkCgfIK5ATmprB5t9ljvLeFDEA==",
-		},
-
-		"@vanilla-extract/rollup-plugin@1.5.4": {
-			"integrity": "sha512-MFcpJ4ri+a76RPl2co8n1PPMcYwRo7nq95UPdNThBT9gG2QvOiXsDd+ussHIwcTrQd8LGjoRb5bjIKUnoWnw0g==",
-			"peerDependencies": {
-				"rollup": {
-					"specifier": "^2.0.0 || ^3.0.0 || ^4.0.0",
-					"version": "4.68.6",
-				},
-				"supports-color": {
-					"version": "10.2.2",
-					"below": true,
-				},
-			},
-			"dependencies": {
-				"@vanilla-extract/integration": "8.0.11",
-				"magic-string": "0.30.21",
-			},
-		},
-
-		"@vanilla-extract/vite-plugin@5.2.6": {
-			"integrity": "sha512-mGk0YEan+NyeoxEO51LfxOdtw2JBI+Yb840FGg+zvG6tVU3YfDgKGPiGuk5oT8jqzfsm7H89DyjOVCpl6Bnn0w==",
-			"peerDependencies": {
-				"@types/node": {
-					"version": "24.19.2",
-					"below": true,
-				},
-				"esbuild": {
-					"version": "0.28.2",
-					"below": true,
-				},
-				"jiti": {
-					"version": "2.7.0",
-					"below": true,
-				},
-				"terser": {
-					"version": "5.51.2",
-					"below": true,
-				},
-				"tsx": {
-					"version": "4.23.15",
-					"below": true,
-				},
-				"vite": {
-					"specifier": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0",
-					"version": "8.3.8",
-				},
-				"yaml": {
-					"version": "2.9.1",
-					"below": true,
-				},
-			},
-			"dependencies": {
-				"@vanilla-extract/compiler": "0.7.2",
-				"@vanilla-extract/integration": "8.0.11",
-			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
-		},
-
 		"@vercel/error-utils@2.2.0": {
 			"integrity": "sha512-WFWiRxfPzoYWYifaj4thSKvAaZZwUOqD4k5GINRIgZgCiS2E3iAJbWbIsIZmkQdTecWFHcWGA6q48CjisgpOBA==",
 		},
@@ -21573,96 +18423,6 @@ snapshots:
 			"integrity": "sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==",
 		},
 
-		"@yuku-core/binding-android-arm64@0.19.0": {
-			"integrity": "sha512-wdL2XmTiZixAOaHk9Z0JJZ8u9Qm8d333Zjpc6gaxXFX+UR5BlsfxZ7a2+2Rm71pamppsPYGUGFq2oVLbh6DISw==",
-			"cpu": ["arm64"],
-			"os": ["android"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-darwin-arm64@0.19.0": {
-			"integrity": "sha512-7sNJa6XJhyetnTy64jw3NEi4YgUcezHk1G5GH9FSvXAuC8wIlbaOwT9lgq5qo5sspjrZJQlBR1TWflP49uRpMw==",
-			"cpu": ["arm64"],
-			"os": ["darwin"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-darwin-x64@0.19.0": {
-			"integrity": "sha512-pTC7dYEc59isdyizc3nsuyFNBu2LU5wMYZ1be6UMr59PY/AJNtO1aBLWV0MgL/z7C1nv/2sX4TNjGgKLoeevJw==",
-			"cpu": ["x64"],
-			"os": ["darwin"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-freebsd-x64@0.19.0": {
-			"integrity": "sha512-xrZjF6XOEwyLOiDIfrwDdRCS6ghxcJeirNC1KivQhVcUwlRonaU79S3/Uiyx3lBylPnT8qKJ3/aMT+H52nGTJQ==",
-			"cpu": ["x64"],
-			"os": ["freebsd"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-linux-arm-gnu@0.19.0": {
-			"integrity": "sha512-0OyIH53C0I1CbADHn9FSdCfX5qbpeLwJhmOVhonFJNYheybOnkSJ50qGMfTJIb8y5zrwqvLs7FVBvz6Fk8maZg==",
-			"cpu": ["arm"],
-			"os": ["linux"],
-			"libc": ["glibc"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-linux-arm-musl@0.19.0": {
-			"integrity": "sha512-z/iPfkCOCSXE34VXNt0uP1ORSW+4mEa9b5CiJcWZeqZH08g49bFU/jRM2T04f+Wpw5mJ6HIzNBiojxeAbrHjeg==",
-			"cpu": ["arm"],
-			"os": ["linux"],
-			"libc": ["musl"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-linux-arm64-gnu@0.19.0": {
-			"integrity": "sha512-jLNTi+gzaRwBJ+gwhCJ+rDb5dmx/8hEBx93UWd7hjMSqPTL1D1wvVSvXVAldV5kALvju7b0/m51EHEhs4+I1fA==",
-			"cpu": ["arm64"],
-			"os": ["linux"],
-			"libc": ["glibc"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-linux-arm64-musl@0.19.0": {
-			"integrity": "sha512-YwyPIdW/rN2Fmv0MTFWi47FaB3F9g+2b+sJISyAw83Yd60RWH4T3Nx6XkAHHVN+uKJNBAd6So7/BVihSiFYvuQ==",
-			"cpu": ["arm64"],
-			"os": ["linux"],
-			"libc": ["musl"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-linux-x64-gnu@0.19.0": {
-			"integrity": "sha512-/vskaAXVX3ESR43FiTdfiYS7z1b9uoQJwVQ/0RgUHgN2sWoAyCZs+aX4CgU7eKGIHTVfp9VFwv+c+2XchYiEtQ==",
-			"cpu": ["x64"],
-			"os": ["linux"],
-			"libc": ["glibc"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-linux-x64-musl@0.19.0": {
-			"integrity": "sha512-FuXL5igeSKib9Rye02TdH+D6SQezTyGxIATMu1Qsn/QywrzwpGl35OLpS2C1x5vpGLeVE2XgiLd5mVPFHmIglQ==",
-			"cpu": ["x64"],
-			"os": ["linux"],
-			"libc": ["musl"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-win32-arm64@0.19.0": {
-			"integrity": "sha512-YuJAe7zEKT1Xa7LuHlhGJpPnYQeVtvo0rZvNjJRqkH0hQGOw4C8QeP30Tg5VKGzZfo2x8CjhjEhKt4TmLwfmdg==",
-			"cpu": ["arm64"],
-			"os": ["win32"],
-			"optional": true,
-		},
-
-		"@yuku-core/binding-win32-x64@0.19.0": {
-			"integrity": "sha512-o8iY/mXwlRkedp0LNTr4+TEfXTPQwoNZmv6k+1WIAd1ZXEn8xJJTBCtB0osaVvdZo/x/cNmV16UrWrrGpM5Mvw==",
-			"cpu": ["x64"],
-			"os": ["win32"],
-			"optional": true,
-		},
-
 		"@yuku-toolchain/darwin-arm64@0.28.1": {
 			"integrity": "sha512-xMtZUwiGvJH90ogLjRrnG5+YEhinKti8qMPF18bd5z0ahSoaHWyBoe16evT7cSUxid0JEaZvh6H3daDPwDw4+g==",
 			"cpu": ["arm64"],
@@ -21689,10 +18449,6 @@ snapshots:
 			"cpu": ["x64"],
 			"os": ["linux"],
 			"optional": true,
-		},
-
-		"@yuku-toolchain/types@0.19.0": {
-			"integrity": "sha512-tFkNbsP4WXX9UMUC5syJGdK9dPMLK0PPaIuXCcCYH75sZ8MrebfBZ2XvCILRTw8AgLivSSCfDa4R67iYBDa4Kg==",
 		},
 
 		"@yuku-toolchain/win32-arm64@0.28.1": {
@@ -22310,124 +19066,55 @@ snapshots:
 		"babel-plugin-polyfill-corejs2@0.4.17": {
 			"integrity": "sha512-aTyf30K/rqAsNwN76zYrdtx8obu0E4KoUME29B1xj+B3WxgvWkp943vYQ+z8Mv3lw9xHXMHpvSPOBxzAkIa94w==",
 			"peerDependencies": {
-				"@babel/core": "^7.4.0 || ^8.0.0-0 <8.0.0",
+				"@babel/core": {
+					"specifier": "^7.4.0 || ^8.0.0-0 <8.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/compat-data": "7.29.7",
 				"@babel/helper-define-polyfill-provider": "0.6.8",
 				"semver": "6.3.2",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"babel-plugin-polyfill-corejs3@0.14.2": {
 			"integrity": "sha512-coWpDLJ410R781Npmn/SIBZEsAetR4xVi0SxLMXPaMO4lSf1MwnkGYMtkFxew0Dn8B3/CpbpYxN0JCgg8mn67g==",
 			"peerDependencies": {
-				"@babel/core": "^7.4.0 || ^8.0.0-0 <8.0.0",
+				"@babel/core": {
+					"specifier": "^7.4.0 || ^8.0.0-0 <8.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-define-polyfill-provider": "0.6.8",
 				"core-js-compat": "3.51.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"babel-plugin-polyfill-regenerator@0.6.8": {
 			"integrity": "sha512-M762rNHfSF1EV3SLtnCJXFoQbbIIz0OyRwnCmV0KPC7qosSfCO0QLTSuJX3ayAebubhE6oYBAYPrBA5ljowaZg==",
 			"peerDependencies": {
-				"@babel/core": "^7.4.0 || ^8.0.0-0 <8.0.0",
+				"@babel/core": {
+					"specifier": "^7.4.0 || ^8.0.0-0 <8.0.0",
+					"version": "7.29.13",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@babel/helper-define-polyfill-provider": "0.6.8",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "10.2.2",
-							},
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@babel/core": {
-							"version": "7.29.13",
-							"with": {
-								"supports-color": "8.1.1",
-							},
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"babel-plugin-react-compiler@1.0.0": {
@@ -22449,7 +19136,7 @@ snapshots:
 					"version": "6.6.0",
 				},
 				"supports-color": {
-					"version": "10.2.2",
+					"version": "8.1.1",
 					"below": true,
 				},
 			},
@@ -23847,15 +20534,6 @@ snapshots:
 			},
 		},
 
-		"deep-object-diff@1.1.9": {
-			"integrity": "sha512-Rn+RuwkmkDwCi2/oXOFS9Gsr5lJZu/yTGpK7wAaAIE75CC+LCGEZHpY6VQJa/RoJcrmaA/docWJZvYohlNkWPA==",
-		},
-
-		"deepmerge-ts@8.0.2": {
-			"integrity": "sha512-uqbvqLUMrc6p0MO+WBRtTxY55hmyh94WRwI5a++PZe54X+bfVh59FSN7uWCBCW1CCVjzjnrwzfI8zidE2obMMw==",
-			"engines": {"node": ">=16.9.0"},
-		},
-
 		"deepmerge@4.3.1": {
 			"integrity": "sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==",
 			"engines": {"node": ">=0.10.0"},
@@ -24446,15 +21124,6 @@ snapshots:
 		"etag@1.8.1": {
 			"integrity": "sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==",
 			"engines": {"node": ">= 0.6"},
-		},
-
-		"eval@0.1.8": {
-			"integrity": "sha512-EzV94NYKoO09GLXGjXj9JIlXijVck4ONSr5wiCWDvhsvj5jxSrzTmRU/9C1DyB6uToszLs8aifA6NQ7lEQdvFw==",
-			"engines": {"node": ">= 0.8"},
-			"dependencies": {
-				"@types/node": "24.19.2",
-				"require-like": "0.1.2",
-			},
 		},
 
 		"event-source-polyfill@1.0.31": {
@@ -25357,27 +22026,15 @@ snapshots:
 		"groq-js@1.30.3": {
 			"integrity": "sha512-X3Zppy8KO/mDLSu5RylcO9zON+IwxV6y6aeIWsfNNBz0PaRboUmsTVgk3Zndqp9TgWCTFvCk+Z2W0uu0R3i5DA==",
 			"engines": {"node": ">= 14"},
+			"peerDependencies": {
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
+			},
 			"dependencies": {
 				"debug": "4.4.3",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"groq-js@2.0.1": {
@@ -26393,29 +23050,15 @@ snapshots:
 					"version": "2.4.0",
 					"below": true,
 				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"dompurify": "3.4.18",
 				"jsdom": "28.1.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"isomorphic-ws@5.0.0": {
@@ -27027,6 +23670,10 @@ snapshots:
 					"specifier": "^3.0.0",
 					"optional": true,
 				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
+				},
 			},
 			"dependencies": {
 				"@acemir/cssom": "0.9.33",
@@ -27051,24 +23698,6 @@ snapshots:
 				"whatwg-url": "16.0.1",
 				"xml-name-validator": "5.0.0",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"jsdom@29.1.1": {
@@ -27705,13 +24334,6 @@ snapshots:
 			},
 		},
 
-		"media-query-parser@2.0.2": {
-			"integrity": "sha512-1N4qp+jE0pL5Xv4uEcwVUhIkwdUO3S/9gML90nqKA7v7FcOS5vUtatfzok9S9U1EJU8dHWlcv95WLnKmmxZI9w==",
-			"dependencies": {
-				"@babel/runtime": "7.29.14",
-			},
-		},
-
 		"media-tracks@0.3.5": {
 			"integrity": "sha512-l54rkKXlLBt3ob3zOLWHcnjvwUmX5bNEZ70igyapOZZC9imzqBmq1oz8p2roiV04KhjblFIi2hetLPF1oYVLRA==",
 		},
@@ -28119,10 +24741,6 @@ snapshots:
 
 		"mocked-exports@0.1.1": {
 			"integrity": "sha512-aF7yRQr/Q0O2/4pIXm6PZ5G+jAd7QS4Yu8m+WEeEHGnbo+7mE36CbLSDQiXYV8bVL3NfmdeqPJct0tUlnjVSnA==",
-		},
-
-		"modern-ahocorasick@3.3.0": {
-			"integrity": "sha512-OEuPxzKD4fG8Zx2dUX8jDP7ArNhRdlHhjLA00k+ZmtXe49Qb6+E/M/ViDYnXOZ9A3uRbRIb1eTKPesQGKd0USA==",
 		},
 
 		"modern-tar@0.8.6": {
@@ -29914,12 +26532,6 @@ snapshots:
 			},
 		},
 
-		"plain-css-js-dependency@file:integration/vanilla-extract-studio/fixtures/plain-css-js-dependency": {
-			"specifiers": {
-				"manifestSource": "path",
-			},
-		},
-
 		"player.style@0.3.5": {
 			"integrity": "sha512-hknPiLjNtJP5zM0vCVXsl3Pef+uQnecYg8X/1vjd/Y3TdAgs/zxhck02SFTxRSckaObKemP5tUT8wTH7ByUmnw==",
 			"peerDependencies": {
@@ -30975,10 +27587,6 @@ snapshots:
 			"engines": {"node": ">=0.10.0"},
 		},
 
-		"require-like@0.1.2": {
-			"integrity": "sha512-oyrU88skkMtDdauHDuKVrgR+zuItqr6/c//FXzvmxRGMexSDc6hNvJInGW3LL46n+8b50RykrvwSUIIQH2LQ5A==",
-		},
-
 		"requires-port@1.0.0": {
 			"integrity": "sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==",
 		},
@@ -31386,6 +27994,10 @@ snapshots:
 					"version": "0.3.1",
 					"below": true,
 				},
+				"@sanity/workflow-blueprint": {
+					"version": "0.37.0",
+					"below": true,
+				},
 				"@types/node": {
 					"version": "24.19.2",
 					"below": true,
@@ -31445,6 +28057,10 @@ snapshots:
 				"styled-components": {
 					"specifier": "^6.1.15",
 					"version": "6.6.0",
+				},
+				"supports-color": {
+					"version": "8.1.1",
+					"below": true,
 				},
 				"terser": {
 					"version": "5.51.2",
@@ -31573,48 +28189,6 @@ snapshots:
 				"web-vitals": "6.2.3",
 				"xstate": "5.33.4",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "10.2.2",
-									},
-								},
-							},
-							"below": true,
-						},
-						"supports-color": {
-							"version": "10.2.2",
-							"below": true,
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"@sanity/workflow-blueprint": {
-							"version": "0.37.0",
-							"with": {
-								"@sanity/workflow-engine": {
-									"version": "0.37.0",
-									"with": {
-										"supports-color": "8.1.1",
-									},
-								},
-							},
-							"below": true,
-						},
-						"supports-color": {
-							"version": "8.1.1",
-							"below": true,
-						},
-					},
-				},
-			],
 		},
 
 		"satteri@0.11.7": {
@@ -35504,37 +32078,6 @@ snapshots:
 				"@speed-highlight/core": "1.2.24",
 				"cookie-es": "3.1.1",
 				"youch-core": "0.3.3",
-			},
-		},
-
-		"yuku-core@0.19.0": {
-			"integrity": "sha512-kYK9e1XdfirNhkipzW0wmMcSWcVF/CWnuugodfVYRCUwvoBefweL9HzB96OiKEhsx78V5WbUxbJqlizMX869Qg==",
-			"engines": {"node": ">=14.18.0"},
-			"dependencies": {
-				"@yuku-toolchain/types": "0.19.0",
-			},
-			"optionalDependencies": {
-				"@yuku-core/binding-android-arm64": "0.19.0",
-				"@yuku-core/binding-darwin-arm64": "0.19.0",
-				"@yuku-core/binding-darwin-x64": "0.19.0",
-				"@yuku-core/binding-freebsd-x64": "0.19.0",
-				"@yuku-core/binding-linux-arm-gnu": "0.19.0",
-				"@yuku-core/binding-linux-arm-musl": "0.19.0",
-				"@yuku-core/binding-linux-arm64-gnu": "0.19.0",
-				"@yuku-core/binding-linux-arm64-musl": "0.19.0",
-				"@yuku-core/binding-linux-x64-gnu": "0.19.0",
-				"@yuku-core/binding-linux-x64-musl": "0.19.0",
-				"@yuku-core/binding-win32-arm64": "0.19.0",
-				"@yuku-core/binding-win32-x64": "0.19.0",
-			},
-		},
-
-		"yuku-parser@0.19.0": {
-			"integrity": "sha512-XrBh9ZiQK5mJVRxZBAvD6LwRyAYrK3MFtH3+onyuxFL5hFD44EC3QOmIC1FjTj6H2MMwq46/NAI+NZxLZPZgxg==",
-			"engines": {"node": ">=14.18.0"},
-			"dependencies": {
-				"@yuku-toolchain/types": "0.19.0",
-				"yuku-core": "0.19.0",
 			},
 		},
 

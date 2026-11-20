@@ -9,7 +9,8 @@
  * configs bypass the types, and the error text is written to be actionable for humans and
  * agents alike.
  *
- * The checks are gated by the `legacyChecks` option, defaulting to on outside production
+ * The v14 `vanillaExtract` removal is checked the same way, but always runs. The other checks
+ * are gated by the `legacyChecks` option, defaulting to on outside production
  * builds (`process.env.NODE_ENV !== 'production'`) so they add no overhead where migration
  * mistakes can no longer surface.
  */
@@ -76,9 +77,10 @@ const tombstones: LegacyCheck[] = [
     migration: [
       'The rollup stack was replaced with tsdown:',
       '',
-      '  // rollup: {vanillaExtract: true}     -> vanillaExtract: true',
       '  // rollup: {plugins: [...]}           -> plugins: [...] (rolldown plugins; most',
       '  //                                       Rollup plugins are compatible)',
+      '',
+      '`rollup.vanillaExtract` has no successor: vanilla-extract support was removed in v14.',
       '',
       '`rollup.output`, `rollup.treeshake`, `rollup.experimentalLogSideEffects` and',
       '`rollup.hashChunkFileNames` have no successor (chunk filenames are content-hashed now).',
@@ -130,6 +132,22 @@ const tombstones: LegacyCheck[] = [
  * @internal
  */
 export function runLegacyConfigChecks(config: Record<string, unknown>): void {
+  // Not gated by `legacyChecks`: ignoring the option would silently publish a package without
+  // its CSS.
+  if (config['vanillaExtract'] !== undefined) {
+    throw new Error(
+      [
+        'package.config.ts: the `vanillaExtract` option was removed in @sanity/pkg-utils v14,',
+        'along with all vanilla-extract support.',
+        '',
+        'Remove the option, then either add a vanilla-extract bundler plugin to `plugins`',
+        'yourself, or move the styles to plain CSS or CSS modules with the `css` option.',
+        '',
+        `Migration notes: ${MIGRATION_GUIDE_URL}#v14-vanilla-extract-support-removed`,
+      ].join('\n'),
+    )
+  }
+
   const legacyChecks =
     typeof config['legacyChecks'] === 'boolean'
       ? config['legacyChecks']
@@ -184,7 +202,7 @@ export function runLegacyConfigChecks(config: Record<string, unknown>): void {
   // Grandfathered: `inject: {nodeCompat: true}` still works (it means
   // `{inject: true, exports: {nodeCompat: true}}`), with a nudge toward its successor. The
   // option configures how the CSS file is published, not how the import is injected.
-  for (const option of ['vanillaExtract', 'css'] as const) {
+  for (const option of ['css'] as const) {
     const value = config[option]
     if (typeof value !== 'object' || value === null) continue
     // oxlint-disable-next-line no-unsafe-type-assertion

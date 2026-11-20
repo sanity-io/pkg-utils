@@ -1,12 +1,16 @@
 # Vanilla Extract benchmarks
 
-Opt-in performance comparisons for the Vanilla Extract integrations maintained in this
-repository. The workspace uses Vitest 4's Tinybench-backed `bench` API for fixed-sample
-measurements and Playwright for browser-observed Vite HMR.
+> [!NOTE]
+> This repository no longer uses vanilla-extract. `@sanity/pkg-utils` v14 and
+> `@sanity/tsdown-config` 0.32.0 removed vanilla-extract support, the `@sanity/vanilla-extract-*`
+> packages are deprecated and no longer maintained, and the benchmark suite was deleted. See
+> [MIGRATE.md](../../packages/@sanity/pkg-utils/MIGRATE.md#v14-vanilla-extract-support-removed).
+> The results below are the last ones measured and are kept for historical reference.
 
-The benchmarks are intentionally not part of the normal test suite or CI. Run them on an idle,
-consistent machine and compare results produced with the same lockfile, Node version, fixture
-sizes, and sample counts.
+These benchmarks compared the Vanilla Extract integrations that used to be maintained in this
+repository with the official ones, using Vitest's Tinybench-backed `bench` API for fixed-sample
+measurements and Playwright for browser-observed Vite HMR. They ran opt-in, outside the normal
+test suite and CI.
 
 ## Matrix
 
@@ -74,10 +78,6 @@ Each benchmark process lazy-loads only the plugin under test — the competing i
 never imported into the same process, so module-level state cannot cross-contaminate runs.
 
 ## Latest results
-
-Keep this section current: re-run the full suite and update the tables whenever the
-`vanilla-extract` dependencies are bumped or any of the `@sanity/vanilla-extract-*` plugins
-change (see [AGENTS.md](../../AGENTS.md)).
 
 Last run: 2026-11-19, after the plugins started passing `*.css.js`/`*.css.ts` modules that are
 not vanilla-extract modules through unchanged (library builds on Rolldown 1.3.3, Vite builds on
@@ -163,38 +163,6 @@ Rust ↔ JS boundary.
 |             1,000 |                         1,006 / 1,008 |                               1 / 1 |
 |             5,000 |                         5,006 / 5,008 |                               1 / 1 |
 
-## Running
-
-Use Node.js 24, install dependencies at the repository root, then run:
-
-```sh
-pnpm benchmark:vanilla-extract
-```
-
-Run one group:
-
-```sh
-pnpm benchmark:build
-pnpm benchmark:vite-build
-pnpm benchmark:vite-hooks
-pnpm benchmark:vite-hmr
-```
-
-HMR requires a one-time Chromium install:
-
-```sh
-pnpm --filter @benchmarks/vanilla-extract install-browser
-```
-
-Check every build configuration without collecting timing samples:
-
-```sh
-pnpm --filter @benchmarks/vanilla-extract smoke
-```
-
-Each benchmark command rebuilds the local Sanity plugins and regenerates fixtures before
-starting. It also prints the exact runtime, CPU, bundler, and plugin versions.
-
 ## What is timed
 
 Build samples invoke the real local CLI binary in a fresh Node process and write output to disk.
@@ -215,38 +183,3 @@ The hook-filter stress suite reports absolute build time and handler-entry count
 default `[PLUGIN_TIMINGS]` warning is surfaced when emitted, but it is not an assertion: the
 warning requires a build longer than three seconds, a plugin longer than one second, and
 plugin-dominated execution, so whether it appears depends on the host.
-
-## Configuration
-
-All values are optional:
-
-| Variable                     |              Default | Purpose                                             |
-| ---------------------------- | -------------------: | --------------------------------------------------- |
-| `VE_BENCH_MODULES`           |                `500` | Ordinary modules in the representative graph        |
-| `VE_BENCH_STYLES`            |                `100` | `.css.ts` modules in the representative graph       |
-| `VE_BENCH_HEAVY_MODULES`     |               `5000` | Ordinary modules in the kitchen-sink graph          |
-| `VE_BENCH_HEAVY_STYLES`      |                `500` | `.css.ts` modules in the kitchen-sink graph         |
-| `VE_BENCH_HMR_MODULES`       | representative value | Ordinary modules loaded by each HMR server          |
-| `VE_BENCH_HMR_STYLES`        | representative value | `.css.ts` importers invalidated by shared-theme HMR |
-| `VE_BENCH_STRESS_SIZES`      |        `0,1000,5000` | Ordinary-module counts in the hook-filter sweep     |
-| `VE_BENCH_BUILD_ITERATIONS`  |                  `5` | Samples per normal build case                       |
-| `VE_BENCH_STRESS_ITERATIONS` |                  `3` | Samples per hook-filter build case                  |
-| `VE_BENCH_HMR_ITERATIONS`    |                 `10` | Samples per HMR case                                |
-| `VE_BENCH_WARMUP_ITERATIONS` |                  `1` | Untimed warmup samples per case                     |
-| `VE_BENCH_HMR_SETTLE`        |                `250` | Untimed milliseconds between source edits           |
-| `VE_BENCH_HMR_TIMEOUT`       |              `30000` | Milliseconds before an HMR sample fails             |
-
-For a quick wiring check:
-
-```sh
-VE_BENCH_MODULES=10 \
-VE_BENCH_STYLES=3 \
-VE_BENCH_STRESS_SIZES=0,20 \
-VE_BENCH_BUILD_ITERATIONS=1 \
-VE_BENCH_STRESS_ITERATIONS=1 \
-VE_BENCH_HMR_ITERATIONS=1 \
-pnpm benchmark:vanilla-extract
-```
-
-Generated fixtures and build outputs live in `.generated/`. Hook diagnostics are written to
-`results/vite-hook-counts.json`. Both directories are ignored by Git.

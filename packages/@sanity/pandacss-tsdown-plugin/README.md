@@ -222,7 +222,6 @@ export default defineConfig({
 ## Related
 
 - [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#panda) — the `panda` option wraps this plugin with Sanity's defaults.
-- [`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme) — the same extract-and-publish model for vanilla-extract.
 
 ## License
 

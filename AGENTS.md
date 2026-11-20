@@ -6,19 +6,17 @@ This is the `@sanity/pkg-utils` monorepo: a pnpm workspace containing a build/to
 authoring npm packages (`packages/@sanity/pkg-utils`, which composes `tsdown` +
 `@sanity/tsdown-config` for JS + `.d.ts` builds, publint for `pkg check`, and API Extractor for
 TSDoc/release-tag checking only), supporting packages (`tsdown-config`, `tsconfig`,
-`parse-package-json`, the `vanilla-extract-*-plugin` packages, `pandacss-tsdown-plugin`), a `playground/*` fixture suite
+`parse-package-json`, `pandacss-tsdown-plugin`), a `playground/*` fixture suite
 (~30 packages exercising
-build/typecheck scenarios), a `css-playground/*` fixture suite (~20 packages verifying the
-conditional `bundle.css` export pattern across many frameworks/runtimes), and an
-`integration/*` suite (a real Sanity Studio fixture comparing
-`@sanity/vanilla-extract-vite-plugin` against upstream `@vanilla-extract/vite-plugin` through
-the `sanity` CLI). There is **no long-running application/database** in this repo — it's a
+build/typecheck scenarios), and a `css-playground/*` fixture suite (~20 packages verifying the
+conditional `bundle.css` export pattern across many frameworks/runtimes). The
+`packages/@sanity/vanilla-extract-*` directories are README-only tombstones of deprecated
+packages; they are not workspace packages. There is **no long-running application/database** in this repo — it's a
 CLI/build-tool product; "running the product" means running its build/lint/test/typecheck
 commands (see root `package.json` `scripts` and `.github/workflows/main.yml` for the canonical
 commands, e.g. `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm knip`,
-`pnpm playground:build`/`:typecheck`, `pnpm css-playground:build`/`:test`,
-`pnpm integration:test`; `css-playground/README.md` and
-`integration/vanilla-extract-studio/README.md` document those suites in detail).
+`pnpm playground:build`/`:typecheck`, `pnpm css-playground:build`/`:test`;
+`css-playground/README.md` documents that suite in detail).
 
 ### Node version matters (tsdown requires Node ^22.18.0 || >=24.11.0)
 
@@ -37,31 +35,6 @@ If a shell ever shows the wrong Node version (e.g. `node -v` reports `v22.14.0`/
 or pnpm/deno/bun are "command not found"), run `nvm use 24` (or open a fresh login shell) to fix it
 for that session — `nvm`'s "current" version is sticky per-shell once explicitly set and won't
 retroactively follow later `nvm alias default` changes.
-
-### Vanilla Extract benchmarks must stay current
-
-`benchmarks/vanilla-extract` is an opt-in performance suite comparing the
-`@sanity/vanilla-extract-*` plugins against the official `@vanilla-extract/*` plugins, and its
-README publishes the latest measured results (which the plugin READMEs link to). **Whenever you
-bump any `vanilla-extract` dependency (`@vanilla-extract/*` packages, or the pinned
-`@vanilla-extract/rollup-plugin`/`@vanilla-extract/vite-plugin` dev dependencies of the benchmark
-workspace), or change any of the `@sanity/vanilla-extract-rolldown-plugin`,
-`@sanity/vanilla-extract-tsdown-plugin`, or `@sanity/vanilla-extract-vite-plugin` packages in any
-way, re-run the full suite and update the "Latest results" section of
-`benchmarks/vanilla-extract/README.md`** (tables, run date, and the environment/version line):
-
-```sh
-pnpm --filter @benchmarks/vanilla-extract install-browser # once, for the HMR suite
-pnpm benchmark:vanilla-extract
-```
-
-Run it on an idle machine on Node 24 and update all result tables — the library-build variant
-matrix (baseline/minify/target/minify+target), the Vite build baseline, dev HMR, hook-filter
-stress timings, and the hook-entry diagnostic (also written to
-`benchmarks/vanilla-extract/results/vite-hook-counts.json`).
-`pnpm --filter @benchmarks/vanilla-extract smoke` validates every build configuration first
-without collecting timings. See `benchmarks/vanilla-extract/README.md` for fixture-size and
-sample-count overrides.
 
 ### Testing notes
 
@@ -83,14 +56,3 @@ sample-count overrides.
   `rgb(1, 2, 3)`, and writes a screenshot to `css-playground/verify/screenshots/`. See
   `css-playground/README.md` for the full manual/automated visual-verification workflow (dev
   servers for individual consumers, e.g. `pnpm --filter @css-playground/vite dev`).
-- `pnpm integration:test` runs `integration/vanilla-extract-studio`: a real Sanity Studio
-  fixture driven through `sanity dev`, `sanity build`, and `sanity schema extract` with
-  `@sanity/vanilla-extract-vite-plugin` and with upstream `@vanilla-extract/vite-plugin` as the
-  reference — the fork's CSS/class-name/schema output must match upstream exactly across
-  identifier (`short`/`debug`/custom prefix), `build.cssMinify`, and `build.cssTarget`
-  variants, plus a `sanity dev` `unstable_bundledDev` (Vite bundled dev mode) case that
-  on-demand-compiles a lazy chunk containing a plain non-vanilla-extract `Styles.css.js`
-  node_modules dependency (the sanity-io/plugins#1553 scenario). **Run it whenever
-  `@sanity/vanilla-extract-vite-plugin` or `@sanity/vanilla-extract-integration` changes.**
-  The suite spawns the CLI without `NODE_ENV` on purpose (that's what reproduces GH-3073); it
-  needs no Sanity auth/network. Takes ~2.5 min (sequential CLI runs).
