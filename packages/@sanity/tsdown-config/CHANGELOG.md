@@ -1,5 +1,13 @@
 # @sanity/tsdown-config
 
+## 0.32.0
+
+### Minor Changes
+
+- [#3780](https://github.com/sanity-io/pkg-utils/pull/3780) [`45cd20c`](https://github.com/sanity-io/pkg-utils/commit/45cd20c928ce15b1f5e597eb272420b7b0171dbd) Thanks [@stipsan](https://github.com/stipsan)! - Remove the `vanillaExtract` option.
+
+  **BREAKING:** the `vanillaExtract` option and the `PackageVanillaExtractOptions` type are gone, and `@sanity/vanilla-extract-tsdown-plugin` is no longer a dependency. `defineConfig()` throws when `vanillaExtract` is set. To keep using vanilla-extract, append one of its own bundler plugins, for example `vanillaExtractPlugin()` from `@vanilla-extract/rollup-plugin`, to the `plugins` of the config `defineConfig()` returns (see the README), or move the styles to the `css` or `panda` options, which keep the conditional CSS export. `CssExportsOptions` is still exported.
+
 ## 0.31.6
 
 ### Patch Changes
