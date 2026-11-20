@@ -51,8 +51,7 @@ function detectIndent(source: string): string | number {
  * idempotent: if every export already matches, the file is left untouched.
  *
  * Full builds write these entries through tsdown's `exports.customExports` (the
- * `@sanity/vanilla-extract-tsdown-plugin` composition, and the `@sanity/tsdown-config` one for
- * `@tsdown/css` output), but watch mode disables tsdown's `exports` feature (a `package.json`
+ * `@sanity/tsdown-config` composition for `@tsdown/css` output), but watch mode disables tsdown's `exports` feature (a `package.json`
  * write per rebuild would loop the watcher) — `pkg watch` calls this once per context instead,
  * like v11 did.
  *

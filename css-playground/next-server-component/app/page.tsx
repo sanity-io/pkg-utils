@@ -1,4 +1,4 @@
-import {TestComponent} from 'sanity-css-vanilla-extract-test'
+import {TestComponent} from 'sanity-css-test'
 
 // The default App Router page is a Server Component. Rendering the package during SSR exercises the
 // Node shim path, while the client bundle resolves the self-referential import to the real CSS.

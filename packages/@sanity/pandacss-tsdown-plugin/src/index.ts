@@ -114,8 +114,8 @@ const RE_DIRECTIVE =
 /**
  * Options for {@link pandacssPlugin}: the options of the official `@pandacss/vite` plugin for
  * locating the Panda config, plus the CSS output options modeled after the `css` options of
- * [`@tsdown/css`](https://tsdown.dev/options/css) (the same vocabulary as
- * `@sanity/vanilla-extract-tsdown-plugin`) so they feel familiar in a tsdown-based toolchain.
+ * [`@tsdown/css`](https://tsdown.dev/options/css) so they feel familiar in a tsdown-based
+ * toolchain.
  * @public
  */
 export interface Options {
@@ -370,8 +370,7 @@ const CONSERVATIVE_TRANSFORM_FILTER: TransformHookFilter = {id: {exclude: [RE_DT
  * single `lightningcss`-optimized CSS
  * file — optionally lowered to the build's `target`, minified, injected into the entry chunks,
  * and published as a conditional `"./bundle.css"` export subpath, following the same
- * architecture (and option vocabulary) as `@tsdown/css` and
- * `@sanity/vanilla-extract-tsdown-plugin`.
+ * architecture (and option vocabulary) as `@tsdown/css`.
  *
  * Like `@pandacss/vite`, it also runs Panda's codegen before the build starts, so the generated
  * `styled-system` directory the sources import is in sync with the config the stylesheet is

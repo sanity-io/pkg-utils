@@ -591,7 +591,7 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     // A `.css` export subpath with a `source` builds through `@tsdown/css`, emitting the
     // stylesheet at the path its subpath promises
     expect(stdout).toContain('./src/ui/styles.css → ./dist/ui/styles.css')
-    // …lowered with lightningcss, like `vanillaExtract` output (unminified unless `minify: true`)
+    // …lowered with lightningcss (unminified unless `minify: true`)
     expect(distStylesCss).toContain('#010203')
     expect(distStylesCss).not.toContain('rgb(1, 2, 3)')
     // The pure-CSS entry leaves no JS chunk behind
@@ -688,64 +688,6 @@ describe.skipIf(process.platform === 'win32')('cli', () => {
     expect(distChunksColorInput).toMatchSnapshot('./dist/ColorInput-[hash].js')
     expect(distIndexJs).toMatchSnapshot('./dist/index.js')
     expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-  })
-
-  test('should build `sanity-plugin-with-vanilla-extract` package', async () => {
-    const project = await spawnProject('sanity-plugin-with-vanilla-extract')
-    await project.run('build')
-
-    const [
-      distChunksColorInput,
-      distIndexJs,
-      distIndexDts,
-      distBundleCss,
-      distBundleCssShim,
-      distBundleCssShimDts,
-      pkg,
-    ] = await Promise.all([
-      project.readFile(await findDistFile(project, /^ColorInput-[\w-]+\.js$/)),
-      project.readFile('dist/index.js'),
-      project.readFile('dist/index.d.ts'),
-      project.readFile('dist/bundle.css'),
-      project.readFile('dist/bundle-css.js'),
-      project.readFile('dist/bundle-css.d.ts'),
-      project.readFile('package.json'),
-    ])
-
-    // The inline CSS should be extracted to a separate file
-    expect(distChunksColorInput).not.toContain('border:')
-    expect(distBundleCss).toContain('border:')
-    // The CSS side effectful imports should remain
-    expect(distIndexJs).toContain(`import "@sanity/ui/styles.css"`)
-    // `vanillaExtract` compat mode injects the self-referential bundle.css import automatically
-    expect(distIndexJs).toContain(`import "sanity-plugin-with-vanilla-extract/bundle.css"`)
-    // …emits a no-op JS shim for CSS-unaware runtimes (named `bundle-css.js`, not
-    // `bundle.css.js`, so vanilla-extract's `cssFileFilter` does not match it). The shim has
-    // no JS syntax on purpose: it parses as both CommonJS and an ES module.
-    expect(distBundleCssShim).toContain('No-op shim for `bundle.css`')
-    // …emits the shim's `.d.ts` (the conditional export's `types` target); no separate
-    // `bundle.css.d.ts` is needed
-    expect(distBundleCssShimDts).toContain('export {}')
-    await expect(project.readFile('dist/bundle.css.d.ts')).rejects.toThrow()
-    // …and declares the conditional `./bundle.css` export in package.json
-    expect(JSON.parse(pkg).exports['./bundle.css']).toEqual({
-      types: './dist/bundle-css.d.ts',
-      browser: './dist/bundle.css',
-      style: './dist/bundle.css',
-      node: './dist/bundle-css.js',
-      default: './dist/bundle-css.js',
-    })
-    // React Compiler memoizes the component through its runtime cache
-    expect(distChunksColorInput).toContain('$ = c(')
-    // The index has a lazy loaded import to the (content-hashed) chunk
-    expect(distIndexJs).toMatch(/lazy\(\(\) => import\("\.\/ColorInput-[\w-]+\.js"\)\)/)
-    // The index d.ts inlines props that comes from the lazy loaded chunk
-    expect(distIndexDts).toContain('interface ColorOptions')
-
-    expect(distChunksColorInput).toMatchSnapshot('./dist/ColorInput-[hash].js')
-    expect(distIndexJs).toMatchSnapshot('./dist/index.js')
-    expect(distIndexDts).toMatchSnapshot('./dist/index.d.ts')
-    expect(distBundleCss).toMatchSnapshot('./dist/bundle.css')
   })
 
   test('should build with `--emitDeclarationOnly` emitting declarations only', async () => {

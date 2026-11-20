@@ -13,7 +13,7 @@ import {onMounted} from 'vue'
 // the package into the client bundle, where the browser condition resolves the self-referential
 // import to the real CSS.
 onMounted(async () => {
-  const {renderInto} = await import('sanity-css-vanilla-extract-test')
+  const {renderInto} = await import('sanity-css-test')
   const el = document.getElementById('react-root')
   if (el) await renderInto(el)
 })

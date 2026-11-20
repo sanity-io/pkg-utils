@@ -15,8 +15,7 @@ if (major < 24) {
   process.exit(0)
 }
 
-const {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} =
-  await import('sanity-css-vanilla-extract-test')
+const {createConfig, CREATE_CONFIG_MESSAGE, TestComponent} = await import('sanity-css-test')
 
 const config = createConfig()
 assert.equal(config.marker, CREATE_CONFIG_MESSAGE)

@@ -1,4 +1,4 @@
-import {TestComponent} from 'sanity-css-vanilla-extract-test'
+import {TestComponent} from 'sanity-css-test'
 
 // React Router v7 is React-based, so the component renders normally. SSR exercises the Node shim
 // path and the client build resolves the self-referential import to the real CSS.

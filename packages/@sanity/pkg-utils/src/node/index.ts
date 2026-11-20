@@ -16,7 +16,6 @@ export type {
   PackageTsdocRuleLevel,
   PkgConfigOptions,
   PackageBundleAnalyzerOptions,
-  PackageVanillaExtractOptions,
   ReactCompilerBabelOptions,
   ReactCompilerConfigOptions,
   ReactCompilerOptions,

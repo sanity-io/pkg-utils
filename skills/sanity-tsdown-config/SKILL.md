@@ -75,9 +75,8 @@ resulting local `exports` and `publishConfig.exports`.
 ## Use `PackageOptions` first
 
 The wrapper directly exposes common package options: `tsconfig`, `entry`, `format`, `dts`, `define`,
-`target`, `outDir`, `clean`, `platform`, `cwd`, `exports`, `sourcemap`, `deps`, `css`,
-`vanillaExtract`, `reactCompiler`, `styledComponents`, `bundleAnalyzer`, `tsdoc`, and
-`suppressWarnings`.
+`target`, `outDir`, `clean`, `platform`, `cwd`, `exports`, `sourcemap`, `deps`, `css`, `panda`,
+`reactCompiler`, `styledComponents`, `bundleAnalyzer`, `tsdoc`, and `suppressWarnings`.
 
 Add only what the package needs:
 
@@ -134,19 +133,16 @@ ship `'use client'`.
 Set `styledComponents: true` to add display names and stable component IDs and to minify tagged
 CSS. This uses Oxc's native transform; do not install `babel-plugin-styled-components`.
 
-### CSS and vanilla-extract
+### CSS
 
-- `vanillaExtract: true` extracts `.css.ts` files to `dist/bundle.css`.
 - `css: {...}` enables plain CSS, CSS modules, preprocessors, and PostCSS through the optional
   `@tsdown/css` peer. Install it with `pnpm add -D @tsdown/css`.
-- Neither enables CSS minification. Set `minify: true` on `vanillaExtract` or `css` to minify.
-  Both use Sanity browser targets when the JS target has no browsers, and publish a conditional
-  CSS export with a no-op Node shim.
-- Both can be enabled together: vanilla-extract uses `bundle.css`; `css` uses `style.css`.
+- CSS minification is off. Set `minify: true` on `css` to minify. It uses Sanity browser targets
+  when the JS target has no browsers, and publishes a conditional CSS export with a no-op Node
+  shim.
 - Add published CSS to `package.json#sideEffects`, for example `"sideEffects": ["*.css"]`.
-
-Install `@vanilla-extract/css` when authoring `.css.ts` files. It is separate from the tsdown
-plugin bundled by this wrapper.
+- The `vanillaExtract` option was removed. For vanilla-extract, add its bundler plugin (e.g.
+  `@vanilla-extract/rollup-plugin`) to `plugins`.
 
 ### Bundle analysis
 

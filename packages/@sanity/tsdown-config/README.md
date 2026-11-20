@@ -168,91 +168,25 @@ export default defineConfig({
 
 ## vanilla-extract
 
-The same `vanillaExtract` feature as `@sanity/pkg-utils` is available. It extracts the CSS from
-`.css.ts` files into a separate file (`dist/bundle.css` by default), lowered with
-`lightningcss` for the
-[`@sanity/browserslist-config`](https://github.com/sanity-io/browserslist-config#readme)
-browsers by default. Under the hood it uses
-[`@sanity/vanilla-extract-tsdown-plugin`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-tsdown-plugin#readme),
-a tsdown-native port of `@vanilla-extract/rollup-plugin`, so enabling it doesn't pull `rollup`
-into your project. Start by installing `@vanilla-extract/css` for authoring the `.css.ts` files:
-
-```sh
-pnpm add --save-dev @vanilla-extract/css
-```
+The `vanillaExtract` option was removed in 0.32.0, and setting it now throws.
+`@sanity/vanilla-extract-tsdown-plugin` is deprecated and no longer maintained. To keep using
+vanilla-extract, append one of its
+[bundler integrations](https://vanilla-extract.style/documentation/integrations/vite/), e.g.
+`@vanilla-extract/rollup-plugin`, to the `plugins` of the returned config. Don't use
+`mergeConfig()` for this: it replaces the `plugins` array, dropping the plugins this config sets up.
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'
+import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
 
-export default defineConfig({
-  tsconfig: 'tsconfig.dist.json',
-  vanillaExtract: true,
-})
+const config = await defineConfig({tsconfig: 'tsconfig.dist.json'})
+
+export default {...config, plugins: [config.plugins, vanillaExtractPlugin()]}
 ```
 
-By default (`inject: true` with `exports: {nodeCompat: true}`) the conditional CSS export pattern
-is wired up automatically:
-
-- injects the self-referential `import "<pkg>/bundle.css"` into the entry chunks that use
-  vanilla-extract styles,
-- emits a no-op `bundle-css.js` shim (plus `bundle-css.d.ts`) for runtimes that cannot import
-  `.css` files, and
-- writes the conditional `"./bundle.css"` export to `package.json` (`types` → the shim's `.d.ts`,
-  `browser`/`style` → the real CSS, `node`/`default` → the shim).
-
-The result is that `import "<pkg>/bundle.css"` resolves to the real CSS in bundlers/browsers and to
-the no-op shim in Node and similar runtimes. Make sure the extracted CSS survives tree-shaking in
-consumers by adding it to `sideEffects` in `package.json`:
-
-```json
-{
-  "sideEffects": ["*.css"]
-}
-```
-
-Pass an options object instead of `true` to customize - the options are modeled after the
-[`css` options of `@tsdown/css`](https://tsdown.dev/options/css) (e.g. `fileName`, `minify`,
-`target`, `lightningcss`). `inject` and `exports` are independent: set `exports: true` for a
-plain (browser-only) `"./bundle.css"` export without the shim, `exports: false` for a relative
-`import "./bundle.css"` instead of the export pattern, or `inject: false` to publish the CSS
-without importing it automatically (for packages whose consumers import the subpath themselves).
-
-> [!NOTE]
-> `inject: {nodeCompat: true}` is deprecated. It means `{inject: true, exports: {nodeCompat: true}}`
-> and still works, with a warning: `nodeCompat` configures how the CSS file is published, not how
-> the import is injected, so it moved to `exports`.
-
-The default `identifiers: 'short'` names each style after a hash of the package name and the
-file path, plus a counter of the styles before it in the file. A release that reorders a file's
-styles therefore reuses its class names for different rules, and pages that load the CSS of two
-releases (e.g. an app bundling a design system next to a CDN-served Studio bundling another
-release of it) style one release's markup with the other's rules. Opt in to `'safe'` to keep
-releases apart: it is `'short'` with the package version also hashed in, so every release gets
-its own class names, and the same release always builds the same ones:
-
-```ts
-import {defineConfig} from '@sanity/tsdown-config'
-
-export default defineConfig({
-  tsconfig: 'tsconfig.dist.json',
-  vanillaExtract: {identifiers: 'safe'},
-})
-```
-
-`minify` is not enabled. Set `minify: true` to minify the extracted CSS; otherwise it stays
-readable, matching the bare plugin and `css.minify` in `@tsdown/css`.
-
-The CSS syntax lowering `target` still diverges from the bare plugins (which match `@tsdown/css`
-exactly). It defaults to tsdown's top-level `target`, and when the effective target is undefined
-or names no browsers (e.g. `'node20'`, also what tsdown derives from `engines.node` - it speaks
-to the JS runtime, not the browsers the extracted CSS runs in), the lowering targets are resolved
-from `@sanity/browserslist-config` and passed through `lightningcss.targets`. The bare plugins
-(like `@tsdown/css`) would skip lowering in that case. `target: false` disables lowering
-entirely, and a user-provided `lightningcss.targets` wins over the fallback.
-
-`vanillaExtract` can be combined with the [`css` option](#css) below when a package also uses
-CSS modules (or other `@tsdown/css` features) — the two pipelines write to different files by
-default (`bundle.css` vs `style.css`) and do not interfere with each other.
+The plugin decides how the CSS is emitted and imported; this config no longer adds the
+`./bundle.css` export or its Node shim for it. To keep that pattern, move the styles to plain
+CSS or CSS modules with the [`css` option](#css), or to Panda CSS with the [`panda` option](#panda).
 
 ## panda
 
@@ -363,26 +297,9 @@ The options are `@tsdown/css`'s, plus an `exports` option this config implements
   which throws in runtimes that cannot load `.css` files. Set `exports: true` for a plain
   (browser-only) CSS export, or `exports: false` to fall back to the relative injection.
 - `minify` is not enabled unless you set `minify: true`. Browserless CSS syntax lowering targets
-  fall back to `@sanity/browserslist-config` — exactly as described for `vanillaExtract` above.
+  fall back to `@sanity/browserslist-config` — exactly as described for `panda` above.
 
-Both `css` and `vanillaExtract` can be enabled in the same config. Use that when a package
-authors styles with vanilla-extract _and_ CSS modules (`.module.css`):
-
-```ts
-import {defineConfig} from '@sanity/tsdown-config'
-
-export default defineConfig({
-  tsconfig: 'tsconfig.dist.json',
-  vanillaExtract: true,
-  css: {
-    modules: {localsConvention: 'camelCase'},
-  },
-})
-```
-
-vanilla-extract extracts into `dist/bundle.css`, while `@tsdown/css` merges other CSS — including
-scoped CSS modules — into `dist/style.css`. Each pipeline publishes its own conditional export and
-emits its own shim, so they never collide. See the
+See the
 [`InlineConfig.css`](https://tsdown.dev/reference/api/Interface.InlineConfig#css) API reference
 for the full option surface.
 
@@ -604,7 +521,7 @@ the browser - `'node'` makes CommonJS-interop emit a module-scope
 
 tsdown's [`target` option](https://tsdown.dev/options/target) is also passed through as-is. It
 downlevels JS syntax for the given runtimes (esbuild-style target strings), and doubles as the
-default CSS syntax lowering target when `vanillaExtract`, `panda` or `css` is enabled
+default CSS syntax lowering target when `panda` or `css` is enabled
 (browserless targets like `node20` don't affect the CSS - it falls back to
 `@sanity/browserslist-config`):
 
@@ -793,8 +710,7 @@ like `@sanity/pkg-utils` compose their own opinions over it programmatically. `m
 applies with tsdown's semantics:
 
 - `plugins` (top-level, `inputOptions`, `outputOptions`) are **appended**, so layering your own
-  plugins never clobbers the ones this config sets up (React Compiler, vanilla-extract, bundle
-  analyzer),
+  plugins never clobbers the ones this config sets up (React Compiler, bundle analyzer),
 - plain objects deep-merge over the defaults (e.g. `minify: {mangle: true}` keeps the
   `compress`/`codegen` defaults), and
 - scalars and non-plugin arrays replace (e.g. `publint: false`, `format: ['esm']`).

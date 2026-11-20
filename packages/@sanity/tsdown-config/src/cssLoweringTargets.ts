@@ -1,6 +1,6 @@
-import {esbuildTargetToLightningCSS} from '@sanity/vanilla-extract-tsdown-plugin'
 import type {Targets} from 'lightningcss'
 import {expandBaselineTarget, resolveComma, toArray} from 'tsdown/internal'
+import {esbuildTargetToLightningCSS} from './esbuildTargets.ts'
 
 /** tsdown's alias for the browsers of Baseline Widely available, which it expands itself. */
 const BASELINE_WIDELY_AVAILABLE = 'baseline-widely-available'
@@ -41,7 +41,7 @@ interface LightningCSSOptionsWithTargets {
 
 /**
  * Resolves the CSS syntax lowering targets for a CSS pipeline
- * (`vanillaExtract`/`panda`/`css`), applying the Sanity-flavored fallback on top of the
+ * (`panda`/`css`), applying the Sanity-flavored fallback on top of the
  * `@tsdown/css` behavior the pipelines otherwise follow.
  *
  * `@tsdown/css` skips syntax lowering when it has no browser targets. Extracted CSS always runs

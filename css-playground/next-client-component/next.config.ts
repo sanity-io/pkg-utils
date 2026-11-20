@@ -1,5 +1,5 @@
 import type {NextConfig} from 'next'
-import {createConfig} from 'sanity-css-vanilla-extract-test'
+import {createConfig} from 'sanity-css-test'
 
 // Evaluated in Node during `next build`, reproducing the sanity-io/sanity#12825 failure mode:
 // importing a package whose entry chunk has a self-referential `import "<pkg>/bundle.css"` in a

@@ -1,4 +1,42 @@
-# Migrating to `@sanity/pkg-utils` v12
+# Migrating `@sanity/pkg-utils`
+
+## v14: vanilla-extract support removed
+
+v14 no longer compiles vanilla-extract `.css.ts` files. The `vanillaExtract` option is gone, and a
+`package.config.ts` that still sets it fails the build with a link to this section. The
+`vanillaExtract` option of
+[`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme)
+was removed in 0.32.0, and the `@sanity/vanilla-extract-*` packages are deprecated and no longer
+maintained.
+
+Remove `vanillaExtract` from `package.config.ts`, then pick one of these:
+
+- **Keep vanilla-extract** and use its own tooling. Add one of the
+  [vanilla-extract bundler integrations](https://vanilla-extract.style/documentation/integrations/vite/)
+  to `plugins`. `@vanilla-extract/rollup-plugin` runs under tsdown:
+
+  ```ts
+  import {defineConfig} from '@sanity/pkg-utils'
+  import {vanillaExtractPlugin} from '@vanilla-extract/rollup-plugin'
+
+  export default defineConfig({
+    plugins: [vanillaExtractPlugin()],
+  })
+  ```
+
+  The plugin decides how the CSS is emitted and imported (see its `extract` option). pkg-utils no
+  longer injects `import "<pkg>/bundle.css"`, emits the `bundle-css.js` shim, or writes the
+  `./bundle.css` export for it, so remove that export from `package.json` unless you still
+  provide the file yourself.
+
+- **Move the styles to plain CSS or CSS modules** with the [`css` option](./README.md#css). It
+  keeps the conditional CSS export pattern. `css: {fileName: 'bundle.css'}` keeps the
+  `./bundle.css` subpath consumers already import.
+
+Apps that used `@sanity/vanilla-extract-vite-plugin` can switch to the official
+[`@vanilla-extract/vite-plugin`](https://vanilla-extract.style/documentation/integrations/vite/).
+
+## v12: tsdown
 
 v12 replaced the rollup/rolldown build stack with [`tsdown`](https://tsdown.dev) +
 [`@sanity/tsdown-config`](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/tsdown-config#readme).
@@ -9,29 +47,29 @@ stops with an error that contains these same migration instructions (skipped whe
 
 ## TL;DR
 
-| v11                                            | v12                                                                                     |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `dts: 'rolldown'`                              | delete it (it's the default now)                                                        |
-| `dts: 'api-extractor'`                         | delete it (types come from tsdown)                                                      |
-| `tsgo: true`                                   | `dts: {generator: 'tsgo'}`                                                              |
-| `babel: {reactCompiler: true}`                 | `reactCompiler: true`                                                                   |
-| `reactCompilerOptions: {...}`                  | `reactCompiler: {...}`                                                                  |
-| `babel: {styledComponents: true}`              | `styledComponents: true`                                                                |
-| `babel: {plugins: [...]}`                      | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)                           |
-| `rollup: {vanillaExtract: true}`               | `vanillaExtract: true`                                                                  |
-| `vanillaExtract: {inject: {nodeCompat: true}}` | `vanillaExtract: {inject: true, exports: {nodeCompat: true}}` (deprecated, still works) |
-| `rollup: {plugins: [...]}`                     | `plugins: [...]`                                                                        |
-| `rollup: {optimizeLodash: ...}`                | removed — see [lodash](#lodash)                                                         |
-| `extract: {enabled: false}`                    | `tsdoc: false`                                                                          |
-| `extract: {rules, customTags}`                 | `tsdoc: {rules, customTags}`                                                            |
-| `extract: {bundledPackages: [...]}`            | `deps: {alwaysBundle: [...]}` — see [type inlining](#type-inlining)                     |
-| `external: [...]`                              | `deps: {neverBundle: [...]}` (deprecated, still works)                                  |
-| `external: (prev) => prev.filter()`            | `deps: {alwaysBundle: [...]}` (deprecated, still works)                                 |
-| `jsx`, `jsxFactory`, …                         | `tsconfig.json` `compilerOptions.jsx` and friends                                       |
-| `process.env.PKG_FORMAT`                       | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)                        |
-| `process.env.PKG_RUNTIME`                      | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)                        |
-| `process.env.PKG_FILE_PATH`                    | [`import.meta.url`](#pkg_file_path)                                                     |
-| `pkg build --clean`                            | delete it (cleaning is on by default; `--no-clean` skips it)                            |
+| v11                                 | v12                                                                          |
+| ----------------------------------- | ---------------------------------------------------------------------------- |
+| `dts: 'rolldown'`                   | delete it (it's the default now)                                             |
+| `dts: 'api-extractor'`              | delete it (types come from tsdown)                                           |
+| `tsgo: true`                        | `dts: {generator: 'tsgo'}`                                                   |
+| `babel: {reactCompiler: true}`      | `reactCompiler: true`                                                        |
+| `reactCompilerOptions: {...}`       | `reactCompiler: {...}`                                                       |
+| `babel: {styledComponents: true}`   | `styledComponents: true`                                                     |
+| `babel: {plugins: [...]}`           | `plugins` + [`@rolldown/plugin-babel`](#custom-babel-plugins)                |
+| `rollup: {vanillaExtract: true}`    | removed in v14, see [above](#v14-vanilla-extract-support-removed)            |
+| `css: {inject: {nodeCompat: true}}` | `css: {inject: true, exports: {nodeCompat: true}}` (deprecated, still works) |
+| `rollup: {plugins: [...]}`          | `plugins: [...]`                                                             |
+| `rollup: {optimizeLodash: ...}`     | removed — see [lodash](#lodash)                                              |
+| `extract: {enabled: false}`         | `tsdoc: false`                                                               |
+| `extract: {rules, customTags}`      | `tsdoc: {rules, customTags}`                                                 |
+| `extract: {bundledPackages: [...]}` | `deps: {alwaysBundle: [...]}` — see [type inlining](#type-inlining)          |
+| `external: [...]`                   | `deps: {neverBundle: [...]}` (deprecated, still works)                       |
+| `external: (prev) => prev.filter()` | `deps: {alwaysBundle: [...]}` (deprecated, still works)                      |
+| `jsx`, `jsxFactory`, …              | `tsconfig.json` `compilerOptions.jsx` and friends                            |
+| `process.env.PKG_FORMAT`            | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)             |
+| `process.env.PKG_RUNTIME`           | [`package.json#imports` conditions](#pkg_format-and-pkg_runtime)             |
+| `process.env.PKG_FILE_PATH`         | [`import.meta.url`](#pkg_file_path)                                          |
+| `pkg build --clean`                 | delete it (cleaning is on by default; `--no-clean` skips it)                 |
 
 Other behavior changes:
 

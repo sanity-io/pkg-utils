@@ -1,4 +1,4 @@
-import {renderInto} from 'sanity-css-vanilla-extract-test'
+import {renderInto} from 'sanity-css-test'
 import {render} from 'solid-js/web'
 
 function SolidApp() {

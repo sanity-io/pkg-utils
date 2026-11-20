@@ -18,7 +18,7 @@ import {cssShimDtsFileName, cssShimFileName} from './cssShimFileName.ts'
  * file's basename, and which TypeScript is deprecating anyway - microsoft/TypeScript#50762)
  * points resolvers straight at the shim's declaration file.
  *
- * Kept in sync with `createConditionalCssExport` in `@sanity/vanilla-extract-tsdown-plugin`,
+ * Kept in sync with `createConditionalCssExport` in `@sanity/tsdown-config`,
  * which writes the same entry through tsdown's `exports.customExports` during full builds.
  *
  * @internal

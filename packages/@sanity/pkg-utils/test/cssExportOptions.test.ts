@@ -1,7 +1,7 @@
 import {describe, expect, test} from 'vitest'
 import {usesCssExportNodeCompat} from '../src/node/core/pkg/cssExportOptions'
 
-/** The subset of the `vanillaExtract`/`css` options these cases exercise. */
+/** The subset of the `css` options these cases exercise. */
 interface CssPipelineOptions {
   exports?: unknown
   inject?: unknown
@@ -15,12 +15,10 @@ interface CssPipelineOptions {
  * agree with the plugin for every option shape, or watch mode and `pkg build` write different
  * `package.json` exports.
  *
- * The expectations below are the values `resolveCssExportOptions` in
- * `@sanity/vanilla-extract-rolldown-plugin` returns for
- * `{inject: true, exports: {nodeCompat: true}, ...userOptions}` — how `@sanity/tsdown-config`
- * composes the plugin options, defaults first and user last. They cannot be asserted against
- * the plugin directly: `@sanity/pkg-utils` deliberately does not depend on the vanilla-extract
- * packages, since importing them would pull the whole CSS toolchain into every build.
+ * The expectations below are the values `resolveCssExportOptions` in `@sanity/tsdown-config`
+ * returns for `{inject: true, exports: {nodeCompat: true}, ...userOptions}` — how
+ * `@sanity/tsdown-config` composes the CSS options, defaults first and user last. They cannot
+ * be asserted against it directly, since `@sanity/tsdown-config` does not export it.
  */
 describe('usesCssExportNodeCompat', () => {
   const defaultApplies: [CssPipelineOptions, boolean][] = [

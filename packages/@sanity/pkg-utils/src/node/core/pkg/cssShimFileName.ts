@@ -1,10 +1,9 @@
 /**
- * The no-op JS shim file name for a CSS file under vanilla-extract compat mode.
+ * The no-op JS shim file name for a CSS file under `exports.nodeCompat`.
  *
  * `bundle.css` → `bundle-css.js` — deliberately not `${cssFileName}.js` (`bundle.css.js`),
  * which vanilla-extract's `cssFileFilter` (`/\.css\.(js|cjs|mjs|jsx|ts|tsx)$/`) would treat as
- * a stylesheet module. Kept in sync with `cssShimFileName` in
- * `@sanity/vanilla-extract-rolldown-plugin`.
+ * a stylesheet module. Kept in sync with `cssShimFileName` in `@sanity/tsdown-config`.
  *
  * @internal
  */

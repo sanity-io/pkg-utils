@@ -1,16 +1,13 @@
 import path from 'node:path'
+import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
+import {createConditionalCssExport, createCssExport, insertCssExport} from './cssExports.ts'
+import {resolveCssExportOptions, type CssExportsOptions} from './cssExportsOptions.ts'
 import {
-  createConditionalCssExport,
-  createCssExport,
   cssShimDtsFileName,
   cssShimDtsSource,
   cssShimFileName,
   cssShimSource,
-  insertCssExport,
-  resolveCssExportOptions,
-  type CssExportsOptions,
-} from '@sanity/vanilla-extract-tsdown-plugin'
-import type {ResolvedConfig, TsdownPlugin, UserConfig} from 'tsdown'
+} from './cssShimFileName.ts'
 
 /**
  * Matches the module ids `@tsdown/css` treats as stylesheets, so this plugin can tell which
@@ -46,7 +43,7 @@ export interface CssNodeCompatPluginOptions {
 
 /**
  * A tsdown plugin that gives `@tsdown/css` output the same conditional CSS export pattern
- * `@sanity/vanilla-extract-tsdown-plugin` gives vanilla-extract output.
+ * `@sanity/pandacss-tsdown-plugin` gives Panda CSS output.
  *
  * `@tsdown/css` compiles CSS but has no node-shim concept: its only `inject` is a relative
  * `import "./style.css"`, which throws in every runtime that cannot load `.css` files. For each
@@ -209,7 +206,7 @@ export function cssNodeCompatPlugin(options: CssNodeCompatPluginOptions = {}): T
 
         for (const cssFileName of cssFileNames) {
           const shimFileName = cssShimFileName(cssFileName)
-          // Another plugin (`@sanity/vanilla-extract-rolldown-plugin` for `bundle.css`) may
+          // Another plugin (`@sanity/pandacss-tsdown-plugin` for `bundle.css`) may
           // already own this CSS file and have emitted its shims.
           if (bundle[shimFileName]) continue
           this.emitFile({

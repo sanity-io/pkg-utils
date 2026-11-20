@@ -318,7 +318,7 @@ describe('reactCompiler.reactServer option', () => {
     expect(result).toEqual({
       '.': {'react-server': './dist/index.react-server.js', 'default': './dist/index.js'},
       './theme': {'react-server': './dist/theme.react-server.js', 'default': './dist/theme.js'},
-      // The conditional CSS export of `vanillaExtract` names no entry chunks - untouched
+      // The conditional CSS export of `panda` names no entry chunks - untouched
       './bundle.css': conditionalCssExport,
       './package.json': './package.json',
     })

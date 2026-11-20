@@ -13,7 +13,7 @@ interface ComposeContext {
 /**
  * The pkg-utils opinion layer over tsdown's generated `exports` map, composed into
  * `exports.customExports` of the canonical build (the same composition hook
- * `@sanity/vanilla-extract-tsdown-plugin` uses for its conditional CSS export).
+ * `@sanity/tsdown-config` uses for its conditional CSS export).
  *
  * tsdown generates subpaths from the entry aliases with `source`/`import`/`require` conditions
  * (`devExports: 'source'`) and a `source`-less `publishConfig.exports` — already the Sanity

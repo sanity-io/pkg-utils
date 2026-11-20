@@ -13,14 +13,14 @@ describe('programmatic composition via mergeConfig', () => {
   const marker: Rolldown.Plugin = {name: 'composition-marker'}
 
   test('appends plugins instead of replacing the ones this config sets up', async () => {
-    const base = await defineConfig({vanillaExtract: true})
+    const base = await defineConfig({css: {}})
     const composed = mergeConfig(base, {plugins: [marker]})
 
     const pluginNames = (composed.plugins as Rolldown.Plugin[]).map(
       (plugin) => plugin && typeof plugin === 'object' && 'name' in plugin && plugin.name,
     )
-    // The vanilla-extract plugin from the base config survives, the host plugin is appended
-    expect(pluginNames).toEqual(['vanilla-extract', 'composition-marker'])
+    // The CSS plugin from the base config survives, the host plugin is appended
+    expect(pluginNames).toEqual(['sanity-css-node-compat', 'composition-marker'])
   })
 
   test('appends plugins even when the base config added none', async () => {

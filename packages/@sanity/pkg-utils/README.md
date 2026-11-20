@@ -252,17 +252,6 @@ Runs [API Extractor](https://api-extractor.com/) during `pkg build` and again du
 `pkg check` to check that TSDoc tags are valid and release tags are correct. Set
 `tsdoc: false` to disable it.
 
-#### `vanillaExtract`
-
-- Type: `boolean | PackageVanillaExtractOptions`
-- Default: `false`
-
-Extracts the CSS from [vanilla-extract](https://vanilla-extract.style) `.css.ts` files into
-`dist/bundle.css` (lowered with `lightningcss`, unminified unless `minify: true`), injects the
-self-referential
-`import "<pkg>/bundle.css"`, emits a no-op `bundle-css.js` shim for runtimes that cannot import
-`.css` files, and writes the conditional `"./bundle.css"` export to `package.json`.
-
 #### `css`
 
 - Type: `PackageCssOptions`
@@ -270,8 +259,8 @@ self-referential
 
 Enables the [`@tsdown/css`](https://www.npmjs.com/package/@tsdown/css) pipeline (install it
 first — it is an optional peer dependency) for plain CSS, CSS modules, preprocessors, and
-Lightning CSS / PostCSS. The emitted CSS gets the same lowering settings as
-[`vanillaExtract`](#vanillaextract), and the same conditional CSS export treatment: the
+Lightning CSS / PostCSS. The emitted CSS is lowered with `lightningcss` (unminified unless
+`minify: true`), and gets the conditional CSS export treatment: the
 self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim with its
 `style-css.d.ts` declaration, and the conditional `"./style.css"` export written to
 `package.json`.
@@ -316,6 +305,14 @@ Add the CSS to `sideEffects` in `package.json` so it survives tree-shaking in co
   "sideEffects": ["*.css"]
 }
 ```
+
+## Migrating to v14
+
+v14 removes vanilla-extract support: the `vanillaExtract` option is gone, and setting it fails the
+build. Use vanilla-extract's own bundler integrations through the [`plugins`](#plugins) option
+(e.g. `@vanilla-extract/rollup-plugin`), or move the styles to plain CSS or CSS modules with the
+[`css`](#css) option. See
+[MIGRATE.md](./MIGRATE.md#v14-vanilla-extract-support-removed) for details.
 
 ## Migrating to v12
 

@@ -5,7 +5,6 @@ import type {
   PackageTsdocCustomTag,
   PackageTsdocOptions,
   PackageTsdocRuleLevel,
-  PackageVanillaExtractOptions,
   ReactCompilerConfigOptions,
   StyledComponentsOptions,
 } from '@sanity/tsdown-config'
@@ -21,7 +20,6 @@ export type {
   PackageTsdocCustomTag,
   PackageTsdocOptions,
   PackageTsdocRuleLevel,
-  PackageVanillaExtractOptions,
   ReactCompilerConfigOptions,
   StyledComponentsOptions,
 } from '@sanity/tsdown-config'
@@ -135,10 +133,9 @@ export interface PkgConfigOptions {
   clean?: UserConfig['clean']
   /**
    * Enables the `@tsdown/css` pipeline (requires `@tsdown/css` to be installed): plain CSS,
-   * CSS modules, preprocessors, Lightning CSS / PostCSS. The emitted CSS is lowered with the
-   * same settings as {@link PkgConfigOptions.vanillaExtract | `vanillaExtract`} and left
-   * unminified unless `minify: true` is set, and gets the same conditional CSS export
-   * treatment — the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim
+   * CSS modules, preprocessors, Lightning CSS / PostCSS. The emitted CSS is lowered for the
+   * `@sanity/browserslist-config` browsers by default, left unminified unless `minify: true` is
+   * set, and gets the conditional CSS export treatment — the self-referential `import "<pkg>/style.css"`, a no-op `style-css.js` shim
    * with its `style-css.d.ts` declaration, and the conditional `"./style.css"` export written
    * to `package.json`.
    *
@@ -205,7 +202,7 @@ export interface PkgConfigOptions {
   minify?: boolean
   /**
    * Extra rolldown plugins, appended after the plugins pkg-utils sets up (React Compiler,
-   * vanilla-extract, bundle analyzer). Most Rollup plugins are also compatible.
+   * bundle analyzer). Most Rollup plugins are also compatible.
    * @see https://tsdown.dev/advanced/plugins
    * @alpha
    */
@@ -246,22 +243,11 @@ export interface PkgConfigOptions {
    * @defaultValue true
    */
   tsdoc?: boolean | PackageTsdocOptions
-  /**
-   * Enables `@sanity/vanilla-extract-tsdown-plugin` to extract CSS from `.css.ts` files into a
-   * separate file (`dist/bundle.css` by default), lowered with `lightningcss`. CSS is left
-   * unminified unless `minify: true` is set.
-   * By default the conditional CSS export pattern is wired up automatically: the
-   * self-referential `import "<pkg>/bundle.css"` is injected into the entry chunks, a no-op
-   * `bundle-css.js` shim is emitted, and the conditional `"./bundle.css"` export is written to
-   * `package.json`. Pass `true` for the defaults, or an options object to customize.
-   * @alpha
-   */
-  vanillaExtract?: boolean | PackageVanillaExtractOptions
 
-  // --- Tombstones for options removed in v12. They stay declared (typed `never`, tagged
+  // --- Tombstones for removed options. They stay declared (typed `never`, tagged
   // `@deprecated`) so editors surface the migration path instead of "unknown property", and
   // `loadConfig` throws a helpful error when they are set at runtime (JS configs bypass the
-  // types). Gated by `legacyChecks`.
+  // types). The v12 ones are gated by `legacyChecks`.
 
   /**
    * @deprecated Removed in v12. `babel.reactCompiler` is the top-level `reactCompiler` option,
@@ -304,8 +290,7 @@ export interface PkgConfigOptions {
    */
   reactCompilerOptions?: never
   /**
-   * @deprecated Removed in v12. `rollup.vanillaExtract` is the top-level `vanillaExtract`
-   * option, and `rollup.plugins` is the top-level `plugins` option (rolldown plugins; most
+   * @deprecated Removed in v12. `rollup.plugins` is the top-level `plugins` option (rolldown plugins; most
    * Rollup plugins are compatible). `rollup.output`, `rollup.treeshake`,
    * `rollup.experimentalLogSideEffects`, `rollup.hashChunkFileNames` and
    * `rollup.optimizeLodash` have no successor.
@@ -316,4 +301,10 @@ export interface PkgConfigOptions {
    * passed through to tsdown as-is.
    */
   tsgo?: never
+  /**
+   * @deprecated Removed in v14, along with all vanilla-extract support. Add a vanilla-extract
+   * bundler plugin to `plugins` yourself, or move the styles to the `css` option. See the v14
+   * section of `MIGRATE.md`.
+   */
+  vanillaExtract?: never
 }

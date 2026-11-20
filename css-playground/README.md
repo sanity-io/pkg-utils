@@ -7,10 +7,10 @@ that cannot import `.css` files (Node SSR, typegen, importing a package in `next
 
 ## What's here
 
-- **`sanity-css-vanilla-extract-test`** — the _producer_. A `@sanity/pkg-utils`-built package that
-  enables `rollup.vanillaExtract`. With pkg-utils' compat mode (`extract.compatMode`, on by default)
-  this is all it takes — pkg-utils automatically injects the self-referential
-  `import "sanity-css-vanilla-extract-test/bundle.css"` into the entry chunk, emits the no-op
+- **`sanity-css-test`** — the _producer_. A `@sanity/pkg-utils`-built package that
+  enables the `css` option with `fileName: 'bundle.css'`. That is all it takes — pkg-utils
+  automatically injects the self-referential
+  `import "sanity-css-test/bundle.css"` into the entry chunk, emits the no-op
   `bundle-css.js` shim, and writes the conditional `./bundle.css` export to `package.json` so that
   the import resolves to:
   - the real CSS file under the `browser`/`style` conditions (bundlers / browsers), and
@@ -32,7 +32,7 @@ Each consumer has a single command that must exit cleanly. This is what CI runs:
 
 ```sh
 pnpm build                                   # build @sanity/* (the `pkg` CLI)
-pnpm --filter sanity-css-vanilla-extract-test build   # build the producer
+pnpm --filter sanity-css-test build   # build the producer
 pnpm --workspace-concurrency=1 --filter "./css-playground/**" test
 ```
 
@@ -50,7 +50,7 @@ pnpm --filter @css-playground/astro dev
 # …etc
 ```
 
-Look for the text **`sanity-css-vanilla-extract-test`** on the page:
+Look for the text **`sanity-css-test`** on the page:
 
 - **CSS applied** → it sits inside a box with a `1px solid` border, `8px` padding, and the text/border
   use the marker colour `rgb(1, 2, 3)` (a near-black).

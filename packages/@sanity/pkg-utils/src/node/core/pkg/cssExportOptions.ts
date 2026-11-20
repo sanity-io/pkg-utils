@@ -16,10 +16,8 @@ import {isRecord} from '../isRecord.ts'
  * `{inject: {nodeCompat: false}}` wrong: it still leaves the `exports` default in place, so the
  * conditional export is written.
  *
- * Kept in sync with `resolveCssExportOptions` in `@sanity/vanilla-extract-rolldown-plugin` —
- * the same reason `cssShimFileName` has a copy here. Importing the canonical one would make
- * `@sanity/vanilla-extract-tsdown-plugin` a static dependency of this module graph, pulling the
- * whole vanilla-extract toolchain into every `pkg build`.
+ * Kept in sync with `resolveCssExportOptions` in `@sanity/tsdown-config`, which does not
+ * export it.
  *
  * @internal
  */
