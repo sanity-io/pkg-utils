@@ -13,16 +13,16 @@ lockfile:
 autoDedupe: true
 
 catalog:
-  '@pandacss/compiler': ^2.5.0
-  '@pandacss/dev': ^2.5.0
-  '@pandacss/transformer': ^2.5.0
-  '@pandacss/vite': ^2.5.0
+  '@pandacss/compiler': ^2.6.0
+  '@pandacss/dev': ^2.6.0
+  '@pandacss/transformer': ^2.6.0
+  '@pandacss/vite': ^2.6.0
   '@sanity/client': ^8.16.0
   '@sanity/icons': ^5.3.0
   '@sanity/logos': ^2.2.6
   '@tsdown/css': ^0.23.7
   '@types/node': ^24.19.2
-  '@vitest/browser-playwright': ^5.1.0
+  '@vitest/browser-playwright': ^5.1.1
   lightningcss: ^1.33.0
   oxc-transform-react: ^0.158.0
   playwright: ^1.65.1
@@ -30,7 +30,7 @@ catalog:
   publint: ^0.3.25
   tsdown: ^0.23.7
   typescript: 7.0.2
-  vitest: ^5.1.0
+  vitest: ^5.1.1
 
 # When running `pnpm add`, reuse a dependency's catalog version automatically if
 # it already exists in a catalog, so shared deps stay aligned on a single version.
