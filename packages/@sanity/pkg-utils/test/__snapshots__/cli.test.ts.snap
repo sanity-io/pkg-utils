@@ -3825,7 +3825,7 @@ function optionsFromFile(opts, file) {
 		contentType: file.type
 	}, opts);
 }
-var name = "@sanity/client", version = "8.16.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
+var name = "@sanity/client", version = "8.17.0", defaults_default = (obj, defaults) => Object.keys(defaults).concat(Object.keys(obj)).reduce((target, prop) => (target[prop] = obj[prop] === void 0 ? defaults[prop] : obj[prop], target), {});
 const pick = (obj, props) => props.reduce((selection, prop) => (obj[prop] === void 0 || (selection[prop] = obj[prop]), selection), {}), REQUIRED_GLOBALS = [
 	"Event",
 	"EventTarget",
@@ -5210,6 +5210,26 @@ function _modify(client, httpRequest, method, name, options) {
 	});
 }
 /**
+* The headers that scope a functions request to an organization or a project.
+* An organization, from the request or the client config, takes precedence over
+* the project.
+*
+* @internal
+*/
+function _scopeHeaders(config, organizationId) {
+	let scopeOrganizationId = organizationId || config.organizationId;
+	if (scopeOrganizationId) return {
+		"X-Sanity-Scope-Type": "organization",
+		"X-Sanity-Scope-Id": scopeOrganizationId
+	};
+	let { projectId } = config;
+	if (!projectId) throw Error("A functions call requires a \`projectId\` to be set in the client config, or an \`organizationId\` for a stack deployed at organization scope");
+	return {
+		"X-Sanity-Scope-Type": "project",
+		"X-Sanity-Scope-Id": projectId
+	};
+}
+/**
 * An \`Error\` is reported by its message and stack
 * @internal
 */
@@ -5230,63 +5250,45 @@ function _callback(client, httpRequest, callbackId, outcome, body, options) {
 		signal: options?.signal
 	}).pipe((0, import_cjs.map)(() => void 0)));
 }
-/** Function resource types in a blueprint are namespaced under this prefix. */
-const SYNC_INVOCABLE_FUNCTION_TYPES = ["sanity.function.pubsub"], ASYNC_INVOCABLE_FUNCTION_TYPES = [
-	"sanity.function.durable",
-	"sanity.function.pubsub",
-	"sanity.function.queue"
-], INVOCABLE_FUNCTION_TYPES = [.../* @__PURE__ */ new Set([...SYNC_INVOCABLE_FUNCTION_TYPES, ...ASYNC_INVOCABLE_FUNCTION_TYPES])], scopeHeaders = (config, request) => {
-	let organizationId = request?.organizationId || config.organizationId;
-	if (organizationId) return {
-		"X-Sanity-Scope-Type": "organization",
-		"X-Sanity-Scope-Id": organizationId
-	};
-	let { projectId } = config;
-	if (!projectId) throw Error("\`functions.invoke()\` requires a \`projectId\` to be set in the client config, or an \`organizationId\` for a stack deployed at organization scope");
-	return {
-		"X-Sanity-Scope-Type": "project",
-		"X-Sanity-Scope-Id": projectId
-	};
-}, resolveStackId = (config, request) => {
+function isDurableExecution(value) {
+	return require_isRecord_Kfmt_nk_.t(value) && typeof value.executionId == "string" && typeof value.stopTimestamp == "number";
+}
+/** @internal */
+function _stopExecution(client, httpRequest, functionId, executionId, options) {
+	return (0, import_cjs.defer)(() => {
+		let headers = _scopeHeaders(client.config(), options?.organizationId);
+		return _requestObservable(client, httpRequest, {
+			method: "POST",
+			url: \`/functions/durables/\${functionId}/executions/\${encodeURIComponent(executionId)}/stop\`,
+			headers,
+			timeout: options?.timeout,
+			signal: options?.signal
+		}).pipe((0, import_cjs.map)((body) => {
+			if (require_isRecord_Kfmt_nk_.t(body) && isDurableExecution(body.execution)) return body.execution;
+			throw Error("Expected the stopped execution in the response");
+		}));
+	});
+}
+/**
+* A per-call \`stackId\` overrides the one in the client config.
+*/
+const resolveStackId = (config, request) => {
 	let stackId = request?.stackId || config.stackId;
 	if (!stackId) throw Error("\`functions.invoke()\` requires a \`stackId\`, either in the client config or on the request. Function names are only unique within a stack.");
 	return stackId;
 };
-/**
-* The invoke route is keyed by function id, but callers know functions by the
-* name declared in the blueprint. Names are unique within a stack, so the stack
-* both makes the name resolvable and confines the call to its own functions.
-*
-* @internal
-*/
-function _resolveFunctionId(client, httpRequest, functionName, stackId, headers, request, sync) {
-	return _requestObservable(client, httpRequest, {
-		method: "GET",
-		url: \`/blueprints/stacks/\${stackId}\`,
-		headers,
-		signal: request?.signal
-	}).pipe((0, import_cjs.map)((stack) => {
-		let match = (stack?.resources || []).find((resource) => resource.type?.startsWith("sanity.function.") && resource.name === functionName);
-		if (!match) throw Error(\`Function "\${functionName}" not found in stack "\${stackId}"\`);
-		if (!match.externalId) throw Error(\`Function "\${functionName}" is declared in stack "\${stackId}" but is not deployed\`);
-		if (!INVOCABLE_FUNCTION_TYPES.includes(match.type)) throw Error(\`Function invocation is not supported for \${match.type}\`);
-		if (sync && !SYNC_INVOCABLE_FUNCTION_TYPES.includes(match.type)) throw Error(\`Synchronous function invocation is not supported for \${match.type}\`);
-		if (!sync && !ASYNC_INVOCABLE_FUNCTION_TYPES.includes(match.type)) throw Error(\`Asynchronous function invocation is not supported for \${match.type}\`);
-		return match.externalId;
-	}));
-}
 /** @internal */
 function _invoke(client, httpRequest, functionName, request, options) {
 	return (0, import_cjs.defer)(() => {
-		let config = client.config(), headers = scopeHeaders(config, request), stackId = resolveStackId(config, request), sync = options?.sync ?? !1;
-		return _resolveFunctionId(client, httpRequest, functionName, stackId, headers, request, sync).pipe((0, import_cjs.mergeMap)((functionId) => _requestObservable(client, httpRequest, {
+		let config = client.config(), headers = _scopeHeaders(config, request?.organizationId);
+		return _requestObservable(client, httpRequest, {
 			method: "POST",
-			url: \`/functions/\${functionId}/invoke\${sync ? "?sync=true" : ""}\`,
+			url: \`/functions/\${functionName}/invoke?blueprintStackId=\${resolveStackId(config, request)}\${options?.sync ?? !1 ? "&sync=true" : ""}\`,
 			headers,
 			body: { event: { data: request?.event?.data ?? {} } },
 			timeout: request?.timeout,
 			signal: request?.signal
-		})));
+		});
 	});
 }
 /** @public */
@@ -5319,6 +5321,18 @@ var ObservableDurablesClient = class {
 	*/
 	callbackFailure(callbackId, failure = {}, options) {
 		return _callback(this.#client, this.#httpRequest, callbackId, "failure", _toCallbackFailure(failure), options);
+	}
+	/**
+	* Stop a durable function execution.
+	*
+	* Emits the stopped execution, including its \`stopTimestamp\`, once the stop is accepted.
+	*
+	* @param functionId - ID of the durable function
+	* @param executionId - ID of the execution to stop
+	* @param options - request options
+	*/
+	stopExecution(functionId, executionId, options) {
+		return _stopExecution(this.#client, this.#httpRequest, functionId, executionId, options);
 	}
 }, DurablesClient = class {
 	#client;
@@ -5357,6 +5371,18 @@ var ObservableDurablesClient = class {
 	*/
 	callbackFailure(callbackId, failure = {}, options) {
 		return (0, import_cjs.lastValueFrom)(_callback(this.#client, this.#httpRequest, callbackId, "failure", _toCallbackFailure(failure), options));
+	}
+	/**
+	* Stop a durable function execution.
+	*
+	* Resolves with the stopped execution, including its \`stopTimestamp\`, once the stop is accepted.
+	*
+	* @param functionId - ID of the durable function
+	* @param executionId - ID of the execution to stop
+	* @param options - request options
+	*/
+	stopExecution(functionId, executionId, options) {
+		return (0, import_cjs.lastValueFrom)(_stopExecution(this.#client, this.#httpRequest, functionId, executionId, options));
 	}
 }, ObservableFunctionsClient = class {
 	#client;
