@@ -111,11 +111,7 @@ describe('writePackageSideEffects', () => {
   test('rewrites sideEffects and preserves indentation', async () => {
     const cwd = await tempDir()
     const packageJsonPath = path.join(cwd, 'package.json')
-    await writeFile(
-      packageJsonPath,
-      '{\n  "name": "example",\n  "sideEffects": true\n}\n',
-      'utf8',
-    )
+    await writeFile(packageJsonPath, '{\n  "name": "example",\n  "sideEffects": true\n}\n', 'utf8')
 
     expect(
       writePackageSideEffects({
@@ -153,10 +149,6 @@ describe('sideEffects after fixture builds', () => {
 
   test('panda-library package.json lists CSS and both format entries', async () => {
     const pkg = JSON.parse(await readFile(path.join(pandaFixture, 'package.json'), 'utf8'))
-    expect(pkg.sideEffects).toEqual([
-      './dist/bundle.css',
-      './dist/index.cjs',
-      './dist/index.js',
-    ])
+    expect(pkg.sideEffects).toEqual(['./dist/bundle.css', './dist/index.cjs', './dist/index.js'])
   })
 })
