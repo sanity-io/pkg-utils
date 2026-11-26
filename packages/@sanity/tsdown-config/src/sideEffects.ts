@@ -1,4 +1,4 @@
-import {readFileSync, readdirSync, statSync, writeFileSync} from 'node:fs'
+import {readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs'
 import path from 'node:path'
 import {isDeepStrictEqual} from 'node:util'
 import type {RolldownChunk} from 'tsdown'

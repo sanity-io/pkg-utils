@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "private": true,
   "license": "MIT",
+  "sideEffects": false,
   "type": "module",
   "exports": {
     ".": "./src/exports/index.ts",
@@ -21,6 +22,5 @@
       "./nodes": "./dist/nodes.js",
       "./package.json": "./package.json"
     }
-  },
-  "sideEffects": false
+  }
 }
