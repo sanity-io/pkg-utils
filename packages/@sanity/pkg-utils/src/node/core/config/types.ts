@@ -243,6 +243,14 @@ export interface PkgConfigOptions {
    * @defaultValue true
    */
   tsdoc?: boolean | PackageTsdocOptions
+  /**
+   * Writes `package.json#sideEffects` after the build from the CSS assets, `.css.js` chunks,
+   * and JS files that import stylesheets the build produced. Defaults to on (via
+   * `@sanity/tsdown-config`); set `sideEffects: false` to leave the field untouched. Skipped
+   * automatically in watch mode.
+   * @defaultValue true
+   */
+  sideEffects?: boolean
 
   // --- Tombstones for removed options. They stay declared (typed `never`, tagged
   // `@deprecated`) so editors surface the migration path instead of "unknown property", and

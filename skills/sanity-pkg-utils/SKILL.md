@@ -160,13 +160,14 @@ replace a separate type-check command.
 - `css: {...}` uses the optional `@tsdown/css` peer for plain CSS, CSS modules, preprocessors, or
   PostCSS and conditionally exports `style.css`.
 - A `.css` export subpath with a `source` automatically enables the CSS pipeline.
-- Add emitted CSS to `sideEffects` so consumer tree-shaking does not remove it.
+- Do not hand-maintain `package.json#sideEffects` for CSS. The build writes exact paths for
+  emitted CSS and the JS entries that import it (via `@sanity/tsdown-config`). Opt out with
+  `sideEffects: false` in `package.config.ts` when a package needs a hand-maintained allowlist.
 
 Example standalone stylesheet export:
 
 ```json
 {
-  "sideEffects": ["*.css"],
   "exports": {
     "./ui/styles.css": {"source": "./src/ui/styles.css"}
   }
@@ -184,7 +185,8 @@ Example standalone stylesheet export:
 - Do not fully minify libraries by default. The inherited compression already removes dead code,
   and preserved names aid debugging.
 - Do not publish bundle-analyzer output. Exclude `dist/analyze-data.md` from `package.json#files`.
-- Do not forget `sideEffects` for emitted CSS.
+- Do not hand-maintain `sideEffects` for emitted CSS unless you opted out with
+  `sideEffects: false`.
 - Do not assume declaration bundling type-checks source. Run the repository's type-check command.
 - Do not use removed pre-v12 options such as `babel`, `extract`, `rollup`,
   `reactCompilerOptions`, or `jsxImportSource`; use the current top-level options.

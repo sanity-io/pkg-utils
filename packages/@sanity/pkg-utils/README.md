@@ -298,13 +298,10 @@ Consumers then `import "<pkg>/ui/styles.css"`, which resolves to the stylesheet 
 browsers, and to the no-op shim in Node and similar runtimes. This turns on the `@tsdown/css`
 pipeline automatically; set [`css`](#css) explicitly to customize it.
 
-Add the CSS to `sideEffects` in `package.json` so it survives tree-shaking in consumers:
-
-```json
-{
-  "sideEffects": ["*.css"]
-}
-```
+Leave `package.json#sideEffects` alone: the build rewrites it from the emitted CSS and the JS
+entries that import it (or sets `sideEffects: false` when nothing is side-effectful). Opt out
+with `sideEffects: false` in `package.config.ts` when a package needs a hand-maintained
+allowlist.
 
 ## Migrating to v14
 
