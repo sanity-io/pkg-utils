@@ -19,9 +19,11 @@ describe('dts option', () => {
 })
 
 describe('tsdoc option', () => {
-  test('is off by default', async () => {
-    expect((await defineConfig()).hooks).toBeUndefined()
-    expect((await defineConfig({tsdoc: false})).hooks).toBeUndefined()
+  test('is off by default (sideEffects still registers build:done)', async () => {
+    // `sideEffects` defaults to on, so hooks are present even when tsdoc is off.
+    expect(typeof (await defineConfig()).hooks).toBe('function')
+    expect(typeof (await defineConfig({tsdoc: false})).hooks).toBe('function')
+    expect((await defineConfig({sideEffects: false, tsdoc: false})).hooks).toBeUndefined()
   })
 
   test('registers a build:done hook when enabled', async () => {
@@ -40,6 +42,17 @@ describe('tsdoc option', () => {
     await expect(import('@sanity/tsdown-config/tsdoc')).resolves.toEqual(
       expect.objectContaining({checkTsdoc: expect.any(Function)}),
     )
+  })
+})
+
+describe('sideEffects option', () => {
+  test('registers a build:done hook by default', async () => {
+    expect(typeof (await defineConfig()).hooks).toBe('function')
+  })
+
+  test('can be opted out of, leaving package.json untouched', async () => {
+    expect((await defineConfig({sideEffects: false})).hooks).toBeUndefined()
+    expect(typeof (await defineConfig({sideEffects: false, tsdoc: true})).hooks).toBe('function')
   })
 })
 

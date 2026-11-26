@@ -130,13 +130,14 @@ describe('reactCompiler.reactServer option', () => {
     // The react-server variant builds the same source without the compiler, skips d.ts (the
     // compiled variant's declarations serve both entries), never cleans (the compiled
     // variant's `clean` covers the run - tsdown cleans once, before either variant emits),
-    // and stays out of `exports` generation, `publint`, and `tsdoc`
+    // and stays out of `exports` generation, `publint`, and `tsdoc`. It still registers the
+    // `sideEffects` rewrite (idempotent with the compiled variant after the per-package barrier).
     expect(getPluginNames(reactServer)).toEqual([])
     expect(reactServer.dts).toBe(false)
     expect(reactServer.clean).toBe(false)
     expect(reactServer.exports).toBe(false)
     expect(reactServer.publint).toBe(false)
-    expect(reactServer.hooks).toBeUndefined()
+    expect(typeof reactServer.hooks).toBe('function')
   })
 
   test('combines with `transform: "babel"`', async () => {
@@ -154,8 +155,10 @@ describe('reactCompiler.reactServer option', () => {
     const [compiled, reactServer] = await defineDualConfig({
       reactCompiler: {target: '19'},
       tsdoc: true,
+      sideEffects: false,
     })
     expect(typeof compiled.hooks).toBe('function')
+    // With `sideEffects` opted out, only the compiled variant's tsdoc hook remains
     expect(reactServer.hooks).toBeUndefined()
   })
 

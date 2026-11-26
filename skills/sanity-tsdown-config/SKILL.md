@@ -4,7 +4,7 @@ description: Configure Sanity libraries with @sanity/tsdown-config, including it
 license: MIT
 metadata:
   author: sanity-io
-  version: '0.28'
+  version: '0.29'
 ---
 
 # `@sanity/tsdown-config`
@@ -56,6 +56,7 @@ Do not restate these unless intentionally overriding them:
 | Format                | `'esm'`                                                                                                                           |
 | Source maps           | `true` (stock tsdown defaults to `false`)                                                                                         |
 | Package exports       | Always generated; in pnpm projects, `devExports: true` points local exports at source and puts built exports in `publishConfig`   |
+| Package sideEffects   | Always rewritten from the build (`false`, or exact CSS / `.css.js` / importing-JS paths); opt out with `sideEffects: false`       |
 | Package validation    | `publint: true`                                                                                                                   |
 | Dependency subpaths   | `deps.resolveDepSubpath: true`                                                                                                    |
 | Circular dependencies | `checks.circularDependency: true`; declaration-only cycles are suppressed, runtime cycles still warn                              |
@@ -76,7 +77,8 @@ resulting local `exports` and `publishConfig.exports`.
 
 The wrapper directly exposes common package options: `tsconfig`, `entry`, `format`, `dts`, `define`,
 `target`, `outDir`, `clean`, `platform`, `cwd`, `exports`, `sourcemap`, `deps`, `css`, `panda`,
-`reactCompiler`, `styledComponents`, `bundleAnalyzer`, `tsdoc`, and `suppressWarnings`.
+`reactCompiler`, `styledComponents`, `bundleAnalyzer`, `tsdoc`, `sideEffects`, and
+`suppressWarnings`.
 
 Add only what the package needs:
 
@@ -140,7 +142,10 @@ CSS. This uses Oxc's native transform; do not install `babel-plugin-styled-compo
 - CSS minification is off. Set `minify: true` on `css` to minify. It uses Sanity browser targets
   when the JS target has no browsers, and publishes a conditional CSS export with a no-op Node
   shim.
-- Add published CSS to `package.json#sideEffects`, for example `"sideEffects": ["*.css"]`.
+- Do not hand-maintain `package.json#sideEffects` for CSS. The build writes exact paths for
+  emitted `.css` files, `.css.js` chunks, and JS entries that import stylesheets, and sets
+  `sideEffects: false` when nothing is side-effectful. Opt out with `sideEffects: false` on
+  `defineConfig` when a package needs a hand-maintained allowlist.
 - The `vanillaExtract` option was removed. For vanilla-extract, add its bundler plugin (e.g.
   `@vanilla-extract/rollup-plugin`) to `plugins`.
 

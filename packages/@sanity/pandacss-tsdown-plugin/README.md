@@ -23,7 +23,6 @@ A package with Panda sources under `src/`:
   "name": "my-library",
   "type": "module",
   "files": ["dist"],
-  "sideEffects": ["*.css"],
   "imports": {
     "#styled-system/*": "./styled-system/*/index.js"
   },
@@ -36,7 +35,9 @@ A package with Panda sources under `src/`:
 
 - `imports` maps the generated `styled-system` directory, so sources import `#styled-system/css`.
 - `prepare` generates that directory on install. The plugin regenerates it when it builds, but the editor, the type checker and the test runner need it before any build runs.
-- `sideEffects` keeps the stylesheet import that `inject` adds from being tree-shaken by consumers' bundlers.
+- With `@sanity/tsdown-config`, leave `package.json#sideEffects` alone — the build writes the
+  exact CSS file and the entries that import it. Without that wrapper, list those paths (or a
+  `"*.css"` glob) yourself so consumers' tree-shaking keeps the injected stylesheet import.
 
 ```ts
 // panda.config.ts

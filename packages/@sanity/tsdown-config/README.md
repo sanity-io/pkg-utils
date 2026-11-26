@@ -261,7 +261,8 @@ Setup reminders, in the package being built:
   regenerates them when it builds.
 - An `imports` map for the generated directory, e.g. `"#styled-system/*": "./styled-system/*/index.js"`,
   matching `importMap` in `panda.config.ts`.
-- `"sideEffects": ["*.css"]`, so consumers' tree-shaking keeps the injected stylesheet import.
+- Leave `package.json#sideEffects` alone — the build writes it from the emitted CSS and the
+  entries that import it (see [sideEffects](#sideeffects)).
 
 See the plugin README for the full behavior (sources, codegen, the limits of the transform,
 watch mode) and the options reference.
@@ -298,10 +299,46 @@ The options are `@tsdown/css`'s, plus an `exports` option this config implements
   (browser-only) CSS export, or `exports: false` to fall back to the relative injection.
 - `minify` is not enabled unless you set `minify: true`. Browserless CSS syntax lowering targets
   fall back to `@sanity/browserslist-config` — exactly as described for `panda` above.
+- The build also rewrites `package.json#sideEffects` to the exact CSS file and the JS entries
+  that import it — see [sideEffects](#sideeffects).
 
 See the
 [`InlineConfig.css`](https://tsdown.dev/reference/api/Interface.InlineConfig#css) API reference
 for the full option surface.
+
+## sideEffects
+
+After every build this config rewrites `package.json#sideEffects` from the files the build
+actually produced:
+
+- every emitted `.css` asset
+- vanilla-extract-style `.css.js` / `.css.cjs` / `.css.mjs` chunks (not the `*-css.js` Node
+  shims this config emits for conditional CSS exports)
+- every JS file whose emitted code imports a stylesheet (including the self-referential
+  `import "<pkg>/style.css"` injected by `css` / `panda`)
+
+When nothing is side-effectful the field is set to `false`. Exact paths replace hand-maintained
+globs like `"*.css"`, so a removed file cannot linger in the allowlist.
+
+```json
+{
+  "sideEffects": ["./dist/index.js", "./dist/style.css"]
+}
+```
+
+On by default. Set `sideEffects: false` to leave the field untouched — for packages that need a
+hand-maintained allowlist beyond what the CSS pipelines produce:
+
+```ts
+import {defineConfig} from '@sanity/tsdown-config'
+
+export default defineConfig({
+  tsconfig: 'tsconfig.dist.json',
+  sideEffects: false,
+})
+```
+
+Skipped in watch mode (rewriting `package.json` would re-trigger the watcher).
 
 ## dts
 

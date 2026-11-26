@@ -13,6 +13,7 @@ import {
   type UserConfig,
 } from 'tsdown'
 import type {CssExportsOptions} from './cssExportsOptions.ts'
+import {collectSideEffects, writePackageSideEffects} from './sideEffects.ts'
 import type {PackageTsdocOptions} from './tsdoc/types.ts'
 
 export type {
@@ -508,6 +509,24 @@ export interface PackageOptions extends Pick<
    */
   tsdoc?: boolean | PackageTsdocOptions
   /**
+   * Writes `package.json#sideEffects` after the build from the files the build actually
+   * produced: CSS assets, vanilla-extract-style `.css.js` chunks, and every JS file whose
+   * emitted code imports a stylesheet (including the self-referential
+   * `import "<pkg>/style.css"` this config injects). When nothing is side-effectful the field
+   * is set to `false`. Exact paths replace hand-maintained globs like `"*.css"`, so a removed
+   * file can never linger in the allowlist the way it did in sanity-io/sanity#16513.
+   *
+   * On by default. Set `sideEffects: false` to leave `package.json#sideEffects` untouched —
+   * for packages that need a hand-maintained allowlist beyond what the CSS pipelines produce
+   * (e.g. entry points whose only job is a polyfill side effect).
+   *
+   * Skipped in watch mode: rewriting `package.json` would re-trigger the watcher. The
+   * `react-server` variant of a dual React Server Components build also skips it; the compiled
+   * `default` variant owns the write, like it owns `exports` generation.
+   * @defaultValue true
+   */
+  sideEffects?: boolean
+  /**
    * tsdown's `suppressWarnings` option: strings (matched with `includes`), regular expressions
    * (matched with `test`), or a predicate that drop build warnings before they're printed — and
    * before `failOnWarn` turns them into errors.
@@ -627,6 +646,10 @@ async function resolvePackageConfig(
   // The `react-server` variant skips TSDoc checking (it emits no `.d.ts` files — the compiled
   // variant's declarations serve both entries), matching how it skips `publint`.
   const tsdoc = isReactServer ? false : (options.tsdoc ?? false)
+  // Both dual-build variants rewrite `sideEffects`. tsdown's per-package `done` barrier
+  // waits until every format of every variant has emitted before any `build:done` runs, so
+  // the outDir scan sees compiled and `.react-server` barrels alike; the write is idempotent.
+  const sideEffects = options.sideEffects ?? true
   const report = {gzip: false} as const satisfies UserConfig['report']
   const format = options.format ?? 'esm'
   // When `platform` is `'neutral'`, restore the conventional `module`/`main` fallback that
@@ -937,17 +960,23 @@ async function resolvePackageConfig(
     entry,
     exports,
     format,
-    // When `tsdoc` is enabled, run API Extractor against the entry `.d.ts` files after the
-    // build. The function form of `hooks` registers via hookable so a later `mergeConfig` that
-    // also uses the function form can compose — an object-form `hooks: {'build:done': …}`
-    // override still replaces this (tsdown's `mergeConfig` replaces functions).
-    ...(tsdoc !== false
+    // When `sideEffects` and/or `tsdoc` are enabled, register `build:done` hooks. The function
+    // form registers via hookable so a later `mergeConfig` that also uses the function form
+    // can compose — an object-form `hooks: {'build:done': …}` override still replaces this
+    // (tsdown's `mergeConfig` replaces functions).
+    ...(sideEffects || tsdoc !== false
       ? {
-          hooks: createTsdocHooks({
-            tsdoc: tsdoc === true ? {} : tsdoc,
-            tsconfig,
-            outDir,
-            deps,
+          hooks: createBuildDoneHooks({
+            sideEffects,
+            tsdoc:
+              tsdoc === false
+                ? false
+                : {
+                    tsdoc: tsdoc === true ? {} : tsdoc,
+                    tsconfig,
+                    outDir,
+                    deps,
+                  },
           }),
         }
       : {}),
@@ -1076,57 +1105,99 @@ function resolveSuppressWarnings(
 }
 
 /**
- * Registers the `build:done` hook that runs `checkTsdoc` against every entry `.d.ts` file
- * the build emitted. The checker is loaded from `./tsdoc` only when the hook runs, so
+ * Registers the `build:done` hooks that rewrite `package.json#sideEffects` and/or run
+ * `checkTsdoc`. The TSDoc checker is loaded from `./tsdoc` only when that hook runs, so
  * importing `defineConfig` never pulls in API Extractor.
+ *
+ * Dual-format builds fire `build:done` once per format after exports generation; the write is
+ * idempotent, so a second format that sees the already-updated field is a no-op.
  */
-function createTsdocHooks(options: {
-  tsdoc: PackageTsdocOptions
-  tsconfig: UserConfig['tsconfig']
-  outDir: UserConfig['outDir']
-  deps: UserConfig['deps']
+function createBuildDoneHooks(options: {
+  sideEffects: boolean
+  tsdoc:
+    | false
+    | {
+        tsdoc: PackageTsdocOptions
+        tsconfig: UserConfig['tsconfig']
+        outDir: UserConfig['outDir']
+        deps: UserConfig['deps']
+      }
 }): NonNullable<UserConfig['hooks']> {
-  const {tsdoc, outDir, deps} = options
-  // `tsconfig: false` means "don't use a tsconfig"; fall back to the conventional name so
-  // API Extractor still has a project root. A string path is forwarded as-is.
-  const tsconfigPath = typeof options.tsconfig === 'string' ? options.tsconfig : 'tsconfig.json'
-  const bundledPackages =
-    tsdoc.bundledPackages ??
-    (Array.isArray(deps?.alwaysBundle)
-      ? deps.alwaysBundle.filter((entry): entry is string => typeof entry === 'string')
-      : typeof deps?.alwaysBundle === 'string'
-        ? [deps.alwaysBundle]
-        : undefined)
+  const {sideEffects: writeSideEffects, tsdoc: tsdocOptions} = options
+
+  let tsconfigPath: string | undefined
+  let bundledPackages: string[] | undefined
+  if (tsdocOptions) {
+    // `tsconfig: false` means "don't use a tsconfig"; fall back to the conventional name so
+    // API Extractor still has a project root. A string path is forwarded as-is.
+    tsconfigPath =
+      typeof tsdocOptions.tsconfig === 'string' ? tsdocOptions.tsconfig : 'tsconfig.json'
+    const {tsdoc, deps} = tsdocOptions
+    bundledPackages =
+      tsdoc.bundledPackages ??
+      (Array.isArray(deps?.alwaysBundle)
+        ? deps.alwaysBundle.filter((entry): entry is string => typeof entry === 'string')
+        : typeof deps?.alwaysBundle === 'string'
+          ? [deps.alwaysBundle]
+          : undefined)
+  }
 
   return (hooks) => {
-    hooks.hook('build:done', async ({chunks, options: resolved}) => {
-      const entryDtsFiles = entryDtsFilesFromChunks(chunks)
-      if (entryDtsFiles.length === 0) return
+    if (writeSideEffects) {
+      hooks.hook('build:done', async ({chunks, options: resolved}) => {
+        // Watch rebuilds must not touch package.json: the watcher also watches it, and a
+        // rewrite would loop. Exports generation is disabled the same way in pkg watch.
+        if (resolved.watch) return
+        const packageJsonPath = resolved.pkg?.packageJsonPath
+        if (!packageJsonPath) return
 
-      // Lazy-load the `/tsdoc` entry so `@microsoft/api-extractor` and friends stay out of
-      // the root module graph until a build with `tsdoc` enabled actually finishes.
-      const {checkTsdoc} = await import('./tsdoc/index.ts')
-      await checkTsdoc({
-        cwd: resolved.cwd,
-        entryDtsFiles,
-        tsconfig: tsconfigPath,
-        outDir: outDir ?? resolved.outDir,
-        bundledPackages,
-        customTags: tsdoc.customTags,
-        rules: tsdoc.rules,
-        logger: {
-          log: (...args) => {
-            resolved.logger.info(...args.map(String))
-          },
-          warn: (...args) => {
-            resolved.logger.warn(...args.map(String))
-          },
-          error: (...args) => {
-            resolved.logger.error(...args.map(String))
-          },
-        },
+        const sideEffects = collectSideEffects({
+          cwd: resolved.cwd,
+          outDir: resolved.outDir,
+          chunks,
+        })
+        const changed = writePackageSideEffects({packageJsonPath, sideEffects})
+        if (changed) {
+          const summary =
+            sideEffects === false
+              ? 'false'
+              : `[${sideEffects.map((entry) => JSON.stringify(entry)).join(', ')}]`
+          resolved.logger.info(`sideEffects: ${summary}`)
+        }
       })
-    })
+    }
+
+    if (tsdocOptions) {
+      const {tsdoc, outDir} = tsdocOptions
+      hooks.hook('build:done', async ({chunks, options: resolved}) => {
+        const entryDtsFiles = entryDtsFilesFromChunks(chunks)
+        if (entryDtsFiles.length === 0) return
+
+        // Lazy-load the `/tsdoc` entry so `@microsoft/api-extractor` and friends stay out of
+        // the root module graph until a build with `tsdoc` enabled actually finishes.
+        const {checkTsdoc} = await import('./tsdoc/index.ts')
+        await checkTsdoc({
+          cwd: resolved.cwd,
+          entryDtsFiles,
+          tsconfig: tsconfigPath!,
+          outDir: outDir ?? resolved.outDir,
+          bundledPackages,
+          customTags: tsdoc.customTags,
+          rules: tsdoc.rules,
+          logger: {
+            log: (...args) => {
+              resolved.logger.info(...args.map(String))
+            },
+            warn: (...args) => {
+              resolved.logger.warn(...args.map(String))
+            },
+            error: (...args) => {
+              resolved.logger.error(...args.map(String))
+            },
+          },
+        })
+      })
+    }
   }
 }
 

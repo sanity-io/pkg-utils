@@ -183,6 +183,16 @@ export async function resolveTsdownConfig(
           bundledPackages: ctx.bundledPackages,
         }
 
+  // `sideEffects` rewrites package.json from whatever is on disk in `outDir`. Every waterfall
+  // build may run it (CSS-only packages have no canonical build; earlier passes write a
+  // partial list that a later pass replaces). Watch mode skips it (a rewrite would re-trigger
+  // the package.json watcher), and types-only builds leave it alone. Userland
+  // `sideEffects: false` opts out entirely.
+  const sideEffectsOption =
+    config?.sideEffects === false || ctx.emitDeclarationOnly || options.watch
+      ? false
+      : (config?.sideEffects ?? true)
+
   // `reactCompiler`'s type still includes `reactServer?: boolean`, so this overload can
   // resolve to one config or two. `reactServer: true` already threw above.
   const baseOrBuilds = await defineConfig({
@@ -211,6 +221,7 @@ export async function resolveTsdownConfig(
     // Types-only builds still emit `.d.ts` files that deserve the check; watch mode skips it
     // so a failing TSDoc rule doesn't tear down the watcher on every save.
     tsdoc: options.watch ? false : tsdocOption,
+    sideEffects: sideEffectsOption,
   })
   if (Array.isArray(baseOrBuilds)) {
     throw new Error(
