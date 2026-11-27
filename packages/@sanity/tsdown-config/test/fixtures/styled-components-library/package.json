@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "private": true,
   "license": "MIT",
+  "sideEffects": false,
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -19,7 +20,7 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "devDependencies": {
-    "@types/react": "^19.3.0",
+    "@types/react": "^19.3.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "styled-components": "^6.6.0"
@@ -37,6 +38,5 @@
       },
       "./package.json": "./package.json"
     }
-  },
-  "sideEffects": false
+  }
 }

@@ -1,5 +1,28 @@
 # @sanity/tsdown-config
 
+## 0.33.1
+
+### Patch Changes
+
+- [#3818](https://github.com/sanity-io/pkg-utils/pull/3818) [`350d18b`](https://github.com/sanity-io/pkg-utils/commit/350d18b05c549f0edd383045170c3283056b58c7) Thanks [@stipsan](https://github.com/stipsan)! - fix: don't rewrite `package.json#sideEffects` when `outDir` is outside the package
+
+  Calling `build()` with an `outDir` outside the package directory (for example a test that builds into `os.tmpdir()`) wrote paths like `../../tmp/…/styles.css` into `sideEffects`, dropping the real `./dist/…` entries. Such builds now leave `sideEffects` untouched.
+
+## 0.33.0
+
+### Minor Changes
+
+- [#3805](https://github.com/sanity-io/pkg-utils/pull/3805) [`f867d0e`](https://github.com/sanity-io/pkg-utils/commit/f867d0eaf7187793eb144f8b4971c9f944533d51) Thanks [@stipsan](https://github.com/stipsan)! - feat: auto-generate `package.json#sideEffects` from the build
+
+  `@sanity/tsdown-config` now rewrites `sideEffects` after every build from the CSS assets,
+  `.css.js` chunks, and JS files that import stylesheets the build produced. When nothing is
+  side-effectful the field is set to `false`. Opt out with `sideEffects: false` to leave the
+  field untouched. `@sanity/pkg-utils` forwards the same option from `package.config.ts`.
+
+### Patch Changes
+
+- [#3782](https://github.com/sanity-io/pkg-utils/pull/3782) [`c79915f`](https://github.com/sanity-io/pkg-utils/commit/c79915fc91f2261a3415d49e6adf5d5754567240) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency browserslist to ^4.29.6
+
 ## 0.32.0
 
 ### Minor Changes

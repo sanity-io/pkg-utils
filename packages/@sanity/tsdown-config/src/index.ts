@@ -520,6 +520,9 @@ export interface PackageOptions extends Pick<
    * for packages that need a hand-maintained allowlist beyond what the CSS pipelines produce
    * (e.g. entry points whose only job is a polyfill side effect).
    *
+   * Skipped when `outDir` is outside the package directory (e.g. a test that calls `build()`
+   * with a temporary `outDir`), since those files are never published.
+   *
    * Skipped in watch mode: rewriting `package.json` would re-trigger the watcher. The
    * `react-server` variant of a dual React Server Components build also skips it; the compiled
    * `default` variant owns the write, like it owns `exports` generation.
@@ -1151,8 +1154,20 @@ function createBuildDoneHooks(options: {
         const packageJsonPath = resolved.pkg?.packageJsonPath
         if (!packageJsonPath) return
 
+        // An `outDir` outside the package (e.g. a test that builds into `os.tmpdir()`) holds
+        // files that are never published, so they can't describe this package's side effects.
+        const packageRoot = path.dirname(packageJsonPath)
+        const outDirFromRoot = path.relative(packageRoot, resolved.outDir)
+        if (
+          outDirFromRoot === '..' ||
+          outDirFromRoot.startsWith(`..${path.sep}`) ||
+          path.isAbsolute(outDirFromRoot)
+        ) {
+          return
+        }
+
         const sideEffects = collectSideEffects({
-          cwd: resolved.cwd,
+          cwd: packageRoot,
           outDir: resolved.outDir,
           chunks,
         })

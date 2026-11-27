@@ -2,6 +2,7 @@ import {mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import {build} from 'tsdown'
 import {afterEach, describe, expect, test} from 'vitest'
 import {collectSideEffects, writePackageSideEffects} from '../src/sideEffects.ts'
 
@@ -111,11 +112,7 @@ describe('writePackageSideEffects', () => {
   test('rewrites sideEffects and preserves indentation', async () => {
     const cwd = await tempDir()
     const packageJsonPath = path.join(cwd, 'package.json')
-    await writeFile(
-      packageJsonPath,
-      '{\n  "name": "example",\n  "sideEffects": true\n}\n',
-      'utf8',
-    )
+    await writeFile(packageJsonPath, '{\n  "name": "example",\n  "sideEffects": true\n}\n', 'utf8')
 
     expect(
       writePackageSideEffects({
@@ -153,10 +150,30 @@ describe('sideEffects after fixture builds', () => {
 
   test('panda-library package.json lists CSS and both format entries', async () => {
     const pkg = JSON.parse(await readFile(path.join(pandaFixture, 'package.json'), 'utf8'))
-    expect(pkg.sideEffects).toEqual([
-      './dist/bundle.css',
-      './dist/index.cjs',
-      './dist/index.js',
-    ])
+    expect(pkg.sideEffects).toEqual(['./dist/bundle.css', './dist/index.cjs', './dist/index.js'])
+  })
+
+  test('building into an outDir outside the package leaves package.json untouched', async () => {
+    const packageJsonPath = path.join(cssModulesFixture, 'package.json')
+    const original = await readFile(packageJsonPath, 'utf8')
+    const outDir = await tempDir()
+
+    try {
+      await build({
+        config: path.join(cssModulesFixture, 'tsdown.config.ts'),
+        cwd: cssModulesFixture,
+        outDir,
+        dts: false,
+        exports: false,
+        logLevel: 'silent',
+        publint: false,
+      })
+
+      expect(await readFile(path.join(outDir, 'style.css'), 'utf8')).toMatch(/\{/)
+      expect(await readFile(packageJsonPath, 'utf8')).toBe(original)
+      expect(JSON.parse(original).sideEffects).toEqual(['./dist/index.js', './dist/style.css'])
+    } finally {
+      await writeFile(packageJsonPath, original, 'utf8')
+    }
   })
 })
