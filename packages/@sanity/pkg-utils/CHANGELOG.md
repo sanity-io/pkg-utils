@@ -1,5 +1,16 @@
 # @sanity/pkg-utils
 
+## 14.1.1
+
+### Patch Changes
+
+- [#3818](https://github.com/sanity-io/pkg-utils/pull/3818) [`350d18b`](https://github.com/sanity-io/pkg-utils/commit/350d18b05c549f0edd383045170c3283056b58c7) Thanks [@stipsan](https://github.com/stipsan)! - fix: don't rewrite `package.json#sideEffects` when `outDir` is outside the package
+
+  Calling `build()` with an `outDir` outside the package directory (for example a test that builds into `os.tmpdir()`) wrote paths like `../../tmp/…/styles.css` into `sideEffects`, dropping the real `./dist/…` entries. Such builds now leave `sideEffects` untouched.
+
+- Updated dependencies [[`350d18b`](https://github.com/sanity-io/pkg-utils/commit/350d18b05c549f0edd383045170c3283056b58c7)]:
+  - @sanity/tsdown-config@0.33.1
+
 ## 14.1.0
 
 ### Minor Changes
